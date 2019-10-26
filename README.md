@@ -1,2 +1,1 @@
-# obdh2
-On-Board Data Handling Module 2
+# On-Board Data Handling 2.0
