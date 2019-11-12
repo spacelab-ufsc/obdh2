@@ -50,3 +50,29 @@
     \label{tab:firmware-tasks}
 \end{table}
 
+\section{Telecommands}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{lll}
+        \toprule[1.5pt]
+        \textit{Name}          & \textit{Parameters}           & \textit{Access} \\
+        \midrule
+        Enter hibernation      & Hibernation period in seconds & Private         \\
+        Leave hibernation      & None                          & Private         \\
+        Activate beacon        & None                          & Private         \\
+        Deactivate beacon      & None                          & Private         \\
+        Activate downlink      & None                          & Private         \\
+        Deactivate dtownlink   & None                          & Private         \\
+        Activate EDC           & None                          & Private         \\
+        Deactivate EDC         & None                          & Private         \\
+        Activate Payload X     & Experiment period in seconds  & Private         \\
+        Deactivate Payload X   & None                          & Private         \\
+        Ping                   & None                          & Public          \\
+        Message broadcast      & ASCII message                 & Public          \\
+        Request data           & Data flags                    & Public          \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{System telecomamnds.}
+    \label{tab:system-telecommands}
+\end{table}
