@@ -24,3 +24,55 @@
 
 \chapter{Firmware} \label{ch:firmware}
 
+\section{Tasks}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{lllll}
+        \toprule[1.5pt]
+        \textit{Name}          & \textit{Priority} & \textit{Initial delay [ms]} & \textit{Period [ms]} \\
+        \midrule
+        Startup (boot)         & Highest           & 0                           & Aperiodic            \\
+        Deployment hibernation & Highest           & 0                           & Aperiodic            \\
+        Antenna deployment     & Highest           & 0                           & Aperiodic            \\
+        Watchdog reset         & Lowest            & 0                           & 100                  \\
+        Periodic downlink      & Medium            & 5000                        & 60000                \\
+        Uplink                 & High              & 5000                        & 1000                 \\
+        EPS reading            & Medium            & 5000                        & 60000                \\
+        EDC reading            & High              & 5000                        & 1000                 \\
+        Payload X reading      & Medium            & 5000                        & 5000                 \\
+        TTC writing            & Medium            & 5000                        & Beacon period        \\
+        Radio periodoc reset   & Low               & 0                           & 600000               \\
+        OBDH reset             & Low               & 0                           & 36000000             \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{Firmware tasks.}
+    \label{tab:firmware-tasks}
+\end{table}
+
+\section{Telecommands}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{lll}
+        \toprule[1.5pt]
+        \textit{Name}          & \textit{Parameters}           & \textit{Access} \\
+        \midrule
+        Enter hibernation      & Hibernation period in seconds & Private         \\
+        Leave hibernation      & None                          & Private         \\
+        Activate beacon        & None                          & Private         \\
+        Deactivate beacon      & None                          & Private         \\
+        Activate downlink      & None                          & Private         \\
+        Deactivate dtownlink   & None                          & Private         \\
+        Activate EDC           & None                          & Private         \\
+        Deactivate EDC         & None                          & Private         \\
+        Activate Payload X     & Experiment period in seconds  & Private         \\
+        Deactivate Payload X   & None                          & Private         \\
+        Ping                   & None                          & Public          \\
+        Message broadcast      & ASCII message                 & Public          \\
+        Request data           & Data flags                    & Public          \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{System telecomamnds.}
+    \label{tab:system-telecommands}
+\end{table}
