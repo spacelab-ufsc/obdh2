@@ -34,3 +34,44 @@
     \end{center}
 \end{figure}
 
+\section{External Connectors}
+
+\subsection{PC-104}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{cllll}
+        \toprule[1.5pt]
+        \textit{Pin [A-B]} & \textit{H1A}     & \textit{H1B}     & \textit{H2A}  & \textit{H2B}  \\
+        \midrule
+        1-2                & -                & -                & -             & -             \\
+        3-4                & -                & -                & -             & -             \\
+        5-6                & GPIO\_0          & GPIO\_1          & -             & -             \\
+        7-8                & GPIO\_2          & GPIO\_3          & -             & -             \\
+        9-10               & GPIO\_4          & -                 & -            & -             \\
+        11-12              & GPIO\_5          & GPIO\_6          & GPIO\_7       & GPIO\_8       \\
+        13-14              & VCC\_5V\_EN      & -                & GPIO\_9       & GPIO\_10      \\
+        15-16              & -                & -                & -             & -             \\
+        17-18              & -                & EN\_PAYLOAD\_0   & -             & -             \\
+        19-20              & -                & EN\_PAYLOAD\_1   & -             & -             \\
+        21-22              & -                & -                & -             & -             \\
+        23-24              & -                & -                & -             & -             \\
+        25-26              & -                & -                & -             & -             \\
+        27-28              & -                & -                & -             & -             \\
+        29-30              & GND              & GND              & GND           & GND           \\
+        31-32              & GND              & GND              & GND           & GND           \\
+        33-34              & -                & -                & -             & -             \\
+        35-36              & SPI\_0\_CLK      & -                & VCC\_3V3\_ANT & VCC\_3V3\_ANT \\
+        37-38              & SPI\_0\_MISO     & -                & -             & -             \\
+        39-40              & SPI\_0\_MOSI     & SPI\_0\_CS       & -             & -             \\
+        41-42              & I2C\_0\_SDA      & -                & -             & -             \\
+        43-44              & I2C\_0\_SCL      & -                & -             & -             \\
+        45-46              & VCC\_3V3         & VCC\_3V3         & VCC\_MAG      & VCC\_MAG      \\
+        47-48              & -                & -                & -             & -             \\
+        49-50              & -                & -                & -             & -             \\
+        51-52              & -                & -                & -             & -             \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{PC-104 connector pinout.}
+    \label{tab:pc104-pins}
+\end{table}
