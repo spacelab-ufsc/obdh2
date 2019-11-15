@@ -30,7 +30,7 @@ Y2,ECS-.327-12.5-34S-TR,"32.768kHz ±20ppm Crystal 12.5pF 70
 kOhm -40°C ~ 125°C",ABS06 0805,1
 TBD,TCA9545APWR,4-Channel I2C and SMBus Switch With Interrupt Logic and Reset Functions,TSSOP 20 pins,1
 TBD,THVD1451DR,3.3-V to 5-V RS-485 transceiver with ±18-kV IEC ESD protection,SOIC 8 pins,1
-TBD,IS37SML01G1-MLI,NAND Flash 1G 3.3V 104MHz Serial NAND Flash,SOIC 16 pins,2
+TBD,MT25QL01GBBB8ESF-0AAT,NOR Flash SPI FLASH NOR SLC 256MX4 SOIC DDP,SOP 16 pins,1
 TBD,TCA4311ADR,Hot swappable 2-wire bus buffers,SOIC 8 pins,3
 TBD,SN74AVC4T774PWR,4-bit dual-supply bus transceiver with configurable voltage-level shifting and 3-state outputs,TSSOP 16 pins,2
 TBD,RCS0805120RFKEA,Thick Film Resistors - SMD 0.4watt 120ohms 1% 100ppm,_0805,2
