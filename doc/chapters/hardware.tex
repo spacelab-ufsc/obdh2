@@ -29,10 +29,12 @@
 \begin{figure}[!ht]
     \begin{center}
         \includegraphics[width=\textwidth]{figures/diagram_interfaces.pdf}
+        \caption{Interfaces diagram.}
         \label{fig:diagram-interfaces}
-        \caption{Interface diagram.}
     \end{center}
 \end{figure}
+
+Currently, ``\textit{Payload 1}'' and ``\textit{Payload 2}'' are ``\textit{Payload-X}'' and ``\textit{Payload EDC}'' respectively.
 
 \section{External Connectors}
 
@@ -75,3 +77,20 @@
     \caption{PC-104 connector pinout.}
     \label{tab:pc104-pins}
 \end{table}
+
+\subsection{Antenna Module}
+
+
+
+\subsection{Programmer}
+
+
+
+\subsection{Debug Interface}
+
+
+\section{Non-Volatile Memory}
+
+The non-volatile memory is composed by a NOR flash memory with 1 Gb of capacity (or 128 MB). The used model is the Micron MT25QL01GBBB.
+
+As can be seen in \autoref{fig:diagram-interfaces}, a SPI bus is used to communicate with this peripheral.
