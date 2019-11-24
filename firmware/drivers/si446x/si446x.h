@@ -1,91 +1,90 @@
 /*
- * rf4463.h
+ * si446x.h
  * 
- * Copyright (C) 2017-2019, Universidade Federal de Santa Catarina
+ * Copyright (C) 2019, SpaceLab.
  * 
- * This file is part of FloripaSat-OBDH.
+ * This file is part of OBDH 2.0.
  * 
- * FloripaSat-OBDH is free software: you can redistribute it and/or modify
+ * OBDH 2.0 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * FloripaSat-OBDH is distributed in the hope that it will be useful,
+ * OBDH 2.0 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with FloripaSat-OBDH. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
 
 /**
- * \brief NiceRF RF4463 driver.
- * 
- * This library suits for RF4463PRO and RF4463F30 in FIFO mode.
+ * \brief Si446x driver definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.18
+ * \version 0.1.0
  * 
  * \date 01/06/2017
  * 
- * \defgroup rf4463 RF4463
+ * \defgroup si446x Si446x
+ * \ingroup drivers
  * \{
  */
 
-#ifndef RF4463_H_
-#define RF4463_H_
+#ifndef SI446X_H_
+#define SI446X_H_
 
 #include <stdint.h>
 #include <stdbool.h>
 
 /**
- * \brief RF4463 modes.
+ * \brief Si446x modes.
  */
 typedef enum
 {
-    RF4463_MODE_STANDBY=0,      /**< Standby mode. */
-    RF4463_MODE_TX,             /**< TX mode. */
-    RF4463_MODE_RX              /**< RX mode. */
-} rf4463_modes_e;
+    SI446X_MODE_STANDBY=0,      /**< Standby mode. */
+    SI446X_MODE_TX,             /**< TX mode. */
+    SI446X_MODE_RX              /**< RX mode. */
+} si446x_modes_e;
 
 /**
- * \brief RF4463 initialization.
+ * \brief Si446x initialization.
  * 
- * Initializes the RF4463 module with the configuration parameters from
- * "rf4463_reg_config.h".
+ * Initializes the Si446x module with the configuration parameters from
+ * "si446x_reg_config.h".
  * 
  * \return Initialization status. It can be:
  *              -\b STATUS_SUCCESS if the initialization was successful
  *              -\b STATUS_FAIL if the initialization was not successful
  *              .
  */
-uint8_t rf4463_init();
+uint8_t si446x_init(void);
 
 /**
- * \brief RF4463F30 GPIO initialization.
+ * \brief GPIO initialization.
  * 
  * \return None
  */
-void rf4463_gpio_init();
+void si446x_gpio_init(void);
 
 /**
- * \brief Configures the registers of the RF4463 device.
+ * \brief Configures the registers of the SI446X device.
  * 
- * All the configuration parameters are defined in the "rf4463_reg_config.h" file.
+ * All the configuration parameters are defined in the "si446x_reg_config.h" file.
  * 
  * \return None
  */
-void rf4463_reg_config();
+void si446x_reg_config(void);
 
 /**
- * \brief Power on reset procedure of the RF4463 module.
+ * \brief Power on reset procedure of the SI446X module.
  * 
  * \return None
  */
-void rf4463_power_on_reset();
+void si446x_power_on_reset(void);
 
 /**
  * \brief Transmit a packet through RF.
@@ -98,7 +97,7 @@ void rf4463_power_on_reset();
  *              -\b false if the packet was not sent.
  *              .
  */
-bool rf4463_tx_packet(uint8_t *data, uint8_t len);
+bool si446x_tx_packet(uint8_t *data, uint8_t len);
 
 /**
  * \brief Transmit a long packet (> FIFO buffer, or 64 bytes) through RF.
@@ -110,7 +109,7 @@ bool rf4463_tx_packet(uint8_t *data, uint8_t len);
  * 
  * \return None
  */
-bool rf4463_tx_long_packet(uint8_t *packet, uint16_t len);
+bool si446x_tx_long_packet(uint8_t *packet, uint16_t len);
 
 /**
  * \brief 
@@ -121,7 +120,7 @@ bool rf4463_tx_long_packet(uint8_t *packet, uint16_t len);
  *
  * \return 
  */
-uint8_t rf4463_rx_packet(uint8_t *rx_buf, uint8_t read_len);
+uint8_t si446x_rx_packet(uint8_t *rx_buf, uint8_t read_len);
 
 /**
  * \brief 
@@ -131,7 +130,7 @@ uint8_t rf4463_rx_packet(uint8_t *rx_buf, uint8_t read_len);
  *              -\b false 
  *              .
  */
-bool rf4463_rx_init();
+bool si446x_rx_init(void);
 
 /**
  * \brief Checks if the device is working.
@@ -141,7 +140,7 @@ bool rf4463_rx_init();
  *              -\b false if the device is not working.
  *              .
  */
-bool rf4463_check_device();
+bool si446x_check_device(void);
 
 /**
  * \brief 
@@ -151,7 +150,7 @@ bool rf4463_check_device();
  *              -\b false 
  *              .
  */
-bool rf4463_check_cts();
+bool si446x_check_cts(void);
 
 /**
  * \brief 
@@ -163,7 +162,7 @@ bool rf4463_check_cts();
  *              -\b false 
  *              .
  */
-bool rf4463_set_tx_power(uint8_t pwr);
+bool si446x_set_tx_power(uint8_t pwr);
 
 /**
  * \brief 
@@ -177,7 +176,7 @@ bool rf4463_set_tx_power(uint8_t pwr);
  *              -\b false 
  *              .
  */
-bool rf4463_set_properties(uint16_t start_property, uint8_t *para_buf, uint8_t length);
+bool si446x_set_properties(uint16_t start_property, uint8_t *para_buf, uint8_t length);
 
 /**
  * \brief 
@@ -187,7 +186,7 @@ bool rf4463_set_properties(uint16_t start_property, uint8_t *para_buf, uint8_t l
  *              -\b false 
  *              .
  */
-bool rf4463_get_properties(uint16_t start_property, uint8_t length, uint8_t *para_buf);
+bool si446x_get_properties(uint16_t start_property, uint8_t length, uint8_t *para_buf);
 
 /**
  * \brief 
@@ -197,7 +196,7 @@ bool rf4463_get_properties(uint16_t start_property, uint8_t length, uint8_t *par
  * 
  * \return None
  */
-void rf4463_set_config(const uint8_t *parameters, uint16_t para_len);
+void si446x_set_config(const uint8_t *parameters, uint16_t para_len);
 
 /**
  * \brief 
@@ -209,7 +208,7 @@ void rf4463_set_config(const uint8_t *parameters, uint16_t para_len);
  *              -\b false 
  *              .
  */
-bool rf4463_set_preamble_len(uint8_t len);
+bool si446x_set_preamble_len(uint8_t len);
 
 /**
  * \brief 
@@ -222,7 +221,7 @@ bool rf4463_set_preamble_len(uint8_t len);
  *              -\b false 
  *              .
  */
-bool rf4463_set_sync_word(uint8_t *sync_word, uint8_t len);
+bool si446x_set_sync_word(uint8_t *sync_word, uint8_t len);
 
 /**
  * \brief 
@@ -235,7 +234,7 @@ bool rf4463_set_sync_word(uint8_t *sync_word, uint8_t len);
  *              -\b false 
  *              .
  */
-bool rf4463_set_gpio_mode(uint8_t gpio0_mode, uint8_t gpio1_mode);
+bool si446x_set_gpio_mode(uint8_t gpio0_mode, uint8_t gpio1_mode);
 
 /**
  * \brief 
@@ -249,7 +248,7 @@ bool rf4463_set_gpio_mode(uint8_t gpio0_mode, uint8_t gpio1_mode);
  *              -\b false 
  *              .
  */
-bool rf4463_set_cmd(uint8_t cmd, uint8_t *para_buf, uint8_t len);
+bool si446x_set_cmd(uint8_t cmd, uint8_t *para_buf, uint8_t len);
 
 /**
  * \brief Reads a command.
@@ -263,7 +262,7 @@ bool rf4463_set_cmd(uint8_t cmd, uint8_t *para_buf, uint8_t len);
  *              -\b false if an error occurs.
  *              .
  */
-bool rf4463_get_cmd(uint8_t cmd, uint8_t *para_buf, uint8_t length);
+bool si446x_get_cmd(uint8_t cmd, uint8_t *para_buf, uint8_t length);
 
 /**
  * \brief 
@@ -273,7 +272,7 @@ bool rf4463_get_cmd(uint8_t cmd, uint8_t *para_buf, uint8_t length);
  *              -\b false 
  *              .
  */
-bool rf4463_set_tx_interrupt();
+bool si446x_set_tx_interrupt(void);
 
 /**
  * \brief 
@@ -283,7 +282,7 @@ bool rf4463_set_tx_interrupt();
  *              -\b false 
  *              .
  */
-bool rf4463_set_rx_interrupt();
+bool si446x_set_rx_interrupt(void);
 
 /**
  * \brief 
@@ -293,7 +292,7 @@ bool rf4463_set_rx_interrupt();
  *              -\b false 
  *              .
  */
-bool rf4463_clear_interrupts();
+bool si446x_clear_interrupts(void);
 
 /**
  * \brief 
@@ -303,7 +302,7 @@ bool rf4463_clear_interrupts();
  * 
  * \return None
  */
-void rf4463_write_tx_fifo(uint8_t *data, uint8_t len);
+void si446x_write_tx_fifo(uint8_t *data, uint8_t len);
 
 /**
  * \brief 
@@ -314,28 +313,28 @@ void rf4463_write_tx_fifo(uint8_t *data, uint8_t len);
  *
  * \return 
  */
-uint8_t rf4463_read_rx_fifo(uint8_t *data, uint8_t read_len);
+uint8_t si446x_read_rx_fifo(uint8_t *data, uint8_t read_len);
 
 /**
  * \brief 
  * 
  * \return None
  */
-void rf4463_fifo_reset();
+void si446x_fifo_reset(void);
 
 /**
  * \brief 
  * 
  * \return None
  */
-void rf4463_enter_tx_mode();
+void si446x_enter_tx_mode(void);
 
 /**
  * \brief 
  * 
  * \return None
  */
-void rf4463_enter_rx_mode();
+void si446x_enter_rx_mode(void);
 
 /**
  * \brief 
@@ -345,7 +344,7 @@ void rf4463_enter_rx_mode();
  *              -\b false 
  *              .
  */
-bool rf4463_enter_standby_mode();
+bool si446x_enter_standby_mode(void);
 
 /**
  * \brief Inquire interrupt.
@@ -355,7 +354,7 @@ bool rf4463_enter_standby_mode();
  *              -\b false if no interrupt occurs.
  *              .
  */
-bool rf4463_wait_nIRQ();
+bool si446x_wait_nIRQ(void);
 
 /**
  * \brief Checks GPIO1 interruption.
@@ -365,8 +364,8 @@ bool rf4463_wait_nIRQ();
  *              -\b false if no interrupt occurs.
  *              .
  */
-bool rf4463_wait_gpio1();
+bool si446x_wait_gpio1(void);
 
-#endif // RF4463_H_
+#endif // SI446X_H_
 
-//! \} End of rf4463 group
+//! \} End of si446x group
