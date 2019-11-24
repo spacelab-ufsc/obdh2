@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * mt25ql01gbbb.c
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,23 +21,33 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief MT25QL01GBBB driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 26/10/2019
+ * \date 15/11/2019
  * 
- * \defgroup drivers Drivers
+ * \addtogroup mt25ql01gbbb
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#include "mt25ql01gbbb.h"
 
-#include "si4463/rf4463.h"
+int mt25ql01gbbb_init()
+{
+    return -1;
+}
 
-#endif // DRIVERS_H_
+int mt25ql01gbbb_write(uint32_t adr, uint8_t *data, uint32_t len)
+{
+    return -1;
+}
 
-//! \} End of drivers group
+int mt25ql01gbbb_read(uint32_t adr, uint8_t *data, uint32_t len)
+{
+    return -1;
+}
+
+//! \} End of mt25ql01gbbb ggggg
