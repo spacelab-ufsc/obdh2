@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * edc.c
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,23 +21,33 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief EDC driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 26/10/2019
+ * \date 27/10/2019
  * 
- * \defgroup drivers Drivers
+ * \addtogroup edc
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#include "edc.h"
 
-#include "si4463/rf4463.h"
+int edc_init()
+{
+    return -1;
+}
 
-#endif // DRIVERS_H_
+int edc_write_cmd(edc_cmd_t cmd)
+{
+    return -1;
+}
 
-//! \} End of drivers group
+int edc_read(uint8_t *data, uint16_t len)
+{
+    return -1;
+}
+
+//! \} End of edc group

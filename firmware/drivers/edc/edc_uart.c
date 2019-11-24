@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * edc_uart.c
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,23 +21,34 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief EDC driver UART interface implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 26/10/2019
+ * \date 27/10/2019
  * 
- * \defgroup drivers Drivers
+ * \defgroup edc_uart UART
+ * \ingroup edc
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#include "edc.h"
 
-#include "si4463/rf4463.h"
+int edc_uart_init()
+{
+    return -1;
+}
 
-#endif // DRIVERS_H_
+int edc_uart_write(uint8_t *data, uint16_t len)
+{
+    return -1;
+}
 
-//! \} End of drivers group
+int edc_uart_read(uint8_t *data, uint16_t len)
+{
+    return -1;
+}
+
+//! \} End of edc_uart group
