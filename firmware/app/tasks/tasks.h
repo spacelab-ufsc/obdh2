@@ -1,5 +1,5 @@
 /*
- * main.c
+ * tasks.h
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,33 +21,28 @@
  */
 
 /**
- * \brief Main file.
+ * \brief Tasks definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 25/10/2019
+ * \date 02/11/2019
  * 
- * \defgroup main Main file
+ * \defgroup tasks Tasks
  * \{
  */
 
-#include <FreeRTOS.h>
-#include <task.h>
+#ifndef TASKS_H_
+#define TASKS_H_
 
-#include "app/tasks/tasks.h"
+/**
+ * \brief Creates the system tasks.
+ *
+ * \return None.
+ */
+void create_tasks();
 
-void main(void)
-{
-    // Create all the tasks
-    create_tasks();
+#endif // TASKS_H_
 
-	// Start the scheduler
-    vTaskStartScheduler();
-
-	// Will only get here if there was insufficient memory to create the idle and/or timer task
-    while(1);
-}
-
-//! \} End of main group
+//! \} End of tasks group
