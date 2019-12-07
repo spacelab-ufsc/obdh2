@@ -1,5 +1,5 @@
 /*
- * devices.h
+ * startup.c
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,23 +21,26 @@
  */
 
 /**
- * \brief Devices layer.
+ * \brief Startup task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 26/10/2019
+ * \date 04/12/2019
  * 
- * \defgroup devices Devices
+ * \addtogroup startup
  * \{
  */
 
-#ifndef DEVICES_H_
-#define DEVICES_H_
+#include "startup.h"
 
-#include "logger/logger.h"
+xTaskHandle xTaskStartupHandle;
 
-#endif // DEVICES_H_
+void vTaskStartup(void *pvParameters)
+{
+    // Delete the task
+    vTaskDelete(xTaskStartupHandle);
+}
 
-//! \} End of devices group
+//! \} End of startup group

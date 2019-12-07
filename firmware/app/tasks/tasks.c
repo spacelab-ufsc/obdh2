@@ -1,5 +1,5 @@
 /*
- * devices.h
+ * tasks.c
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,23 +21,33 @@
  */
 
 /**
- * \brief Devices layer.
+ * \brief Tasks implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 26/10/2019
+ * \date 02/11/2019
  * 
- * \defgroup devices Devices
+ * \addtogroup tasks
  * \{
  */
 
-#ifndef DEVICES_H_
-#define DEVICES_H_
+#include <FreeRTOS.h>
+#include <task.h>
 
-#include "logger/logger.h"
+#include "tasks.h"
+#include "startup.h"
 
-#endif // DEVICES_H_
+void create_tasks()
+{
+    // Startup task
+    xTaskCreate(vTaskStartup, TASK_STARTUP_NAME, TASK_STARTUP_STACK_SIZE, NULL, TASK_STARTUP_PRIORITY, &xTaskStartupHandle);
 
-//! \} End of devices group
+    if (xTaskStartupHandle == NULL)
+    {
+        // Error creating the startup task
+    }
+}
+
+//! \} End of tasks group
