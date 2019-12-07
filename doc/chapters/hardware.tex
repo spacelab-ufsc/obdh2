@@ -68,7 +68,7 @@ Currently, ``\textit{Payload 1}'' and ``\textit{Payload 2}'' are ``\textit{Paylo
         39-40              & SPI\_0\_MOSI     & SPI\_0\_CS\_0    & -             & -             \\
         41-42              & I2C\_0\_SDA      & -                & -             & -             \\
         43-44              & I2C\_0\_SCL      & -                & -             & -             \\
-        45-46              & VCC\_3V3         & VCC\_3V3         & -             & -             \\
+        45-46              & VCC\_3V3         & VCC\_3V3         & VCC\_BAT      & VCC\_BAT      \\
         47-48              & -                & -                & -             & -             \\
         49-50              & -                & -                & -             & -             \\
         51-52              & -                & -                & -             & -             \\
@@ -90,9 +90,41 @@ Currently, ``\textit{Payload 1}'' and ``\textit{Payload 2}'' are ``\textit{Paylo
 
 
 
-\subsection{Daughter Board}
+\subsection{Daughterboard}
 
+The daughterboard interface uses the Samtec FSI-110-D connector. An illustration of the connector can be seen in the \autoref{fig:samtec-connector}.
 
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=0.4\textwidth]{figures/samtec_fsi-110-03-g-d-ad.jpeg}
+        \caption{Samtec FSI-110-03-G-D-AD connector.}
+        \label{fig:samtec-connector}
+    \end{center}
+\end{figure}
+
+The pinout of the daughterboard interface are available in the \autoref{tab:daugtherboard-connector-pins}.
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{cllll}
+        \toprule[1.5pt]
+        \textit{Pin [A-B]} & \textit{Row A} & \textit{Row B} \\
+        \midrule
+        1-2                & VCC\_3V3       & GND            \\
+        3-4                & VCC\_3V3\_ANT  & GND            \\
+        5-6                & VCC\_BAT       & GND            \\
+        7-8                & GPIO\_0        & GPIO\_1        \\
+        9-10               & GPIO\_2        & GPIO\_3        \\
+        11-12              & SPI\_0\_CLK    & ADC\_0         \\
+        13-14              & SPI\_0\_MISO   & ADC\_1         \\
+        15-16              & SPI\_0\_MOSI   & ADC\_2         \\
+        17-18              & SPI\_0\_CS\_0  & I2C\_2\_SDA    \\
+        19-20              & SPI\_0\_CS\_1  & I2C\_2\_SCL    \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{Daughterboard connector pinout.}
+    \label{tab:daugtherboard-connector-pins}
+\end{table}
 
 \section{Microcontroller}
 
