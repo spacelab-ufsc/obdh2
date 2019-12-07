@@ -1,5 +1,5 @@
 /*
- * devices.h
+ * startup.h
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,23 +21,45 @@
  */
 
 /**
- * \brief Devices layer.
+ * \brief Startup task definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 26/10/2019
+ * \date 04/12/2019
  * 
- * \defgroup devices Devices
+ * \defgroup startup Startup
+ * \ingroup tasks
  * \{
  */
 
-#ifndef DEVICES_H_
-#define DEVICES_H_
+#ifndef STARTUP_H_
+#define STARTUP_H_
 
-#include "logger/logger.h"
+#include <FreeRTOS.h>
+#include <task.h>
 
-#endif // DEVICES_H_
+#define TASK_STARTUP_NAME                   "Startup"
+#define TASK_STARTUP_STACK_SIZE             500
+#define TASK_STARTUP_PRIORITY               5
 
-//! \} End of devices group
+/**
+ * \brief Startup task handle.
+ */
+extern xTaskHandle xTaskStartupHandle;
+
+/**
+ * \brief System startup task.
+ *
+ * This task runs in a single shot (non-periodic). After it's conclusion, it is deleted.
+ *
+ * \param[in] pvParameters is a value that will passed as the task's parameter.
+ *
+ * \return None.
+ */
+void vTaskStartup(void *pvParameters);
+
+#endif // STARTUP_H_
+
+//! \} End of startup group
