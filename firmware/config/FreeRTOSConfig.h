@@ -31,7 +31,7 @@
  * executed from within CCS4!  Once it has been executed, re-open or refresh
  * the CCS4 project and remove the #error line below.
  */
-#error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
+//#error Ensure CreateProjectDirectoryStructure.bat has been executed before building.  See comment immediately above.
 
 
 #ifndef FREERTOS_CONFIG_H
@@ -52,14 +52,14 @@
 #define configUSE_PREEMPTION			1
 #define configUSE_IDLE_HOOK				1
 #define configUSE_TICK_HOOK				1
-#define configCPU_CLOCK_HZ				( 25000000UL )
+#define configCPU_CLOCK_HZ				( 16000000UL )
 #define configLFXT_CLOCK_HZ       		( 32768L )
 #define configTICK_RATE_HZ				( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES			( 5 )
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 10 * 1024 ) )
-#define configMAX_TASK_NAME_LEN			( 10 )
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 60 * 1024 ) )
+#define configMAX_TASK_NAME_LEN			( 20 )
 #define configUSE_TRACE_FACILITY		0
-#define configUSE_16_BIT_TICKS			1
+#define configUSE_16_BIT_TICKS			0
 #define configIDLE_SHOULD_YIELD			1
 #define configUSE_MUTEXES				1
 #define configQUEUE_REGISTRY_SIZE		0
@@ -71,9 +71,9 @@
 #define configUSE_COUNTING_SEMAPHORES	1
 
 #ifdef __LARGE_DATA_MODEL__
-	#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 80 )
+	#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 100 )
 #else
-	#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 120 )
+	#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 150 )
 #endif
 
 /* Co-routine definitions. */
