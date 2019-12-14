@@ -36,7 +36,13 @@
 #ifndef DRIVERS_H_
 #define DRIVERS_H_
 
-#include "si4463/rf4463.h"
+#include "edc/edc.h"
+#include "i2c/i2c.h"
+#include "isis_antenna/isis_antenna.h"
+#include "mt25ql01gbbb/mt25ql01gbbb.h"
+#include "spi/spi.h"
+#include "si446x/si446x.h"
+#include "uart/uart.h"
 
 #endif // DRIVERS_H_
 
