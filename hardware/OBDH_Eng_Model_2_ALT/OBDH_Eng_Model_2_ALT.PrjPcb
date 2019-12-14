@@ -28,7 +28,7 @@ DItemRevisionGUID=
 ReportSuppressedErrorsInMessages=0
 FSMCodingStyle=eFMSDropDownList_OneProcess
 FSMEncodingStyle=eFMSDropDownList_OneHot
-OutputPath=
+OutputPath=Project Outputs for OBDH_Eng_Model_2_ALT
 LogFolderPath=
 ManagedProjectGUID=
 IncludeDesignInRelease=0
@@ -86,7 +86,7 @@ ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
-DocumentUniqueId=UXIRFCRP
+DocumentUniqueId=VFNPJVLR
 
 [Document4]
 DocumentPath=Sources\3_MCU_Main.SchDoc
@@ -315,8 +315,8 @@ AddNetNetLabels=-1
 AddNetPorts=-1
 ShowComponentParameters=-1
 GlobalBookmarks=0
-ExportBOM=-1
-TemplateFilename=BOM Variant Template.XLT
+ExportBOM=0
+TemplateFilename=Board Stack Report.XLT
 TemplateStoreRelative=-1
 PCB_PrintColor=1
 SCH_PrintColor=0
@@ -336,10 +336,10 @@ SCH_ExpandPorts=0
 SCH_ExpandSheetNumber=0
 SCH_ExpandDocumentNumber=0
 SCH_HasExpandLogicalToPhysicalSheets=-1
-SaveSettingsToOutJob=-1
+SaveSettingsToOutJob=0
 
 [Generic_EDE]
-OutputDir=
+OutputDir=Project Outputs for OBDH_Eng_Model_2_ALT
 
 [OutputGroup1]
 Name=Netlist Outputs
