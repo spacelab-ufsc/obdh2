@@ -46,19 +46,19 @@
 #define EDC_CMD_PTT_RESUME          0x09    /**< Resumes the PTT Decoding Task. */
 #define EDC_CMD_SAMPLER_START       0x0A    /**< Start ADC Sample task. This trigger the sampling of a sequence of 2048 I&Q samples from the RF Front End. */
 #define EDC_CMD_GET_STATE           0x30    /**< Causes the transmission of System State Frame through RS-485 interface. */
-#define EDC_CMD_GET_PTT_PKT         0x31    /**< Causes the transmission of current PTT Decoder Frame through RS-485 interface. */
-#define EDC_CMD_GET_HK_PKT          0x32    /**< Updates HK Frame information, and transmit it through the RS-485 interface. */
+#define EDC_CMD_GET_PTT_PKG         0x31    /**< Causes the transmission of current PTT Decoder Frame through RS-485 interface. */
+#define EDC_CMD_GET_HK_PKG          0x32    /**< Updates HK Frame information, and transmit it through the RS-485 interface. */
 #define EDC_CMD_GET_ADC_SEQ         0x34    /**< Causes the transmission of current ADC Sampler Frame through RS-485 interface. */
 #define EDC_CMD_ECHO                0xF0    /**< Cause the transmission of the string "ECHO" in the debug interface. */
 
 /**
  * \brief EDC command.
  */
-struct edc_cmd_t
+typedef struct
 {
     uint8_t id;         /**< Command ID. */
     uint32_t param;     /**< Command param. */
-};
+} edc_cmd_t;
 
 /**
  * \brief Device initialization.
@@ -80,6 +80,7 @@ int edc_write_cmd(edc_cmd_t cmd);
  * \brief Reads data from the EDC module.
  *
  * \param[in,out] data is an array to store the read bytes.
+ *
  * \param[in] len is the number of bytes to read.
  *
  * \return The status/error code.
@@ -97,6 +98,7 @@ int edc_uart_init();
  * \brief Writes data to the UART interface.
  *
  * \param[in,out] data is an array with the bytes to be written in the UART interface.
+ *
  * \param[in] len is the number of bytes to write.
  *
  * \return The status/error code.
@@ -107,6 +109,7 @@ int edc_uart_write(uint8_t *data, uint16_t len);
  * \brief Reads data from the UART interface.
  *
  * \param[in,out] data is an array to store the read bytes.
+ *
  * \param[in] len is the number of bytes to read.
  *
  * \return The status/error code.

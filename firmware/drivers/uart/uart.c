@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * uart.c
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,29 +21,33 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief UART driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 26/10/2019
+ * \date 07/12/2019
  * 
- * \defgroup drivers Drivers
+ * \addtogroup uart
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#include "uart.h"
 
-#include "edc/edc.h"
-#include "i2c/i2c.h"
-#include "isis_antenna/isis_antenna.h"
-#include "mt25ql01gbbb/mt25ql01gbbb.h"
-#include "spi/spi.h"
-#include "si446x/si446x.h"
-#include "uart/uart.h"
+int uart_init(uart_port_t port, uart_config_t config)
+{
+    return -1;
+}
 
-#endif // DRIVERS_H_
+int uart_write(uart_port_t port, uint8_t *data, uint16_t len)
+{
+    return -1;
+}
 
-//! \} End of drivers group
+int uart_read(uart_port_t port, uint8_t *data, uint16_t len)
+{
+    return -1;
+}
+
+//! \} End of uart group
