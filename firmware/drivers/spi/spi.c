@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * spi.c
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,29 +21,38 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief SPI driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 26/10/2019
+ * \date 07/12/2019
  * 
- * \defgroup drivers Drivers
+ * \addtogroup spi
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#include "spi.h"
 
-#include "edc/edc.h"
-#include "i2c/i2c.h"
-#include "isis_antenna/isis_antenna.h"
-#include "mt25ql01gbbb/mt25ql01gbbb.h"
-#include "spi/spi.h"
-#include "si446x/si446x.h"
-#include "uart/uart.h"
+int spi_init(spi_port_t port, spi_config_t config)
+{
+    return -1;
+}
 
-#endif // DRIVERS_H_
+int spi_transfer(spi_port_t port, spi_cs_t cs, uint8_t *data_w, uint8_t *data_r, uint16_t len)
+{
+    return -1;
+}
 
-//! \} End of drivers group
+int spi_write(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len)
+{
+    return -1;
+}
+
+int spi_read(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len)
+{
+    return -1;
+}
+
+//! \} End of spi group

@@ -2,3 +2,6 @@
 .launches
 .settings
 Debug/
+
+# Vi/Vim files
+*.swp

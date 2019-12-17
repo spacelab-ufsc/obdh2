@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * i2c.c
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,29 +21,33 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief I2C driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 26/10/2019
+ * \date 07/12/2019
  * 
- * \defgroup drivers Drivers
+ * \addtogroup i2c
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#include "i2c.h"
 
-#include "edc/edc.h"
-#include "i2c/i2c.h"
-#include "isis_antenna/isis_antenna.h"
-#include "mt25ql01gbbb/mt25ql01gbbb.h"
-#include "spi/spi.h"
-#include "si446x/si446x.h"
-#include "uart/uart.h"
+int i2c_init(i2c_port_t port, i2c_config_t config)
+{
+    return -1;
+}
 
-#endif // DRIVERS_H_
+int i2c_write(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
+{
+    return -1;
+}
 
-//! \} End of drivers group
+int i2c_read(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
+{
+    return -1;
+}
+
+//! \} End of i2c group

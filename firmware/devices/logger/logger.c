@@ -35,9 +35,9 @@
 
 #include <math.h>
 
-#include "FreeRTOS.h"
-#include "task.h"
-#include "version.h"
+#include <FreeRTOS.h>
+#include <task.h>
+#include <version.h>
 
 #include "logger.h"
 #include "logger_config.h"
@@ -63,7 +63,7 @@ bool logger_init()
         logger_new_line();
 
         logger_print_msg("Author:\t\t");
-        logger_print_msg(FIRMWARE_AUTHOR_NAME);
+        logger_print_msg(FIRMWARE_AUTHOR);
         logger_print_msg(" <");
         logger_print_msg(FIRMWARE_AUTHOR_EMAIL);
         logger_print_msg(">");
