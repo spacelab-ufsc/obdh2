@@ -47,7 +47,7 @@ typedef enum
     UART_PORT_0=0,          /**< UART port 0. */
     UART_PORT_1,            /**< UART port 1. */
     UART_PORT_2             /**< UART port 2. */
-};
+} uart_ports_e;
 
 /**
  * \brief Parity configuration.
@@ -66,7 +66,7 @@ typedef enum
 {
     UART_ONE_STOP_BIT=1,    /**< One stop bit. */
     UART_TWO_STOP_BITS      /**< Two stop bits. */
-};
+} uart_stop_bits_e;
 
 /**
  * \brief UART port configuration parameters.
@@ -82,7 +82,7 @@ typedef struct
 /**
  * \brief UART port.
  */
-typedef uart_port_t uint8_t;
+typedef uint8_t uart_port_t;
 
 /**
  * \brief UART interface initialization.
