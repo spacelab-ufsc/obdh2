@@ -1,5 +1,5 @@
 /*
- * devices.h
+ * radio.c
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,24 +21,38 @@
  */
 
 /**
- * \brief Devices layer.
+ * \brief Radio device implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 26/10/2019
+ * \date 27/10/2019
  * 
- * \defgroup devices Devices
+ * \addtogroup radio
  * \{
  */
 
-#ifndef DEVICES_H_
-#define DEVICES_H_
+#include "radio.h"
 
-#include "logger/logger.h"
-#include "radio/radio.h"
+int radio_init()
+{
+    return -1;
+}
 
-#endif // DEVICES_H_
+int radio_send(uint8_t *data, uint16_t len)
+{
+    return -1;
+}
 
-//! \} End of devices group
+int radio_recv(uint8_t *data, uint16_t len)
+{
+    return -1;
+}
+
+int radio_available()
+{
+    return -1;
+}
+
+//! \} End of radio group
