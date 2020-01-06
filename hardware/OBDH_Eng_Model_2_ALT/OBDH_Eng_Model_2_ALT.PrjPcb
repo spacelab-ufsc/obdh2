@@ -106,23 +106,6 @@ GenerateClassCluster=0
 DocumentUniqueId=DLGWQPLI
 
 [Document5]
-DocumentPath=Sources\PCB_OBDH_ALT.PcbDoc
-AnnotationEnabled=1
-AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
-AnnotateSuffix=
-AnnotateScope=All
-AnnotateOrder=-1
-DoLibraryUpdate=1
-DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
-ClassGenCCAutoRoomEnabled=1
-ClassGenNCAutoScope=None
-DItemRevisionGUID=
-GenerateClassCluster=0
-DocumentUniqueId=GNXFAQYT
-
-[Document6]
 DocumentPath=Sources\4_Analog_Circuits.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -139,7 +122,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=VDDBGUQI
 
-[Document7]
+[Document6]
 DocumentPath=Sources\5_Non_Volatile_Memory.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -156,7 +139,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=EPKVVAVK
 
-[Document8]
+[Document7]
 DocumentPath=Libraries\OBDH_Eng_Model_2_ALT.SCHLIB
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -173,7 +156,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=TFOAXFIV
 
-[Document9]
+[Document8]
 DocumentPath=Libraries\PCB_OBDH_ALT.PcbLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -190,7 +173,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=ASHDXGHA
 
-[Document10]
+[Document9]
 DocumentPath=Sources\1_Interface.Harness
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -207,7 +190,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
 
-[Document11]
+[Document10]
 DocumentPath=Sources\3_MCU_Main.Harness
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -224,7 +207,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
 
-[Document12]
+[Document11]
 DocumentPath=Sources\4_Analog_Circuits.Harness
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -241,7 +224,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
 
-[Document13]
+[Document12]
 DocumentPath=Sources\5_Non_Volatile_Memory.Harness
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -258,7 +241,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
 
-[Document14]
+[Document13]
 DocumentPath=Sources\6_Communication_Buffers.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -275,7 +258,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=DLKBMIUU
 
-[Document15]
+[Document14]
 DocumentPath=Sources\6_Communication_Buffers.Harness
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -291,6 +274,27 @@ ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
+
+[Document15]
+DocumentPath=Sources\PCB_OBDH_ALT.PcbDoc
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=GNXFAQYT
+
+[DeviceSheetFolder1]
+Path=C:\Users\Vostro\Desktop\Hardware - Cópia\OBDH_Eng_Model_2_ALT\Sources\
+IncludeSubFolders=0
 
 [Configuration1]
 Name=Default Configuration
@@ -1822,6 +1826,14 @@ ModelUpdate22=1
 SelectedOnly=0
 UpdateVariants=1
 PartTypes=0
+
+[NetInfos]
+Net1=NetName=NetJ_V5_2|NetColor=$00FF6E6E
+Net2=NetName=OBDH_AVCC|NetColor=$00FFFF6E
+Net3=NetName=NetJ_V6_2|NetColor=$00FF6E6E
+Net4=NetName=OBDH_DVCC|NetColor=$00FF6E6E
+Net5=NetName=ANTENNA_VCC|NetColor=$00FF6EFF
+Net6=NetName=COMMON_VCC|NetColor=$0000BE00
 
 [Comparison Options]
 ComparisonOptions0=Kind=Net|MinPercent=75|MinMatch=3|ShowMatch=-1|Confirm=-1|UseName=-1|InclAllRules=0
