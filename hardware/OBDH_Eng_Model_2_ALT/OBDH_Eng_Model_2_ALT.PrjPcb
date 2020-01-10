@@ -28,7 +28,7 @@ DItemRevisionGUID=
 ReportSuppressedErrorsInMessages=0
 FSMCodingStyle=eFMSDropDownList_OneProcess
 FSMEncodingStyle=eFMSDropDownList_OneHot
-OutputPath=Project Outputs for OBDH_Eng_Model_2_ALT
+OutputPath=
 LogFolderPath=
 ManagedProjectGUID=
 IncludeDesignInRelease=0
@@ -292,23 +292,6 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=GNXFAQYT
 
-[Document16]
-DocumentPath=Sources\0_Architecture.SchDoc
-AnnotationEnabled=1
-AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
-AnnotateSuffix=
-AnnotateScope=All
-AnnotateOrder=-1
-DoLibraryUpdate=1
-DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
-ClassGenCCAutoRoomEnabled=1
-ClassGenNCAutoScope=None
-DItemRevisionGUID=
-GenerateClassCluster=0
-DocumentUniqueId=
-
 [DeviceSheetFolder1]
 Path=C:\Users\Vostro\Desktop\Hardware - Cópia\OBDH_Eng_Model_2_ALT\Sources\
 IncludeSubFolders=0
@@ -360,7 +343,7 @@ SCH_HasExpandLogicalToPhysicalSheets=-1
 SaveSettingsToOutJob=0
 
 [Generic_EDE]
-OutputDir=Project Outputs for OBDH_Eng_Model_2_ALT
+OutputDir=
 
 [OutputGroup1]
 Name=Netlist Outputs
