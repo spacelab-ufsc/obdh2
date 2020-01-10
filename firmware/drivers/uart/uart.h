@@ -64,7 +64,7 @@ typedef enum
  */
 typedef enum
 {
-    UART_ONE_STOP_BIT=1,    /**< One stop bit. */
+    UART_ONE_STOP_BIT=0,    /**< One stop bit. */
     UART_TWO_STOP_BITS      /**< Two stop bits. */
 } uart_stop_bits_e;
 
@@ -73,6 +73,7 @@ typedef enum
  */
 typedef struct
 {
+    uint32_t clock;         /**< Reference clock in Hz. */
     uint32_t baudrate;      /**< Baudrate in bps. */
     uint8_t data_bits;      /**< Data bits length. */
     uint8_t parity;         /**< Parity bits. */
