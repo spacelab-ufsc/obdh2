@@ -60,12 +60,12 @@ typedef struct
 /**
  * \brief I2C port.
  */
-typedef i2c_port_t uint8_t;
+typedef uint8_t i2c_port_t;
 
 /**
  * \brief I2C slave 7-bit address.
  */
-typedef i2c_slave_adr_t uint8_t;
+typedef uint8_t i2c_slave_adr_t;
 
 /**
  * \brief I2C interface initialization.

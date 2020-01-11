@@ -40,6 +40,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define SI446X_PART_INFO        0x4463
+
 /**
  * \brief Si446x modes.
  */

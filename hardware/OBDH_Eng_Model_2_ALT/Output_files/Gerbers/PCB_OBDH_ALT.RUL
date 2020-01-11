@@ -1,0 +1,7 @@
+DRC Rules Export File for PCB: C:\Users\Vostro\Desktop\Hardware\Sources\PCB_OBDH_ALT.PcbDoc
+RuleKind=Width|RuleName=Width_Power|Scope=Board|Minimum=20.00
+RuleKind=Clearance|RuleName=Clearance|Scope=Board|Minimum=7.00
+RuleKind=Width|RuleName=Width|Scope=Board|Minimum=5.00
+RuleKind=SolderMaskExpansion|RuleName=SolderMaskExpansion|Scope=Board|Minimum=7.00
+RuleKind=ShortCircuit|RuleName=ShortCircuit|Scope=Board|Allowed=0
+RuleKind=Clearance|RuleName=Clearance_6|Scope=Board|Minimum=15.00
