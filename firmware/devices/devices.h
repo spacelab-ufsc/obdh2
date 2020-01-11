@@ -37,6 +37,7 @@
 #define DEVICES_H_
 
 #include "logger/logger.h"
+#include "radio/radio.h"
 
 #endif // DEVICES_H_
 

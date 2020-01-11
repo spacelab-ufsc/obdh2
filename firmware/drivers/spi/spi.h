@@ -77,12 +77,12 @@ typedef struct
 /**
  * \brief SPI port type.
  */
-typedef spi_port_t uint8_t;
+typedef uint8_t spi_port_t;
 
 /**
  * \brief SPI chip select type.
  */
-typedef spi_cs_t uint8_t;
+typedef uint8_t spi_cs_t;
 
 /**
  * \brief SPI port initialization.
