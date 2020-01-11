@@ -36,25 +36,33 @@
 
 #include <stdint.h>
 
-#include "../driver/spi.h"
-#include "si446x_spi.h"
+#include <drivers/spi/spi.h>
+
 #include "si446x_config.h"
 #include "si446x_reg.h"
 
-static void si446x_spi_write_byte(uint8_t byte) {
-    spi_tx(RADIO_BASE_ADDRESS, byte);
+uint8_t si446x_spi_transfer(uint8_t byte)
+{
+    uint8_t buf;
+
+    spi_transfer(0, 0, &byte, &buf, 1);
+
+    return buf;
 }
 
-void si446x_spi_write(uint8_t *data, uint16_t size) {
-    spi_tx_multiple(RADIO_BASE_ADDRESS, data, size);
+void si446x_spi_write_byte(uint8_t byte)
+{
+    spi_write(0, 0, &byte, 1);
 }
 
-void si446x_spi_read(uint8_t *data, uint16_t size) {
-    spi_rx_multiple(RADIO_BASE_ADDRESS, data, size);
+void si446x_spi_write(uint8_t *data, uint16_t size)
+{
+    spi_write(0, 0, data, size);
 }
 
-uint8_t si446x_spi_transfer(uint8_t byte) {
-    return spi_tx(RADIO_BASE_ADDRESS, byte);
+void si446x_spi_read(uint8_t *data, uint16_t size)
+{
+    spi_read(0, 0, data, size);
 }
 
 //! \} End of si446x group
