@@ -28,7 +28,7 @@ DItemRevisionGUID=
 ReportSuppressedErrorsInMessages=0
 FSMCodingStyle=eFMSDropDownList_OneProcess
 FSMEncodingStyle=eFMSDropDownList_OneHot
-OutputPath=
+OutputPath=Project Outputs for OBDH_Eng_Model_2_ALT
 LogFolderPath=
 ManagedProjectGUID=
 IncludeDesignInRelease=0
@@ -38,7 +38,7 @@ PrefsVaultGUID=
 PrefsRevisionGUID=
 
 [Document1]
-DocumentPath=Output_files\OBDH_Eng_Model_2_ALT.OutJob
+DocumentPath=Sources\0_Architecture.SchDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -52,7 +52,7 @@ ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
-DocumentUniqueId=
+DocumentUniqueId=VOXHWOPC
 
 [Document2]
 DocumentPath=Sources\1_Interface.SchDoc
@@ -293,7 +293,7 @@ GenerateClassCluster=0
 DocumentUniqueId=GNXFAQYT
 
 [Document16]
-DocumentPath=Sources\0_Architecture.SchDoc
+DocumentPath=Output_files\Output Job File\OBDH_Eng_Model_2_ALT.OutJob
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -307,7 +307,125 @@ ClassGenCCAutoRoomEnabled=1
 ClassGenNCAutoScope=None
 DItemRevisionGUID=
 GenerateClassCluster=0
-DocumentUniqueId=VOXHWOPC
+DocumentUniqueId=
+
+[Document17]
+DocumentPath=Output_files\CAMtastic_Gerbers.cam
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=
+
+[Document18]
+DocumentPath=Output_files\CAMtastic_NCDrills.cam
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=
+
+[GeneratedDocument1]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.DRR
+DItemRevisionGUID=
+
+[GeneratedDocument2]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.EXTREP
+DItemRevisionGUID=
+
+[GeneratedDocument3]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GBL
+DItemRevisionGUID=
+
+[GeneratedDocument4]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GBO
+DItemRevisionGUID=
+
+[GeneratedDocument5]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GBP
+DItemRevisionGUID=
+
+[GeneratedDocument6]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GBS
+DItemRevisionGUID=
+
+[GeneratedDocument7]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GKO
+DItemRevisionGUID=
+
+[GeneratedDocument8]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GM1
+DItemRevisionGUID=
+
+[GeneratedDocument9]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GM13
+DItemRevisionGUID=
+
+[GeneratedDocument10]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GM15
+DItemRevisionGUID=
+
+[GeneratedDocument11]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GM17
+DItemRevisionGUID=
+
+[GeneratedDocument12]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GPB
+DItemRevisionGUID=
+
+[GeneratedDocument13]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GPT
+DItemRevisionGUID=
+
+[GeneratedDocument14]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GTL
+DItemRevisionGUID=
+
+[GeneratedDocument15]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GTO
+DItemRevisionGUID=
+
+[GeneratedDocument16]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GTP
+DItemRevisionGUID=
+
+[GeneratedDocument17]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GTS
+DItemRevisionGUID=
+
+[GeneratedDocument18]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.LDP
+DItemRevisionGUID=
+
+[GeneratedDocument19]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.REP
+DItemRevisionGUID=
+
+[GeneratedDocument20]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.RUL
+DItemRevisionGUID=
+
+[GeneratedDocument21]
+DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.TXT
+DItemRevisionGUID=
 
 [DeviceSheetFolder1]
 Path=C:\Users\Vostro\Desktop\Hardware - Cópia\OBDH_Eng_Model_2_ALT\Sources\
@@ -360,7 +478,7 @@ SCH_HasExpandLogicalToPhysicalSheets=-1
 SaveSettingsToOutJob=0
 
 [Generic_EDE]
-OutputDir=
+OutputDir=Project Outputs for OBDH_Eng_Model_2_ALT
 
 [OutputGroup1]
 Name=Netlist Outputs
@@ -591,7 +709,7 @@ PageOptions3=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintS
 [OutputGroup5]
 Name=Fabrication Outputs
 Description=
-TargetPrinter=Foxit Reader PDF Printer
+TargetPrinter=Enviar para o OneNote 2010
 PrinterOptions=Record=PrinterOptions|Copies=1|Duplex=1|TrueTypeOptions=3|Collate=1|PrintJobKind=1|PrintWhat=1
 OutputType1=CompositeDrill
 OutputName1=Composite Drill Drawing
@@ -760,8 +878,10 @@ OutputName8=NC Drill Files
 OutputDocumentPath8=
 OutputVariantName8=
 OutputDefault8=0
-Configuration8_Name1=OutputConfigurationParameter1
-Configuration8_Item1=BoardEdgeRoutToolDia=2000000|GenerateBoardEdgeRout=False|GenerateDrilledSlotsG85=False|GenerateEIADrillFile=False|GenerateSeparatePlatedNonPlatedFiles=False|NumberOfDecimals=5|NumberOfUnits=2|OptimizeChangeLocationCommands=True|OriginPosition=Relative|Record=DrillView|Units=Imperial|ZeroesMode=SuppressTrailingZeroes
+Configuration8_Name1=ForceUpdateSettings
+Configuration8_Item1=False
+Configuration8_Name2=OutputConfigurationParameter1
+Configuration8_Item2=BoardEdgeRoutToolDia=2000000|GenerateBoardEdgeRout=False|GenerateDrilledSlotsG85=False|GenerateEIADrillFile=False|GenerateSeparatePlatedNonPlatedFiles=False|NumberOfDecimals=4|NumberOfUnits=4|OptimizeChangeLocationCommands=True|OriginPosition=Relative|Record=DrillView|Units=Metric|ZeroesMode=SuppressTrailingZeroes
 OutputType9=IPC2581
 OutputName9=IPC-2581 Files
 OutputDocumentPath9=
@@ -783,13 +903,15 @@ OutputName12=Gerber Files
 OutputDocumentPath12=
 OutputVariantName12=[No Variations]
 OutputDefault12=0
-Configuration12_Name1=OutputConfigurationParameter1
-Configuration12_Item1=AddToAllLayerClasses.Set= |AddToAllPlots.Set=SerializeLayerHash.Version~2,ClassName~TLayerToBoolean|CentrePlots=False|DrillDrawingSymbol=GraphicsSymbol|DrillDrawingSymbolSize=200000|EmbeddedApertures=True|FilmBorderSize=10000000|FilmXSize=200000000|FilmYSize=160000000|FlashAllFills=False|FlashPadShapes=True|G54OnApertureChange=False|GenerateDRCRulesFile=True|GenerateDRCRulesFile=True|GenerateReliefShapes=True|GerberUnit=Metric|GerberUnit=Metric|IncludeUnconnectedMidLayerPads=False|LayerClassesMirror.Set= |LayerClassesPlot.Set= |LeadingAndTrailingZeroesMode=SuppressLeadingZeroes|MaxApertureSize=2500000|MinusApertureTolerance=39|MinusApertureTolerance=39|Mirror.Set=SerializeLayerHash.Version~2,ClassName~TLayerToBoolean|MirrorDrillDrawingPlots=False|MirrorDrillGuidePlots=False|NoRegularPolygons=False|NumberOfDecimals=4|NumberOfDecimals=4|OptimizeChangeLocationCommands=True|OptimizeChangeLocationCommands=True|OriginPosition=Relative|Panelize=False|Plot.Set=SerializeLayerHash.Version~2,ClassName~TLayerToBoolean,16973830~1,16973832~1,16973834~1,16777217~1,16842751~1,16973835~1,16973833~1,16973831~1,16908289~1,16908301~1,16908303~1,16908305~1,16973837~1,16973848~1,16973849~1|PlotPositivePlaneLayers=False|PlotUsedDrillDrawingLayerPairs=False|PlotUsedDrillGuideLayerPairs=False|PlusApertureTolerance=39|PlusApertureTolerance=39|Record=GerberView|SoftwareArcs=False|Sorted=False|Sorted=False
+Configuration12_Name1=ForceUpdateSettings
+Configuration12_Item1=False
+Configuration12_Name2=OutputConfigurationParameter1
+Configuration12_Item2=AddToAllLayerClasses.Set= |AddToAllPlots.Set=SerializeLayerHash.Version~2,ClassName~TLayerToBoolean|CentrePlots=False|DrillDrawingSymbol=GraphicsSymbol|DrillDrawingSymbolSize=200000|EmbeddedApertures=True|FilmBorderSize=10000000|FilmXSize=200000000|FilmYSize=160000000|FlashAllFills=False|FlashPadShapes=True|G54OnApertureChange=False|GenerateDRCRulesFile=True|GenerateDRCRulesFile=True|GenerateReliefShapes=True|GerberUnit=Metric|GerberUnit=Metric|IncludeUnconnectedMidLayerPads=False|LayerClassesMirror.Set= |LayerClassesPlot.Set= |LeadingAndTrailingZeroesMode=SuppressLeadingZeroes|MaxApertureSize=2500000|MinusApertureTolerance=39|MinusApertureTolerance=39|Mirror.Set=SerializeLayerHash.Version~2,ClassName~TLayerToBoolean|MirrorDrillDrawingPlots=False|MirrorDrillGuidePlots=False|NoRegularPolygons=False|NumberOfDecimals=4|NumberOfDecimals=4|OptimizeChangeLocationCommands=True|OptimizeChangeLocationCommands=True|OriginPosition=Relative|Panelize=False|Plot.Set=SerializeLayerHash.Version~2,ClassName~TLayerToBoolean,16973830~1,16973832~1,16973834~1,16777217~1,16842751~1,16973835~1,16973833~1,16973831~1,16908289~1,16908301~1,16908303~1,16908305~1,16973837~1,16973848~1,16973849~1|PlotPositivePlaneLayers=False|PlotUsedDrillDrawingLayerPairs=False|PlotUsedDrillGuideLayerPairs=False|PlusApertureTolerance=39|PlusApertureTolerance=39|Record=GerberView|SoftwareArcs=False|Sorted=False|Sorted=False
 
 [OutputGroup6]
 Name=Report Outputs
 Description=
-TargetPrinter=Foxit Reader PDF Printer
+TargetPrinter=Enviar para o OneNote 2010
 PrinterOptions=Record=PrinterOptions|Copies=1|Duplex=1|TrueTypeOptions=3|Collate=1|PrintJobKind=1|PrintWhat=1
 OutputType1=Script
 OutputName1=Script Output
@@ -818,16 +940,18 @@ Configuration4_Name1=ColumnNameFormat
 Configuration4_Item1=CaptionAsName
 Configuration4_Name2=Filter
 Configuration4_Item2=545046300E5446696C74657257726170706572000D46696C7465722E416374697665090F46696C7465722E43726974657269610A04000000000000000000
-Configuration4_Name3=General
-Configuration4_Item3=OpenExported=False|AddToProject=False|ForceFit=False|NotFitted=False|Database=False|DatabasePriority=False|IncludePCBData=True|IncludeVaultData=False|IncludeAlternatives=False|ShowExportOptions=True|TemplateFilename=C:\Users\sara\Documents\BOM Default Template.xlsx|BatchMode=5|FormWidth=950|FormHeight=661|SupplierProdQty=1|SupplierAutoQty=False|SupplierUseCachedPricing=False|SupplierCurrency=<none>
-Configuration4_Name4=GroupOrder
-Configuration4_Item4=Comment=True|Footprint=True
-Configuration4_Name5=OutputConfigurationParameter1
-Configuration4_Item5=atZ=0|QuatW=1|Zoom=2.64731593652563E-5|UnitsPercent=True|UnitsDPI=True|LockResAspect=True|ViewConfigType=.config_3d|CustomCamera=False|ViewFromTop=False|ViewConfig=
-Configuration4_Name6=SortOrder
-Configuration4_Item6=Designator=Up|Comment=Up|Footprint=Up
-Configuration4_Name7=VisibleOrder
-Configuration4_Item7=Comment=100|Description=100|Designator=100|Footprint=100|LibRef=100|Partnumber=100|Quantity=100
+Configuration4_Name3=ForceUpdateSettings
+Configuration4_Item3=False
+Configuration4_Name4=General
+Configuration4_Item4=OpenExported=False|AddToProject=False|ForceFit=False|NotFitted=False|Database=False|DatabasePriority=False|IncludePCBData=True|IncludeVaultData=False|IncludeAlternatives=False|ShowExportOptions=True|TemplateFilename=C:\Users\Public\Documents\Altium\AD18\Templates\BOM Default Template.XLT|BatchMode=5|FormWidth=1169|FormHeight=812|SupplierProdQty=1|SupplierAutoQty=False|SupplierUseCachedPricing=False|SupplierCurrency=<none>|ViewType=0
+Configuration4_Name5=GroupOrder
+Configuration4_Item5=Comment=True|Footprint=True
+Configuration4_Name6=OutputConfigurationParameter1
+Configuration4_Item6=atZ=0|QuatW=1|Zoom=2.64731593652563E-5|UnitsPercent=True|UnitsDPI=True|LockResAspect=True|ViewConfigType=.config_3d|CustomCamera=False|ViewFromTop=False|ViewConfig=
+Configuration4_Name7=SortOrder
+Configuration4_Item7=Designator=Up|Comment=Up|Footprint=Up
+Configuration4_Name8=VisibleOrder
+Configuration4_Item8=Comment=100|Description=100|Designator=100|Footprint=100|LibRef=100|Partnumber=100|Quantity=100
 OutputType5=ComponentCrossReference
 OutputName5=Component Cross Reference Report
 OutputDocumentPath5=

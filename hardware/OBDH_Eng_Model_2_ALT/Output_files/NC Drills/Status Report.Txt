@@ -1,0 +1,12 @@
+Output: NC Drill Files
+Type  : NC Drill
+From  : Project [OBDH_Eng_Model_2_ALT.PrjPcb]
+   Generated File[PCB_OBDH_ALT.TXT]
+   Generated File[PCB_OBDH_ALT.LDP]
+   Generated File[PCB_OBDH_ALT.DRR]
+
+
+Files Generated   : 3
+Documents Printed : 0
+
+Finished Output Generation At 00:26:55 On 11/01/2020
