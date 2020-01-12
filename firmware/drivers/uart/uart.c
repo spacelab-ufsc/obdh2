@@ -41,7 +41,7 @@ int uart_init(uart_port_t port, uart_config_t config)
 {
     USCI_A_UART_initParam uart_params = {0};
 
-    uart_params.selecClockSource    = USCI_A_UART_CLOCKSOURCE_SMCLK;
+    uart_params.selectClockSource   = USCI_A_UART_CLOCKSOURCE_SMCLK;
     uart_params.clockPrescalar      = 8;    // 115200 bps @ 16 MHz
     uart_params.firstModReg         = 11;   // 115200 bps @ 16 MHz
     uart_params.secondModReg        = 0;    // 115200 bps @ 16 MHz
@@ -61,7 +61,7 @@ int uart_init(uart_port_t port, uart_config_t config)
         default:            return -1;
     }
 
-    if (USCI_A_UART_init(base_address, &param) != STATUS_SUCCESS)
+    if (USCI_A_UART_init(base_address, &uart_params) != STATUS_SUCCESS)
     {
         return -1;
     }
