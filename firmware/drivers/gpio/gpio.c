@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * gpio.c
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,30 +21,33 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief GPIO driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 26/10/2019
+ * \date 13/01/2020
  * 
- * \defgroup drivers Drivers
+ * \addtogroup gpio
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#include "gpio.h"
 
-#include "edc/edc.h"
-#include "i2c/i2c.h"
-#include "isis_antenna/isis_antenna.h"
-#include "mt25ql01gbbb/mt25ql01gbbb.h"
-#include "spi/spi.h"
-#include "si446x/si446x.h"
-#include "uart/uart.h"
-#include "gpio/gpio.h"
+int gpio_init(gpio_pin_t pin, gpio_config_t config)
+{
+    return -1;
+}
 
-#endif // DRIVERS_H_
+int gpio_set_state(gpio_pin_t pin, bool level)
+{
+    return -1;
+}
 
-//! \} End of drivers group
+int gpio_get_state(gpio_pin_t pin)
+{
+    return -1;
+}
+
+//! \} End of gpio group
