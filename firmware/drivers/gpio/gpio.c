@@ -316,4 +316,90 @@ int gpio_get_state(gpio_pin_t pin)
     }
 }
 
+int gpio_toggle(gpio_pin_t pin)
+{
+    uint8_t msp_port;
+    uint16_t msp_pin;
+
+    switch(pin)
+    {
+        case GPIO_PIN_0:    msp_port = GPIO_PORT_P1;    msp_pin = GPIO_PIN0;    break;
+        case GPIO_PIN_1:    msp_port = GPIO_PORT_P1;    msp_pin = GPIO_PIN1;    break;
+        case GPIO_PIN_2:    msp_port = GPIO_PORT_P1;    msp_pin = GPIO_PIN2;    break;
+        case GPIO_PIN_3:    msp_port = GPIO_PORT_P1;    msp_pin = GPIO_PIN3;    break;
+        case GPIO_PIN_4:    msp_port = GPIO_PORT_P1;    msp_pin = GPIO_PIN4;    break;
+        case GPIO_PIN_5:    msp_port = GPIO_PORT_P1;    msp_pin = GPIO_PIN5;    break;
+        case GPIO_PIN_6:    msp_port = GPIO_PORT_P1;    msp_pin = GPIO_PIN6;    break;
+        case GPIO_PIN_7:    msp_port = GPIO_PORT_P1;    msp_pin = GPIO_PIN7;    break;
+        case GPIO_PIN_8:    msp_port = GPIO_PORT_P2;    msp_pin = GPIO_PIN0;    break;
+        case GPIO_PIN_9:    msp_port = GPIO_PORT_P2;    msp_pin = GPIO_PIN1;    break;
+        case GPIO_PIN_10:   msp_port = GPIO_PORT_P2;    msp_pin = GPIO_PIN2;    break;
+        case GPIO_PIN_11:   msp_port = GPIO_PORT_P2;    msp_pin = GPIO_PIN3;    break;
+        case GPIO_PIN_12:   msp_port = GPIO_PORT_P2;    msp_pin = GPIO_PIN4;    break;
+        case GPIO_PIN_13:   msp_port = GPIO_PORT_P2;    msp_pin = GPIO_PIN5;    break;
+        case GPIO_PIN_14:   msp_port = GPIO_PORT_P2;    msp_pin = GPIO_PIN6;    break;
+        case GPIO_PIN_15:   msp_port = GPIO_PORT_P2;    msp_pin = GPIO_PIN7;    break;
+        case GPIO_PIN_16:   msp_port = GPIO_PORT_P3;    msp_pin = GPIO_PIN0;    break;
+        case GPIO_PIN_17:   msp_port = GPIO_PORT_P3;    msp_pin = GPIO_PIN1;    break;
+        case GPIO_PIN_18:   msp_port = GPIO_PORT_P3;    msp_pin = GPIO_PIN2;    break;
+        case GPIO_PIN_19:   msp_port = GPIO_PORT_P3;    msp_pin = GPIO_PIN3;    break;
+        case GPIO_PIN_20:   msp_port = GPIO_PORT_P3;    msp_pin = GPIO_PIN4;    break;
+        case GPIO_PIN_21:   msp_port = GPIO_PORT_P3;    msp_pin = GPIO_PIN5;    break;
+        case GPIO_PIN_22:   msp_port = GPIO_PORT_P3;    msp_pin = GPIO_PIN6;    break;
+        case GPIO_PIN_23:   msp_port = GPIO_PORT_P3;    msp_pin = GPIO_PIN7;    break;
+        case GPIO_PIN_24:   msp_port = GPIO_PORT_P4;    msp_pin = GPIO_PIN0;    break;
+        case GPIO_PIN_25:   msp_port = GPIO_PORT_P4;    msp_pin = GPIO_PIN1;    break;
+        case GPIO_PIN_26:   msp_port = GPIO_PORT_P4;    msp_pin = GPIO_PIN2;    break;
+        case GPIO_PIN_27:   msp_port = GPIO_PORT_P4;    msp_pin = GPIO_PIN3;    break;
+        case GPIO_PIN_28:   msp_port = GPIO_PORT_P4;    msp_pin = GPIO_PIN4;    break;
+        case GPIO_PIN_29:   msp_port = GPIO_PORT_P4;    msp_pin = GPIO_PIN5;    break;
+        case GPIO_PIN_30:   msp_port = GPIO_PORT_P4;    msp_pin = GPIO_PIN6;    break;
+        case GPIO_PIN_31:   msp_port = GPIO_PORT_P4;    msp_pin = GPIO_PIN7;    break;
+        case GPIO_PIN_32:   msp_port = GPIO_PORT_P5;    msp_pin = GPIO_PIN0;    break;
+        case GPIO_PIN_33:   msp_port = GPIO_PORT_P5;    msp_pin = GPIO_PIN1;    break;
+        case GPIO_PIN_34:   msp_port = GPIO_PORT_P5;    msp_pin = GPIO_PIN2;    break;
+        case GPIO_PIN_35:   msp_port = GPIO_PORT_P5;    msp_pin = GPIO_PIN3;    break;
+        case GPIO_PIN_36:   msp_port = GPIO_PORT_P5;    msp_pin = GPIO_PIN4;    break;
+        case GPIO_PIN_37:   msp_port = GPIO_PORT_P5;    msp_pin = GPIO_PIN5;    break;
+        case GPIO_PIN_38:   msp_port = GPIO_PORT_P5;    msp_pin = GPIO_PIN6;    break;
+        case GPIO_PIN_39:   msp_port = GPIO_PORT_P5;    msp_pin = GPIO_PIN7;    break;
+        case GPIO_PIN_40:   msp_port = GPIO_PORT_P6;    msp_pin = GPIO_PIN0;    break;
+        case GPIO_PIN_41:   msp_port = GPIO_PORT_P6;    msp_pin = GPIO_PIN1;    break;
+        case GPIO_PIN_42:   msp_port = GPIO_PORT_P6;    msp_pin = GPIO_PIN2;    break;
+        case GPIO_PIN_43:   msp_port = GPIO_PORT_P6;    msp_pin = GPIO_PIN3;    break;
+        case GPIO_PIN_44:   msp_port = GPIO_PORT_P6;    msp_pin = GPIO_PIN4;    break;
+        case GPIO_PIN_45:   msp_port = GPIO_PORT_P6;    msp_pin = GPIO_PIN5;    break;
+        case GPIO_PIN_46:   msp_port = GPIO_PORT_P6;    msp_pin = GPIO_PIN6;    break;
+        case GPIO_PIN_47:   msp_port = GPIO_PORT_P6;    msp_pin = GPIO_PIN7;    break;
+        case GPIO_PIN_48:   msp_port = GPIO_PORT_P7;    msp_pin = GPIO_PIN2;    break;
+        case GPIO_PIN_49:   msp_port = GPIO_PORT_P7;    msp_pin = GPIO_PIN3;    break;
+        case GPIO_PIN_50:   msp_port = GPIO_PORT_P7;    msp_pin = GPIO_PIN4;    break;
+        case GPIO_PIN_51:   msp_port = GPIO_PORT_P7;    msp_pin = GPIO_PIN5;    break;
+        case GPIO_PIN_52:   msp_port = GPIO_PORT_P7;    msp_pin = GPIO_PIN6;    break;
+        case GPIO_PIN_53:   msp_port = GPIO_PORT_P7;    msp_pin = GPIO_PIN7;    break;
+        case GPIO_PIN_54:   msp_port = GPIO_PORT_P8;    msp_pin = GPIO_PIN0;    break;
+        case GPIO_PIN_55:   msp_port = GPIO_PORT_P8;    msp_pin = GPIO_PIN1;    break;
+        case GPIO_PIN_56:   msp_port = GPIO_PORT_P8;    msp_pin = GPIO_PIN2;    break;
+        case GPIO_PIN_57:   msp_port = GPIO_PORT_P8;    msp_pin = GPIO_PIN3;    break;
+        case GPIO_PIN_58:   msp_port = GPIO_PORT_P8;    msp_pin = GPIO_PIN4;    break;
+        case GPIO_PIN_59:   msp_port = GPIO_PORT_P8;    msp_pin = GPIO_PIN5;    break;
+        case GPIO_PIN_60:   msp_port = GPIO_PORT_P8;    msp_pin = GPIO_PIN6;    break;
+        case GPIO_PIN_61:   msp_port = GPIO_PORT_P8;    msp_pin = GPIO_PIN7;    break;
+        case GPIO_PIN_62:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN0;    break;
+        case GPIO_PIN_63:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN1;    break;
+        case GPIO_PIN_64:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN2;    break;
+        case GPIO_PIN_65:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN3;    break;
+        case GPIO_PIN_66:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN4;    break;
+        case GPIO_PIN_67:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN5;    break;
+        case GPIO_PIN_68:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN6;    break;
+        case GPIO_PIN_69:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN7;    break;
+        default:
+            return -1;  // Invalid GPIO pin
+    }
+
+    GPIO_toggleOutputOnPin(msp_port, msp_pin);
+
+    return 0;
+}
+
 //! \} End of gpio group
