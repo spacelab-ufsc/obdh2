@@ -76,7 +76,47 @@ typedef enum
     GPIO_PIN_26,            /**< GPIO pin 26. */
     GPIO_PIN_27,            /**< GPIO pin 27. */
     GPIO_PIN_28,            /**< GPIO pin 28. */
-    GPIO_PIN_29             /**< GPIO pin 29. */
+    GPIO_PIN_29,            /**< GPIO pin 29. */
+    GPIO_PIN_30,            /**< GPIO pin 30. */
+    GPIO_PIN_31,            /**< GPIO pin 31. */
+    GPIO_PIN_32,            /**< GPIO pin 32. */
+    GPIO_PIN_33,            /**< GPIO pin 33. */
+    GPIO_PIN_34,            /**< GPIO pin 34. */
+    GPIO_PIN_35,            /**< GPIO pin 35. */
+    GPIO_PIN_36,            /**< GPIO pin 36. */
+    GPIO_PIN_37,            /**< GPIO pin 37. */
+    GPIO_PIN_38,            /**< GPIO pin 38. */
+    GPIO_PIN_39,            /**< GPIO pin 39. */
+    GPIO_PIN_40,            /**< GPIO pin 40. */
+    GPIO_PIN_41,            /**< GPIO pin 41. */
+    GPIO_PIN_42,            /**< GPIO pin 42. */
+    GPIO_PIN_43,            /**< GPIO pin 43. */
+    GPIO_PIN_44,            /**< GPIO pin 44. */
+    GPIO_PIN_45,            /**< GPIO pin 45. */
+    GPIO_PIN_46,            /**< GPIO pin 46. */
+    GPIO_PIN_47,            /**< GPIO pin 47. */
+    GPIO_PIN_48,            /**< GPIO pin 48. */
+    GPIO_PIN_49,            /**< GPIO pin 49. */
+    GPIO_PIN_50,            /**< GPIO pin 50. */
+    GPIO_PIN_51,            /**< GPIO pin 51. */
+    GPIO_PIN_52,            /**< GPIO pin 52. */
+    GPIO_PIN_53,            /**< GPIO pin 53. */
+    GPIO_PIN_54,            /**< GPIO pin 54. */
+    GPIO_PIN_55,            /**< GPIO pin 55. */
+    GPIO_PIN_56,            /**< GPIO pin 56. */
+    GPIO_PIN_57,            /**< GPIO pin 57. */
+    GPIO_PIN_58,            /**< GPIO pin 58. */
+    GPIO_PIN_59,            /**< GPIO pin 59. */
+    GPIO_PIN_60,            /**< GPIO pin 60. */
+    GPIO_PIN_61,            /**< GPIO pin 61. */
+    GPIO_PIN_62,            /**< GPIO pin 62. */
+    GPIO_PIN_63,            /**< GPIO pin 63. */
+    GPIO_PIN_64,            /**< GPIO pin 64. */
+    GPIO_PIN_65,            /**< GPIO pin 65. */
+    GPIO_PIN_66,            /**< GPIO pin 66. */
+    GPIO_PIN_67,            /**< GPIO pin 67. */
+    GPIO_PIN_68,            /**< GPIO pin 68. */
+    GPIO_PIN_69             /**< GPIO pin 69. */
 } gpio_pins_e;
 
 /**
