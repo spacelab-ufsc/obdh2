@@ -44,11 +44,13 @@
  */
 typedef struct
 {
-    gpio_pin_t wdi_pin;
+    gpio_pin_t wdi_pin;     /**< WDI pin. */
 } tps382x_config_t;
 
 /**
  * \brief TPS382x initialization routine.
+ *
+ * This function configures the WDI pin as an GPIO output pin.
  *
  * \param[in] config is the configuration parameters of the TPS382x driver.
  *
@@ -58,6 +60,11 @@ int tps382x_init(tps382x_config_t config);
 
 /**
  * \brief Triggers the WDI pin of the device by toggling a GPIO pin.
+ *
+ * If WDI remains high or low longer than the timeout period, then reset is triggered.
+ * The timer clears when reset is asserted or when WDI sees a rising edge or a falling edge.
+ *
+ * \see SLVS165L - TPS382x Voltage Monitor With Watchdog Timer.
  *
  * \param[in] config is the configuration parameters of the TPS382x driver.
  *
