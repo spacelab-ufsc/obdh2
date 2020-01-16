@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * tps382x.h
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,31 +21,50 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief TPS382x driver definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 26/10/2019
+ * \date 15/01/2020
  * 
- * \defgroup drivers Drivers
+ * \defgroup tps382x TPS382x
+ * \ingroup drivers
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#ifndef TPS382X_H_
+#define TPS382X_H_
 
-#include "edc/edc.h"
-#include "i2c/i2c.h"
-#include "isis_antenna/isis_antenna.h"
-#include "mt25ql01gbbb/mt25ql01gbbb.h"
-#include "spi/spi.h"
-#include "si446x/si446x.h"
-#include "uart/uart.h"
-#include "gpio/gpio.h"
-#include "tps382x/tps382x.h"
+#include <drivers/gpio/gpio.h>
 
-#endif // DRIVERS_H_
+/**
+ * \brief TPS382x configuration.
+ */
+typedef struct
+{
+    gpio_pin_t wdi_pin;
+} tps382x_config_t;
 
-//! \} End of drivers group
+/**
+ * \brief TPS382x initialization routine.
+ *
+ * \param[in] config is the configuration parameters of the TPS382x driver.
+ *
+ * \return The status/error code.
+ */
+int tps382x_init(tps382x_config_t config);
+
+/**
+ * \brief Triggers the WDI pin of the device by toggling a GPIO pin.
+ *
+ * \param[in] config is the configuration parameters of the TPS382x driver.
+ *
+ * \return None.
+ */
+void tps271x_trigger(tps382x_config_t config);
+
+#endif // TPS382X_H_
+
+//! \} End of tps382x group
