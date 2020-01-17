@@ -246,6 +246,24 @@ MSP430F6659.
     \label{tab:mcu-pinout}
 \end{table}
 
+\section{External Watchdog}
+
+Additionally to the internal watchdog timer of the microcontroller, to ensure a system reset in case of a software freeze, an external watchdog circuit is being used. For that, the TPS3823 IC from Texas Instruments was chosen. This IC is a voltage monitor with a watchdog timer circuit.
+
+This circuit works this way: if the WDI pin remains high or low longer than the timeout period, then reset is triggered. The timer clears when reset is asserted or when WDI sees a rising edge or a falling edge.
+
+The watchdog timer task clears the TPS3823 timer by toggling the WDI pin at every 100 ms. If the WDI pin state stays unmodified for more than 1600 ms, the reset pin is cleared and the microcontroller is reseted.
+
+This circuit can be seen in the \autoref{fig:ext-wdt-circuit}.
+
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=0.75\textwidth]{figures/ext-watchdog-circuit.png}
+        \caption{External watchdog timer circuit.}
+        \label{fig:ext-wdt-circuit}
+    \end{center}
+\end{figure}
+
 \section{Non-Volatile Memory}
 
 The non-volatile memory is composed by a NOR flash memory with 1 Gb of capacity (or 128 MB). The used model is the Micron MT25QL01GBBB.
