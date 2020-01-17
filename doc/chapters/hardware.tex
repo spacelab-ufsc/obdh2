@@ -144,107 +144,104 @@ MSP430F6659.
 
 \subsection{Pinout}
 
-\begin{table}[!h]
-    \centering
-    \begin{tabular}{lcl}
-        \toprule[1.5pt]
-        \textit{Pin Code} & \textit{Pin Number} & \textit{Signal}       \\
-        \midrule
-        P1.0              & 34                  & MAIN\_RADIO\_ENABLE   \\
-        P1.1              & 35                  & MAIN\_RADIO\_GPIO0    \\
-        P1.2              & 36                  & MAIN\_RADIO\_GPIO1    \\
-        P1.3              & 37                  & MAIN\_RADIO\_GPIO2    \\
-        P1.4              & 38                  & MAIN\_RADIO\_RESET    \\
-        P1.5              & 39                  & MAIN\_RADIO\_SPI\_CS  \\
-        P1.6              & 40                  & TTC\_MCU\_SPI\_CS     \\
-        P1.7              & 41                  & -                     \\
-        \midrule
-        P2.0              & 17                  & SPI\_CLK              \\
-        P2.1              & 18                  & I2C0\_SDA             \\
-        P2.2              & 19                  & I2C0\_SCL             \\
-        P2.3              & 20                  & -                     \\
-        P2.4              & 21                  & SPI\_MOSI             \\
-        P2.5              & 22                  & SPI\_MISO             \\
-        P2.6              & 23                  & -                     \\
-        P2.7              & 24                  & -                     \\
-        \midrule
-        P3.0              & 42                  & I2C0\_EN              \\
-        P3.1              & 43                  & I2C1\_EN              \\
-        P3.2              & 44                  & I2C2\_EN              \\
-        P3.3              & 45                  & I2C0\_READY           \\
-        P3.4              & 46                  & I2C1\_READY           \\
-        P3.5              & 47                  & I2C2\_READY           \\
-        P3.6              & 48                  & PC104\_GPIO0          \\
-        P3.7              & 49                  & PC104\_GPIO1          \\
-        \midrule
-        P4.0              & 50                  & PC104\_GPIO2          \\
-        P4.1              & 51                  & PC104\_GPIO3          \\
-        P4.2              & 52                  & MEM\_HOLD             \\
-        P4.3              & 53                  & MEM\_RESET            \\
-        P4.4              & 54                  & MEM\_SPI\_CS          \\
-        P4.5              & 55                  & -                     \\
-        P4.6              & 56                  & -                     \\
-        P4.7              & 57                  & -                     \\
-        \midrule
-        P5.0              & 9                   & VREF                  \\
-        P5.1              & 10                  & AGND                  \\
-        P5.2              & 28                  & SYSTEM\_FAULT\_LED    \\
-        P5.3              & 31                  & SYSTEM\_LED           \\
-        P5.4              & 32                  & PAYLOAD\_0\_ENABLE    \\
-        P5.5              & 33                  & PAYLOAD\_1\_ENABLE    \\
-        P5.6              & 16                  & -                     \\
-        P5.7              & 88                  & -                     \\
-        \midrule
-        P6.0              & 97                  & D\_BOARD\_ADC0        \\
-        P6.1              & 98                  & D\_BOARD\_ADC1        \\
-        P6.2              & 99                  & D\_BOARD\_ADC2        \\
-        P6.3              & 100                 & OBDH\_CURRENT\_ADC    \\
-        P6.4              & 1                   & OBDH\_VOLTAGE\_ADC    \\
-        P6.5              & 2                   & D\_BOARD\_SPI\_CS0    \\
-        P6.6              & 3                   & D\_BOARD\_SPI\_CS1    \\
-        P6.7              & 4                   & -                     \\
-        \midrule
-        P7.0              & -                   & -                     \\
-        P7.1              & -                   & -                     \\
-        P7.2              & 84                  & XT2\_N                \\
-        P7.3              & 85                  & XT2\_P                \\
-        P7.4              & 5                   & D\_BOARD\_GPIO0       \\
-        P7.5              & 6                   & D\_BOARD\_GPIO1       \\
-        P7.6              & 7                   & D\_BOARD\_GPIO2       \\
-        P7.7              & 8                   & D\_BOARD\_GPIO3       \\
-        \midrule
-        P8.0              & 58                  & -                     \\
-        P8.1              & 59                  & -                     \\
-        P8.2              & 60                  & UART1\_TX             \\
-        P8.3              & 61                  & UART1\_RX             \\
-        P8.4              & 62                  & -                     \\
-        P8.5              & 65                  & I2C1\_SDA             \\
-        P8.6              & 66                  & I2C1\_SCL             \\
-        P8.7              & 67                  & ANTENNA\_GPIO         \\
-        \midrule
-        P9.0              & 68                  & -                     \\
-        P9.1              & 69                  & -                     \\
-        P9.2              & 70                  & UART0\_TX             \\
-        P9.3              & 71                  & UART0\_RX             \\
-        P9.4              & 72                  & WDI\_EXT              \\
-        P9.5              & 73                  & I2C2\_SDA             \\
-        P9.6              & 74                  & I2C2\_SCL             \\
-        P9.7              & 75                  & MR\_WDOG              \\
-        \midrule
-        PJ.0              & 92                  & TP21                  \\
-        PJ.1              & 93                  & TP22                  \\
-        PJ.2              & 94                  & TP23                  \\
-        PJ.3              & 95                  & TP24                  \\
-        \midrule
-        -                 & 13                  & XT1IN                 \\
-        -                 & 14                  & XT1OUT                \\
-        -                 & 96                  & JTAG\_TDO\_TDI        \\
-        -                 & 91                  & JTAG\_TCK             \\
-        \bottomrule[1.5pt]
-    \end{tabular}
+\begin{longtable}{lcl}
+    \toprule[1.5pt]
+    \textit{Pin Code} & \textit{Pin Number} & \textit{Signal}       \\
+    \midrule
+    P1.0              & 34                  & MAIN\_RADIO\_ENABLE   \\
+    P1.1              & 35                  & MAIN\_RADIO\_GPIO0    \\
+    P1.2              & 36                  & MAIN\_RADIO\_GPIO1    \\
+    P1.3              & 37                  & MAIN\_RADIO\_GPIO2    \\
+    P1.4              & 38                  & MAIN\_RADIO\_RESET    \\
+    P1.5              & 39                  & MAIN\_RADIO\_SPI\_CS  \\
+    P1.6              & 40                  & TTC\_MCU\_SPI\_CS     \\
+    P1.7              & 41                  & -                     \\
+    \midrule
+    P2.0              & 17                  & SPI\_CLK              \\
+    P2.1              & 18                  & I2C0\_SDA             \\
+    P2.2              & 19                  & I2C0\_SCL             \\
+    P2.3              & 20                  & -                     \\
+    P2.4              & 21                  & SPI\_MOSI             \\
+    P2.5              & 22                  & SPI\_MISO             \\
+    P2.6              & 23                  & -                     \\
+    P2.7              & 24                  & -                     \\
+    \midrule
+    P3.0              & 42                  & I2C0\_EN              \\
+    P3.1              & 43                  & I2C1\_EN              \\
+    P3.2              & 44                  & I2C2\_EN              \\
+    P3.3              & 45                  & I2C0\_READY           \\
+    P3.4              & 46                  & I2C1\_READY           \\
+    P3.5              & 47                  & I2C2\_READY           \\
+    P3.6              & 48                  & PC104\_GPIO0          \\
+    P3.7              & 49                  & PC104\_GPIO1          \\
+    \midrule
+    P4.0              & 50                  & PC104\_GPIO2          \\
+    P4.1              & 51                  & PC104\_GPIO3          \\
+    P4.2              & 52                  & MEM\_HOLD             \\
+    P4.3              & 53                  & MEM\_RESET            \\
+    P4.4              & 54                  & MEM\_SPI\_CS          \\
+    P4.5              & 55                  & -                     \\
+    P4.6              & 56                  & -                     \\
+    P4.7              & 57                  & -                     \\
+    \midrule
+    P5.0              & 9                   & VREF                  \\
+    P5.1              & 10                  & AGND                  \\
+    P5.2              & 28                  & SYSTEM\_FAULT\_LED    \\
+    P5.3              & 31                  & SYSTEM\_LED           \\
+    P5.4              & 32                  & PAYLOAD\_0\_ENABLE    \\
+    P5.5              & 33                  & PAYLOAD\_1\_ENABLE    \\
+    P5.6              & 16                  & -                     \\
+    P5.7              & 88                  & -                     \\
+    \midrule
+    P6.0              & 97                  & D\_BOARD\_ADC0        \\
+    P6.1              & 98                  & D\_BOARD\_ADC1        \\
+    P6.2              & 99                  & D\_BOARD\_ADC2        \\
+    P6.3              & 100                 & OBDH\_CURRENT\_ADC    \\
+    P6.4              & 1                   & OBDH\_VOLTAGE\_ADC    \\
+    P6.5              & 2                   & D\_BOARD\_SPI\_CS0    \\
+    P6.6              & 3                   & D\_BOARD\_SPI\_CS1    \\
+    P6.7              & 4                   & -                     \\
+    \midrule
+    P7.0              & -                   & -                     \\
+    P7.1              & -                   & -                     \\
+    P7.2              & 84                  & XT2\_N                \\
+    P7.3              & 85                  & XT2\_P                \\
+    P7.4              & 5                   & D\_BOARD\_GPIO0       \\
+    P7.5              & 6                   & D\_BOARD\_GPIO1       \\
+    P7.6              & 7                   & D\_BOARD\_GPIO2       \\
+    P7.7              & 8                   & D\_BOARD\_GPIO3       \\
+    \midrule
+    P8.0              & 58                  & -                     \\
+    P8.1              & 59                  & -                     \\
+    P8.2              & 60                  & UART1\_TX             \\
+    P8.3              & 61                  & UART1\_RX             \\
+    P8.4              & 62                  & -                     \\
+    P8.5              & 65                  & I2C1\_SDA             \\
+    P8.6              & 66                  & I2C1\_SCL             \\
+    P8.7              & 67                  & ANTENNA\_GPIO         \\
+    \midrule
+    P9.0              & 68                  & -                     \\
+    P9.1              & 69                  & -                     \\
+    P9.2              & 70                  & UART0\_TX             \\
+    P9.3              & 71                  & UART0\_RX             \\
+    P9.4              & 72                  & WDI\_EXT              \\
+    P9.5              & 73                  & I2C2\_SDA             \\
+    P9.6              & 74                  & I2C2\_SCL             \\
+    P9.7              & 75                  & MR\_WDOG              \\
+    \midrule
+    PJ.0              & 92                  & TP21                  \\
+    PJ.1              & 93                  & TP22                  \\
+    PJ.2              & 94                  & TP23                  \\
+    PJ.3              & 95                  & TP24                  \\
+    \midrule
+    -                 & 13                  & XT1IN                 \\
+    -                 & 14                  & XT1OUT                \\
+    -                 & 96                  & JTAG\_TDO\_TDI        \\
+    -                 & 91                  & JTAG\_TCK             \\
+    \bottomrule[1.5pt]
     \caption{Microcontroller pinout.}
     \label{tab:mcu-pinout}
-\end{table}
+\end{longtable}
 
 \section{External Watchdog}
 
