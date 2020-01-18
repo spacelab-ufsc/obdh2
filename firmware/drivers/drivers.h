@@ -45,6 +45,7 @@
 #include "uart/uart.h"
 #include "gpio/gpio.h"
 #include "tps382x/tps382x.h"
+#include "wdt/wdt.h"
 
 #endif // DRIVERS_H_
 
