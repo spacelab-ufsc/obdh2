@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * tps382x.c
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,32 +21,28 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief TPS382x driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 26/10/2019
+ * \date 15/01/2020
  * 
- * \defgroup drivers Drivers
+ * \addtogroup tps382x
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#include "tps382x.h"
 
-#include "edc/edc.h"
-#include "i2c/i2c.h"
-#include "isis_antenna/isis_antenna.h"
-#include "mt25ql01gbbb/mt25ql01gbbb.h"
-#include "spi/spi.h"
-#include "si446x/si446x.h"
-#include "uart/uart.h"
-#include "gpio/gpio.h"
-#include "tps382x/tps382x.h"
-#include "wdt/wdt.h"
+int tps382x_init(tps382x_config_t config)
+{
+    return gpio_init(config.wdi_pin, (gpio_config_t){.mode=GPIO_MODE_OUTPUT});
+}
 
-#endif // DRIVERS_H_
+void tps271x_trigger(tps382x_config_t config)
+{
+    gpio_toggle(config.wdi_pin);
+}
 
-//! \} End of drivers group
+//! \} End of tps382x group
