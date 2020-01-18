@@ -38,25 +38,14 @@
 #define WATCHDOG_H_
 
 /**
- * \brief Watchdog configuration.
- */
-typedef struct
-{
-    uint8_t clk_src;        /**< Clock source of the watchdog peripheral. */
-    uint8_t clk_div;        /**< Clock divider. */
-} watchdog_config_t;
-
-/**
  * \brief Watchdog initialization.
- *
- * \param[in] config is the configuration parameters of the watchdog device.
  *
  * \return The status/error code.
  */
-int watchdog_init(watchdog_config_t config);
+int watchdog_init();
 
 /**
- * \brief Wwatchdog timer reset.
+ * \brief Watchdog timer reset.
  *
  * \return None.
  */

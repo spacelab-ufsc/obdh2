@@ -33,50 +33,30 @@
  * \{
  */
 
-#include <hal/wdt_a.h>
+#include <drivers/wdt.h>
+#include <drivers/tps382x.h>
 
 #include "watchdog.h"
 
-int watchdog_init(watchdog_config_t config)
+int watchdog_init()
 {
-    // Checking clock source value
-    switch(config.clk_src)
-    {
-        case WDT_A_CLOCKSOURCE_SMCLK:       break;
-        case WDT_A_CLOCKSOURCE_ACLK:        break;
-        case WDT_A_CLOCKSOURCE_VLOCLK:      break;
-        case WDT_A_CLOCKSOURCE_XCLK:        break;
-        default:
-            return -1;      // Invalid clock source
-    }
+    wdt_config_t int_wdt;
 
-    // Checking clock divider value
-    switch(config.clk_div)
-    {
-        case WDT_A_CLOCKDIVIDER_2G:         break;
-        case WDT_A_CLOCKDIVIDER_128M:       break;
-        case WDT_A_CLOCKDIVIDER_8192K:      break;
-        case WDT_A_CLOCKDIVIDER_512K:       break;
-        case WDT_A_CLOCKDIVIDER_32K:        break;       
-        case WDT_A_CLOCKDIVIDER_8192:       break;
-        case WDT_A_CLOCKDIVIDER_512:        break;
-        case WDT_A_CLOCKDIVIDER_64:         break;
-        default:
-            return -1;      // Invalid clock divider value
-    }
+    int_wdt.clk_src = WDT_A_CLOCKSOURCE_SMCLK;
+    int_wdt.clk_div = WDT_A_CLOCKDIVIDER_32K;
 
-    // Watchdog initialization
-    WDT_A_initWatchdogTimer(WDT_A_BASE, config.clk_src, config.clk_div);
+    tps382x_config_t ext_wdt;
 
-    // Start counter
-    WDT_A_start(WDT_A_BASE);
+    ext_wdt.wdi_pin = GPIO_PIN_66;
 
-    return 0;
+    return wdt_init(int_wdt) | tps382x_init(ext_wdt);
 }
 
 void watchdog_reset()
 {
-    WDT_A_resetTimer(WDT_A_BASE);
+    wdt_reset();
+
+    tps382x_trigger();
 }
 
 //! \} End of watchdog group
