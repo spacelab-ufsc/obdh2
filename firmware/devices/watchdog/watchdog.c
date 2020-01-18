@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * watchdog.c
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,32 +21,42 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief Watchdog device implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 26/10/2019
+ * \date 01/11/2019
  * 
- * \defgroup drivers Drivers
+ * \addtogroup watchdog
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#include <drivers/wdt.h>
+#include <drivers/tps382x.h>
 
-#include "edc/edc.h"
-#include "i2c/i2c.h"
-#include "isis_antenna/isis_antenna.h"
-#include "mt25ql01gbbb/mt25ql01gbbb.h"
-#include "spi/spi.h"
-#include "si446x/si446x.h"
-#include "uart/uart.h"
-#include "gpio/gpio.h"
-#include "tps382x/tps382x.h"
-#include "wdt/wdt.h"
+#include "watchdog.h"
 
-#endif // DRIVERS_H_
+int watchdog_init()
+{
+    wdt_config_t int_wdt;
 
-//! \} End of drivers group
+    int_wdt.clk_src = WDT_A_CLOCKSOURCE_SMCLK;
+    int_wdt.clk_div = WDT_A_CLOCKDIVIDER_32K;
+
+    tps382x_config_t ext_wdt;
+
+    ext_wdt.wdi_pin = GPIO_PIN_66;
+
+    return wdt_init(int_wdt) | tps382x_init(ext_wdt);
+}
+
+void watchdog_reset()
+{
+    wdt_reset();
+
+    tps382x_trigger();
+}
+
+//! \} End of watchdog group

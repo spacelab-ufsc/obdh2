@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * watchdog.h
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,32 +21,36 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief Watchdog device definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 26/10/2019
+ * \date 01/11/2019
  * 
- * \defgroup drivers Drivers
+ * \defgroup watchdog Watchdog
+ * \ingroup devices
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#ifndef WATCHDOG_H_
+#define WATCHDOG_H_
 
-#include "edc/edc.h"
-#include "i2c/i2c.h"
-#include "isis_antenna/isis_antenna.h"
-#include "mt25ql01gbbb/mt25ql01gbbb.h"
-#include "spi/spi.h"
-#include "si446x/si446x.h"
-#include "uart/uart.h"
-#include "gpio/gpio.h"
-#include "tps382x/tps382x.h"
-#include "wdt/wdt.h"
+/**
+ * \brief Watchdog initialization.
+ *
+ * \return The status/error code.
+ */
+int watchdog_init();
 
-#endif // DRIVERS_H_
+/**
+ * \brief Watchdog timer reset.
+ *
+ * \return None.
+ */
+void watchdog_reset();
 
-//! \} End of drivers group
+#endif // WATCHDOG_H_
+
+//! \} End of watchdog group

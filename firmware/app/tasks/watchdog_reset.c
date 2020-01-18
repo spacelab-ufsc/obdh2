@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * watchdog_reset.h
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,32 +21,33 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief Watchdog reset task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 26/10/2019
+ * \date 11/01/2020
  * 
- * \defgroup drivers Drivers
+ * \addtogroup watchdog_reset
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#include "watchdog_reset.h"
 
-#include "edc/edc.h"
-#include "i2c/i2c.h"
-#include "isis_antenna/isis_antenna.h"
-#include "mt25ql01gbbb/mt25ql01gbbb.h"
-#include "spi/spi.h"
-#include "si446x/si446x.h"
-#include "uart/uart.h"
-#include "gpio/gpio.h"
-#include "tps382x/tps382x.h"
-#include "wdt/wdt.h"
+xTaskHandle xTaskWatchdogResetHandle;
 
-#endif // DRIVERS_H_
+void vTaskWatchdogReset(void *pvParameters)
+{
+    // Delay before the first cycle
+    vTaskDelay(pdMS_TO_TICKS(TASK_WATCHDOG_RESET_INITIAL_DELAY_MS));
 
-//! \} End of drivers group
+    while(1)
+    {
+        TickType_t last_cycle = xTaskGetTickCount();
+
+        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_WATCHDOG_RESET_PERIOD_MS));
+    }
+}
+
+//! \} End of watchdog_reset group

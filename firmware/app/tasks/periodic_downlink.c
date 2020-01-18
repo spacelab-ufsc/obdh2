@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * periodic_downlink.c
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,32 +21,33 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief Periodic downlink task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 26/10/2019
+ * \date 27/10/2019
  * 
- * \defgroup drivers Drivers
+ * \addtogroup periodic_downlink
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#include "periodic_downlink.h"
 
-#include "edc/edc.h"
-#include "i2c/i2c.h"
-#include "isis_antenna/isis_antenna.h"
-#include "mt25ql01gbbb/mt25ql01gbbb.h"
-#include "spi/spi.h"
-#include "si446x/si446x.h"
-#include "uart/uart.h"
-#include "gpio/gpio.h"
-#include "tps382x/tps382x.h"
-#include "wdt/wdt.h"
+xTaskHandle xTaskPeriodicDownlinkHandle;
 
-#endif // DRIVERS_H_
+void vTaskPeriodicDownlink(void *pvParameters)
+{
+    // Delay before the first cycle
+    vTaskDelay(pdMS_TO_TICKS(TASK_PERIODIC_DOWNLINK_INITIAL_DELAY_MS));
 
-//! \} End of drivers group
+    while(1)
+    {
+        TickType_t last_cycle = xTaskGetTickCount();
+
+        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_PERIODIC_DOWNLINK_PERIOD_MS));
+    }
+}
+
+//! \} End of periodic_downlink group
