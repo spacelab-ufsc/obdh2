@@ -34,6 +34,7 @@
  */
 
 #include <devices/watchdog.h>
+#include <devices/logger.h>
 
 #include "startup.h"
 
@@ -43,6 +44,9 @@ void vTaskStartup(void *pvParameters)
 {
     // Watchdog device initialization
     watchdog_init();
+
+    // Logger device initialization
+    logger_init();
 
     // Delete the task
     vTaskDelete(xTaskStartupHandle);
