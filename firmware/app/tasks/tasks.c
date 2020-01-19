@@ -48,6 +48,14 @@ void create_tasks()
     {
         // Error creating the startup task
     }
+
+    // Watchdog reset task
+    xTaskCreate(vTaskWatchdogReset, TASK_WATCHDOG_RESET_NAME, TASK_WATCHDOG_RESET_STACK_SIZE, NULL, TASK_WATCHDOG_RESET_PRIORITY, &xTaskWatchdogResetHandle);
+
+    if (vTaskWatchdogReset == NULL)
+    {
+        // Error creating the watchdog reset task
+    }
 }
 
 //! \} End of tasks group
