@@ -33,12 +33,17 @@
  * \{
  */
 
+#include <devices/watchdog.h>
+
 #include "startup.h"
 
 xTaskHandle xTaskStartupHandle;
 
 void vTaskStartup(void *pvParameters)
 {
+    // Watchdog device initialization
+    watchdog_init();
+
     // Delete the task
     vTaskDelete(xTaskStartupHandle);
 }
