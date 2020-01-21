@@ -38,6 +38,7 @@
 
 #include "tasks.h"
 #include "startup.h"
+#include "watchdog_reset.h"
 
 void create_tasks()
 {

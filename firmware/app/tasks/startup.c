@@ -33,8 +33,8 @@
  * \{
  */
 
-#include <devices/watchdog.h>
-#include <devices/logger.h>
+#include <devices/watchdog/watchdog.h>
+#include <devices/logger/logger.h>
 
 #include "startup.h"
 

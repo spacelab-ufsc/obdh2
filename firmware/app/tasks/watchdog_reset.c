@@ -33,7 +33,7 @@
  * \{
  */
 
-#include <devices/watchdog.h>
+#include <devices/watchdog/watchdog.h>
 
 #include "watchdog_reset.h"
 

@@ -37,6 +37,7 @@
 #ifndef GPIO_H_
 #define GPIO_H_
 
+#include <stdint.h>
 #include <stdbool.h>
 
 #define GPIO_STATE_HIGH     (true)
