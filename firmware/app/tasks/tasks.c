@@ -36,6 +36,8 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
+#include <config/config.h>
+
 #include "tasks.h"
 #include "startup.h"
 #include "watchdog_reset.h"
@@ -43,20 +45,24 @@
 void create_tasks()
 {
     // Startup task
+#if CONFIG_TASK_STARTUP_ENABLED == 1
     xTaskCreate(vTaskStartup, TASK_STARTUP_NAME, TASK_STARTUP_STACK_SIZE, NULL, TASK_STARTUP_PRIORITY, &xTaskStartupHandle);
 
     if (xTaskStartupHandle == NULL)
     {
         // Error creating the startup task
     }
+#endif // CONFIG_TASK_STARTUP_ENABLED
 
     // Watchdog reset task
+#if CONFIG_TASK_WATCHDOG_RESET_ENABLED == 1
     xTaskCreate(vTaskWatchdogReset, TASK_WATCHDOG_RESET_NAME, TASK_WATCHDOG_RESET_STACK_SIZE, NULL, TASK_WATCHDOG_RESET_PRIORITY, &xTaskWatchdogResetHandle);
 
     if (vTaskWatchdogReset == NULL)
     {
         // Error creating the watchdog reset task
     }
+#endif // CONFIG_TASK_WATCHDOG_RESET_ENABLED
 }
 
 //! \} End of tasks group
