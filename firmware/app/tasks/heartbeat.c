@@ -37,7 +37,7 @@
 
 xTaskHandle xTaskHeartbeatHandle;
 
-void vTaskStartup(void *pvParameters)
+void vTaskHeartbeat(void *pvParameters)
 {
     // Delay before the first cycle
     vTaskDelay(pdMS_TO_TICKS(TASK_HEARTBEAT_INITIAL_DELAY_MS));
