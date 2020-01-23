@@ -70,7 +70,7 @@ int tps382x_init(tps382x_config_t config);
  *
  * \return None.
  */
-void tps271x_trigger(tps382x_config_t config);
+void tps382x_trigger(tps382x_config_t config);
 
 #endif // TPS382X_H_
 

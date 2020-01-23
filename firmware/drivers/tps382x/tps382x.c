@@ -40,7 +40,7 @@ int tps382x_init(tps382x_config_t config)
     return gpio_init(config.wdi_pin, (gpio_config_t){.mode=GPIO_MODE_OUTPUT});
 }
 
-void tps271x_trigger(tps382x_config_t config)
+void tps382x_trigger(tps382x_config_t config)
 {
     gpio_toggle(config.wdi_pin);
 }
