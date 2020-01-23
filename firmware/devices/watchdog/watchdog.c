@@ -56,7 +56,11 @@ void watchdog_reset()
 {
     wdt_reset();
 
-    tps382x_trigger();
+    tps382x_config_t ext_wdt;
+
+    ext_wdt.wdi_pin = GPIO_PIN_66;
+
+    tps382x_trigger(ext_wdt);
 }
 
 //! \} End of watchdog group
