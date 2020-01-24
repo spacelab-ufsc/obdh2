@@ -51,9 +51,6 @@ void vTaskStartup(void *pvParameters)
 
     // LEDs device initialization
     leds_init();
-
-    // Delete the task
-    vTaskDelete(xTaskStartupHandle);
 }
 
 //! \} End of startup group
