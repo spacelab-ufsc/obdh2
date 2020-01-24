@@ -35,6 +35,7 @@
 
 #include <devices/watchdog/watchdog.h>
 #include <devices/logger/logger.h>
+#include <devices/leds/leds.h>
 
 #include "startup.h"
 
@@ -47,6 +48,9 @@ void vTaskStartup(void *pvParameters)
 
     // Logger device initialization
     logger_init();
+
+    // LEDs device initialization
+    leds_init();
 
     // Delete the task
     vTaskDelete(xTaskStartupHandle);
