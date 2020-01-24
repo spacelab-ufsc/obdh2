@@ -41,6 +41,7 @@
 #include "tasks.h"
 #include "startup.h"
 #include "watchdog_reset.h"
+#include "heartbeat.h"
 
 void create_tasks()
 {
@@ -58,11 +59,21 @@ void create_tasks()
 #if CONFIG_TASK_WATCHDOG_RESET_ENABLED == 1
     xTaskCreate(vTaskWatchdogReset, TASK_WATCHDOG_RESET_NAME, TASK_WATCHDOG_RESET_STACK_SIZE, NULL, TASK_WATCHDOG_RESET_PRIORITY, &xTaskWatchdogResetHandle);
 
-    if (vTaskWatchdogReset == NULL)
+    if (xTaskWatchdogResetHandle == NULL)
     {
         // Error creating the watchdog reset task
     }
 #endif // CONFIG_TASK_WATCHDOG_RESET_ENABLED
+
+    // Heartbeat task
+#if CONFIG_TASK_HEARTBEAT_ENABLED == 1
+    xTaskCreate(vTaskHeartbeat, TASK_HEARTBEAT_NAME, TASK_HEARTBEAT_STACK_SIZE, NULL, TASK_HEARTBEAT_PRIORITY, &xTaskHeartbeatHandle);
+
+    if (xTaskHeartbeatHandle == NULL)
+    {
+        // Error creating the heartbeat task
+    }
+#endif // CONFIG_TASK_HEARTBEAT_ENABLED
 }
 
 //! \} End of tasks group

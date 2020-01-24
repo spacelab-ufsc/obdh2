@@ -39,6 +39,7 @@
 // Tasks
 #define CONFIG_TASK_STARTUP_ENABLED                     1
 #define CONFIG_TASK_WATCHDOG_RESET_ENABLED              1
+#define CONFIG_TASK_HEARTBEAT_ENABLED                   1
 
 #endif // CONFIG_H_
 
