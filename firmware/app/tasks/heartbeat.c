@@ -33,6 +33,8 @@
  * \{
  */
 
+#include <devices/leds/leds.h>
+
 #include "heartbeat.h"
 
 xTaskHandle xTaskHeartbeatHandle;
@@ -45,6 +47,8 @@ void vTaskHeartbeat(void *pvParameters)
     while(1)
     {
         TickType_t last_cycle = xTaskGetTickCount();
+
+        led_toggle(LED_SYSTEM);
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_HEARTBEAT_PERIOD_MS));
     }
