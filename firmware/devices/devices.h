@@ -38,6 +38,7 @@
 
 #include "logger/logger.h"
 #include "radio/radio.h"
+#include "leds/leds.h"
 
 #endif // DEVICES_H_
 
