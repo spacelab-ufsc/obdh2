@@ -36,10 +36,14 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
+#include "system/clocks.h"
 #include "app/tasks/tasks.h"
 
 void main(void)
 {
+    // System clocks configuration
+    clocks_setup((clocks_config_t){.mclk_hz = 32000000UL, .smclk_hz=32000000UL, .aclk_hz=32768});
+
     // Create all the tasks
     create_tasks();
 
