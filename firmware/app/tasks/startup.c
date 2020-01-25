@@ -48,6 +48,8 @@ void vTaskStartup(void *pvParameters)
 
     // LEDs device initialization
     leds_init();
+
+    vTaskSuspend(xTaskStartupHandle);
 }
 
 //! \} End of startup group
