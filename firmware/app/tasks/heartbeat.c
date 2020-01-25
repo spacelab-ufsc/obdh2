@@ -1,5 +1,5 @@
 /*
- * tps382x.c
+ * heartbeat.c
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,28 +21,37 @@
  */
 
 /**
- * \brief TPS382x driver implementation.
+ * \brief Heartbeat task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 15/01/2020
+ * \date 20/01/2020
  * 
- * \addtogroup tps382x
+ * \addtogroup heartbeat
  * \{
  */
 
-#include "tps382x.h"
+#include <devices/leds/leds.h>
 
-int tps382x_init(tps382x_config_t config)
+#include "heartbeat.h"
+
+xTaskHandle xTaskHeartbeatHandle;
+
+void vTaskHeartbeat(void *pvParameters)
 {
-    return gpio_init(config.wdi_pin, (gpio_config_t){.mode=GPIO_MODE_OUTPUT});
+    // Delay before the first cycle
+    vTaskDelay(pdMS_TO_TICKS(TASK_HEARTBEAT_INITIAL_DELAY_MS));
+
+    while(1)
+    {
+        TickType_t last_cycle = xTaskGetTickCount();
+
+        led_toggle(LED_SYSTEM);
+
+        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_HEARTBEAT_PERIOD_MS));
+    }
 }
 
-void tps382x_trigger(tps382x_config_t config)
-{
-    gpio_toggle(config.wdi_pin);
-}
-
-//! \} End of tps382x group
+//! \} End of heartbeat group

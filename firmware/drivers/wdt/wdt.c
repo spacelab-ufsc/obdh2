@@ -42,10 +42,10 @@ int wdt_init(wdt_config_t config)
     // Checking clock source value
     switch(config.clk_src)
     {
-        case WDT_A_CLOCKSOURCE_SMCLK:       break;
-        case WDT_A_CLOCKSOURCE_ACLK:        break;
-        case WDT_A_CLOCKSOURCE_VLOCLK:      break;
-        case WDT_A_CLOCKSOURCE_XCLK:        break;
+        case WDT_CLK_SRC_SMCLK:       break;
+        case WDT_CLK_SRC_ACLK:        break;
+        case WDT_CLK_SRC_VLOCLK:      break;
+        case WDT_CLK_SRC_XCLK:        break;
         default:
             return -1;      // Invalid clock source
     }
@@ -53,14 +53,14 @@ int wdt_init(wdt_config_t config)
     // Checking clock divider value
     switch(config.clk_div)
     {
-        case WDT_A_CLOCKDIVIDER_2G:         break;
-        case WDT_A_CLOCKDIVIDER_128M:       break;
-        case WDT_A_CLOCKDIVIDER_8192K:      break;
-        case WDT_A_CLOCKDIVIDER_512K:       break;
-        case WDT_A_CLOCKDIVIDER_32K:        break;       
-        case WDT_A_CLOCKDIVIDER_8192:       break;
-        case WDT_A_CLOCKDIVIDER_512:        break;
-        case WDT_A_CLOCKDIVIDER_64:         break;
+        case WDT_CLK_DIV_2G:         break;
+        case WDT_CLK_DIV_128M:       break;
+        case WDT_CLK_DIV_8192K:      break;
+        case WDT_CLK_DIV_512K:       break;
+        case WDT_CLK_DIV_32K:        break;
+        case WDT_CLK_DIV_8192:       break;
+        case WDT_CLK_DIV_512:        break;
+        case WDT_CLK_DIV_64:         break;
         default:
             return -1;      // Invalid clock divider value
     }

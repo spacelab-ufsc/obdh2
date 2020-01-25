@@ -1,5 +1,5 @@
 /*
- * tps382x.c
+ * clocks.h
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,28 +21,50 @@
  */
 
 /**
- * \brief TPS382x driver implementation.
+ * \brief System clocks functions definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 15/01/2020
+ * \date 25/01/2020
  * 
- * \addtogroup tps382x
+ * \defgroup clocks Clocks
+ * \ingroup system
  * \{
  */
 
-#include "tps382x.h"
+#ifndef CLOCKS_H_
+#define CLOCKS_H_
 
-int tps382x_init(tps382x_config_t config)
+#include <stdint.h>
+
+/**
+ * \brief Clocks configuration.
+ */
+typedef struct
 {
-    return gpio_init(config.wdi_pin, (gpio_config_t){.mode=GPIO_MODE_OUTPUT});
-}
+    uint32_t mclk_hz;       /**< MCLK frequency in Hz. */
+    uint32_t smclk_hz;      /**< SMCLK frequency in Hz. */
+    uint32_t aclk_hz;       /**< ACLK frequency in Hz. */
+} clocks_config_t;
 
-void tps382x_trigger(tps382x_config_t config)
-{
-    gpio_toggle(config.wdi_pin);
-}
+/**
+ * \brief System clocks setup.
+ *
+ * \see SLAU388F - Power Management Module and Supply Voltage Supervisor
+ *
+ * \return The status/error code.
+ */
+int clocks_setup(clocks_config_t clks);
 
-//! \} End of tps382x group
+/**
+ * \brief Reads the current system clocks.
+ *
+ * \return A clocks_config_t struct with the system clocks.
+ */
+clocks_config_t clocks_read();
+
+#endif // CLOCKS_H_
+
+//! \} End of clocks group
