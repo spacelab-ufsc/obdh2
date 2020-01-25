@@ -42,7 +42,7 @@ int watchdog_init()
 {
     wdt_config_t int_wdt;
 
-    int_wdt.clk_src = WDT_CLK_SRC_SMCLK;
+    int_wdt.clk_src = WDT_CLK_SRC_ACLK;
     int_wdt.clk_div = WDT_CLK_DIV_32K;
 
     tps382x_config_t ext_wdt;
