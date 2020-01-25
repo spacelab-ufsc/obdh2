@@ -41,6 +41,9 @@
 
 void main(void)
 {
+    // Watchdog device initialization
+    watchdog_init();
+
     // System clocks configuration
     clocks_setup((clocks_config_t){.mclk_hz = 32000000UL, .smclk_hz=32000000UL, .aclk_hz=32768});
 

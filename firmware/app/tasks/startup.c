@@ -43,9 +43,6 @@ xTaskHandle xTaskStartupHandle;
 
 void vTaskStartup(void *pvParameters)
 {
-    // Watchdog device initialization
-    watchdog_init();
-
     // Logger device initialization
     logger_init();
 
