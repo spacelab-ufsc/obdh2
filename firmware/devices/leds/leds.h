@@ -1,5 +1,5 @@
 /*
- * watchdog.c
+ * leds.h
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,46 +21,72 @@
  */
 
 /**
- * \brief Watchdog device implementation.
+ * \brief System LEDs definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 01/11/2019
+ * \date 20/01/2020
  * 
- * \addtogroup watchdog
+ * \defgroup leds LEDs
+ * \ingroup devices
  * \{
  */
 
-#include <drivers/wdt/wdt.h>
-#include <drivers/tps382x/tps382x.h>
+#ifndef LEDS_H_
+#define LEDS_H_
 
-#include "watchdog.h"
+#include <stdint.h>
 
-int watchdog_init()
+/**
+ * \brief System LEDs.
+ */
+typedef enum
 {
-    wdt_config_t int_wdt;
+    LED_SYSTEM=0,
+    LED_FAULT
+} leds_types_e;
 
-    int_wdt.clk_src = WDT_CLK_SRC_ACLK;
-    int_wdt.clk_div = WDT_CLK_DIV_32K;
+/**
+ * \brief LED type.
+ */
+typedef uint8_t led_t;
 
-    tps382x_config_t ext_wdt;
+/**
+ * \brief Initialization routine of the LEDs.
+ *
+ * \return The status/error code.
+ */
+int leds_init();
 
-    ext_wdt.wdi_pin = GPIO_PIN_66;
+/**
+ * \brief Sets a given LED.
+ *
+ * \param[in] l is the LED to set.
+ *
+ * \return The status/error code.
+ */
+int led_set(led_t l);
 
-    return wdt_init(int_wdt) | tps382x_init(ext_wdt);
-}
+/**
+ * \brief Clears a given LED.
+ *
+ * \param[in] l is the LED to clear.
+ *
+ * \return The status/error code.
+ */
+int led_clear(led_t l);
 
-void watchdog_reset()
-{
-    wdt_reset();
+/**
+ * \brief Toggles a given LED.
+ *
+ * \param[in] l is the LED to toggle.
+ *
+ * \return The status/error code.
+ */
+int led_toggle(led_t l);
 
-    tps382x_config_t ext_wdt;
+#endif // LEDS_H_
 
-    ext_wdt.wdi_pin = GPIO_PIN_66;
-
-    tps382x_trigger(ext_wdt);
-}
-
-//! \} End of watchdog group
+//! \} End of leds group

@@ -1,5 +1,5 @@
 /*
- * tps382x.c
+ * system.h
  * 
  * Copyright (C) 2019, SpaceLab.
  * 
@@ -21,28 +21,23 @@
  */
 
 /**
- * \brief TPS382x driver implementation.
+ * \brief System layer definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.0
  * 
- * \date 15/01/2020
+ * \date 25/01/2020
  * 
- * \addtogroup tps382x
+ * \defgroup system System
  * \{
  */
 
-#include "tps382x.h"
+#ifndef SYSTEM_H_
+#define SYSTEM_H_
 
-int tps382x_init(tps382x_config_t config)
-{
-    return gpio_init(config.wdi_pin, (gpio_config_t){.mode=GPIO_MODE_OUTPUT});
-}
+#include "clocks.h"
 
-void tps382x_trigger(tps382x_config_t config)
-{
-    gpio_toggle(config.wdi_pin);
-}
+#endif // SYSTEM_H_
 
-//! \} End of tps382x group
+//! \} End of system group

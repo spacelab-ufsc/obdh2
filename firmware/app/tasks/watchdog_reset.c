@@ -33,6 +33,8 @@
  * \{
  */
 
+#include <devices/watchdog/watchdog.h>
+
 #include "watchdog_reset.h"
 
 xTaskHandle xTaskWatchdogResetHandle;
@@ -45,6 +47,8 @@ void vTaskWatchdogReset(void *pvParameters)
     while(1)
     {
         TickType_t last_cycle = xTaskGetTickCount();
+
+        watchdog_reset();
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_WATCHDOG_RESET_PERIOD_MS));
     }

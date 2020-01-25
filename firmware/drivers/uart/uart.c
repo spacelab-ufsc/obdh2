@@ -41,10 +41,63 @@ int uart_init(uart_port_t port, uart_config_t config)
 {
     USCI_A_UART_initParam uart_params = {0};
 
+    switch(config.baudrate)
+    {
+        case 1200:
+            uart_params.clockPrescalar      = 833;  // 1200 bps @ 16 MHz
+            uart_params.firstModReg         = 5;    // 1200 bps @ 16 MHz
+            uart_params.secondModReg        = 0;    // 1200 bps @ 16 MHz
+            break;
+        case 2400:
+            uart_params.clockPrescalar      = 416;  // 2400 bps @ 16 MHz
+            uart_params.firstModReg         = 11;   // 2400 bps @ 16 MHz
+            uart_params.secondModReg        = 0;    // 2400 bps @ 16 MHz
+            break;
+        case 4800:
+            uart_params.clockPrescalar      = 208;  // 4800 bps @ 16 MHz
+            uart_params.firstModReg         = 5;    // 4800 bps @ 16 MHz
+            uart_params.secondModReg        = 0;    // 4800 bps @ 16 MHz
+            break;
+        case 9600:
+            uart_params.clockPrescalar      = 104;  // 9600 bps @ 16 MHz
+            uart_params.firstModReg         = 3;    // 9600 bps @ 16 MHz
+            uart_params.secondModReg        = 0;    // 9600 bps @ 16 MHz
+            break;
+        case 19200:
+            uart_params.clockPrescalar      = 52;   // 19200 bps @ 16 MHz
+            uart_params.firstModReg         = 1;    // 19200 bps @ 16 MHz
+            uart_params.secondModReg        = 0;    // 19200 bps @ 16 MHz
+            break;
+        case 38400:
+            uart_params.clockPrescalar      = 26;   // 38400 bps @ 16 MHz
+            uart_params.firstModReg         = 1;    // 38400 bps @ 16 MHz
+            uart_params.secondModReg        = 0;    // 38400 bps @ 16 MHz
+            break;
+        case 57600:
+            uart_params.clockPrescalar      = 17;   // 57600 bps @ 16 MHz
+            uart_params.firstModReg         = 6;    // 57600 bps @ 16 MHz
+            uart_params.secondModReg        = 0;    // 57600 bps @ 16 MHz
+            break;
+        case 115200:
+            uart_params.clockPrescalar      = 8;    // 115200 bps @ 16 MHz
+            uart_params.firstModReg         = 11;   // 115200 bps @ 16 MHz
+            uart_params.secondModReg        = 0;    // 115200 bps @ 16 MHz
+            break;
+        case 230400:
+            uart_params.clockPrescalar      = 4;    // 230400 bps @ 16 MHz
+            uart_params.firstModReg         = 3;    // 230400 bps @ 16 MHz
+            uart_params.secondModReg        = 5;    // 230400 bps @ 16 MHz
+            break;
+        case 460800:
+            uart_params.clockPrescalar      = 2;    // 460800 bps @ 16 MHz
+            uart_params.firstModReg         = 2;    // 460800 bps @ 16 MHz
+            uart_params.secondModReg        = 3;    // 460800 bps @ 16 MHz
+            break;
+        default:
+            return -1;      // Invalid baudrate value
+    }
+
     uart_params.selectClockSource   = USCI_A_UART_CLOCKSOURCE_SMCLK;
-    uart_params.clockPrescalar      = 8;    // 115200 bps @ 16 MHz
-    uart_params.firstModReg         = 11;   // 115200 bps @ 16 MHz
-    uart_params.secondModReg        = 0;    // 115200 bps @ 16 MHz
     uart_params.parity              = config.parity;
     uart_params.msborLsbFirst       = USCI_A_UART_LSB_FIRST;
     uart_params.numberofStopBits    = config.stop_bits;

@@ -34,21 +34,25 @@
  * \{
  */
 
-#include <hal/usci_a_uart.h>
+#include <drivers/uart/uart.h>
 
 #include "logger.h"
-#include "logger_config.h"
 
 bool logger_uart_init()
 {
-    uart0_setup(LOGGER_UART_BAUDRATE_BPS);
+    uart_config_t config;
 
-    return true;
+    config.baudrate     = 115200;
+    config.data_bits    = 8;
+    config.parity       = UART_NO_PARITY;
+    config.stop_bits    = UART_ONE_STOP_BIT;
+
+    return uart_init(UART_PORT_2, config) == 0 ? true : false;
 }
 
 void logger_uart_write_byte(uint8_t byte)
 {
-    uart_tx_char(byte);
+    uart_write(UART_PORT_2, &byte, 1);
 }
 
 //! \} End of logger_uart group

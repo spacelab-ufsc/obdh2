@@ -33,14 +33,23 @@
  * \{
  */
 
+#include <devices/watchdog/watchdog.h>
+#include <devices/logger/logger.h>
+#include <devices/leds/leds.h>
+
 #include "startup.h"
 
 xTaskHandle xTaskStartupHandle;
 
 void vTaskStartup(void *pvParameters)
 {
-    // Delete the task
-    vTaskDelete(xTaskStartupHandle);
+    // Logger device initialization
+    logger_init();
+
+    // LEDs device initialization
+    leds_init();
+
+    vTaskSuspend(xTaskStartupHandle);
 }
 
 //! \} End of startup group

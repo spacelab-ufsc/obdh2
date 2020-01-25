@@ -37,6 +37,26 @@
 #ifndef WDT_H_
 #define WDT_H_
 
+#include <stdint.h>
+
+#include <hal/wdt_a.h>
+
+// Clock sources
+#define WDT_CLK_SRC_SMCLK           WDT_A_CLOCKSOURCE_SMCLK         // SMCLK as clock source
+#define WDT_CLK_SRC_ACLK            WDT_A_CLOCKSOURCE_ACLK          // ACLK as clock source
+#define WDT_CLK_SRC_VLOCLK          WDT_A_CLOCKSOURCE_VLOCLK        // VLOCLK as clock source
+#define WDT_CLK_SRC_XCLK            WDT_A_CLOCKSOURCE_XCLK          // XCLK as clock source
+
+// Clock divider values
+#define WDT_CLK_DIV_2G              WDT_A_CLOCKDIVIDER_2G           // Divider = 2G
+#define WDT_CLK_DIV_128M            WDT_A_CLOCKDIVIDER_128M         // Divider = 128M
+#define WDT_CLK_DIV_8192K           WDT_A_CLOCKDIVIDER_8192K        // Divider = 8192K
+#define WDT_CLK_DIV_512K            WDT_A_CLOCKDIVIDER_512K         // Divider = 512K
+#define WDT_CLK_DIV_32K             WDT_A_CLOCKDIVIDER_32K          // Divider = 32K
+#define WDT_CLK_DIV_8192            WDT_A_CLOCKDIVIDER_8192         // Divider = 8192
+#define WDT_CLK_DIV_512             WDT_A_CLOCKDIVIDER_512          // Divider = 512
+#define WDT_CLK_DIV_64              WDT_A_CLOCKDIVIDER_64           // Divider = 64
+
 /**
  * \brief Watchdog timer configuration.
  */
@@ -60,11 +80,9 @@ int wdt_init(wdt_config_t config);
 /**
  * \brief Resets the watchdog timer counter.
  *
- * \param[in] config is the configuration parameters of the watchdog timer peripheral.
- *
  * \return None.
  */
-void wdt_reset(wdt_config_t config);
+void wdt_reset();
 
 #endif // WDT_H_
 
