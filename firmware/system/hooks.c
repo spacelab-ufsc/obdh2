@@ -30,7 +30,7 @@
  * \date 22/01/2020
  * 
  * \defgroup hooks FreeRTOS Hooks
- * \ingroup app
+ * \ingroup system
  * \{
  */
 
