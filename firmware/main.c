@@ -36,6 +36,7 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
+#include "devices/watchdog/watchdog.h"
 #include "system/clocks.h"
 #include "app/tasks/tasks.h"
 

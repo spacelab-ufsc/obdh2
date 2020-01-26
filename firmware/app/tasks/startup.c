@@ -41,6 +41,8 @@
 
 xTaskHandle xTaskStartupHandle;
 
+EventGroupHandle_t task_startup_status;
+
 void vTaskStartup(void *pvParameters)
 {
     // Logger device initialization
@@ -48,6 +50,9 @@ void vTaskStartup(void *pvParameters)
 
     // LEDs device initialization
     leds_init();
+
+    // Startup task status = Done
+    xEventGroupSetBits(task_startup_status, TASK_STARTUP_DONE);
 
     vTaskSuspend(xTaskStartupHandle);
 }
