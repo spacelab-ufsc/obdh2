@@ -1,7 +1,7 @@
 /*
  * logger.c
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -37,12 +37,13 @@
 
 #include <FreeRTOS.h>
 #include <task.h>
+
 #include <version.h>
 
 #include "logger.h"
 #include "logger_config.h"
 
-bool logger_init()
+int logger_init()
 {
     if (logger_uart_init())
     {
@@ -75,11 +76,11 @@ bool logger_init()
 
         logger_mutex_create();
 
-        return true;
+        return 0;
     }
     else
     {
-        return false;
+        return -1;
     }
 }
 
@@ -176,7 +177,7 @@ void logger_print_event_from_module(uint8_t type, const char *module, const char
 
 void logger_print_msg(const char *msg)
 {
-    uint8_t i = 0;
+    uint16_t i = 0;
     while(msg[i] != '\0')
     {
         logger_print_byte(msg[i]);
@@ -277,7 +278,7 @@ void logger_print_system_time()
 
 void logger_print_license_msg()
 {
-    logger_print_msg("OBDH 2.0 Copyright (C) 2019, SpaceLab;");
+    logger_print_msg("OBDH 2.0 Copyright (C) 2020, SpaceLab;");
     logger_new_line();
     logger_print_msg("This program comes with ABSOLUTELY NO WARRANTY.");
     logger_new_line();
@@ -288,7 +289,7 @@ void logger_print_license_msg()
     logger_new_line();
     logger_print_msg("Source code: https://github.com/spacelab-ufsc/obdh2");
     logger_new_line();
-    logger_print_msg("Documentation: https://github.com/spacelab-ufsc/obdh2/wiki");
+    logger_print_msg("Documentation: https://github.com/spacelab-ufsc/obdh2/doc");
     logger_new_line();
 }
 
@@ -331,14 +332,6 @@ void logger_print_firmware_version()
     logger_print_msg("[ ");
     logger_print_msg(FIRMWARE_VERSION);
     logger_print_msg(" ]");
-}
-
-void logger_abort()
-{
-    while(1)
-    {
-        
-    }
 }
 
 //! \} End of logger group

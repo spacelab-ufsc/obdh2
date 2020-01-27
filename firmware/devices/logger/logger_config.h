@@ -1,7 +1,7 @@
 /*
  * logger_config.h
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -37,7 +37,7 @@
 #ifndef LOGGER_CONFIG_H_
 #define LOGGER_CONFIG_H_
 
-#include "config.h"
+#include <config/config.h>
 
 #include "logger.h"
 
