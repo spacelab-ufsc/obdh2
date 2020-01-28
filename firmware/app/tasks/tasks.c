@@ -74,6 +74,18 @@ void create_tasks()
         // Error creating the heartbeat task
     }
 #endif // CONFIG_TASK_HEARTBEAT_ENABLED
+
+    create_event_groups();
+}
+
+void create_event_groups()
+{
+    task_startup_status = xEventGroupCreate();
+
+    if (task_startup_status == NULL)
+    {
+        // Error creating the startup status event group
+    }
 }
 
 //! \} End of tasks group

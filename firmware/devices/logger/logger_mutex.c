@@ -1,7 +1,7 @@
 /*
  * debug_mutex.h
  * 
- * Copyright (C) 2017-2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 

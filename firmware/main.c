@@ -36,6 +36,7 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
+#include "devices/watchdog/watchdog.h"
 #include "system/clocks.h"
 #include "app/tasks/tasks.h"
 
@@ -50,10 +51,10 @@ void main(void)
     // Create all the tasks
     create_tasks();
 
-	// Start the scheduler
+    // Start the scheduler
     vTaskStartScheduler();
 
-	// Will only get here if there was insufficient memory to create the idle and/or timer task
+    // Will only get here if there was insufficient memory to create the idle and/or timer task
     while(1);
 }
 

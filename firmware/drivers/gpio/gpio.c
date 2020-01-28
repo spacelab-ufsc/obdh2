@@ -130,6 +130,8 @@ int gpio_init(gpio_pin_t pin, gpio_config_t config)
     {
         return -1;  // Invalid mode
     }
+
+    return 0;
 }
 
 int gpio_set_state(gpio_pin_t pin, bool level)

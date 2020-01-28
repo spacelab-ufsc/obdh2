@@ -1,7 +1,7 @@
 /*
  * logger.c
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -37,12 +37,13 @@
 
 #include <FreeRTOS.h>
 #include <task.h>
+
 #include <version.h>
 
 #include "logger.h"
 #include "logger_config.h"
 
-bool logger_init()
+int logger_init()
 {
     if (logger_uart_init())
     {
@@ -52,7 +53,7 @@ bool logger_init()
 
         logger_print_splash_screen();
 
-        logger_print_msg("==========================================================================");
+        logger_print_msg("===================================================================");
         logger_new_line();
         logger_print_msg("Version:\t");
         logger_print_firmware_version();
@@ -68,18 +69,18 @@ bool logger_init()
         logger_print_msg(FIRMWARE_AUTHOR_EMAIL);
         logger_print_msg(">");
         logger_new_line();
-        logger_print_msg("==========================================================================");
+        logger_print_msg("===================================================================");
         logger_new_line();
         logger_new_line();
         logger_new_line();
 
         logger_mutex_create();
 
-        return true;
+        return 0;
     }
     else
     {
-        return false;
+        return -1;
     }
 }
 
@@ -176,7 +177,7 @@ void logger_print_event_from_module(uint8_t type, const char *module, const char
 
 void logger_print_msg(const char *msg)
 {
-    uint8_t i = 0;
+    uint16_t i = 0;
     while(msg[i] != '\0')
     {
         logger_print_byte(msg[i]);
@@ -277,7 +278,7 @@ void logger_print_system_time()
 
 void logger_print_license_msg()
 {
-    logger_print_msg("OBDH 2.0 Copyright (C) 2019, SpaceLab;");
+    logger_print_msg("OBDH 2.0 Copyright (C) 2020, SpaceLab;");
     logger_new_line();
     logger_print_msg("This program comes with ABSOLUTELY NO WARRANTY.");
     logger_new_line();
@@ -288,41 +289,57 @@ void logger_print_license_msg()
     logger_new_line();
     logger_print_msg("Source code: https://github.com/spacelab-ufsc/obdh2");
     logger_new_line();
-    logger_print_msg("Documentation: https://github.com/spacelab-ufsc/obdh2/wiki");
+    logger_print_msg("Documentation: https://github.com/spacelab-ufsc/obdh2/doc");
     logger_new_line();
 }
 
 void logger_print_splash_screen()
 {
-    logger_print_msg("                                                                          ");
+    logger_print_msg("                                                                   ");
     logger_new_line();
-    logger_print_msg("                                                                          ");
+    logger_print_msg("                                                                   ");
     logger_new_line();
-    logger_print_msg("..........................................................................");
+    logger_print_msg("...................................................................");
     logger_new_line();
-    logger_print_msg("..........................................................................");
+    logger_print_msg("...................................................................");
     logger_new_line();
-    logger_print_msg("..........                                                      ..........");
+    logger_print_msg("..........                                               ..........");
     logger_new_line();
-    logger_print_msg("..........  _____ ____        _         ___  ____  ____  _   _  ..........");
+    logger_print_msg("..........  ____                       _          _      ..........");
     logger_new_line();
-    logger_print_msg(".......... |  ___/ ___|  __ _| |_      / _ \\| __ )|  _ \\| | | | ..........");
+    logger_print_msg(".......... / ___| _ __   __ _  ___ ___| |    __ _| |__   ..........");
     logger_new_line();
-    logger_print_msg(".......... | |_  \\___ \\ / _` | __|____| | | |  _ \\| | | | |_| | ..........");
+    logger_print_msg(".......... \\___ \\| '_ \\ / _` |/ __/ _ \\ |   / _` | '_ \\  ..........");
     logger_new_line();
-    logger_print_msg(".......... |  _|  ___) | (_| | ||_____| |_| | |_) | |_| |  _  | ..........");
+    logger_print_msg("..........  ___) | |_) | (_| | (_|  __/ |__| (_| | |_) | ..........");
     logger_new_line();
-    logger_print_msg(".......... |_|   |____/ \\__,_|\\__|     \\___/|____/|____/|_| |_| ..........");
+    logger_print_msg(".......... |____/| .__/ \\__,_|\\___\\___|_____\\__,_|_.__/  ..........");
     logger_new_line();
-    logger_print_msg("..........                                                      ..........");
+    logger_print_msg("..........       |_|                                     ..........");
     logger_new_line();
-    logger_print_msg("..........................................................................");
+    logger_print_msg("..........                                               ..........");
     logger_new_line();
-    logger_print_msg("..........................................................................");
+    logger_print_msg("..........     ___  ____  ____  _   _   ____    ___      ..........");
     logger_new_line();
-    logger_print_msg("                                                                          ");
+    logger_print_msg("..........    / _ \\| __ )|  _ \\| | | | |___ \\  / _ \\     ..........");
     logger_new_line();
-    logger_print_msg("                                                                          ");
+    logger_print_msg("..........   | | | |  _ \\| | | | |_| |   __) || | | |    ..........");
+    logger_new_line();
+    logger_print_msg("..........   | |_| | |_) | |_| |  _  |  / __/ | |_| |    ..........");
+    logger_new_line();
+    logger_print_msg("..........    \\___/|____/|____/|_| |_| |_____(_)___/     ..........");
+    logger_new_line();
+    logger_print_msg("..........                                               ..........");
+    logger_new_line();
+    logger_print_msg("..........                                               ..........");
+    logger_new_line();
+    logger_print_msg("...................................................................");
+    logger_new_line();
+    logger_print_msg("...................................................................");
+    logger_new_line();
+    logger_print_msg("                                                                   ");
+    logger_new_line();
+    logger_print_msg("                                                                   ");
     logger_new_line();
 }
 
@@ -331,14 +348,6 @@ void logger_print_firmware_version()
     logger_print_msg("[ ");
     logger_print_msg(FIRMWARE_VERSION);
     logger_print_msg(" ]");
-}
-
-void logger_abort()
-{
-    while(1)
-    {
-        
-    }
 }
 
 //! \} End of logger group
