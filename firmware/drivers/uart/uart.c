@@ -34,6 +34,7 @@
  */
 
 #include <hal/usci_a_uart.h>
+#include <hal/gpio.h>
 
 #include "uart.h"
 
@@ -108,10 +109,26 @@ int uart_init(uart_port_t port, uart_config_t config)
 
     switch(port)
     {
-        case UART_PORT_0:   base_address = USCI_A0_BASE;    break;
-        case UART_PORT_1:   base_address = USCI_A1_BASE;    break;
-        case UART_PORT_2:   base_address = USCI_A2_BASE;    break;
-        default:            return -1;
+        case UART_PORT_0:
+            base_address = USCI_A0_BASE;
+
+            GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P2, GPIO_PIN4 + GPIO_PIN5);
+
+            break;
+        case UART_PORT_1:
+            base_address = USCI_A1_BASE;
+
+            GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P8, GPIO_PIN2 + GPIO_PIN3);
+
+            break;
+        case UART_PORT_2:
+            base_address = USCI_A2_BASE;
+
+            GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P9, GPIO_PIN2 + GPIO_PIN3);
+
+            break;
+        default:
+            return -1;      // Invalid port
     }
 
     if (USCI_A_UART_init(base_address, &uart_params) != STATUS_SUCCESS)
