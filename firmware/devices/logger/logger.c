@@ -53,7 +53,7 @@ int logger_init()
 
         logger_print_splash_screen();
 
-        logger_print_msg("==========================================================================");
+        logger_print_msg("===================================================================");
         logger_new_line();
         logger_print_msg("Version:\t");
         logger_print_firmware_version();
@@ -69,7 +69,7 @@ int logger_init()
         logger_print_msg(FIRMWARE_AUTHOR_EMAIL);
         logger_print_msg(">");
         logger_new_line();
-        logger_print_msg("==========================================================================");
+        logger_print_msg("===================================================================");
         logger_new_line();
         logger_new_line();
         logger_new_line();
@@ -295,35 +295,51 @@ void logger_print_license_msg()
 
 void logger_print_splash_screen()
 {
-    logger_print_msg("                                                                          ");
+    logger_print_msg("                                                                   ");
     logger_new_line();
-    logger_print_msg("                                                                          ");
+    logger_print_msg("                                                                   ");
     logger_new_line();
-    logger_print_msg("..........................................................................");
+    logger_print_msg("...................................................................");
     logger_new_line();
-    logger_print_msg("..........................................................................");
+    logger_print_msg("...................................................................");
     logger_new_line();
-    logger_print_msg("..........                                                      ..........");
+    logger_print_msg("..........                                               ..........");
     logger_new_line();
-    logger_print_msg("..........  _____ ____        _         ___  ____  ____  _   _  ..........");
+    logger_print_msg("..........  ____                       _          _      ..........");
     logger_new_line();
-    logger_print_msg(".......... |  ___/ ___|  __ _| |_      / _ \\| __ )|  _ \\| | | | ..........");
+    logger_print_msg(".......... / ___| _ __   __ _  ___ ___| |    __ _| |__   ..........");
     logger_new_line();
-    logger_print_msg(".......... | |_  \\___ \\ / _` | __|____| | | |  _ \\| | | | |_| | ..........");
+    logger_print_msg(".......... \\___ \\| '_ \\ / _` |/ __/ _ \\ |   / _` | '_ \\  ..........");
     logger_new_line();
-    logger_print_msg(".......... |  _|  ___) | (_| | ||_____| |_| | |_) | |_| |  _  | ..........");
+    logger_print_msg("..........  ___) | |_) | (_| | (_|  __/ |__| (_| | |_) | ..........");
     logger_new_line();
-    logger_print_msg(".......... |_|   |____/ \\__,_|\\__|     \\___/|____/|____/|_| |_| ..........");
+    logger_print_msg(".......... |____/| .__/ \\__,_|\\___\\___|_____\\__,_|_.__/  ..........");
     logger_new_line();
-    logger_print_msg("..........                                                      ..........");
+    logger_print_msg("..........       |_|                                     ..........");
     logger_new_line();
-    logger_print_msg("..........................................................................");
+    logger_print_msg("..........                                               ..........");
     logger_new_line();
-    logger_print_msg("..........................................................................");
+    logger_print_msg("..........     ___  ____  ____  _   _   ____    ___      ..........");
     logger_new_line();
-    logger_print_msg("                                                                          ");
+    logger_print_msg("..........    / _ \\| __ )|  _ \\| | | | |___ \\  / _ \\     ..........");
     logger_new_line();
-    logger_print_msg("                                                                          ");
+    logger_print_msg("..........   | | | |  _ \\| | | | |_| |   __) || | | |    ..........");
+    logger_new_line();
+    logger_print_msg("..........   | |_| | |_) | |_| |  _  |  / __/ | |_| |    ..........");
+    logger_new_line();
+    logger_print_msg("..........    \\___/|____/|____/|_| |_| |_____(_)___/     ..........");
+    logger_new_line();
+    logger_print_msg("..........                                               ..........");
+    logger_new_line();
+    logger_print_msg("..........                                               ..........");
+    logger_new_line();
+    logger_print_msg("...................................................................");
+    logger_new_line();
+    logger_print_msg("...................................................................");
+    logger_new_line();
+    logger_print_msg("                                                                   ");
+    logger_new_line();
+    logger_print_msg("                                                                   ");
     logger_new_line();
 }
 
