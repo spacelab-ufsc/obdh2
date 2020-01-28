@@ -1,7 +1,7 @@
 /*
  * logger.h
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -21,7 +21,7 @@
  */
 
 /**
- * \brief Functions for printing messages and bytes over an UART port.
+ * \brief Functions for printing messages and variables over an UART port.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
@@ -40,8 +40,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "FreeRTOS.h"
-#include "semphr.h"
+#include <FreeRTOS.h>
+#include <semphr.h>
 
 /**
  * \brief Event types.
@@ -74,16 +74,16 @@ typedef enum
 extern SemaphoreHandle_t xLoggerSemaphore;
 
 /**
- * \brief Initialization of the logger mode.
+ * \brief Initialization of the logger device.
  * 
- * \return TRUE/FALSE if successful or not:
+ * \return The error/status code.
  */
-bool logger_init();
+int logger_init();
 
 /**
- * \brief Sets the foreground color for the next logger message.
+ * \brief Sets the foreground color for the next log message.
  *
- * This function uses the ANSI color code to output color logger messages.
+ * This function uses the ANSI color code to output color log messages.
  *
  * \param[in] color is the foreground color of text to select. It can be:
  * \parblock
@@ -119,6 +119,7 @@ void logger_reset_color();
  *      -\b LOGGER_ERROR
  *      .
  * \endparblock
+ *
  * \param[in] event is the event text.
  *
  * \return None.
@@ -135,7 +136,9 @@ void logger_print_event(uint8_t type, const char *event);
  *      -\b LOGGER_ERROR
  *      .
  * \endparblock
+ *
  * \param[in] module is the module name.
+ *
  * \param[in] event is the event text.
  *
  * \return None.
@@ -143,7 +146,7 @@ void logger_print_event(uint8_t type, const char *event);
 void logger_print_event_from_module(uint8_t type, const char *module, const char *event);
 
 /**
- * \brief Prints a message over the UART.
+ * \brief Prints a message over the UART port.
  * 
  * \param[in] msg is the message to be written.
  * 
@@ -227,15 +230,6 @@ void logger_print_splash_screen();
  * \return None.
  */
 void logger_print_firmware_version();
-
-/**
- * \brief Puts the program in an infinite loop.
- * 
- * This function can be used in case of a critical error during debug mode.
- * 
- * \return None.
- */
-void logger_abort();
 
 /**
  * \brief Initialization of the logger UART port.

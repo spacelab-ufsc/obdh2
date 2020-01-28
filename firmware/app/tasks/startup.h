@@ -39,15 +39,24 @@
 
 #include <FreeRTOS.h>
 #include <task.h>
+#include <event_groups.h>
 
 #define TASK_STARTUP_NAME                   "Startup"
 #define TASK_STARTUP_STACK_SIZE             500
 #define TASK_STARTUP_PRIORITY               5
 
+// Status done bit position
+#define TASK_STARTUP_DONE                   (1 << 0)
+
 /**
  * \brief Startup task handle.
  */
 extern xTaskHandle xTaskStartupHandle;
+
+/**
+ * \brief Startup status event group.
+ */
+extern EventGroupHandle_t task_startup_status;
 
 /**
  * \brief System startup task.

@@ -43,6 +43,13 @@
  */
 void create_tasks();
 
+/**
+ * \brief Creates the system event groups.
+ *
+ * \return None.
+ */
+void create_event_groups();
+
 #endif // TASKS_H_
 
 //! \} End of tasks group

@@ -30,7 +30,7 @@
  * \date 22/01/2020
  * 
  * \defgroup setup System setup
- * \ingroup app
+ * \ingroup system
  * \{
  */
 
