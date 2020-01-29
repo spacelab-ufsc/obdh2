@@ -30,23 +30,23 @@ A list of the firmware tasks can be seen in the \autoref{tab:firmware-tasks}.
 
 \begin{table}[!h]
     \centering
-    \begin{tabular}{lllll}
+    \begin{tabular}{llllll}
         \toprule[1.5pt]
-        \textit{Name}          & \textit{Priority} & \textit{Initial delay [ms]} & \textit{Period [ms]} \\
+        \textit{Name}          & \textit{Priority} & \textit{Initial delay [ms]} & \textit{Period [ms]} & \textit{Stack [bytes]} \\
         \midrule
-        Startup (boot)         & Highest           & 0                           & Aperiodic            \\
-        Deployment hibernation & Highest           & 0                           & Aperiodic            \\
-        Antenna deployment     & Highest           & 0                           & Aperiodic            \\
-        Watchdog reset         & Lowest            & 0                           & 100                  \\
-        Heartbeat              & Lowest            & 0                           & 500                  \\
-        Periodic downlink      & Medium            & 5000                        & 60000                \\
-        Uplink                 & High              & 5000                        & 1000                 \\
-        EPS reading            & Medium            & 5000                        & 60000                \\
-        EDC reading            & High              & 5000                        & 1000                 \\
-        Payload X reading      & Medium            & 5000                        & 5000                 \\
-        TTC writing            & Medium            & 5000                        & Beacon period        \\
-        Radio periodoc reset   & Low               & 0                           & 600000               \\
-        System reset           & High              & 0                           & 36000000 (10 h)      \\
+        Startup (boot)         & Highest           & 0                           & Aperiodic            & 500                    \\
+        Deployment hibernation & Highest           & 0                           & Aperiodic            & TBD                    \\
+        Antenna deployment     & Highest           & 0                           & Aperiodic            & TBD                    \\
+        Watchdog reset         & Lowest            & 0                           & 100                  & TBD                    \\
+        Heartbeat              & Lowest            & 0                           & 500                  & 128                    \\
+        Periodic downlink      & Medium            & 5000                        & 60000                & 128                    \\
+        Uplink                 & High              & 5000                        & 1000                 & TBD                    \\
+        EPS reading            & Medium            & 5000                        & 60000                & TBD                    \\
+        EDC reading            & High              & 5000                        & 1000                 & TBD                    \\
+        Payload X reading      & Medium            & 5000                        & 5000                 & TBD                    \\
+        TTC writing            & Medium            & 5000                        & 10000                & TBD                    \\
+        Radio periodoc reset   & Low               & 0                           & 600000               & TBD                    \\
+        System reset           & High              & 0                           & 36000000             & 128                    \\
         \bottomrule[1.5pt]
     \end{tabular}
     \caption{Firmware tasks.}
