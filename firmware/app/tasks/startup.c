@@ -1,7 +1,7 @@
 /*
  * startup.c
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.1.1
  * 
  * \date 04/12/2019
  * 
@@ -36,6 +36,7 @@
 #include <devices/watchdog/watchdog.h>
 #include <devices/logger/logger.h>
 #include <devices/leds/leds.h>
+#include <system/clocks.h>
 
 #include "startup.h"
 
@@ -48,11 +49,30 @@ void vTaskStartup(void *pvParameters)
     // Logger device initialization
     logger_init();
 
+    // Print the FreeRTOS version
+    logger_print_event_from_module(LOGGER_INFO, TASK_STARTUP_NAME, "FreeRTOS ");
+    logger_print_msg(tskKERNEL_VERSION_NUMBER);
+    logger_new_line();
+
+    // Print the system clocks
+    clocks_config_t clks = clocks_read();
+    logger_print_event_from_module(LOGGER_INFO, TASK_STARTUP_NAME, "System clocks: MCLK=");
+    logger_print_dec(clks.mclk_hz);
+    logger_print_msg(" Hz, SMCLK=");
+    logger_print_dec(clks.smclk_hz);
+    logger_print_msg(" Hz, ACLK=");
+    logger_print_dec(clks.aclk_hz);
+    logger_print_msg(" Hz");
+    logger_new_line();
+
     // LEDs device initialization
     leds_init();
 
     // Startup task status = Done
     xEventGroupSetBits(task_startup_status, TASK_STARTUP_DONE);
+
+    logger_print_event_from_module(LOGGER_INFO, TASK_STARTUP_NAME, "Boot completed with SUCCESS!");
+    logger_new_line();
 
     vTaskSuspend(xTaskStartupHandle);
 }

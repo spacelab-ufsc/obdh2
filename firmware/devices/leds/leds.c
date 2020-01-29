@@ -1,7 +1,7 @@
 /*
  * leds.c
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.1.1
  * 
  * \date 20/01/2020
  * 
@@ -33,12 +33,16 @@
  * \{
  */
 
+#include <devices/logger/logger.h>
 #include <drivers/gpio/gpio.h>
 
 #include "leds.h"
 
 int leds_init()
 {
+    logger_print_event_from_module(LOGGER_INFO, LEDS_MODULE_NAME, "Initializing system LEDs...");
+    logger_new_line();
+
     gpio_config_t config_sys = {.mode = GPIO_MODE_OUTPUT};
     gpio_config_t config_fault = {.mode = GPIO_MODE_OUTPUT};
 
@@ -48,6 +52,9 @@ int leds_init()
     }
     else
     {
+        logger_print_event_from_module(LOGGER_ERROR, LEDS_MODULE_NAME, "Error initializing the system LEDs!");
+        logger_new_line();
+
         return -1;
     }
 }
