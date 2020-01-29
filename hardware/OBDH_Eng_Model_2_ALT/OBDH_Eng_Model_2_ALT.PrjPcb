@@ -28,7 +28,7 @@ DItemRevisionGUID=
 ReportSuppressedErrorsInMessages=0
 FSMCodingStyle=eFMSDropDownList_OneProcess
 FSMEncodingStyle=eFMSDropDownList_OneHot
-OutputPath=Project Outputs for OBDH_Eng_Model_2_ALT
+OutputPath=
 LogFolderPath=
 ManagedProjectGUID=
 IncludeDesignInRelease=0
@@ -343,90 +343,6 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
 
-[GeneratedDocument1]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.DRR
-DItemRevisionGUID=
-
-[GeneratedDocument2]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.EXTREP
-DItemRevisionGUID=
-
-[GeneratedDocument3]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GBL
-DItemRevisionGUID=
-
-[GeneratedDocument4]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GBO
-DItemRevisionGUID=
-
-[GeneratedDocument5]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GBP
-DItemRevisionGUID=
-
-[GeneratedDocument6]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GBS
-DItemRevisionGUID=
-
-[GeneratedDocument7]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GKO
-DItemRevisionGUID=
-
-[GeneratedDocument8]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GM1
-DItemRevisionGUID=
-
-[GeneratedDocument9]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GM13
-DItemRevisionGUID=
-
-[GeneratedDocument10]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GM15
-DItemRevisionGUID=
-
-[GeneratedDocument11]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GM17
-DItemRevisionGUID=
-
-[GeneratedDocument12]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GPB
-DItemRevisionGUID=
-
-[GeneratedDocument13]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GPT
-DItemRevisionGUID=
-
-[GeneratedDocument14]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GTL
-DItemRevisionGUID=
-
-[GeneratedDocument15]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GTO
-DItemRevisionGUID=
-
-[GeneratedDocument16]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GTP
-DItemRevisionGUID=
-
-[GeneratedDocument17]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.GTS
-DItemRevisionGUID=
-
-[GeneratedDocument18]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.LDP
-DItemRevisionGUID=
-
-[GeneratedDocument19]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.REP
-DItemRevisionGUID=
-
-[GeneratedDocument20]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.RUL
-DItemRevisionGUID=
-
-[GeneratedDocument21]
-DocumentPath=Project Outputs for OBDH_Eng_Model_2_ALT\PCB_OBDH_ALT.TXT
-DItemRevisionGUID=
-
 [DeviceSheetFolder1]
 Path=C:\Users\Vostro\Desktop\Hardware - Cópia\OBDH_Eng_Model_2_ALT\Sources\
 IncludeSubFolders=0
@@ -478,7 +394,7 @@ SCH_HasExpandLogicalToPhysicalSheets=-1
 SaveSettingsToOutJob=0
 
 [Generic_EDE]
-OutputDir=Project Outputs for OBDH_Eng_Model_2_ALT
+OutputDir=
 
 [OutputGroup1]
 Name=Netlist Outputs
@@ -1406,7 +1322,7 @@ Type40=1
 Type41=1
 Type42=1
 Type43=1
-Type44=0
+Type44=1
 Type45=1
 Type46=1
 Type47=1
@@ -1969,12 +1885,16 @@ UpdateVariants=1
 PartTypes=0
 
 [NetInfos]
-Net1=NetName=NetJ_V5_2|NetColor=$00FF6E6E
-Net2=NetName=OBDH_AVCC|NetColor=$00FFFF6E
-Net3=NetName=NetJ_V6_2|NetColor=$00FF6E6E
-Net4=NetName=OBDH_DVCC|NetColor=$00FF6E6E
-Net5=NetName=ANTENNA_VCC|NetColor=$00FF6EFF
-Net6=NetName=COMMON_VCC|NetColor=$0000BE00
+Net1=NetName=GND|NetColor=$000083FD
+Net2=NetName=AGND|NetColor=$0001F1FD
+Net3=NetName=OBDH_AVCC|NetColor=$00CA9C00
+Net4=NetName=OBDH_DVCC|NetColor=$00C9B08B
+Net5=NetName=BATTERY_VCC|NetColor=$005D3900
+Net6=NetName=NetJ_V5_2|NetColor=$00C9B08B
+Net7=NetName=ANTENNA_VCC|NetColor=$006EA300
+Net8=NetName=NetJ_V6_2|NetColor=$00C9B08B
+Net9=NetName=COMMON_VCC|NetColor=$006F2F68
+Net10=NetName=OBDH_VCC|NetColor=$00560F45
 
 [Comparison Options]
 ComparisonOptions0=Kind=Net|MinPercent=75|MinMatch=3|ShowMatch=-1|Confirm=-1|UseName=-1|InclAllRules=0
