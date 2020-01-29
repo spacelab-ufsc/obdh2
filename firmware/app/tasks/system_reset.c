@@ -1,7 +1,7 @@
 /*
  * system_reset.c
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.1.2
  * 
  * \date 12/01/2020
  * 
@@ -33,20 +33,23 @@
  * \{
  */
 
+#include <devices/logger/logger.h>
+#include <system/system.h>
+
 #include "system_reset.h"
 
 xTaskHandle xTaskSystemResetHandle;
 
 void vTaskSystemReset(void *pvParameters)
 {
-    // Delay before the first cycle
-    vTaskDelay(pdMS_TO_TICKS(TASK_SYSTEM_RESET_INITIAL_DELAY_MS));
-
     while(1)
     {
-        TickType_t last_cycle = xTaskGetTickCount();
+        vTaskDelay(pdMS_TO_TICKS(TASK_SYSTEM_RESET_PERIOD_MS));
 
-        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_SYSTEM_RESET_PERIOD_MS));
+        logger_print_event_from_module(LOGGER_INFO, TASK_SYSTEM_RESET_NAME, "Restarting the system...");
+        logger_new_line();
+
+        system_reset();
     }
 }
 

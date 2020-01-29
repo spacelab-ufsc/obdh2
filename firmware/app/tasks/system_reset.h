@@ -1,7 +1,7 @@
 /*
  * system_reset.h
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.1.2
  * 
  * \date 12/01/2020
  * 
@@ -44,7 +44,6 @@
 #define TASK_SYSTEM_RESET_STACK_SIZE                128                 /**< Stack size in bytes. */
 #define TASK_SYSTEM_RESET_PRIORITY                  2                   /**< Task priority. */
 #define TASK_SYSTEM_RESET_PERIOD_MS                 (1000UL*60*60*10)   /**< Task period in milliseconds. */
-#define TASK_SYSTEM_RESET_INITIAL_DELAY_MS          0                   /**< Delay, in milliseconds, before the first execution. */
 
 /**
  * \brief Periodic system reset handle.
@@ -53,6 +52,8 @@ extern xTaskHandle xTaskSystemResetHandle;
 
 /**
  * \brief Periodic system reset task.
+ *
+ * This task resets the microcontroller.
  *
  * \param[in] pvParameters is a value that will passed as the task's parameter.
  *
