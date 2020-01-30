@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.2
+ * \version 0.1.3
  * 
  * \date 26/10/2019
  * 
@@ -41,6 +41,7 @@
 #define CONFIG_TASK_WATCHDOG_RESET_ENABLED              1
 #define CONFIG_TASK_HEARTBEAT_ENABLED                   1
 #define CONFIG_TASK_SYSTEM_RESET_ENABLED                1
+#define CONFIG_TASK_RADIO_RESET_ENABLED                 1
 
 #endif // CONFIG_H_
 

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.2
+ * \version 0.1.3
  * 
  * \date 02/11/2019
  * 
@@ -43,6 +43,7 @@
 #include "watchdog_reset.h"
 #include "heartbeat.h"
 #include "system_reset.h"
+#include "radio_reset.h"
 
 void create_tasks()
 {
@@ -84,6 +85,15 @@ void create_tasks()
         // Error creating the system reset task
     }
 #endif // CONFIG_TASK_SYSTEM_RESET_ENABLED
+
+#if CONFIG_TASK_RADIO_RESET_ENABLED == 1
+    xTaskCreate(vTaskRadioReset, TASK_RADIO_RESET_NAME, TASK_RADIO_RESET_STACK_SIZE, NULL, TASK_RADIO_RESET_PRIORITY, &xTaskRadioResetHandle);
+
+    if (xTaskRadioResetHandle == NULL)
+    {
+        // Error creating the radio reset task
+    }
+#endif // CONFIG_TASK_RADIO_RESET_ENABLED
 
     create_event_groups();
 }
