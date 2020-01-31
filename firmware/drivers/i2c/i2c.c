@@ -1,7 +1,7 @@
 /*
  * i2c.c
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.1.5
  * 
  * \date 07/12/2019
  * 
@@ -33,11 +33,52 @@
  * \{
  */
 
+#include <hal/usci_b_i2c.h>
+#include <hal/gpio.h>
+
 #include "i2c.h"
 
 int i2c_init(i2c_port_t port, i2c_config_t config)
 {
-    return -1;
+    switch(config.speed_hz)
+    {
+        case USCI_B_I2C_SET_DATA_RATE_100KBPS:      break;
+        case USCI_B_I2C_SET_DATA_RATE_400KBPS:      break;
+        default:
+            return -1;  // Invalid transfer rate
+    }
+
+    uint16_t base_address;
+
+    switch(port)
+    {
+        case I2C_PORT_0:
+            base_address = USCI_B0_BASE;
+            GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P2, GPIO_PIN1 + GPIO_PIN2);
+            break;
+        case I2C_PORT_1:
+            base_address = USCI_B1_BASE;
+            GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P8, GPIO_PIN4 + GPIO_PIN5);
+            break;
+        case I2C_PORT_2:
+            base_address = USCI_B2_BASE;
+            GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P9, GPIO_PIN5 + GPIO_PIN6);
+            break;
+        default:
+            return -1;  // Invalid port
+    }
+
+    USCI_B_I2C_initMasterParam i2c_params;
+
+    i2c_params.selectClockSource    = USCI_B_I2C_CLOCKSOURCE_SMCLK;
+    i2c_params.i2cClk               = config.clk_hz;
+    i2c_params.dataRate             = config.speed_hz;
+
+    USCI_B_I2C_initMaster(base_address, &i2c_params);
+
+    USCI_B_I2C_enable(base_address);
+
+    return 0;
 }
 
 int i2c_write(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
