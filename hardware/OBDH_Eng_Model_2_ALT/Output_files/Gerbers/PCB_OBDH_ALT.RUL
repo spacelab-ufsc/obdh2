@@ -1,4 +1,4 @@
-DRC Rules Export File for PCB: C:\Users\Vostro\Desktop\Hardware\Sources\PCB_OBDH_ALT.PcbDoc
+DRC Rules Export File for PCB: C:\Users\Vostro\Desktop\GitHub\obdh2\hardware\OBDH_Eng_Model_2_ALT\Sources\PCB_OBDH_ALT.PcbDoc
 RuleKind=Width|RuleName=Width_Power|Scope=Board|Minimum=20.00
 RuleKind=Clearance|RuleName=Clearance|Scope=Board|Minimum=7.00
 RuleKind=Width|RuleName=Width|Scope=Board|Minimum=5.00
