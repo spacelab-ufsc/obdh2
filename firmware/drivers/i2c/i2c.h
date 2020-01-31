@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.5
+ * \version 0.1.7
  * 
  * \date 07/12/2019
  * 
@@ -54,7 +54,6 @@ typedef enum
  */
 typedef struct
 {
-    uint32_t clk_hz;    /**< Source clock in Hertz. */
     uint32_t speed_hz;  /**< Transfer rate in bps (available values: 100 or 400 kbps). */
 } i2c_config_t;
 

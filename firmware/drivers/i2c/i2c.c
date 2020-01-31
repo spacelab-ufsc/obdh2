@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.6
+ * \version 0.1.7
  * 
  * \date 07/12/2019
  * 
@@ -66,13 +66,13 @@ int i2c_init(i2c_port_t port, i2c_config_t config)
             GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P9, GPIO_PIN5 + GPIO_PIN6);
             break;
         default:
-            return -1;  // Invalid port
+            return -1;  // Invalid I2C port
     }
 
     USCI_B_I2C_initMasterParam i2c_params;
 
     i2c_params.selectClockSource    = USCI_B_I2C_CLOCKSOURCE_SMCLK;
-    i2c_params.i2cClk               = config.clk_hz;
+    i2c_params.i2cClk               = UCS_getSMCLK();
     i2c_params.dataRate             = config.speed_hz;
 
     USCI_B_I2C_initMaster(base_address, &i2c_params);
