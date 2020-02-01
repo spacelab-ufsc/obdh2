@@ -1,5 +1,5 @@
 /*
- * system_reset.h
+ * radio_reset.h
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,46 +21,45 @@
  */
 
 /**
- * \brief Periodic system reset task definition.
+ * \brief Periodic radio reset task definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.2
  * 
- * \date 12/01/2020
+ * \date 29/01/2020
  * 
- * \defgroup system_reset System Reset
+ * \defgroup radio_reset Radio Reset
  * \ingroup tasks
  * \{
  */
 
-#ifndef SYSTEM_RESET_H_
-#define SYSTEM_RESET_H_
+#ifndef RADIO_RESET_H_
+#define RADIO_RESET_H_
 
 #include <FreeRTOS.h>
 #include <task.h>
 
-#define TASK_SYSTEM_RESET_NAME                      "SystemReset"       /**< Task name. */
-#define TASK_SYSTEM_RESET_STACK_SIZE                128                 /**< Stack size in bytes. */
-#define TASK_SYSTEM_RESET_PRIORITY                  2                   /**< Task priority. */
-#define TASK_SYSTEM_RESET_PERIOD_MS                 (1000UL*60*60*10)   /**< Task period in milliseconds. */
+#define TASK_RADIO_RESET_NAME               "RadioReset"    /**< Task name. */
+#define TASK_RADIO_RESET_STACK_SIZE         128             /**< Stack size in bytes. */
+#define TASK_RADIO_RESET_PRIORITY           5               /**< Task priority. */
+#define TASK_RADIO_RESET_PERIOD_MS          60000           /**< Task period in milliseconds. */
+#define TASK_RADIO_RESET_INITIAL_DELAY_MS   60000           /**< Delay, in milliseconds, before the first execution. */
 
 /**
- * \brief Periodic system reset handle.
+ * \brief Radio reset handle.
  */
-extern xTaskHandle xTaskSystemResetHandle;
+extern xTaskHandle xTaskRadioResetHandle;
 
 /**
- * \brief Periodic system reset task.
- *
- * This task resets the microcontroller.
+ * \brief Periodic radio reset task.
  *
  * \param[in] pvParameters is a value that will passed as the task's parameter.
  *
  * \return None.
  */
-void vTaskSystemReset(void *pvParameters);
+void vTaskRadioReset(void *pvParameters);
 
-#endif // SYSTEM_RESET_H_
+#endif // RADIO_RESET_H_
 
-//! \} End of system_reset group
+//! \} End of radio_reset group

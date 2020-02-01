@@ -1,7 +1,10 @@
 ===========================================
 
-v0.1.0 - 26/10/2019
+v0.1 - 27/01/2020
 
-- First version
+- First release
+- Prototype version of the hardware
+- Initial documentation
+- Base version of the firmware (FreeRTOS, watchdog, heartbeat and log messages)
 
 ===========================================

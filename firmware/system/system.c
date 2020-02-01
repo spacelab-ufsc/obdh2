@@ -1,5 +1,5 @@
 /*
- * system.h
+ * system.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,30 +21,27 @@
  */
 
 /**
- * \brief System layer definition.
+ * \brief System management routines implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.2
  * 
- * \date 25/01/2020
+ * \date 29/01/2020
  * 
- * \defgroup system System
+ * \addtogroup system
  * \{
  */
 
-#ifndef SYSTEM_H_
-#define SYSTEM_H_
+#include <msp430.h>
 
-#include "clocks.h"
+#include "system.h"
 
-/**
- * \brief System reset.
- *
- * \return None.
- */
-void system_reset();
+void system_reset()
+{
+    PMMCTL0 = PMMPW | PMMSWBOR;     // Triggers a software BOR
 
-#endif // SYSTEM_H_
+    WDTCTL = 0xDEAD;                // Reset system by writing to the WDT register without using the proper password
+}
 
 //! \} End of system group

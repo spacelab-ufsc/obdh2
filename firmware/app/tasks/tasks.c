@@ -1,7 +1,7 @@
 /*
  * tasks.c
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.1.3
  * 
  * \date 02/11/2019
  * 
@@ -42,6 +42,8 @@
 #include "startup.h"
 #include "watchdog_reset.h"
 #include "heartbeat.h"
+#include "system_reset.h"
+#include "radio_reset.h"
 
 void create_tasks()
 {
@@ -74,6 +76,24 @@ void create_tasks()
         // Error creating the heartbeat task
     }
 #endif // CONFIG_TASK_HEARTBEAT_ENABLED
+
+#if CONFIG_TASK_SYSTEM_RESET_ENABLED == 1
+    xTaskCreate(vTaskSystemReset, TASK_SYSTEM_RESET_NAME, TASK_SYSTEM_RESET_STACK_SIZE, NULL, TASK_SYSTEM_RESET_PRIORITY, &xTaskSystemResetHandle);
+
+    if (xTaskSystemResetHandle == NULL)
+    {
+        // Error creating the system reset task
+    }
+#endif // CONFIG_TASK_SYSTEM_RESET_ENABLED
+
+#if CONFIG_TASK_RADIO_RESET_ENABLED == 1
+    xTaskCreate(vTaskRadioReset, TASK_RADIO_RESET_NAME, TASK_RADIO_RESET_STACK_SIZE, NULL, TASK_RADIO_RESET_PRIORITY, &xTaskRadioResetHandle);
+
+    if (xTaskRadioResetHandle == NULL)
+    {
+        // Error creating the radio reset task
+    }
+#endif // CONFIG_TASK_RADIO_RESET_ENABLED
 
     create_event_groups();
 }

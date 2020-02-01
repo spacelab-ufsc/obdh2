@@ -1,5 +1,5 @@
 /*
- * system.h
+ * radio_reset.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,30 +21,33 @@
  */
 
 /**
- * \brief System layer definition.
+ * \brief Periodic radio reset task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.2
  * 
- * \date 25/01/2020
+ * \date 29/01/2020
  * 
- * \defgroup system System
+ * \addtogroup radio_reset
  * \{
  */
 
-#ifndef SYSTEM_H_
-#define SYSTEM_H_
+#include "radio_reset.h"
 
-#include "clocks.h"
+xTaskHandle xTaskRadioResetHandle;
 
-/**
- * \brief System reset.
- *
- * \return None.
- */
-void system_reset();
+void vTaskRadioReset(void *pvParameters)
+{
+    // Delay before the first cycle
+    vTaskDelay(pdMS_TO_TICKS(TASK_RADIO_RESET_INITIAL_DELAY_MS));
 
-#endif // SYSTEM_H_
+    while(1)
+    {
+        TickType_t last_cycle = xTaskGetTickCount();
 
-//! \} End of system group
+        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_RADIO_RESET_PERIOD_MS));
+    }
+}
+
+//! \} End of radio_reset group
