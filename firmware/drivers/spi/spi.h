@@ -1,7 +1,7 @@
 /*
  * spi.h
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.1.9
  * 
  * \date 07/12/2019
  * 
@@ -46,7 +46,10 @@ typedef enum
 {
     SPI_PORT_0=0,       /**< SPI port 0. */
     SPI_PORT_1,         /**< SPI port 1. */
-    SPI_PORT_2          /**< SPI port 2. */
+    SPI_PORT_2,         /**< SPI port 2. */
+    SPI_PORT_3,         /**< SPI port 3. */
+    SPI_PORT_4,         /**< SPI port 4. */
+    SPI_PORT_5          /**< SPI port 5. */
 } spi_ports_e;
 
 /**
@@ -67,11 +70,28 @@ typedef enum
 } spi_cs_e;
 
 /**
+ * \brief SPI modes.
+ */
+typedef enum
+{
+    SPI_MODE_0=0,       /**< SPI mode 0 (Clock Polarity = 0, Clock Phase = 0). */
+    SPI_MODE_1,         /**< SPI mode 1 (Clock Polarity = 0, Clock Phase = 1). */
+    SPI_MODE_2,         /**< SPI mode 2 (Clock Polarity = 1, Clock Phase = 0). */
+    SPI_MODE_3          /**< SPI mode 3 (Clock Polarity = 1, Clock Phase = 1). */
+} spi_modes_e;
+
+/**
+ * \brief SPI mode type.
+ */
+typedef uint8_t spi_mode_t;
+
+/**
  * \brief SPI bus configuration parameters.
  */
 typedef struct
 {
-    uint32_t speed;
+    uint32_t speed_hz;  /**< Transfer rate in Hertz. */
+    spi_mode_t mode;    /**< SPI mode (0, 1, 2 or 3). */
 } spi_config_t;
 
 /**

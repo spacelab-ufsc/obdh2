@@ -1,7 +1,7 @@
 /*
  * system.h
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.1.2
  * 
  * \date 25/01/2020
  * 
@@ -37,6 +37,13 @@
 #define SYSTEM_H_
 
 #include "clocks.h"
+
+/**
+ * \brief System reset.
+ *
+ * \return None.
+ */
+void system_reset();
 
 #endif // SYSTEM_H_
 

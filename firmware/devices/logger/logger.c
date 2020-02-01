@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.1.4
  * 
  * \date 03/11/2019
  * 
@@ -270,7 +270,7 @@ void logger_print_system_time()
     logger_set_color(LOGGER_SYSTEM_TIME_COLOR);
 
     logger_print_msg("[ ");
-    logger_print_dec(xTaskGetTickCount()*10);    // System time in milliseconds
+    logger_print_dec(xTaskGetTickCount());  // System time in milliseconds
     logger_print_msg(" ]");
 
     logger_reset_color();
