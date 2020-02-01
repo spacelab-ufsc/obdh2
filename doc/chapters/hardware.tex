@@ -96,11 +96,25 @@ Currently, ``\textit{Payload 1}'' and ``\textit{Payload 2}'' are ``\textit{Paylo
 
 \subsection{Antenna Module}
 
-
+\begin{figure}[!htb]
+    \begin{center}
+        \subfigure[Debug interface of the antenna module.\label{fig:ant-debug-connector}]{\includegraphics[width=0.115\textwidth]{figures/p5-connector.png}}
+        \qquad
+        \subfigure[Main interface of the antenna module.\label{fig:ant-main-connector}]{\includegraphics[width=0.15\textwidth]{figures/p4-connector.png}}
+        \caption{Antenna module conectors.}
+        \label{fig:ant-connectors}
+    \end{center}
+\end{figure}
 
 \subsection{Programmer}
 
-
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=0.4\textwidth]{figures/jtag-connector.png}
+        \caption{JTAG connectors (P1 and P2).}
+        \label{fig:jtag-connectors}
+    \end{center}
+\end{figure}
 
 \subsection{Debug Interface}
 
@@ -108,13 +122,21 @@ Currently, ``\textit{Payload 1}'' and ``\textit{Payload 2}'' are ``\textit{Paylo
 
 \subsection{Daughterboard}
 
-The daughterboard interface uses the Samtec FSI-110-D connector. An illustration of the connector can be seen in the \autoref{fig:samtec-connector}.
+The daughterboard interface uses the Samtec FSI-110-D connector. An illustration of the connector can be seen in the \autoref{fig:samtec-connector}. A picture of this connector on the PCB can be seen in \autoref{fig:daughterboard-connector}.
 
 \begin{figure}[!ht]
     \begin{center}
         \includegraphics[width=0.4\textwidth]{figures/samtec_fsi-110-03-g-d-ad.jpeg}
         \caption{Samtec FSI-110-03-G-D-AD connector.}
         \label{fig:samtec-connector}
+    \end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=0.2\textwidth]{figures/p3-connector.png}
+        \caption{Daughterboard connector (P3).}
+        \label{fig:daughterboard-connector}
     \end{center}
 \end{figure}
 
