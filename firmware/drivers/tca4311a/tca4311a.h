@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.10
+ * \version 0.1.11
  * 
  * \date 01/02/2020
  * 
@@ -142,7 +142,7 @@ int tca4311a_disable(tca4311a_config_t config);
  *      .
  * \endparblock
  */
-int tca4311a_ready(tca4311a_config_t config);
+int tca4311a_is_ready(tca4311a_config_t config);
 
 /**
  * \brief Writes data to a given I2C slave.

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.10
+ * \version 0.1.11
  * 
  * \date 01/02/2020
  * 
@@ -37,42 +37,103 @@
 
 int tca4311a_init(tca4311a_config_t config, bool en)
 {
-    return TCA4311A_ERROR;
+    int res_i2c = i2c_init(config.i2c_port, config.i2c_config);
+
+    int res_en = gpio_init(config.en_pin, (gpio_config_t){.mode=GPIO_MODE_OUTPUT});
+
+    int res_ready = gpio_init(config.ready_pin, (gpio_config_t){.mode=GPIO_MODE_INPUT});
+
+    if ((res_i2c != 0) || (res_en != 0) || (res_ready != 0))
+    {
+        return TCA4311A_ERROR;
+    }
+
+    if (en)
+    {
+        return tca4311a_enable(config);
+    }
+    else
+    {
+        return tca4311a_disable(config);
+    }
 }
 
 int tca4311a_enable(tca4311a_config_t config)
 {
-    return TCA4311A_ERROR;
+    if (gpio_set_state(config.en_pin, true) != 0)
+    {
+        return TCA4311A_ERROR;
+    }
+
+    return tca4311a_is_ready(config);
 }
 
 int tca4311a_disable(tca4311a_config_t config)
 {
-    return TCA4311A_ERROR;
+    if (gpio_set_state(config.en_pin, false) != 0)
+    {
+        return TCA4311A_ERROR;
+    }
+
+    return tca4311a_is_ready(config);
 }
 
-int tca4311a_ready(tca4311a_config_t config)
+int tca4311a_is_ready(tca4311a_config_t config)
 {
-    return TCA4311A_ERROR;
+    int result = gpio_get_state(config.ready_pin);
+
+    if (result == GPIO_STATE_HIGH)
+    {
+        return TCA4311A_READY;
+    }
+    else if (result == GPIO_STATE_LOW)
+    {
+        return TCA4311A_NOT_READY;
+    }
+    else
+    {
+        return TCA4311A_ERROR;
+    }
 }
 
 int tca4311a_write(tca4311a_config_t config, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
 {
-    return TCA4311A_ERROR;
+    if (i2c_write(config.i2c_port, adr, data, len) != 0)
+    {
+        return TCA4311A_ERROR;
+    }
+
+    return tca4311a_is_ready(config);
 }
 
 int tca4311a_read(tca4311a_config_t config, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
 {
-    return TCA4311A_ERROR;
+    if (i2c_read(config.i2c_port, adr, data, len) != 0)
+    {
+        return TCA4311A_ERROR;
+    }
+
+    return tca4311a_is_ready(config);
 }
 
 int tca4311a_write_byte(tca4311a_config_t config, i2c_slave_adr_t adr, uint8_t byte)
 {
-    return TCA4311A_ERROR;
+    if (i2c_write(config.i2c_port, adr, &byte, 1) != 0)
+    {
+        return TCA4311A_ERROR;
+    }
+
+    return tca4311a_is_ready(config);
 }
 
 int tca4311a_read_byte(tca4311a_config_t config, i2c_slave_adr_t adr, uint8_t *byte)
 {
-    return TCA4311A_ERROR;
+    if (i2c_read(config.i2c_port, adr, byte, 1) != 0)
+    {
+        return TCA4311A_ERROR;
+    }
+
+    return tca4311a_is_ready(config);
 }
 
 //! \} End of tca4311a group
