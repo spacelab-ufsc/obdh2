@@ -1,7 +1,7 @@
 /*
  * uart.h
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.1.12
  * 
  * \date 07/12/2019
  * 
@@ -69,6 +69,15 @@ typedef enum
 } uart_stop_bits_e;
 
 /**
+ * \brief RX data availability.
+ */
+typedef enum
+{
+    UART_NOT_AVAILABLE=0,   /**< Data is not available in the RX buffer. */
+    UART_AVAILABLE          /**< Data is available in the RX buffer. */
+} uart_data_availability_e;
+
+/**
  * \brief UART port configuration parameters.
  */
 typedef struct
@@ -101,6 +110,36 @@ typedef uint8_t uart_port_t;
  * \return The status/error code.
  */
 int uart_init(uart_port_t port, uart_config_t config);
+
+/**
+ * \brief Verifies if there is data available to received in the RX buffer.
+ *
+ * \param[in] port is the UART port to verify. It can be:
+ * \parblock
+ *      -\b UART_PORT_0
+ *      -\b UART_PORT_1
+ *      -\b UART_PORT_2
+ *      .
+ * \endparblock
+ *
+ * \return The status/error code.
+ */
+int uart_available(uart_port_t port);
+
+/**
+ * \brief Flushes the RX buffer of a given port.
+ *
+ * \param[in] port is the UART port to flush. It can be:
+ * \parblock
+ *      -\b UART_PORT_0
+ *      -\b UART_PORT_1
+ *      -\b UART_PORT_2
+ *      .
+ * \endparblock
+ *
+ * \return The status/error code.
+ */
+int uart_flush(uart_port_t port);
 
 /**
  * \brief Writes data to a given UART port.

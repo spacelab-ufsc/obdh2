@@ -1,7 +1,7 @@
 /*
  * uart.c
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.1.12
  * 
  * \date 07/12/2019
  * 
@@ -137,6 +137,50 @@ int uart_init(uart_port_t port, uart_config_t config)
     }
 
     USCI_A_UART_enable(base_address);
+
+    return 0;
+}
+
+int uart_available(uart_port_t port)
+{
+    uint16_t base_address;
+
+    switch(port)
+    {
+        case UART_PORT_0:   base_address = USCI_A0_BASE;    break;
+        case UART_PORT_1:   base_address = USCI_A1_BASE;    break;
+        case UART_PORT_2:   base_address = USCI_A2_BASE;    break;
+        default:            return -1;  // Invalid UART port
+    }
+
+    // Check RX interrupt flag
+    uint8_t status = USCI_A_UART_getInterruptStatus(base_address, USCI_A_UART_RECEIVE_INTERRUPT_FLAG);
+
+    if (status | USCI_A_UART_RECEIVE_INTERRUPT_FLAG)
+    {
+        return UART_AVAILABLE;
+    }
+    else
+    {
+        return UART_NOT_AVAILABLE;
+    }
+}
+
+int uart_flush(uart_port_t port)
+{
+    switch(port)
+    {
+        case UART_PORT_0:   break;
+        case UART_PORT_1:   break;
+        case UART_PORT_2:   break;
+        default:            return -1;  // Invalid UART port
+    }
+
+    while(uart_available(port) == UART_AVAILABLE)
+    {
+        uint8_t dummy;
+        uart_read(port, &dummy, 1);
+    }
 
     return 0;
 }
