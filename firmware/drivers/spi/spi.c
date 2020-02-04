@@ -6,16 +6,16 @@
  * This file is part of OBDH 2.0.
  * 
  * OBDH 2.0 is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * OBDH 2.0 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.9
+ * \version 0.1.13
  * 
  * \date 07/12/2019
  * 
@@ -35,6 +35,7 @@
 
 #include <hal/usci_a_spi.h>
 #include <hal/usci_b_spi.h>
+#include <hal/gpio.h>
 #include <hal/ucs.h>
 
 #include <drivers/gpio/gpio.h>
@@ -53,6 +54,13 @@ int spi_setup_gpio(spi_port_t port)
             gpio_init(GPIO_PIN_28, (gpio_config_t){.mode=GPIO_MODE_OUTPUT});
             gpio_init(GPIO_PIN_45, (gpio_config_t){.mode=GPIO_MODE_OUTPUT});
             gpio_init(GPIO_PIN_46, (gpio_config_t){.mode=GPIO_MODE_OUTPUT});
+
+            // Set all CS pins to high
+            gpio_set_state(GPIO_PIN_5, true);
+            gpio_set_state(GPIO_PIN_6, true);
+            gpio_set_state(GPIO_PIN_28, true);
+            gpio_set_state(GPIO_PIN_45, true);
+            gpio_set_state(GPIO_PIN_46, true);
 
             break;
         case SPI_PORT_1:
@@ -93,7 +101,10 @@ int spi_init(spi_port_t port, spi_config_t config)
             return -1;  // Invalid SPI port
     }
 
-    spi_setup_gpio(port);
+    if (spi_setup_gpio(port) != 0)
+    {
+        return -1;
+    }
 
     if ((port == SPI_PORT_0) || (port == SPI_PORT_1) || (port == SPI_PORT_2))
     {
@@ -110,19 +121,19 @@ int spi_init(spi_port_t port, spi_config_t config)
             case SPI_MODE_0:
                 spi_params.clockPhase       = USCI_A_SPI_PHASE_DATA_CHANGED_ONFIRST_CAPTURED_ON_NEXT;
                 spi_params.clockPolarity    = USCI_A_SPI_CLOCKPOLARITY_INACTIVITY_LOW;
-                break:
+                break;
             case SPI_MODE_1:
                 spi_params.clockPhase       = USCI_A_SPI_PHASE_DATA_CAPTURED_ONFIRST_CHANGED_ON_NEXT;
                 spi_params.clockPolarity    = USCI_A_SPI_CLOCKPOLARITY_INACTIVITY_LOW;
-                break:
+                break;
             case SPI_MODE_2:
                 spi_params.clockPhase       = USCI_A_SPI_PHASE_DATA_CHANGED_ONFIRST_CAPTURED_ON_NEXT;
                 spi_params.clockPolarity    = USCI_A_SPI_CLOCKPOLARITY_INACTIVITY_HIGH;
-                break:
+                break;
             case SPI_MODE_3:
                 spi_params.clockPhase       = USCI_A_SPI_PHASE_DATA_CAPTURED_ONFIRST_CHANGED_ON_NEXT;
                 spi_params.clockPolarity    = USCI_A_SPI_CLOCKPOLARITY_INACTIVITY_HIGH;
-                break:
+                break;
             default:
                 return -1;  // Invalid SPI mode
         }
@@ -147,19 +158,19 @@ int spi_init(spi_port_t port, spi_config_t config)
             case SPI_MODE_0:
                 spi_params.clockPhase       = USCI_B_SPI_PHASE_DATA_CHANGED_ONFIRST_CAPTURED_ON_NEXT;
                 spi_params.clockPolarity    = USCI_B_SPI_CLOCKPOLARITY_INACTIVITY_LOW;
-                break:
+                break;
             case SPI_MODE_1:
                 spi_params.clockPhase       = USCI_B_SPI_PHASE_DATA_CAPTURED_ONFIRST_CHANGED_ON_NEXT;
                 spi_params.clockPolarity    = USCI_B_SPI_CLOCKPOLARITY_INACTIVITY_LOW;
-                break:
+                break;
             case SPI_MODE_2:
                 spi_params.clockPhase       = USCI_B_SPI_PHASE_DATA_CHANGED_ONFIRST_CAPTURED_ON_NEXT;
                 spi_params.clockPolarity    = USCI_B_SPI_CLOCKPOLARITY_INACTIVITY_HIGH;
-                break:
+                break;
             case SPI_MODE_3:
                 spi_params.clockPhase       = USCI_B_SPI_PHASE_DATA_CAPTURED_ONFIRST_CHANGED_ON_NEXT;
                 spi_params.clockPolarity    = USCI_B_SPI_CLOCKPOLARITY_INACTIVITY_HIGH;
-                break:
+                break;
             default:
                 return -1;  // Invalid SPI mode
         }
