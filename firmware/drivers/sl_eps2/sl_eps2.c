@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * sl_eps2.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,34 +21,40 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief SpaceLab EPS 2.0 driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.15
  * 
- * \date 26/10/2019
+ * \date 05/02/2020
  * 
- * \defgroup drivers Drivers
+ * \addtogroup sl_eps2
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#include <drivers/spi/spi.h>
 
-#include "edc/edc.h"
-#include "i2c/i2c.h"
-#include "isis_antenna/isis_antenna.h"
-#include "mt25ql01gbbb/mt25ql01gbbb.h"
-#include "spi/spi.h"
-#include "si446x/si446x.h"
-#include "uart/uart.h"
-#include "gpio/gpio.h"
-#include "tps382x/tps382x.h"
-#include "wdt/wdt.h"
-#include "tca4311a/tca4311a.h"
-#include "sl_eps2/sl_eps2.h"
+#include "eps.h"
 
-#endif // DRIVERS_H_
+int sl_eps2_init()
+{
+    return -1;
+}
 
-//! \} End of drivers group
+int sl_eps2_check_device()
+{
+    return -1;
+}
+
+int sl_eps2_write_reg(uint16_t adr, uint32_t val)
+{
+    return -1;
+}
+
+int sl_eps2_read_reg(uint16_t adr, uint32_t *val)
+{
+    return -1;
+}
+
+//! \} End of sl_eps2 group
