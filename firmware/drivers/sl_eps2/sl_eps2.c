@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.16
+ * \version 0.1.17
  * 
  * \date 05/02/2020
  * 
@@ -121,6 +121,49 @@ int sl_eps2_read_reg(uint8_t adr, uint32_t *val)
            ((uint32_t)buf[3] << 0);
 
     return 0;
+}
+
+int sl_eps2_read_battery_voltage(uint8_t bat, uint32_t *val)
+{
+    switch(bat)
+    {
+        case SL_EPS2_BATTERY_CELL_0:    return sl_eps2_read_reg(SL_EPS2_REG_BATTERY_0_VOLTAGE, val);
+        case SL_EPS2_BATTERY_CELL_1:    return sl_eps2_read_reg(SL_EPS2_REG_BATTERY_1_VOLTAGE, val);
+        default:
+            return -1;  // Invalid battery cell
+    }
+}
+
+int sl_eps2_read_battery_charge(uint32_t *val)
+{
+    return sl_eps2_read_reg(SL_EPS2_REG_BATTERY_CHARGE, val);
+}
+
+int sl_eps2_read_solar_panel_current(uint8_t sp, uint32_t *val)
+{
+    switch(sp)
+    {
+        case SL_EPS2_SOLAR_PANEL_0:     return sl_eps2_read_reg(SL_EPS2_REG_SOLAR_PANEL_0_CUR, val);
+        case SL_EPS2_SOLAR_PANEL_1:     return sl_eps2_read_reg(SL_EPS2_REG_SOLAR_PANEL_1_CUR, val);
+        case SL_EPS2_SOLAR_PANEL_2:     return sl_eps2_read_reg(SL_EPS2_REG_SOLAR_PANEL_2_CUR, val);
+        case SL_EPS2_SOLAR_PANEL_3:     return sl_eps2_read_reg(SL_EPS2_REG_SOLAR_PANEL_3_CUR, val);
+        case SL_EPS2_SOLAR_PANEL_4:     return sl_eps2_read_reg(SL_EPS2_REG_SOLAR_PANEL_4_CUR, val);
+        case SL_EPS2_SOLAR_PANEL_5:     return sl_eps2_read_reg(SL_EPS2_REG_SOLAR_PANEL_5_CUR, val);
+        default:
+            return -1;  // Invalid solar panel
+    }
+}
+
+int sl_eps2_read_solar_panel_voltage(uint8_t sp, uint32_t *val)
+{
+    switch(sp)
+    {
+        case SL_EPS2_SOLAR_PANEL_30:    return sl_eps2_read_reg(SL_EPS2_REG_SOLAR_PANEL_30_VOLT, val);
+        case SL_EPS2_SOLAR_PANEL_14:    return sl_eps2_read_reg(SL_EPS2_REG_SOLAR_PANEL_14_VOLT, val);
+        case SL_EPS2_SOLAR_PANEL_52:    return sl_eps2_read_reg(SL_EPS2_REG_SOLAR_PANEL_52_VOLT, val);
+        default:
+            return -1;  // Invalid solar panel set
+    }
 }
 
 //! \} End of sl_eps2 group
