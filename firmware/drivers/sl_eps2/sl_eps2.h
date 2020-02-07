@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.15
+ * \version 0.1.16
  * 
  * \date 01/02/2020
  * 
@@ -38,6 +38,13 @@
 #define SL_EPS2_H_
 
 #include <stdint.h>
+
+#define SL_EPS2_SLAVE_ADR           0x36    /**< 7-bit slave address. */
+
+#define SL_EPS2_DEVICE_ID           0x43    /**< EPS 2.0 device ID. */
+
+// EPS 2.0 registers
+#define SL_EPS2_REG_DEVICE_ID       0x00    /**< Device ID register address. */
 
 /**
  * \brief Initialization of the EPS module driver.
@@ -64,7 +71,7 @@ int sl_eps2_check_device();
  *
  * \return The status/error code.
  */
-int sl_eps2_write_reg(uint16_t adr, uint32_t val);
+int sl_eps2_write_reg(uint8_t adr, uint32_t val);
 
 /**
  * \brief Reads a register from the EPS module.
@@ -75,7 +82,7 @@ int sl_eps2_write_reg(uint16_t adr, uint32_t val);
  *
  * \return The status/error code.
  */
-int sl_eps2_read_reg(uint16_t adr, uint32_t *val);
+int sl_eps2_read_reg(uint8_t adr, uint32_t *val);
 
 #endif // SL_EPS2_H_
 
