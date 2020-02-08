@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.1
+ * \version 0.1.20
  * 
  * \date 04/12/2019
  * 
@@ -36,6 +36,7 @@
 #include <devices/watchdog/watchdog.h>
 #include <devices/logger/logger.h>
 #include <devices/leds/leds.h>
+#include <devices/eps/eps.h>
 #include <system/clocks.h>
 
 #include "startup.h"
@@ -67,6 +68,9 @@ void vTaskStartup(void *pvParameters)
 
     // LEDs device initialization
     leds_init();
+
+    // EPS device initialization
+    eps_init();
 
     // Startup task status = Done
     xEventGroupSetBits(task_startup_status, TASK_STARTUP_DONE);
