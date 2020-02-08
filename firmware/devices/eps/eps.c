@@ -1,5 +1,5 @@
 /*
- * version.h
+ * eps.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,29 +21,45 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief EPS device implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.1.18
  * 
- * \date 25/10/2019
+ * \date 01/02/2020
  * 
- * \defgroup version Version control
+ * \addtogroup eps
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include <drivers/sl_eps2/sl_eps2.h>
 
-#define FIRMWARE_VERSION            "0.1.18"
+#include "eps.h"
 
-#define FIRMWARE_STATUS             "Development"
+int eps_init()
+{
+    return -1;
+}
 
-#define FIRMWARE_AUTHOR             "SpaceLab"
+int eps_get_bat_voltage(eps_bat_voltage_t *bat_volt)
+{
+    return -1;
+}
 
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
+int eps_get_bat_current(uint32_t *bat_cur)
+{
+    return -1;
+}
 
-#endif // VERSION_H_
+int eps_get_bat_charge(uint32_t *charge)
+{
+    return -1;
+}
 
-//! \} End of version group
+int eps_get_data(eps_data_t *data)
+{
+    return -1;
+}
+
+/** \} End of eps group */
