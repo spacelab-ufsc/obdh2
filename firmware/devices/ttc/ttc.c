@@ -1,5 +1,5 @@
 /*
- * version.h
+ * ttc.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,29 +21,33 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief TTC device implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.2.0
  * 
- * \date 25/10/2019
+ * \date 01/02/2020
  * 
- * \defgroup version Version control
+ * \addtogroup ttc
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include "ttc.h"
 
-#define FIRMWARE_VERSION            "0.2.0"
+int ttc_init()
+{
+    return -1;
+}
 
-#define FIRMWARE_STATUS             "Development"
+int ttc_enter_hibernation(uint32_t period_min)
+{
+    return -1;
+}
 
-#define FIRMWARE_AUTHOR             "SpaceLab"
+int ttc_leave_hibernation()
+{
+    return -1;
+}
 
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
-
-#endif // VERSION_H_
-
-//! \} End of version group
+//! \} End of ttc group

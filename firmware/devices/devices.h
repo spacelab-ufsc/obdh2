@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.18
+ * \version 0.2.0
  * 
  * \date 26/10/2019
  * 
@@ -40,6 +40,7 @@
 #include "radio/radio.h"
 #include "leds/leds.h"
 #include "eps/eps.h"
+#include "ttc/ttc.h"
 
 #endif // DEVICES_H_
 

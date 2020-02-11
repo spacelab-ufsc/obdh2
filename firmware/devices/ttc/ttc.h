@@ -1,5 +1,5 @@
 /*
- * version.h
+ * ttc.h
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,29 +21,49 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief TTC device definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.2.0
  * 
- * \date 25/10/2019
+ * \date 01/02/2020
  * 
- * \defgroup version Version control
+ * \defgroup ttc TTC
+ * \ingroup devices
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#ifndef TTC_H_
+#define TTC_H_
 
-#define FIRMWARE_VERSION            "0.2.0"
+#include <stdint.h>
 
-#define FIRMWARE_STATUS             "Development"
+#define TTC_MODULE_NAME         "TTC"
 
-#define FIRMWARE_AUTHOR             "SpaceLab"
+/**
+ * \brief Initialization routine of the TTC device.
+ *
+ * \return The status/error code.
+ */
+int ttc_init();
 
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
+/**
+ * \brief Enables the TTC hibernation for a given period.
+ *
+ * \param[in] period_min is the period of hibernation in minutes.
+ *
+ * \return The status/error code.
+ */
+int ttc_enter_hibernation(uint32_t period_min);
 
-#endif // VERSION_H_
+/**
+ * \brief Disables the TTC hibernation.
+ *
+ * \return The status/error code.
+ */
+int ttc_leave_hibernation();
 
-//! \} End of version group
+#endif // TTC_H_
+
+//! \} End of ttc group
