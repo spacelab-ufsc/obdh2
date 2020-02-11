@@ -1,5 +1,15 @@
 ===========================================
 
+v0.2 - 10/02/2020
+
+- I2C driver
+- SPI driver
+- TCA4311A driver
+- Initial implementation of the EPS 2.0 driver
+- Adding a Makefile to the project
+
+===========================================
+
 v0.1 - 27/01/2020
 
 - First release

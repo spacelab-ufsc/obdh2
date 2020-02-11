@@ -1,21 +1,21 @@
 /*
  * uart.h
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
  * OBDH 2.0 is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * OBDH 2.0 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.1.12
  * 
  * \date 07/12/2019
  * 
@@ -69,6 +69,15 @@ typedef enum
 } uart_stop_bits_e;
 
 /**
+ * \brief RX data availability.
+ */
+typedef enum
+{
+    UART_NOT_AVAILABLE=0,   /**< Data is not available in the RX buffer. */
+    UART_AVAILABLE          /**< Data is available in the RX buffer. */
+} uart_data_availability_e;
+
+/**
  * \brief UART port configuration parameters.
  */
 typedef struct
@@ -101,6 +110,36 @@ typedef uint8_t uart_port_t;
  * \return The status/error code.
  */
 int uart_init(uart_port_t port, uart_config_t config);
+
+/**
+ * \brief Verifies if there is data available to received in the RX buffer.
+ *
+ * \param[in] port is the UART port to verify. It can be:
+ * \parblock
+ *      -\b UART_PORT_0
+ *      -\b UART_PORT_1
+ *      -\b UART_PORT_2
+ *      .
+ * \endparblock
+ *
+ * \return The status/error code.
+ */
+int uart_available(uart_port_t port);
+
+/**
+ * \brief Flushes the RX buffer of a given port.
+ *
+ * \param[in] port is the UART port to flush. It can be:
+ * \parblock
+ *      -\b UART_PORT_0
+ *      -\b UART_PORT_1
+ *      -\b UART_PORT_2
+ *      .
+ * \endparblock
+ *
+ * \return The status/error code.
+ */
+int uart_flush(uart_port_t port);
 
 /**
  * \brief Writes data to a given UART port.
