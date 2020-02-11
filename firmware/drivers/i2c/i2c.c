@@ -6,16 +6,16 @@
  * This file is part of OBDH 2.0.
  * 
  * OBDH 2.0 is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
  * OBDH 2.0 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU Lesser General Public License
+ * You should have received a copy of the GNU General Public License
  * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.8
+ * \version 0.1.21
  * 
  * \date 07/12/2019
  * 
@@ -109,7 +109,10 @@ int i2c_write(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
 
     if (len == 1)   // Single byte
     {
-        USCI_B_I2C_masterSendSingleByte(base_address, data[0]);
+        if (USCI_B_I2C_masterSendSingleByteWithTimeout(base_address, data[0], I2C_SLAVE_TIMEOUT) != STATUS_SUCCESS)
+        {
+            return -1;  /* Timeout reached */
+        }
 
         // Delay until transmission completes
         while(USCI_B_I2C_isBusBusy(base_address));
@@ -117,16 +120,25 @@ int i2c_write(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
     else            // Multiple bytes
     {
         // Initiate start and send first character
-        USCI_B_I2C_masterSendMultiByteStart(base_address, data[0]);
+        if (USCI_B_I2C_masterSendMultiByteStartWithTimeout(base_address, data[0], I2C_SLAVE_TIMEOUT) != STATUS_SUCCESS)
+        {
+            return -1;  /* Timeout reached */
+        }
 
         uint16_t i = 0;
         for(i=1; i<len; i++)
         {
-            USCI_B_I2C_masterSendMultiByteNext(base_address, data[i]);
+            if (USCI_B_I2C_masterSendMultiByteNextWithTimeout(base_address, data[i], I2C_SLAVE_TIMEOUT) != STATUS_SUCCESS)
+            {
+                return -1;  /* Timeout reached */
+            }
         }
 
         // Initiate stop only
-        USCI_B_I2C_masterSendMultiByteStop(base_address);
+        if (USCI_B_I2C_masterSendMultiByteStopWithTimeout(base_address, I2C_SLAVE_TIMEOUT) != STATUS_SUCCESS)
+        {
+            return -1;      /* Timeout reached */
+        }
 
         // Delay until transmission completes
         while(USCI_B_I2C_isBusBusy(base_address));
@@ -165,7 +177,10 @@ int i2c_read(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
     if (len == 1)   // Single byte
     {
         // Initiate command to receive a single character from Slave
-        USCI_B_I2C_masterReceiveSingleStart(base_address);
+        if (USCI_B_I2C_masterReceiveSingleStartWithTimeout(base_address, I2C_SLAVE_TIMEOUT) != STATUS_SUCCESS)
+        {
+            return -1;  /* Timeout reached */
+        }
 
         // Grab data from data register
         data[0] = USCI_B_I2C_masterReceiveSingle(base_address);
@@ -185,7 +200,10 @@ int i2c_read(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
         }
 
         // Initiate end of reception -> Receive byte with NAK
-        data[i++] = USCI_B_I2C_masterReceiveMultiByteFinish(base_address);
+        if (USCI_B_I2C_masterReceiveMultiByteFinishWithTimeout(base_address, &data[i++], I2C_SLAVE_TIMEOUT) != STATUS_SUCCESS)
+        {
+            return -1;  /* Timeout reached */
+        }
 
         // Receive last byte
         data[i++] = USCI_B_I2C_masterReceiveMultiByteNext(base_address);

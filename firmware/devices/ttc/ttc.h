@@ -1,7 +1,7 @@
 /*
- * app.h
+ * ttc.h
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -21,23 +21,49 @@
  */
 
 /**
- * \brief Application layer.
+ * \brief TTC device definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.2.0
  * 
- * \date 26/10/2019
+ * \date 01/02/2020
  * 
- * \defgroup app Applications
+ * \defgroup ttc TTC
+ * \ingroup devices
  * \{
  */
 
-#ifndef APP_H_
-#define APP_H_
+#ifndef TTC_H_
+#define TTC_H_
 
+#include <stdint.h>
 
+#define TTC_MODULE_NAME         "TTC"
 
-#endif // APP_H_
+/**
+ * \brief Initialization routine of the TTC device.
+ *
+ * \return The status/error code.
+ */
+int ttc_init();
 
-//! \} End of app group
+/**
+ * \brief Enables the TTC hibernation for a given period.
+ *
+ * \param[in] period_min is the period of hibernation in minutes.
+ *
+ * \return The status/error code.
+ */
+int ttc_enter_hibernation(uint32_t period_min);
+
+/**
+ * \brief Disables the TTC hibernation.
+ *
+ * \return The status/error code.
+ */
+int ttc_leave_hibernation();
+
+#endif // TTC_H_
+
+//! \} End of ttc group

@@ -1,7 +1,7 @@
 /*
  * si446x_spi.c
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -12,7 +12,7 @@
  * 
  * OBDH 2.0 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
@@ -21,11 +21,11 @@
  */
 
 /**
- * \brief Si446x SPI driver implementation.
+ * \brief Si446x SPI implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.1.15
  * 
  * \date 29/07/2017
  * 
@@ -41,28 +41,33 @@
 #include "si446x_config.h"
 #include "si446x_reg.h"
 
+int si446x_spi_init()
+{
+    return spi_init(SPI_PORT_0, (spi_config_t){.speed_hz=100000, .mode=SPI_MODE_1});
+}
+
 uint8_t si446x_spi_transfer(uint8_t byte)
 {
     uint8_t buf;
 
-    spi_transfer(0, 0, &byte, &buf, 1);
+    spi_transfer(SPI_PORT_0, GPIO_PIN_5, &byte, &buf, 1);
 
     return buf;
 }
 
 void si446x_spi_write_byte(uint8_t byte)
 {
-    spi_write(0, 0, &byte, 1);
+    spi_write(SPI_PORT_0, GPIO_PIN_5, &byte, 1);
 }
 
 void si446x_spi_write(uint8_t *data, uint16_t size)
 {
-    spi_write(0, 0, data, size);
+    spi_write(SPI_PORT_0, GPIO_PIN_5, data, size);
 }
 
 void si446x_spi_read(uint8_t *data, uint16_t size)
 {
-    spi_read(0, 0, data, size);
+    spi_read(SPI_PORT_0, GPIO_PIN_5, data, size);
 }
 
 //! \} End of si446x group

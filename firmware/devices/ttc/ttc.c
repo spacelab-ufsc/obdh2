@@ -1,7 +1,7 @@
 /*
- * app.h
+ * ttc.c
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -21,23 +21,33 @@
  */
 
 /**
- * \brief Application layer.
+ * \brief TTC device implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.2.0
  * 
- * \date 26/10/2019
+ * \date 01/02/2020
  * 
- * \defgroup app Applications
+ * \addtogroup ttc
  * \{
  */
 
-#ifndef APP_H_
-#define APP_H_
+#include "ttc.h"
 
+int ttc_init()
+{
+    return -1;
+}
 
+int ttc_enter_hibernation(uint32_t period_min)
+{
+    return -1;
+}
 
-#endif // APP_H_
+int ttc_leave_hibernation()
+{
+    return -1;
+}
 
-//! \} End of app group
+//! \} End of ttc group
