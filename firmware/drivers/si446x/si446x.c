@@ -36,7 +36,6 @@
 #include <drivers/gpio/gpio.h>
 
 #include "si446x.h"
-#include "si446x_config.h"
 #include "si446x_reg.h"
 #include "radio_config_Si4463.h"
 

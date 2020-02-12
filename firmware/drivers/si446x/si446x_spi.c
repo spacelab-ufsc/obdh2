@@ -39,9 +39,6 @@
 #include <drivers/spi/spi.h>
 #include <drivers/gpio/gpio.h>
 
-#include "si446x_config.h"
-#include "si446x_reg.h"
-
 int si446x_spi_init()
 {
     return spi_init(SPI_PORT_0, (spi_config_t){.speed_hz=100000, .mode=SPI_MODE_1});

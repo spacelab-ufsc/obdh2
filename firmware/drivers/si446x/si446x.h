@@ -40,7 +40,21 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define SI446X_PART_INFO        0x4463
+#define SI446X_MODULE_NAME                      "SI446X"
+
+#define SI446X_PART_INFO                        0x4463
+#define SI446X_TX_FIFO_LEN                      128
+#define SI446X_RX_FIFO_LEN                      128
+#define SI446X_TX_FIFO_ALMOST_EMPTY_THRESHOLD   48
+#define SI446X_RX_FIFO_ALMOST_FULL_THRESHOLD    48
+#define SI446X_CTS_REPLY                        0xFF
+#define SI446X_CTS_TIMEOUT                      2500    /* Waiting time for a valid FFh CTS reading. The typical time is 20 us. */
+#define SI446X_TX_TIMEOUT                       20000   /* Waiting time for packet send interrupt. this time is depended on tx length and data rate of wireless. */
+#define SI446X_FREQ_CHANNEL                     0       /* Frequency channel. */
+
+/* This value must be obtained measuring the output signal with a frequency analyzer */
+/* The register value is tuned according to the desired output frequency */
+#define SI446X_XO_TUNE_REG_VALUE                97
 
 /**
  * \brief Si446x modes.
