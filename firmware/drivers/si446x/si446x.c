@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.2
+ * \version 0.2.3
  * 
  * \date 01/06/2017
  * 
@@ -44,11 +44,11 @@ const uint8_t SI446X_CONFIGURATION_DATA[] = RADIO_CONFIGURATION_DATA_ARRAY;
 
 uint8_t si446x_mode = 0xFF;
 
-uint8_t si446x_init(void)
+int8_t si446x_init(void)
 {
     if (si446x_spi_init() != 0)
     {
-        return STATUS_FAIL;     // Error initializing the SPI port
+        return -1;     // Error initializing the SPI port
     }
 
     // Power-on reset
@@ -63,11 +63,11 @@ uint8_t si446x_init(void)
     // Check if the device is working
     if (si446x_check_device())
     {
-        return STATUS_SUCCESS;
+        return 0;
     }
     else
     {
-        return STATUS_FAIL;
+        return -1;
     }
 }
 
@@ -153,16 +153,19 @@ void si446x_power_on_reset(void)
     uint8_t buffer[8] = {RF_POWER_UP};
 
     si446x_shutdown();
-    __delay_cycles(DELAY_100_MS_IN_CYCLES);
+
+    si446x_delay_ms(100);
+
     si446x_power_up();
-    __delay_cycles(2 * DELAY_10_MS_IN_CYCLES);           // Wait for stabilization
+
+    si446x_delay_ms(20);    // Wait for stabilization
 
     // Send power-up command
     si446x_slave_enable();
     si446x_spi_write(buffer, 7);
     si446x_slave_disable();
 
-    __delay_cycles(2 * DELAY_100_MS_IN_CYCLES);
+    si446x_delay_ms(200);
 }
 
 bool si446x_tx_packet(uint8_t *data, uint8_t len)
@@ -200,7 +203,7 @@ bool si446x_tx_packet(uint8_t *data, uint8_t len)
             return true;
         }
 
-        __delay_cycles(DELAY_100_uS_IN_CYCLES);
+        si446x_delay_ms(1);
     }
 
     // If the packet transmission takes longer than expected, resets the radio.
@@ -275,7 +278,7 @@ bool si446x_tx_long_packet(uint8_t *packet, uint16_t len)
                         return true;
                     }
 
-                    __delay_cycles(DELAY_100_uS_IN_CYCLES);
+                    si446x_delay_ms(1);
                 }
                 break;
             }

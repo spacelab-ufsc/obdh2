@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.2
+ * \version 0.2.3
  * 
  * \date 01/06/2017
  * 
@@ -58,12 +58,9 @@ typedef enum
  * Initializes the Si446x module with the configuration parameters from
  * "si446x_reg_config.h".
  * 
- * \return Initialization status. It can be:
- *              -\b STATUS_SUCCESS if the initialization was successful
- *              -\b STATUS_FAIL if the initialization was not successful
- *              .
+ * \return The status/error code.
  */
-uint8_t si446x_init(void);
+int8_t si446x_init(void);
 
 /**
  * \brief GPIO initialization.
@@ -414,6 +411,15 @@ bool si446x_wait_nIRQ(void);
  *              .
  */
 bool si446x_wait_gpio1(void);
+
+/**
+ * \brief Milliseconds delay.
+ *
+ * \param[in] ms is the time to delay in milliseconds.
+ *
+ * \return None.
+ */
+void si446x_delay_ms(uint32_t ms);
 
 #endif // SI446X_H_
 
