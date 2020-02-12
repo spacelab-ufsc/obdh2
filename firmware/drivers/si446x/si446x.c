@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.3
+ * \version 0.2.4
  * 
  * \date 01/06/2017
  * 
@@ -123,6 +123,8 @@ int8_t si446x_gpio_init(void)
     si446x_slave_disable();
 
     si446x_shutdown();
+
+    return 0;
 }
 
 void si446x_reg_config(void)
@@ -678,7 +680,7 @@ bool si446x_enter_standby_mode(void)
 {
     if (si446x_mode == SI446X_MODE_STANDBY)
     {
-        return;
+        return false;
     }
 
 //    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Entering standby mode...");

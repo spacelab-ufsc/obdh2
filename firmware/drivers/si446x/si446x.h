@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.3
+ * \version 0.2.4
  * 
  * \date 01/06/2017
  * 
@@ -344,6 +344,13 @@ void si446x_enter_rx_mode(void);
  *              .
  */
 bool si446x_enter_standby_mode(void);
+
+/**
+ * \brief .
+ *
+ * \return .
+ */
+bool si446x_wait_packet_sent(void);
 
 /**
  * \brief SPI interface initialization.
