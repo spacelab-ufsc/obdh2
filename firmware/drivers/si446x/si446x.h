@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.2.1
  * 
  * \date 01/06/2017
  * 
@@ -347,6 +347,53 @@ void si446x_enter_rx_mode(void);
  *              .
  */
 bool si446x_enter_standby_mode(void);
+
+/**
+ * \brief SPI interface initialization.
+ *
+ * \return The status/error code.
+ */
+int si446x_spi_init();
+
+/**
+ * \brief SPI transfer routine (write and read at the same time).
+ *
+ * \param[in] byte is the byte to write during the data transfer.
+ *
+ * \return The read byte during the data transfer.
+ */
+uint8_t si446x_spi_transfer(uint8_t byte);
+
+/**
+ * \brief Writes a byte over the SPI interface.
+ *
+ * \param[in] byte is the byte to be written to the SPI interface.
+ *
+ * \return None.
+ */
+void si446x_spi_write_byte(uint8_t byte);
+
+/**
+ * \brief Write an array of bytes over the SPI interface.
+ *
+ * \param[in] data is the array to write to the SPI interface.
+ *
+ * \param[in] size is the number of bytes to be written.
+ *
+ * \return None.
+ */
+void si446x_spi_write(uint8_t *data, uint16_t size);
+
+/**
+ * \brief Reads a N bytes from the SPI interface.
+ *
+ * \param[in] data is an array to store the read bytes.
+ *
+ * \param[in] size is the number of bytes to read.
+ *
+ * \return None.
+ */
+void si446x_spi_read(uint8_t *data, uint16_t size);
 
 /**
  * \brief Inquire interrupt.
