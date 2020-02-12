@@ -25,13 +25,15 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.1
+ * \version 0.2.2
  * 
  * \date 01/06/2017
  * 
  * \addtogroup si446x
  * \{
  */
+
+#include <drivers/gpio/gpio.h>
 
 #include "si446x.h"
 #include "si446x_config.h"
@@ -69,39 +71,57 @@ uint8_t si446x_init(void)
     }
 }
 
-void si446x_shutdown(void)
+int8_t si446x_shutdown(void)
 {
-    BIT_SET(TTC_RESETn_MAIN_OUT, TTC_RESETn_MAIN_PIN);
+    return gpio_set_state(GPIO_PIN_4, true);
 }
 
-void si446x_power_up(void)
+int8_t si446x_power_up(void)
 {
-    BIT_CLEAR(TTC_RESETn_MAIN_OUT, TTC_RESETn_MAIN_PIN);
+    return gpio_set_state(GPIO_PIN_4, false);
 }
 
-void si446x_slave_enable(void)
+int8_t si446x_slave_enable(void)
 {
-    BIT_CLEAR(SPI0_CSn_OUT, SPI0_CSn_PIN);
+    return gpio_set_state(GPIO_PIN_5, false);
 }
 
-void si446x_slave_disable(void)
+int8_t si446x_slave_disable(void)
 {
-    BIT_SET(SPI0_CSn_OUT, SPI0_CSn_PIN);
+    return gpio_set_state(GPIO_PIN_5, true);
 }
 
-void si446x_gpio_init(void)
+int8_t si446x_gpio_init(void)
 {
 //    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Initializing GPIO pins...");
 //    debug_new_line();
 
-    BIT_SET(TTC_RESETn_MAIN_DIR, TTC_RESETn_MAIN_PIN);
-    BIT_CLEAR(TTC_GPIO2_MAIN_DIR, TTC_GPIO2_MAIN_PIN);
+    // Pin GPIO0
+    if (gpio_init(GPIO_PIN_1, (gpio_config_t){.mode=GPIO_MODE_OUTPUT}) != 0)
+    {
+        return -1;
+    }
 
-    BIT_CLEAR(TTC_GPIO1_MAIN_DIR, TTC_GPIO1_MAIN_PIN);
+    // Pin GPIO1
+    if (gpio_init(GPIO_PIN_2, (gpio_config_t){.mode=GPIO_MODE_INPUT}) != 0)
+    {
+        return -1;
+    }
 
-    BIT_SET(SPI0_CSn_DIR, SPI0_CSn_PIN);
+    // Pin GPIO2
+    if (gpio_init(GPIO_PIN_3, (gpio_config_t){.mode=GPIO_MODE_INPUT}) != 0)
+    {
+        return -1;
+    }
+
+    // Pin RESET
+    if (gpio_init(GPIO_PIN_4, (gpio_config_t){.mode=GPIO_MODE_OUTPUT}) != 0)
+    {
+        return -1;
+    }
 
     si446x_slave_disable();
+
     si446x_shutdown();
 }
 
@@ -670,7 +690,7 @@ bool si446x_enter_standby_mode(void)
 
 bool si446x_wait_nIRQ(void)
 {
-    if (BIT_READ(TTC_GPIO2_MAIN_IN, TTC_GPIO2_MAIN_PIN) == 1)
+    if (gpio_get_state(GPIO_PIN_3) == GPIO_STATE_HIGH)
     {
         return false;
     }
@@ -698,7 +718,7 @@ bool si446x_wait_packet_sent(void)
 
 bool si446x_wait_gpio1(void)
 {
-    if (BIT_READ(TTC_GPIO1_MAIN_IN, TTC_GPIO1_MAIN_PIN) == 1)
+    if (gpio_get_state(GPIO_PIN_2) == GPIO_STATE_HIGH)
     {
         return true;
     }

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.1
+ * \version 0.2.2
  * 
  * \date 01/06/2017
  * 
@@ -68,9 +68,9 @@ uint8_t si446x_init(void);
 /**
  * \brief GPIO initialization.
  * 
- * \return None
+ * \return The status/error code.
  */
-void si446x_gpio_init(void);
+int8_t si446x_gpio_init(void);
 
 /**
  * \brief Configures the registers of the SI446X device.
