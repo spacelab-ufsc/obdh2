@@ -1,5 +1,5 @@
 /*
- * devices.h
+ * antenna.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,28 +21,33 @@
  */
 
 /**
- * \brief Devices layer.
+ * \brief Antenna device implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.2.4
  * 
- * \date 26/10/2019
+ * \date 01/11/2019
  * 
- * \defgroup devices Devices
+ * \addtogroup antenna
  * \{
  */
 
-#ifndef DEVICES_H_
-#define DEVICES_H_
+#include "antenna.h"
 
-#include "logger/logger.h"
-#include "radio/radio.h"
-#include "leds/leds.h"
-#include "eps/eps.h"
-#include "ttc/ttc.h"
-#include "antenna/antenna.h"
+int antenna_init()
+{
+    return -1;
+}
 
-#endif // DEVICES_H_
+int antenna_get_status()
+{
+    return -1;
+}
 
-//! \} End of devices group
+int antenna_deploy()
+{
+    return -1;
+}
+
+/** \} End of antenna group */

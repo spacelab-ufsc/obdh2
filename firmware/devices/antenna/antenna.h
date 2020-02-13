@@ -1,5 +1,5 @@
 /*
- * devices.h
+ * antenna.h
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,28 +21,43 @@
  */
 
 /**
- * \brief Devices layer.
+ * \brief Antenna device definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.2.4
  * 
- * \date 26/10/2019
+ * \date 01/11/2019
  * 
- * \defgroup devices Devices
+ * \defgroup antenna Antenna
+ * \ingroup devices
  * \{
  */
 
-#ifndef DEVICES_H_
-#define DEVICES_H_
+#ifndef ANTENNA_H_
+#define ANTENNA_H_
 
-#include "logger/logger.h"
-#include "radio/radio.h"
-#include "leds/leds.h"
-#include "eps/eps.h"
-#include "ttc/ttc.h"
-#include "antenna/antenna.h"
+/**
+ * \brief Antenna initialization.
+ *
+ * \return The status/error code.
+ */
+int antenna_init();
 
-#endif // DEVICES_H_
+/**
+ * \brief Gets the antenna status.
+ *
+ * \return The status/error code of the antenna module.
+ */
+int antenna_get_status();
 
-//! \} End of devices group
+/**
+ * \brief Execute the antenna deployment.
+ *
+ * \return The status/error code.
+ */
+int antenna_deploy();
+
+#endif // ANTENNA_H_
+
+/** \} End of antenna group */
