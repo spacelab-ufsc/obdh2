@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.20
+ * \version 0.2.5
  * 
  * \date 04/12/2019
  * 
@@ -37,6 +37,7 @@
 #include <devices/logger/logger.h>
 #include <devices/leds/leds.h>
 #include <devices/eps/eps.h>
+#include <devices/radio/radio.h>
 #include <system/clocks.h>
 
 #include "startup.h"
@@ -71,6 +72,9 @@ void vTaskStartup(void *pvParameters)
 
     // EPS device initialization
     eps_init();
+
+    /* Radio device initialization */
+    radio_init();
 
     // Startup task status = Done
     xEventGroupSetBits(task_startup_status, TASK_STARTUP_DONE);
