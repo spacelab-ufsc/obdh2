@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.8
+ * \version 0.2.9
  * 
  * \date 27/10/2019
  * 
@@ -52,6 +52,18 @@
 #define EDC_CMD_GET_HK_PKG          0x32    /**< Updates HK Frame information, and transmit it through the RS-485 interface. */
 #define EDC_CMD_GET_ADC_SEQ         0x34    /**< Causes the transmission of current ADC Sampler Frame through RS-485 interface. */
 #define EDC_CMD_ECHO                0xF0    /**< Cause the transmission of the string "ECHO" in the debug interface. */
+
+/* Frames IDs */
+#define EDC_FRAME_ID_STATE          0x11    /**< State frame. */
+#define EDC_FRAME_ID_PTT            0x22    /**< PTT frame. */
+#define EDC_FRAME_ID_ADC_SEQ        0x33    /**< ADC sequence frame. */
+#define EDC_FRAME_ID_HK             0x44    /**< Housekeeping frame. */
+
+/* Frames length */
+#define EDC_FRAME_STATE_LEN         9       /**< State frame length. */
+#define EDC_FRAME_PTT_LEN           49      /**< PTT frame length. */
+#define EDC_FRAME_ADC_SEQ_LEN       8199    /**< ADC sequence frame length. */
+#define EDC_FRAME_HK_LEN            21      /**< Housekeeping frame length. */
 
 /**
  * \brief EDC interfaces.

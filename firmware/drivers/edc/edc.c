@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.8
+ * \version 0.2.9
  * 
  * \date 27/10/2019
  * 
@@ -73,59 +73,124 @@ int edc_write_cmd(edc_cmd_t cmd)
     return edc_uart_write(cmd_str, cmd_str_len);
 }
 
-int edc_get_result(edc_cmd_t cmd, uint8_t *data, uint16_t len)
+int edc_read(uint8_t *data, uint16_t len)
 {
     return -1;
 }
 
 int edc_set_rtc_time(uint32_t time)
 {
-    return -1;
+    edc_cmd_t rtc_cmd;
+
+    rtc_cmd.id = EDC_CMD_RTC_SET;
+    rtc_cmd.param = time;
+
+    return edc_write_cmd(rtc_cmd);
 }
 
 int edc_pop_ptt_pkg()
 {
-    return -1;
+    return edc_write_cmd((edc_cmd_t){.id=EDC_CMD_PTT_POP});
 }
 
 int edc_pause_ptt_task()
 {
-    return -1;
+    return edc_write_cmd((edc_cmd_t){.id=EDC_CMD_PTT_PAUSE});
 }
 
 int edc_resume_ptt_task()
 {
-    return -1;
+    return edc_write_cmd((edc_cmd_t){.id=EDC_CMD_PTT_RESUME});
 }
 
 int edc_start_adc_task()
 {
-    return -1;
+    return edc_write_cmd((edc_cmd_t){.id=EDC_CMD_SAMPLER_START});
 }
 
 int16_t edc_get_state(uint8_t *status)
 {
-    return -1;
+    if (edc_write_cmd((edc_cmd_t){.id=EDC_CMD_GET_STATE}) != 0)
+    {
+        return -1;
+    }
+
+    if (edc_read(status, EDC_FRAME_STATE_LEN) != 0)
+    {
+        return -1;
+    }
+
+    if (status[0] != EDC_FRAME_ID_STATE)
+    {
+        return -1;  /* Invalid data! */
+    }
+
+    return EDC_FRAME_STATE_LEN;
 }
 
 int16_t edc_get_ptt_pkg(uint8_t *pkg)
 {
-    return -1;
+    if (edc_write_cmd((edc_cmd_t){.id=EDC_CMD_GET_PTT_PKG}) != 0)
+    {
+        return -1;
+    }
+
+    if (edc_read(pkg, EDC_FRAME_PTT_LEN) != 0)
+    {
+        return -1;
+    }
+
+    if (pkg[0] != EDC_FRAME_ID_PTT)
+    {
+        return -1;  /* Invalid data! */
+    }
+
+    return EDC_FRAME_PTT_LEN;
 }
 
 int16_t edc_get_hk_pkg(uint8_t *hk)
 {
-    return -1;
+    if (edc_write_cmd((edc_cmd_t){.id=EDC_CMD_GET_HK_PKG}) != 0)
+    {
+        return -1;
+    }
+
+    if (edc_read(hk, EDC_FRAME_HK_LEN) != 0)
+    {
+        return -1;
+    }
+
+    if (hk[0] != EDC_FRAME_ID_HK)
+    {
+        return -1;  /* Invalid data! */
+    }
+
+    return EDC_FRAME_HK_LEN;
 }
 
 int16_t edc_get_adc_seq(uint8_t *seq)
 {
-    return -1;
+    if (edc_write_cmd((edc_cmd_t){.id=EDC_CMD_GET_ADC_SEQ}) != 0)
+    {
+        return -1;
+    }
+
+    if (edc_read(seq, EDC_FRAME_ADC_SEQ_LEN) != 0)
+    {
+        return -1;
+    }
+
+    if (seq[0] != EDC_FRAME_ID_ADC_SEQ)
+    {
+        return -1;  /* Invalid data! */
+    }
+
+    return EDC_FRAME_ADC_SEQ_LEN;
 }
 
 int edc_echo()
 {
-    return -1;
+    return edc_write_cmd((edc_cmd_t){.id=EDC_CMD_ECHO});
 }
 
 //! \} End of edc group
