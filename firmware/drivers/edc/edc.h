@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.9
+ * \version 0.2.10
  * 
  * \date 27/10/2019
  * 
@@ -38,6 +38,8 @@
 #define EDC_H_
 
 #include <stdint.h>
+
+#include <drivers/i2c/i2c.h>
 
 #define EDC_SLAVE_ADDRESS           0x13    /**< 7-bit slave address. */
 
@@ -66,15 +68,13 @@
 #define EDC_FRAME_HK_LEN            21      /**< Housekeeping frame length. */
 
 /**
- * \brief EDC interfaces.
+ * \brief EDC configuration parameters.
  */
-typedef enum
+typedef struct
 {
-    EDC_IF_UART=0,                          /**< UART as EDC interface. */
-    EDC_IF_I2C                              /**< I2C as EDC interface. */
-} edc_if_e;
-
-#define EDC_IF                      EDC_IF_I2C
+    i2c_port_t port;
+    uint32_t bitrate;
+} edc_config_t;
 
 /**
  * \brief EDC command.
@@ -88,9 +88,11 @@ typedef struct
 /**
  * \brief Device initialization.
  *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
  * \return The status/error code.
  */
-int edc_init();
+int edc_init(edc_config_t config);
 
 /**
  * \brief Writes a command to the EDC module.
@@ -272,35 +274,6 @@ int16_t edc_get_adc_seq(uint8_t *seq);
  * \return The status/error code.
  */
 int edc_echo();
-
-/**
- * \brief UART interface initialization.
- *
- * \return The status/error code.
- */
-int edc_uart_init();
-
-/**
- * \brief Writes data to the UART interface.
- *
- * \param[in,out] data is an array with the bytes to be written in the UART interface.
- *
- * \param[in] len is the number of bytes to write.
- *
- * \return The status/error code.
- */
-int edc_uart_write(uint8_t *data, uint16_t len);
-
-/**
- * \brief Reads data from the UART interface.
- *
- * \param[in,out] data is an array to store the read bytes.
- *
- * \param[in] len is the number of bytes to read.
- *
- * \return The status/error code.
- */
-int edc_uart_read(uint8_t *data, uint16_t len);
 
 #endif // EDC_H_
 

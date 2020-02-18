@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.9
+ * \version 0.2.10
  * 
  * \date 27/10/2019
  * 
@@ -35,9 +35,16 @@
 
 #include "edc.h"
 
-int edc_init()
+/**
+ * \brief EDC I2C port.
+ */
+i2c_port_t edc_i2c_port;
+
+int edc_init(edc_config_t config)
 {
-    return -1;
+    edc_i2c_port = config.port;
+
+    return i2c_init(config.port, (i2c_config_t){.speed_hz=config.bitrate});
 }
 
 int edc_write_cmd(edc_cmd_t cmd)
@@ -61,21 +68,28 @@ int edc_write_cmd(edc_cmd_t cmd)
         case EDC_CMD_PTT_RESUME:        break;
         case EDC_CMD_SAMPLER_START:     break;
         case EDC_CMD_GET_STATE:         break;
-        case EDC_CMD_GET_PTT_PKG:       break;
+        case EDC_CMD_GET_PTT_PKG:
+            cmd_str[1] = 0;     /* Position 0 */
+            cmd_str_len = 2;
+            break;
         case EDC_CMD_GET_HK_PKG:        break;
-        case EDC_CMD_GET_ADC_SEQ:       break;
+        case EDC_CMD_GET_ADC_SEQ:
+            cmd_str[1] = 0;     /* Position 0 */
+            cmd_str[2] = 0;
+            cmd_str_len = 3;
+            break;
         case EDC_CMD_ECHO:              break;
         default:
-            return -1;  // Invalid command
+            return -1;  /* Invalid command */
     }
 
-    // Transmit the command over an UART port
-    return edc_uart_write(cmd_str, cmd_str_len);
+    /* Transmit the command over an I2C port */
+    return i2c_write(edc_i2c_port, EDC_SLAVE_ADDRESS, cmd_str, cmd_str_len);
 }
 
 int edc_read(uint8_t *data, uint16_t len)
 {
-    return -1;
+    return i2c_read(edc_i2c_port, EDC_SLAVE_ADDRESS, data, len);
 }
 
 int edc_set_rtc_time(uint32_t time)
