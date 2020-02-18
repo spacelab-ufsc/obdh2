@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.10
+ * \version 0.2.11
  * 
  * \date 27/10/2019
  * 
@@ -113,6 +113,13 @@ int edc_write_cmd(edc_cmd_t cmd);
  * \return The status/error code.
  */
 int edc_read(uint8_t *data, uint16_t len);
+
+/**
+ * \brief Verifies if the EDC is connected.
+ *
+ * \return The status/error code.
+ */
+int edc_check_device();
 
 /**
  * \brief Sets the RTC time.

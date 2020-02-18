@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.10
+ * \version 0.2.11
  * 
  * \date 27/10/2019
  * 
@@ -44,7 +44,12 @@ int edc_init(edc_config_t config)
 {
     edc_i2c_port = config.port;
 
-    return i2c_init(config.port, (i2c_config_t){.speed_hz=config.bitrate});
+    if (i2c_init(config.port, (i2c_config_t){.speed_hz=config.bitrate}) != 0)
+    {
+        return -1;  /* Error initializing the I2C port */
+    }
+
+    return edc_check_device();
 }
 
 int edc_write_cmd(edc_cmd_t cmd)
@@ -90,6 +95,18 @@ int edc_write_cmd(edc_cmd_t cmd)
 int edc_read(uint8_t *data, uint16_t len)
 {
     return i2c_read(edc_i2c_port, EDC_SLAVE_ADDRESS, data, len);
+}
+
+int edc_check_device()
+{
+    uint8_t status[EDC_FRAME_STATE_LEN];
+
+    if (edc_get_state(status) != EDC_FRAME_STATE_LEN)
+    {
+        return -1;
+    }
+
+    return 0;
 }
 
 int edc_set_rtc_time(uint32_t time)
