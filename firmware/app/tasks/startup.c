@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.7
+ * \version 0.2.14
  * 
  * \date 04/12/2019
  * 
@@ -40,6 +40,7 @@
 #include <devices/leds/leds.h>
 #include <devices/eps/eps.h>
 #include <devices/radio/radio.h>
+#include <devices/payload_edc/payload_edc.h>
 #include <system/clocks.h>
 
 #include "startup.h"
@@ -85,6 +86,12 @@ void vTaskStartup(void *pvParameters)
 
     /* Radio device initialization */
     if (radio_init() != 0)
+    {
+        error = true;
+    }
+
+    /* Payload EDC device initialization */
+    if (payload_edc_init() != 0)
     {
         error = true;
     }
