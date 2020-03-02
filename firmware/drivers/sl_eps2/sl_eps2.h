@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.17
+ * \version 0.2.6
  * 
  * \date 01/02/2020
  * 
@@ -38,6 +38,8 @@
 #define SL_EPS2_H_
 
 #include <stdint.h>
+
+#include <drivers/tca4311a/tca4311a.h>
 
 #define SL_EPS2_SLAVE_ADR                   0x36    /**< 7-bit slave address. */
 
@@ -91,23 +93,34 @@ typedef enum
 } sl_eps2_solar_panels_sets_e;
 
 /**
+ * \brief Configuration parameters structure of the driver.
+ */
+typedef tca4311a_config_t sl_eps2_config_t;
+
+/**
  * \brief Initialization of the EPS module driver.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
  *
  * \return The status/error code.
  */
-int sl_eps2_init();
+int sl_eps2_init(sl_eps2_config_t config);
 
 /**
  * \brief Verifies the EPS ID code.
  *
  * This function is useful to test the connection with the EPS module.
  *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
  * \return The status/error code.
  */
-int sl_eps2_check_device();
+int sl_eps2_check_device(sl_eps2_config_t config);
 
 /**
  * \brief Writes a value to a register of the EPS module.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
  *
  * \param[in] adr is the register address to write.
  *
@@ -115,10 +128,12 @@ int sl_eps2_check_device();
  *
  * \return The status/error code.
  */
-int sl_eps2_write_reg(uint8_t adr, uint32_t val);
+int sl_eps2_write_reg(sl_eps2_config_t config, uint8_t adr, uint32_t val);
 
 /**
  * \brief Reads a register from the EPS module.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
  *
  * \param[in] adr is the register address to read.
  *
@@ -126,10 +141,12 @@ int sl_eps2_write_reg(uint8_t adr, uint32_t val);
  *
  * \return The status/error code.
  */
-int sl_eps2_read_reg(uint8_t adr, uint32_t *val);
+int sl_eps2_read_reg(sl_eps2_config_t config, uint8_t adr, uint32_t *val);
 
 /**
  * \brief Reads the battery voltage.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
  *
  * \param[in] bat is the battery cell to read. It can be:
  * \parblock
@@ -142,19 +159,23 @@ int sl_eps2_read_reg(uint8_t adr, uint32_t *val);
  *
  * \return The status/error code.
  */
-int sl_eps2_read_battery_voltage(uint8_t bat, uint32_t *val);
+int sl_eps2_read_battery_voltage(sl_eps2_config_t config, uint8_t bat, uint32_t *val);
 
 /**
  * \brief Reads the battery charge.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
  *
  * \param[in,out] val is a pointer to store the raw value of the battery charge.
  *
  * \return The status/error code.
  */
-int sl_eps2_read_battery_charge(uint32_t *val);
+int sl_eps2_read_battery_charge(sl_eps2_config_t config, uint32_t *val);
 
 /**
  * \brief Reads the current of a given solar panel.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
  *
  * \param[in] sp is the solar panel to read the current. It can be:
  * \parblock
@@ -171,10 +192,12 @@ int sl_eps2_read_battery_charge(uint32_t *val);
  *
  * \return The status/error code.
  */
-int sl_eps2_read_solar_panel_current(uint8_t sp, uint32_t *val);
+int sl_eps2_read_solar_panel_current(sl_eps2_config_t config, uint8_t sp, uint32_t *val);
 
 /**
  * \brief Reads the voltage of a given solar panel set.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
  *
  * \param[sp] sp is the solar panel set to read the voltage. It can be:
  * \parblock
@@ -188,7 +211,7 @@ int sl_eps2_read_solar_panel_current(uint8_t sp, uint32_t *val);
  *
  * \return The status/error code.
  */
-int sl_eps2_read_solar_panel_voltage(uint8_t sp, uint32_t *val);
+int sl_eps2_read_solar_panel_voltage(sl_eps2_config_t config, uint8_t sp, uint32_t *val);
 
 #endif // SL_EPS2_H_
 

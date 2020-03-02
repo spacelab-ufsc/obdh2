@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.19
+ * \version 0.2.6
  * 
  * \date 01/02/2020
  * 
@@ -39,12 +39,19 @@
 
 #include "eps.h"
 
+sl_eps2_config_t eps_config;
+
 int eps_init()
 {
     logger_print_event_from_module(LOGGER_INFO, EPS_MODULE_NAME, "Initializing EPS device...");
     logger_new_line();
 
-    int err = sl_eps2_init();
+    eps_config.i2c_port     = I2C_PORT_1;
+    eps_config.i2c_config   = (i2c_config_t){.speed_hz=100000};
+    eps_config.en_pin       = GPIO_PIN_17;
+    eps_config.ready_pin    = GPIO_PIN_20;
+
+    int err = sl_eps2_init(eps_config);
     if (err != 0)
     {
         logger_print_event_from_module(LOGGER_ERROR, EPS_MODULE_NAME, "Error during the initialization! (error ");
@@ -60,9 +67,9 @@ int eps_init()
 
 int eps_get_bat_voltage(eps_bat_voltage_t *bat_volt)
 {
-    int err_0 = sl_eps2_read_battery_voltage(SL_EPS2_BATTERY_CELL_0, &bat_volt->cell_0);
+    int err_0 = sl_eps2_read_battery_voltage(eps_config, SL_EPS2_BATTERY_CELL_0, &bat_volt->cell_0);
 
-    int err_1 = sl_eps2_read_battery_voltage(SL_EPS2_BATTERY_CELL_1, &bat_volt->cell_1);
+    int err_1 = sl_eps2_read_battery_voltage(eps_config, SL_EPS2_BATTERY_CELL_1, &bat_volt->cell_1);
 
     if (err_0 != 0)
     {
@@ -94,7 +101,7 @@ int eps_get_bat_current(uint32_t *bat_cur)
 
 int eps_get_bat_charge(uint32_t *charge)
 {
-    int err = sl_eps2_read_battery_charge(charge);
+    int err = sl_eps2_read_battery_charge(eps_config, charge);
 
     if (err != 0)
     {

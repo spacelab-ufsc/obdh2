@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.20
+ * \version 0.2.14
  * 
  * \date 04/12/2019
  * 
@@ -33,10 +33,14 @@
  * \{
  */
 
+#include <stdbool.h>
+
 #include <devices/watchdog/watchdog.h>
 #include <devices/logger/logger.h>
 #include <devices/leds/leds.h>
 #include <devices/eps/eps.h>
+#include <devices/radio/radio.h>
+#include <devices/payload_edc/payload_edc.h>
 #include <system/clocks.h>
 
 #include "startup.h"
@@ -47,6 +51,8 @@ EventGroupHandle_t task_startup_status;
 
 void vTaskStartup(void *pvParameters)
 {
+    bool error = false;
+
     // Logger device initialization
     logger_init();
 
@@ -67,16 +73,46 @@ void vTaskStartup(void *pvParameters)
     logger_new_line();
 
     // LEDs device initialization
-    leds_init();
+    if (leds_init() != 0)
+    {
+        error = true;
+    }
 
     // EPS device initialization
-    eps_init();
+    if (eps_init() != 0)
+    {
+        error = true;
+    }
+
+    /* Radio device initialization */
+    if (radio_init() != 0)
+    {
+        error = true;
+    }
+
+    /* Payload EDC device initialization */
+    if (payload_edc_init() != 0)
+    {
+        error = true;
+    }
 
     // Startup task status = Done
     xEventGroupSetBits(task_startup_status, TASK_STARTUP_DONE);
 
-    logger_print_event_from_module(LOGGER_INFO, TASK_STARTUP_NAME, "Boot completed with SUCCESS!");
-    logger_new_line();
+    if (error)
+    {
+        logger_print_event_from_module(LOGGER_ERROR, TASK_STARTUP_NAME, "Boot completed with ERRORS!");
+        logger_new_line();
+
+        led_set(LED_FAULT);
+    }
+    else
+    {
+        logger_print_event_from_module(LOGGER_INFO, TASK_STARTUP_NAME, "Boot completed with SUCCESS!");
+        logger_new_line();
+
+        led_clear(LED_FAULT);
+    }
 
     vTaskSuspend(xTaskStartupHandle);
 }

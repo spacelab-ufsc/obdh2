@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.2.4
  * 
  * \date 01/06/2017
  * 
@@ -40,7 +40,21 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define SI446X_PART_INFO        0x4463
+#define SI446X_MODULE_NAME                      "SI446X"
+
+#define SI446X_PART_INFO                        0x4463
+#define SI446X_TX_FIFO_LEN                      128
+#define SI446X_RX_FIFO_LEN                      128
+#define SI446X_TX_FIFO_ALMOST_EMPTY_THRESHOLD   48
+#define SI446X_RX_FIFO_ALMOST_FULL_THRESHOLD    48
+#define SI446X_CTS_REPLY                        0xFF
+#define SI446X_CTS_TIMEOUT                      2500    /* Waiting time for a valid FFh CTS reading. The typical time is 20 us. */
+#define SI446X_TX_TIMEOUT                       20000   /* Waiting time for packet send interrupt. this time is depended on tx length and data rate of wireless. */
+#define SI446X_FREQ_CHANNEL                     0       /* Frequency channel. */
+
+/* This value must be obtained measuring the output signal with a frequency analyzer */
+/* The register value is tuned according to the desired output frequency */
+#define SI446X_XO_TUNE_REG_VALUE                97
 
 /**
  * \brief Si446x modes.
@@ -58,19 +72,16 @@ typedef enum
  * Initializes the Si446x module with the configuration parameters from
  * "si446x_reg_config.h".
  * 
- * \return Initialization status. It can be:
- *              -\b STATUS_SUCCESS if the initialization was successful
- *              -\b STATUS_FAIL if the initialization was not successful
- *              .
+ * \return The status/error code.
  */
-uint8_t si446x_init(void);
+int8_t si446x_init(void);
 
 /**
  * \brief GPIO initialization.
  * 
- * \return None
+ * \return The status/error code.
  */
-void si446x_gpio_init(void);
+int8_t si446x_gpio_init(void);
 
 /**
  * \brief Configures the registers of the SI446X device.
@@ -349,6 +360,60 @@ void si446x_enter_rx_mode(void);
 bool si446x_enter_standby_mode(void);
 
 /**
+ * \brief .
+ *
+ * \return .
+ */
+bool si446x_wait_packet_sent(void);
+
+/**
+ * \brief SPI interface initialization.
+ *
+ * \return The status/error code.
+ */
+int si446x_spi_init();
+
+/**
+ * \brief SPI transfer routine (write and read at the same time).
+ *
+ * \param[in] byte is the byte to write during the data transfer.
+ *
+ * \return The read byte during the data transfer.
+ */
+uint8_t si446x_spi_transfer(uint8_t byte);
+
+/**
+ * \brief Writes a byte over the SPI interface.
+ *
+ * \param[in] byte is the byte to be written to the SPI interface.
+ *
+ * \return None.
+ */
+void si446x_spi_write_byte(uint8_t byte);
+
+/**
+ * \brief Write an array of bytes over the SPI interface.
+ *
+ * \param[in] data is the array to write to the SPI interface.
+ *
+ * \param[in] size is the number of bytes to be written.
+ *
+ * \return None.
+ */
+void si446x_spi_write(uint8_t *data, uint16_t size);
+
+/**
+ * \brief Reads a N bytes from the SPI interface.
+ *
+ * \param[in] data is an array to store the read bytes.
+ *
+ * \param[in] size is the number of bytes to read.
+ *
+ * \return None.
+ */
+void si446x_spi_read(uint8_t *data, uint16_t size);
+
+/**
  * \brief Inquire interrupt.
  * 
  * \return It can return:
@@ -367,6 +432,15 @@ bool si446x_wait_nIRQ(void);
  *              .
  */
 bool si446x_wait_gpio1(void);
+
+/**
+ * \brief Milliseconds delay.
+ *
+ * \param[in] ms is the time to delay in milliseconds.
+ *
+ * \return None.
+ */
+void si446x_delay_ms(uint32_t ms);
 
 #endif // SI446X_H_
 

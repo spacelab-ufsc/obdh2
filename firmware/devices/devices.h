@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.0
+ * \version 0.2.13
  * 
  * \date 26/10/2019
  * 
@@ -41,6 +41,8 @@
 #include "leds/leds.h"
 #include "eps/eps.h"
 #include "ttc/ttc.h"
+#include "antenna/antenna.h"
+#include "payload_edc/payload_edc.h"
 
 #endif // DEVICES_H_
 

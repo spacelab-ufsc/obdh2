@@ -1,5 +1,5 @@
 /*
- * version.h
+ * payload_edc.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,29 +21,54 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief Payload EDC device implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.2.15
  * 
- * \date 25/10/2019
+ * \date 18/02/2020
  * 
- * \defgroup version Version control
+ * \addtogroup payload_edc
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include <devices/logger/logger.h>
+#include <drivers/edc/edc.h>
 
-#define FIRMWARE_VERSION            "0.2.15"
+#include "payload_edc.h"
 
-#define FIRMWARE_STATUS             "Development"
+int payload_edc_init()
+{
+    edc_config_t config;
 
-#define FIRMWARE_AUTHOR             "SpaceLab"
+    config.port = I2C_PORT_0;
+    config.bitrate = 100000;
 
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
+    if (edc_init(config) != 0)
+    {
+        logger_print_event_from_module(LOGGER_ERROR, PAYLOAD_EDC_MODULE_NAME, "Error initializing the device!");
+        logger_new_line();
 
-#endif // VERSION_H_
+        return -1;
+    }
 
-//! \} End of version group
+    return 0;
+}
+
+int payload_edc_get_state()
+{
+    return -1;
+}
+
+int payload_edc_enable()
+{
+    return -1;
+}
+
+int payload_edc_disable()
+{
+    return -1;
+}
+
+/** \} End of leds group */

@@ -1,7 +1,7 @@
 /*
  * si446x.c
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.2.4
  * 
  * \date 01/06/2017
  * 
@@ -33,12 +33,9 @@
  * \{
  */
 
-#include "../interface/debug/debug.h"
+#include <drivers/gpio/gpio.h>
 
 #include "si446x.h"
-#include "../hal/obdh_hal.h"
-#include "si446x_config.h"
-#include "si446x_spi.h"
 #include "si446x_reg.h"
 #include "radio_config_Si4463.h"
 
@@ -46,10 +43,12 @@ const uint8_t SI446X_CONFIGURATION_DATA[] = RADIO_CONFIGURATION_DATA_ARRAY;
 
 uint8_t si446x_mode = 0xFF;
 
-uint8_t si446x_init(void)
+int8_t si446x_init(void)
 {
-    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Initializing device...");
-    debug_new_line();
+    if (si446x_spi_init() != 0)
+    {
+        return -1;     // Error initializing the SPI port
+    }
 
     // Power-on reset
     si446x_power_on_reset();
@@ -63,54 +62,74 @@ uint8_t si446x_init(void)
     // Check if the device is working
     if (si446x_check_device())
     {
-        return STATUS_SUCCESS;
+        return 0;
     }
     else
     {
-        return STATUS_FAIL;
+        return -1;
     }
 }
 
-void si446x_shutdown(void)
+int8_t si446x_shutdown(void)
 {
-    BIT_SET(TTC_RESETn_MAIN_OUT, TTC_RESETn_MAIN_PIN);
+    return gpio_set_state(GPIO_PIN_4, true);
 }
 
-void si446x_power_up(void)
+int8_t si446x_power_up(void)
 {
-    BIT_CLEAR(TTC_RESETn_MAIN_OUT, TTC_RESETn_MAIN_PIN);
+    return gpio_set_state(GPIO_PIN_4, false);
 }
 
-void si446x_slave_enable(void)
+int8_t si446x_slave_enable(void)
 {
-    BIT_CLEAR(SPI0_CSn_OUT, SPI0_CSn_PIN);
+    return gpio_set_state(GPIO_PIN_5, false);
 }
 
-void si446x_slave_disable(void)
+int8_t si446x_slave_disable(void)
 {
-    BIT_SET(SPI0_CSn_OUT, SPI0_CSn_PIN);
+    return gpio_set_state(GPIO_PIN_5, true);
 }
 
-void si446x_gpio_init(void)
+int8_t si446x_gpio_init(void)
 {
-    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Initializing GPIO pins...");
-    debug_new_line();
+//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Initializing GPIO pins...");
+//    debug_new_line();
 
-    BIT_SET(TTC_RESETn_MAIN_DIR, TTC_RESETn_MAIN_PIN);
-    BIT_CLEAR(TTC_GPIO2_MAIN_DIR, TTC_GPIO2_MAIN_PIN);
+    // Pin GPIO0
+    if (gpio_init(GPIO_PIN_1, (gpio_config_t){.mode=GPIO_MODE_OUTPUT}) != 0)
+    {
+        return -1;
+    }
 
-    BIT_CLEAR(TTC_GPIO1_MAIN_DIR, TTC_GPIO1_MAIN_PIN);
+    // Pin GPIO1
+    if (gpio_init(GPIO_PIN_2, (gpio_config_t){.mode=GPIO_MODE_INPUT}) != 0)
+    {
+        return -1;
+    }
 
-    BIT_SET(SPI0_CSn_DIR, SPI0_CSn_PIN);
+    // Pin GPIO2
+    if (gpio_init(GPIO_PIN_3, (gpio_config_t){.mode=GPIO_MODE_INPUT}) != 0)
+    {
+        return -1;
+    }
+
+    // Pin RESET
+    if (gpio_init(GPIO_PIN_4, (gpio_config_t){.mode=GPIO_MODE_OUTPUT}) != 0)
+    {
+        return -1;
+    }
 
     si446x_slave_disable();
+
     si446x_shutdown();
+
+    return 0;
 }
 
 void si446x_reg_config(void)
 {
-    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Loading registers values...");
-    debug_new_line();
+//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Loading registers values...");
+//    debug_new_line();
 
     // Set RF parameter like frequency, data rate, etc.
     si446x_set_config(SI446X_CONFIGURATION_DATA, sizeof(SI446X_CONFIGURATION_DATA));
@@ -129,28 +148,31 @@ void si446x_reg_config(void)
 
 void si446x_power_on_reset(void)
 {
-    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Power-on reset...");
-    debug_new_line();
+//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Power-on reset...");
+//    debug_new_line();
 
     uint8_t buffer[8] = {RF_POWER_UP};
 
     si446x_shutdown();
-    __delay_cycles(DELAY_100_MS_IN_CYCLES);
+
+    si446x_delay_ms(100);
+
     si446x_power_up();
-    __delay_cycles(2 * DELAY_10_MS_IN_CYCLES);           // Wait for stabilization
+
+    si446x_delay_ms(20);    // Wait for stabilization
 
     // Send power-up command
     si446x_slave_enable();
     si446x_spi_write(buffer, 7);
     si446x_slave_disable();
 
-    __delay_cycles(2 * DELAY_100_MS_IN_CYCLES);
+    si446x_delay_ms(200);
 }
 
 bool si446x_tx_packet(uint8_t *data, uint8_t len)
 {
-    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Trying to transmit a packet...");
-    debug_new_line();
+//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Trying to transmit a packet...");
+//    debug_new_line();
 
     // Setting packet size
     si446x_set_properties(SI446X_PROPERTY_PKT_FIELD_1_LENGTH_7_0, &len, 1);
@@ -163,17 +185,17 @@ bool si446x_tx_packet(uint8_t *data, uint8_t len)
 
     si446x_enter_tx_mode();
 
-    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Transmitting a packet: ");
-    uint8_t i = 0;
-    for(i=0; i<len; i++)
-    {
-        debug_print_hex(data[i]);
-        if (i < len-1)
-        {
-            debug_print_msg(",");
-        }
-    }
-    debug_new_line();
+//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Transmitting a packet: ");
+//    uint8_t i = 0;
+//    for(i=0; i<len; i++)
+//    {
+//        debug_print_hex(data[i]);
+//        if (i < len-1)
+//        {
+//            debug_print_msg(",");
+//        }
+//    }
+//    debug_new_line();
 
     while(tx_timer--)
     {
@@ -182,7 +204,7 @@ bool si446x_tx_packet(uint8_t *data, uint8_t len)
             return true;
         }
 
-        __delay_cycles(DELAY_100_uS_IN_CYCLES);
+        si446x_delay_ms(1);
     }
 
     // If the packet transmission takes longer than expected, resets the radio.
@@ -198,8 +220,8 @@ bool si446x_tx_long_packet(uint8_t *packet, uint16_t len)
         return si446x_tx_packet(packet, (uint8_t)(len));
     }
 
-    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Trying to transmit a long packet...");
-    debug_new_line();
+//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Trying to transmit a long packet...");
+//    debug_new_line();
 
     // Setting packet size
     uint8_t buf[2];
@@ -223,16 +245,16 @@ bool si446x_tx_long_packet(uint8_t *packet, uint16_t len)
 
     si446x_enter_tx_mode();
 
-    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Transmitting data: ");
-    for(i=0; i<len; i++)
-    {
-        debug_print_hex(packet[i]);
-        if (i < len-1)
-        {
-            debug_print_msg(",");
-        }
-    }
-    debug_new_line();
+//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Transmitting data: ");
+//    for(i=0; i<len; i++)
+//    {
+//        debug_print_hex(packet[i]);
+//        if (i < len-1)
+//        {
+//            debug_print_msg(",");
+//        }
+//    }
+//    debug_new_line();
 
     while(tx_timer--)
     {
@@ -257,7 +279,7 @@ bool si446x_tx_long_packet(uint8_t *packet, uint16_t len)
                         return true;
                     }
 
-                    __delay_cycles(DELAY_100_uS_IN_CYCLES);
+                    si446x_delay_ms(1);
                 }
                 break;
             }
@@ -309,8 +331,8 @@ bool si446x_check_device(void)
 
     if (!si446x_get_cmd(SI446X_CMD_PART_INFO, buffer, 9))
     {
-        debug_print_event_from_module(DEBUG_ERROR, SI446X_MODULE_NAME, "Error reading the device ID!");
-        debug_new_line();
+//        debug_print_event_from_module(DEBUG_ERROR, SI446X_MODULE_NAME, "Error reading the device ID!");
+//        debug_new_line();
 
         return false;
     }
@@ -318,12 +340,12 @@ bool si446x_check_device(void)
     part_info = (buffer[2] << 8) | buffer[3];
     if (part_info != SI446X_PART_INFO)
     {
-        debug_print_event_from_module(DEBUG_ERROR, SI446X_MODULE_NAME, "Error checking the device ID! (read=");
-        debug_print_hex(part_info);
-        debug_print_msg(", expected=");
-        debug_print_hex(SI446X_PART_INFO);
-        debug_print_msg(")");
-        debug_new_line();
+//        debug_print_event_from_module(DEBUG_ERROR, SI446X_MODULE_NAME, "Error checking the device ID! (read=");
+//        debug_print_hex(part_info);
+//        debug_print_msg(", expected=");
+//        debug_print_hex(SI446X_PART_INFO);
+//        debug_print_msg(")");
+//        debug_new_line();
 
         return false;
     }
@@ -387,10 +409,10 @@ bool si446x_set_tx_power(uint8_t pwr)
         pwr = 127;
     }
 
-    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Configuring TX power to ");
-    debug_print_hex(pwr);
-    debug_print_msg("...");
-    debug_new_line();
+//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Configuring TX power to ");
+//    debug_print_hex(pwr);
+//    debug_print_msg("...");
+//    debug_new_line();
 
     uint8_t buffer[5];
     buffer[0] = 0x08;
@@ -477,10 +499,10 @@ void si446x_set_config(const uint8_t *parameters, uint16_t para_len)
 
 bool si446x_set_preamble_len(uint8_t len)
 {
-    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Configuring preamble length to ");
-    debug_print_dec(len);
-    debug_print_msg("...");
-    debug_new_line();
+//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Configuring preamble length to ");
+//    debug_print_dec(len);
+//    debug_print_msg("...");
+//    debug_new_line();
 
     return si446x_set_properties(SI446X_PROPERTY_PREAMBLE_TX_LENGTH, &len, 1);
 }
@@ -489,23 +511,23 @@ bool si446x_set_sync_word(uint8_t *sync_word, uint8_t len)
 {
     if ((len == 0) || (len > 3))
     {
-        debug_print_event_from_module(DEBUG_ERROR, SI446X_MODULE_NAME, "Error configuring sync word! Length greater than 4 bytes!");
-        debug_new_line();
+//        debug_print_event_from_module(DEBUG_ERROR, SI446X_MODULE_NAME, "Error configuring sync word! Length greater than 4 bytes!");
+//        debug_new_line();
 
         return false;
     }
 
-    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Configuring sync word as ");
-    uint8_t i = 0;
-    for(i=0; i<len; i++)
-    {
-        debug_print_hex(sync_word[i]);
-        if (i < len-1)
-        {
-            debug_print_msg(",");
-        }
-    }
-    debug_new_line();
+//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Configuring sync word as ");
+//    uint8_t i = 0;
+//    for(i=0; i<len; i++)
+//    {
+//        debug_print_hex(sync_word[i]);
+//        if (i < len-1)
+//        {
+//            debug_print_msg(",");
+//        }
+//    }
+//    debug_new_line();
 
     uint8_t buffer[6];
     buffer[0] = len - 1;
@@ -613,8 +635,8 @@ void si446x_enter_tx_mode(void)
         return;
     }
 
-    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Entering TX mode...");
-    debug_new_line();
+//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Entering TX mode...");
+//    debug_new_line();
 
     uint8_t buffer[5];
     
@@ -635,8 +657,8 @@ void si446x_enter_rx_mode(void)
         return;
     }
 
-    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Entering RX mode...");
-    debug_new_line();
+//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Entering RX mode...");
+//    debug_new_line();
 
     uint8_t buffer[8];
     
@@ -657,11 +679,11 @@ bool si446x_enter_standby_mode(void)
 {
     if (si446x_mode == SI446X_MODE_STANDBY)
     {
-        return;
+        return false;
     }
 
-    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Entering standby mode...");
-    debug_new_line();
+//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Entering standby mode...");
+//    debug_new_line();
 
     uint8_t data = 0x01;
 
@@ -672,7 +694,7 @@ bool si446x_enter_standby_mode(void)
 
 bool si446x_wait_nIRQ(void)
 {
-    if (BIT_READ(TTC_GPIO2_MAIN_IN, TTC_GPIO2_MAIN_PIN) == 1)
+    if (gpio_get_state(GPIO_PIN_3) == GPIO_STATE_HIGH)
     {
         return false;
     }
@@ -682,7 +704,8 @@ bool si446x_wait_nIRQ(void)
     }
 }
 
-bool si446x_wait_packet_sent(void) {
+bool si446x_wait_packet_sent(void)
+{
     uint8_t interrupt_status[5];
     si446x_get_cmd(SI446X_CMD_GET_INT_STATUS, interrupt_status, 5);
 
@@ -699,7 +722,7 @@ bool si446x_wait_packet_sent(void) {
 
 bool si446x_wait_gpio1(void)
 {
-    if (BIT_READ(TTC_GPIO1_MAIN_IN, TTC_GPIO1_MAIN_PIN) == 1)
+    if (gpio_get_state(GPIO_PIN_2) == GPIO_STATE_HIGH)
     {
         return true;
     }
