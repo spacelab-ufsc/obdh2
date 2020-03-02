@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.17
+ * \version 0.2.6
  * 
  * \date 05/02/2020
  * 
@@ -39,21 +39,14 @@
 
 #include "sl_eps2.h"
 
-tca4311a_config_t sl_eps2_config;
-
-int sl_eps2_init()
+int sl_eps2_init(sl_eps2_config_t config)
 {
-    sl_eps2_config.i2c_port     = I2C_PORT_1;
-    sl_eps2_config.i2c_config   = (i2c_config_t){.speed_hz=100000};
-    sl_eps2_config.en_pin       = GPIO_PIN_17;
-    sl_eps2_config.ready_pin    = GPIO_PIN_20;
-
-    if (tca4311a_init(sl_eps2_config, true) != TCA4311A_READY)
+    if (tca4311a_init(config, true) != TCA4311A_READY)
     {
         return -1;      // Error initializing the I2C port
     }
 
-    if (sl_eps2_check_device() != 0)
+    if (sl_eps2_check_device(config) != 0)
     {
         return -1;      // Error checking the connection
     }
@@ -61,16 +54,16 @@ int sl_eps2_init()
     return 0;
 }
 
-int sl_eps2_check_device()
+int sl_eps2_check_device(sl_eps2_config_t config)
 {
     uint8_t buf = SL_EPS2_REG_DEVICE_ID;
 
-    if (tca4311a_write(sl_eps2_config, SL_EPS2_SLAVE_ADR, &buf, 1) != TCA4311A_READY)
+    if (tca4311a_write(config, SL_EPS2_SLAVE_ADR, &buf, 1) != TCA4311A_READY)
     {
         return -1;      // Error writing the command
     }
 
-    if (tca4311a_read(sl_eps2_config, SL_EPS2_SLAVE_ADR, &buf, 1) != TCA4311A_READY)
+    if (tca4311a_read(config, SL_EPS2_SLAVE_ADR, &buf, 1) != TCA4311A_READY)
     {
         return -1;      // Error reading the command result
     }
@@ -83,7 +76,7 @@ int sl_eps2_check_device()
     return 0;
 }
 
-int sl_eps2_write_reg(uint8_t adr, uint32_t val)
+int sl_eps2_write_reg(sl_eps2_config_t config, uint8_t adr, uint32_t val)
 {
     uint8_t buf[5];
 
@@ -93,7 +86,7 @@ int sl_eps2_write_reg(uint8_t adr, uint32_t val)
     buf[3] = (val >> 8)  & 0xFF;
     buf[4] = (val >> 0)  & 0xFF;
 
-    if (tca4311a_write(sl_eps2_config, SL_EPS2_SLAVE_ADR, buf, 5) != TCA4311A_READY)
+    if (tca4311a_write(config, SL_EPS2_SLAVE_ADR, buf, 5) != TCA4311A_READY)
     {
         return -1;
     }
@@ -101,16 +94,16 @@ int sl_eps2_write_reg(uint8_t adr, uint32_t val)
     return 0;
 }
 
-int sl_eps2_read_reg(uint8_t adr, uint32_t *val)
+int sl_eps2_read_reg(sl_eps2_config_t config, uint8_t adr, uint32_t *val)
 {
-    if (tca4311a_write_byte(sl_eps2_config, SL_EPS2_SLAVE_ADR, adr) != TCA4311A_READY)
+    if (tca4311a_write_byte(config, SL_EPS2_SLAVE_ADR, adr) != TCA4311A_READY)
     {
         return -1;
     }
 
     uint8_t buf[4];
 
-    if (tca4311a_read(sl_eps2_config, SL_EPS2_SLAVE_ADR, buf, 4) != TCA4311A_READY)
+    if (tca4311a_read(config, SL_EPS2_SLAVE_ADR, buf, 4) != TCA4311A_READY)
     {
         return -1;
     }
@@ -123,44 +116,44 @@ int sl_eps2_read_reg(uint8_t adr, uint32_t *val)
     return 0;
 }
 
-int sl_eps2_read_battery_voltage(uint8_t bat, uint32_t *val)
+int sl_eps2_read_battery_voltage(sl_eps2_config_t config, uint8_t bat, uint32_t *val)
 {
     switch(bat)
     {
-        case SL_EPS2_BATTERY_CELL_0:    return sl_eps2_read_reg(SL_EPS2_REG_BATTERY_0_VOLTAGE, val);
-        case SL_EPS2_BATTERY_CELL_1:    return sl_eps2_read_reg(SL_EPS2_REG_BATTERY_1_VOLTAGE, val);
+        case SL_EPS2_BATTERY_CELL_0:    return sl_eps2_read_reg(config, SL_EPS2_REG_BATTERY_0_VOLTAGE, val);
+        case SL_EPS2_BATTERY_CELL_1:    return sl_eps2_read_reg(config, SL_EPS2_REG_BATTERY_1_VOLTAGE, val);
         default:
             return -1;  // Invalid battery cell
     }
 }
 
-int sl_eps2_read_battery_charge(uint32_t *val)
+int sl_eps2_read_battery_charge(sl_eps2_config_t config, uint32_t *val)
 {
-    return sl_eps2_read_reg(SL_EPS2_REG_BATTERY_CHARGE, val);
+    return sl_eps2_read_reg(config, SL_EPS2_REG_BATTERY_CHARGE, val);
 }
 
-int sl_eps2_read_solar_panel_current(uint8_t sp, uint32_t *val)
+int sl_eps2_read_solar_panel_current(sl_eps2_config_t config, uint8_t sp, uint32_t *val)
 {
     switch(sp)
     {
-        case SL_EPS2_SOLAR_PANEL_0:     return sl_eps2_read_reg(SL_EPS2_REG_SOLAR_PANEL_0_CUR, val);
-        case SL_EPS2_SOLAR_PANEL_1:     return sl_eps2_read_reg(SL_EPS2_REG_SOLAR_PANEL_1_CUR, val);
-        case SL_EPS2_SOLAR_PANEL_2:     return sl_eps2_read_reg(SL_EPS2_REG_SOLAR_PANEL_2_CUR, val);
-        case SL_EPS2_SOLAR_PANEL_3:     return sl_eps2_read_reg(SL_EPS2_REG_SOLAR_PANEL_3_CUR, val);
-        case SL_EPS2_SOLAR_PANEL_4:     return sl_eps2_read_reg(SL_EPS2_REG_SOLAR_PANEL_4_CUR, val);
-        case SL_EPS2_SOLAR_PANEL_5:     return sl_eps2_read_reg(SL_EPS2_REG_SOLAR_PANEL_5_CUR, val);
+        case SL_EPS2_SOLAR_PANEL_0:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_0_CUR, val);
+        case SL_EPS2_SOLAR_PANEL_1:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_1_CUR, val);
+        case SL_EPS2_SOLAR_PANEL_2:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_2_CUR, val);
+        case SL_EPS2_SOLAR_PANEL_3:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_3_CUR, val);
+        case SL_EPS2_SOLAR_PANEL_4:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_4_CUR, val);
+        case SL_EPS2_SOLAR_PANEL_5:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_5_CUR, val);
         default:
             return -1;  // Invalid solar panel
     }
 }
 
-int sl_eps2_read_solar_panel_voltage(uint8_t sp, uint32_t *val)
+int sl_eps2_read_solar_panel_voltage(sl_eps2_config_t config, uint8_t sp, uint32_t *val)
 {
     switch(sp)
     {
-        case SL_EPS2_SOLAR_PANEL_30:    return sl_eps2_read_reg(SL_EPS2_REG_SOLAR_PANEL_30_VOLT, val);
-        case SL_EPS2_SOLAR_PANEL_14:    return sl_eps2_read_reg(SL_EPS2_REG_SOLAR_PANEL_14_VOLT, val);
-        case SL_EPS2_SOLAR_PANEL_52:    return sl_eps2_read_reg(SL_EPS2_REG_SOLAR_PANEL_52_VOLT, val);
+        case SL_EPS2_SOLAR_PANEL_30:    return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_30_VOLT, val);
+        case SL_EPS2_SOLAR_PANEL_14:    return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_14_VOLT, val);
+        case SL_EPS2_SOLAR_PANEL_52:    return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_52_VOLT, val);
         default:
             return -1;  // Invalid solar panel set
     }

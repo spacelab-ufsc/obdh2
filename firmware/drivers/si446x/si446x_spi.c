@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.15
+ * \version 0.2.2
  * 
  * \date 29/07/2017
  * 
@@ -37,9 +37,7 @@
 #include <stdint.h>
 
 #include <drivers/spi/spi.h>
-
-#include "si446x_config.h"
-#include "si446x_reg.h"
+#include <drivers/gpio/gpio.h>
 
 int si446x_spi_init()
 {

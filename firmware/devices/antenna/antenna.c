@@ -1,5 +1,5 @@
 /*
- * version.h
+ * antenna.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,29 +21,33 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief Antenna device implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.15
+ * \version 0.2.4
  * 
- * \date 25/10/2019
+ * \date 01/11/2019
  * 
- * \defgroup version Version control
+ * \addtogroup antenna
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include "antenna.h"
 
-#define FIRMWARE_VERSION            "0.2.15"
+int antenna_init()
+{
+    return -1;
+}
 
-#define FIRMWARE_STATUS             "Development"
+int antenna_get_status()
+{
+    return -1;
+}
 
-#define FIRMWARE_AUTHOR             "SpaceLab"
+int antenna_deploy()
+{
+    return -1;
+}
 
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
-
-#endif // VERSION_H_
-
-//! \} End of version group
+/** \} End of antenna group */

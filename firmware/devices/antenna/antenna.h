@@ -1,5 +1,5 @@
 /*
- * version.h
+ * antenna.h
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,29 +21,43 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief Antenna device definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.15
+ * \version 0.2.4
  * 
- * \date 25/10/2019
+ * \date 01/11/2019
  * 
- * \defgroup version Version control
+ * \defgroup antenna Antenna
+ * \ingroup devices
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#ifndef ANTENNA_H_
+#define ANTENNA_H_
 
-#define FIRMWARE_VERSION            "0.2.15"
+/**
+ * \brief Antenna initialization.
+ *
+ * \return The status/error code.
+ */
+int antenna_init();
 
-#define FIRMWARE_STATUS             "Development"
+/**
+ * \brief Gets the antenna status.
+ *
+ * \return The status/error code of the antenna module.
+ */
+int antenna_get_status();
 
-#define FIRMWARE_AUTHOR             "SpaceLab"
+/**
+ * \brief Execute the antenna deployment.
+ *
+ * \return The status/error code.
+ */
+int antenna_deploy();
 
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
+#endif // ANTENNA_H_
 
-#endif // VERSION_H_
-
-//! \} End of version group
+/** \} End of antenna group */

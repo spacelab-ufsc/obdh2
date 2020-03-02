@@ -1,5 +1,5 @@
 /*
- * version.h
+ * si446x_delay.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,29 +21,27 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief Si446x driver delay implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.15
+ * \version 0.2.3
  * 
- * \date 25/10/2019
+ * \date 29/07/2017
  * 
- * \defgroup version Version control
+ * \defgroup si446x_delay Delay
+ * \ingroup si446x
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include <FreeRTOS.h>
+#include <task.h>
 
-#define FIRMWARE_VERSION            "0.2.15"
+#include "si446x.h"
 
-#define FIRMWARE_STATUS             "Development"
+void si446x_delay_ms(uint32_t ms)
+{
+    vTaskDelay(pdMS_TO_TICKS(ms));
+}
 
-#define FIRMWARE_AUTHOR             "SpaceLab"
-
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
-
-#endif // VERSION_H_
-
-//! \} End of version group
+/** \} End of si446x_delay group */
