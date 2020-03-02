@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.13
+ * \version 0.2.15
  * 
  * \date 18/02/2020
  * 
@@ -40,7 +40,20 @@
 
 int payload_edc_init()
 {
-    return -1;
+    edc_config_t config;
+
+    config.port = I2C_PORT_0;
+    config.bitrate = 100000;
+
+    if (edc_init(config) != 0)
+    {
+        logger_print_event_from_module(LOGGER_ERROR, PAYLOAD_EDC_MODULE_NAME, "Error initializing the device!");
+        logger_new_line();
+
+        return -1;
+    }
+
+    return 0;
 }
 
 int payload_edc_get_state()
