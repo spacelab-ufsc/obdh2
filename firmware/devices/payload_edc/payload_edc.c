@@ -1,5 +1,5 @@
 /*
- * version.h
+ * payload_edc.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,29 +21,41 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief Payload EDC device implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.2.13
  * 
- * \date 25/10/2019
+ * \date 18/02/2020
  * 
- * \defgroup version Version control
+ * \addtogroup payload_edc
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include <devices/logger/logger.h>
+#include <drivers/edc/edc.h>
 
-#define FIRMWARE_VERSION            "0.2.13"
+#include "payload_edc.h"
 
-#define FIRMWARE_STATUS             "Development"
+int payload_edc_init()
+{
+    return -1;
+}
 
-#define FIRMWARE_AUTHOR             "SpaceLab"
+int payload_edc_get_state()
+{
+    return -1;
+}
 
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
+int payload_edc_enable()
+{
+    return -1;
+}
 
-#endif // VERSION_H_
+int payload_edc_disable()
+{
+    return -1;
+}
 
-//! \} End of version group
+/** \} End of leds group */
