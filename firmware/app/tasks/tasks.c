@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.3
+ * \version 0.2.16
  * 
  * \date 02/11/2019
  * 
@@ -44,6 +44,7 @@
 #include "heartbeat.h"
 #include "system_reset.h"
 #include "radio_reset.h"
+#include "read_temp.h"
 
 void create_tasks()
 {
@@ -94,6 +95,15 @@ void create_tasks()
         // Error creating the radio reset task
     }
 #endif // CONFIG_TASK_RADIO_RESET_ENABLED
+
+#if CONFIG_TASK_READ_TEMP_ENABLED == 1
+    xTaskCreate(vTaskReadTemp, TASK_READ_TEMP_NAME, TASK_READ_TEMP_STACK_SIZE, NULL, TASK_READ_TEMP_PRIORITY, &xTaskReadTempHandle);
+
+    if (xTaskReadTempHandle == NULL)
+    {
+        /* Error creating the read tempearture task */
+    }
+#endif /* CONFIG_TASK_READ_TEMP_ENABLED */
 
     create_event_groups();
 }

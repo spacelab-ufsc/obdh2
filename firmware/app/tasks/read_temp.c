@@ -1,5 +1,5 @@
 /*
- * version.h
+ * read_temp.h
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,29 +21,35 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief Read uC temperature task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.2.16
  * 
- * \date 25/10/2019
+ * \date 02/03/2020
  * 
- * \defgroup version Version control
+ * \addtogroup read_temp
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include "read_temp.h"
+#include "startup.h"
 
-#define FIRMWARE_VERSION            "0.2.16"
+xTaskHandle xTaskReadTempHandle;
 
-#define FIRMWARE_STATUS             "Development"
+void vTaskReadTemp(void *pvParameters)
+{
+    /* Wait startup task to finish */
+    xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_TEMP_INIT_TIMEOUT_MS));
 
-#define FIRMWARE_AUTHOR             "SpaceLab"
+    while(1)
+    {
+        TickType_t last_cycle = xTaskGetTickCount();
 
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
 
-#endif // VERSION_H_
+        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_TEMP_PERIOD_MS));
+    }
+}
 
-//! \} End of version group
+/** \} End of watchdog_reset group */
