@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * adc.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,35 +21,31 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief ADC driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.15
+ * \version 0.2.17
  * 
- * \date 26/10/2019
+ * \date 03/03/2020
  * 
- * \defgroup drivers Drivers
+ * \addtogroup adc
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#include <hal/adc10_a.h>
+#include <hal/adc12_a.h>
 
-#include "edc/edc.h"
-#include "i2c/i2c.h"
-#include "isis_antenna/isis_antenna.h"
-#include "mt25ql01gbbb/mt25ql01gbbb.h"
-#include "spi/spi.h"
-#include "si446x/si446x.h"
-#include "uart/uart.h"
-#include "gpio/gpio.h"
-#include "tps382x/tps382x.h"
-#include "wdt/wdt.h"
-#include "tca4311a/tca4311a.h"
-#include "sl_eps2/sl_eps2.h"
-#include "adc/adc.h"
+#include "adc.h"
 
-#endif // DRIVERS_H_
+int adc_init(adc_port_t port, adc_config_t config)
+{
+    return -1;
+}
 
-//! \} End of drivers group
+int adc_read(adc_port_t port, uint16_t *val)
+{
+    return -1;
+}
+
+/** \} End of i2c group */
