@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.4
+ * \version 0.2.18
  * 
  * \date 01/06/2017
  * 
@@ -494,6 +494,8 @@ void si446x_set_config(const uint8_t *parameters, uint16_t para_len)
         
         si446x_set_cmd(cmd, buffer, cmd_len);
         pos += cmd_len;
+
+        si446x_delay_ms(1);
     }
 }
 
