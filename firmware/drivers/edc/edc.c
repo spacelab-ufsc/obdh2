@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.11
+ * \version 0.2.21
  * 
  * \date 27/10/2019
  * 
@@ -146,6 +146,9 @@ int16_t edc_get_state(uint8_t *status)
         return -1;
     }
 
+    /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
+    edc_delay_ms(10);
+
     if (edc_read(status, EDC_FRAME_STATE_LEN) != 0)
     {
         return -1;
@@ -165,6 +168,9 @@ int16_t edc_get_ptt_pkg(uint8_t *pkg)
     {
         return -1;
     }
+
+    /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
+    edc_delay_ms(10);
 
     if (edc_read(pkg, EDC_FRAME_PTT_LEN) != 0)
     {
@@ -186,6 +192,9 @@ int16_t edc_get_hk_pkg(uint8_t *hk)
         return -1;
     }
 
+    /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
+    edc_delay_ms(10);
+
     if (edc_read(hk, EDC_FRAME_HK_LEN) != 0)
     {
         return -1;
@@ -205,6 +214,9 @@ int16_t edc_get_adc_seq(uint8_t *seq)
     {
         return -1;
     }
+
+    /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
+    edc_delay_ms(10);
 
     if (edc_read(seq, EDC_FRAME_ADC_SEQ_LEN) != 0)
     {

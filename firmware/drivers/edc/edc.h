@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.11
+ * \version 0.2.21
  * 
  * \date 27/10/2019
  * 
@@ -281,6 +281,15 @@ int16_t edc_get_adc_seq(uint8_t *seq);
  * \return The status/error code.
  */
 int edc_echo();
+
+/**
+ * \brief Milliseconds delay.
+ *
+ * \param[in] ms is the period to delay in milliseconds.
+ *
+ * \return None.
+ */
+void edc_delay_ms(uint32_t ms);
 
 #endif // EDC_H_
 
