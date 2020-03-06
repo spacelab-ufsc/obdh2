@@ -1,5 +1,5 @@
 /*
- * version.h
+ * edc_delay.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,29 +21,27 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief EDC driver delay implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.22
+ * \version 0.2.21
  * 
- * \date 25/10/2019
+ * \date 05/03/2020
  * 
- * \defgroup version Version control
+ * \defgroup edc_delay Delay
+ * \ingroup edc
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include <FreeRTOS.h>
+#include <task.h>
 
-#define FIRMWARE_VERSION            "0.2.22"
+#include "edc.h"
 
-#define FIRMWARE_STATUS             "Development"
+void edc_delay_ms(uint32_t ms)
+{
+    vTaskDelay(pdMS_TO_TICKS(ms));
+}
 
-#define FIRMWARE_AUTHOR             "SpaceLab"
-
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
-
-#endif // VERSION_H_
-
-//! \} End of version group
+/** \} End of edc_delay group */
