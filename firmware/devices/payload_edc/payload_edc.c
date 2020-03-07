@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.15
+ * \version 0.3.0
  * 
  * \date 18/02/2020
  * 
@@ -43,7 +43,7 @@ int payload_edc_init()
     edc_config_t config;
 
     config.port = I2C_PORT_0;
-    config.bitrate = 100000;
+    config.bitrate = 400000;
 
     if (edc_init(config) != 0)
     {
@@ -53,22 +53,83 @@ int payload_edc_init()
         return -1;
     }
 
+    if (payload_edc_disable() != 0)
+    {
+        return -1;
+    }
+
+    edc_hk_t hk_data;
+
+    if (edc_get_hk(&hk_data) != 0)
+    {
+        logger_print_event_from_module(LOGGER_ERROR, PAYLOAD_EDC_MODULE_NAME, "Error pausing the PTT task!");
+        logger_new_line();
+
+        return -1;
+    }
+
+    logger_print_event_from_module(LOGGER_INFO, PAYLOAD_EDC_MODULE_NAME, "Initialization done! (");
+    logger_print_dec(hk_data.temp);
+    logger_print_msg(" oC, ");
+    logger_print_dec(hk_data.voltage_supply);
+    logger_print_msg(" mV, ");
+    logger_print_dec(hk_data.current_supply);
+    logger_print_msg(" mA)");
+    logger_new_line();
+
     return 0;
 }
 
-int payload_edc_get_state()
+int payload_edc_get_raw_state(uint8_t *data)
 {
-    return -1;
+    int len = edc_get_state_pkg(data);
+
+    if (len < 0)
+    {
+        logger_print_event_from_module(LOGGER_ERROR, PAYLOAD_EDC_MODULE_NAME, "Error reading state from EDC!");
+        logger_new_line();
+    }
+
+    return len;
+}
+
+int payload_edc_get_raw_housekeeping(uint8_t *data)
+{
+    int len = edc_get_hk_pkg(data);
+
+    if (len < 0)
+    {
+        logger_print_event_from_module(LOGGER_ERROR, PAYLOAD_EDC_MODULE_NAME, "Error reading housekeeping data from EDC!");
+        logger_new_line();
+    }
+
+    return len;
 }
 
 int payload_edc_enable()
 {
-    return -1;
+    if (edc_resume_ptt_task() != 0)
+    {
+        logger_print_event_from_module(LOGGER_ERROR, PAYLOAD_EDC_MODULE_NAME, "Error enabling EDC!");
+        logger_new_line();
+
+        return -1;
+    }
+
+    return 0;
 }
 
 int payload_edc_disable()
 {
-    return -1;
+    if (edc_pause_ptt_task() != 0)
+    {
+        logger_print_event_from_module(LOGGER_ERROR, PAYLOAD_EDC_MODULE_NAME, "Error disabling EDC!");
+        logger_new_line();
+
+        return -1;
+    }
+
+    return 0;
 }
 
 /** \} End of leds group */

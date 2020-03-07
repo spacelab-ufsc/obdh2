@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.13
+ * \version 0.3.0
  * 
  * \date 18/02/2020
  * 
@@ -49,9 +49,16 @@ int payload_edc_init();
 /**
  * \brief Gets the general state of the payload.
  *
- * \return The status/error code.
+ * \return The number of read bytes (-1 on error).
  */
-int payload_edc_get_state();
+int payload_edc_get_state(uint8_t *data);
+
+/**
+ * \brief Gets the housekeeping data from the payload.
+ *
+ * \return The number of read bytes (-1 on error).
+ */
+int payload_edc_get_housekeeping(uint8_t *data);
 
 /**
  * \brief Enables the EDC payload.

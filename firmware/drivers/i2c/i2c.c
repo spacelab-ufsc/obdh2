@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.21
+ * \version 0.2.20
  * 
  * \date 07/12/2019
  * 
@@ -174,42 +174,36 @@ int i2c_read(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
 
     USCI_B_I2C_enable(base_address);
 
-    if (len == 1)   // Single byte
+    uint16_t timeout = 0;
+
+    /* Starts the transmission */
+    HWREG8(base_address + OFS_UCBxCTL1) |= UCTXSTT;
+
+    /* Wait Slave Address ACK */
+    while((HWREG8(base_address + OFS_UCBxCTL1) & UCTXSTT) && timeout++ < I2C_SLAVE_TIMEOUT);
+
+    while(len-- > 1)
     {
-        // Initiate command to receive a single character from Slave
-        if (USCI_B_I2C_masterReceiveSingleStartWithTimeout(base_address, I2C_SLAVE_TIMEOUT) != STATUS_SUCCESS)
-        {
-            return -1;  /* Timeout reached */
-        }
+        /* Wait to receive data and shift data on buffer */
+        while((!(HWREG8(base_address + OFS_UCBxIFG) & UCRXIFG)) && timeout++ < I2C_SLAVE_TIMEOUT);
 
-        // Grab data from data register
-        data[0] = USCI_B_I2C_masterReceiveSingle(base_address);
-    }
-    else            // Multiple bytes
-    {
-        // Wait for bus to be free
-        while(USCI_B_I2C_isBusBusy(base_address));
-
-        // Initialize multi reception
-        USCI_B_I2C_masterReceiveMultiByteStart(base_address);
-
-        uint16_t i = 0;
-        for(i=0; i<len-2; i++)
-        {
-            data[i] = USCI_B_I2C_masterReceiveMultiByteNext(base_address);
-        }
-
-        // Initiate end of reception -> Receive byte with NAK
-        if (USCI_B_I2C_masterReceiveMultiByteFinishWithTimeout(base_address, &data[i++], I2C_SLAVE_TIMEOUT) != STATUS_SUCCESS)
-        {
-            return -1;  /* Timeout reached */
-        }
-
-        // Receive last byte
-        data[i++] = USCI_B_I2C_masterReceiveMultiByteNext(base_address);
+        /* Receive a byte and increment the pointer */
+        *(data++) = HWREG8(base_address + OFS_UCBxRXBUF);
     }
 
-    USCI_B_I2C_disable(base_address);
+    /* Prepares to stop the transmission */
+    HWREG8(base_address + OFS_UCBxCTL1) |= UCTXSTP;
+
+    /* Wait to receive data and shift data on buffer */
+    while((!(HWREG8(base_address + OFS_UCBxIFG) & UCRXIFG)) && timeout++ < I2C_SLAVE_TIMEOUT);
+
+    /* Receive a byte and increment the pointer */
+    *(data++) = HWREG8(base_address + OFS_UCBxRXBUF);
+
+    if (timeout > I2C_SLAVE_TIMEOUT)
+    {
+        return -1;
+    }
 
     return 0;
 }

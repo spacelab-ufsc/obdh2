@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * read_temp.h
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,35 +21,35 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief Read uC temperature task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.15
+ * \version 0.2.16
  * 
- * \date 26/10/2019
+ * \date 02/03/2020
  * 
- * \defgroup drivers Drivers
+ * \addtogroup read_temp
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#include "read_temp.h"
+#include "startup.h"
 
-#include "edc/edc.h"
-#include "i2c/i2c.h"
-#include "isis_antenna/isis_antenna.h"
-#include "mt25ql01gbbb/mt25ql01gbbb.h"
-#include "spi/spi.h"
-#include "si446x/si446x.h"
-#include "uart/uart.h"
-#include "gpio/gpio.h"
-#include "tps382x/tps382x.h"
-#include "wdt/wdt.h"
-#include "tca4311a/tca4311a.h"
-#include "sl_eps2/sl_eps2.h"
-#include "adc/adc.h"
+xTaskHandle xTaskReadTempHandle;
 
-#endif // DRIVERS_H_
+void vTaskReadTemp(void *pvParameters)
+{
+    /* Wait startup task to finish */
+    xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_TEMP_INIT_TIMEOUT_MS));
 
-//! \} End of drivers group
+    while(1)
+    {
+        TickType_t last_cycle = xTaskGetTickCount();
+
+
+        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_TEMP_PERIOD_MS));
+    }
+}
+
+/** \} End of watchdog_reset group */
