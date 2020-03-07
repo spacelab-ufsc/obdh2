@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * edc_delay.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,35 +21,27 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief EDC driver delay implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.15
+ * \version 0.2.21
  * 
- * \date 26/10/2019
+ * \date 05/03/2020
  * 
- * \defgroup drivers Drivers
+ * \defgroup edc_delay Delay
+ * \ingroup edc
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#include <FreeRTOS.h>
+#include <task.h>
 
-#include "edc/edc.h"
-#include "i2c/i2c.h"
-#include "isis_antenna/isis_antenna.h"
-#include "mt25ql01gbbb/mt25ql01gbbb.h"
-#include "spi/spi.h"
-#include "si446x/si446x.h"
-#include "uart/uart.h"
-#include "gpio/gpio.h"
-#include "tps382x/tps382x.h"
-#include "wdt/wdt.h"
-#include "tca4311a/tca4311a.h"
-#include "sl_eps2/sl_eps2.h"
-#include "adc/adc.h"
+#include "edc.h"
 
-#endif // DRIVERS_H_
+void edc_delay_ms(uint32_t ms)
+{
+    vTaskDelay(pdMS_TO_TICKS(ms));
+}
 
-//! \} End of drivers group
+/** \} End of edc_delay group */

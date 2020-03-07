@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.11
+ * \version 0.2.23
  * 
  * \date 27/10/2019
  * 
@@ -38,6 +38,7 @@
 #define EDC_H_
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include <drivers/i2c/i2c.h>
 
@@ -84,6 +85,47 @@ typedef struct
     uint8_t id;         /**< Command ID. */
     uint32_t param;     /**< Command param. */
 } edc_cmd_t;
+
+/**
+ * \brief State data.
+ */
+typedef struct
+{
+    uint32_t current_time;                  /**< Current time in number of seconds elapsed since J2000 epoch. */
+    uint8_t ptt_available;                  /**< Number of PTT Package available for reading. */
+    bool ptt_is_paused;                     /**< PTT Decoder task status. */
+    uint8_t sampler_state;                  /**< ADC Sampler state. */
+} edc_state_t;
+
+/**
+ * \brief PTT data.
+ */
+typedef struct
+{
+    uint32_t time_tag;                      /**< PTT signal receiving time in number of seconds elapsed since J2000 epoch. */
+    uint8_t error_code;                     /**< PTT error code. */
+    int32_t carrier_freq;                   /**< Carrier frequency. */
+    uint16_t carrier_abs;                   /**< Carrier amplitude at ADC interface output. */
+    uint8_t msg_byte_length;                /**< user_msg length in number of bytes. */
+    uint8_t user_msg[36];                   /**< User Message as specified in ARGOS-2 PTT-A2 signal specification. */
+} edc_ptt_t;
+
+/**
+ * \brief Housekeeping data.
+ */
+typedef struct
+{
+    uint32_t current_time;                  /**< Current time in number of seconds elapsed since J2000 epoch. */
+    uint32_t elapsed_time;                  /**< Elapsed time since last system initialization in seconds. */
+    uint16_t current_supply;                /**< System current supply in mA. */
+    uint16_t voltage_supply;                /**< System voltage supply in mV. */
+    int8_t temp;                            /**< EDC board temperature in Celsius. */
+    uint8_t pll_sync_bit;                   /**< RF Front End LO frequency synthesizer indicator of PLL synchronization. */
+    int16_t adc_rms;                        /**< RMS level at front-end output. */
+    uint8_t num_rx_ptt;                     /**< Number of generated PTT package since last system initialization. */
+    uint8_t max_parl_decod;                 /**< Maximum number of active PTT decoder channels registered since last system initialization. */
+    uint8_t mem_err_count;                  /**< Number of double bit errors detected by MSS data memory controller since last system initialization. */
+} edc_hk_t;
 
 /**
  * \brief Device initialization.
@@ -182,7 +224,7 @@ int edc_start_adc_task();
  *
  * \return The number of read bytes (-1 on error).
  */
-int16_t edc_get_state(uint8_t *status);
+int16_t edc_get_state_pkg(uint8_t *status);
 
 /**
  * \brief Gets the current PTT decoder frame.
@@ -281,6 +323,46 @@ int16_t edc_get_adc_seq(uint8_t *seq);
  * \return The status/error code.
  */
 int edc_echo();
+
+/**
+ * \brief Calculates the checksum of an array of bytes.
+ *
+ * This checksum value is obtained through a bitwise XOR operation between all bytes.
+ *
+ * \param[in] data is an array of bytes to obtain the checksum.
+ *
+ * \param[in] len is the number of bytes of the given array.
+ *
+ * \return The calculated checksum value.
+ */
+uint16_t edc_calc_checksum(uint8_t *data, uint16_t len);
+
+/**
+ * \brief Gets the state data.
+ *
+ * \param[in,out] state_data is a pointer to a state structure.
+ *
+ * \return The status/error code.
+ */
+int edc_get_state(edc_state_t *state_data);
+
+/**
+ * \brief Gets the housekeeping data.
+ *
+ * \param[in,out] hk_data is a pointer to store the hk data.
+ *
+ * \return The status/error code.
+ */
+int edc_get_hk(edc_hk_t *hk_data);
+
+/**
+ * \brief Milliseconds delay.
+ *
+ * \param[in] ms is the period to delay in milliseconds.
+ *
+ * \return None.
+ */
+void edc_delay_ms(uint32_t ms);
 
 #endif // EDC_H_
 
