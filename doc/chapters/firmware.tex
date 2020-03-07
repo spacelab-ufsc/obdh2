@@ -1,7 +1,7 @@
 %
 % firmware.tex
 %
-% Copyright (C) 2019 by Universidade Federal de Santa Catarina.
+% Copyright (C) 2020 by Universidade Federal de Santa Catarina.
 %
 % OBDH 2.0 Documentation
 %
@@ -127,9 +127,10 @@ This task reads the internal temperature of the microcontroller of the OBDH at e
         Activate beacon        & None                          & Private         \\
         Deactivate beacon      & None                          & Private         \\
         Activate downlink      & None                          & Private         \\
-        Deactivate dtownlink   & None                          & Private         \\
+        Deactivate downlink    & None                          & Private         \\
         Activate EDC           & None                          & Private         \\
         Deactivate EDC         & None                          & Private         \\
+        Get EDC info           & None                          & Private         \\
         Activate Payload X     & Experiment period in seconds  & Private         \\
         Deactivate Payload X   & None                          & Private         \\
         Set system time        & Time value (epoch)            & Private         \\
@@ -141,6 +142,58 @@ This task reads the internal temperature of the microcontroller of the OBDH at e
     \caption{System telecomamnds.}
     \label{tab:system-telecommands}
 \end{table}
+
+\subsection{Enter hibernation}
+
+.
+
+\subsection{Leave hibernation}
+
+.
+
+\subsection{Activate beacon}
+
+.
+
+\subsection{Deactivate beacon}
+
+.
+
+\subsection{Activate EDC}
+
+.
+
+\subsection{Deactivate EDC}
+
+.
+
+\subsection{Get EDC info}
+
+This telecommand request information from the EDC payload. When received, the OBDH transmits the housekeeping and state frames of the EDC module (28 bytes). This telecommand does not requires a key.
+
+\subsection{Activate Payload X}
+
+.
+
+\subsection{Deactivate Payload X}
+
+.
+
+\subsection{Set system time}
+
+.
+
+\subsection{Ping}
+
+.
+
+\subsection{Message broadcast}
+
+.
+
+\subsection{Request data}
+
+.
 
 \section{Operating System}
 
