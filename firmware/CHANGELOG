@@ -1,5 +1,16 @@
 ===========================================
 
+v0.3 - 07/03/2020
+
+- EDC driver
+- Payload EDC device
+- Si446x driver improvements
+- Using the fault LED to signalize boot errors
+- Fixing I2C driver
+- General improvements and fixes
+
+===========================================
+
 v0.2 - 10/02/2020
 
 - I2C driver
