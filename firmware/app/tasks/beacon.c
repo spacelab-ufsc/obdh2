@@ -1,7 +1,7 @@
 /*
- * periodic_downlink.c
+ * beacon.c
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -21,33 +21,33 @@
  */
 
 /**
- * \brief Periodic downlink task implementation.
+ * \brief Beacon task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.3.1
  * 
  * \date 27/10/2019
  * 
- * \addtogroup periodic_downlink
+ * \addtogroup beacon
  * \{
  */
 
-#include "periodic_downlink.h"
+#include "beacon.h"
 
-xTaskHandle xTaskPeriodicDownlinkHandle;
+xTaskHandle xTaskBeaconHandle;
 
-void vTaskPeriodicDownlink(void *pvParameters)
+void vTaskBeacon(void *pvParameters)
 {
-    // Delay before the first cycle
-    vTaskDelay(pdMS_TO_TICKS(TASK_PERIODIC_DOWNLINK_INITIAL_DELAY_MS));
+    /* Delay before the first cycle */
+    vTaskDelay(pdMS_TO_TICKS(TASK_BEACON_INITIAL_DELAY_MS));
 
     while(1)
     {
         TickType_t last_cycle = xTaskGetTickCount();
 
-        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_PERIODIC_DOWNLINK_PERIOD_MS));
+        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_BEACON_PERIOD_MS));
     }
 }
 
-//! \} End of periodic_downlink group
+/** \} End of beacon group */

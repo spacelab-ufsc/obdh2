@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.16
+ * \version 0.3.1
  * 
  * \date 02/11/2019
  * 
@@ -45,6 +45,7 @@
 #include "system_reset.h"
 #include "radio_reset.h"
 #include "read_temp.h"
+#include "beacon.h"
 
 void create_tasks()
 {
@@ -104,6 +105,15 @@ void create_tasks()
         /* Error creating the read tempearture task */
     }
 #endif /* CONFIG_TASK_READ_TEMP_ENABLED */
+
+#if CONFIG_TASK_BEACON_ENABLED == 1
+    xTaskCreate(vTaskBeacon, TASK_BEACON_NAME, TASK_BEACON_STACK_SIZE, NULL, TASK_BEACON_PRIORITY, &xTaskBeaconHandle);
+
+    if (xTaskBeaconHandle == NULL)
+    {
+        /* Error creating the beacon task */
+    }
+#endif /* CONFIG_TASK_BEACON_ENABLED */
 
     create_event_groups();
 }
