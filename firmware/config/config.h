@@ -36,7 +36,7 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-// Tasks
+/* Tasks */
 #define CONFIG_TASK_STARTUP_ENABLED                     1
 #define CONFIG_TASK_WATCHDOG_RESET_ENABLED              1
 #define CONFIG_TASK_HEARTBEAT_ENABLED                   1
@@ -45,6 +45,6 @@
 #define CONFIG_TASK_READ_TEMP_ENABLED                   1
 #define CONFIG_TASK_BEACON_ENABLED                      1
 
-#endif // CONFIG_H_
+#endif /* CONFIG_H_ */
 
-//! \} End of config group
+/** \} End of config group */

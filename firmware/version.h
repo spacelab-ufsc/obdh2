@@ -44,6 +44,6 @@
 
 #define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
 
-#endif // VERSION_H_
+#endif /* VERSION_H_ */
 
-//! \} End of version group
+/** \} End of version group */

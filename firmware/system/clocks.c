@@ -41,7 +41,7 @@
 
 int clocks_setup(clocks_config_t clks)
 {
-    // Set VCore
+    /* Set VCore */
     if (clks.mclk_hz >= 25000000UL)
     {
         PMM_setVCore(PMM_CORE_LEVEL_3);
@@ -59,19 +59,19 @@ int clocks_setup(clocks_config_t clks)
         PMM_setVCore(PMM_CORE_LEVEL_0);
     }
 
-    // Set DCO FLL reference = REFO
+    /* Set DCO FLL reference = REFO */
     UCS_initClockSignal(UCS_FLLREF, UCS_REFOCLK_SELECT, UCS_CLOCK_DIVIDER_1);
 
-    // Set ACLK = REFO
+    /* Set ACLK = REFO */
     UCS_initClockSignal(UCS_ACLK, UCS_REFOCLK_SELECT, UCS_CLOCK_DIVIDER_1);
 
-    // Set SMCLK = DCO/1
+    /* Set SMCLK = DCO/1 */
     UCS_initClockSignal(UCS_SMCLK, UCS_DCOCLK_SELECT, UCS_CLOCK_DIVIDER_1);
 
-    // Set Ratio and Desired MCLK Frequency and initialize DCO
+    /* Set Ratio and Desired MCLK Frequency and initialize DCO */
     UCS_initFLLSettle(clks.aclk_hz, clks.mclk_hz/clks.aclk_hz);
 
-    // Enable global oscillator fault flag
+    /* Enable global oscillator fault flag */
     SFR_clearInterrupt(SFR_OSCILLATOR_FAULT_INTERRUPT);
     SFR_enableInterrupt(SFR_OSCILLATOR_FAULT_INTERRUPT);
 
@@ -106,10 +106,10 @@ void NMI_ISR()
 
     do
     {
-        // If it still can't clear the oscillator fault flags after the timeout, trap and wait here
+        /* If it still can't clear the oscillator fault flags after the timeout, trap and wait here */
         status = UCS_clearAllOscFlagsWithTimeout(1000);
     }
     while(status != 0);
 }
 
-//! \} End of clocks group
+/** \} End of clocks group */

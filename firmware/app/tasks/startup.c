@@ -53,15 +53,15 @@ void vTaskStartup(void *pvParameters)
 {
     bool error = false;
 
-    // Logger device initialization
+    /* Logger device initialization */
     logger_init();
 
-    // Print the FreeRTOS version
+    /* Print the FreeRTOS version */
     logger_print_event_from_module(LOGGER_INFO, TASK_STARTUP_NAME, "FreeRTOS ");
     logger_print_msg(tskKERNEL_VERSION_NUMBER);
     logger_new_line();
 
-    // Print the system clocks
+    /* Print the system clocks */
     clocks_config_t clks = clocks_read();
     logger_print_event_from_module(LOGGER_INFO, TASK_STARTUP_NAME, "System clocks: MCLK=");
     logger_print_dec(clks.mclk_hz);
@@ -72,13 +72,13 @@ void vTaskStartup(void *pvParameters)
     logger_print_msg(" Hz");
     logger_new_line();
 
-    // LEDs device initialization
+    /* LEDs device initialization */
     if (leds_init() != 0)
     {
         error = true;
     }
 
-    // EPS device initialization
+    /* EPS device initialization */
     if (eps_init() != 0)
     {
         error = true;
@@ -96,7 +96,7 @@ void vTaskStartup(void *pvParameters)
         error = true;
     }
 
-    // Startup task status = Done
+    /* Startup task status = Done */
     xEventGroupSetBits(task_startup_status, TASK_STARTUP_DONE);
 
     if (error)
@@ -117,4 +117,4 @@ void vTaskStartup(void *pvParameters)
     vTaskSuspend(xTaskStartupHandle);
 }
 
-//! \} End of startup group
+/** \} End of startup group */

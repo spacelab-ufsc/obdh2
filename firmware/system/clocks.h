@@ -65,6 +65,6 @@ int clocks_setup(clocks_config_t clks);
  */
 clocks_config_t clocks_read();
 
-#endif // CLOCKS_H_
+#endif /* CLOCKS_H_ */
 
-//! \} End of clocks group
+/** \} End of clocks group */

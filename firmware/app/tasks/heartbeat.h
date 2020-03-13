@@ -60,6 +60,6 @@ extern xTaskHandle xTaskHeartbeatHandle;
  */
 void vTaskHeartbeat(void *pvParameters);
 
-#endif // HEARTBEAT_H_
+#endif /* HEARTBEAT_H_ */
 
-//! \} End of heartbeat group
+/** \} End of heartbeat group */

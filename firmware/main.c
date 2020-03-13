@@ -42,20 +42,20 @@
 
 void main(void)
 {
-    // Watchdog device initialization
+    /* Watchdog device initialization */
     watchdog_init();
 
-    // System clocks configuration
+    /* System clocks configuration */
     clocks_setup((clocks_config_t){.mclk_hz = 32000000UL, .smclk_hz=32000000UL, .aclk_hz=32768});
 
-    // Create all the tasks
+    /* Create all the tasks */
     create_tasks();
 
-    // Start the scheduler
+    /* Start the scheduler */
     vTaskStartScheduler();
 
-    // Will only get here if there was insufficient memory to create the idle and/or timer task
+    /* Will only get here if there was insufficient memory to create the idle and/or timer task */
     while(1);
 }
 
-//! \} End of main group
+/** \} End of main group */

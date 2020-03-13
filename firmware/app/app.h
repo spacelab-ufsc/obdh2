@@ -38,6 +38,6 @@
 
 
 
-#endif // APP_H_
+#endif /* APP_H_ */
 
-//! \} End of app group
+/** \} End of app group */
