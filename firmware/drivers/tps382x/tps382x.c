@@ -45,4 +45,4 @@ void tps382x_trigger(tps382x_config_t config)
     gpio_toggle(config.wdi_pin);
 }
 
-//! \} End of tps382x group
+/** \} End of tps382x group */

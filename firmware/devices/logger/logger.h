@@ -276,6 +276,6 @@ bool logger_mutex_take();
  */
 bool logger_mutex_give();
 
-#endif // LOGGER_H_
+#endif /* LOGGER_H_ */
 
-//! \} End of logger group
+/** \} End of logger group */

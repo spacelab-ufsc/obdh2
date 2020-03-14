@@ -65,7 +65,7 @@ int led_set(led_t l)
     {
         case LED_SYSTEM:    return gpio_set_state(GPIO_PIN_35, true);
         case LED_FAULT:     return gpio_set_state(GPIO_PIN_34, true);
-        default:            return -1;      // Invalid LED
+        default:            return -1;      /* Invalid LED */
     }
 }
 
@@ -75,7 +75,7 @@ int led_clear(led_t l)
     {
         case LED_SYSTEM:    return gpio_set_state(GPIO_PIN_35, false);
         case LED_FAULT:     return gpio_set_state(GPIO_PIN_34, false);
-        default:            return -1;      // Invalid LED
+        default:            return -1;      /* Invalid LED */
     }
 }
 
@@ -85,8 +85,8 @@ int led_toggle(led_t l)
     {
         case LED_SYSTEM:    return gpio_toggle(GPIO_PIN_35);
         case LED_FAULT:     return gpio_toggle(GPIO_PIN_34);
-        default:            return -1;      // Invalid LED
+        default:            return -1;      /* Invalid LED */
     }
 }
 
-//! \} End of leds group
+/** \} End of leds group */

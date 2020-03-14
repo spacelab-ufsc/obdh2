@@ -51,6 +51,6 @@ int watchdog_init();
  */
 void watchdog_reset();
 
-#endif // WATCHDOG_H_
+#endif /* WATCHDOG_H_ */
 
-//! \} End of watchdog group
+/** \} End of watchdog group */

@@ -58,6 +58,6 @@ int antenna_get_status();
  */
 int antenna_deploy();
 
-#endif // ANTENNA_H_
+#endif /* ANTENNA_H_ */
 
 /** \} End of antenna group */

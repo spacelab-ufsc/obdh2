@@ -224,6 +224,6 @@ int tca4311a_write_byte(tca4311a_config_t config, i2c_slave_adr_t adr, uint8_t b
  */
 int tca4311a_read_byte(tca4311a_config_t config, i2c_slave_adr_t adr, uint8_t *byte);
 
-#endif // TCA4311A_H_
+#endif /* TCA4311A_H_ */
 
-//! \} End of tca4311a group
+/** \} End of tca4311a group */

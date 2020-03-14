@@ -196,11 +196,11 @@ void logger_print_digit(uint8_t digit)
 {
     if (digit < 0x0A)
     {
-        logger_print_byte(digit + 0x30);    // 0x30 = ascii 0
+        logger_print_byte(digit + 0x30);    /* 0x30 = ascii 0 */
     }
     else if (digit <= 0x0F)
     {
-        logger_print_byte(digit + 0x37);    // 0x37 = ascii 7
+        logger_print_byte(digit + 0x37);    /* 0x37 = ascii 7 */
     }
     else
     {
@@ -216,7 +216,7 @@ void logger_print_dec(uint32_t dec)
     }
     else
     {
-        uint8_t dec_str[10];                // 32-bits = decimal with 10 digits
+        uint8_t dec_str[10];                /* 32-bits = decimal with 10 digits */
 
         uint8_t digits = log10(dec) + 1;
 
@@ -270,7 +270,7 @@ void logger_print_system_time()
     logger_set_color(LOGGER_SYSTEM_TIME_COLOR);
 
     logger_print_msg("[ ");
-    logger_print_dec(xTaskGetTickCount());  // System time in milliseconds
+    logger_print_dec(xTaskGetTickCount());  /* System time in milliseconds */
     logger_print_msg(" ]");
 
     logger_reset_color();
@@ -350,4 +350,4 @@ void logger_print_firmware_version()
     logger_print_msg(" ]");
 }
 
-//! \} End of logger group
+/** \} End of logger group */

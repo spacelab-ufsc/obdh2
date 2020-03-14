@@ -179,6 +179,6 @@ int uart_write(uart_port_t port, uint8_t *data, uint16_t len);
  */
 int uart_read(uart_port_t port, uint8_t *data, uint16_t len);
 
-#endif // UART_H_
+#endif /* UART_H_ */
 
-//! \} End of uart group
+/** \} End of uart group */

@@ -136,4 +136,4 @@ int tca4311a_read_byte(tca4311a_config_t config, i2c_slave_adr_t adr, uint8_t *b
     return tca4311a_is_ready(config);
 }
 
-//! \} End of tca4311a group
+/** \} End of tca4311a group */

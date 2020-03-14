@@ -62,4 +62,4 @@ int radio_available()
     return -1;
 }
 
-//! \} End of radio group
+/** \} End of radio group */

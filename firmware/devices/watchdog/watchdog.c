@@ -63,4 +63,4 @@ void watchdog_reset()
     tps382x_trigger(ext_wdt);
 }
 
-//! \} End of watchdog group
+/** \} End of watchdog group */

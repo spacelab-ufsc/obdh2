@@ -45,57 +45,57 @@ int uart_init(uart_port_t port, uart_config_t config)
     switch(config.baudrate)
     {
         case 1200:
-            uart_params.clockPrescalar      = 1665; // 1200 bps @ 31.981568 MHz
-            uart_params.firstModReg         = 11;   // 1200 bps @ 31.981568 MHz
-            uart_params.secondModReg        = 0;    // 1200 bps @ 31.981568 MHz
+            uart_params.clockPrescalar      = 1665; /* 1200 bps @ 31.981568 MHz */
+            uart_params.firstModReg         = 11;   /* 1200 bps @ 31.981568 MHz */
+            uart_params.secondModReg        = 0;    /* 1200 bps @ 31.981568 MHz */
             break;
         case 2400:
-            uart_params.clockPrescalar      = 832;  // 2400 bps @ 31.981568 MHz
-            uart_params.firstModReg         = 14;   // 2400 bps @ 31.981568 MHz
-            uart_params.secondModReg        = 0;    // 2400 bps @ 31.981568 MHz
+            uart_params.clockPrescalar      = 832;  /* 2400 bps @ 31.981568 MHz */
+            uart_params.firstModReg         = 14;   /* 2400 bps @ 31.981568 MHz */
+            uart_params.secondModReg        = 0;    /* 2400 bps @ 31.981568 MHz */
             break;
         case 4800:
-            uart_params.clockPrescalar      = 416;  // 4800 bps @ 31.981568 MHz
-            uart_params.firstModReg         = 7;    // 4800 bps @ 31.981568 MHz
-            uart_params.secondModReg        = 0;    // 4800 bps @ 31.981568 MHz
+            uart_params.clockPrescalar      = 416;  /* 4800 bps @ 31.981568 MHz */
+            uart_params.firstModReg         = 7;    /* 4800 bps @ 31.981568 MHz */
+            uart_params.secondModReg        = 0;    /* 4800 bps @ 31.981568 MHz */
             break;
         case 9600:
-            uart_params.clockPrescalar      = 208;  // 9600 bps @ 31.981568 MHz
-            uart_params.firstModReg         = 3;    // 9600 bps @ 31.981568 MHz
-            uart_params.secondModReg        = 0;    // 9600 bps @ 31.981568 MHz
+            uart_params.clockPrescalar      = 208;  /* 9600 bps @ 31.981568 MHz */
+            uart_params.firstModReg         = 3;    /* 9600 bps @ 31.981568 MHz */
+            uart_params.secondModReg        = 0;    /* 9600 bps @ 31.981568 MHz */
             break;
         case 19200:
-            uart_params.clockPrescalar      = 104;  // 19200 bps @ 31.981568 MHz
-            uart_params.firstModReg         = 2;    // 19200 bps @ 31.981568 MHz
-            uart_params.secondModReg        = 0;    // 19200 bps @ 31.981568 MHz
+            uart_params.clockPrescalar      = 104;  /* 19200 bps @ 31.981568 MHz */
+            uart_params.firstModReg         = 2;    /* 19200 bps @ 31.981568 MHz */
+            uart_params.secondModReg        = 0;    /* 19200 bps @ 31.981568 MHz */
             break;
         case 38400:
-            uart_params.clockPrescalar      = 52;   // 38400 bps @ 31.981568 MHz
-            uart_params.firstModReg         = 1;    // 38400 bps @ 31.981568 MHz
-            uart_params.secondModReg        = 0;    // 38400 bps @ 31.981568 MHz
+            uart_params.clockPrescalar      = 52;   /* 38400 bps @ 31.981568 MHz */
+            uart_params.firstModReg         = 1;    /* 38400 bps @ 31.981568 MHz */
+            uart_params.secondModReg        = 0;    /* 38400 bps @ 31.981568 MHz */
             break;
         case 57600:
-            uart_params.clockPrescalar      = 34;   // 57600 bps @ 31.981568 MHz
-            uart_params.firstModReg         = 11;   // 57600 bps @ 31.981568 MHz
-            uart_params.secondModReg        = 0;    // 57600 bps @ 31.981568 MHz
+            uart_params.clockPrescalar      = 34;   /* 57600 bps @ 31.981568 MHz */
+            uart_params.firstModReg         = 11;   /* 57600 bps @ 31.981568 MHz */
+            uart_params.secondModReg        = 0;    /* 57600 bps @ 31.981568 MHz */
             break;
         case 115200:
-            uart_params.clockPrescalar      = 17;   // 115200 bps @ 31.981568 MHz
-            uart_params.firstModReg         = 6;    // 115200 bps @ 31.981568 MHz
-            uart_params.secondModReg        = 0;    // 115200 bps @ 31.981568 MHz
+            uart_params.clockPrescalar      = 17;   /* 115200 bps @ 31.981568 MHz */
+            uart_params.firstModReg         = 6;    /* 115200 bps @ 31.981568 MHz */
+            uart_params.secondModReg        = 0;    /* 115200 bps @ 31.981568 MHz */
             break;
         case 230400:
-            uart_params.clockPrescalar      = 8;    // 230400 bps @ 31.981568 MHz
-            uart_params.firstModReg         = 11;   // 230400 bps @ 31.981568 MHz
-            uart_params.secondModReg        = 5;    // 230400 bps @ 31.981568 MHz
+            uart_params.clockPrescalar      = 8;    /* 230400 bps @ 31.981568 MHz */
+            uart_params.firstModReg         = 11;   /* 230400 bps @ 31.981568 MHz */
+            uart_params.secondModReg        = 5;    /* 230400 bps @ 31.981568 MHz */
             break;
         case 460800:
-            uart_params.clockPrescalar      = 4;    // 460800 bps @ 31.981568 MHz
-            uart_params.firstModReg         = 3;    // 460800 bps @ 31.981568 MHz
-            uart_params.secondModReg        = 5;    // 460800 bps @ 31.981568 MHz
+            uart_params.clockPrescalar      = 4;    /* 460800 bps @ 31.981568 MHz */
+            uart_params.firstModReg         = 3;    /* 460800 bps @ 31.981568 MHz */
+            uart_params.secondModReg        = 5;    /* 460800 bps @ 31.981568 MHz */
             break;
         default:
-            return -1;      // Invalid baudrate value
+            return -1;      /* Invalid baudrate value */
     }
 
     uart_params.selectClockSource   = USCI_A_UART_CLOCKSOURCE_SMCLK;
@@ -128,7 +128,7 @@ int uart_init(uart_port_t port, uart_config_t config)
 
             break;
         default:
-            return -1;      // Invalid port
+            return -1;      /* Invalid port */
     }
 
     if (USCI_A_UART_init(base_address, &uart_params) != STATUS_SUCCESS)
@@ -150,10 +150,10 @@ int uart_available(uart_port_t port)
         case UART_PORT_0:   base_address = USCI_A0_BASE;    break;
         case UART_PORT_1:   base_address = USCI_A1_BASE;    break;
         case UART_PORT_2:   base_address = USCI_A2_BASE;    break;
-        default:            return -1;  // Invalid UART port
+        default:            return -1;  /* Invalid UART port */
     }
 
-    // Check RX interrupt flag
+    /* Check RX interrupt flag */
     uint8_t status = USCI_A_UART_getInterruptStatus(base_address, USCI_A_UART_RECEIVE_INTERRUPT_FLAG);
 
     if (status | USCI_A_UART_RECEIVE_INTERRUPT_FLAG)
@@ -173,7 +173,7 @@ int uart_flush(uart_port_t port)
         case UART_PORT_0:   break;
         case UART_PORT_1:   break;
         case UART_PORT_2:   break;
-        default:            return -1;  // Invalid UART port
+        default:            return -1;  /* Invalid UART port */
     }
 
     while(uart_available(port) == UART_AVAILABLE)
@@ -227,4 +227,4 @@ int uart_read(uart_port_t port, uint8_t *data, uint16_t len)
     return 0;
 }
 
-//! \} End of uart group
+/** \} End of uart group */

@@ -46,7 +46,7 @@ int i2c_init(i2c_port_t port, i2c_config_t config)
         case USCI_B_I2C_SET_DATA_RATE_100KBPS:      break;
         case USCI_B_I2C_SET_DATA_RATE_400KBPS:      break;
         default:
-            return -1;  // Invalid transfer rate
+            return -1;  /* Invalid transfer rate */
     }
 
     uint16_t base_address;
@@ -66,7 +66,7 @@ int i2c_init(i2c_port_t port, i2c_config_t config)
             GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P9, GPIO_PIN5 + GPIO_PIN6);
             break;
         default:
-            return -1;  // Invalid I2C port
+            return -1;  /* Invalid I2C port */
     }
 
     USCI_B_I2C_initMasterParam i2c_params;
@@ -84,10 +84,10 @@ int i2c_init(i2c_port_t port, i2c_config_t config)
 
 int i2c_write(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
 {
-    // Verifies if the slave address is lesser than 7-bits
+    /* Verifies if the slave address is lesser than 7-bits */
     if (adr > 128)
     {
-        return -1;  // Invalid slave address
+        return -1;  /* Invalid slave address */
     }
 
     uint16_t base_address;
@@ -98,7 +98,7 @@ int i2c_write(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
         case I2C_PORT_1:    base_address = USCI_B1_BASE;    break;
         case I2C_PORT_2:    base_address = USCI_B2_BASE;    break;
         default:
-            return -1;  // Invalid I2C port
+            return -1;  /* Invalid I2C port */
     }
 
     USCI_B_I2C_setSlaveAddress(base_address, adr);
@@ -107,19 +107,19 @@ int i2c_write(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
 
     USCI_B_I2C_enable(base_address);
 
-    if (len == 1)   // Single byte
+    if (len == 1)   /* Single byte */
     {
         if (USCI_B_I2C_masterSendSingleByteWithTimeout(base_address, data[0], I2C_SLAVE_TIMEOUT) != STATUS_SUCCESS)
         {
             return -1;  /* Timeout reached */
         }
 
-        // Delay until transmission completes
+        /* Delay until transmission completes */
         while(USCI_B_I2C_isBusBusy(base_address));
     }
-    else            // Multiple bytes
+    else            /* Multiple bytes */
     {
-        // Initiate start and send first character
+        /* Initiate start and send first character */
         if (USCI_B_I2C_masterSendMultiByteStartWithTimeout(base_address, data[0], I2C_SLAVE_TIMEOUT) != STATUS_SUCCESS)
         {
             return -1;  /* Timeout reached */
@@ -134,13 +134,13 @@ int i2c_write(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
             }
         }
 
-        // Initiate stop only
+        /* Initiate stop only */
         if (USCI_B_I2C_masterSendMultiByteStopWithTimeout(base_address, I2C_SLAVE_TIMEOUT) != STATUS_SUCCESS)
         {
             return -1;      /* Timeout reached */
         }
 
-        // Delay until transmission completes
+        /* Delay until transmission completes */
         while(USCI_B_I2C_isBusBusy(base_address));
     }
 
@@ -151,10 +151,10 @@ int i2c_write(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
 
 int i2c_read(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
 {
-    // Verifies if the slave address is lesser than 7-bits
+    /* Verifies if the slave address is lesser than 7-bits */
     if (adr > 128)
     {
-        return -1;  // Invalid slave address
+        return -1;  /* Invalid slave address */
     }
 
     uint16_t base_address;
@@ -165,7 +165,7 @@ int i2c_read(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
         case I2C_PORT_1:    base_address = USCI_B1_BASE;    break;
         case I2C_PORT_2:    base_address = USCI_B2_BASE;    break;
         default:
-            return -1;  // Invalid I2C port
+            return -1;  /* Invalid I2C port */
     }
 
     USCI_B_I2C_setSlaveAddress(base_address, adr);
@@ -208,4 +208,4 @@ int i2c_read(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
     return 0;
 }
 
-//! \} End of i2c group
+/** \} End of i2c group */

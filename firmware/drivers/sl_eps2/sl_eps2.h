@@ -45,7 +45,7 @@
 
 #define SL_EPS2_DEVICE_ID                   0x43    /**< EPS 2.0 device ID. */
 
-// EPS 2.0 registers
+/* EPS 2.0 registers */
 #define SL_EPS2_REG_DEVICE_ID               0x00    /**< Device ID register address. */
 #define SL_EPS2_REG_BATTERY_0_VOLTAGE       0x01    /**< Battery 0 voltage. */
 #define SL_EPS2_REG_BATTERY_1_VOLTAGE       0x02    /**< Battery 1 voltage. */
@@ -213,6 +213,6 @@ int sl_eps2_read_solar_panel_current(sl_eps2_config_t config, uint8_t sp, uint32
  */
 int sl_eps2_read_solar_panel_voltage(sl_eps2_config_t config, uint8_t sp, uint32_t *val);
 
-#endif // SL_EPS2_H_
+#endif /* SL_EPS2_H_ */
 
-//! \} End of sl_eps2 group
+/** \} End of sl_eps2 group */

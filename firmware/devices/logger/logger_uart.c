@@ -55,4 +55,4 @@ void logger_uart_write_byte(uint8_t byte)
     uart_write(UART_PORT_2, &byte, 1);
 }
 
-//! \} End of logger_uart group
+/** \} End of logger_uart group */

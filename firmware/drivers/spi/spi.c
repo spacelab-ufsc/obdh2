@@ -55,7 +55,7 @@ int spi_setup_gpio(spi_port_t port)
             gpio_init(GPIO_PIN_45, (gpio_config_t){.mode=GPIO_MODE_OUTPUT});
             gpio_init(GPIO_PIN_46, (gpio_config_t){.mode=GPIO_MODE_OUTPUT});
 
-            // Set all CS pins to high
+            /* Set all CS pins to high */
             gpio_set_state(GPIO_PIN_5, true);
             gpio_set_state(GPIO_PIN_6, true);
             gpio_set_state(GPIO_PIN_28, true);
@@ -79,7 +79,7 @@ int spi_setup_gpio(spi_port_t port)
             GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P9, GPIO_PIN1 + GPIO_PIN5 + GPIO_PIN6);
             break;
         default:
-            return -1;  // Invalid SPI port
+            return -1;  /* Invalid SPI port */
     }
 
     return 0;
@@ -98,24 +98,24 @@ int spi_select_slave(spi_port_t port, spi_cs_t cs, bool active)
                 case SPI_CS_3:      gpio_set_state(GPIO_PIN_45, !active);     break;
                 case SPI_CS_4:      gpio_set_state(GPIO_PIN_46, !active);     break;
                 default:
-                    return -1;  // Invalid CS pin
+                    return -1;  /* Invalid CS pin */
             }
 
             break;
         case SPI_PORT_1:
-            // TODO: Define the CS pins pf port 1
+            /* TODO: Define the CS pins pf port 1 */
             break;
         case SPI_PORT_2:
-            // TODO: Define the CS pins pf port 2
+            /* TODO: Define the CS pins pf port 2 */
             break;
         case SPI_PORT_3:
-            // TODO: Define the CS pins pf port 3
+            /* TODO: Define the CS pins pf port 3 */
             break;
         case SPI_PORT_4:
-            // TODO: Define the CS pins pf port 4
+            /* TODO: Define the CS pins pf port 4 */
             break;
         case SPI_PORT_5:
-            // TODO: Define the CS pins pf port 5
+            /* TODO: Define the CS pins pf port 5 */
             break;
         default:
             return -1;  // Invalid SPI port
@@ -137,7 +137,7 @@ int spi_init(spi_port_t port, spi_config_t config)
         case SPI_PORT_4:    base_address = USCI_B1_BASE;    break;
         case SPI_PORT_5:    base_address = USCI_B2_BASE;    break;
         default:
-            return -1;  // Invalid SPI port
+            return -1;  /* Invalid SPI port */
     }
 
     if (spi_setup_gpio(port) != 0)
@@ -154,7 +154,7 @@ int spi_init(spi_port_t port, spi_config_t config)
         spi_params.desiredSpiClock          = config.speed_hz;
         spi_params.msbFirst                 = USCI_A_SPI_LSB_FIRST;
 
-        // SPI mode
+        /* SPI mode */
         switch(config.mode)
         {
             case SPI_MODE_0:
@@ -174,12 +174,12 @@ int spi_init(spi_port_t port, spi_config_t config)
                 spi_params.clockPolarity    = USCI_A_SPI_CLOCKPOLARITY_INACTIVITY_HIGH;
                 break;
             default:
-                return -1;  // Invalid SPI mode
+                return -1;  /* Invalid SPI mode */
         }
 
         if (USCI_A_SPI_initMaster(base_address, &spi_params) != STATUS_SUCCESS)
         {
-            return -1;      // Error initializing the SPI port
+            return -1;      /* Error initializing the SPI port */
         }
 
         USCI_A_SPI_enable(base_address);
@@ -193,7 +193,7 @@ int spi_init(spi_port_t port, spi_config_t config)
         spi_params.desiredSpiClock          = config.speed_hz;
         spi_params.msbFirst                 = USCI_B_SPI_LSB_FIRST;
 
-        // SPI mode
+        /* SPI mode */
         switch(config.mode)
         {
             case SPI_MODE_0:
@@ -213,12 +213,12 @@ int spi_init(spi_port_t port, spi_config_t config)
                 spi_params.clockPolarity    = USCI_B_SPI_CLOCKPOLARITY_INACTIVITY_HIGH;
                 break;
             default:
-                return -1;  // Invalid SPI mode
+                return -1;  /* Invalid SPI mode */
         }
 
         if (USCI_B_SPI_initMaster(base_address, &spi_params) != STATUS_SUCCESS)
         {
-            return -1;      // Error initializing the SPI port
+            return -1;      /* Error initializing the SPI port */
         }
 
         USCI_B_SPI_enable(base_address);
@@ -231,7 +231,7 @@ void spi_write_byte(uint16_t base_address, uint8_t byte)
 {
     if ((base_address == USCI_A0_BASE) || (base_address == USCI_A1_BASE) || (base_address == USCI_A2_BASE))
     {
-        // Wait until TX buffer ready
+        /* Wait until TX buffer ready */
         while(!USCI_A_SPI_getInterruptStatus(base_address, USCI_A_SPI_TRANSMIT_INTERRUPT));
 
         USCI_A_SPI_clearInterrupt(base_address, USCI_A_SPI_TRANSMIT_INTERRUPT);
@@ -240,7 +240,7 @@ void spi_write_byte(uint16_t base_address, uint8_t byte)
     }
     else
     {
-        // Wait until TX buffer ready
+        /* Wait until TX buffer ready */
         while(!USCI_B_SPI_getInterruptStatus(base_address, USCI_B_SPI_TRANSMIT_INTERRUPT));
 
         USCI_B_SPI_clearInterrupt(base_address, USCI_B_SPI_TRANSMIT_INTERRUPT);
@@ -253,7 +253,7 @@ uint8_t spi_read_byte(uint16_t base_address)
 {
     if ((base_address == USCI_A0_BASE) || (base_address == USCI_A1_BASE) || (base_address == USCI_A2_BASE))
     {
-        // Wait until new data was written into RX buffer
+        /* Wait until new data was written into RX buffer */
         while(!USCI_A_SPI_getInterruptStatus(base_address, USCI_A_SPI_RECEIVE_INTERRUPT));
 
         USCI_A_SPI_clearInterrupt(base_address, USCI_A_SPI_RECEIVE_INTERRUPT);
@@ -262,7 +262,7 @@ uint8_t spi_read_byte(uint16_t base_address)
     }
     else
     {
-        // Wait until new data was written into RX buffer
+        /* Wait until new data was written into RX buffer */
         while(!USCI_B_SPI_getInterruptStatus(base_address, USCI_B_SPI_RECEIVE_INTERRUPT));
 
         USCI_B_SPI_clearInterrupt(base_address, USCI_B_SPI_RECEIVE_INTERRUPT);
@@ -291,22 +291,22 @@ int spi_write(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len)
         case SPI_PORT_4:    base_address = USCI_B1_BASE;    break;
         case SPI_PORT_5:    base_address = USCI_B2_BASE;    break;
         default:
-            return -1;  // Invalid SPI port
+            return -1;  /* Invalid SPI port */
     }
 
-    // Enable the CS pin
+    /* Enable the CS pin */
     if (spi_select_slave(port, cs, true) != 0)
     {
         return -1;  // Invalid CS pin
     }
 
-    // Write data
+    /* Write data */
     while(len--)
     {
         spi_transfer_byte(base_address, *data++);
     }
 
-    // Disable the CS pin
+    /* Disable the CS pin */
     spi_select_slave(port, cs, false);
 
     return 0;
@@ -325,22 +325,22 @@ int spi_read(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len)
         case SPI_PORT_4:    base_address = USCI_B1_BASE;    break;
         case SPI_PORT_5:    base_address = USCI_B2_BASE;    break;
         default:
-            return -1;  // Invalid SPI port
+            return -1;  /* Invalid SPI port */
     }
 
-    // Enable the CS pin
+    /* Enable the CS pin */
     if (spi_select_slave(port, cs, true) != 0)
     {
         return -1;  // Invalid CS pin
     }
 
-    // Read data
+    /* Read data */
     while(len--)
     {
         *data++ = spi_transfer_byte(base_address, 0);
     }
 
-    // Disable the CS pin
+    /* Disable the CS pin */
     spi_select_slave(port, cs, false);
 
     return 0;
@@ -359,25 +359,25 @@ int spi_transfer(spi_port_t port, spi_cs_t cs, uint8_t *wd, uint8_t *rd, uint16_
         case SPI_PORT_4:    base_address = USCI_B1_BASE;    break;
         case SPI_PORT_5:    base_address = USCI_B2_BASE;    break;
         default:
-            return -1;  // Invalid SPI port
+            return -1;  /* Invalid SPI port */
     }
 
-    // Enable the CS pin
+    /* Enable the CS pin */
     if (spi_select_slave(port, cs, true) != 0)
     {
         return -1;  // Invalid CS pin
     }
 
-    // Transfer data (write and read)
+    /* Transfer data (write and read) */
     while(len--)
     {
         *rd++ = spi_transfer_byte(base_address, *wd++);
     }
 
-    // Disable the CS pin
+    /* Disable the CS pin */
     spi_select_slave(port, cs, false);
 
     return 0;
 }
 
-//! \} End of spi group
+/** \} End of spi group */

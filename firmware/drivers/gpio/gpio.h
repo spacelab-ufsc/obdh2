@@ -193,6 +193,6 @@ int gpio_get_state(gpio_pin_t pin);
  */
 int gpio_toggle(gpio_pin_t pin);
 
-#endif // GPIO_H_
+#endif /* GPIO_H_ */
 
-//! \} End of gpio group
+/** \} End of gpio group */
