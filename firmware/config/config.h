@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.1
+ * \version 0.3.2
  * 
  * \date 26/10/2019
  * 
@@ -44,6 +44,7 @@
 #define CONFIG_TASK_RADIO_RESET_ENABLED                 1
 #define CONFIG_TASK_READ_TEMP_ENABLED                   1
 #define CONFIG_TASK_BEACON_ENABLED                      1
+#define CONFIG_TASK_SAVE_TIME_ENABLED                   1
 
 #endif /* CONFIG_H_ */
 

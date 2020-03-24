@@ -1,5 +1,5 @@
 /*
- * version.h
+ * save_time.h
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,29 +21,35 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief Save system time task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.3.2
  * 
- * \date 25/10/2019
+ * \date 17/03/2020
  * 
- * \defgroup version Version control
+ * \addtogroup save_time
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include "save_time.h"
+#include "startup.h"
 
-#define FIRMWARE_VERSION            "0.3.2"
+xTaskHandle xTaskSaveTimeHandle;
 
-#define FIRMWARE_STATUS             "Development"
+void vTaskSaveTime(void *pvParameters)
+{
+    /* Wait startup task to finish */
+    xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_SAVE_TIME_INIT_TIMEOUT_MS));
 
-#define FIRMWARE_AUTHOR             "SpaceLab"
+    while(1)
+    {
+        TickType_t last_cycle = xTaskGetTickCount();
 
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
 
-#endif /* VERSION_H_ */
+        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_SAVE_TIME_PERIOD_MS));
+    }
+}
 
-/** \} End of version group */
+/** \} End of save_time group */
