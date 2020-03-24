@@ -1,5 +1,5 @@
 /*
- * devices.h
+ * temp_sensor.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,30 +21,40 @@
  */
 
 /**
- * \brief Devices layer.
+ * \brief Temperature sensor device implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.3.1
  * 
- * \date 26/10/2019
+ * \date 17/03/2020
  * 
- * \defgroup devices Devices
+ * \addtogroup temp_sensor
  * \{
  */
 
-#ifndef DEVICES_H_
-#define DEVICES_H_
+#include <drivers/adc/adc.h>
 
-#include "logger/logger.h"
-#include "radio/radio.h"
-#include "leds/leds.h"
-#include "eps/eps.h"
-#include "ttc/ttc.h"
-#include "antenna/antenna.h"
-#include "payload_edc/payload_edc.h"
-#include "temp_sensor/temp_sensor.h"
+#include <devices/logger/logger.h>
 
-#endif // DEVICES_H_
+#include "temp_sensor.h"
 
-//! \} End of devices group
+int temp_sensor_init()
+{
+    logger_print_event_from_module(LOGGER_INFO, TEMP_SENSOR_MODULE_NAME, "Initializing temperature sensor...");
+    logger_new_line();
+
+    return -1;
+}
+
+int temp_sensor_read_raw(uint16_t *val)
+{
+    return -1;
+}
+
+int temp_sensor_read(float *temp)
+{
+    return -1;
+}
+
+/** \} End of temp_sensor group */
