@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.1
+ * \version 0.3.3
  * 
  * \date 14/03/2020
  * 
@@ -39,6 +39,31 @@
 
 void fsat_pkt_encode(fsat_pkt_pl_t *pkt, uint8_t *pl, uint16_t *len)
 {
+    /* Packet ID */
+    pl[0] = pkt->id;
+
+    /* Callsign */
+    uint8_t cs_len = 0;
+    for(cs_len=0; cs_len<7; cs_len++)
+    {
+        if (pkt->callsign[cs_len] == '\0')
+        {
+            break;
+        }
+    }
+
+    uint8_t i = 0;
+    for(i=0; i<7-cs_len; i++)
+    {
+        pl[1+i] = FSAT_PKT_CALLSIGN_PADDING_CHAR;
+    }
+
+    memcpy(pl+1+i, pkt->callsign, 7-i);
+
+    /* Packet data */
+    memcpy(pl+1+7, pkt->payload, pkt->length);
+
+    *len = 1 + 7 + pkt->length;
 }
 
 void fsat_pkt_decode(uint8_t *raw_pkt, uint16_t len, fsat_pkt_pl_t *pkt)
@@ -46,22 +71,25 @@ void fsat_pkt_decode(uint8_t *raw_pkt, uint16_t len, fsat_pkt_pl_t *pkt)
     /* Copy packet ID */
     pkt->id = raw_pkt[0];
 
+    /* Copy callsign */
     uint8_t i = 0;
-    for(i=1; i<8; i++)
+    for(i=0; i<7; i++)
     {
-        if ((raw_pkt[i] >= 0x41) && (raw_pkt[i] <= 0x5A))   /* 0x41 = 'A', 0x5A = 'Z' */
+        if ((raw_pkt[i+1] >= 0x41) && (raw_pkt[i+1] <= 0x5A))   /* 0x41 = 'A', 0x5A = 'Z' */
         {
             break;
         }
     }
 
-    /* Copy callsign */
-    memcpy(pkt->callsign, raw_pkt+i+1, 7+1-i);
+    memcpy(pkt->callsign, raw_pkt+1+i, 7-i);
 
-    pkt->callsign[i+1] = '\0';
+    pkt->callsign[7-i] = '\0';
 
     /* Copy payload data */
-    memcpy(pkt->payload, raw_pkt+7+1, len-7-1);
+    memcpy(pkt->payload, raw_pkt+1+7, len-7-1);
+
+    /* Payload data length */
+    pkt->length = len-7-1;
 }
 
 /** \} End of fsat_pkt group */

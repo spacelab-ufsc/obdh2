@@ -25,11 +25,11 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.1
+ * \version 0.3.3
  * 
  * \date 14/03/2020
  * 
- * \defgroup fsat_pkt FloripaSat Packet
+ * \defgroup fsat_pkt FloripaSat Packet Handler
  * \{
  */
 
@@ -38,25 +38,29 @@
 
 #include <stdint.h>
 
+#include <ngham/ngham.h>
+
+#define FSAT_PKT_CALLSIGN_PADDING_CHAR      ('0')
+
 /**
  * \brief FloripaSat packet.
  */
 typedef struct
 {
-    uint8_t id;             /**< Packet ID. */
-    char callsign[7+1];     /**< Callsign (7 bytes). */
-    uint8_t *payload;       /**< Packet payload. */
-    uint16_t length;        /**< Packet payload length. */
+    uint8_t id;                             /**< Packet ID. */
+    char callsign[7+1];                     /**< Callsign (7 bytes). */
+    uint8_t payload[NGHAM_PL_MAX-7-1];      /**< Packet payload. */
+    uint16_t length;                        /**< Packet payload length. */
 } fsat_pkt_pl_t;
 
 /**
  * \brief Encodes a raw packet.
  *
- * \param[in] pkt is the packet structure to decode.
+ * \param[in] pkt is the packet structure to encode.
  *
  * \param[in,out] pl is a pointer to store the raw packet.
  *
- * \param[in,out] len is length of the result packet in bytes.
+ * \param[in,out] len is the length of the result raw packet in bytes.
  *
  * \return None.
  */
@@ -69,7 +73,7 @@ void fsat_pkt_encode(fsat_pkt_pl_t *pkt, uint8_t *pl, uint16_t *len);
  *
  * \param[in] len is length of the raw packet in bytes.
  *
- * \param[in] pkt is the packet structure to the result.
+ * \param[in] pkt is the packet structure to store the result.
  *
  * \return None.
  */
