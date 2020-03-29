@@ -25,13 +25,17 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.1
+ * \version 0.3.4
  * 
  * \date 27/10/2019
  * 
  * \addtogroup beacon
  * \{
  */
+
+#include <fsat_pkt/fsat_pkt.h>
+#include <ngham/ngham.h>
+#include <config/config.h>
 
 #include "beacon.h"
 
@@ -45,6 +49,30 @@ void vTaskBeacon(void *pvParameters)
     while(1)
     {
         TickType_t last_cycle = xTaskGetTickCount();
+
+        /* Beacon data */
+        uint8_t data[30] = {0};
+        uint16_t data_len = 1;
+
+        fsat_pkt_pl_t beacon_pl;
+
+        /* Packet ID */
+        fsat_pkt_add_id(&beacon_pl, CONFIG_PKT_ID_BEACON);
+
+        /* Source callsign */
+        fsat_pkt_add_callsign(&beacon_pl, CONFIG_SATELLITE_CALLSIGN);
+
+        /* Payload data */
+        fsat_pkt_add_payload(&beacon_pl, data, data_len);
+
+        tx_pkt_t beacon_pkt;
+
+        fsat_pkt_encode(beacon_pl, beacon_pkt.pl, &beacon_pkt.pl_len);
+
+        beacon_pkt.ngham_flags = 0;
+        beacon_pkt.priority = PKT_PRIORITY_NORMAL;
+
+        ngham_encode(&beacon_pkt);
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_BEACON_PERIOD_MS));
     }
