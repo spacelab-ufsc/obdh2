@@ -54,6 +54,41 @@ typedef struct
 } fsat_pkt_pl_t;
 
 /**
+ * \brief Add the ID code to a FSat packet.
+ *
+ * \param[in,out] pkt is the packet to add the ID.
+ *
+ * \param[in] id is the ID code.
+ *
+ * \return None.
+ */
+void fsat_pkt_add_id(fsat_pkt_pl_t *pkt, uint8_t id);
+
+/**
+ * \brief Add the source callsign to a FSat packet.
+ *
+ * \param[in,out] pkt is the packet to add the source callsign.
+ *
+ * \param[in] callsign is the callsign of the packet source.
+ *
+ * \return None.
+ */
+void fsat_pkt_add_callsign(fsat_pkt_pl_t *pkt, const char *callsign);
+
+/**
+ * \brief Add the payload to a FSat packet.
+ *
+ * \param[in,out] pkt is the packet to add the payload data.
+ *
+ * \param[in] pl is the payload.
+ *
+ * \param[in] len is the payload length in bytes.
+ *
+ * \return None.
+ */
+void fsat_pkt_add_payload(fsat_pkt_pl_t *pkt, uint8_t *pl, uint16_t len);
+
+/**
  * \brief Encodes a raw packet.
  *
  * \param[in] pkt is the packet structure to encode.
@@ -64,7 +99,7 @@ typedef struct
  *
  * \return None.
  */
-void fsat_pkt_encode(fsat_pkt_pl_t *pkt, uint8_t *pl, uint16_t *len);
+void fsat_pkt_encode(fsat_pkt_pl_t pkt, uint8_t *pl, uint16_t *len);
 
 /**
  * \brief Decodes a raw packet.
