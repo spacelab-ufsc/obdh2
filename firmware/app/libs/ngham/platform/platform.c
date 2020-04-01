@@ -35,9 +35,11 @@ void ngham_action_send_data(uint8_t *d, uint16_t d_len, uint8_t priority){
 	switch (priority){
 		case PKT_PRIORITY_NORMAL:
 			// Send d[]
+			radio_send(d, d_len);
 			break;
 		case PKT_PRIORITY_FIRST_IN_SLOT:
 			// Send d[]
+			radio_send(d, d_len);
 			break;
 	}
 }

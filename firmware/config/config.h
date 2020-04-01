@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.16
+ * \version 0.3.4
  * 
  * \date 26/10/2019
  * 
@@ -36,14 +36,21 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-// Tasks
+/* Tasks */
 #define CONFIG_TASK_STARTUP_ENABLED                     1
 #define CONFIG_TASK_WATCHDOG_RESET_ENABLED              1
 #define CONFIG_TASK_HEARTBEAT_ENABLED                   1
 #define CONFIG_TASK_SYSTEM_RESET_ENABLED                1
 #define CONFIG_TASK_RADIO_RESET_ENABLED                 1
 #define CONFIG_TASK_READ_TEMP_ENABLED                   1
+#define CONFIG_TASK_BEACON_ENABLED                      1
+#define CONFIG_TASK_SAVE_TIME_ENABLED                   1
 
-#endif // CONFIG_H_
+#define CONFIG_SATELLITE_CALLSIGN                       "PY0EFS"
 
-//! \} End of config group
+/* Packets IDs */
+#define CONFIG_PKT_ID_BEACON                            0x10
+
+#endif /* CONFIG_H_ */
+
+/** \} End of config group */

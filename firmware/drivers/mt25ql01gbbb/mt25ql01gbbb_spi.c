@@ -55,4 +55,4 @@ int mt25ql01gbbb_spi_transfer()
     return -1;
 }
 
-//! \} End of mt25ql01gbbb ggggg
+/** \} End of mt25ql01gbbb group */

@@ -39,9 +39,9 @@
 
 void system_reset()
 {
-    PMMCTL0 = PMMPW | PMMSWBOR;     // Triggers a software BOR
+    PMMCTL0 = PMMPW | PMMSWBOR;     /* Triggers a software BOR */
 
-    WDTCTL = 0xDEAD;                // Reset system by writing to the WDT register without using the proper password
+    WDTCTL = 0xDEAD;                /* Reset system by writing to the WDT register without using the proper password */
 }
 
-//! \} End of system group
+/** \} End of system group */

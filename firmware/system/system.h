@@ -45,6 +45,6 @@
  */
 void system_reset();
 
-#endif // SYSTEM_H_
+#endif /* SYSTEM_H_ */
 
-//! \} End of system group
+/** \} End of system group */

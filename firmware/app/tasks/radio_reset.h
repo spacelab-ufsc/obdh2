@@ -60,6 +60,6 @@ extern xTaskHandle xTaskRadioResetHandle;
  */
 void vTaskRadioReset(void *pvParameters);
 
-#endif // RADIO_RESET_H_
+#endif /* RADIO_RESET_H_ */
 
-//! \} End of radio_reset group
+/** \} End of radio_reset group */

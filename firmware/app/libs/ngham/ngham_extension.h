@@ -68,7 +68,7 @@ typedef struct ATTRIBUTE_PACKED{
 	int32_t latitude;          // In degrees * 10^7
 	int32_t longitude;         // In degrees * 10^7
 	int32_t altitude;          // In centimeters
-	unsigned int sog:20;     // Hundreds of meters per second
+	uint32_t sog:20;     // Hundreds of meters per second
 	unsigned int cog:12;   // Tenths of degrees
 	uint8_t hdop;              // In tenths
 }ngham_pos_t;

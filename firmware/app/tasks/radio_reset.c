@@ -39,7 +39,7 @@ xTaskHandle xTaskRadioResetHandle;
 
 void vTaskRadioReset(void *pvParameters)
 {
-    // Delay before the first cycle
+    /* Delay before the first cycle */
     vTaskDelay(pdMS_TO_TICKS(TASK_RADIO_RESET_INITIAL_DELAY_MS));
 
     while(1)
@@ -50,4 +50,4 @@ void vTaskRadioReset(void *pvParameters)
     }
 }
 
-//! \} End of radio_reset group
+/** \} End of radio_reset group */

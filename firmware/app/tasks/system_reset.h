@@ -61,6 +61,6 @@ extern xTaskHandle xTaskSystemResetHandle;
  */
 void vTaskSystemReset(void *pvParameters);
 
-#endif // SYSTEM_RESET_H_
+#endif /* SYSTEM_RESET_H_ */
 
-//! \} End of system_reset group
+/** \} End of system_reset group */

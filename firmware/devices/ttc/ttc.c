@@ -50,4 +50,4 @@ int ttc_leave_hibernation()
     return -1;
 }
 
-//! \} End of ttc group
+/** \} End of ttc group */

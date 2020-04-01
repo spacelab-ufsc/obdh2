@@ -225,6 +225,6 @@ int spi_read(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len);
  */
 int spi_transfer(spi_port_t port, spi_cs_t cs, uint8_t *wd, uint8_t *rd, uint16_t len);
 
-#endif // SPI_H_
+#endif /* SPI_H_ */
 
-//! \} End of spi group
+/** \} End of spi group */

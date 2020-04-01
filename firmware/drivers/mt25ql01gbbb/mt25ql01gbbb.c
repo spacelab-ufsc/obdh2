@@ -50,4 +50,4 @@ int mt25ql01gbbb_read(uint32_t adr, uint8_t *data, uint32_t len)
     return -1;
 }
 
-//! \} End of mt25ql01gbbb ggggg
+/** \} End of mt25ql01gbbb group */

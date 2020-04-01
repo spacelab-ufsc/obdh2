@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.13
+ * \version 0.3.1
  * 
  * \date 26/10/2019
  * 
@@ -43,6 +43,7 @@
 #include "ttc/ttc.h"
 #include "antenna/antenna.h"
 #include "payload_edc/payload_edc.h"
+#include "temp_sensor/temp_sensor.h"
 
 #endif // DEVICES_H_
 
