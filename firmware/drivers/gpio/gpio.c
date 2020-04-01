@@ -115,7 +115,7 @@ int gpio_init(gpio_pin_t pin, gpio_config_t config)
         case GPIO_PIN_68:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN6;    break;
         case GPIO_PIN_69:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN7;    break;
         default:
-            return -1;  // Invalid GPIO pin
+            return -1;  /* Invalid GPIO pin */
     }
 
     if (config.mode == GPIO_MODE_OUTPUT)
@@ -128,7 +128,7 @@ int gpio_init(gpio_pin_t pin, gpio_config_t config)
     }
     else
     {
-        return -1;  // Invalid mode
+        return -1;  /* Invalid mode */
     }
 
     return 0;
@@ -212,7 +212,7 @@ int gpio_set_state(gpio_pin_t pin, bool level)
         case GPIO_PIN_68:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN6;    break;
         case GPIO_PIN_69:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN7;    break;
         default:
-            return -1;  // Invalid GPIO pin
+            return -1;  /* Invalid GPIO pin */
     }
 
     if (level)
@@ -305,7 +305,7 @@ int gpio_get_state(gpio_pin_t pin)
         case GPIO_PIN_68:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN6;    break;
         case GPIO_PIN_69:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN7;    break;
         default:
-            return -1;  // Invalid GPIO pin
+            return -1;  /* Invalid GPIO pin */
     }
 
     if (GPIO_getInputPinValue(msp_port, msp_pin) == GPIO_INPUT_PIN_HIGH)
@@ -396,7 +396,7 @@ int gpio_toggle(gpio_pin_t pin)
         case GPIO_PIN_68:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN6;    break;
         case GPIO_PIN_69:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN7;    break;
         default:
-            return -1;  // Invalid GPIO pin
+            return -1;  /* Invalid GPIO pin */
     }
 
     GPIO_toggleOutputOnPin(msp_port, msp_pin);
@@ -404,4 +404,4 @@ int gpio_toggle(gpio_pin_t pin)
     return 0;
 }
 
-//! \} End of gpio group
+/** \} End of gpio group */

@@ -77,6 +77,6 @@ int radio_recv(uint8_t *data, uint16_t len);
  */
 int radio_available();
 
-#endif // RADIO_H_
+#endif /* RADIO_H_ */
 
-//! \} End of radio group
+/** \} End of radio group */

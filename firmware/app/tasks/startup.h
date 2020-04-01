@@ -45,7 +45,7 @@
 #define TASK_STARTUP_STACK_SIZE             500
 #define TASK_STARTUP_PRIORITY               5
 
-// Status done bit position
+/* Status done bit position */
 #define TASK_STARTUP_DONE                   (1 << 0)
 
 /**
@@ -69,6 +69,6 @@ extern EventGroupHandle_t task_startup_status;
  */
 void vTaskStartup(void *pvParameters);
 
-#endif // STARTUP_H_
+#endif /* STARTUP_H_ */
 
-//! \} End of startup group
+/** \} End of startup group */

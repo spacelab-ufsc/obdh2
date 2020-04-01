@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.17
+ * \version 0.3.1
  * 
  * \date 03/03/2020
  * 
@@ -45,7 +45,21 @@
 typedef enum
 {
     ADC_PORT_0=0,       /**< ADC port 0 (10-bits). */
-    ADC_PORT_1          /**< ADC port 1 (12-bits). */
+    ADC_PORT_1,         /**< ADC port 1 (12-bits). */
+    ADC_PORT_2,         /**< ADC port 2 (12-bits). */
+    ADC_PORT_3,         /**< ADC port 3 (12-bits). */
+    ADC_PORT_4,         /**< ADC port 4 (12-bits). */
+    ADC_PORT_5,         /**< ADC port 5 (12-bits). */
+    ADC_PORT_6,         /**< ADC port 6 (12-bits). */
+    ADC_PORT_7,         /**< ADC port 7 (12-bits). */
+    ADC_PORT_8,         /**< ADC port 8 (12-bits). */
+    ADC_PORT_9,         /**< ADC port 9 (12-bits). */
+    ADC_PORT_10,        /**< ADC port 10 (12-bits). */
+    ADC_PORT_11,        /**< ADC port 11 (12-bits). */
+    ADC_PORT_12,        /**< ADC port 12 (12-bits). */
+    ADC_PORT_13,        /**< ADC port 13 (12-bits). */
+    ADC_PORT_14,        /**< ADC port 14 (12-bits). */
+    ADC_PORT_15         /**< ADC port 15 (12-bits). */
 } adc_port_e;
 
 /**
@@ -68,8 +82,8 @@ typedef uint8_t adc_port_t;
  *
  * \param[in] port is the ADC port to initialize. It can be:
  * \parblock
- *      -\b ADC_PORT_0: 10-bit resolution.
- *      -\b ADC_PORT_1: 12-bit resolution.
+ *      -\b ADC_PORT_0
+ *      -\b ADC_PORT_1
  * \endparblock
  *
  * \param[in] config is the configuration of the ADC port.
@@ -83,8 +97,23 @@ int adc_init(adc_port_t port, adc_config_t config);
  *
  * \param[in] port is the ADC port to read. It can be:
  * \parblock
- *      -\b ADC_PORT_0: 10-bit resolution.
- *      -\b ADC_PORT_1: 12-bit resolution.
+ *      -\b ADC_PORT_0
+ *      -\b ADC_PORT_1
+ *      -\b ADC_PORT_2
+ *      -\b ADC_PORT_3
+ *      -\b ADC_PORT_4
+ *      -\b ADC_PORT_5
+ *      -\b ADC_PORT_6
+ *      -\b ADC_PORT_7
+ *      -\b ADC_PORT_8
+ *      -\b ADC_PORT_9
+ *      -\b ADC_PORT_10
+ *      -\b ADC_PORT_11
+ *      -\b ADC_PORT_12
+ *      -\b ADC_PORT_13
+ *      -\b ADC_PORT_14
+ *      -\b ADC_PORT_15
+ *      .
  * \endparblock
  *
  * \param[in] val is a pointer to store the read value.
@@ -92,6 +121,15 @@ int adc_init(adc_port_t port, adc_config_t config);
  * \return The status/error code.
  */
 int adc_read(adc_port_t port, uint16_t *val);
+
+/**
+ * \brief Milliseconds delay.
+ *
+ * \param[in] ms is the delay period in milliseconds.
+ *
+ * \return None.
+ */
+void adc_delay_ms(uint16_t ms);
 
 #endif /* ADC_H_ */
 

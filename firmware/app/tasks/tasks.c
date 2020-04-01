@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.16
+ * \version 0.3.2
  * 
  * \date 02/11/2019
  * 
@@ -45,56 +45,58 @@
 #include "system_reset.h"
 #include "radio_reset.h"
 #include "read_temp.h"
+#include "beacon.h"
+#include "save_time.h"
 
 void create_tasks()
 {
-    // Startup task
+    /* Startup task */
 #if CONFIG_TASK_STARTUP_ENABLED == 1
     xTaskCreate(vTaskStartup, TASK_STARTUP_NAME, TASK_STARTUP_STACK_SIZE, NULL, TASK_STARTUP_PRIORITY, &xTaskStartupHandle);
 
     if (xTaskStartupHandle == NULL)
     {
-        // Error creating the startup task
+        /* Error creating the startup task */
     }
-#endif // CONFIG_TASK_STARTUP_ENABLED
+#endif /* CONFIG_TASK_STARTUP_ENABLED */
 
-    // Watchdog reset task
+    /* Watchdog reset task */
 #if CONFIG_TASK_WATCHDOG_RESET_ENABLED == 1
     xTaskCreate(vTaskWatchdogReset, TASK_WATCHDOG_RESET_NAME, TASK_WATCHDOG_RESET_STACK_SIZE, NULL, TASK_WATCHDOG_RESET_PRIORITY, &xTaskWatchdogResetHandle);
 
     if (xTaskWatchdogResetHandle == NULL)
     {
-        // Error creating the watchdog reset task
+        /* Error creating the watchdog reset task */
     }
-#endif // CONFIG_TASK_WATCHDOG_RESET_ENABLED
+#endif /* CONFIG_TASK_WATCHDOG_RESET_ENABLED */
 
-    // Heartbeat task
+    /* Heartbeat task */
 #if CONFIG_TASK_HEARTBEAT_ENABLED == 1
     xTaskCreate(vTaskHeartbeat, TASK_HEARTBEAT_NAME, TASK_HEARTBEAT_STACK_SIZE, NULL, TASK_HEARTBEAT_PRIORITY, &xTaskHeartbeatHandle);
 
     if (xTaskHeartbeatHandle == NULL)
     {
-        // Error creating the heartbeat task
+        /* Error creating the heartbeat task */
     }
-#endif // CONFIG_TASK_HEARTBEAT_ENABLED
+#endif /* CONFIG_TASK_HEARTBEAT_ENABLED */
 
 #if CONFIG_TASK_SYSTEM_RESET_ENABLED == 1
     xTaskCreate(vTaskSystemReset, TASK_SYSTEM_RESET_NAME, TASK_SYSTEM_RESET_STACK_SIZE, NULL, TASK_SYSTEM_RESET_PRIORITY, &xTaskSystemResetHandle);
 
     if (xTaskSystemResetHandle == NULL)
     {
-        // Error creating the system reset task
+        /* Error creating the system reset task */
     }
-#endif // CONFIG_TASK_SYSTEM_RESET_ENABLED
+#endif /* CONFIG_TASK_SYSTEM_RESET_ENABLED */
 
 #if CONFIG_TASK_RADIO_RESET_ENABLED == 1
     xTaskCreate(vTaskRadioReset, TASK_RADIO_RESET_NAME, TASK_RADIO_RESET_STACK_SIZE, NULL, TASK_RADIO_RESET_PRIORITY, &xTaskRadioResetHandle);
 
     if (xTaskRadioResetHandle == NULL)
     {
-        // Error creating the radio reset task
+        /* Error creating the radio reset task */
     }
-#endif // CONFIG_TASK_RADIO_RESET_ENABLED
+#endif /* CONFIG_TASK_RADIO_RESET_ENABLED */
 
 #if CONFIG_TASK_READ_TEMP_ENABLED == 1
     xTaskCreate(vTaskReadTemp, TASK_READ_TEMP_NAME, TASK_READ_TEMP_STACK_SIZE, NULL, TASK_READ_TEMP_PRIORITY, &xTaskReadTempHandle);
@@ -105,6 +107,24 @@ void create_tasks()
     }
 #endif /* CONFIG_TASK_READ_TEMP_ENABLED */
 
+#if CONFIG_TASK_BEACON_ENABLED == 1
+    xTaskCreate(vTaskBeacon, TASK_BEACON_NAME, TASK_BEACON_STACK_SIZE, NULL, TASK_BEACON_PRIORITY, &xTaskBeaconHandle);
+
+    if (xTaskBeaconHandle == NULL)
+    {
+        /* Error creating the beacon task */
+    }
+#endif /* CONFIG_TASK_BEACON_ENABLED */
+
+#if CONFIG_TASK_SAVE_TIME_ENABLED == 1
+    xTaskCreate(vTaskSaveTime, TASK_SAVE_TIME_NAME, TASK_SAVE_TIME_STACK_SIZE, NULL, TASK_SAVE_TIME_PRIORITY, &xTaskSaveTimeHandle);
+
+    if (xTaskSaveTimeHandle == NULL)
+    {
+        /* Error creating the save time task */
+    }
+#endif /* CONFIG_TASK_BEACON_ENABLED */
+
     create_event_groups();
 }
 
@@ -114,8 +134,8 @@ void create_event_groups()
 
     if (task_startup_status == NULL)
     {
-        // Error creating the startup status event group
+        /* Error creating the startup status event group */
     }
 }
 
-//! \} End of tasks group
+/** \} End of tasks group */

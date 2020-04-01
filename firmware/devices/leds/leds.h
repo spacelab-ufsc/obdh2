@@ -89,6 +89,6 @@ int led_clear(led_t l);
  */
 int led_toggle(led_t l);
 
-#endif // LEDS_H_
+#endif /* LEDS_H_ */
 
-//! \} End of leds group
+/** \} End of leds group */

@@ -41,7 +41,7 @@ SemaphoreHandle_t xLoggerSemaphore = NULL;
 
 bool logger_mutex_create()
 {
-    // Create a mutex type semaphore
+    /* Create a mutex type semaphore */
     xLoggerSemaphore = xSemaphoreCreateMutex();
 
     if (xLoggerSemaphore == NULL)
@@ -59,8 +59,8 @@ bool logger_mutex_take()
 {
     if (xLoggerSemaphore != NULL)
     {
-        // See if we can obtain the semaphore. If the semaphore is not
-        // available wait LOGGER_MUTEX_WAIT_TIME_MS ms to see if it becomes free
+        /* See if we can obtain the semaphore. If the semaphore is not */
+        /* available wait LOGGER_MUTEX_WAIT_TIME_MS ms to see if it becomes free */
         if (xSemaphoreTake(xLoggerSemaphore, pdMS_TO_TICKS(LOGGER_MUTEX_WAIT_TIME_MS)) == pdTRUE)
         {
             return true;
@@ -90,4 +90,4 @@ bool logger_mutex_give()
     }
 }
 
-//! \} End of logger_mutex group
+/** \} End of logger_mutex group */

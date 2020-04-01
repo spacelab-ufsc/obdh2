@@ -6,7 +6,7 @@
 #ifndef PLATFORM_NGHAM_H
 #define PLATFORM_NGHAM_H
 
-#include "ngham_packets.h"	// Packet structs, NA-values etc.
+#include "ngham/ngham_packets.h"    // Packet structs, NA-values etc.
 #include <stdint.h>
 
 // NGHAM_BYTES_TILL_ACTION_HALFWAY is number of payload bytes until ngham_action_reception_halfway is executed

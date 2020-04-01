@@ -1,7 +1,7 @@
 /*
- * periodic_downlink.c
+ * px.c
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2020, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -21,33 +21,38 @@
  */
 
 /**
- * \brief Periodic downlink task implementation.
+ * \brief Payload X driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.3.5
  * 
- * \date 27/10/2019
+ * \date 31/03/2020
  * 
- * \addtogroup periodic_downlink
+ * \addtogroup px
  * \{
  */
 
-#include "periodic_downlink.h"
+#include "px.h"
 
-xTaskHandle xTaskPeriodicDownlinkHandle;
+/**
+ * \brief Payload X I2C port.
+ */
+i2c_port_t px_i2c_port;
 
-void vTaskPeriodicDownlink(void *pvParameters)
+int px_init(px_config_t config)
 {
-    // Delay before the first cycle
-    vTaskDelay(pdMS_TO_TICKS(TASK_PERIODIC_DOWNLINK_INITIAL_DELAY_MS));
-
-    while(1)
-    {
-        TickType_t last_cycle = xTaskGetTickCount();
-
-        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_PERIODIC_DOWNLINK_PERIOD_MS));
-    }
+    return -1;
 }
 
-//! \} End of periodic_downlink group
+int px_write(uint8_t *data, uint16_t len)
+{
+    return -1;
+}
+
+int px_read(uint8_t *data, uint16_t len)
+{
+    return -1;
+}
+
+/** \} End of px group */

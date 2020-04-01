@@ -60,6 +60,6 @@ extern xTaskHandle xTaskWatchdogResetHandle;
  */
 void vTaskWatchdogReset(void *pvParameters);
 
-#endif // WATCHDOG_RESET_H_
+#endif /* WATCHDOG_RESET_H_ */
 
-//! \} End of watchdog_reset group
+/** \} End of watchdog_reset group */

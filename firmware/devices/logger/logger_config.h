@@ -41,21 +41,21 @@
 
 #include "logger.h"
 
-// Device name
+/* Device name */
 #define LOGGER_DEVICE_NAME              "Logger"
 
-// UART
+/* UART */
 #define LOGGER_UART_BAUDRATE_BPS        115200
 
-// Mutex config.
+/* Mutex config. */
 #define LOGGER_MUTEX_WAIT_TIME_MS       100
 
-// Log messages colors
+/* Log messages colors */
 #define LOGGER_SYSTEM_TIME_COLOR        LOGGER_COLOR_GREEN
 #define LOGGER_MODULE_NAME_COLOR        LOGGER_COLOR_MAGENTA
 #define LOGGER_WARNING_COLOR            LOGGER_COLOR_YELLOW
 #define LOGGER_ERROR_COLOR              LOGGER_COLOR_RED
 
-#endif // LOGGER_CONFIG_H_
+#endif /* LOGGER_CONFIG_H_ */
 
-//! \} End of logger_config group
+/** \} End of logger_config group */

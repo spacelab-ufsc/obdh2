@@ -50,6 +50,6 @@ void create_tasks();
  */
 void create_event_groups();
 
-#endif // TASKS_H_
+#endif /* TASKS_H_ */
 
-//! \} End of tasks group
+/** \} End of tasks group */

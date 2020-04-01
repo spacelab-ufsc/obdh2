@@ -53,4 +53,4 @@ void vTaskSystemReset(void *pvParameters)
     }
 }
 
-//! \} End of system_reset group
+/** \} End of system_reset group */

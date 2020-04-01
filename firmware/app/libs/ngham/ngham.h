@@ -24,6 +24,8 @@ extern const uint8_t NGH_SYNC[];
 #define NGH_FLAGS_bm                    0xe0
 #define NGH_FLAGS_bp                    5
 
+#define NGHAM_FOUR_LEVEL_MODULATION     0
+
 void ngham_init_arrays(void);
 void ngham_deinit_arrays(void);
 void ngham_init(void);

@@ -72,6 +72,6 @@ int tps382x_init(tps382x_config_t config);
  */
 void tps382x_trigger(tps382x_config_t config);
 
-#endif // TPS382X_H_
+#endif /* TPS382X_H_ */
 
-//! \} End of tps382x group
+/** \} End of tps382x group */

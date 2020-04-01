@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.15
+ * \version 0.3.5
  * 
  * \date 26/10/2019
  * 
@@ -49,7 +49,8 @@
 #include "tca4311a/tca4311a.h"
 #include "sl_eps2/sl_eps2.h"
 #include "adc/adc.h"
+#include "flash/flash.h"
 
-#endif // DRIVERS_H_
+#endif /* DRIVERS_H_ */
 
-//! \} End of drivers group
+/** \} End of drivers group */

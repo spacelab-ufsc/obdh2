@@ -64,6 +64,6 @@ int ttc_enter_hibernation(uint32_t period_min);
  */
 int ttc_leave_hibernation();
 
-#endif // TTC_H_
+#endif /* TTC_H_ */
 
-//! \} End of ttc group
+/** \} End of ttc group */

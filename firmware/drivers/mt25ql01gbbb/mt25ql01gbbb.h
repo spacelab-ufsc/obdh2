@@ -39,10 +39,10 @@
 
 #include <stdint.h>
 
-// Registers
+/* Registers */
 #define MT25QL01GBBB_REG_   0x00
 
-// Commands
+/* Commands */
 #define MT25QL01GBBB_CMD_   0x00
 
 /**
@@ -120,6 +120,6 @@ int mt25ql01gbbb_spi_read(uint8_t *data, uint16_t len);
  */
 int mt25ql01gbbb_spi_transfer();
 
-#endif // MT25QL01GBBB_H_
+#endif /* MT25QL01GBBB_H_ */
 
-//! \} End of mt25ql01gbbb ggggg
+/** \} End of mt25ql01gbbb group */

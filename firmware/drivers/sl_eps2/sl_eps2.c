@@ -43,12 +43,12 @@ int sl_eps2_init(sl_eps2_config_t config)
 {
     if (tca4311a_init(config, true) != TCA4311A_READY)
     {
-        return -1;      // Error initializing the I2C port
+        return -1;      /* Error initializing the I2C port */
     }
 
     if (sl_eps2_check_device(config) != 0)
     {
-        return -1;      // Error checking the connection
+        return -1;      /* Error checking the connection */
     }
 
     return 0;
@@ -60,17 +60,17 @@ int sl_eps2_check_device(sl_eps2_config_t config)
 
     if (tca4311a_write(config, SL_EPS2_SLAVE_ADR, &buf, 1) != TCA4311A_READY)
     {
-        return -1;      // Error writing the command
+        return -1;      /* Error writing the command */
     }
 
     if (tca4311a_read(config, SL_EPS2_SLAVE_ADR, &buf, 1) != TCA4311A_READY)
     {
-        return -1;      // Error reading the command result
+        return -1;      /* Error reading the command result */
     }
 
     if (buf != SL_EPS2_DEVICE_ID)
     {
-        return -1;      // Wrong device ID (connection error?)
+        return -1;      /* Wrong device ID (connection error?) */
     }
 
     return 0;
@@ -123,7 +123,7 @@ int sl_eps2_read_battery_voltage(sl_eps2_config_t config, uint8_t bat, uint32_t 
         case SL_EPS2_BATTERY_CELL_0:    return sl_eps2_read_reg(config, SL_EPS2_REG_BATTERY_0_VOLTAGE, val);
         case SL_EPS2_BATTERY_CELL_1:    return sl_eps2_read_reg(config, SL_EPS2_REG_BATTERY_1_VOLTAGE, val);
         default:
-            return -1;  // Invalid battery cell
+            return -1;  /* Invalid battery cell */
     }
 }
 
@@ -143,7 +143,7 @@ int sl_eps2_read_solar_panel_current(sl_eps2_config_t config, uint8_t sp, uint32
         case SL_EPS2_SOLAR_PANEL_4:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_4_CUR, val);
         case SL_EPS2_SOLAR_PANEL_5:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_5_CUR, val);
         default:
-            return -1;  // Invalid solar panel
+            return -1;  /* Invalid solar panel */
     }
 }
 
@@ -155,8 +155,8 @@ int sl_eps2_read_solar_panel_voltage(sl_eps2_config_t config, uint8_t sp, uint32
         case SL_EPS2_SOLAR_PANEL_14:    return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_14_VOLT, val);
         case SL_EPS2_SOLAR_PANEL_52:    return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_52_VOLT, val);
         default:
-            return -1;  // Invalid solar panel set
+            return -1;  /* Invalid solar panel set */
     }
 }
 
-//! \} End of sl_eps2 group
+/** \} End of sl_eps2 group */
