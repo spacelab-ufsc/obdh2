@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.3.7
  * 
  * \date 03/11/2019
  * 
@@ -153,6 +153,15 @@ void logger_print_event_from_module(uint8_t type, const char *module, const char
  * \return None.
  */
 void logger_print_msg(const char *msg);
+
+/**
+ * \brief Prints an string over the UART port.
+ *
+ * \param[in] str is a pointer to an string.
+ *
+ * \return None.
+ */
+void logger_print_str(char *str);
 
 /**
  * \brief Goes to the next line.

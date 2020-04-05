@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.4
+ * \version 0.3.7
  * 
  * \date 03/11/2019
  * 
@@ -205,6 +205,16 @@ void logger_print_digit(uint8_t digit)
     else
     {
         logger_print_byte('N');
+    }
+}
+
+void logger_print_str(char *str)
+{
+    uint16_t i = 0;
+    while(str[i] != '\0')
+    {
+        logger_print_byte(str[i]);
+        i++;
     }
 }
 
