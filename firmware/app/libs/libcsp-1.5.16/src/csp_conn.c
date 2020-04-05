@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include <stdlib.h>
-#include <stdio.h>
+/* #include <stdio.h> */
 #include <stdint.h>
 #include <string.h>
 
@@ -32,6 +32,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <csp/arch/csp_semaphore.h>
 #include <csp/arch/csp_malloc.h>
 #include <csp/arch/csp_time.h>
+
+#include <devices/logger/logger.h>
 
 #include "csp_conn.h"
 #include "transport/csp_transport.h"
@@ -456,9 +458,26 @@ void csp_conn_print_table(void) {
 
 	for (i = 0; i < CSP_CONN_MAX; i++) {
 		conn = &arr_conn[i];
-		printf("[%02u %p] S:%u, %u -> %u, %u -> %u, sock: %p\r\n",
-				i, conn, conn->state, conn->idin.src, conn->idin.dst,
-				conn->idin.dport, conn->idin.sport, conn->socket);
+        /* printf("[%02u %p] S:%u, %u -> %u, %u -> %u, sock: %p\r\n", */
+        /*        i, conn, conn->state, conn->idin.src, conn->idin.dst, */
+        /*        conn->idin.dport, conn->idin.sport, conn->socket); */
+        logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "[");
+        logger_print_dec(i);
+        logger_print_msg(" ");
+        logger_print_hex(conn);
+        logger_print_msg("] S:");
+        logger_print_dec(conn->state);
+        logger_print_msg(", ");
+        logger_print_dec(conn->idin.src);
+        logger_print_msg(" -> ");
+        logger_print_dec(conn->idin.dst);
+        logger_print_msg(" , ");
+        logger_print_dec(conn->idin.dport);
+        logger_print_msg(" -> ");
+        logger_print_dec(conn->idin.sport);
+        logger_print_msg(", sock: ");
+        logger_print_hex(conn->socket);
+        logger_new_line();
 #ifdef CSP_USE_RDP
 		if (conn->idin.flags & CSP_FRDP)
 			csp_rdp_conn_print(conn);

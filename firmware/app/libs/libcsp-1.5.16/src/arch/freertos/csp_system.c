@@ -18,7 +18,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <stdio.h>
+/* #include <stdio.h> */
 #include <stdint.h>
 #include <FreeRTOS.h>
 #include <task.h>
@@ -135,5 +135,5 @@ void csp_sys_set_color(csp_color_t color) {
 			modifier_code = 0; break;
 	}
 
-	printf("\033[%u;%um", modifier_code, color_code);
+    /* printf("\033[%u;%um", modifier_code, color_code); */
 }

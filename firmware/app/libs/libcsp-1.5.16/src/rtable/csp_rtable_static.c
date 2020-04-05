@@ -18,9 +18,11 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <stdio.h>
+/* #include <stdio.h> */
 #include <csp/csp.h>
 #include <stdio.h>
+
+#include <devices/logger/logger.h>
 
 /* Local typedef for routing table */
 typedef struct __attribute__((__packed__)) csp_rtable_s {
@@ -116,13 +118,27 @@ int csp_rtable_check(const char * buffer) {
 #ifdef CSP_DEBUG
 void csp_rtable_print(void) {
 	int i;
-	printf("Node  Interface  Address\r\n");
+    /* printf("Node  Interface  Address\r\n"); */
+    logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "Node  Interface  Address");
+    logger_new_line();
 	for (i = 0; i < CSP_DEFAULT_ROUTE; i++)
 		if (routes[i].interface != NULL)
-			printf("%4u  %-9s  %u\r\n", i,
-				routes[i].interface->name,
-				routes[i].mac == CSP_NODE_MAC ? i : routes[i].mac);
-	printf("   *  %-9s  %u\r\n", routes[CSP_DEFAULT_ROUTE].interface->name, routes[CSP_DEFAULT_ROUTE].mac);
+            /* printf("%4u  %-9s  %u\r\n", i, */
+            /*        routes[i].interface->name, */
+            /*        routes[i].mac == CSP_NODE_MAC ? i : routes[i].mac); */
+            logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "");
+            logger_print_dec(i);
+            logger_print_msg("  ");
+            logger_print_str(routes[i].interface->name);
+            logger_print_msg("  ");
+            logger_print_dec(routes[i].mac == CSP_NODE_MAC ? i : routes[i].mac);
+            logger_new_line();
+    /* printf("   *  %-9s  %u\r\n", routes[CSP_DEFAULT_ROUTE].interface->name, routes[CSP_DEFAULT_ROUTE].mac); */
+    logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "   *  ");
+    logger_print_str(routes[CSP_DEFAULT_ROUTE].interface->name);
+    logger_print_msg("  ");
+    logger_print_dec(routes[CSP_DEFAULT_ROUTE].mac);
+    logger_new_line();
 
 }
 #endif

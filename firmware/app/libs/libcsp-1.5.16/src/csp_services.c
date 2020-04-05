@@ -18,7 +18,7 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <stdio.h>
+/* #include <stdio.h> */
 #include <string.h>
 #include <stdint.h>
 #include <inttypes.h>
@@ -29,6 +29,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <csp/csp_endian.h>
 
 #include <csp/arch/csp_time.h>
+
+#include <devices/logger/logger.h>
 
 int csp_ping(uint8_t node, uint32_t timeout, unsigned int size, uint8_t conn_options) {
 
@@ -107,7 +109,11 @@ void csp_ping_noreply(uint8_t node) {
 	packet->data[0] = 0x55;
 	packet->length = 1;
 
-	printf("Ping ignore reply node %u.\r\n", (unsigned int) node);
+    /* printf("Ping ignore reply node %u.\r\n", (unsigned int) node); */
+    logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "Ping ignore reply node ");
+    logger_print_dec(node);
+    logger_print_msg(".");
+    logger_new_line();
 
 	/* Try to send frame */
 	if (!csp_send(conn, packet, 0))
@@ -145,7 +151,11 @@ void csp_ps(uint8_t node, uint32_t timeout) {
 	packet->data[0] = 0x55;
 	packet->length = 1;
 
-	printf("PS node %u: \r\n", (unsigned int) node);
+    /* printf("PS node %u: \r\n", (unsigned int) node); */
+    logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "PS node ");
+    logger_print_dec(node);
+    logger_print_msg(": ");
+    logger_new_line();
 
 	/* Try to send frame */
 	if (!csp_send(conn, packet, 0))
@@ -160,13 +170,16 @@ void csp_ps(uint8_t node, uint32_t timeout) {
 
 		/* We have a reply, add our own NULL char */
 		packet->data[packet->length] = 0;
-		printf("%s", packet->data);
+        /* printf("%s", packet->data); */
+        logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "");
+        logger_print_str(packet->data);
 
 		/* Each packet from csp_read must to be freed by user */
 		csp_buffer_free(packet);
 	}
 
-	printf("\r\n");
+    /* printf("\r\n"); */
+    logger_new_line();
 
 	/* Clean up */
 out:
@@ -182,14 +195,22 @@ void csp_memfree(uint8_t node, uint32_t timeout) {
 
 	int status = csp_transaction(CSP_PRIO_NORM, node, CSP_MEMFREE, timeout, NULL, 0, &memfree, sizeof(memfree));
 	if (status == 0) {
-		printf("Network error\r\n");
+        /* printf("Network error\r\n"); */
+        logger_print_event_from_module(LOGGER_ERROR, LIBCSP_MODULE_NAME, "Network error");
+        logger_new_line();
 		return;
 	}
 
 	/* Convert from network to host order */
 	memfree = csp_ntoh32(memfree);
 
-	printf("Free Memory at node %u is %"PRIu32" bytes\r\n", (unsigned int) node, memfree);
+    /* printf("Free Memory at node %u is %"PRIu32" bytes\r\n", (unsigned int) node, memfree); */
+    logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "Free Memory at node ");
+    logger_print_dec(node);
+    logger_print_msg(" is ");
+    logger_print_dec(memfree);
+    logger_print_msg(" bytes");
+    logger_new_line();
 
 }
 
@@ -199,11 +220,18 @@ void csp_buf_free(uint8_t node, uint32_t timeout) {
 
 	int status = csp_transaction(CSP_PRIO_NORM, node, CSP_BUF_FREE, timeout, NULL, 0, &size, sizeof(size));
 	if (status == 0) {
-		printf("Network error\r\n");
+        /* printf("Network error\r\n"); */
+        logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "Network error");
+        logger_new_line();
 		return;
 	}
 	size = csp_ntoh32(size);
-	printf("Free buffers at node %u is %"PRIu32"\r\n", (unsigned int) node, size);
+    /* printf("Free buffers at node %u is %"PRIu32"\r\n", (unsigned int) node, size); */
+    logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "Free buffers at node ");
+    logger_print_dec(node);
+    logger_print_msg(" is ");
+    logger_print_dec(size);
+    logger_new_line();
 
 }
 
@@ -223,9 +251,16 @@ void csp_uptime(uint8_t node, uint32_t timeout) {
 	uint32_t uptime;
 	int err = csp_get_uptime(node, timeout, &uptime);
 	if (err == CSP_ERR_NONE) {
-		printf("Uptime of node %u is %"PRIu32" s\r\n", (unsigned int) node, uptime);
+        /* printf("Uptime of node %u is %"PRIu32" s\r\n", (unsigned int) node, uptime); */
+        logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "Uptime of node ");
+        logger_print_dec(node);
+        logger_print_msg(" is ");
+        logger_print_dec(uptime);
+        logger_new_line();
 	} else {
-		printf("Network error\r\n");
+        /* printf("Network error\r\n"); */
+        logger_print_event_from_module(LOGGER_ERROR, LIBCSP_MODULE_NAME, "Network error");
+        logger_new_line();
 	}
 
 }

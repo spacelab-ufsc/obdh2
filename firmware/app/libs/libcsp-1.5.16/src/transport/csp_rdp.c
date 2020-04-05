@@ -24,7 +24,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  * delayed acknowledgments, to improve performance over half-duplex links.
  */
 
-#include <stdio.h>
+/* #include <stdio.h> */
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
@@ -1093,8 +1093,17 @@ void csp_rdp_conn_print(csp_conn_t * conn) {
 	if (conn == NULL)
 		return;
 
-	printf("\tRDP: State %"PRIu16", rcv %"PRIu16", snd %"PRIu16", win %"PRIu32"\r\n",
-			conn->rdp.state, conn->rdp.rcv_cur, conn->rdp.snd_una, conn->rdp.window_size);
+    /* printf("\tRDP: State %"PRIu16", rcv %"PRIu16", snd %"PRIu16", win %"PRIu32"\r\n", */
+    /*        conn->rdp.state, conn->rdp.rcv_cur, conn->rdp.snd_una, conn->rdp.window_size); */
+    logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "RDP: State ")
+    logger_print_dec(conn->rdp.state);
+    logger_print_msg(", rcv ");
+    logger_print_dec(conn->rdp.rcv_cur);
+    logger_print_msg(", snd ");
+    logger_print_dec(conn->rdp.snd_una);
+    logger_print_msg(", win ");
+    logger_print_dec(conn->rdp.window_size);
+    logger_new_line();
 
 }
 #endif

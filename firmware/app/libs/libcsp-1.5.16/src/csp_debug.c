@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 #include <stdint.h>
-#include <stdio.h>
+/*#include <stdio.h>*/
 #include <stdarg.h>
 #include <string.h>
 
@@ -31,6 +31,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <csp/csp.h>
 
 #include <csp/arch/csp_system.h>
+
+#include <devices/logger/logger.h>
 
 /* Custom debug function */
 csp_debug_hook_func_t csp_debug_hook_func = NULL;
@@ -101,7 +103,8 @@ void do_csp_debug(csp_debug_level_t level, const char *format, ...)
 #else
 		vprintf(format, args);
 #endif
-		printf("\r\n");
+        /* printf("\r\n"); */
+        logger_new_line();
 		csp_sys_set_color(COLOR_RESET);
 	}
 
@@ -125,9 +128,16 @@ int csp_debug_get_level(csp_debug_level_t level)
 void csp_debug_toggle_level(csp_debug_level_t level)
 {
 	if (level > CSP_LOCK) {
-		printf("Max level is 6\r\n");
+        /* printf("Max level is 6\r\n"); */
+        logger_print_event_from_module(LOGGER_WARNING, LIBCSP_MODULE_NAME, "Max level is 6!");
+        logger_new_line();
 		return;
 	}
 	csp_debug_level_enabled[level] = (csp_debug_level_enabled[level]) ? false : true;
-	printf("Level %u: value %u\r\n", level, csp_debug_level_enabled[level]);
+    /* printf("Level %u: value %u\r\n", level, csp_debug_level_enabled[level]); */
+    logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "Level ");
+    logger_print_dec(level);
+    logger_print_msg(": value ");
+    logger_print_dec(csp_debug_level_enabled[level]);
+    logger_new_line();
 }

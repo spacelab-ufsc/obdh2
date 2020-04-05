@@ -18,8 +18,10 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <stdio.h>
+/* #include <stdio.h> */
 #include <csp/csp.h>
+
+#include <devices/logger/logger.h>
 
 /* Interfaces are stored in a linked list*/
 static csp_iface_t * interfaces = NULL;
@@ -87,11 +89,41 @@ void csp_iflist_print(void) {
 	while (i) {
 		csp_bytesize(txbuf, sizeof(txbuf), i->txbytes);
 		csp_bytesize(rxbuf, sizeof(rxbuf), i->rxbytes);
-		printf("%-10stx: %05"PRIu32" rx: %05"PRIu32" txe: %05"PRIu32" rxe: %05"PRIu32"\r\n"
-		       "          drop: %05"PRIu32" autherr: %05"PRIu32 " frame: %05"PRIu32"\r\n"
-		       "          txb: %"PRIu32" (%s) rxb: %"PRIu32" (%s) MTU: %u\r\n\r\n",
-		       i->name, i->tx, i->rx, i->tx_error, i->rx_error, i->drop,
-		       i->autherr, i->frame, i->txbytes, txbuf, i->rxbytes, rxbuf, i->mtu);
+		/* printf("%-10stx: %05"PRIu32" rx: %05"PRIu32" txe: %05"PRIu32" rxe: %05"PRIu32"\r\n" */
+		/*        "          drop: %05"PRIu32" autherr: %05"PRIu32 " frame: %05"PRIu32"\r\n" */
+		/*        "          txb: %"PRIu32" (%s) rxb: %"PRIu32" (%s) MTU: %u\r\n\r\n", */
+		/*        i->name, i->tx, i->rx, i->tx_error, i->rx_error, i->drop, */
+		/*        i->autherr, i->frame, i->txbytes, txbuf, i->rxbytes, rxbuf, i->mtu); */
+        logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "");
+        logger_print_str(i->name);
+        logger_print_msg("tx: ");
+        logger_print_dec(i->tx);
+        logger_print_msg(" rx: ");
+        logger_print_dec(i->rx);
+        logger_print_msg(" txe: ");
+        logger_print_dec(i->tx_error);
+        logger_print_msg(" rxe: ");
+        logger_print_dec(i->rx_error);
+        logger_new_line();
+        logger_print_msg("\tdrop: ");
+        logger_print_dec(i->drop);
+        logger_print_msg(" autherr: ");
+        logger_print_dec(i->autherr);
+        logger_print_msg(" frame: ");
+        logger_print_dec(i->frame);
+        logger_print_msg(" frame: ");
+        logger_new_line();
+        logger_print_msg("\ttxb: ");
+        logger_print_dec(i->txbytes);
+        logger_print_msg(" (");
+        logger_print_str(txbuf);
+        logger_print_msg(") rxb: ");
+        logger_print_dec(i->rxbytes);
+        logger_print_msg(" (");
+        logger_print_str(rxbuf);
+        logger_print_msg(") MTU: ");
+        logger_print_dec(i->mtu);
+        logger_new_line();
 		i = i->next;
 	}
 
