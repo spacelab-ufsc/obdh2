@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.6
+ * \version 0.3.7
  * 
  * \date 26/10/2019
  * 
@@ -51,6 +51,19 @@
 
 /* Packets IDs */
 #define CONFIG_PKT_ID_BEACON                            0x10
+
+/* CSP */
+#define CONFIG_CSP_MY_ADDRESS                           0
+#define CONFIG_CSP_TTC_ADDRESS                          1
+#define CONFIG_CSP_EPS_ADDRESS                          2
+#define CONFIG_CSP_BUFFER_MAX_PKTS                      5
+#define CONFIG_CSP_BUFFER_MAX_SIZE                      300
+#define CONFIG_CSP_ROUTER_WORD_STACK                    300
+#define CONFIG_CSP_ROUTER_TASK_PRIORITY                 1
+#define CONFIG_CSP_MAX_CONN                             10
+#define CONFIG_CSP_WAIT_CONN_TIMEOUT_MS                 (10*1000)
+#define CONFIG_CSP_READ_PKT_TIMEOUT_MS                  1000
+#define CONFIG_CSP_PORT                                 10
 
 #endif /* CONFIG_H_ */
 
