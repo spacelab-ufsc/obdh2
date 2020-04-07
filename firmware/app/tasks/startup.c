@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.14
+ * \version 0.3.8
  * 
  * \date 04/12/2019
  * 
@@ -35,6 +35,7 @@
 
 #include <stdbool.h>
 
+#include <config/config.h>
 #include <devices/watchdog/watchdog.h>
 #include <devices/logger/logger.h>
 #include <devices/leds/leds.h>
@@ -42,6 +43,10 @@
 #include <devices/radio/radio.h>
 #include <devices/payload_edc/payload_edc.h>
 #include <system/clocks.h>
+
+#include <csp/csp.h>
+#include <csp/interfaces/csp_if_spi.h>
+#include <csp/interfaces/csp_if_i2c.h>
 
 #include "startup.h"
 
@@ -90,6 +95,12 @@ void vTaskStartup(void *pvParameters)
         error = true;
     }
 
+    /* CSP initialization */
+    if (startup_init_csp() != CSP_ERR_NONE)
+    {
+        error = true;
+    }
+
     /* Payload EDC device initialization */
     if (payload_edc_init() != 0)
     {
@@ -115,6 +126,46 @@ void vTaskStartup(void *pvParameters)
     }
 
     vTaskSuspend(xTaskStartupHandle);
+}
+
+int startup_init_csp()
+{
+#if CONFIG_CSP_ENABLED == 1
+    /* CSP initialization */
+    if (csp_init(CONFIG_CSP_MY_ADDRESS) != CSP_ERR_NONE)
+    {
+        return -1;  /* Error during CSP initialization */
+    }
+
+    /* Buffer initialization */
+    if (csp_buffer_init(CONFIG_CSP_BUFFER_MAX_PKTS, CONFIG_CSP_BUFFER_MAX_SIZE) != CSP_ERR_NONE)
+    {
+        return -1;  /* Error during the CSP buffer initialization */
+    }
+
+    if (csp_route_set(CONFIG_CSP_TTC_ADDRESS, &csp_if_spi, CSP_NODE_MAC) != CSP_ERR_NONE)
+    {
+        return -1;
+    }
+
+    if (csp_route_set(CONFIG_CSP_EPS_ADDRESS, &csp_if_i2c, CSP_NODE_MAC) != CSP_ERR_NONE)
+    {
+        return -1;
+    }
+
+    /* CSP router task initialization */
+	if (csp_route_start_task(CONFIG_CSP_ROUTER_WORD_STACK, CONFIG_CSP_ROUTER_TASK_PRIORITY) != CSP_ERR_NONE)
+    {
+        return -1;  /* Error during CSP router task initialization! */
+    }
+
+    return CSP_ERR_NONE;
+#else
+    logger_print_event_from_module(LOGGER_WARNING, TASK_STARTUP_NAME, "libcsp disabled!");
+    logger_new_line();
+
+    return CSP_ERR_NONE;
+#endif /* CONFIG_CSP_ENABLED */
 }
 
 /** \} End of startup group */

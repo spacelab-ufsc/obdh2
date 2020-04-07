@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.7
+ * \version 0.3.8
  * 
  * \date 26/10/2019
  * 
@@ -53,6 +53,7 @@
 #define CONFIG_PKT_ID_BEACON                            0x10
 
 /* CSP */
+#define CONFIG_CSP_ENABLED                              0
 #define CONFIG_CSP_MY_ADDRESS                           0
 #define CONFIG_CSP_TTC_ADDRESS                          1
 #define CONFIG_CSP_EPS_ADDRESS                          2
