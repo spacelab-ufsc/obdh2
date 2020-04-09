@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.3.9
  * 
  * \date 17/01/2020
  * 
@@ -40,6 +40,8 @@
 #include <stdint.h>
 
 #include <hal/wdt_a.h>
+
+#define WDT_MODULE_NAME             "WDT"
 
 /* Clock sources */
 #define WDT_CLK_SRC_SMCLK           WDT_A_CLOCKSOURCE_SMCLK         /* SMCLK as clock source */

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.3.9
  * 
  * \date 17/01/2020
  * 
@@ -34,6 +34,9 @@
  */
 
 #include <hal/wdt_a.h>
+
+#include <config/config.h>
+#include <system/sys_log/sys_log.h>
 
 #include "wdt.h"
 
@@ -47,6 +50,10 @@ int wdt_init(wdt_config_t config)
         case WDT_CLK_SRC_VLOCLK:      break;
         case WDT_CLK_SRC_XCLK:        break;
         default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, WDT_MODULE_NAME, "Error during initialization: Invalid clock source!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
             return -1;      // Invalid clock source
     }
 
@@ -62,6 +69,10 @@ int wdt_init(wdt_config_t config)
         case WDT_CLK_DIV_512:        break;
         case WDT_CLK_DIV_64:         break;
         default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, WDT_MODULE_NAME, "Error during initialization: Invalid clock divider!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
             return -1;      // Invalid clock divider value
     }
 
