@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.14
+ * \version 0.3.9
  * 
  * \date 07/12/2019
  * 
@@ -37,6 +37,9 @@
 #include <hal/usci_b_spi.h>
 #include <hal/gpio.h>
 #include <hal/ucs.h>
+
+#include <config/config.h>
+#include <system/sys_log/sys_log.h>
 
 #include <drivers/gpio/gpio.h>
 
@@ -79,6 +82,10 @@ int spi_setup_gpio(spi_port_t port)
             GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P9, GPIO_PIN1 + GPIO_PIN5 + GPIO_PIN6);
             break;
         default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error during GPIO configuration: Invalid port!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
             return -1;  /* Invalid SPI port */
     }
 
@@ -98,6 +105,10 @@ int spi_select_slave(spi_port_t port, spi_cs_t cs, bool active)
                 case SPI_CS_3:      gpio_set_state(GPIO_PIN_45, !active);     break;
                 case SPI_CS_4:      gpio_set_state(GPIO_PIN_46, !active);     break;
                 default:
+                #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error selecting a slave from port 0: Invalid CS pin!");
+                    sys_log_new_line();
+                #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
                     return -1;  /* Invalid CS pin */
             }
 
@@ -118,6 +129,10 @@ int spi_select_slave(spi_port_t port, spi_cs_t cs, bool active)
             /* TODO: Define the CS pins pf port 5 */
             break;
         default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error selecting a slave: Invalid port!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
             return -1;  // Invalid SPI port
     }
 
@@ -137,6 +152,10 @@ int spi_init(spi_port_t port, spi_config_t config)
         case SPI_PORT_4:    base_address = USCI_B1_BASE;    break;
         case SPI_PORT_5:    base_address = USCI_B2_BASE;    break;
         default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error during initialization: Invalid port!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
             return -1;  /* Invalid SPI port */
     }
 
@@ -174,11 +193,19 @@ int spi_init(spi_port_t port, spi_config_t config)
                 spi_params.clockPolarity    = USCI_A_SPI_CLOCKPOLARITY_INACTIVITY_HIGH;
                 break;
             default:
+            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error during initialization: Invalid mode!");
+                sys_log_new_line();
+            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
                 return -1;  /* Invalid SPI mode */
         }
 
         if (USCI_A_SPI_initMaster(base_address, &spi_params) != STATUS_SUCCESS)
         {
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error configuring as master!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
             return -1;      /* Error initializing the SPI port */
         }
 
@@ -213,11 +240,19 @@ int spi_init(spi_port_t port, spi_config_t config)
                 spi_params.clockPolarity    = USCI_B_SPI_CLOCKPOLARITY_INACTIVITY_HIGH;
                 break;
             default:
+            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error during initialization: Invalid mode!");
+                sys_log_new_line();
+            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
                 return -1;  /* Invalid SPI mode */
         }
 
         if (USCI_B_SPI_initMaster(base_address, &spi_params) != STATUS_SUCCESS)
         {
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error configuring as master!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
             return -1;      /* Error initializing the SPI port */
         }
 
@@ -291,6 +326,10 @@ int spi_write(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len)
         case SPI_PORT_4:    base_address = USCI_B1_BASE;    break;
         case SPI_PORT_5:    base_address = USCI_B2_BASE;    break;
         default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error during writing: Invalid port!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
             return -1;  /* Invalid SPI port */
     }
 
@@ -325,6 +364,10 @@ int spi_read(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len)
         case SPI_PORT_4:    base_address = USCI_B1_BASE;    break;
         case SPI_PORT_5:    base_address = USCI_B2_BASE;    break;
         default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error during reading: Invalid port!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
             return -1;  /* Invalid SPI port */
     }
 
