@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.3.9
  * 
  * \date 13/01/2020
  * 
@@ -39,6 +39,8 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+
+#define GPIO_MODULE_NAME    "GPIO"
 
 #define GPIO_STATE_HIGH     (true)
 #define GPIO_STATE_LOW      (false)
