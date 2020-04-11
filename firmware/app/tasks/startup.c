@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.8
+ * \version 0.3.11
  * 
  * \date 04/12/2019
  * 
@@ -43,6 +43,8 @@
 #include <devices/radio/radio.h>
 #include <devices/payload_edc/payload_edc.h>
 #include <system/clocks.h>
+
+#include <ngham/ngham.h>
 
 #include <csp/csp.h>
 #include <csp/interfaces/csp_if_spi.h>
@@ -95,6 +97,10 @@ void vTaskStartup(void *pvParameters)
         error = true;
     }
 
+    /* NGHam initialization */
+    ngham_init_arrays();
+    ngham_init();
+
     /* CSP initialization */
     if (startup_init_csp() != CSP_ERR_NONE)
     {
@@ -106,9 +112,6 @@ void vTaskStartup(void *pvParameters)
     {
         error = true;
     }
-
-    /* Startup task status = Done */
-    xEventGroupSetBits(task_startup_status, TASK_STARTUP_DONE);
 
     if (error)
     {
@@ -124,6 +127,9 @@ void vTaskStartup(void *pvParameters)
 
         led_clear(LED_FAULT);
     }
+
+    /* Startup task status = Done */
+    xEventGroupSetBits(task_startup_status, TASK_STARTUP_DONE);
 
     vTaskSuspend(xTaskStartupHandle);
 }
