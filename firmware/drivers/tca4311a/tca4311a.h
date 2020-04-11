@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.11
+ * \version 0.3.9
  * 
  * \date 01/02/2020
  * 
@@ -42,6 +42,8 @@
 
 #include <drivers/i2c/i2c.h>
 #include <drivers/gpio/gpio.h>
+
+#define TCA4311A_MODULE_NAME            "TCA4311A"
 
 /**
  * \brief TCA4311A configuration parameters.
