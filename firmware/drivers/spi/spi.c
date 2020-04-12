@@ -133,7 +133,7 @@ int spi_select_slave(spi_port_t port, spi_cs_t cs, bool active)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error selecting a slave: Invalid port!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-            return -1;  // Invalid SPI port
+            return -1;  /* Invalid SPI port */
     }
 
     return 0;
@@ -336,7 +336,7 @@ int spi_write(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len)
     /* Enable the CS pin */
     if (spi_select_slave(port, cs, true) != 0)
     {
-        return -1;  // Invalid CS pin
+        return -1;  /* Invalid CS pin */
     }
 
     /* Write data */
@@ -374,7 +374,7 @@ int spi_read(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len)
     /* Enable the CS pin */
     if (spi_select_slave(port, cs, true) != 0)
     {
-        return -1;  // Invalid CS pin
+        return -1;  /* Invalid CS pin */
     }
 
     /* Read data */
@@ -408,7 +408,7 @@ int spi_transfer(spi_port_t port, spi_cs_t cs, uint8_t *wd, uint8_t *rd, uint16_
     /* Enable the CS pin */
     if (spi_select_slave(port, cs, true) != 0)
     {
-        return -1;  // Invalid CS pin
+        return -1;  /* Invalid CS pin */
     }
 
     /* Transfer data (write and read) */

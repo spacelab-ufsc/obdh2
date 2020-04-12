@@ -130,7 +130,7 @@ void isis_antenna_start_independent_deploy(uint8_t ant, uint8_t sec, uint8_t ovr
 
 uint16_t isis_antenna_read_deployment_status_code()
 {
-    uint16_t status_code = ISIS_ANTENNA_STATUS_MASK;    // Initial state
+    uint16_t status_code = ISIS_ANTENNA_STATUS_MASK;    /* Initial state */
 
     isis_antenna_i2c_write_byte(ISIS_ANTENNA_CMD_REPORT_DEPLOY_STATUS);
 
@@ -245,11 +245,11 @@ uint16_t isis_antenna_get_temperature()
 
     uint16_t raw_data = (uint16_t)(temp_bytes[1] << 8) | temp_bytes[0];
 
-//    uint16_t vout = ISIS_ANTENNA_REF_VOLTAGE/1023.0 * raw_data;
+/*    uint16_t vout = ISIS_ANTENNA_REF_VOLTAGE/1023.0 * raw_data; */
 
-//    int temp = (vout * (ISIS_ANTENNA_MAX_TEMP - ISIS_ANTENNA_MIN_TEMP))/(ISIS_ANTENNA_TEMP_MAX_VOUT - ISIS_ANTENNA_TEMP_MIN_VOUT);
+/*    int temp = (vout * (ISIS_ANTENNA_MAX_TEMP - ISIS_ANTENNA_MIN_TEMP))/(ISIS_ANTENNA_TEMP_MAX_VOUT - ISIS_ANTENNA_TEMP_MIN_VOUT); */
 
     return raw_data;
 }
 
-//! \} End of isis_antenna group
+/** \} End of isis_antenna group */

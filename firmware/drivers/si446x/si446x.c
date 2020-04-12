@@ -50,19 +50,19 @@ int8_t si446x_init(void)
 {
     if (si446x_spi_init() != 0)
     {
-        return -1;     // Error initializing the SPI port
+        return -1;     /* Error initializing the SPI port */
     }
 
-    // Power-on reset
+    /* Power-on reset */
     si446x_power_on_reset();
 
-    // Registers configuration
+    /* Registers configuration */
     si446x_reg_config();
 
-    // Set max. TX power
+    /* Set max. TX power */
     si446x_set_tx_power(127);
 
-    // Check if the device is working
+    /* Check if the device is working */
     if (si446x_check_device())
     {
         return 0;
@@ -100,25 +100,25 @@ int8_t si446x_gpio_init(void)
     sys_log_new_line();
 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
-    // Pin GPIO0
+    /* Pin GPIO0 */
     if (gpio_init(GPIO_PIN_1, (gpio_config_t){.mode=GPIO_MODE_OUTPUT}) != 0)
     {
         return -1;
     }
 
-    // Pin GPIO1
+    /* Pin GPIO1 */
     if (gpio_init(GPIO_PIN_2, (gpio_config_t){.mode=GPIO_MODE_INPUT}) != 0)
     {
         return -1;
     }
 
-    // Pin GPIO2
+    /* Pin GPIO2 */
     if (gpio_init(GPIO_PIN_3, (gpio_config_t){.mode=GPIO_MODE_INPUT}) != 0)
     {
         return -1;
     }
 
-    // Pin RESET
+    /* Pin RESET */
     if (gpio_init(GPIO_PIN_4, (gpio_config_t){.mode=GPIO_MODE_OUTPUT}) != 0)
     {
         return -1;
@@ -138,19 +138,19 @@ void si446x_reg_config(void)
     sys_log_new_line();
 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
-    // Set RF parameter like frequency, data rate, etc.
+    /* Set RF parameter like frequency, data rate, etc. */
     si446x_set_config(SI446X_CONFIGURATION_DATA, sizeof(SI446X_CONFIGURATION_DATA));
 
     uint8_t buf[2];
 
-    // Frequency adjust (Tested manually)
+    /* Frequency adjust (Tested manually) */
     buf[0] = SI446X_XO_TUNE_REG_VALUE;
     si446x_set_properties(SI446X_PROPERTY_GLOBAL_XO_TUNE, buf, 1);
 
-    // TX/RX shares 128 bytes FIFO
+    /* TX/RX shares 128 bytes FIFO */
     buf[0] = 0x10;
     si446x_set_properties(SI446X_PROPERTY_GLOBAL_CONFIG, buf, 1);
-    si446x_fifo_reset();    // The TX/RX FIFO sharing configuration will only take effect after FIFO reset.
+    si446x_fifo_reset();    /* The TX/RX FIFO sharing configuration will only take effect after FIFO reset */
 }
 
 void si446x_power_on_reset(void)
@@ -168,9 +168,9 @@ void si446x_power_on_reset(void)
 
     si446x_power_up();
 
-    si446x_delay_ms(20);    // Wait for stabilization
+    si446x_delay_ms(20);    /* Wait for stabilization */
 
-    // Send power-up command
+    /* Send power-up command */
     si446x_slave_enable();
     si446x_spi_write(buffer, 7);
     si446x_slave_disable();
@@ -185,10 +185,10 @@ bool si446x_tx_packet(uint8_t *data, uint8_t len)
     sys_log_new_line();
 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
-    // Setting packet size
+    /* Setting packet size */
     si446x_set_properties(SI446X_PROPERTY_PKT_FIELD_1_LENGTH_7_0, &len, 1);
 
-    si446x_fifo_reset();        // Clear FIFO
+    si446x_fifo_reset();    /* Clear FIFO */
     si446x_write_tx_fifo(data, len);
     si446x_clear_interrupts();
 
@@ -204,7 +204,7 @@ bool si446x_tx_packet(uint8_t *data, uint8_t len)
 
     while(tx_timer--)
     {
-        if (si446x_wait_packet_sent())         // Wait packet sent interruption
+        if (si446x_wait_packet_sent())         /* Wait packet sent interruption */
         {
             return true;
         }
@@ -212,8 +212,8 @@ bool si446x_tx_packet(uint8_t *data, uint8_t len)
         si446x_delay_ms(1);
     }
 
-    // If the packet transmission takes longer than expected, resets the radio.
-//    si446x_init();
+    /* If the packet transmission takes longer than expected, resets the radio. */
+/*    si446x_init(); */
 
     return false;
 }
@@ -230,7 +230,7 @@ bool si446x_tx_long_packet(uint8_t *packet, uint16_t len)
     sys_log_new_line();
 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
-    // Setting packet size
+    /* Setting packet size */
     uint8_t buf[2];
     buf[0] = (uint8_t)(len);
     buf[1] = (uint8_t)(len >> 8);
@@ -240,7 +240,7 @@ bool si446x_tx_long_packet(uint8_t *packet, uint16_t len)
     }
     si446x_set_properties(SI446X_PROPERTY_PKT_FIELD_1_LENGTH_7_0, &buf[0], 1);
 
-    si446x_fifo_reset();        // Clear FIFO
+    si446x_fifo_reset();        /* Clear FIFO */
     si446x_write_tx_fifo(packet, SI446X_TX_FIFO_LEN);
     uint16_t long_pkt_pos = SI446X_TX_FIFO_LEN;
 
@@ -276,7 +276,7 @@ bool si446x_tx_long_packet(uint8_t *packet, uint16_t len)
 
                 while(tx_timer--)
                 {
-                    if (si446x_wait_packet_sent())         // Wait packet sent interruption
+                    if (si446x_wait_packet_sent())         /* Wait packet sent interruption */
                     {
                         return true;
                     }
@@ -296,19 +296,19 @@ bool si446x_tx_long_packet(uint8_t *packet, uint16_t len)
                 tx_timer = SI446X_TX_TIMEOUT;
             }
         }
-        __delay_cycles(160); //10us
+        __delay_cycles(160);    /* 10 us */
     }
 
-    // If the packet transmission takes longer than expected, resets the radio.
-//    si446x_init();
+    /* If the packet transmission takes longer than expected, resets the radio */
+/*    si446x_init(); */
 
     return false;
 }
 
 uint8_t si446x_rx_packet(uint8_t *rx_buf, uint8_t read_len)
 {
-    uint8_t rx_len = si446x_read_rx_fifo(rx_buf, read_len);     // Read data from the FIFO
-    si446x_fifo_reset();                                        // Clear FIFO
+    uint8_t rx_len = si446x_read_rx_fifo(rx_buf, read_len);     /* Read data from the FIFO */
+    si446x_fifo_reset();                                        /* Clear FIFO */
 
     return rx_len;
 }
@@ -317,8 +317,8 @@ bool si446x_rx_init(void)
 {
     uint8_t length = 50;
 
-    si446x_set_properties(SI446X_PROPERTY_PKT_FIELD_2_LENGTH_7_0, &length, 1);  // Reload RX FIFO size
-    si446x_fifo_reset();                                                        // Clear FIFO
+    si446x_set_properties(SI446X_PROPERTY_PKT_FIELD_2_LENGTH_7_0, &length, 1);  /* Reload RX FIFO size */
+    si446x_fifo_reset();                                                        /* Clear FIFO */
     si446x_set_rx_interrupt();
     si446x_clear_interrupts();
     si446x_enter_rx_mode();
@@ -371,7 +371,7 @@ bool si446x_check_cts(void)
         
         si446x_spi_transfer(SI446X_CMD_READ_BUF);
         
-        if (si446x_spi_transfer(SI446X_CMD_NOP) == SI446X_CTS_REPLY) // Read CTS
+        if (si446x_spi_transfer(SI446X_CMD_NOP) == SI446X_CTS_REPLY) /* Read CTS */
         {
             si446x_slave_disable();
             
@@ -392,7 +392,7 @@ bool si446x_get_cmd(uint8_t cmd, uint8_t *para_buf, uint8_t length)
     }
     
     si446x_slave_enable();
-    si446x_spi_transfer(cmd);                   // Send the command
+    si446x_spi_transfer(cmd);                   /* Send the command */
     si446x_slave_disable();
     
     if (!si446x_check_cts())
@@ -401,8 +401,8 @@ bool si446x_get_cmd(uint8_t cmd, uint8_t *para_buf, uint8_t length)
     }
     
     si446x_slave_enable();
-    si446x_spi_transfer(SI446X_CMD_READ_BUF);   // Send READ_BUF command to grab the command parameters
-    si446x_spi_read(para_buf, length);          // Read the parameters
+    si446x_spi_transfer(SI446X_CMD_READ_BUF);   /* Send READ_BUF command to grab the command parameters */
+    si446x_spi_read(para_buf, length);          /* Read the parameters */
     si446x_slave_disable();
     
     return true;
@@ -410,7 +410,7 @@ bool si446x_get_cmd(uint8_t cmd, uint8_t *para_buf, uint8_t length)
 
 bool si446x_set_tx_power(uint8_t pwr)
 {
-    if (pwr > 127)      // Max. value is 127
+    if (pwr > 127)      /* Max. value is 127 */
     {
         pwr = 127;
     }
@@ -439,14 +439,14 @@ bool si446x_set_properties(uint16_t start_property, uint8_t *para_buf, uint8_t l
     }
     
     uint8_t buffer[5];
-    buffer[0] = SI446X_CMD_SET_PROPERTY;    // CMD
-    buffer[1] = start_property >> 8;        // GROUP
-    buffer[2] = length;                     // NUM_PROPS
-    buffer[3] = start_property & 0xFF;      // START_PROP
+    buffer[0] = SI446X_CMD_SET_PROPERTY;    /* CMD */
+    buffer[1] = start_property >> 8;        /* GROUP */
+    buffer[2] = length;                     /* NUM_PROPS */
+    buffer[3] = start_property & 0xFF;      /* START_PROP */
     
     si446x_slave_enable();
-    si446x_spi_write(buffer, 4);            // Set start property and read length
-    si446x_spi_write(para_buf, length);     // Set parameters
+    si446x_spi_write(buffer, 4);            /* Set start property and read length */
+    si446x_spi_write(para_buf, length);     /* Set parameters */
     si446x_slave_disable();
     
     return true;
@@ -461,12 +461,12 @@ bool si446x_get_properties(uint16_t start_property, uint8_t length, uint8_t *par
     
     uint8_t buffer[5];
     buffer[0] = SI446X_CMD_GET_PROPERTY;
-    buffer[1] = start_property >> 8;    // GROUP
-    buffer[2] = length;                 // NUM_PROPS
-    buffer[3] = start_property & 0xFF;  // START_PROP
+    buffer[1] = start_property >> 8;        /* GROUP */
+    buffer[2] = length;                     /* NUM_PROPS */
+    buffer[3] = start_property & 0xFF;      /* START_PROP */
     
     si446x_slave_enable();
-    si446x_spi_write(buffer, 4);        // Set start property and read length
+    si446x_spi_write(buffer, 4);            /* Set start property and read length */
     si446x_slave_disable();
     
     if (!si446x_check_cts())
@@ -475,8 +475,8 @@ bool si446x_get_properties(uint16_t start_property, uint8_t length, uint8_t *par
     }
     
     si446x_slave_enable();
-    si446x_spi_transfer(SI446X_CMD_READ_BUF);   // Turn to read command mode
-    si446x_spi_write(para_buf, length);         // Read parameters
+    si446x_spi_transfer(SI446X_CMD_READ_BUF);   /* Turn to read command mode */
+    si446x_spi_write(para_buf, length);         /* Read parameters */
     si446x_slave_disable();
     
     return true;
@@ -484,7 +484,7 @@ bool si446x_get_properties(uint16_t start_property, uint8_t length, uint8_t *par
 
 void si446x_set_config(const uint8_t *parameters, uint16_t para_len)
 {
-    // Command buffer starts with the length of the command in RADIO_CONFIGURATION_DATA_ARRAY
+    /* Command buffer starts with the length of the command in RADIO_CONFIGURATION_DATA_ARRAY */
     uint8_t cmd_len;
     uint16_t cmd;
     uint16_t pos;
@@ -496,9 +496,9 @@ void si446x_set_config(const uint8_t *parameters, uint16_t para_len)
     
     while(pos < para_len)
     {
-        cmd_len = parameters[pos++] - 1;            // Get command len
-        cmd = parameters[pos++];                    // Get command
-        memcpy(buffer, parameters + pos, cmd_len);  // Get parameters
+        cmd_len = parameters[pos++] - 1;            /* Get command len */
+        cmd = parameters[pos++];                    /* Get command */
+        memcpy(buffer, parameters + pos, cmd_len);  /* Get parameters */
         
         si446x_set_cmd(cmd, buffer, cmd_len);
         pos += cmd_len;
@@ -565,8 +565,8 @@ bool si446x_set_cmd(uint8_t cmd, uint8_t *para_buf, uint8_t len)
     }
     
     si446x_slave_enable();
-    si446x_spi_transfer(cmd);           // Send the command
-    si446x_spi_write(para_buf, len);    // Send the parameters
+    si446x_spi_transfer(cmd);           /* Send the command */
+    si446x_spi_write(para_buf, len);    /* Send the parameters */
     si446x_slave_disable();
     
     return true;
@@ -574,7 +574,7 @@ bool si446x_set_cmd(uint8_t cmd, uint8_t *para_buf, uint8_t len)
 
 bool si446x_set_tx_interrupt(void)
 {
-    uint8_t buffer[4];      // Enable PACKET_SENT interruption
+    uint8_t buffer[4];      /* Enable PACKET_SENT interruption */
     
     buffer[0] = 0x01;
     buffer[1] = 0x20;
@@ -585,7 +585,7 @@ bool si446x_set_tx_interrupt(void)
 
 bool si446x_set_rx_interrupt(void)
 {
-    uint8_t buffer[4];      // Enable PACKET_RX interrution
+    uint8_t buffer[4];      /* Enable PACKET_RX interrution */
     
     buffer[0] = 0x03;
     buffer[1] = 0x18;
@@ -651,9 +651,9 @@ void si446x_enter_tx_mode(void)
     uint8_t buffer[5];
     
     buffer[0] = SI446X_FREQ_CHANNEL;
-    buffer[1] = 0x30;                   // TXCOMPLETE_STATE = Ready State; RETRANSMIT = 0 = No re-transmition; START = 0 = Start TX immediately
-    buffer[2] = 0x00;                   // TX packet length MSB (If equal zero, default length)
-    buffer[3] = 0x00;                   // TX packet length LSB (If equal zero, default length)
+    buffer[1] = 0x30;                   /* TXCOMPLETE_STATE = Ready State; RETRANSMIT = 0 = No re-transmition; START = 0 = Start TX immediately */
+    buffer[2] = 0x00;                   /* TX packet length MSB (If equal zero, default length) */
+    buffer[3] = 0x00;                   /* TX packet length LSB (If equal zero, default length) */
     
     si446x_set_cmd(SI446X_CMD_START_TX, buffer, 4);
 
@@ -746,4 +746,4 @@ bool si446x_wait_gpio1(void)
     }
 }
 
-//! \} End of si446x group
+/** \} End of si446x group */
