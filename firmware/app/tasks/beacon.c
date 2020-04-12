@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.4
+ * \version 0.3.10
  * 
  * \date 27/10/2019
  * 
@@ -38,11 +38,15 @@
 #include <config/config.h>
 
 #include "beacon.h"
+#include "startup.h"
 
 xTaskHandle xTaskBeaconHandle;
 
 void vTaskBeacon(void *pvParameters)
 {
+    /* Wait startup task to finish */
+    xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_BEACON_INIT_TIMEOUT_MS));
+
     /* Delay before the first cycle */
     vTaskDelay(pdMS_TO_TICKS(TASK_BEACON_INITIAL_DELAY_MS));
 

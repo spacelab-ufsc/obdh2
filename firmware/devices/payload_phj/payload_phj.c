@@ -9,7 +9,7 @@
  *
  */
 
-#include <devices/logger/logger.h>
+#include <system/sys_log/sys_log.h>
 #include <drivers/phj/phj.h>
 
 #include "payload_phj.h"
@@ -24,8 +24,8 @@ int payload_phj_init()
 
     if (phj_init_i2c(config_i2c) != 0)
     {
-        logger_print_event_from_module(LOGGER_ERROR, PAYLOAD_PHJ_MODULE_NAME, "Error initializing the i2c configuration!");
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_PHJ_MODULE_NAME, "Error initializing the i2c configuration!");
+        sys_log_new_line();
 
         return -1;
     }
@@ -36,8 +36,8 @@ int payload_phj_init()
 
     if (phj_init_gpio(config_gpio) != 0)
     {
-        logger_print_event_from_module(LOGGER_ERROR, PAYLOAD_PHJ_MODULE_NAME, "Error initializing the gpio configuration!");
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_PHJ_MODULE_NAME, "Error initializing the gpio configuration!");
+        sys_log_new_line();
 
         return -1;
     }

@@ -507,6 +507,6 @@
  */
 #define ISIS_ANTENNA_CMD_REPORT_DEPLOY_TIMER_4          0xB7
 
-#endif // ISIS_ANTENNA_CMDS_H_
+#endif /* ISIS_ANTENNA_CMDS_H_ */
 
-//! \} End of isis_antenna_cmds group
+/** \} End of isis_antenna_cmds group */

@@ -63,4 +63,4 @@ void isis_antenna_delay_us(uint32_t us)
     }
 }
 
-//! \} End of isis_antenna_delay group
+/** \} End of isis_antenna_delay group */

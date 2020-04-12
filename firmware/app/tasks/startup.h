@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.3.8
  * 
  * \date 04/12/2019
  * 
@@ -68,6 +68,13 @@ extern EventGroupHandle_t task_startup_status;
  * \return None.
  */
 void vTaskStartup(void *pvParameters);
+
+/**
+ * \brief CSP initialization.
+ *
+ * \return The status/error code.
+ */
+int startup_init_csp();
 
 #endif /* STARTUP_H_ */
 

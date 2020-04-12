@@ -52,13 +52,13 @@
 #elif ISIS_ANTENNA_I2C_USCI == USCI_B
     #define ISIS_ANTENNA_I2C_CLOCK_SOURCE       USCI_B_I2C_CLOCKSOURCE_SMCLK
     #define ISIS_ANTENNA_I2C_DATA_RATE          USCI_B_I2C_SET_DATA_RATE_100KBPS
-#endif // ISIS_ANTENNA_I2C_USCI
+#endif /* ISIS_ANTENNA_I2C_USCI */
 
 #define ISIS_ANTENNA_I2C_CLOCK                  UCS_getSMCLK()
 
 #define ISIS_ANTENNA_I2C_TIMEOUT                10000
 #define ISIS_ANTENNA_I2C_TIMEOUT_MS             100
 
-#endif // ISIS_ANTENNA_CONFIG_H_
+#endif /* ISIS_ANTENNA_CONFIG_H_ */
 
-//! \} End of isis_antenna_config group
+/** \} End of isis_antenna_config group */

@@ -51,6 +51,6 @@
 #define ISIS_ANTENNA_GPIO_DEBUG_PORT            ANTENNA_GPIO_DEBUG_PORT
 #define ISIS_ANTENNA_GPIO_DEBUG_PIN             ANTENNA_GPIO_DEBUG_PIN
 
-#endif // ISIS_ANTENNA_PINMAP_H_
+#endif /* ISIS_ANTENNA_PINMAP_H_ */
 
-//! \} End of isis_antenna_pinmap group
+/** \} End of isis_antenna_pinmap group */

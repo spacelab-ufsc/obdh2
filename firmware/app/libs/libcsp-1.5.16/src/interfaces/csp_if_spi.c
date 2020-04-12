@@ -1,5 +1,5 @@
 /*
- * logger_uart.c
+ * csp_if_spi.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -12,7 +12,7 @@
  * 
  * OBDH 2.0 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
@@ -21,38 +21,41 @@
  */
 
 /**
- * \brief Logger device UART implementation.
+ * \brief libcsp SPI interface implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.3.7
  * 
- * \date 03/11/2019
+ * \date 05/04/2020
  * 
- * \defgroup logger_uart UART
- * \ingroup logger
+ * \addtogroup csp_if_spi
  * \{
  */
 
-#include <drivers/uart/uart.h>
+#include <csp/csp.h>
+#include <csp/csp_interface.h>
+#include <csp/csp_error.h>
+#include <csp/interfaces/csp_if_spi.h>
 
-#include "logger.h"
+/* Interface definition */
+csp_iface_t csp_if_spi = {
+    .name = "SPI",
+    .nexthop = csp_spi_write,
+};
 
-bool logger_uart_init()
+int csp_spi_init()
 {
-    uart_config_t config;
-
-    config.baudrate     = 115200;
-    config.data_bits    = 8;
-    config.parity       = UART_NO_PARITY;
-    config.stop_bits    = UART_ONE_STOP_BIT;
-
-    return uart_init(UART_PORT_2, config) == 0 ? true : false;
+    return -1;
 }
 
-void logger_uart_write_byte(uint8_t byte)
+int csp_spi_write(csp_iface_t *interface, csp_packet_t *packet, uint32_t timeout)
 {
-    uart_write(UART_PORT_2, &byte, 1);
+    return -1;
 }
 
-/** \} End of logger_uart group */
+void csp_spi_read()
+{
+}
+
+/** \} End of csp_if_spi group */

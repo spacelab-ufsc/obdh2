@@ -32,18 +32,18 @@
   rs->pad = pad;
 
   rs->alpha_to = (data_t *)malloc(sizeof(data_t)*(rs->nn+1));
-  if(rs->alpha_to == NULL){
-    free(rs);
-    rs = NULL;
-    goto done;
-  }
+//  if(rs->alpha_to == NULL){
+//    free(rs);
+//    rs = NULL;
+//    goto done;
+//  }
   rs->index_of = (data_t *)malloc(sizeof(data_t)*(rs->nn+1));
-  if(rs->index_of == NULL){
-    free(rs->alpha_to);
-    free(rs);
-    rs = NULL;
-    goto done;
-  }
+//  if(rs->index_of == NULL){
+//    free(rs->alpha_to);
+//    free(rs);
+//    rs = NULL;
+//    goto done;
+//  }
 
   /* Generate Galois field lookup tables */
   rs->index_of[0] = A0; /* log(zero) = -inf */

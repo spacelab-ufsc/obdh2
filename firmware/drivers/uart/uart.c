@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.12
+ * \version 0.3.9
  * 
  * \date 07/12/2019
  * 
@@ -35,6 +35,9 @@
 
 #include <hal/usci_a_uart.h>
 #include <hal/gpio.h>
+
+#include <config/config.h>
+#include <system/sys_log/sys_log.h>
 
 #include "uart.h"
 
@@ -95,6 +98,10 @@ int uart_init(uart_port_t port, uart_config_t config)
             uart_params.secondModReg        = 5;    /* 460800 bps @ 31.981568 MHz */
             break;
         default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, UART_MODULE_NAME, "Error during the initialization: Invalid baudrate!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
             return -1;      /* Invalid baudrate value */
     }
 
@@ -128,11 +135,19 @@ int uart_init(uart_port_t port, uart_config_t config)
 
             break;
         default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, UART_MODULE_NAME, "Error during the initialization: Invalid port!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
             return -1;      /* Invalid port */
     }
 
     if (USCI_A_UART_init(base_address, &uart_params) != STATUS_SUCCESS)
     {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, UART_MODULE_NAME, "Error during the initialization!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         return -1;
     }
 
@@ -150,7 +165,12 @@ int uart_available(uart_port_t port)
         case UART_PORT_0:   base_address = USCI_A0_BASE;    break;
         case UART_PORT_1:   base_address = USCI_A1_BASE;    break;
         case UART_PORT_2:   base_address = USCI_A2_BASE;    break;
-        default:            return -1;  /* Invalid UART port */
+        default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, UART_MODULE_NAME, "Error during RX buffer verification: Invalid port!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            return -1;  /* Invalid UART port */
     }
 
     /* Check RX interrupt flag */
@@ -173,7 +193,12 @@ int uart_flush(uart_port_t port)
         case UART_PORT_0:   break;
         case UART_PORT_1:   break;
         case UART_PORT_2:   break;
-        default:            return -1;  /* Invalid UART port */
+        default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, UART_MODULE_NAME, "Error flushing the RX buffer: Invalid port!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            return -1;  /* Invalid UART port */
     }
 
     while(uart_available(port) == UART_AVAILABLE)
@@ -194,7 +219,12 @@ int uart_write(uart_port_t port, uint8_t *data, uint16_t len)
         case UART_PORT_0:   base_address = USCI_A0_BASE;    break;
         case UART_PORT_1:   base_address = USCI_A1_BASE;    break;
         case UART_PORT_2:   base_address = USCI_A2_BASE;    break;
-        default:            return -1;
+        default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, UART_MODULE_NAME, "Error during writing: Invalid port!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            return -1;
     }
 
     uint16_t i = 0;
@@ -215,7 +245,12 @@ int uart_read(uart_port_t port, uint8_t *data, uint16_t len)
         case UART_PORT_0:   base_address = USCI_A0_BASE;    break;
         case UART_PORT_1:   base_address = USCI_A1_BASE;    break;
         case UART_PORT_2:   base_address = USCI_A2_BASE;    break;
-        default:            return -1;
+        default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, UART_MODULE_NAME, "Error during reading: Invalid port!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            return -1;
     }
 
     uint16_t i = 0;

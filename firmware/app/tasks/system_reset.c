@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.2
+ * \version 0.3.12
  * 
  * \date 12/01/2020
  * 
@@ -33,8 +33,8 @@
  * \{
  */
 
-#include <devices/logger/logger.h>
 #include <system/system.h>
+#include <system/sys_log/sys_log.h>
 
 #include "system_reset.h"
 
@@ -46,8 +46,8 @@ void vTaskSystemReset(void *pvParameters)
     {
         vTaskDelay(pdMS_TO_TICKS(TASK_SYSTEM_RESET_PERIOD_MS));
 
-        logger_print_event_from_module(LOGGER_INFO, TASK_SYSTEM_RESET_NAME, "Restarting the system...");
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_SYSTEM_RESET_NAME, "Restarting the system...");
+        sys_log_new_line();
 
         system_reset();
     }

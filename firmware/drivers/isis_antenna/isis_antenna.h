@@ -40,11 +40,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-// I2C addresses
+/* I2C addresses */
 #define ISIS_ANTENNA_I2C_SLAVE_ADDRESS_UC_A     0x31
 #define ISIS_ANTENNA_I2C_SLAVE_ADDRESS_UC_B     0x32
 
-// Status mask
+/* Status mask */
 #define ISIS_ANTENNA_STATUS_MASK    0x8888                  /**< Status mask (all antenna not deployed and disarmed). */
 
 #define ISIS_ANTENNA_REF_VOLTAGE    3300                    /**< Reference voltage in millivolts. */
@@ -350,6 +350,6 @@ void isis_antenna_delay_ms(uint16_t ms);
  */
 void isis_antenna_delay_us(uint32_t us);
 
-#endif // ANTENNA_H_
+#endif /* ANTENNA_H_ */
 
-//! \} End of isis_antenna group
+/** \} End of isis_antenna group */

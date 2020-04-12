@@ -36,7 +36,6 @@
 #ifndef DEVICES_H_
 #define DEVICES_H_
 
-#include "logger/logger.h"
 #include "radio/radio.h"
 #include "leds/leds.h"
 #include "eps/eps.h"

@@ -1,5 +1,5 @@
 /*
- * debug_mutex.h
+ * sys_log_mutes.h
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,33 +21,33 @@
  */
 
 /**
- * \brief Logger device mutex implementation.
+ * \brief System log mutex implementation.
  *
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  *
- * \version 0.1.0
+ * \version 0.3.11
  *
  * \date 03/11/2019
  *
- * \defgroup logger_mutex Mutex
- * \ingroup logger
+ * \defgroup sys_log_mutex Mutex
+ * \ingroup sys_log
  * \{
  */
 
-#include "logger.h"
-#include "logger_config.h"
+#include "sys_log.h"
+#include "sys_log_config.h"
 
-SemaphoreHandle_t xLoggerSemaphore = NULL;
+SemaphoreHandle_t xSysLogSemaphore = NULL;
 
-bool logger_mutex_create()
+bool sys_log_mutex_create()
 {
     /* Create a mutex type semaphore */
-    xLoggerSemaphore = xSemaphoreCreateMutex();
+    xSysLogSemaphore = xSemaphoreCreateMutex();
 
-    if (xLoggerSemaphore == NULL)
+    if (xSysLogSemaphore == NULL)
     {
-        logger_print_event_from_module(LOGGER_ERROR, LOGGER_DEVICE_NAME, "Error creating a mutex!");
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_ERROR, SYS_LOG_DEVICE_NAME, "Error creating a mutex!");
+        sys_log_new_line();
 
         return false;
     }
@@ -55,13 +55,13 @@ bool logger_mutex_create()
     return true;
 }
 
-bool logger_mutex_take()
+bool sys_log_mutex_take()
 {
-    if (xLoggerSemaphore != NULL)
+    if (xSysLogSemaphore != NULL)
     {
         /* See if we can obtain the semaphore. If the semaphore is not */
-        /* available wait LOGGER_MUTEX_WAIT_TIME_MS ms to see if it becomes free */
-        if (xSemaphoreTake(xLoggerSemaphore, pdMS_TO_TICKS(LOGGER_MUTEX_WAIT_TIME_MS)) == pdTRUE)
+        /* available wait SYS_LOG_MUTEX_WAIT_TIME_MS ms to see if it becomes free */
+        if (xSemaphoreTake(xSysLogSemaphore, pdMS_TO_TICKS(SYS_LOG_MUTEX_WAIT_TIME_MS)) == pdTRUE)
         {
             return true;
         }
@@ -76,11 +76,11 @@ bool logger_mutex_take()
     }
 }
 
-bool logger_mutex_give()
+bool sys_log_mutex_give()
 {
-    if (xLoggerSemaphore != NULL)
+    if (xSysLogSemaphore != NULL)
     {
-        xSemaphoreGive(xLoggerSemaphore);
+        xSemaphoreGive(xSysLogSemaphore);
 
         return true;
     }
@@ -90,4 +90,4 @@ bool logger_mutex_give()
     }
 }
 
-/** \} End of logger_mutex group */
+/** \} End of sys_log_mutex group */

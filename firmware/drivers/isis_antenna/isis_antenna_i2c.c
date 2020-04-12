@@ -55,16 +55,16 @@ void isis_antenna_i2c_init()
     
     USCI_A_I2C_initMaster(ISIS_ANTENNA_I2C_BASE_ADDRESS, &i2c_params);
     
-    // Specify slave address
+    /* Specify slave address */
     USCI_A_I2C_setSlaveAddress(ISIS_ANTENNA_I2C_BASE_ADDRESS, ISIS_ANTENNA_I2C_SLAVE_ADDRESS);
     
-    // Set in transmit mode
+    /* Set in transmit mode */
     USCI_A_I2C_setMode(ISIS_ANTENNA_I2C_BASE_ADDRESS, USCI_A_I2C_TRANSMIT_MODE);
 
-    // Enable I2C Module to start operations
+    /* Enable I2C Module to start operations */
     USCI_A_I2C_enable(ISIS_ANTENNA_I2C_BASE_ADDRESS);
 
-    // Enable TX interrupt
+    /* Enable TX interrupt */
     USCI_A_I2C_clearInterrupt(ISIS_ANTENNA_I2C_BASE_ADDRESS, USCI_A_I2C_TRANSMIT_INTERRUPT);
     USCI_A_I2C_enableInterrupt(ISIS_ANTENNA_I2C_BASE_ADDRESS, USCI_A_I2C_TRANSMIT_INTERRUPT);
 #elif ISIS_ANTENNA_I2C_USCI == USCI_B
@@ -76,31 +76,31 @@ void isis_antenna_i2c_init()
     
     USCI_B_I2C_initMaster(ISIS_ANTENNA_I2C_BASE_ADDRESS, &i2c_params);
     
-    // Specify slave address
+    /* Specify slave address */
     USCI_B_I2C_setSlaveAddress(ISIS_ANTENNA_I2C_BASE_ADDRESS, ISIS_ANTENNA_I2C_SLAVE_ADDRESS);
     
-    // Set in transmit mode
+    /* Set in transmit mode */
     USCI_B_I2C_setMode(ISIS_ANTENNA_I2C_BASE_ADDRESS, USCI_B_I2C_TRANSMIT_MODE);
 
-    // Enable I2C Module to start operations
+    /* Enable I2C Module to start operations */
     USCI_B_I2C_enable(ISIS_ANTENNA_I2C_BASE_ADDRESS);
 
-    // Enable TX interrupt
+    /* Enable TX interrupt */
     USCI_B_I2C_clearInterrupt(ISIS_ANTENNA_I2C_BASE_ADDRESS, USCI_B_I2C_TRANSMIT_INTERRUPT);
     USCI_B_I2C_enableInterrupt(ISIS_ANTENNA_I2C_BASE_ADDRESS, USCI_B_I2C_TRANSMIT_INTERRUPT);
-#endif // ISIS_ANTENNA_I2C_USCI
+#endif /* ISIS_ANTENNA_I2C_USCI */
 }
 
 void isis_antenna_i2c_write_byte(uint8_t byte)
 {
 #if ISIS_ANTENNA_I2C_USCI == USCI_A
-    // Set in transmit mode
+    /* Set in transmit mode */
     USCI_A_I2C_setMode(ISIS_ANTENNA_I2C_BASE_ADDRESS, USCI_A_I2C_TRANSMIT_MODE);
 
-    // Send single byte data
+    /* Send single byte data */
     USCI_A_I2C_masterSendSingleByteWithTimeout(ISIS_ANTENNA_I2C_BASE_ADDRESS, byte, ISIS_ANTENNA_I2C_TIMEOUT);
 
-    // Wait until transmission completes
+    /* Wait until transmission completes */
     uint16_t timeout_ms = ISIS_ANTENNA_I2C_TIMEOUT_MS;
     while(timeout_ms--)
     {
@@ -114,13 +114,13 @@ void isis_antenna_i2c_write_byte(uint8_t byte)
 
     debug_print_event_from_module(DEBUG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Timeout reached during an I2C writing!\n\r");
 #elif ISIS_ANTENNA_I2C_USCI == USCI_B
-    // Set in transmit mode
+    /* Set in transmit mode */
     USCI_B_I2C_setMode(ISIS_ANTENNA_I2C_BASE_ADDRESS, USCI_B_I2C_TRANSMIT_MODE);
 
-    // Send single byte data
+    /* Send single byte data */
     USCI_B_I2C_masterSendSingleByteWithTimeout(ISIS_ANTENNA_I2C_BASE_ADDRESS, byte, ISIS_ANTENNA_I2C_TIMEOUT);
 
-    // Wait until transmission completes
+    /* Wait until transmission completes */
     uint16_t timeout_ms = ISIS_ANTENNA_I2C_TIMEOUT_MS;
     while(timeout_ms--)
     {
@@ -133,13 +133,13 @@ void isis_antenna_i2c_write_byte(uint8_t byte)
     }
 
     debug_print_event_from_module(DEBUG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Timeout reached during an I2C writing!\n\r");
-#endif // ISIS_ANTENNA_I2C_USCI
+#endif /* ISIS_ANTENNA_I2C_USCI */
 }
 
 void isis_antenna_i2c_write_data(uint8_t *data, uint8_t len)
 {
 #if ISIS_ANTENNA_I2C_USCI == USCI_A
-    // Set in transmit mode
+    /* Set in transmit mode */
     USCI_A_I2C_setMode(ISIS_ANTENNA_I2C_BASE_ADDRESS, USCI_A_I2C_TRANSMIT_MODE);
 
     USCI_A_I2C_masterSendMultiByteStartWithTimeout(ISIS_ANTENNA_I2C_BASE_ADDRESS, data[0], ISIS_ANTENNA_I2C_TIMEOUT);
@@ -152,7 +152,7 @@ void isis_antenna_i2c_write_data(uint8_t *data, uint8_t len)
 
     USCI_A_I2C_masterSendMultiByteStop(ISIS_ANTENNA_I2C_BASE_ADDRESS);
 #elif ISIS_ANTENNA_I2C_USCI == USCI_B
-    // Set in transmit mode
+    /* Set in transmit mode */
     USCI_B_I2C_setMode(ISIS_ANTENNA_I2C_BASE_ADDRESS, USCI_B_I2C_TRANSMIT_MODE);
 
     USCI_B_I2C_masterSendMultiByteStartWithTimeout(ISIS_ANTENNA_I2C_BASE_ADDRESS, data[0], ISIS_ANTENNA_I2C_TIMEOUT);
@@ -164,7 +164,7 @@ void isis_antenna_i2c_write_data(uint8_t *data, uint8_t len)
     }
 
     USCI_B_I2C_masterSendMultiByteStopWithTimeout(ISIS_ANTENNA_I2C_BASE_ADDRESS, ISIS_ANTENNA_I2C_TIMEOUT);
-#endif // ISIS_ANTENNA_I2C_USCI
+#endif /* ISIS_ANTENNA_I2C_USCI */
 }
 
 uint8_t isis_antenna_i2c_read_byte()
@@ -177,7 +177,7 @@ uint8_t isis_antenna_i2c_read_byte()
     USCI_B_I2C_setMode(ISIS_ANTENNA_I2C_BASE_ADDRESS, USCI_B_I2C_RECEIVE_MODE);
     
     return USCI_B_I2C_masterReceiveSingle(ISIS_ANTENNA_I2C_BASE_ADDRESS);
-#endif // ISIS_ANTENNA_I2C_USCI
+#endif /* ISIS_ANTENNA_I2C_USCI */
 }
 
 void isis_antenna_i2c_read_data(uint8_t *data, uint8_t len)
@@ -195,35 +195,35 @@ void isis_antenna_i2c_read_data(uint8_t *data, uint8_t len)
     
     data[len-1] = USCI_A_I2C_masterReceiveMultiByteFinish(ISIS_ANTENNA_I2C_BASE_ADDRESS);
 #elif ISIS_ANTENNA_I2C_USCI == USCI_B
-    // Set mode
+    /* Set mode */
     HWREG8(ISIS_ANTENNA_I2C_BASE_ADDRESS + OFS_UCBxCTL1) &= ~UCTR;
     HWREG8(ISIS_ANTENNA_I2C_BASE_ADDRESS + OFS_UCBxCTL1) |= USCI_B_I2C_RECEIVE_MODE;
 
     uint16_t timeout = 0;
     uint8_t start_stop_flag = 1;
 
-    if (!(start_stop_flag & 0x0002))  // 0x02 = No start
+    if (!(start_stop_flag & 0x0002))  /* 0x02 = No start */
     {
-        HWREG8(ISIS_ANTENNA_I2C_BASE_ADDRESS + OFS_UCBxCTL1) |= UCTXSTT;                                                    // starts the transmission
-        while((HWREG8(ISIS_ANTENNA_I2C_BASE_ADDRESS + OFS_UCBxCTL1) & UCTXSTT) && timeout++ < ISIS_ANTENNA_I2C_TIMEOUT);    // wait Slave Address ACK
+        HWREG8(ISIS_ANTENNA_I2C_BASE_ADDRESS + OFS_UCBxCTL1) |= UCTXSTT;                                                    /* starts the transmission */
+        while((HWREG8(ISIS_ANTENNA_I2C_BASE_ADDRESS + OFS_UCBxCTL1) & UCTXSTT) && timeout++ < ISIS_ANTENNA_I2C_TIMEOUT);    /* wait Slave Address ACK */
     }
 
     while(len-- > 1)
     {
-        // wait to receive data and shift data on buffer
+        /* wait to receive data and shift data on buffer */
         while((!(HWREG8(ISIS_ANTENNA_I2C_BASE_ADDRESS + OFS_UCBxIFG) & UCRXIFG)) && timeout++ < ISIS_ANTENNA_I2C_TIMEOUT);
-        *(data++) = HWREG8(ISIS_ANTENNA_I2C_BASE_ADDRESS + OFS_UCBxRXBUF);  // receive a byte and increment the pointer
+        *(data++) = HWREG8(ISIS_ANTENNA_I2C_BASE_ADDRESS + OFS_UCBxRXBUF);  /* receive a byte and increment the pointer */
     }
 
-    if(!(start_stop_flag & 0x0004)) // 0x0004 = No stop
+    if(!(start_stop_flag & 0x0004)) /* 0x0004 = No stop */
     {
         HWREG8(ISIS_ANTENNA_I2C_BASE_ADDRESS + OFS_UCBxCTL1) |= UCTXSTP;
     }
 
-    // wait to receive data and shift data on buffer
+    /* wait to receive data and shift data on buffer */
     while((!(HWREG8(ISIS_ANTENNA_I2C_BASE_ADDRESS + OFS_UCBxIFG) & UCRXIFG)) && timeout++ < ISIS_ANTENNA_I2C_TIMEOUT);
-    *(data++) = HWREG8(ISIS_ANTENNA_I2C_BASE_ADDRESS + OFS_UCBxRXBUF);      // receive a byte and increment the pointer
-#endif // ISIS_ANTENNA_I2C_USCI
+    *(data++) = HWREG8(ISIS_ANTENNA_I2C_BASE_ADDRESS + OFS_UCBxRXBUF);      /* receive a byte and increment the pointer */
+#endif /* ISIS_ANTENNA_I2C_USCI */
 }
 
 #if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
@@ -236,7 +236,7 @@ void USCI_B2_ISR(void)
 {
     switch(__even_in_range(UCB2IV, 12))
     {
-        //Vector 12: Transmit buffer empty - TXIF
+        /* Vector 12: Transmit buffer empty - TXIF */
         case USCI_I2C_UCTXIFG:
         {
             __no_operation();
@@ -246,4 +246,4 @@ void USCI_B2_ISR(void)
     }
 }
 
-//! \} End of isis_antenna group
+/** \} End of isis_antenna group */

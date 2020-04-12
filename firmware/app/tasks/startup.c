@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.14
+ * \version 0.3.12
  * 
  * \date 04/12/2019
  * 
@@ -35,13 +35,20 @@
 
 #include <stdbool.h>
 
+#include <config/config.h>
+#include <system/sys_log/sys_log.h>
+#include <system/clocks.h>
 #include <devices/watchdog/watchdog.h>
-#include <devices/logger/logger.h>
 #include <devices/leds/leds.h>
 #include <devices/eps/eps.h>
 #include <devices/radio/radio.h>
 #include <devices/payload_edc/payload_edc.h>
-#include <system/clocks.h>
+
+#include <ngham/ngham.h>
+
+#include <csp/csp.h>
+#include <csp/interfaces/csp_if_spi.h>
+#include <csp/interfaces/csp_if_i2c.h>
 
 #include "startup.h"
 
@@ -54,23 +61,23 @@ void vTaskStartup(void *pvParameters)
     bool error = false;
 
     /* Logger device initialization */
-    logger_init();
+    sys_log_init();
 
     /* Print the FreeRTOS version */
-    logger_print_event_from_module(LOGGER_INFO, TASK_STARTUP_NAME, "FreeRTOS ");
-    logger_print_msg(tskKERNEL_VERSION_NUMBER);
-    logger_new_line();
+    sys_log_print_event_from_module(SYS_LOG_INFO, TASK_STARTUP_NAME, "FreeRTOS ");
+    sys_log_print_msg(tskKERNEL_VERSION_NUMBER);
+    sys_log_new_line();
 
     /* Print the system clocks */
     clocks_config_t clks = clocks_read();
-    logger_print_event_from_module(LOGGER_INFO, TASK_STARTUP_NAME, "System clocks: MCLK=");
-    logger_print_dec(clks.mclk_hz);
-    logger_print_msg(" Hz, SMCLK=");
-    logger_print_dec(clks.smclk_hz);
-    logger_print_msg(" Hz, ACLK=");
-    logger_print_dec(clks.aclk_hz);
-    logger_print_msg(" Hz");
-    logger_new_line();
+    sys_log_print_event_from_module(SYS_LOG_INFO, TASK_STARTUP_NAME, "System clocks: MCLK=");
+    sys_log_print_dec(clks.mclk_hz);
+    sys_log_print_msg(" Hz, SMCLK=");
+    sys_log_print_dec(clks.smclk_hz);
+    sys_log_print_msg(" Hz, ACLK=");
+    sys_log_print_dec(clks.aclk_hz);
+    sys_log_print_msg(" Hz");
+    sys_log_new_line();
 
     /* LEDs device initialization */
     if (leds_init() != 0)
@@ -90,31 +97,81 @@ void vTaskStartup(void *pvParameters)
         error = true;
     }
 
+    /* NGHam initialization */
+    ngham_init_arrays();
+    ngham_init();
+
+    /* CSP initialization */
+    if (startup_init_csp() != CSP_ERR_NONE)
+    {
+        error = true;
+    }
+
     /* Payload EDC device initialization */
     if (payload_edc_init() != 0)
     {
         error = true;
     }
 
-    /* Startup task status = Done */
-    xEventGroupSetBits(task_startup_status, TASK_STARTUP_DONE);
-
     if (error)
     {
-        logger_print_event_from_module(LOGGER_ERROR, TASK_STARTUP_NAME, "Boot completed with ERRORS!");
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_STARTUP_NAME, "Boot completed with ERRORS!");
+        sys_log_new_line();
 
         led_set(LED_FAULT);
     }
     else
     {
-        logger_print_event_from_module(LOGGER_INFO, TASK_STARTUP_NAME, "Boot completed with SUCCESS!");
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_STARTUP_NAME, "Boot completed with SUCCESS!");
+        sys_log_new_line();
 
         led_clear(LED_FAULT);
     }
 
+    /* Startup task status = Done */
+    xEventGroupSetBits(task_startup_status, TASK_STARTUP_DONE);
+
     vTaskSuspend(xTaskStartupHandle);
+}
+
+int startup_init_csp()
+{
+#if CONFIG_CSP_ENABLED == 1
+    /* CSP initialization */
+    if (csp_init(CONFIG_CSP_MY_ADDRESS) != CSP_ERR_NONE)
+    {
+        return -1;  /* Error during CSP initialization */
+    }
+
+    /* Buffer initialization */
+    if (csp_buffer_init(CONFIG_CSP_BUFFER_MAX_PKTS, CONFIG_CSP_BUFFER_MAX_SIZE) != CSP_ERR_NONE)
+    {
+        return -1;  /* Error during the CSP buffer initialization */
+    }
+
+    if (csp_route_set(CONFIG_CSP_TTC_ADDRESS, &csp_if_spi, CSP_NODE_MAC) != CSP_ERR_NONE)
+    {
+        return -1;
+    }
+
+    if (csp_route_set(CONFIG_CSP_EPS_ADDRESS, &csp_if_i2c, CSP_NODE_MAC) != CSP_ERR_NONE)
+    {
+        return -1;
+    }
+
+    /* CSP router task initialization */
+	if (csp_route_start_task(CONFIG_CSP_ROUTER_WORD_STACK, CONFIG_CSP_ROUTER_TASK_PRIORITY) != CSP_ERR_NONE)
+    {
+        return -1;  /* Error during CSP router task initialization! */
+    }
+
+    return CSP_ERR_NONE;
+#else
+    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "libcsp disabled!");
+    sys_log_new_line();
+
+    return CSP_ERR_NONE;
+#endif /* CONFIG_CSP_ENABLED */
 }
 
 /** \} End of startup group */
