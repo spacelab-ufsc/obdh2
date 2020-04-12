@@ -33,7 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <csp/arch/csp_malloc.h>
 #include <csp/arch/csp_time.h>
 
-#include <devices/logger/logger.h>
+#include <system/sys_log/sys_log.h>
 
 #include "csp_conn.h"
 #include "transport/csp_transport.h"
@@ -461,23 +461,23 @@ void csp_conn_print_table(void) {
         /* printf("[%02u %p] S:%u, %u -> %u, %u -> %u, sock: %p\r\n", */
         /*        i, conn, conn->state, conn->idin.src, conn->idin.dst, */
         /*        conn->idin.dport, conn->idin.sport, conn->socket); */
-        logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "[");
-        logger_print_dec(i);
-        logger_print_msg(" ");
-        logger_print_hex(conn);
-        logger_print_msg("] S:");
-        logger_print_dec(conn->state);
-        logger_print_msg(", ");
-        logger_print_dec(conn->idin.src);
-        logger_print_msg(" -> ");
-        logger_print_dec(conn->idin.dst);
-        logger_print_msg(" , ");
-        logger_print_dec(conn->idin.dport);
-        logger_print_msg(" -> ");
-        logger_print_dec(conn->idin.sport);
-        logger_print_msg(", sock: ");
-        logger_print_hex(conn->socket);
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_INFO, LIBCSP_MODULE_NAME, "[");
+        sys_log_print_dec(i);
+        sys_log_print_msg(" ");
+        sys_log_print_hex(conn);
+        sys_log_print_msg("] S:");
+        sys_log_print_dec(conn->state);
+        sys_log_print_msg(", ");
+        sys_log_print_dec(conn->idin.src);
+        sys_log_print_msg(" -> ");
+        sys_log_print_dec(conn->idin.dst);
+        sys_log_print_msg(" , ");
+        sys_log_print_dec(conn->idin.dport);
+        sys_log_print_msg(" -> ");
+        sys_log_print_dec(conn->idin.sport);
+        sys_log_print_msg(", sock: ");
+        sys_log_print_hex(conn->socket);
+        sys_log_new_line();
 #ifdef CSP_USE_RDP
 		if (conn->idin.flags & CSP_FRDP)
 			csp_rdp_conn_print(conn);

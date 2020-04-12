@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.6
+ * \version 0.3.12
  * 
  * \date 01/02/2020
  * 
@@ -33,7 +33,7 @@
  * \{
  */
 
-#include <devices/logger/logger.h>
+#include <system/sys_log/sys_log.h>
 
 #include <drivers/sl_eps2/sl_eps2.h>
 
@@ -43,8 +43,8 @@ sl_eps2_config_t eps_config;
 
 int eps_init()
 {
-    logger_print_event_from_module(LOGGER_INFO, EPS_MODULE_NAME, "Initializing EPS device...");
-    logger_new_line();
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "Initializing EPS device...");
+    sys_log_new_line();
 
     eps_config.i2c_port     = I2C_PORT_1;
     eps_config.i2c_config   = (i2c_config_t){.speed_hz=100000};
@@ -54,10 +54,10 @@ int eps_init()
     int err = sl_eps2_init(eps_config);
     if (err != 0)
     {
-        logger_print_event_from_module(LOGGER_ERROR, EPS_MODULE_NAME, "Error during the initialization! (error ");
-        logger_print_dec(err);
-        logger_print_msg(")");
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error during the initialization! (error ");
+        sys_log_print_dec(err);
+        sys_log_print_msg(")");
+        sys_log_new_line();
 
         return -1;
     }
@@ -73,20 +73,20 @@ int eps_get_bat_voltage(eps_bat_voltage_t *bat_volt)
 
     if (err_0 != 0)
     {
-        logger_print_event_from_module(LOGGER_ERROR, EPS_MODULE_NAME, "Error reading the battery voltage from cell 0! (error ");
-        logger_print_dec(err_0);
-        logger_print_msg(")");
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery voltage from cell 0! (error ");
+        sys_log_print_dec(err_0);
+        sys_log_print_msg(")");
+        sys_log_new_line();
 
         return -1;
     }
 
     if (err_0 != 0)
     {
-        logger_print_event_from_module(LOGGER_ERROR, EPS_MODULE_NAME, "Error reading the battery voltage from cell 1! (error ");
-        logger_print_dec(err_1);
-        logger_print_msg(")");
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery voltage from cell 1! (error ");
+        sys_log_print_dec(err_1);
+        sys_log_print_msg(")");
+        sys_log_new_line();
 
         return -1;
     }
@@ -105,10 +105,10 @@ int eps_get_bat_charge(uint32_t *charge)
 
     if (err != 0)
     {
-        logger_print_event_from_module(LOGGER_ERROR, EPS_MODULE_NAME, "Error reading the battery charge! (error ");
-        logger_print_dec(err);
-        logger_print_msg(")");
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery charge! (error ");
+        sys_log_print_dec(err);
+        sys_log_print_msg(")");
+        sys_log_new_line();
 
         return -1;
     }

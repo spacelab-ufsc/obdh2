@@ -21,7 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 /* #include <stdio.h> */
 #include <csp/csp.h>
 
-#include <devices/logger/logger.h>
+#include <system/sys_log/sys_log.h>
 
 /* Interfaces are stored in a linked list*/
 static csp_iface_t * interfaces = NULL;
@@ -94,36 +94,36 @@ void csp_iflist_print(void) {
 		/*        "          txb: %"PRIu32" (%s) rxb: %"PRIu32" (%s) MTU: %u\r\n\r\n", */
 		/*        i->name, i->tx, i->rx, i->tx_error, i->rx_error, i->drop, */
 		/*        i->autherr, i->frame, i->txbytes, txbuf, i->rxbytes, rxbuf, i->mtu); */
-        logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "");
-        logger_print_str(i->name);
-        logger_print_msg("tx: ");
-        logger_print_dec(i->tx);
-        logger_print_msg(" rx: ");
-        logger_print_dec(i->rx);
-        logger_print_msg(" txe: ");
-        logger_print_dec(i->tx_error);
-        logger_print_msg(" rxe: ");
-        logger_print_dec(i->rx_error);
-        logger_new_line();
-        logger_print_msg("\tdrop: ");
-        logger_print_dec(i->drop);
-        logger_print_msg(" autherr: ");
-        logger_print_dec(i->autherr);
-        logger_print_msg(" frame: ");
-        logger_print_dec(i->frame);
-        logger_print_msg(" frame: ");
-        logger_new_line();
-        logger_print_msg("\ttxb: ");
-        logger_print_dec(i->txbytes);
-        logger_print_msg(" (");
-        logger_print_str(txbuf);
-        logger_print_msg(") rxb: ");
-        logger_print_dec(i->rxbytes);
-        logger_print_msg(" (");
-        logger_print_str(rxbuf);
-        logger_print_msg(") MTU: ");
-        logger_print_dec(i->mtu);
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_INFO, LIBCSP_MODULE_NAME, "");
+        sys_log_print_str(i->name);
+        sys_log_print_msg("tx: ");
+        sys_log_print_dec(i->tx);
+        sys_log_print_msg(" rx: ");
+        sys_log_print_dec(i->rx);
+        sys_log_print_msg(" txe: ");
+        sys_log_print_dec(i->tx_error);
+        sys_log_print_msg(" rxe: ");
+        sys_log_print_dec(i->rx_error);
+        sys_log_new_line();
+        sys_log_print_msg("\tdrop: ");
+        sys_log_print_dec(i->drop);
+        sys_log_print_msg(" autherr: ");
+        sys_log_print_dec(i->autherr);
+        sys_log_print_msg(" frame: ");
+        sys_log_print_dec(i->frame);
+        sys_log_print_msg(" frame: ");
+        sys_log_new_line();
+        sys_log_print_msg("\ttxb: ");
+        sys_log_print_dec(i->txbytes);
+        sys_log_print_msg(" (");
+        sys_log_print_str(txbuf);
+        sys_log_print_msg(") rxb: ");
+        sys_log_print_dec(i->rxbytes);
+        sys_log_print_msg(" (");
+        sys_log_print_str(rxbuf);
+        sys_log_print_msg(") MTU: ");
+        sys_log_print_dec(i->mtu);
+        sys_log_new_line();
 		i = i->next;
 	}
 

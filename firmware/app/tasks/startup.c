@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.11
+ * \version 0.3.12
  * 
  * \date 04/12/2019
  * 
@@ -36,13 +36,13 @@
 #include <stdbool.h>
 
 #include <config/config.h>
+#include <system/sys_log/sys_log.h>
+#include <system/clocks.h>
 #include <devices/watchdog/watchdog.h>
-#include <devices/logger/logger.h>
 #include <devices/leds/leds.h>
 #include <devices/eps/eps.h>
 #include <devices/radio/radio.h>
 #include <devices/payload_edc/payload_edc.h>
-#include <system/clocks.h>
 
 #include <ngham/ngham.h>
 
@@ -61,23 +61,23 @@ void vTaskStartup(void *pvParameters)
     bool error = false;
 
     /* Logger device initialization */
-    logger_init();
+    sys_log_init();
 
     /* Print the FreeRTOS version */
-    logger_print_event_from_module(LOGGER_INFO, TASK_STARTUP_NAME, "FreeRTOS ");
-    logger_print_msg(tskKERNEL_VERSION_NUMBER);
-    logger_new_line();
+    sys_log_print_event_from_module(SYS_LOG_INFO, TASK_STARTUP_NAME, "FreeRTOS ");
+    sys_log_print_msg(tskKERNEL_VERSION_NUMBER);
+    sys_log_new_line();
 
     /* Print the system clocks */
     clocks_config_t clks = clocks_read();
-    logger_print_event_from_module(LOGGER_INFO, TASK_STARTUP_NAME, "System clocks: MCLK=");
-    logger_print_dec(clks.mclk_hz);
-    logger_print_msg(" Hz, SMCLK=");
-    logger_print_dec(clks.smclk_hz);
-    logger_print_msg(" Hz, ACLK=");
-    logger_print_dec(clks.aclk_hz);
-    logger_print_msg(" Hz");
-    logger_new_line();
+    sys_log_print_event_from_module(SYS_LOG_INFO, TASK_STARTUP_NAME, "System clocks: MCLK=");
+    sys_log_print_dec(clks.mclk_hz);
+    sys_log_print_msg(" Hz, SMCLK=");
+    sys_log_print_dec(clks.smclk_hz);
+    sys_log_print_msg(" Hz, ACLK=");
+    sys_log_print_dec(clks.aclk_hz);
+    sys_log_print_msg(" Hz");
+    sys_log_new_line();
 
     /* LEDs device initialization */
     if (leds_init() != 0)
@@ -115,15 +115,15 @@ void vTaskStartup(void *pvParameters)
 
     if (error)
     {
-        logger_print_event_from_module(LOGGER_ERROR, TASK_STARTUP_NAME, "Boot completed with ERRORS!");
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_STARTUP_NAME, "Boot completed with ERRORS!");
+        sys_log_new_line();
 
         led_set(LED_FAULT);
     }
     else
     {
-        logger_print_event_from_module(LOGGER_INFO, TASK_STARTUP_NAME, "Boot completed with SUCCESS!");
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_STARTUP_NAME, "Boot completed with SUCCESS!");
+        sys_log_new_line();
 
         led_clear(LED_FAULT);
     }
@@ -167,8 +167,8 @@ int startup_init_csp()
 
     return CSP_ERR_NONE;
 #else
-    logger_print_event_from_module(LOGGER_WARNING, TASK_STARTUP_NAME, "libcsp disabled!");
-    logger_new_line();
+    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "libcsp disabled!");
+    sys_log_new_line();
 
     return CSP_ERR_NONE;
 #endif /* CONFIG_CSP_ENABLED */

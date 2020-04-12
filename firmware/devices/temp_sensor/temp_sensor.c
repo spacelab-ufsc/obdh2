@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.1
+ * \version 0.3.12
  * 
  * \date 17/03/2020
  * 
@@ -35,14 +35,14 @@
 
 #include <drivers/adc/adc.h>
 
-#include <devices/logger/logger.h>
+#include <system/sys_log/sys_log.h>
 
 #include "temp_sensor.h"
 
 int temp_sensor_init()
 {
-    logger_print_event_from_module(LOGGER_INFO, TEMP_SENSOR_MODULE_NAME, "Initializing temperature sensor...");
-    logger_new_line();
+    sys_log_print_event_from_module(SYS_LOG_INFO, TEMP_SENSOR_MODULE_NAME, "Initializing temperature sensor...");
+    sys_log_new_line();
 
     return -1;
 }

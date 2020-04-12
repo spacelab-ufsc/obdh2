@@ -1095,15 +1095,15 @@ void csp_rdp_conn_print(csp_conn_t * conn) {
 
     /* printf("\tRDP: State %"PRIu16", rcv %"PRIu16", snd %"PRIu16", win %"PRIu32"\r\n", */
     /*        conn->rdp.state, conn->rdp.rcv_cur, conn->rdp.snd_una, conn->rdp.window_size); */
-    logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "RDP: State ")
-    logger_print_dec(conn->rdp.state);
-    logger_print_msg(", rcv ");
-    logger_print_dec(conn->rdp.rcv_cur);
-    logger_print_msg(", snd ");
-    logger_print_dec(conn->rdp.snd_una);
-    logger_print_msg(", win ");
-    logger_print_dec(conn->rdp.window_size);
-    logger_new_line();
+    sys_log_print_event_from_module(SYS_LOG_INFO, LIBCSP_MODULE_NAME, "RDP: State ")
+    sys_log_print_dec(conn->rdp.state);
+    sys_log_print_msg(", rcv ");
+    sys_log_print_dec(conn->rdp.rcv_cur);
+    sys_log_print_msg(", snd ");
+    sys_log_print_dec(conn->rdp.snd_una);
+    sys_log_print_msg(", win ");
+    sys_log_print_dec(conn->rdp.window_size);
+    sys_log_new_line();
 
 }
 #endif

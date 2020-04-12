@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <csp/csp.h>
 #include <stdio.h>
 
-#include <devices/logger/logger.h>
+#include <system/sys_log/sys_log.h>
 
 /* Local typedef for routing table */
 typedef struct __attribute__((__packed__)) csp_rtable_s {
@@ -119,26 +119,26 @@ int csp_rtable_check(const char * buffer) {
 void csp_rtable_print(void) {
 	int i;
     /* printf("Node  Interface  Address\r\n"); */
-    logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "Node  Interface  Address");
-    logger_new_line();
+    sys_log_print_event_from_module(SYS_LOG_INFO, LIBCSP_MODULE_NAME, "Node  Interface  Address");
+    sys_log_new_line();
 	for (i = 0; i < CSP_DEFAULT_ROUTE; i++)
 		if (routes[i].interface != NULL)
             /* printf("%4u  %-9s  %u\r\n", i, */
             /*        routes[i].interface->name, */
             /*        routes[i].mac == CSP_NODE_MAC ? i : routes[i].mac); */
-            logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "");
-            logger_print_dec(i);
-            logger_print_msg("  ");
-            logger_print_str(routes[i].interface->name);
-            logger_print_msg("  ");
-            logger_print_dec(routes[i].mac == CSP_NODE_MAC ? i : routes[i].mac);
-            logger_new_line();
+            sys_log_print_event_from_module(SYS_LOG_INFO, LIBCSP_MODULE_NAME, "");
+            sys_log_print_dec(i);
+            sys_log_print_msg("  ");
+            sys_log_print_str(routes[i].interface->name);
+            sys_log_print_msg("  ");
+            sys_log_print_dec(routes[i].mac == CSP_NODE_MAC ? i : routes[i].mac);
+            sys_log_new_line();
     /* printf("   *  %-9s  %u\r\n", routes[CSP_DEFAULT_ROUTE].interface->name, routes[CSP_DEFAULT_ROUTE].mac); */
-    logger_print_event_from_module(LOGGER_INFO, LIBCSP_MODULE_NAME, "   *  ");
-    logger_print_str(routes[CSP_DEFAULT_ROUTE].interface->name);
-    logger_print_msg("  ");
-    logger_print_dec(routes[CSP_DEFAULT_ROUTE].mac);
-    logger_new_line();
+    sys_log_print_event_from_module(SYS_LOG_INFO, LIBCSP_MODULE_NAME, "   *  ");
+    sys_log_print_str(routes[CSP_DEFAULT_ROUTE].interface->name);
+    sys_log_print_msg("  ");
+    sys_log_print_dec(routes[CSP_DEFAULT_ROUTE].mac);
+    sys_log_new_line();
 
 }
 #endif

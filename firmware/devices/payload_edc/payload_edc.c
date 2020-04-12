@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.0
+ * \version 0.3.12
  * 
  * \date 18/02/2020
  * 
@@ -33,7 +33,7 @@
  * \{
  */
 
-#include <devices/logger/logger.h>
+#include <system/sys_log/sys_log.h>
 #include <drivers/edc/edc.h>
 
 #include "payload_edc.h"
@@ -47,8 +47,8 @@ int payload_edc_init()
 
     if (edc_init(config) != 0)
     {
-        logger_print_event_from_module(LOGGER_ERROR, PAYLOAD_EDC_MODULE_NAME, "Error initializing the device!");
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_EDC_MODULE_NAME, "Error initializing the device!");
+        sys_log_new_line();
 
         return -1;
     }
@@ -62,20 +62,20 @@ int payload_edc_init()
 
     if (edc_get_hk(&hk_data) != 0)
     {
-        logger_print_event_from_module(LOGGER_ERROR, PAYLOAD_EDC_MODULE_NAME, "Error pausing the PTT task!");
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_EDC_MODULE_NAME, "Error pausing the PTT task!");
+        sys_log_new_line();
 
         return -1;
     }
 
-    logger_print_event_from_module(LOGGER_INFO, PAYLOAD_EDC_MODULE_NAME, "Initialization done! (");
-    logger_print_dec(hk_data.temp);
-    logger_print_msg(" oC, ");
-    logger_print_dec(hk_data.voltage_supply);
-    logger_print_msg(" mV, ");
-    logger_print_dec(hk_data.current_supply);
-    logger_print_msg(" mA)");
-    logger_new_line();
+    sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_EDC_MODULE_NAME, "Initialization done! (");
+    sys_log_print_dec(hk_data.temp);
+    sys_log_print_msg(" oC, ");
+    sys_log_print_dec(hk_data.voltage_supply);
+    sys_log_print_msg(" mV, ");
+    sys_log_print_dec(hk_data.current_supply);
+    sys_log_print_msg(" mA)");
+    sys_log_new_line();
 
     return 0;
 }
@@ -86,8 +86,8 @@ int payload_edc_get_raw_state(uint8_t *data)
 
     if (len < 0)
     {
-        logger_print_event_from_module(LOGGER_ERROR, PAYLOAD_EDC_MODULE_NAME, "Error reading state from EDC!");
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_EDC_MODULE_NAME, "Error reading state from EDC!");
+        sys_log_new_line();
     }
 
     return len;
@@ -99,8 +99,8 @@ int payload_edc_get_raw_housekeeping(uint8_t *data)
 
     if (len < 0)
     {
-        logger_print_event_from_module(LOGGER_ERROR, PAYLOAD_EDC_MODULE_NAME, "Error reading housekeeping data from EDC!");
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_EDC_MODULE_NAME, "Error reading housekeeping data from EDC!");
+        sys_log_new_line();
     }
 
     return len;
@@ -110,8 +110,8 @@ int payload_edc_enable()
 {
     if (edc_resume_ptt_task() != 0)
     {
-        logger_print_event_from_module(LOGGER_ERROR, PAYLOAD_EDC_MODULE_NAME, "Error enabling EDC!");
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_EDC_MODULE_NAME, "Error enabling EDC!");
+        sys_log_new_line();
 
         return -1;
     }
@@ -123,8 +123,8 @@ int payload_edc_disable()
 {
     if (edc_pause_ptt_task() != 0)
     {
-        logger_print_event_from_module(LOGGER_ERROR, PAYLOAD_EDC_MODULE_NAME, "Error disabling EDC!");
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_EDC_MODULE_NAME, "Error disabling EDC!");
+        sys_log_new_line();
 
         return -1;
     }
