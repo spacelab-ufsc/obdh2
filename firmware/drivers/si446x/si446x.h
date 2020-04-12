@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.4
+ * \version 0.3.10
  * 
  * \date 01/06/2017
  * 
@@ -40,7 +40,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define SI446X_MODULE_NAME                      "SI446X"
+#define SI446X_MODULE_NAME                      "Si446x"
 
 #define SI446X_PART_INFO                        0x4463
 #define SI446X_TX_FIFO_LEN                      128
