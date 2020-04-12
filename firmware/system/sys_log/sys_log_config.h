@@ -1,5 +1,5 @@
 /*
- * logger_config.h
+ * sys_log_config.h
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,41 +21,41 @@
  */
 
 /**
- * \brief Logger device configuration parameters.
+ * \brief System log configuration parameters.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.3.11
  * 
  * \date 22/02/2019
  * 
- * \defgroup logger_config Configuration
- * \ingroup logger
+ * \defgroup sys_log_config Configuration
+ * \ingroup sys_log
  * \{
  */
 
-#ifndef LOGGER_CONFIG_H_
-#define LOGGER_CONFIG_H_
+#ifndef SYS_LOG_CONFIG_H_
+#define SYS_LOG_CONFIG_H_
 
 #include <config/config.h>
 
-#include "logger.h"
+#include "sys_log.h"
 
 /* Device name */
-#define LOGGER_DEVICE_NAME              "Logger"
+#define SYS_LOG_DEVICE_NAME             "System Log"
 
 /* UART */
-#define LOGGER_UART_BAUDRATE_BPS        115200
+#define SYS_LOG_UART_BAUDRATE_BPS       115200
 
 /* Mutex config. */
-#define LOGGER_MUTEX_WAIT_TIME_MS       100
+#define SYS_LOG_MUTEX_WAIT_TIME_MS      100
 
 /* Log messages colors */
-#define LOGGER_SYSTEM_TIME_COLOR        LOGGER_COLOR_GREEN
-#define LOGGER_MODULE_NAME_COLOR        LOGGER_COLOR_MAGENTA
-#define LOGGER_WARNING_COLOR            LOGGER_COLOR_YELLOW
-#define LOGGER_ERROR_COLOR              LOGGER_COLOR_RED
+#define SYS_LOG_SYSTEM_TIME_COLOR       SYS_LOG_COLOR_GREEN
+#define SYS_LOG_MODULE_NAME_COLOR       SYS_LOG_COLOR_MAGENTA
+#define SYS_LOG_WARNING_COLOR           SYS_LOG_COLOR_YELLOW
+#define SYS_LOG_ERROR_COLOR             SYS_LOG_COLOR_RED
 
-#endif /* LOGGER_CONFIG_H_ */
+#endif /* SYS_LOG_CONFIG_H_ */
 
-/** \} End of logger_config group */
+/** \} End of sys_log_config group */

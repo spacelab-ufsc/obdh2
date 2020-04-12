@@ -1,5 +1,5 @@
 /*
- * logger_uart.c
+ * sys_log_uart.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,24 +21,24 @@
  */
 
 /**
- * \brief Logger device UART implementation.
+ * \brief System log UART implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.3.11
  * 
  * \date 03/11/2019
  * 
- * \defgroup logger_uart UART
- * \ingroup logger
+ * \defgroup sys_log_uart UART
+ * \ingroup sys_log
  * \{
  */
 
 #include <drivers/uart/uart.h>
 
-#include "logger.h"
+#include "sys_log.h"
 
-bool logger_uart_init()
+bool sys_log_uart_init()
 {
     uart_config_t config;
 
@@ -50,9 +50,9 @@ bool logger_uart_init()
     return uart_init(UART_PORT_2, config) == 0 ? true : false;
 }
 
-void logger_uart_write_byte(uint8_t byte)
+void sys_log_uart_write_byte(uint8_t byte)
 {
     uart_write(UART_PORT_2, &byte, 1);
 }
 
-/** \} End of logger_uart group */
+/** \} End of sys_log_uart group */
