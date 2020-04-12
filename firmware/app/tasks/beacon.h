@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.1
+ * \version 0.3.10
  * 
  * \date 27/10/2019
  * 
@@ -45,6 +45,7 @@
 #define TASK_BEACON_PRIORITY                5                   /**< Task priority. */
 #define TASK_BEACON_PERIOD_MS               60000               /**< Task period in milliseconds. */
 #define TASK_BEACON_INITIAL_DELAY_MS        1000                /**< Delay, in milliseconds, before the first execution. */
+#define TASK_BEACON_INIT_TIMEOUT_MS         (10*1000)           /**< Wait time to initialize the task in milliseconds. */
 
 /**
  * \brief Beacon handle.

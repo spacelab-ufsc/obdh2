@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.12
+ * \version 0.3.12
  * 
  * \date 27/10/2019
  * 
@@ -35,14 +35,14 @@
 
 #include <drivers/si446x/si446x.h>
 
-#include <devices/logger/logger.h>
+#include <system/sys_log/sys_log.h>
 
 #include "radio.h"
 
 int radio_init()
 {
-    logger_print_event_from_module(LOGGER_INFO, RADIO_MODULE_NAME, "Initializing radio device...");
-    logger_new_line();
+    sys_log_print_event_from_module(SYS_LOG_INFO, RADIO_MODULE_NAME, "Initializing radio device...");
+    sys_log_new_line();
 
     return si446x_init();
 }

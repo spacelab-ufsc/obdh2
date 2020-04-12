@@ -1,5 +1,5 @@
 /*
- * logger_config.h
+ * sys_log_uart.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,41 +21,38 @@
  */
 
 /**
- * \brief Logger device configuration parameters.
+ * \brief System log UART implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.3.11
  * 
- * \date 22/02/2019
+ * \date 03/11/2019
  * 
- * \defgroup logger_config Configuration
- * \ingroup logger
+ * \defgroup sys_log_uart UART
+ * \ingroup sys_log
  * \{
  */
 
-#ifndef LOGGER_CONFIG_H_
-#define LOGGER_CONFIG_H_
+#include <drivers/uart/uart.h>
 
-#include <config/config.h>
+#include "sys_log.h"
 
-#include "logger.h"
+bool sys_log_uart_init()
+{
+    uart_config_t config;
 
-/* Device name */
-#define LOGGER_DEVICE_NAME              "Logger"
+    config.baudrate     = 115200;
+    config.data_bits    = 8;
+    config.parity       = UART_NO_PARITY;
+    config.stop_bits    = UART_ONE_STOP_BIT;
 
-/* UART */
-#define LOGGER_UART_BAUDRATE_BPS        115200
+    return uart_init(UART_PORT_2, config) == 0 ? true : false;
+}
 
-/* Mutex config. */
-#define LOGGER_MUTEX_WAIT_TIME_MS       100
+void sys_log_uart_write_byte(uint8_t byte)
+{
+    uart_write(UART_PORT_2, &byte, 1);
+}
 
-/* Log messages colors */
-#define LOGGER_SYSTEM_TIME_COLOR        LOGGER_COLOR_GREEN
-#define LOGGER_MODULE_NAME_COLOR        LOGGER_COLOR_MAGENTA
-#define LOGGER_WARNING_COLOR            LOGGER_COLOR_YELLOW
-#define LOGGER_ERROR_COLOR              LOGGER_COLOR_RED
-
-#endif /* LOGGER_CONFIG_H_ */
-
-/** \} End of logger_config group */
+/** \} End of sys_log_uart group */

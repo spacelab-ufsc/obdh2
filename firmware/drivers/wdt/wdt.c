@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.3.9
  * 
  * \date 17/01/2020
  * 
@@ -35,11 +35,14 @@
 
 #include <hal/wdt_a.h>
 
+#include <config/config.h>
+#include <system/sys_log/sys_log.h>
+
 #include "wdt.h"
 
 int wdt_init(wdt_config_t config)
 {
-    // Checking clock source value
+    /* Checking clock source value */
     switch(config.clk_src)
     {
         case WDT_CLK_SRC_SMCLK:       break;
@@ -47,10 +50,14 @@ int wdt_init(wdt_config_t config)
         case WDT_CLK_SRC_VLOCLK:      break;
         case WDT_CLK_SRC_XCLK:        break;
         default:
-            return -1;      // Invalid clock source
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, WDT_MODULE_NAME, "Error during initialization: Invalid clock source!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            return -1;      /* Invalid clock source */
     }
 
-    // Checking clock divider value
+    /* Checking clock divider value */
     switch(config.clk_div)
     {
         case WDT_CLK_DIV_2G:         break;
@@ -62,13 +69,17 @@ int wdt_init(wdt_config_t config)
         case WDT_CLK_DIV_512:        break;
         case WDT_CLK_DIV_64:         break;
         default:
-            return -1;      // Invalid clock divider value
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, WDT_MODULE_NAME, "Error during initialization: Invalid clock divider!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            return -1;      /* Invalid clock divider value */
     }
 
-    // Watchdog initialization
+    /* Watchdog initialization */
     WDT_A_initWatchdogTimer(WDT_A_BASE, config.clk_src, config.clk_div);
 
-    // Start counter
+    /* Start counter */
     WDT_A_start(WDT_A_BASE);
 
     return 0;
@@ -79,4 +90,4 @@ void wdt_reset()
     WDT_A_resetTimer(WDT_A_BASE);
 }
 
-//! \} End of wdt group
+/** \} End of wdt group */

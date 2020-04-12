@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.18
+ * \version 0.3.10
  * 
  * \date 01/06/2017
  * 
@@ -34,6 +34,9 @@
  */
 
 #include <drivers/gpio/gpio.h>
+
+#include <config/config.h>
+#include <system/sys_log/sys_log.h>
 
 #include "si446x.h"
 #include "si446x_reg.h"
@@ -47,19 +50,19 @@ int8_t si446x_init(void)
 {
     if (si446x_spi_init() != 0)
     {
-        return -1;     // Error initializing the SPI port
+        return -1;     /* Error initializing the SPI port */
     }
 
-    // Power-on reset
+    /* Power-on reset */
     si446x_power_on_reset();
 
-    // Registers configuration
+    /* Registers configuration */
     si446x_reg_config();
 
-    // Set max. TX power
+    /* Set max. TX power */
     si446x_set_tx_power(127);
 
-    // Check if the device is working
+    /* Check if the device is working */
     if (si446x_check_device())
     {
         return 0;
@@ -92,28 +95,30 @@ int8_t si446x_slave_disable(void)
 
 int8_t si446x_gpio_init(void)
 {
-//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Initializing GPIO pins...");
-//    debug_new_line();
+#if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    sys_log_print_event_from_module(SYS_LOG_INFO, SI446X_MODULE_NAME, "Initializing GPIO pins...");
+    sys_log_new_line();
+#endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
-    // Pin GPIO0
+    /* Pin GPIO0 */
     if (gpio_init(GPIO_PIN_1, (gpio_config_t){.mode=GPIO_MODE_OUTPUT}) != 0)
     {
         return -1;
     }
 
-    // Pin GPIO1
+    /* Pin GPIO1 */
     if (gpio_init(GPIO_PIN_2, (gpio_config_t){.mode=GPIO_MODE_INPUT}) != 0)
     {
         return -1;
     }
 
-    // Pin GPIO2
+    /* Pin GPIO2 */
     if (gpio_init(GPIO_PIN_3, (gpio_config_t){.mode=GPIO_MODE_INPUT}) != 0)
     {
         return -1;
     }
 
-    // Pin RESET
+    /* Pin RESET */
     if (gpio_init(GPIO_PIN_4, (gpio_config_t){.mode=GPIO_MODE_OUTPUT}) != 0)
     {
         return -1;
@@ -128,28 +133,32 @@ int8_t si446x_gpio_init(void)
 
 void si446x_reg_config(void)
 {
-//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Loading registers values...");
-//    debug_new_line();
+#if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    sys_log_print_event_from_module(SYS_LOG_INFO, SI446X_MODULE_NAME, "Loading registers values...");
+    sys_log_new_line();
+#endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
-    // Set RF parameter like frequency, data rate, etc.
+    /* Set RF parameter like frequency, data rate, etc. */
     si446x_set_config(SI446X_CONFIGURATION_DATA, sizeof(SI446X_CONFIGURATION_DATA));
 
     uint8_t buf[2];
 
-    // Frequency adjust (Tested manually)
+    /* Frequency adjust (Tested manually) */
     buf[0] = SI446X_XO_TUNE_REG_VALUE;
     si446x_set_properties(SI446X_PROPERTY_GLOBAL_XO_TUNE, buf, 1);
 
-    // TX/RX shares 128 bytes FIFO
+    /* TX/RX shares 128 bytes FIFO */
     buf[0] = 0x10;
     si446x_set_properties(SI446X_PROPERTY_GLOBAL_CONFIG, buf, 1);
-    si446x_fifo_reset();    // The TX/RX FIFO sharing configuration will only take effect after FIFO reset.
+    si446x_fifo_reset();    /* The TX/RX FIFO sharing configuration will only take effect after FIFO reset */
 }
 
 void si446x_power_on_reset(void)
 {
-//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Power-on reset...");
-//    debug_new_line();
+#if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    sys_log_print_event_from_module(SYS_LOG_INFO, SI446X_MODULE_NAME, "Power-on reset...");
+    sys_log_new_line();
+#endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
     uint8_t buffer[8] = {RF_POWER_UP};
 
@@ -159,9 +168,9 @@ void si446x_power_on_reset(void)
 
     si446x_power_up();
 
-    si446x_delay_ms(20);    // Wait for stabilization
+    si446x_delay_ms(20);    /* Wait for stabilization */
 
-    // Send power-up command
+    /* Send power-up command */
     si446x_slave_enable();
     si446x_spi_write(buffer, 7);
     si446x_slave_disable();
@@ -171,13 +180,15 @@ void si446x_power_on_reset(void)
 
 bool si446x_tx_packet(uint8_t *data, uint8_t len)
 {
-//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Trying to transmit a packet...");
-//    debug_new_line();
+#if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    sys_log_print_event_from_module(SYS_LOG_INFO, SI446X_MODULE_NAME, "Trying to transmit a packet...");
+    sys_log_new_line();
+#endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
-    // Setting packet size
+    /* Setting packet size */
     si446x_set_properties(SI446X_PROPERTY_PKT_FIELD_1_LENGTH_7_0, &len, 1);
 
-    si446x_fifo_reset();        // Clear FIFO
+    si446x_fifo_reset();    /* Clear FIFO */
     si446x_write_tx_fifo(data, len);
     si446x_clear_interrupts();
 
@@ -185,21 +196,15 @@ bool si446x_tx_packet(uint8_t *data, uint8_t len)
 
     si446x_enter_tx_mode();
 
-//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Transmitting a packet: ");
-//    uint8_t i = 0;
-//    for(i=0; i<len; i++)
-//    {
-//        debug_print_hex(data[i]);
-//        if (i < len-1)
-//        {
-//            debug_print_msg(",");
-//        }
-//    }
-//    debug_new_line();
+#if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    sys_log_print_event_from_module(SYS_LOG_INFO, SI446X_MODULE_NAME, "Transmitting a packet: ");
+    sys_log_dump_hex(data, len);
+    sys_log_new_line();
+#endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
     while(tx_timer--)
     {
-        if (si446x_wait_packet_sent())         // Wait packet sent interruption
+        if (si446x_wait_packet_sent())         /* Wait packet sent interruption */
         {
             return true;
         }
@@ -207,8 +212,8 @@ bool si446x_tx_packet(uint8_t *data, uint8_t len)
         si446x_delay_ms(1);
     }
 
-    // If the packet transmission takes longer than expected, resets the radio.
-//    si446x_init();
+    /* If the packet transmission takes longer than expected, resets the radio. */
+/*    si446x_init(); */
 
     return false;
 }
@@ -220,10 +225,12 @@ bool si446x_tx_long_packet(uint8_t *packet, uint16_t len)
         return si446x_tx_packet(packet, (uint8_t)(len));
     }
 
-//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Trying to transmit a long packet...");
-//    debug_new_line();
+#if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    sys_log_print_event_from_module(SYS_LOG_INFO, SI446X_MODULE_NAME, "Trying to transmit a long packet...");
+    sys_log_new_line();
+#endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
-    // Setting packet size
+    /* Setting packet size */
     uint8_t buf[2];
     buf[0] = (uint8_t)(len);
     buf[1] = (uint8_t)(len >> 8);
@@ -232,29 +239,24 @@ bool si446x_tx_long_packet(uint8_t *packet, uint16_t len)
         si446x_set_properties(SI446X_PROPERTY_PKT_FIELD_1_LENGTH_12_8, &buf[1], 1);
     }
     si446x_set_properties(SI446X_PROPERTY_PKT_FIELD_1_LENGTH_7_0, &buf[0], 1);
-    
-    si446x_fifo_reset();        // Clear FIFO
+
+    si446x_fifo_reset();        /* Clear FIFO */
     si446x_write_tx_fifo(packet, SI446X_TX_FIFO_LEN);
     uint16_t long_pkt_pos = SI446X_TX_FIFO_LEN;
-    
+
     si446x_clear_interrupts();
-    
+
     uint8_t fifo_buffer[SI446X_TX_FIFO_ALMOST_EMPTY_THRESHOLD];
     uint16_t tx_timer = SI446X_TX_TIMEOUT;
     uint16_t i = 0;
 
     si446x_enter_tx_mode();
 
-//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Transmitting data: ");
-//    for(i=0; i<len; i++)
-//    {
-//        debug_print_hex(packet[i]);
-//        if (i < len-1)
-//        {
-//            debug_print_msg(",");
-//        }
-//    }
-//    debug_new_line();
+#if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    sys_log_print_event_from_module(SYS_LOG_INFO, SI446X_MODULE_NAME, "Transmitting data: ");
+    sys_log_dump_hex(packet, len);
+    sys_log_new_line();
+#endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
     while(tx_timer--)
     {
@@ -274,7 +276,7 @@ bool si446x_tx_long_packet(uint8_t *packet, uint16_t len)
 
                 while(tx_timer--)
                 {
-                    if (si446x_wait_packet_sent())         // Wait packet sent interruption
+                    if (si446x_wait_packet_sent())         /* Wait packet sent interruption */
                     {
                         return true;
                     }
@@ -294,19 +296,19 @@ bool si446x_tx_long_packet(uint8_t *packet, uint16_t len)
                 tx_timer = SI446X_TX_TIMEOUT;
             }
         }
-        __delay_cycles(160); //10us
+        __delay_cycles(160);    /* 10 us */
     }
 
-    // If the packet transmission takes longer than expected, resets the radio.
-//    si446x_init();
+    /* If the packet transmission takes longer than expected, resets the radio */
+/*    si446x_init(); */
 
     return false;
 }
 
 uint8_t si446x_rx_packet(uint8_t *rx_buf, uint8_t read_len)
 {
-    uint8_t rx_len = si446x_read_rx_fifo(rx_buf, read_len);     // Read data from the FIFO
-    si446x_fifo_reset();                                        // Clear FIFO
+    uint8_t rx_len = si446x_read_rx_fifo(rx_buf, read_len);     /* Read data from the FIFO */
+    si446x_fifo_reset();                                        /* Clear FIFO */
 
     return rx_len;
 }
@@ -315,8 +317,8 @@ bool si446x_rx_init(void)
 {
     uint8_t length = 50;
 
-    si446x_set_properties(SI446X_PROPERTY_PKT_FIELD_2_LENGTH_7_0, &length, 1);  // Reload RX FIFO size
-    si446x_fifo_reset();                                                        // Clear FIFO
+    si446x_set_properties(SI446X_PROPERTY_PKT_FIELD_2_LENGTH_7_0, &length, 1);  /* Reload RX FIFO size */
+    si446x_fifo_reset();                                                        /* Clear FIFO */
     si446x_set_rx_interrupt();
     si446x_clear_interrupts();
     si446x_enter_rx_mode();
@@ -331,8 +333,10 @@ bool si446x_check_device(void)
 
     if (!si446x_get_cmd(SI446X_CMD_PART_INFO, buffer, 9))
     {
-//        debug_print_event_from_module(DEBUG_ERROR, SI446X_MODULE_NAME, "Error reading the device ID!");
-//        debug_new_line();
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, SI446X_MODULE_NAME, "Error reading the device ID!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
         return false;
     }
@@ -340,12 +344,14 @@ bool si446x_check_device(void)
     part_info = (buffer[2] << 8) | buffer[3];
     if (part_info != SI446X_PART_INFO)
     {
-//        debug_print_event_from_module(DEBUG_ERROR, SI446X_MODULE_NAME, "Error checking the device ID! (read=");
-//        debug_print_hex(part_info);
-//        debug_print_msg(", expected=");
-//        debug_print_hex(SI446X_PART_INFO);
-//        debug_print_msg(")");
-//        debug_new_line();
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, SI446X_MODULE_NAME, "Error checking the device ID! (read=");
+        sys_log_print_hex(part_info);
+        sys_log_print_msg(", expected=");
+        sys_log_print_hex(SI446X_PART_INFO);
+        sys_log_print_msg(")");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
         return false;
     }
@@ -365,7 +371,7 @@ bool si446x_check_cts(void)
         
         si446x_spi_transfer(SI446X_CMD_READ_BUF);
         
-        if (si446x_spi_transfer(SI446X_CMD_NOP) == SI446X_CTS_REPLY) // Read CTS
+        if (si446x_spi_transfer(SI446X_CMD_NOP) == SI446X_CTS_REPLY) /* Read CTS */
         {
             si446x_slave_disable();
             
@@ -386,7 +392,7 @@ bool si446x_get_cmd(uint8_t cmd, uint8_t *para_buf, uint8_t length)
     }
     
     si446x_slave_enable();
-    si446x_spi_transfer(cmd);                   // Send the command
+    si446x_spi_transfer(cmd);                   /* Send the command */
     si446x_slave_disable();
     
     if (!si446x_check_cts())
@@ -395,8 +401,8 @@ bool si446x_get_cmd(uint8_t cmd, uint8_t *para_buf, uint8_t length)
     }
     
     si446x_slave_enable();
-    si446x_spi_transfer(SI446X_CMD_READ_BUF);   // Send READ_BUF command to grab the command parameters
-    si446x_spi_read(para_buf, length);          // Read the parameters
+    si446x_spi_transfer(SI446X_CMD_READ_BUF);   /* Send READ_BUF command to grab the command parameters */
+    si446x_spi_read(para_buf, length);          /* Read the parameters */
     si446x_slave_disable();
     
     return true;
@@ -404,15 +410,17 @@ bool si446x_get_cmd(uint8_t cmd, uint8_t *para_buf, uint8_t length)
 
 bool si446x_set_tx_power(uint8_t pwr)
 {
-    if (pwr > 127)      // Max. value is 127
+    if (pwr > 127)      /* Max. value is 127 */
     {
         pwr = 127;
     }
 
-//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Configuring TX power to ");
-//    debug_print_hex(pwr);
-//    debug_print_msg("...");
-//    debug_new_line();
+#if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    sys_log_print_event_from_module(SYS_LOG_INFO, SI446X_MODULE_NAME, "Configuring TX power to ");
+    sys_log_print_hex(pwr);
+    sys_log_print_msg("...");
+    sys_log_new_line();
+#endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
     uint8_t buffer[5];
     buffer[0] = 0x08;
@@ -431,14 +439,14 @@ bool si446x_set_properties(uint16_t start_property, uint8_t *para_buf, uint8_t l
     }
     
     uint8_t buffer[5];
-    buffer[0] = SI446X_CMD_SET_PROPERTY;    // CMD
-    buffer[1] = start_property >> 8;        // GROUP
-    buffer[2] = length;                     // NUM_PROPS
-    buffer[3] = start_property & 0xFF;      // START_PROP
+    buffer[0] = SI446X_CMD_SET_PROPERTY;    /* CMD */
+    buffer[1] = start_property >> 8;        /* GROUP */
+    buffer[2] = length;                     /* NUM_PROPS */
+    buffer[3] = start_property & 0xFF;      /* START_PROP */
     
     si446x_slave_enable();
-    si446x_spi_write(buffer, 4);            // Set start property and read length
-    si446x_spi_write(para_buf, length);     // Set parameters
+    si446x_spi_write(buffer, 4);            /* Set start property and read length */
+    si446x_spi_write(para_buf, length);     /* Set parameters */
     si446x_slave_disable();
     
     return true;
@@ -453,12 +461,12 @@ bool si446x_get_properties(uint16_t start_property, uint8_t length, uint8_t *par
     
     uint8_t buffer[5];
     buffer[0] = SI446X_CMD_GET_PROPERTY;
-    buffer[1] = start_property >> 8;    // GROUP
-    buffer[2] = length;                 // NUM_PROPS
-    buffer[3] = start_property & 0xFF;  // START_PROP
+    buffer[1] = start_property >> 8;        /* GROUP */
+    buffer[2] = length;                     /* NUM_PROPS */
+    buffer[3] = start_property & 0xFF;      /* START_PROP */
     
     si446x_slave_enable();
-    si446x_spi_write(buffer, 4);        // Set start property and read length
+    si446x_spi_write(buffer, 4);            /* Set start property and read length */
     si446x_slave_disable();
     
     if (!si446x_check_cts())
@@ -467,8 +475,8 @@ bool si446x_get_properties(uint16_t start_property, uint8_t length, uint8_t *par
     }
     
     si446x_slave_enable();
-    si446x_spi_transfer(SI446X_CMD_READ_BUF);   // Turn to read command mode
-    si446x_spi_write(para_buf, length);         // Read parameters
+    si446x_spi_transfer(SI446X_CMD_READ_BUF);   /* Turn to read command mode */
+    si446x_spi_write(para_buf, length);         /* Read parameters */
     si446x_slave_disable();
     
     return true;
@@ -476,7 +484,7 @@ bool si446x_get_properties(uint16_t start_property, uint8_t length, uint8_t *par
 
 void si446x_set_config(const uint8_t *parameters, uint16_t para_len)
 {
-    // Command buffer starts with the length of the command in RADIO_CONFIGURATION_DATA_ARRAY
+    /* Command buffer starts with the length of the command in RADIO_CONFIGURATION_DATA_ARRAY */
     uint8_t cmd_len;
     uint16_t cmd;
     uint16_t pos;
@@ -488,9 +496,9 @@ void si446x_set_config(const uint8_t *parameters, uint16_t para_len)
     
     while(pos < para_len)
     {
-        cmd_len = parameters[pos++] - 1;            // Get command len
-        cmd = parameters[pos++];                    // Get command
-        memcpy(buffer, parameters + pos, cmd_len);  // Get parameters
+        cmd_len = parameters[pos++] - 1;            /* Get command len */
+        cmd = parameters[pos++];                    /* Get command */
+        memcpy(buffer, parameters + pos, cmd_len);  /* Get parameters */
         
         si446x_set_cmd(cmd, buffer, cmd_len);
         pos += cmd_len;
@@ -501,10 +509,12 @@ void si446x_set_config(const uint8_t *parameters, uint16_t para_len)
 
 bool si446x_set_preamble_len(uint8_t len)
 {
-//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Configuring preamble length to ");
-//    debug_print_dec(len);
-//    debug_print_msg("...");
-//    debug_new_line();
+#if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    sys_log_print_event_from_module(SYS_LOG_INFO, SI446X_MODULE_NAME, "Configuring preamble length to ");
+    sys_log_print_dec(len);
+    sys_log_print_msg("...");
+    sys_log_new_line();
+#endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
     return si446x_set_properties(SI446X_PROPERTY_PREAMBLE_TX_LENGTH, &len, 1);
 }
@@ -513,23 +523,19 @@ bool si446x_set_sync_word(uint8_t *sync_word, uint8_t len)
 {
     if ((len == 0) || (len > 3))
     {
-//        debug_print_event_from_module(DEBUG_ERROR, SI446X_MODULE_NAME, "Error configuring sync word! Length greater than 4 bytes!");
-//        debug_new_line();
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, SI446X_MODULE_NAME, "Error configuring sync word! Length greater than 4 bytes!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
         return false;
     }
 
-//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Configuring sync word as ");
-//    uint8_t i = 0;
-//    for(i=0; i<len; i++)
-//    {
-//        debug_print_hex(sync_word[i]);
-//        if (i < len-1)
-//        {
-//            debug_print_msg(",");
-//        }
-//    }
-//    debug_new_line();
+#if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    sys_log_print_event_from_module(SYS_LOG_INFO, SI446X_MODULE_NAME, "Configuring sync word as ");
+    sys_log_dump_hex(sync_word, len);
+    sys_log_new_line();
+#endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
     uint8_t buffer[6];
     buffer[0] = len - 1;
@@ -559,8 +565,8 @@ bool si446x_set_cmd(uint8_t cmd, uint8_t *para_buf, uint8_t len)
     }
     
     si446x_slave_enable();
-    si446x_spi_transfer(cmd);           // Send the command
-    si446x_spi_write(para_buf, len);    // Send the parameters
+    si446x_spi_transfer(cmd);           /* Send the command */
+    si446x_spi_write(para_buf, len);    /* Send the parameters */
     si446x_slave_disable();
     
     return true;
@@ -568,7 +574,7 @@ bool si446x_set_cmd(uint8_t cmd, uint8_t *para_buf, uint8_t len)
 
 bool si446x_set_tx_interrupt(void)
 {
-    uint8_t buffer[4];      // Enable PACKET_SENT interruption
+    uint8_t buffer[4];      /* Enable PACKET_SENT interruption */
     
     buffer[0] = 0x01;
     buffer[1] = 0x20;
@@ -579,7 +585,7 @@ bool si446x_set_tx_interrupt(void)
 
 bool si446x_set_rx_interrupt(void)
 {
-    uint8_t buffer[4];      // Enable PACKET_RX interrution
+    uint8_t buffer[4];      /* Enable PACKET_RX interrution */
     
     buffer[0] = 0x03;
     buffer[1] = 0x18;
@@ -637,15 +643,17 @@ void si446x_enter_tx_mode(void)
         return;
     }
 
-//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Entering TX mode...");
-//    debug_new_line();
+#if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    sys_log_print_event_from_module(SYS_LOG_INFO, SI446X_MODULE_NAME, "Entering TX mode...");
+    sys_log_new_line();
+#endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
     uint8_t buffer[5];
     
     buffer[0] = SI446X_FREQ_CHANNEL;
-    buffer[1] = 0x30;                   // TXCOMPLETE_STATE = Ready State; RETRANSMIT = 0 = No re-transmition; START = 0 = Start TX immediately
-    buffer[2] = 0x00;                   // TX packet length MSB (If equal zero, default length)
-    buffer[3] = 0x00;                   // TX packet length LSB (If equal zero, default length)
+    buffer[1] = 0x30;                   /* TXCOMPLETE_STATE = Ready State; RETRANSMIT = 0 = No re-transmition; START = 0 = Start TX immediately */
+    buffer[2] = 0x00;                   /* TX packet length MSB (If equal zero, default length) */
+    buffer[3] = 0x00;                   /* TX packet length LSB (If equal zero, default length) */
     
     si446x_set_cmd(SI446X_CMD_START_TX, buffer, 4);
 
@@ -659,8 +667,10 @@ void si446x_enter_rx_mode(void)
         return;
     }
 
-//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Entering RX mode...");
-//    debug_new_line();
+#if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    sys_log_print_event_from_module(SYS_LOG_INFO, SI446X_MODULE_NAME, "Entering RX mode...");
+    sys_log_new_line();
+#endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
     uint8_t buffer[8];
     
@@ -684,8 +694,10 @@ bool si446x_enter_standby_mode(void)
         return false;
     }
 
-//    debug_print_event_from_module(DEBUG_INFO, SI446X_MODULE_NAME, "Entering standby mode...");
-//    debug_new_line();
+#if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    sys_log_print_event_from_module(SYS_LOG_INFO, SI446X_MODULE_NAME, "Entering standby mode...");
+    sys_log_new_line();
+#endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
     uint8_t data = 0x01;
 
@@ -734,4 +746,4 @@ bool si446x_wait_gpio1(void)
     }
 }
 
-//! \} End of si446x group
+/** \} End of si446x group */

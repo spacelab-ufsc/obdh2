@@ -45,4 +45,4 @@ int phj_check_converter();
 
 int phj_check_message();
 
-#endif // PHJ_H_
+#endif /* PHJ_H_ */

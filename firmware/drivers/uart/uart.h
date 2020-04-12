@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.12
+ * \version 0.3.9
  * 
  * \date 07/12/2019
  * 
@@ -38,6 +38,8 @@
 #define UART_H_
 
 #include <stdint.h>
+
+#define UART_MODULE_NAME    "UART"
 
 /**
  * \brief UART ports.

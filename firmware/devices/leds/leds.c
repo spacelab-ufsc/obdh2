@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.1
+ * \version 0.3.12
  * 
  * \date 20/01/2020
  * 
@@ -33,15 +33,15 @@
  * \{
  */
 
-#include <devices/logger/logger.h>
+#include <system/sys_log/sys_log.h>
 #include <drivers/gpio/gpio.h>
 
 #include "leds.h"
 
 int leds_init()
 {
-    logger_print_event_from_module(LOGGER_INFO, LEDS_MODULE_NAME, "Initializing system LEDs...");
-    logger_new_line();
+    sys_log_print_event_from_module(SYS_LOG_INFO, LEDS_MODULE_NAME, "Initializing system LEDs...");
+    sys_log_new_line();
 
     gpio_config_t config_sys = {.mode = GPIO_MODE_OUTPUT};
     gpio_config_t config_fault = {.mode = GPIO_MODE_OUTPUT};
@@ -52,8 +52,8 @@ int leds_init()
     }
     else
     {
-        logger_print_event_from_module(LOGGER_ERROR, LEDS_MODULE_NAME, "Error initializing the system LEDs!");
-        logger_new_line();
+        sys_log_print_event_from_module(SYS_LOG_ERROR, LEDS_MODULE_NAME, "Error initializing the system LEDs!");
+        sys_log_new_line();
 
         return -1;
     }

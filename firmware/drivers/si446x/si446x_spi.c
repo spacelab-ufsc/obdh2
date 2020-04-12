@@ -68,4 +68,4 @@ void si446x_spi_read(uint8_t *data, uint16_t size)
     spi_read(SPI_PORT_0, GPIO_PIN_5, data, size);
 }
 
-//! \} End of si446x group
+/** \} End of si446x group */

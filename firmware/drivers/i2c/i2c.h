@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.21
+ * \version 0.3.9
  * 
  * \date 07/12/2019
  * 
@@ -38,6 +38,8 @@
 #define I2C_H_
 
 #include <stdint.h>
+
+#define I2C_MODULE_NAME         "I2C"
 
 #define I2C_SLAVE_TIMEOUT       10000
 

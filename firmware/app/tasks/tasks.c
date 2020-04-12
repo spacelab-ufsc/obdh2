@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.2
+ * \version 0.3.6
  * 
  * \date 02/11/2019
  * 
@@ -47,6 +47,7 @@
 #include "read_temp.h"
 #include "beacon.h"
 #include "save_time.h"
+#include "csp_server.h"
 
 void create_tasks()
 {
@@ -124,6 +125,15 @@ void create_tasks()
         /* Error creating the save time task */
     }
 #endif /* CONFIG_TASK_BEACON_ENABLED */
+
+#if CONFIG_TASK_CSP_SERVER_ENABLED == 1
+    xTaskCreate(vTaskCSPServer, TASK_CSP_SERVER_NAME, TASK_CSP_SERVER_STACK_SIZE, NULL, TASK_CSP_SERVER_PRIORITY, &xTaskCSPServerHandle);
+
+    if (xTaskCSPServerHandle == NULL)
+    {
+        /* Error creating the CSP server task */
+    }
+#endif /* CONFIG_TASK_CSP_SERVER_ENABLED */
 
     create_event_groups();
 }

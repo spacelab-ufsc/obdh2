@@ -1,5 +1,5 @@
 /*
- * logger.h
+ * sys_log.h
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -25,17 +25,17 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.3.11
  * 
  * \date 03/11/2019
  * 
- * \defgroup logger Logger
- * \ingroup devices
+ * \defgroup sys_log System Log
+ * \ingroup system
  * \{
  */
 
-#ifndef LOGGER_H_
-#define LOGGER_H_
+#ifndef SYS_LOG_H_
+#define SYS_LOG_H_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -48,37 +48,37 @@
  */
 typedef enum
 {
-    LOGGER_INFO,                /**< Information message. */
-    LOGGER_WARNING,             /**< Warning message. */
-    LOGGER_ERROR                /**< Error message. */
-} logger_event_type_e;
+    SYS_LOG_INFO,               /**< Information message. */
+    SYS_LOG_WARNING,            /**< Warning message. */
+    SYS_LOG_ERROR               /**< Error message. */
+} sys_log_event_type_e;
 
 /**
- * \brief Logger text colors list.
+ * \brief System log text colors list.
  */
 typedef enum
 {
-    LOGGER_COLOR_BLACK = 0,     /**< Color black. */
-    LOGGER_COLOR_RED,           /**< Color red. */
-    LOGGER_COLOR_GREEN,         /**< Color green. */
-    LOGGER_COLOR_YELLOW,        /**< Color yellow. */
-    LOGGER_COLOR_BLUE,          /**< Color blue. */
-    LOGGER_COLOR_MAGENTA,       /**< Color magenta. */
-    LOGGER_COLOR_CYAN,          /**< Color cyan. */
-    LOGGER_COLOR_WHITE          /**< Color white. */
-} logger_colors_e;
+    SYS_LOG_COLOR_BLACK = 0,    /**< Color black. */
+    SYS_LOG_COLOR_RED,          /**< Color red. */
+    SYS_LOG_COLOR_GREEN,        /**< Color green. */
+    SYS_LOG_COLOR_YELLOW,       /**< Color yellow. */
+    SYS_LOG_COLOR_BLUE,         /**< Color blue. */
+    SYS_LOG_COLOR_MAGENTA,      /**< Color magenta. */
+    SYS_LOG_COLOR_CYAN,         /**< Color cyan. */
+    SYS_LOG_COLOR_WHITE         /**< Color white. */
+} sys_log_colors_e;
 
 /**
- * \brief Logger device mutex.
+ * \brief System log mutex.
  */
-extern SemaphoreHandle_t xLoggerSemaphore;
+extern SemaphoreHandle_t xSysLogSemaphore;
 
 /**
- * \brief Initialization of the logger device.
+ * \brief Initialization of the system log.
  * 
  * \return The error/status code.
  */
-int logger_init();
+int sys_log_init();
 
 /**
  * \brief Sets the foreground color for the next log message.
@@ -87,36 +87,36 @@ int logger_init();
  *
  * \param[in] color is the foreground color of text to select. It can be:
  * \parblock
- *      -\b LOGGER_COLOR_BLACK
- *      -\b LOGGER_COLOR_RED
- *      -\b LOGGER_COLOR_GREEN
- *      -\b LOGGER_COLOR_YELLOW
- *      -\b LOGGER_COLOR_BLUE
- *      -\b LOGGER_COLOR_MAGENTA
- *      -\b LOGGER_COLOR_CYAN
- *      -\b LOGGER_COLOR_WHITE
+ *      -\b SYS_LOG_COLOR_BLACK
+ *      -\b SYS_LOG_COLOR_RED
+ *      -\b SYS_LOG_COLOR_GREEN
+ *      -\b SYS_LOG_COLOR_YELLOW
+ *      -\b SYS_LOG_COLOR_BLUE
+ *      -\b SYS_LOG_COLOR_MAGENTA
+ *      -\b SYS_LOG_COLOR_CYAN
+ *      -\b SYS_LOG_COLOR_WHITE
  *      .
  * \endparblock
  *
  * \return None.
  */
-void logger_set_color(uint8_t color);
+void sys_log_set_color(uint8_t color);
 
 /**
  * \brief Resets the color back to normal.
  *
  * \return None.
  */
-void logger_reset_color();
+void sys_log_reset_color();
 
 /**
  * \brief Prints a general event.
  *
  * \param[in] type is the type of event. It can be:
  * \parblock
- *      -\b LOGGER_INFO
- *      -\b LOGGER_WARNING
- *      -\b LOGGER_ERROR
+ *      -\b SYS_LOG_INFO
+ *      -\b SYS_LOG_WARNING
+ *      -\b SYS_LOG_ERROR
  *      .
  * \endparblock
  *
@@ -124,16 +124,16 @@ void logger_reset_color();
  *
  * \return None.
  */
-void logger_print_event(uint8_t type, const char *event);
+void sys_log_print_event(uint8_t type, const char *event);
 
 /**
  * \brief Prints an event from a system module.
  *
  * \param[in] type is the type of event. It can be:
  * \parblock
- *      -\b LOGGER_INFO
- *      -\b LOGGER_WARNING
- *      -\b LOGGER_ERROR
+ *      -\b SYS_LOG_INFO
+ *      -\b SYS_LOG_WARNING
+ *      -\b SYS_LOG_ERROR
  *      .
  * \endparblock
  *
@@ -143,44 +143,53 @@ void logger_print_event(uint8_t type, const char *event);
  *
  * \return None.
  */
-void logger_print_event_from_module(uint8_t type, const char *module, const char *event);
+void sys_log_print_event_from_module(uint8_t type, const char *module, const char *event);
 
 /**
- * \brief Prints a message over the UART port.
+ * \brief Prints a message over the system log module.
  * 
  * \param[in] msg is the message to be written.
  * 
  * \return None.
  */
-void logger_print_msg(const char *msg);
+void sys_log_print_msg(const char *msg);
 
 /**
- * \brief Goes to the next line.
+ * \brief Prints an string over the system log module.
+ *
+ * \param[in] str is a pointer to an string.
  *
  * \return None.
  */
-void logger_new_line();
+void sys_log_print_str(char *str);
 
 /**
- * \brief Prints a integer digit over the logger device.
+ * \brief Prints a new line.
+ *
+ * \return None.
+ */
+void sys_log_new_line();
+
+/**
+ * \brief Prints a integer digit over the system log module.
  * 
  * \param[in] d is the digit to be written (0 to 9)
  * 
  * \return None.
  */
-void logger_print_digit(uint8_t d);
+void sys_log_print_digit(uint8_t d);
 
 /**
- * \brief Prints a decimal number over the logger device.
+ * \brief Prints a decimal number over the system log module.
  *
  * \param[in] dec is the decimal number to print.
  *
  * \return None.
  */
-void logger_print_dec(uint32_t dec);
+void sys_log_print_dec(uint32_t dec);
 
 /**
- * \brief Prints a hexadecimal value over the UART port.
+ * \brief Prints a hexadecimal value over the system log module.
  * 
  * Example:
  *      - Integer   = 0x65
@@ -192,59 +201,70 @@ void logger_print_dec(uint32_t dec);
  * 
  * \return None.
  */
-void logger_print_hex(uint32_t hex);
+void sys_log_print_hex(uint32_t hex);
 
 /**
- * \brief Prints a raw byte over the UART.
+ * \brief .
+ *
+ * \param[in] data .
+ *
+ * \param[in] len .
+ *
+ * \return None.
+ */
+void sys_log_dump_hex(uint8_t *data, uint16_t len);
+
+/**
+ * \brief Prints a raw byte over the system log module.
  * 
  * \param[in] byte is the byte to be printed.
  * 
  * \return None.
  */
-void logger_print_byte(uint8_t byte);
+void sys_log_print_byte(uint8_t byte);
 
 /**
  * \brief Prints the system time in milliseconds.
  *
  * \return None.
  */
-void logger_print_system_time();
+void sys_log_print_system_time();
 
 /**
  * \brief Prints the license text and genreal firmware information.
  *
  * \return None.
  */
-void logger_print_license_msg();
+void sys_log_print_license_msg();
 
 /**
  * \brief Prints the splash screen of the firmware.
  *
  * \return None.
  */
-void logger_print_splash_screen();
+void sys_log_print_splash_screen();
 
 /**
  * \brief Writes the current firmware version.
  *
  * \return None.
  */
-void logger_print_firmware_version();
+void sys_log_print_firmware_version();
 
 /**
- * \brief Initialization of the logger UART port.
+ * \brief Initialization of the system log UART port.
  * 
  * UART settings:
- *      - MCU interface = USCI_A1
- *      - Baudrate      = 115200 bps
- *      - Data bits     = 8
- *      - Parity bit    = None
- *      - Stop bits     = 1
+ *      -\b MCU interface = USCI_A1
+ *      -\b Baudrate      = 115200 bps
+ *      -\b Data bits     = 8
+ *      -\b Parity bit    = None
+ *      -\b Stop bits     = 1
  *      .
  * 
  * \return TRUE/FALSE if successful or not.
  */
-bool logger_uart_init();
+bool sys_log_uart_init();
 
 /**
  * \brief Writes a byte over the UART port.
@@ -253,29 +273,29 @@ bool logger_uart_init();
  *
  * \return None.
  */
-void logger_uart_write_byte(uint8_t byte);
+void sys_log_uart_write_byte(uint8_t byte);
 
 /**
- * \brief Creates a mutex to use the logger device.
+ * \brief Creates a mutex to use the system log module.
  *
  * \return TRUE/FALSE if successful or not.
  */
-bool logger_mutex_create();
+bool sys_log_mutex_create();
 
 /**
- * \brief Holds the resource (logger device).
+ * \brief Holds the resource (system log module).
  *
  * \return TRUE/FALSE if successful or not.
  */
-bool logger_mutex_take();
+bool sys_log_mutex_take();
 
 /**
- * \brief Frees the resource (logger device).
+ * \brief Frees the resource (system log).
  *
  * \return TRUE/FALSE if successful or not.
  */
-bool logger_mutex_give();
+bool sys_log_mutex_give();
 
-#endif /* LOGGER_H_ */
+#endif /* SYS_LOG_H_ */
 
-/** \} End of logger group */
+/** \} End of sys_log group */
