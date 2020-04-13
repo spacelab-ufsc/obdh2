@@ -44,6 +44,6 @@
 #include "payload_edc/payload_edc.h"
 #include "temp_sensor/temp_sensor.h"
 
-#endif // DEVICES_H_
+#endif /* DEVICES_H_ */
 
-//! \} End of devices group
+/** \} End of devices group */

@@ -442,6 +442,6 @@ bool si446x_wait_gpio1(void);
  */
 void si446x_delay_ms(uint32_t ms);
 
-#endif // SI446X_H_
+#endif /* SI446X_H_ */
 
-//! \} End of si446x group
+/** \} End of si446x group */
