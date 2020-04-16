@@ -1,1 +1,1 @@
-# MT25QL01GBBB NOT Flash Memory Driver
+# MT25QL01GBBB NOR Flash Memory Driver
