@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.23
+ * \version 0.3.12
  * 
  * \date 27/10/2019
  * 
@@ -42,9 +42,11 @@
 
 #include <drivers/i2c/i2c.h>
 
+#define EDC_MODULE_NAME             "EDC"
+
 #define EDC_SLAVE_ADDRESS           0x13    /**< 7-bit slave address. */
 
-// Commands IDs
+/* Commands IDs */
 #define EDC_CMD_RTC_SET             0x01    /**< Sets the RTC time. The parameters is the number of seconds elapsed since J2000 epoch. */
 #define EDC_CMD_PTT_POP             0x06    /**< Removes current PTT package from the PTT Package FIFO Buffer, allowing the reading of the next PTT package, if existent. */
 #define EDC_CMD_PTT_PAUSE           0x08    /**< Pauses the PTT Decoding Task. At initialization the PTT Task is paused. */
@@ -364,6 +366,6 @@ int edc_get_hk(edc_hk_t *hk_data);
  */
 void edc_delay_ms(uint32_t ms);
 
-#endif // EDC_H_
+#endif /* EDC_H_ */
 
-//! \} End of edc group
+/** \} End of edc group */
