@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.12
+ * \version 0.3.13
  * 
  * \date 27/10/2019
  * 
@@ -33,9 +33,12 @@
  * \{
  */
 
-#include <drivers/si446x/si446x.h>
+#include <FreeRTOS.h>
+#include <task.h>
 
 #include <system/sys_log/sys_log.h>
+
+#include <drivers/si446x/si446x.h>
 
 #include "radio.h"
 
@@ -49,17 +52,76 @@ int radio_init()
 
 int radio_send(uint8_t *data, uint16_t len)
 {
-    return -1;
+    sys_log_print_event_from_module(SYS_LOG_INFO, RADIO_MODULE_NAME, "Transmmiting ");
+    sys_log_print_dec(len);
+    sys_log_print_msg(" byte(s)...");
+    sys_log_new_line();
+
+    if (!si446x_tx_long_packet(uint8_t *packet, uint16_t len))
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, RADIO_MODULE_NAME, "Error transmitting a packet!");
+        sys_log_new_line();
+
+        return -1;
+    }
+
+    return 0;
 }
 
-int radio_recv(uint8_t *data, uint16_t len)
+int radio_recv(uint8_t *data, uint16_t len, uint32_t timeout_ms)
 {
-    return -1;
+    if (!si446x_rx_init())
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, RADIO_MODULE_NAME, "Error starting RX mode!");
+        sys_log_new_line();
+
+        return -1;
+    }
+
+    int recv_len = 0;
+
+    TickType_t timeout_tick = pdMS_TO_TICKS(timeout_ms);
+
+    TickType_t start_time_tick = xTaskGetTickCount();
+
+    while((start_time_tick + timeout_tick) <= xTaskGetTickCount())
+    {
+        if (si446x_wait_nirq())
+        {
+            recv_len = (int)si446x_rx_packet(data, len);
+
+            si446x_clear_interrupts();
+
+            sys_log_print_event_from_module(SYS_LOG_INFO, RADIO_MODULE_NAME, "");
+            sys_log_print_dec(len);
+            sys_log_print_msg(" byte(s) received!");
+            sys_log_new_line();
+
+            return recv_len;
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(250));
+    }
+
+    return 0;
 }
 
 int radio_available()
 {
-    return -1;
+    return (int)si446x_wait_nirq();
+}
+
+int radio_sleep()
+{
+    if (!si446x_enter_standby_mode())
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, RADIO_MODULE_NAME, "Error configuring sleep mode!");
+        sys_log_new_line();
+
+        return -1;
+    }
+
+    return 0;
 }
 
 /** \} End of radio group */
