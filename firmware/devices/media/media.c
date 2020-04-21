@@ -1,5 +1,5 @@
 /*
- * devices.h
+ * media.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,30 +21,38 @@
  */
 
 /**
- * \brief Devices layer.
+ * \brief Media device implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.3.13
  * 
- * \date 26/10/2019
+ * \date 21/07/2020
  * 
- * \defgroup devices Devices
+ * \addtogroup media
  * \{
  */
 
-#ifndef DEVICES_H_
-#define DEVICES_H_
+#include "media.h"
 
-#include "radio/radio.h"
-#include "leds/leds.h"
-#include "eps/eps.h"
-#include "ttc/ttc.h"
-#include "antenna/antenna.h"
-#include "payload_edc/payload_edc.h"
-#include "temp_sensor/temp_sensor.h"
-#include "media/media.h"
+int media_init(media_t med)
+{
+    return -1;
+}
 
-#endif /* DEVICES_H_ */
+int media_write(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
+{
+    return -1;
+}
 
-/** \} End of devices group */
+int media_read(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
+{
+    return -1;
+}
+
+int media_erase(media_t med, uint32_t adr)
+{
+    return -1;
+}
+
+/** \} End of media group */
