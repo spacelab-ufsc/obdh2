@@ -33,26 +33,85 @@
  * \{
  */
 
+#include <system/sys_log/sys_log.h>
+
+#include <drivers/flash/flash.h>
+
 #include "media.h"
 
 int media_init(media_t med)
 {
-    return -1;
+    switch(med)
+    {
+        case MEDIA_INT_FLASH:
+            return flash_init();
+        case MEDIA_NOR:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Initialization not implemented for the NOR memory!");
+            sys_log_new_line();
+
+            return -1;
+        default:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Invalid storage media to initialize!");
+            sys_log_new_line();
+
+            return -1;
+    }
 }
 
 int media_write(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
 {
-    return -1;
+    switch(med)
+    {
+        case MEDIA_INT_FLASH:
+        case MEDIA_NOR:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Write operation not implemented for the NOR memory!");
+            sys_log_new_line();
+
+            return -1;
+        default:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Invalid storage media to write!");
+            sys_log_new_line();
+
+            return -1;
+    }
 }
 
 int media_read(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
 {
-    return -1;
+    switch(med)
+    {
+        case MEDIA_INT_FLASH:
+            return -1;
+        case MEDIA_NOR:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Read operation not implemented for the NOR memory!");
+            sys_log_new_line();
+
+            return -1;
+        default:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Invalid storage media to read!");
+            sys_log_new_line();
+
+            return -1;
+    }
 }
 
 int media_erase(media_t med, uint32_t adr)
 {
-    return -1;
+    switch(med)
+    {
+        case MEDIA_INT_FLASH:
+            return -1;
+        case MEDIA_NOR:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Erase operation not implemented for the NOR memory!");
+            sys_log_new_line();
+
+            return -1;
+        default:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Invalid storage media to erase!");
+            sys_log_new_line();
+
+            return -1;
+    }
 }
 
 /** \} End of media group */
