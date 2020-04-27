@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.13
+ * \version 0.3.14
  * 
  * \date 27/10/2019
  * 
@@ -57,7 +57,7 @@ int radio_send(uint8_t *data, uint16_t len)
     sys_log_print_msg(" byte(s)...");
     sys_log_new_line();
 
-    if (!si446x_tx_long_packet(uint8_t *packet, uint16_t len))
+    if (!si446x_tx_long_packet(data, len))
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, RADIO_MODULE_NAME, "Error transmitting a packet!");
         sys_log_new_line();
