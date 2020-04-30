@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.23
+ * \version 0.3.12
  * 
  * \date 27/10/2019
  * 
@@ -35,6 +35,9 @@
 
 #include <math.h>
 #include <string.h>
+
+#include <config/config.h>
+#include <system/sys_log/sys_log.h>
 
 #include "edc.h"
 
@@ -49,6 +52,10 @@ int edc_init(edc_config_t config)
 
     if (i2c_init(config.port, (i2c_config_t){.speed_hz=config.bitrate}) != 0)
     {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error initializing the I2C port!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         return -1;  /* Error initializing the I2C port */
     }
 
@@ -88,6 +95,10 @@ int edc_write_cmd(edc_cmd_t cmd)
             break;
         case EDC_CMD_ECHO:              break;
         default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Invalid command!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
             return -1;  /* Invalid command */
     }
 
@@ -106,6 +117,10 @@ int edc_check_device()
 
     if (edc_get_state_pkg(status) != EDC_FRAME_STATE_LEN)
     {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error checking the device!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         return -1;
     }
 
@@ -146,6 +161,10 @@ int16_t edc_get_state_pkg(uint8_t *status)
 {
     if (edc_write_cmd((edc_cmd_t){.id=EDC_CMD_GET_STATE}) != 0)
     {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error writing the \"get state\" command!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         return -1;
     }
 
@@ -154,11 +173,21 @@ int16_t edc_get_state_pkg(uint8_t *status)
 
     if (edc_read(status, EDC_FRAME_STATE_LEN) != 0)
     {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading an state packet!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         return -1;
     }
 
     if (status[0] != EDC_FRAME_ID_STATE)
     {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading an state packet! Invalid frame ID (");
+        sys_log_print_hex(status[0]);
+        sys_log_print_msg(")!")
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         return -1;  /* Invalid data! */
     }
 
@@ -169,6 +198,10 @@ int16_t edc_get_ptt_pkg(uint8_t *pkg)
 {
     if (edc_write_cmd((edc_cmd_t){.id=EDC_CMD_GET_PTT_PKG}) != 0)
     {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error writing the \"get PTT\" command!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         return -1;
     }
 
@@ -177,11 +210,21 @@ int16_t edc_get_ptt_pkg(uint8_t *pkg)
 
     if (edc_read(pkg, EDC_FRAME_PTT_LEN) != 0)
     {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading a PTT packet!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         return -1;
     }
 
     if (pkg[0] != EDC_FRAME_ID_PTT)
     {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading a PTT packet! Invalid frame ID (");
+        sys_log_print_hex(pkg[0]);
+        sys_log_print_msg(")!")
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         return -1;  /* Invalid data! */
     }
 
@@ -192,6 +235,10 @@ int16_t edc_get_hk_pkg(uint8_t *hk)
 {
     if (edc_write_cmd((edc_cmd_t){.id=EDC_CMD_GET_HK_PKG}) != 0)
     {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error writing the \"get HK\" command!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         return -1;
     }
 
@@ -200,11 +247,21 @@ int16_t edc_get_hk_pkg(uint8_t *hk)
 
     if (edc_read(hk, EDC_FRAME_HK_LEN) != 0)
     {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading a HK packet!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         return -1;
     }
 
     if (hk[0] != EDC_FRAME_ID_HK)
     {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading a HK packet! Invalid frame ID (");
+        sys_log_print_hex(hk[0]);
+        sys_log_print_msg(")!")
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         return -1;  /* Invalid data! */
     }
 
@@ -215,6 +272,10 @@ int16_t edc_get_adc_seq(uint8_t *seq)
 {
     if (edc_write_cmd((edc_cmd_t){.id=EDC_CMD_GET_ADC_SEQ}) != 0)
     {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error writing the \"get ADC\" command!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         return -1;
     }
 
@@ -223,11 +284,21 @@ int16_t edc_get_adc_seq(uint8_t *seq)
 
     if (edc_read(seq, EDC_FRAME_ADC_SEQ_LEN) != 0)
     {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading an ADC sequence!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         return -1;
     }
 
     if (seq[0] != EDC_FRAME_ID_ADC_SEQ)
     {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading an ADC sequence! Invalid frame ID (");
+        sys_log_print_hex(seq[0]);
+        sys_log_print_msg(")!")
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         return -1;  /* Invalid data! */
     }
 
@@ -366,4 +437,4 @@ int edc_get_hk(edc_hk_t *hk_data)
     return 0;
 }
 
-//! \} End of edc group
+/** \} End of edc group */

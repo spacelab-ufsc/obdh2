@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.6
+ * \version 0.3.14
  * 
  * \date 02/11/2019
  * 
@@ -46,6 +46,7 @@
 #include "radio_reset.h"
 #include "read_temp.h"
 #include "beacon.h"
+#include "uplink.h"
 #include "save_time.h"
 #include "csp_server.h"
 
@@ -116,6 +117,15 @@ void create_tasks()
         /* Error creating the beacon task */
     }
 #endif /* CONFIG_TASK_BEACON_ENABLED */
+
+#if CONFIG_TASK_UPLINK_ENABLED == 1
+    xTaskCreate(vTaskUplink, TASK_UPLINK_NAME, TASK_UPLINK_STACK_SIZE, NULL, TASK_UPLINK_PRIORITY, &xTaskUplinkHandle);
+
+    if (xTaskUplinkHandle == NULL)
+    {
+        /* Error creating the uplink task */
+    }
+#endif /* CONFIG_TASK_UPLINK_ENABLED */
 
 #if CONFIG_TASK_SAVE_TIME_ENABLED == 1
     xTaskCreate(vTaskSaveTime, TASK_SAVE_TIME_NAME, TASK_SAVE_TIME_STACK_SIZE, NULL, TASK_SAVE_TIME_PRIORITY, &xTaskSaveTimeHandle);

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.1
+ * \version 0.3.12
  * 
  * \date 20/01/2020
  * 
@@ -41,14 +41,9 @@
 
 #define LEDS_MODULE_NAME        "LEDs"
 
-/**
- * \brief System LEDs.
- */
-typedef enum
-{
-    LED_SYSTEM=0,
-    LED_FAULT
-} leds_types_e;
+/* LEDs types */
+#define LED_SYSTEM              0       /**< System LED. */
+#define LED_FAULT               1       /**< Fault LED. */
 
 /**
  * \brief LED type.

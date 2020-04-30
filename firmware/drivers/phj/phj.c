@@ -43,7 +43,7 @@ int phj_init_gpio(phj_config_gpio config)
     return 0;
 }
 
-//Read data from Payload PHJ
+/* Read data from Payload PHJ */
 int phj_read(uint8_t *data, uint16_t len)
 {
     return i2c_read(phj_i2c_port, PHJ_SLAVE_ADDRESS, data, len);
