@@ -28,7 +28,7 @@ DItemRevisionGUID=
 ReportSuppressedErrorsInMessages=0
 FSMCodingStyle=eFMSDropDownList_OneProcess
 FSMEncodingStyle=eFMSDropDownList_OneHot
-OutputPath=
+OutputPath=Project Outputs for OBDH_Eng_Model_2_ALT
 LogFolderPath=
 ManagedProjectGUID=
 IncludeDesignInRelease=0
@@ -394,7 +394,7 @@ SCH_HasExpandLogicalToPhysicalSheets=-1
 SaveSettingsToOutJob=0
 
 [Generic_EDE]
-OutputDir=
+OutputDir=Project Outputs for OBDH_Eng_Model_2_ALT
 
 [OutputGroup1]
 Name=Netlist Outputs
@@ -859,7 +859,7 @@ Configuration4_Item2=545046300E5446696C74657257726170706572000D46696C7465722E416
 Configuration4_Name3=ForceUpdateSettings
 Configuration4_Item3=False
 Configuration4_Name4=General
-Configuration4_Item4=OpenExported=False|AddToProject=False|ForceFit=False|NotFitted=False|Database=False|DatabasePriority=False|IncludePCBData=False|IncludeVaultData=False|IncludeAlternatives=False|ShowExportOptions=True|TemplateFilename=C:\Users\Public\Documents\Altium\AD18\Templates\BOM Default Template.XLT|BatchMode=5|FormWidth=1169|FormHeight=816|SupplierProdQty=1|SupplierAutoQty=False|SupplierUseCachedPricing=False|SupplierCurrency=<none>|ViewType=0
+Configuration4_Item4=OpenExported=False|AddToProject=False|ForceFit=False|NotFitted=False|Database=False|DatabasePriority=False|IncludePCBData=True|IncludeVaultData=False|IncludeAlternatives=False|ShowExportOptions=True|TemplateFilename=|BatchMode=5|FormWidth=1169|FormHeight=816|SupplierProdQty=1|SupplierAutoQty=False|SupplierUseCachedPricing=False|SupplierCurrency=<none>|ViewType=0
 Configuration4_Name5=GroupOrder
 Configuration4_Item5=Comment=True|Footprint=True
 Configuration4_Name6=OutputConfigurationParameter1
@@ -867,7 +867,7 @@ Configuration4_Item6=atZ=0|QuatW=1|Zoom=2.64731593652563E-5|UnitsPercent=True|Un
 Configuration4_Name7=SortOrder
 Configuration4_Item7=Designator=Up|Comment=Up|Footprint=Up
 Configuration4_Name8=VisibleOrder
-Configuration4_Item8=Comment=100|Description=100|Designator=100|Footprint=100|LibRef=100|Partnumber=100|Quantity=100
+Configuration4_Item8=LibRef=100|Description=100|Partnumber=100|Designator=100|Quantity=100
 OutputType5=ComponentCrossReference
 OutputName5=Component Cross Reference Report
 OutputDocumentPath5=
