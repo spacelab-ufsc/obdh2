@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.10
+ * \version 0.3.13
  * 
  * \date 01/06/2017
  * 
@@ -706,7 +706,7 @@ bool si446x_enter_standby_mode(void)
     return si446x_set_cmd(SI446X_CMD_CHANGE_STATE, &data, 1);
 }
 
-bool si446x_wait_nIRQ(void)
+bool si446x_wait_nirq(void)
 {
     if (gpio_get_state(GPIO_PIN_3) == GPIO_STATE_HIGH)
     {

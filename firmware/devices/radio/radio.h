@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.12
+ * \version 0.3.13
  * 
  * \date 27/10/2019
  * 
@@ -60,15 +60,17 @@ int radio_init();
 int radio_send(uint8_t *data, uint16_t len);
 
 /**
- * \brief Reads data from the radio device (if available).
+ * \brief Reads data from the radio device (if available) with timeout.
  *
  * \param[in] data is a pointer to store the read data.
  *
  * \param[in] len is the number of bytes to read.
  *
+ * \param[in] timeout_ms is the timeout to received a packet in milliseconds.
+ *
  * \return The number of read bytes (-1 on error).
  */
-int radio_recv(uint8_t *data, uint16_t len);
+int radio_recv(uint8_t *data, uint16_t len, uint32_t timeout_ms);
 
 /**
  * \brief Verifies the number of availables bytes to receive.
@@ -76,6 +78,13 @@ int radio_recv(uint8_t *data, uint16_t len);
  * \return The number of available bytes to receive (-1 on error).
  */
 int radio_available();
+
+/**
+ * \brief Puts the radio in sleep mode.
+ *
+ * \return Tge status/error code.
+ */
+int radio_sleep();
 
 #endif /* RADIO_H_ */
 

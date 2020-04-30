@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.10
+ * \version 0.3.13
  * 
  * \date 01/06/2017
  * 
@@ -421,7 +421,7 @@ void si446x_spi_read(uint8_t *data, uint16_t size);
  *              -\b false if no interrupt occurs.
  *              .
  */
-bool si446x_wait_nIRQ(void);
+bool si446x_wait_niqr(void);
 
 /**
  * \brief Checks GPIO1 interruption.
@@ -442,6 +442,6 @@ bool si446x_wait_gpio1(void);
  */
 void si446x_delay_ms(uint32_t ms);
 
-#endif // SI446X_H_
+#endif /* SI446X_H_ */
 
-//! \} End of si446x group
+/** \} End of si446x group */
