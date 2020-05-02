@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.13
+ * \version 0.3.15
  * 
  * \date 01/06/2017
  * 
@@ -39,7 +39,6 @@
 #include <system/sys_log/sys_log.h>
 
 #include "si446x.h"
-#include "si446x_reg.h"
 #include "radio_config_Si4463.h"
 
 const uint8_t SI446X_CONFIGURATION_DATA[] = RADIO_CONFIGURATION_DATA_ARRAY;
@@ -363,48 +362,50 @@ bool si446x_check_device(void)
 
 bool si446x_check_cts(void)
 {
-    uint16_t timeout_counter = SI446X_CTS_TIMEOUT;
+    uint16_t timeout_ms = SI446X_CTS_TIMEOUT_MS;
 
-    while(timeout_counter--)
+    while(timeout_ms--)
     {
         si446x_slave_enable();
-        
-        si446x_spi_transfer(SI446X_CMD_READ_BUF);
-        
+
+        si446x_spi_transfer(SI446X_CMD_READ_CMD_BUF);
+
         if (si446x_spi_transfer(SI446X_CMD_NOP) == SI446X_CTS_REPLY) /* Read CTS */
         {
             si446x_slave_disable();
-            
+
             return true;
         }
-        
+
         si446x_slave_disable();
+
+        si446x_delay_ms(1);
     }
 
-    return  false;
+    return false;
 }
 
-bool si446x_get_cmd(uint8_t cmd, uint8_t *para_buf, uint8_t length)
+bool si446x_get_cmd(uint8_t cmd, uint8_t *data, uint8_t len)
 {
     if (!si446x_check_cts())
     {
         return false;
     }
-    
+
     si446x_slave_enable();
-    si446x_spi_transfer(cmd);                   /* Send the command */
+    si446x_spi_transfer(cmd);                       /* Send the command */
     si446x_slave_disable();
-    
+
     if (!si446x_check_cts())
     {
         return false;
     }
-    
+
     si446x_slave_enable();
-    si446x_spi_transfer(SI446X_CMD_READ_BUF);   /* Send READ_BUF command to grab the command parameters */
-    si446x_spi_read(para_buf, length);          /* Read the parameters */
+    si446x_spi_transfer(SI446X_CMD_READ_CMD_BUF);   /* Send READ_CMD_BUF command to grab the command parameters */
+    si446x_spi_read(data, len);                     /* Read the parameters */
     si446x_slave_disable();
-    
+
     return true;
 }
 
@@ -431,54 +432,54 @@ bool si446x_set_tx_power(uint8_t pwr)
     return si446x_set_properties(SI446X_PROPERTY_PA_MODE, buffer, 4);
 }
 
-bool si446x_set_properties(uint16_t start_property, uint8_t *para_buf, uint8_t length)
+bool si446x_set_properties(uint16_t start_property, uint8_t *data, uint8_t len)
 {
     if (!si446x_check_cts())
     {
         return false;
     }
-    
-    uint8_t buffer[5];
+
+    uint8_t buffer[4];
     buffer[0] = SI446X_CMD_SET_PROPERTY;    /* CMD */
     buffer[1] = start_property >> 8;        /* GROUP */
-    buffer[2] = length;                     /* NUM_PROPS */
+    buffer[2] = len;                        /* NUM_PROPS */
     buffer[3] = start_property & 0xFF;      /* START_PROP */
-    
+
     si446x_slave_enable();
     si446x_spi_write(buffer, 4);            /* Set start property and read length */
-    si446x_spi_write(para_buf, length);     /* Set parameters */
+    si446x_spi_write(data, len);            /* Set parameters */
     si446x_slave_disable();
-    
+
     return true;
 }
 
-bool si446x_get_properties(uint16_t start_property, uint8_t length, uint8_t *para_buf)
+bool si446x_get_properties(uint16_t start_property, uint8_t len, uint8_t *data)
 {
     if (!si446x_check_cts())
     {
         return false;
     }
-    
-    uint8_t buffer[5];
+
+    uint8_t buffer[4];
     buffer[0] = SI446X_CMD_GET_PROPERTY;
-    buffer[1] = start_property >> 8;        /* GROUP */
-    buffer[2] = length;                     /* NUM_PROPS */
-    buffer[3] = start_property & 0xFF;      /* START_PROP */
-    
+    buffer[1] = start_property >> 8;                /* GROUP */
+    buffer[2] = len;                                /* NUM_PROPS */
+    buffer[3] = start_property & 0xFF;              /* START_PROP */
+
     si446x_slave_enable();
-    si446x_spi_write(buffer, 4);            /* Set start property and read length */
+    si446x_spi_write(buffer, 4);                    /* Set start property and read length */
     si446x_slave_disable();
-    
+
     if (!si446x_check_cts())
     {
         return false;
     }
-    
+
     si446x_slave_enable();
-    si446x_spi_transfer(SI446X_CMD_READ_BUF);   /* Turn to read command mode */
-    si446x_spi_write(para_buf, length);         /* Read parameters */
+    si446x_spi_transfer(SI446X_CMD_READ_CMD_BUF);   /* Turn to read command mode */
+    si446x_spi_write(data, len);                    /* Read parameters */
     si446x_slave_disable();
-    
+
     return true;
 }
 
@@ -489,17 +490,17 @@ void si446x_set_config(const uint8_t *parameters, uint16_t para_len)
     uint16_t cmd;
     uint16_t pos;
     uint8_t buffer[30];
-    
+
     para_len--;
     cmd_len = parameters[0];
     pos = cmd_len + 1;
-    
+
     while(pos < para_len)
     {
         cmd_len = parameters[pos++] - 1;            /* Get command len */
         cmd = parameters[pos++];                    /* Get command */
         memcpy(buffer, parameters + pos, cmd_len);  /* Get parameters */
-        
+
         si446x_set_cmd(cmd, buffer, cmd_len);
         pos += cmd_len;
 
@@ -537,23 +538,23 @@ bool si446x_set_sync_word(uint8_t *sync_word, uint8_t len)
     sys_log_new_line();
 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
-    uint8_t buffer[6];
+    uint8_t buffer[5];
     buffer[0] = len - 1;
-    memcpy(buffer + 1,sync_word, len);
+    memcpy(buffer+1, sync_word, len);
 
     return si446x_set_properties(SI446X_PROPERTY_SYNC_CONFIG, buffer, len);
 }
 
 bool si446x_set_gpio_mode(uint8_t gpio0_mode, uint8_t gpio1_mode)
 {
-    uint8_t buffer[7];
+    uint8_t buffer[6];
     buffer[0] = gpio0_mode;
     buffer[1] = gpio1_mode;
     buffer[2] = 0x00;
     buffer[3] = 0x00;
     buffer[4] = 0x00;
     buffer[5] = 0x00;
-    
+
     return si446x_set_cmd(SI446X_CMD_GPIO_PIN_CFG, buffer, 6);
 }
 
@@ -563,55 +564,52 @@ bool si446x_set_cmd(uint8_t cmd, uint8_t *para_buf, uint8_t len)
     {
         return false;
     }
-    
+
     si446x_slave_enable();
     si446x_spi_transfer(cmd);           /* Send the command */
     si446x_spi_write(para_buf, len);    /* Send the parameters */
     si446x_slave_disable();
-    
+
     return true;
 }
 
 bool si446x_set_tx_interrupt(void)
 {
-    uint8_t buffer[4];      /* Enable PACKET_SENT interruption */
-    
+    uint8_t buffer[3];                  /* Enable PACKET_SENT interruption */
+
     buffer[0] = 0x01;
     buffer[1] = 0x20;
     buffer[2] = 0x00;
-    
+
     return si446x_set_properties(SI446X_PROPERTY_INT_CTL_ENABLE, buffer, 3);
 }
 
 bool si446x_set_rx_interrupt(void)
 {
-    uint8_t buffer[4];      /* Enable PACKET_RX interrution */
-    
+    uint8_t buffer[3];                  /* Enable PACKET_RX interrution */
+
     buffer[0] = 0x03;
     buffer[1] = 0x18;
     buffer[2] = 0x00;
-    
+
     return si446x_set_properties(SI446X_PROPERTY_INT_CTL_ENABLE, buffer, 3);
 }
 
 bool si446x_clear_interrupts(void)
 {
     uint8_t buffer[4];
-    
+
     buffer[0] = 0x00;
     buffer[1] = 0x00;
     buffer[2] = 0x00;
     buffer[3] = 0x00;
-    
+
     return si446x_set_cmd(SI446X_CMD_GET_INT_STATUS, buffer, 4);
 }
 
 void si446x_write_tx_fifo(uint8_t *data, uint8_t len)
 {
-    uint8_t buffer[SI446X_TX_FIFO_LEN];
-    memcpy(buffer, data, len);
-
-    si446x_set_cmd(SI446X_CMD_TX_FIFO_WRITE, buffer, len);
+    si446x_set_cmd(SI446X_CMD_WRITE_TX_FIFO, data, len);
 }
 
 uint8_t si446x_read_rx_fifo(uint8_t *data, uint8_t read_len)
@@ -622,17 +620,17 @@ uint8_t si446x_read_rx_fifo(uint8_t *data, uint8_t read_len)
     }
 
     si446x_slave_enable();
-    si446x_spi_transfer(SI446X_CMD_RX_FIFO_READ);
+    si446x_spi_transfer(SI446X_CMD_READ_RX_FIFO);
     si446x_spi_read(data, read_len);
     si446x_slave_disable();
-    
+
     return read_len;
 }
 
 void si446x_fifo_reset(void)
 {
     uint8_t data = 0x03;
-    
+
     si446x_set_cmd(SI446X_CMD_FIFO_INFO, &data, 1);
 }
 
@@ -648,13 +646,13 @@ void si446x_enter_tx_mode(void)
     sys_log_new_line();
 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
-    uint8_t buffer[5];
-    
+    uint8_t buffer[4];
+
     buffer[0] = SI446X_FREQ_CHANNEL;
     buffer[1] = 0x30;                   /* TXCOMPLETE_STATE = Ready State; RETRANSMIT = 0 = No re-transmition; START = 0 = Start TX immediately */
     buffer[2] = 0x00;                   /* TX packet length MSB (If equal zero, default length) */
     buffer[3] = 0x00;                   /* TX packet length LSB (If equal zero, default length) */
-    
+
     si446x_set_cmd(SI446X_CMD_START_TX, buffer, 4);
 
     si446x_mode = SI446X_MODE_TX;
@@ -672,8 +670,8 @@ void si446x_enter_rx_mode(void)
     sys_log_new_line();
 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
 
-    uint8_t buffer[8];
-    
+    uint8_t buffer[7];
+
     buffer[0] = SI446X_FREQ_CHANNEL;
     buffer[1] = 0x00;
     buffer[2] = 0x00;
@@ -681,7 +679,7 @@ void si446x_enter_rx_mode(void)
     buffer[4] = 0x00;
     buffer[5] = 0x08;
     buffer[6] = 0x08;
-    
+
     si446x_set_cmd(SI446X_CMD_START_RX, buffer, 7);
 
     si446x_mode = SI446X_MODE_RX;
