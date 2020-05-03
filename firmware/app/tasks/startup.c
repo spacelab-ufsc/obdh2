@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.12
+ * \version 0.3.16
  * 
  * \date 04/12/2019
  * 
@@ -71,11 +71,11 @@ void vTaskStartup(void *pvParameters)
     /* Print the system clocks */
     clocks_config_t clks = clocks_read();
     sys_log_print_event_from_module(SYS_LOG_INFO, TASK_STARTUP_NAME, "System clocks: MCLK=");
-    sys_log_print_dec(clks.mclk_hz);
+    sys_log_print_uint(clks.mclk_hz);
     sys_log_print_msg(" Hz, SMCLK=");
-    sys_log_print_dec(clks.smclk_hz);
+    sys_log_print_uint(clks.smclk_hz);
     sys_log_print_msg(" Hz, ACLK=");
-    sys_log_print_dec(clks.aclk_hz);
+    sys_log_print_uint(clks.aclk_hz);
     sys_log_print_msg(" Hz");
     sys_log_new_line();
 

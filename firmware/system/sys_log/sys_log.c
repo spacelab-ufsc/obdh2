@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.11
+ * \version 0.3.16
  * 
  * \date 03/11/2019
  * 
@@ -218,30 +218,41 @@ void sys_log_print_str(char *str)
     }
 }
 
-void sys_log_print_dec(uint32_t dec)
+void sys_log_print_uint(uint32_t uint)
 {
-    if (dec == 0)
+    if (uint == 0)
     {
         sys_log_print_digit(0);
     }
     else
     {
-        uint8_t dec_str[10];                /* 32-bits = decimal with 10 digits */
+        uint8_t uint_str[10];               /* 32-bits = decimal with 10 digits */
 
-        uint8_t digits = log10(dec) + 1;
+        uint8_t digits = log10(uint) + 1;
 
         uint8_t i = 0;
-        for(i=0; i<digits; ++i, dec /= 10)
+        for(i=0; i<digits; ++i, uint /= 10)
         {
-            dec_str[i] = dec % 10;
+            uint_str[i] = uint % 10;
         }
 
         uint8_t j = 0;
         for(j=i; j>0; j--)
         {
-            sys_log_print_digit(dec_str[j-1]);
+            sys_log_print_digit(uint_str[j-1]);
         }
     }
+}
+
+void sys_log_print_int(int32_t sint)
+{
+    if (sint < 0)
+    {
+        sint = abs(sint);
+        sys_log_print_msg("-");
+    }
+
+    sys_log_print_uint((uint32_t)sint);
 }
 
 void sys_log_print_hex(uint32_t hex)
@@ -284,6 +295,31 @@ void sys_log_dump_hex(uint8_t *data, uint16_t len)
     }
 }
 
+void sys_log_print_float(float flt, uint8_t digits)
+{
+    if (flt < 0)
+    {
+        sys_log_print_msg("-");
+
+        flt = abs(flt);
+    }
+
+    /* Extract integer part */
+    uint32_t ipart = (uint32_t)flt;
+
+    /* Extract floating part */
+    float fpart = flt - (float)ipart;
+
+    /* Print integer part */
+    sys_log_print_uint(ipart);
+
+    /* Print decimal point */
+    sys_log_print_msg(".");
+
+    /* Print floating part */
+    sys_log_print_uint((uint32_t)(fpart*pow(10, digits)));
+}
+
 void sys_log_print_byte(uint8_t byte)
 {
     sys_log_uart_write_byte(byte);
@@ -294,7 +330,7 @@ void sys_log_print_system_time()
     sys_log_set_color(SYS_LOG_SYSTEM_TIME_COLOR);
 
     sys_log_print_msg("[ ");
-    sys_log_print_dec(xTaskGetTickCount());  /* System time in milliseconds */
+    sys_log_print_uint(xTaskGetTickCount());    /* System time in milliseconds */
     sys_log_print_msg(" ]");
 
     sys_log_reset_color();
