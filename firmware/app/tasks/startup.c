@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.16
+ * \version 0.3.17
  * 
  * \date 04/12/2019
  * 
@@ -77,6 +77,11 @@ void vTaskStartup(void *pvParameters)
     sys_log_print_msg(" Hz, ACLK=");
     sys_log_print_uint(clks.aclk_hz);
     sys_log_print_msg(" Hz");
+    sys_log_new_line();
+
+    /* Print last reset cause (code) */
+    sys_log_print_event_from_module(SYS_LOG_INFO, TASK_STARTUP_NAME, "Last reset cause: ");
+    sys_log_print_hex(system_get_reset_cause());
     sys_log_new_line();
 
     /* LEDs device initialization */
