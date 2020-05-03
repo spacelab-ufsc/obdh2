@@ -808,6 +808,15 @@ void si446x_enter_rx_mode(void);
 bool si446x_enter_standby_mode(void);
 
 /**
+ * \brief Reads the ADC value of temperature sensor voltage of the chip.
+ *
+ * \param[in,out] raw_temp is a pointer to store the raw value of the read temperature.
+ *
+ * \return TRUE/FALSE if successful or not.
+ */
+bool si446x_read_temp(uint32_t *raw_temp);
+
+/**
  * \brief .
  *
  * \return .

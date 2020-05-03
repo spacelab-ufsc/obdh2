@@ -704,6 +704,31 @@ bool si446x_enter_standby_mode(void)
     return si446x_set_cmd(SI446X_CMD_CHANGE_STATE, &data, 1);
 }
 
+bool si446x_read_temp(uint32_t *raw_temp)
+{
+    uint8_t cmd_param = (1 << 4);   /* (1 << 4) = TEMPERATURE_EN */
+    if (!si446x_set_cmd(SI446X_CMD_GET_ADC_READING, &cmd_param, 1))
+    {
+        return false;
+    }
+
+    if (!si446x_check_cts())
+    {
+        return false;
+    }
+
+    uint8_t data[9];
+
+    si446x_slave_enable();
+    si446x_spi_transfer(SI446X_CMD_READ_CMD_BUF);
+    si446x_spi_read(data, 9);
+    si446x_slave_disable();
+
+    *temp = ((uint32_t)data[5] << 24) | ((uint32_t)data[6] << 16) | ((uint32_t)data[7] << 8) | (uint32_t)data[8];
+
+    return true;
+}
+
 bool si446x_wait_nirq(void)
 {
     if (gpio_get_state(GPIO_PIN_3) == GPIO_STATE_HIGH)
