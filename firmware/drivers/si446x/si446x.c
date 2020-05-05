@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.15
+ * \version 0.3.18
  * 
  * \date 01/06/2017
  * 
@@ -62,14 +62,31 @@ int8_t si446x_init(void)
     si446x_set_tx_power(127);
 
     /* Check if the device is working */
-    if (si446x_check_device())
-    {
-        return 0;
-    }
-    else
+    if (!si446x_check_device())
     {
         return -1;
     }
+
+    return 0;
+}
+
+bool si446x_part_info(si446x_part_info_t *part_info)
+{
+    uint8_t buffer[9];
+
+    if (!si446x_get_cmd(SI446X_CMD_PART_INFO, buffer, 9))
+    {
+        return false;
+    }
+
+    part_info->chiprev      = buffer[1];
+    part_info->part         = ((uint16_t)buffer[2] << 8) | buffer[3];
+    part_info->pbuild       = buffer[4];
+    part_info->id           = ((uint16_t)buffer[5] << 8) | buffer[6];
+    part_info->customer     = buffer[7];
+    part_info->romid        = buffer[8];
+
+    return true;
 }
 
 int8_t si446x_shutdown(void)
@@ -327,25 +344,21 @@ bool si446x_rx_init(void)
 
 bool si446x_check_device(void)
 {
-    uint8_t buffer[10];
-    uint16_t part_info;
-
-    if (!si446x_get_cmd(SI446X_CMD_PART_INFO, buffer, 9))
+    si446x_part_info_t part_info;
+    if (!si446x_part_info(&part_info))
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
-        sys_log_print_event_from_module(SYS_LOG_ERROR, SI446X_MODULE_NAME, "Error reading the device ID!");
+        sys_log_print_event_from_module(SYS_LOG_ERROR, SI446X_MODULE_NAME, "Error reading the part info!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-
         return false;
     }
 
-    part_info = (buffer[2] << 8) | buffer[3];
-    if (part_info != SI446X_PART_INFO)
+    if (part_info.part != SI446X_PART_INFO)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, SI446X_MODULE_NAME, "Error checking the device ID! (read=");
-        sys_log_print_hex(part_info);
+        sys_log_print_hex(part_info.part);
         sys_log_print_msg(", expected=");
         sys_log_print_hex(SI446X_PART_INFO);
         sys_log_print_msg(")");
@@ -354,10 +367,8 @@ bool si446x_check_device(void)
 
         return false;
     }
-    else
-    {
-        return true;
-    }
+
+    return true;
 }
 
 bool si446x_check_cts(void)
@@ -479,6 +490,24 @@ bool si446x_get_properties(uint16_t start_property, uint8_t len, uint8_t *data)
     si446x_spi_transfer(SI446X_CMD_READ_CMD_BUF);   /* Turn to read command mode */
     si446x_spi_write(data, len);                    /* Read parameters */
     si446x_slave_disable();
+
+    return true;
+}
+
+bool si446x_func_info(si446x_func_info_t *func_info)
+{
+    uint8_t buffer[7];
+
+    if (!si446x_get_cmd(SI446X_CMD_FUNC_INFO, buffer, 7))
+    {
+        return false;
+    }
+
+    func_info->revext       = buffer[1];
+    func_info->revbranch    = buffer[2];
+    func_info->revint       = buffer[3];
+    func_info->patch        = ((uint16_t)buffer[4] << 8) | buffer[5];
+    func_info->func         = buffer[6];
 
     return true;
 }
@@ -724,7 +753,7 @@ bool si446x_read_temp(uint32_t *raw_temp)
     si446x_spi_read(data, 9);
     si446x_slave_disable();
 
-    *temp = ((uint32_t)data[5] << 24) | ((uint32_t)data[6] << 16) | ((uint32_t)data[7] << 8) | (uint32_t)data[8];
+    *raw_temp = ((uint32_t)data[5] << 24) | ((uint32_t)data[6] << 16) | ((uint32_t)data[7] << 8) | (uint32_t)data[8];
 
     return true;
 }

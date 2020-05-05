@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.15
+ * \version 0.3.18
  * 
  * \date 01/06/2017
  * 
@@ -515,6 +515,31 @@ typedef enum
 } si446x_modes_e;
 
 /**
+ * \brief Basic information about the device.
+ */
+typedef struct
+{
+    uint8_t chiprev;            /**< Chip mask revision. */
+    uint16_t part;              /**< Part number. */
+    uint8_t pbuild;             /**< Part build. */
+    uint16_t id;                /**< ID. */
+    uint8_t customer;           /**< Customer ID. */
+    uint8_t romid;              /**< ROM ID. */
+} si446x_part_info_t;
+
+/**
+ * \brief Function revision information of the device.
+ */
+typedef struct
+{
+    uint8_t revext;             /**< External revision number. */
+    uint8_t revbranch;          /**< Branch revision number. */
+    uint8_t revint;             /**< Internal revision number. */
+    uint16_t patch;             /**< ID of applied patch. */
+    uint8_t func;               /**< Current functional mode. */
+} si446x_func_info_t;
+
+/**
  * \brief Si446x initialization.
  * 
  * Initializes the Si446x module with the configuration parameters from "radio_config_Si4463.h".
@@ -522,6 +547,22 @@ typedef enum
  * \return The status/error code.
  */
 int8_t si446x_init(void);
+
+/**
+ * \brief This function sends the PART_INFO command to the radio and receives the answer in a si446x_part_info_t struct.
+ *
+ * \param[in] part_info is a pointer to a si446x_part_info_t struct to store the result.
+ *
+ * \return TRUE/FALSE if successful or not.
+ */
+bool si446x_part_info(si446x_part_info_t *part_info);
+
+/**
+ * \brief Checks if the device is connected by verifying the part info ID.
+ *
+ * \return TRUE/FALSE if the device is connected or not.
+ */
+bool si446x_check_device(void);
 
 /**
  * \brief GPIO initialization.
@@ -589,13 +630,6 @@ uint8_t si446x_rx_packet(uint8_t *rx_buf, uint8_t read_len);
 bool si446x_rx_init(void);
 
 /**
- * \brief Checks if the device is connected.
- * 
- * \return TRUE/FALSE if the device is connected or not.
- */
-bool si446x_check_device(void);
-
-/**
  * \brief Checks if the radio is ready to receive a command (CTS - Clear To Send).
  *
  * To ensure the radio is ready to receive the next command, the host MCU has to pull down the NSEL pin to
@@ -649,6 +683,15 @@ bool si446x_set_properties(uint16_t start_property, uint8_t *data, uint8_t len);
  * \return TRUE/FALSE if successful or not.
  */
 bool si446x_get_properties(uint16_t start_property, uint8_t len, uint8_t *data);
+
+/**
+ * \brief Sends the FUNC_INFO command to the radio, then reads the response into Si446xCmd union.
+ *
+ * \param[in,out] func_info is a pointer to a si446x_func_info_t struct to store the result.
+ *
+ * \return TRUE/FALSE if successful or not.
+ */
+bool si446x_func_info(si446x_func_info_t *func_info);
 
 /**
  * \brief 
