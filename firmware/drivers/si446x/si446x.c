@@ -512,6 +512,34 @@ bool si446x_func_info(si446x_func_info_t *func_info)
     return true;
 }
 
+bool si446x_get_adc_reading(uint8_t adc_en, si446x_adc_reading_t *adc_reading)
+{
+    if (!si446x_set_cmd(SI446X_CMD_GET_ADC_READING, &adc_en, 1))
+    {
+        return false;
+    }
+
+    if (!si446x_check_cts())
+    {
+        return false;
+    }
+
+    uint8_t buffer[9];
+
+    si446x_slave_enable();
+    si446x_spi_transfer(SI446X_CMD_READ_CMD_BUF);
+    si446x_spi_read(buffer, 9);
+    si446x_slave_disable();
+
+    adc_reading->gpio_adc       = ((uint16_t)buffer[1] << 8) | buffer[2];
+    adc_reading->battery_adc    = ((uint16_t)buffer[3] << 8) | buffer[4];
+    adc_reading->temp_adc       = ((uint16_t)buffer[5] << 8) | buffer[6];
+    adc_reading->temp_slope     = buffer[7];
+    adc_reading->temp_intercept = buffer[8];
+
+    return true;
+}
+
 void si446x_set_config(const uint8_t *parameters, uint16_t para_len)
 {
     /* Command buffer starts with the length of the command in RADIO_CONFIGURATION_DATA_ARRAY */

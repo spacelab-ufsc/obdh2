@@ -540,6 +540,18 @@ typedef struct
 } si446x_func_info_t;
 
 /**
+ * \brief ADC conversion result.
+ */
+typedef struct
+{
+    uint16_t gpio_adc;          /**< ADC value of voltage on GPIO. */
+    uint16_t battery_adc;       /**< ADC value of battery voltage. */
+    uint16_t temp_adc;          /**< ADC value of temperature sensor voltage of the chip in degrees kelvin. */
+    uint8_t temp_slope;         /**< Slope in the formula of Vtempadc - Temperature. */
+    uint8_t temp_intercept;     /**< Intercept in the fromula of Vtempadc - Temperature. */
+} si446x_adc_reading_t;
+
+/**
  * \brief Si446x initialization.
  * 
  * Initializes the Si446x module with the configuration parameters from "radio_config_Si4463.h".
@@ -692,6 +704,17 @@ bool si446x_get_properties(uint16_t start_property, uint8_t len, uint8_t *data);
  * \return TRUE/FALSE if successful or not.
  */
 bool si446x_func_info(si446x_func_info_t *func_info);
+
+/**
+ * \brief Reads the ADC values from the radio into Si446xCmd union.
+ *
+ * \param[in] adc_en: ADC enable parameter.
+ *
+ * \param[in,out] adc_reading: A pointer to a si446x_adc_reading_t struct to store the result.
+ *
+ * \return TRUE/FALSE if successful or not.
+ */
+bool si446x_get_adc_reading(uint8_t adc_en, si446x_adc_reading_t *adc_reading);
 
 /**
  * \brief 
