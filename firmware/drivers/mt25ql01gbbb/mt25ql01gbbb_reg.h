@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.1
+ * \version 0.3.18
  * 
  * \date 13/03/2020
  * 
@@ -62,7 +62,16 @@
 #define MT25QL01GBBB_REG_STATUS_WRITE_ENABLE_LATCH              (1 << 1)
 #define MT25QL01GBBB_REG_STATUS_WRITE_IN_PROGRESS               (1 << 0)
 
-/* Nonvolatile Configuration Register */
+/* Flag Status Register Bits */
+#define MT25QL01GBBB_REG_FLAG_STATUS_PROGRAM_ERASE_CONTROLLER   (1 << 7)
+#define MT25QL01GBBB_REG_FLAG_STATUS_ERASE_SUSPEND              (1 << 6)
+#define MT25QL01GBBB_REG_FLAG_STATUS_ERASE                      (1 << 5)
+#define MT25QL01GBBB_REG_FLAG_STATUS_PROGRAM                    (1 << 4)
+#define MT25QL01GBBB_REG_FLAG_STATUS_PROGRAM_SUSPEND            (1 << 2)
+#define MT25QL01GBBB_REG_FLAG_STATUS_PROTECTION                 (1 << 1)
+#define MT25QL01GBBB_REG_FLAG_STATUS_ADDRESSING                 (1 << 0)
+
+/* Nonvolatile Configuration Register Bits */
 #define MT25QL01GBBB_REG_NVM_CONFIG_DUMMY_CLOCK_CYCLES          0xF000
 #define MT25QL01GBBB_REG_NVM_CONFIG_XIP_MODE_AT_POR             0x0E00
 #define MT25QL01GBBB_REG_NVM_CONFIG_OUTPUT_DRV_STRENGTH         0x01C0
@@ -72,15 +81,23 @@
 #define MT25QL01GBBB_REG_NVM_CONFIG_DUAL_IO_PROTOCOL            (1 << 2)
 #define MT25QL01GBBB_REG_NVM_CONFIG_128MB_SEGMENT_SEL           (1 << 1)
 #define MT25QL01GBBB_REG_NVM_CONFIG_ADR_BYTES_DURING_CMD_ENTRY  (1 << 0)
-#define MT25QL01GBBB_REG_
 
-/* Volatile Configuration Register */
+/* Volatile Configuration Register Bits */
 #define MT25QL01GBBB_REG_VM_CONFIG_DUMMY_CLOCK_CYCLES           0x01F0
 #define MT25QL01GBBB_REG_VM_CONFIG_XIP                          (1 << 3)
 #define MT25QL01GBBB_REG_VM_CONFIG_RESERVED                     (1 << 2)
 #define MT25QL01GBBB_REG_VM_CONFIG_WRAP                         ((1 << 1) | (1 << 0))
 
+/* Enhanced Volatile Configuration Register Bits */
+#define MT25QL01GBBB_REG_EVC_QUAD_IO_PROTOCOL                   (1 << 7)
+#define MT25QL01GBBB_REG_EVC_DUAL_IO_PROTOCOL                   (1 << 6)
+#define MT25QL01GBBB_REG_EVC_DOUBLE_TRANSGER_RATE_PROTOCOL      (1 << 5)
+#define MT25QL01GBBB_REG_EVC_RESET_HOLD                         (1 << 4)
+#define MT25QL01GBBB_REG_EVC_OUTPUT_DRIVER_STRENGTH             ((1 << 2) | (1 << 1) | (1 << 0))
 
+/* Sector Protection Register Bits */
+#define MT25QL01GBBB_REG_SEC_PROTEC_PASSWORD_PROTECTION_LOCK    (1 << 2)
+#define MT25QL01GBBB_REG_SEC_PROTEC_SECTOR_PROTECTION_LOCK      (1 << 1)
 
 #endif /* MT25QL01GBBB_REG_H_ */
 
