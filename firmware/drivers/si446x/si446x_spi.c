@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.2
+ * \version 0.3.19
  * 
  * \date 29/07/2017
  * 
@@ -44,28 +44,24 @@ int si446x_spi_init()
     return spi_init(SPI_PORT_0, (spi_config_t){.speed_hz=100000, .mode=SPI_MODE_1});
 }
 
-uint8_t si446x_spi_transfer(uint8_t byte)
+int si446x_spi_transfer(uint8_t *wd, uint8_t *rd, uint16_t len)
 {
-    uint8_t buf;
-
-    spi_transfer(SPI_PORT_0, GPIO_PIN_5, &byte, &buf, 1);
-
-    return buf;
+    return spi_transfer(SPI_PORT_0, GPIO_PIN_5, wd, rd, len);
 }
 
-void si446x_spi_write_byte(uint8_t byte)
+int si446x_spi_write_byte(uint8_t byte)
 {
-    spi_write(SPI_PORT_0, GPIO_PIN_5, &byte, 1);
+    return spi_write(SPI_PORT_0, GPIO_PIN_5, &byte, 1);
 }
 
-void si446x_spi_write(uint8_t *data, uint16_t size)
+int si446x_spi_write(uint8_t *data, uint16_t len)
 {
-    spi_write(SPI_PORT_0, GPIO_PIN_5, data, size);
+    return spi_write(SPI_PORT_0, GPIO_PIN_5, data, len);
 }
 
-void si446x_spi_read(uint8_t *data, uint16_t size)
+int si446x_spi_read(uint8_t *data, uint16_t len)
 {
-    spi_read(SPI_PORT_0, GPIO_PIN_5, data, size);
+    return spi_read(SPI_PORT_0, GPIO_PIN_5, data, len);
 }
 
 /** \} End of si446x group */

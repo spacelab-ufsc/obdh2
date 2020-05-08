@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.18
+ * \version 0.3.19
  * 
  * \date 01/06/2017
  * 
@@ -899,42 +899,46 @@ int si446x_spi_init();
 /**
  * \brief SPI transfer routine (write and read at the same time).
  *
- * \param[in] byte is the byte to write during the data transfer.
+ * \param[in] wd is an array ot bytes to write during the transfer.
  *
- * \return The read byte during the data transfer.
+ * \param[in,out] rd is an array to store the read bytes during the transfer.
+ *
+ * \param[in] len is the number of bytes to transfer.
+ *
+ * \return The status/error code.
  */
-uint8_t si446x_spi_transfer(uint8_t byte);
+int si446x_spi_transfer(uint8_t *wd, uint8_t *rd, uint16_t len);
 
 /**
  * \brief Writes a byte over the SPI interface.
  *
  * \param[in] byte is the byte to be written to the SPI interface.
  *
- * \return None.
+ * \return The status/error code.
  */
-void si446x_spi_write_byte(uint8_t byte);
+int si446x_spi_write_byte(uint8_t byte);
 
 /**
  * \brief Write an array of bytes over the SPI interface.
  *
- * \param[in] data is the array to write to the SPI interface.
+ * \param[in] data is the array of bytes to write to the SPI interface.
  *
- * \param[in] size is the number of bytes to be written.
+ * \param[in] len is the number of bytes to be written.
  *
- * \return None.
+ * \return The status/error code.
  */
-void si446x_spi_write(uint8_t *data, uint16_t size);
+int si446x_spi_write(uint8_t *data, uint16_t len);
 
 /**
  * \brief Reads a N bytes from the SPI interface.
  *
  * \param[in] data is an array to store the read bytes.
  *
- * \param[in] size is the number of bytes to read.
+ * \param[in] len is the number of bytes to read.
  *
- * \return None.
+ * \return The status/error code.
  */
-void si446x_spi_read(uint8_t *data, uint16_t size);
+int si446x_spi_read(uint8_t *data, uint16_t len);
 
 /**
  * \brief Inquire interrupt.
