@@ -351,7 +351,9 @@ int si446x_nop(void);
  *
  * Optionally resets the TX/RX FIFO. Reads the radio response back Si446xCmd uniom.
  *
- * \param[in] fifo: RX/TX FIFO reset flags.
+ * \param[in] rst_rx: RX FIFO reset flag.
+ *
+ * \param[in] rst_tx: TX FIFO reset flag.
  *
  * \param[in,out] fifo_info: Is a pointer to store the FIFO info.
  *

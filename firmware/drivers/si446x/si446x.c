@@ -98,7 +98,7 @@ int si446x_part_info(si446x_part_info_t *part_info)
 
     if (error != SI446X_SUCCESS)
     {
-        return error
+        return error;
     }
 
     part_info->chiprev      = result[1];

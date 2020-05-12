@@ -181,6 +181,17 @@
 #define SI446X_INT_CTL_ENABLE_MODEM_INT_STATUS_EN           0x02    /**< If set, Enables MODEM_INT_STATUS interrupt. */
 #define SI446X_INT_CTL_ENABLE_PH_INT_STATUS_EN              0x01    /**< If set, Enables PH_INT_STATUS interrupt. */
 
+
+/* Start TX command flags */
+#define SI446X_START_TX_RETRANSMIT                          0x04    /**< Send last packet again. */
+#define SI446X_START_TX_DO_NOT_RETRANSMIT                   0x00    /**< Send data that has been written to fifo. */
+#define SI446X_START_TX_START_TX_IMMEDIATELY                0x00    /**< Start TX immediately. */
+#define SI446X_START_TX_START_TX_WHEN_WAKEUP_TIMER_EXPIRES  0x01    /**< Start TX when wake up timer expires. */
+
+
+/* Interruption status flags */
+#define SI446X_INT_STATUS_PACKET_SENT                       0x20    /**< Packet sent indicator. */
+
 #endif /* SI446X_CMD_H_ */
 
 /** \} End of si446x_cmd group */
