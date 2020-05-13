@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.21
+ * \version 0.3.22
  * 
  * \date 27/10/2019
  * 
@@ -195,15 +195,42 @@ int radio_send(uint8_t *data, uint16_t len, uint32_t timeout_ms)
 
 int radio_recv(uint8_t *data, uint16_t len, uint32_t timeout_ms)
 {
-/*    if (!si446x_rx_init())
+    if (si446x_change_state(SI446X_RX_STATE) != SI446X_SUCCESS)
     {
-        sys_log_print_event_from_module(SYS_LOG_ERROR, RADIO_MODULE_NAME, "Error starting RX mode!");
+        sys_log_print_event_from_module(SYS_LOG_ERROR, RADIO_MODULE_NAME, "Error starting reception!");
         sys_log_new_line();
 
         return -1;
     }
 
-    int recv_len = 0;
+    uint16_t prop = SI446X_PROP_INT_CTL_ENABLE;
+    uint8_t prop_param = 0x03;
+
+    if (si446x_set_property((uint8_t)(prop >> 8), 1, (uint8_t)(prop & 0xFF), prop_param, 1) != SI446X_SUCCESS)
+    {
+        return -1;
+    }
+
+    prop = SI446X_PROP_INT_CTL_PH_ENABLE;
+    prop_param = 0x18;
+
+    if (si446x_set_property((uint8_t)(prop >> 8), 1, (uint8_t)(prop & 0xFF), prop_param, 1) != SI446X_SUCCESS)
+    {
+        return -1;
+    }
+
+    prop = SI446X_PROP_INT_CTL_MODEM_ENABLE;
+    prop_param = 0x00;
+
+    if (si446x_set_property((uint8_t)(prop >> 8), 1, (uint8_t)(prop & 0xFF), prop_param, 1) != SI446X_SUCCESS)
+    {
+        return -1;
+    }
+
+    if (si446x_start_rx(0, SI446X_START_RX_START_RX_IMMEDIATELY, 0, SI446X_RX_STATE, SI446X_RX_STATE, SI446X_RX_STATE) != SI446X_SUCCESS)
+    {
+        return -1;
+    }
 
     TickType_t timeout_tick = pdMS_TO_TICKS(timeout_ms);
 
@@ -211,37 +238,54 @@ int radio_recv(uint8_t *data, uint16_t len, uint32_t timeout_ms)
 
     while((start_time_tick + timeout_tick) <= xTaskGetTickCount())
     {
-        if (si446x_wait_nirq())
-        {
-            recv_len = (int)si446x_rx_packet(data, len);
+        int avail = radio_available();
 
-            si446x_clear_interrupts();
+        if (avail > 0)
+        {
+            si446x_read_rx_fifo(avail, data);
 
             sys_log_print_event_from_module(SYS_LOG_INFO, RADIO_MODULE_NAME, "");
-            sys_log_print_uint(len);
+            sys_log_print_uint(avail);
             sys_log_print_msg(" byte(s) received!");
             sys_log_new_line();
 
-            return recv_len;
+            /* Clear interrupts */
+            si446x_int_status_t int_status;
+
+            si446x_get_int_status(0, 0, 0, &int_status);
+
+            return avail;
         }
 
         vTaskDelay(pdMS_TO_TICKS(250));
     }
 
     return 0;
-*/
-    return -1;
 }
 
 int radio_available()
 {
-//    return (int)si446x_wait_nirq();
-    return -1;
+    si446x_int_status_t int_status;
+
+    si446x_get_int_status(0, 0, 0, &int_status);
+
+    if ((int_status.ph_status | SI446X_INT_STATUS_PACKET_RX) > 0)
+    {
+        si446x_fifo_info_t fifo_info;
+
+        si446x_fifo_info(false, false, &fifo_info);
+
+        return fifo_info.rx_fifo_count;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 int radio_sleep()
 {
-/*    if (!si446x_enter_standby_mode())
+    if (si446x_change_state(SI446X_SLEEP_STATE) != SI446X_SUCCESS)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, RADIO_MODULE_NAME, "Error configuring sleep mode!");
         sys_log_new_line();
@@ -250,8 +294,6 @@ int radio_sleep()
     }
 
     return 0;
-*/
-    return -1;
 }
 
 /** \} End of radio group */

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.20
+ * \version 0.3.22
  * 
  * \date 10/05/2020
  * 
@@ -189,8 +189,14 @@
 #define SI446X_START_TX_START_TX_WHEN_WAKEUP_TIMER_EXPIRES  0x01    /**< Start TX when wake up timer expires. */
 
 
+/* Start RX command flags */
+#define SI446X_START_RX_START_RX_IMMEDIATELY                0x00    /**< Start RX immediately. */
+#define SI446X_START_RX_START_RX_WHEN_WAKEUP_TIMER_EXPIRES  0x01    /**< Start RX when wake up timer expires. */
+
+
 /* Interruption status flags */
 #define SI446X_INT_STATUS_PACKET_SENT                       0x20    /**< Packet sent indicator. */
+#define SI446X_INT_STATUS_PACKET_RX                         0x10    /**< Packet received indicator. */
 
 #endif /* SI446X_CMD_H_ */
 
