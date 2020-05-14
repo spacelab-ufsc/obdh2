@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.22
+ * \version 0.3.23
  * 
  * \date 27/10/2019
  * 
@@ -62,6 +62,29 @@ int radio_init()
     if (si446x_reset() != SI446X_SUCCESS)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, RADIO_MODULE_NAME, "Error during the reset!");
+        sys_log_new_line();
+
+        return -1;
+    }
+
+    /* Verifies the device ID */
+    si446x_part_info_t part_info;
+
+    if (si446x_part_info(&part_info) != SI446X_SUCCESS)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, RADIO_MODULE_NAME, "Error reading the device ID!");
+        sys_log_new_line();
+
+        return -1;
+    }
+
+    if (part_info.part != SI4463_PART_INFO)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, RADIO_MODULE_NAME, "Wrong device ID! (expected=");
+        sys_log_print_hex(SI4463_PART_INFO);
+        sys_log_print_msg(", read=");
+        sys_log_print_hex(part_info.part);
+        sys_log_print_msg(")");
         sys_log_new_line();
 
         return -1;
