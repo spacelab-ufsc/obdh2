@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.20
+ * \version 0.3.23
  * 
  * \date 01/06/2017
  * 
@@ -584,12 +584,12 @@ int si446x_rx_hop(uint8_t inte, uint8_t frac2, uint8_t frac1, uint8_t frac0, uin
 
 int si446x_shutdown(void)
 {
-    return gpio_set_state(GPIO_PIN_4, true);
+    return si446x_gpio_write_sdn(true);
 }
 
 int si446x_power_on(void)
 {
-    return gpio_set_state(GPIO_PIN_4, false);
+    return si446x_gpio_write_sdn(false);
 }
 
 bool si446x_check_cts(uint32_t timeout_ms)

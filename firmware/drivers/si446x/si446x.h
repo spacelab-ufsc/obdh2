@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.20
+ * \version 0.3.23
  * 
  * \date 01/06/2017
  * 
@@ -665,6 +665,34 @@ int si446x_spi_write(uint8_t *data, uint16_t len);
  * \return The status/error code.
  */
 int si446x_spi_read(uint8_t *data, uint16_t len);
+
+/**
+ * \brief GPIO pins initialization.
+ *
+ * \return The status/error code.
+ */
+int si446x_gpio_init();
+
+/**
+ * \brief Write the state of the SDN pin.
+ *
+ * \param[in] state is new state of the SDN pin.
+ *
+ * \return The status/error code.
+ */
+int si446x_gpio_write_sdn(bool state);
+
+/**
+ * \brief Reads the state of the nIRQ pin.
+ *
+ * \return The state of the nIRQ pin. It can be:
+ * \parblock
+ *      -\b GPIO_STATE_HIGH
+ *      -\b GPIO_STATE_LOW
+ *      .
+ * \endparblock
+ */
+int si446x_gpio_read_nirq();
 
 /**
  * \brief Milliseconds delay.
