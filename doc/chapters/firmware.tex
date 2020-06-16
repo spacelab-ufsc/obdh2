@@ -121,9 +121,16 @@ This task reads the internal temperature of the microcontroller of the OBDH at e
 
 \section{Telemetry}
 
+
 \subsection{Beacon}
 
 The beacon packet is transmitted at every 1 minute and contains a basic telemetry data of the satellite. The content of this packet can be seen in \autoref{tab:telemetry-beacon}.
+
+\begin{itemize}
+    \item Period: 60 seconds
+    \item Band: UHF
+    \item Condition to operate: Always on
+\end{itemize}
 
 \begin{table}[!h]
     \centering
@@ -203,6 +210,8 @@ The beacon packet is transmitted at every 1 minute and contains a basic telemetr
 
 \subsection{EDC Samples}
 
+The EDC samples are XX bytes long and are transmitted in Y packets with 219 bytes each
+
 \begin{table}[!h]
     \centering
     \begin{tabular}{llc}
@@ -257,11 +266,42 @@ The beacon packet is transmitted at every 1 minute and contains a basic telemetr
 
 \subsection{Enter hibernation}
 
-.
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{lll}
+        \toprule[1.5pt]
+        \textbf{Parameter}      & \textbf{Content}                         & \textbf{Length [bytes]} \\
+        \midrule
+        Packet ID               & 20h                                      & 1 \\
+        Ground station callsign & Any callsign (ASCII, filled with ``0''s) & 7 \\
+        Hibernation period      & Period in minutes (1 to 65535)           & 2 \\
+        Key                     & Telecommand key (ASCII)                  & 10 \\
+        \midrule
+        Total                   & -                                        & 20 \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{Enter hibernation telecommand.}
+    \label{tab:enter-hibernation-tc}
+\end{table}
 
 \subsection{Leave hibernation}
 
-.
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{lll}
+        \toprule[1.5pt]
+        \textbf{Parameter}      & \textbf{Content}                         & \textbf{Length [bytes]} \\
+        \midrule
+        Packet ID               & 21h                                      & 1 \\
+        Ground station callsign & Any callsign (ASCII, filled with ``0''s) & 7 \\
+        Key                     & Telecommand key (ASCII)                  & 10 \\
+        \midrule
+        Total                   & -                                        & 18 \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{Leave hibernation telecommand.}
+    \label{tab:leave-hibernation-tc}
+\end{table}
 
 \subsection{Activate beacon}
 
@@ -297,11 +337,57 @@ This telecommand request information from the EDC payload. When received, the OB
 
 \subsection{Ping}
 
-.
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{lll}
+        \toprule[1.5pt]
+        \textbf{Parameter}      & \textbf{Content}                         & \textbf{Length [bytes]} \\
+        \midrule
+        Packet ID               & 22h                                      & 1 \\
+        Ground station callsign & Any callsign (ASCII, filled with ``0''s) & 7 \\
+        \midrule
+        Total                   & -                                        & 8 \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{Ping telecommand.}
+    \label{tab:ping-tc}
+\end{table}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{lll}
+        \toprule[1.5pt]
+        \textbf{Parameter}      & \textbf{Content}                               & \textbf{Length [bytes]} \\
+        \midrule
+        Packet ID               & 12h                                            & 1 \\
+        Satellite callsign      & ``PY0EGU''                                     & 7 \\
+        Destination callsign    & Requester callsign (ASCII, filled with ``0''s) & 7 \\
+        \midrule
+        Total                   & -                                              & 15 \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{Ping telecommand answer.}
+    \label{tab:ping-tc-ans}
+\end{table}
 
 \subsection{Message broadcast}
 
-.
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{lll}
+        \toprule[1.5pt]
+        \textbf{Parameter}      & \textbf{Content}                         & \textbf{Length [bytes]} \\
+        \midrule
+        Packet ID               & 23h                                      & 1 \\
+        Ground station callsign & Any callsign (ASCII, filled with ``0''s) & 7 \\
+        Message                 & Message to broadcast (ASCII)             & up to  \\
+        \midrule
+        Total                   & -                                        & 8 \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{Message broadcast telecommand.}
+    \label{tab:msg-broadcast-tc}
+\end{table}
 
 \subsection{Request data}
 
