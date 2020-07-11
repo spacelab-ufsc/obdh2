@@ -462,19 +462,19 @@ void csp_conn_print_table(void) {
         /*        i, conn, conn->state, conn->idin.src, conn->idin.dst, */
         /*        conn->idin.dport, conn->idin.sport, conn->socket); */
         sys_log_print_event_from_module(SYS_LOG_INFO, LIBCSP_MODULE_NAME, "[");
-        sys_log_print_dec(i);
+        sys_log_print_uint(i);
         sys_log_print_msg(" ");
         sys_log_print_hex(conn);
         sys_log_print_msg("] S:");
-        sys_log_print_dec(conn->state);
+        sys_log_print_uint(conn->state);
         sys_log_print_msg(", ");
-        sys_log_print_dec(conn->idin.src);
+        sys_log_print_uint(conn->idin.src);
         sys_log_print_msg(" -> ");
-        sys_log_print_dec(conn->idin.dst);
+        sys_log_print_uint(conn->idin.dst);
         sys_log_print_msg(" , ");
-        sys_log_print_dec(conn->idin.dport);
+        sys_log_print_uint(conn->idin.dport);
         sys_log_print_msg(" -> ");
-        sys_log_print_dec(conn->idin.sport);
+        sys_log_print_uint(conn->idin.sport);
         sys_log_print_msg(", sock: ");
         sys_log_print_hex(conn->socket);
         sys_log_new_line();

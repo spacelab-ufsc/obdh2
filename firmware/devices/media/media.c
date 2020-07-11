@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.13
+ * \version 0.3.24
  * 
  * \date 21/07/2020
  * 
@@ -63,6 +63,15 @@ int media_write(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
     switch(med)
     {
         case MEDIA_INT_FLASH:
+        {
+            uint16_t i = 0;
+            for(i=0; i<len; i++)
+            {
+                flash_write_single(data[i], (uint8_t*)(adr + i));
+            }
+
+            return 0;
+        }
         case MEDIA_NOR:
             sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Write operation not implemented for the NOR memory!");
             sys_log_new_line();
@@ -81,7 +90,15 @@ int media_read(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
     switch(med)
     {
         case MEDIA_INT_FLASH:
-            return -1;
+        {
+            uint16_t i = 0;
+            for(i=0; i<len; i++)
+            {
+                data[i] = flash_read_single((uint8_t*)(adr + i));
+            }
+
+            return 0;
+        }
         case MEDIA_NOR:
             sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Read operation not implemented for the NOR memory!");
             sys_log_new_line();
@@ -100,7 +117,9 @@ int media_erase(media_t med, uint32_t adr)
     switch(med)
     {
         case MEDIA_INT_FLASH:
-            return -1;
+            flash_write_single(0xFF, (uint8_t*)adr);
+
+            return 0;
         case MEDIA_NOR:
             sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Erase operation not implemented for the NOR memory!");
             sys_log_new_line();

@@ -119,13 +119,129 @@ This task reads the internal temperature of the microcontroller of the OBDH at e
 
 .
 
+\section{Telemetry}
+
+
+\subsection{Beacon}
+
+The beacon packet is transmitted at every 1 minute and contains a basic telemetry data of the satellite. The content of this packet can be seen in \autoref{tab:telemetry-beacon}.
+
+\begin{itemize}
+    \item Period: 60 seconds
+    \item Band: UHF
+    \item Condition to operate: Always on
+\end{itemize}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{llc}
+        \toprule[1.5pt]
+        \textbf{Parameter} & \textbf{Content}       & \textbf{Length [bytes]} \\
+        \midrule
+        Packet ID          & 10h                    & 1 \\
+        Satellite callsign & ``0PY0EGU''            & 7 \\
+        $\mu$C temperature & Raw $\mu$C temperature & 2 \\
+        $\mu$C voltage     & Raw $\mu$C voltage     & 2 \\
+        $\mu$C current     & Raw $\mu$C current     & 2 \\
+        Last reset cause   & Last reset cause ID    & 1 \\
+        System time        & System time in ticks   & 4 \\
+        Radio temperature  & Raw radio temperature  & 4 \\
+        Last TC RSSI       & Raw RSSI value         & 2??? \\
+        Last received TC   & Last received TC ID    & 1 \\
+        Battery 1 voltage  & Raw battery 1 voltage  & 2 \\
+        Battery 2 voltage  & Raw battery 2 voltage  & 2 \\
+        Battery current    & Raw battery current    & 2 \\
+        Battery charge     & Raw battery charge     & 2 \\
+        ...                & ...                    & ... \\
+        \midrule
+        Total              & -                      & 34 \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{Beacon packet.}
+    \label{tab:telemetry-beacon}
+\end{table}
+
+\subsection{EDC Information}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{llc}
+        \toprule[1.5pt]
+        \textbf{Parameter} & \textbf{Content}                                 & \textbf{Len. [bytes]} \\
+        \midrule
+        Packet ID          & 11h                                              & 1 \\
+        Satellite callsign & ``0PY0EGU''                                      & 7 \\
+        \midrule
+        \multicolumn{3}{c}{\textbf{PTT Decoder}} \\
+        \midrule
+        Time tag           & PTT signal receiving time                        & 4 \\
+        Error code         & Error code                                       & 1 \\
+        Carrier frequency  & Carrier frequency                                & 2 \\
+        Carrier Abs        & Carrier amplitude at ADC interface output        & 2 \\
+        Message length     & User message length in bytes                     & 1 \\
+        User message       & ARGOS-2 PTT-A2 user message                      & 35 \\
+        \midrule
+        \multicolumn{3}{c}{\textbf{HK Info}} \\
+        \midrule
+        Current time       & Current time since J2000 epoch                   & 4 \\
+        Elapsed time       & Elapsed time since last reset                    & 4 \\
+        Current supply     & System current supply in mA                      & 2 \\
+        Voltage supply     & System voltage supply in mV                      & 2 \\
+        Temperature        & EDC board temperature                            & 1 \\
+        PLL sync bit       & RF front end LO...                               & 1 \\
+        ADC RMS            & RMS level at front-end output                    & 2 \\
+        Num of RX PTT      & Generated PTT packages since last initialization & 1 \\
+        Max                &                                                  & 1 \\
+        Memory error count &                                                  & 1 \\
+        \midrule
+        \multicolumn{3}{c}{\textbf{System State}} \\
+        \midrule
+        Current time       &                                                  & 4 \\
+        PTT available      & Number of PTT Package available for reading      & 1 \\
+        PTT is paused      & PTT decoder task status                          & 1 \\
+        Sampler state      & ADC sampler state                                & 1 \\
+        \midrule
+        Total              & -                                                & 79 \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{EDC information packet.}
+    \label{tab:telemetry-edc}
+\end{table}
+
+\subsection{EDC Samples}
+
+The EDC samples are XX bytes long and are transmitted in Y packets with 219 bytes each
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{llc}
+        \toprule[1.5pt]
+        \textbf{Parameter} & \textbf{Content}               & \textbf{Length [bytes]} \\
+        \midrule
+        Packet ID          & 12h                            & 1 \\
+        Satellite callsign & ``0PY0EGU''                    & 7 \\
+        Time tag           & Elapsed time since J2000 epoch & 4 \\
+        Packet counter     & ADC sample packet number       & 1 \\
+        I sample[n]        & First ADC I-sample             & 2 \\
+        Q sample[n]        & First ADC Q-sample             & 2 \\
+        ...                & ...                            & ... \\
+        I sample[n+102]    & First ADC I-sample             & 2 \\
+        Q sample[n+102]    & First ADC Q-sample             & 2 \\
+        \midrule
+        Total              & -                              & 219 \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{EDC samples packet.}
+    \label{tab:telemetry-edc-samples}
+\end{table}
+
 \section{Telecommands}
 
 \begin{table}[!h]
     \centering
     \begin{tabular}{lll}
         \toprule[1.5pt]
-        \textit{Name}          & \textit{Parameters}           & \textit{Access} \\
+        \textbf{Name}          & \textbf{Parameters}           & \textbf{Access} \\
         \midrule
         Enter hibernation      & Hibernation period in seconds & Private         \\
         Leave hibernation      & None                          & Private         \\
@@ -150,11 +266,42 @@ This task reads the internal temperature of the microcontroller of the OBDH at e
 
 \subsection{Enter hibernation}
 
-.
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{lll}
+        \toprule[1.5pt]
+        \textbf{Parameter}      & \textbf{Content}                         & \textbf{Length [bytes]} \\
+        \midrule
+        Packet ID               & 20h                                      & 1 \\
+        Ground station callsign & Any callsign (ASCII, filled with ``0''s) & 7 \\
+        Hibernation period      & Period in minutes (1 to 65535)           & 2 \\
+        Key                     & Telecommand key (ASCII)                  & 10 \\
+        \midrule
+        Total                   & -                                        & 20 \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{Enter hibernation telecommand.}
+    \label{tab:enter-hibernation-tc}
+\end{table}
 
 \subsection{Leave hibernation}
 
-.
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{lll}
+        \toprule[1.5pt]
+        \textbf{Parameter}      & \textbf{Content}                         & \textbf{Length [bytes]} \\
+        \midrule
+        Packet ID               & 21h                                      & 1 \\
+        Ground station callsign & Any callsign (ASCII, filled with ``0''s) & 7 \\
+        Key                     & Telecommand key (ASCII)                  & 10 \\
+        \midrule
+        Total                   & -                                        & 18 \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{Leave hibernation telecommand.}
+    \label{tab:leave-hibernation-tc}
+\end{table}
 
 \subsection{Activate beacon}
 
@@ -190,11 +337,57 @@ This telecommand request information from the EDC payload. When received, the OB
 
 \subsection{Ping}
 
-.
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{lll}
+        \toprule[1.5pt]
+        \textbf{Parameter}      & \textbf{Content}                         & \textbf{Length [bytes]} \\
+        \midrule
+        Packet ID               & 22h                                      & 1 \\
+        Ground station callsign & Any callsign (ASCII, filled with ``0''s) & 7 \\
+        \midrule
+        Total                   & -                                        & 8 \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{Ping telecommand.}
+    \label{tab:ping-tc}
+\end{table}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{lll}
+        \toprule[1.5pt]
+        \textbf{Parameter}      & \textbf{Content}                               & \textbf{Length [bytes]} \\
+        \midrule
+        Packet ID               & 12h                                            & 1 \\
+        Satellite callsign      & ``PY0EGU''                                     & 7 \\
+        Destination callsign    & Requester callsign (ASCII, filled with ``0''s) & 7 \\
+        \midrule
+        Total                   & -                                              & 15 \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{Ping telecommand answer.}
+    \label{tab:ping-tc-ans}
+\end{table}
 
 \subsection{Message broadcast}
 
-.
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{lll}
+        \toprule[1.5pt]
+        \textbf{Parameter}      & \textbf{Content}                         & \textbf{Length [bytes]} \\
+        \midrule
+        Packet ID               & 23h                                      & 1 \\
+        Ground station callsign & Any callsign (ASCII, filled with ``0''s) & 7 \\
+        Message                 & Message to broadcast (ASCII)             & up to  \\
+        \midrule
+        Total                   & -                                        & 8 \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{Message broadcast telecommand.}
+    \label{tab:msg-broadcast-tc}
+\end{table}
 
 \subsection{Request data}
 

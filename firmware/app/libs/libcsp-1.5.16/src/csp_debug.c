@@ -136,8 +136,8 @@ void csp_debug_toggle_level(csp_debug_level_t level)
 	csp_debug_level_enabled[level] = (csp_debug_level_enabled[level]) ? false : true;
     /* printf("Level %u: value %u\r\n", level, csp_debug_level_enabled[level]); */
     sys_log_print_event_from_module(SYS_LOG_INFO, LIBCSP_MODULE_NAME, "Level ");
-    sys_log_print_dec(level);
+    sys_log_print_uint(level);
     sys_log_print_msg(": value ");
-    sys_log_print_dec(csp_debug_level_enabled[level]);
+    sys_log_print_uint(csp_debug_level_enabled[level]);
     sys_log_new_line();
 }

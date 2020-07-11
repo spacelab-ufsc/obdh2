@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.11
+ * \version 0.3.16
  * 
  * \date 03/11/2019
  * 
@@ -180,13 +180,22 @@ void sys_log_new_line();
 void sys_log_print_digit(uint8_t d);
 
 /**
- * \brief Prints a decimal number over the system log module.
+ * \brief Prints an unsigned integer over the system log module.
  *
- * \param[in] dec is the decimal number to print.
+ * \param[in] uint is the unsigned integer number to print.
  *
  * \return None.
  */
-void sys_log_print_dec(uint32_t dec);
+void sys_log_print_uint(uint32_t uint);
+
+/**
+ * \brief Prints a signed integer over the system log module.
+ *
+ * \param[in] sint is the signed integer number to print.
+ *
+ * \return None.
+ */
+void sys_log_print_int(int32_t sint);
 
 /**
  * \brief Prints a hexadecimal value over the system log module.
@@ -204,15 +213,26 @@ void sys_log_print_dec(uint32_t dec);
 void sys_log_print_hex(uint32_t hex);
 
 /**
- * \brief .
+ * \brief Prints a array of bytes in hexadecimal format.
  *
- * \param[in] data .
+ * \param[in] data is an array of bytes to print.
  *
- * \param[in] len .
+ * \param[in] len is the number of bytes to print.
  *
  * \return None.
  */
 void sys_log_dump_hex(uint8_t *data, uint16_t len);
+
+/**
+ * \brief Prints a float number over the system log module.
+ *
+ * \param[in] flt is the float number to print.
+ *
+ * \param[in] digits is the number of digits to print.
+ *
+ * \return None.
+ */
+void sys_log_print_float(float flt, uint8_t digits);
 
 /**
  * \brief Prints a raw byte over the system log module.
