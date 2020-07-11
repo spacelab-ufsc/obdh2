@@ -1,5 +1,5 @@
 /*
- * version.h
+ * current_sensor.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,29 +21,40 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief Current sensor device implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.4.0
  * 
- * \date 25/10/2019
+ * \date 11/07/2020
  * 
- * \defgroup version Version control
+ * \addtogroup current_sensor
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include <drivers/adc/adc.h>
 
-#define FIRMWARE_VERSION            "0.4.0"
+#include <system/sys_log/sys_log.h>
 
-#define FIRMWARE_STATUS             "Development"
+#include "current_sensor.h"
 
-#define FIRMWARE_AUTHOR             "SpaceLab"
+int current_sensor_init()
+{
+    sys_log_print_event_from_module(SYS_LOG_INFO, CURRENT_SENSOR_MODULE_NAME, "Initializing current sensor...");
+    sys_log_new_line();
 
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
+    return -1;
+}
 
-#endif /* VERSION_H_ */
+int current_sensor_read_raw(uint16_t *cur)
+{
+    return -1;
+}
 
-/** \} End of version group */
+int current_sensor_read(float *cur)
+{
+    return -1;
+}
+
+/** \} End of current_sensor group */
