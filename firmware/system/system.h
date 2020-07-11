@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.2
+ * \version 0.3.17
  * 
  * \date 25/01/2020
  * 
@@ -36,6 +36,8 @@
 #ifndef SYSTEM_H_
 #define SYSTEM_H_
 
+#include <stdint.h>
+
 #include "clocks.h"
 
 /**
@@ -43,7 +45,39 @@
  *
  * \return None.
  */
-void system_reset();
+void system_reset(void);
+
+/**
+ * \brief Gets the last reset cause code.
+ *
+ * This function reads the value of the reset interrupt vector (SYSRSTIV).
+ *
+ * \see SLAU208P - MSP430x5xx and MSP430x6xx Family User's Guide. Table 1-26. SYSRSTIV Register Description. Page 96.
+ *
+ * \return The last reset cause value. It can be:
+ * \parblock
+ *      -\b 0x00 = No interrupt pending
+ *      -\b 0x02 = Brownout (BOR)
+ *      -\b 0x04 = RST/NMI (BOR)
+ *      -\b 0x06 = PMMSWBOR (BOR)
+ *      -\b 0x08 = Wakeup from LPMx.5 (BOR)
+ *      -\b 0x0A = Security violation (BOR)
+ *      -\b 0x0C = SVSL (POR)
+ *      -\b 0x0E = SVSH (POR)
+ *      -\b 0x10 = SVML_OVP (POR)
+ *      -\b 0x12 = SVMH_OVP (POR)
+ *      -\b 0x14 = PMMSWPOR (POR)
+ *      -\b 0x16 = WDT time out (PUC)
+ *      -\b 0x18 = WDT password violation (PUC)
+ *      -\b 0x1A = Flash password violation (PUC)
+ *      -\b 0x1C = Reserved
+ *      -\b 0x1E = PERF peripheral/configuration area fetch (PUC)
+ *      -\b 0x20 = PMM password violation (PUC)
+ *      -\b 0x22 to 0x3E = Reserved
+ *      .
+ * \endparblock
+ */
+uint8_t system_get_reset_cause(void);
 
 #endif /* SYSTEM_H_ */
 

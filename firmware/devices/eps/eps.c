@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.12
+ * \version 0.3.16
  * 
  * \date 01/02/2020
  * 
@@ -55,7 +55,7 @@ int eps_init()
     if (err != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error during the initialization! (error ");
-        sys_log_print_dec(err);
+        sys_log_print_int(err);
         sys_log_print_msg(")");
         sys_log_new_line();
 
@@ -74,7 +74,7 @@ int eps_get_bat_voltage(eps_bat_voltage_t *bat_volt)
     if (err_0 != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery voltage from cell 0! (error ");
-        sys_log_print_dec(err_0);
+        sys_log_print_int(err_0);
         sys_log_print_msg(")");
         sys_log_new_line();
 
@@ -84,7 +84,7 @@ int eps_get_bat_voltage(eps_bat_voltage_t *bat_volt)
     if (err_0 != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery voltage from cell 1! (error ");
-        sys_log_print_dec(err_1);
+        sys_log_print_int(err_1);
         sys_log_print_msg(")");
         sys_log_new_line();
 
@@ -106,7 +106,7 @@ int eps_get_bat_charge(uint32_t *charge)
     if (err != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery charge! (error ");
-        sys_log_print_dec(err);
+        sys_log_print_int(err);
         sys_log_print_msg(")");
         sys_log_new_line();
 

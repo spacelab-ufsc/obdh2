@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.13
+ * \version 0.3.21
  * 
  * \date 27/10/2019
  * 
@@ -55,9 +55,11 @@ int radio_init();
  *
  * \param[in] len is the number of bytes to write.
  *
+ * \param[in] timeout_ms is the send timeout in milliseconds.
+ *
  * \return The status/error code.
  */
-int radio_send(uint8_t *data, uint16_t len);
+int radio_send(uint8_t *data, uint16_t len, uint32_t timeout_ms);
 
 /**
  * \brief Reads data from the radio device (if available) with timeout.

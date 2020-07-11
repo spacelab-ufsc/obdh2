@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.12
+ * \version 0.3.16
  * 
  * \date 18/02/2020
  * 
@@ -69,11 +69,11 @@ int payload_edc_init()
     }
 
     sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_EDC_MODULE_NAME, "Initialization done! (");
-    sys_log_print_dec(hk_data.temp);
+    sys_log_print_uint(hk_data.temp);
     sys_log_print_msg(" oC, ");
-    sys_log_print_dec(hk_data.voltage_supply);
+    sys_log_print_uint(hk_data.voltage_supply);
     sys_log_print_msg(" mV, ");
-    sys_log_print_dec(hk_data.current_supply);
+    sys_log_print_uint(hk_data.current_supply);
     sys_log_print_msg(" mA)");
     sys_log_new_line();
 

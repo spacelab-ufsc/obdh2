@@ -8,3 +8,6 @@ Debug/
 
 # Vi/Vim files
 *.swp
+
+# ctags files
+tags

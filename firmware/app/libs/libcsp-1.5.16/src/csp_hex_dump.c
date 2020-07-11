@@ -26,7 +26,7 @@ void csp_hex_dump (const char *desc, void *addr, int len)
 	if (len < 0) {
         /* printf("  NEGATIVE LENGTH: %i\r\n",len); */
         sys_log_print_msg(" NEGATIVE LENGTH: ");
-        sys_log_print_dec(len);
+        sys_log_print_int(len);
         sys_log_new_line();
 		return;
 	}

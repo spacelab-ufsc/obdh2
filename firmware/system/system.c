@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.2
+ * \version 0.3.17
  * 
  * \date 29/01/2020
  * 
@@ -37,11 +37,16 @@
 
 #include "system.h"
 
-void system_reset()
+void system_reset(void)
 {
     PMMCTL0 = PMMPW | PMMSWBOR;     /* Triggers a software BOR */
 
     WDTCTL = 0xDEAD;                /* Reset system by writing to the WDT register without using the proper password */
+}
+
+uint8_t system_get_reset_cause(void)
+{
+    return (SYSRSTIV & 0xFF);
 }
 
 /** \} End of system group */

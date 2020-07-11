@@ -111,7 +111,7 @@ void csp_ping_noreply(uint8_t node) {
 
     /* printf("Ping ignore reply node %u.\r\n", (unsigned int) node); */
     sys_log_print_event_from_module(SYS_LOG_INFO, LIBCSP_MODULE_NAME, "Ping ignore reply node ");
-    sys_log_print_dec(node);
+    sys_log_print_uint(node);
     sys_log_print_msg(".");
     sys_log_new_line();
 
@@ -153,7 +153,7 @@ void csp_ps(uint8_t node, uint32_t timeout) {
 
     /* printf("PS node %u: \r\n", (unsigned int) node); */
     sys_log_print_event_from_module(SYS_LOG_INFO, LIBCSP_MODULE_NAME, "PS node ");
-    sys_log_print_dec(node);
+    sys_log_print_uint(node);
     sys_log_print_msg(": ");
     sys_log_new_line();
 
@@ -206,9 +206,9 @@ void csp_memfree(uint8_t node, uint32_t timeout) {
 
     /* printf("Free Memory at node %u is %"PRIu32" bytes\r\n", (unsigned int) node, memfree); */
     sys_log_print_event_from_module(SYS_LOG_INFO, LIBCSP_MODULE_NAME, "Free Memory at node ");
-    sys_log_print_dec(node);
+    sys_log_print_uint(node);
     sys_log_print_msg(" is ");
-    sys_log_print_dec(memfree);
+    sys_log_print_uint(memfree);
     sys_log_print_msg(" bytes");
     sys_log_new_line();
 
@@ -228,9 +228,9 @@ void csp_buf_free(uint8_t node, uint32_t timeout) {
 	size = csp_ntoh32(size);
     /* printf("Free buffers at node %u is %"PRIu32"\r\n", (unsigned int) node, size); */
     sys_log_print_event_from_module(SYS_LOG_INFO, LIBCSP_MODULE_NAME, "Free buffers at node ");
-    sys_log_print_dec(node);
+    sys_log_print_uint(node);
     sys_log_print_msg(" is ");
-    sys_log_print_dec(size);
+    sys_log_print_uint(size);
     sys_log_new_line();
 
 }
@@ -253,9 +253,9 @@ void csp_uptime(uint8_t node, uint32_t timeout) {
 	if (err == CSP_ERR_NONE) {
         /* printf("Uptime of node %u is %"PRIu32" s\r\n", (unsigned int) node, uptime); */
         sys_log_print_event_from_module(SYS_LOG_INFO, LIBCSP_MODULE_NAME, "Uptime of node ");
-        sys_log_print_dec(node);
+        sys_log_print_uint(node);
         sys_log_print_msg(" is ");
-        sys_log_print_dec(uptime);
+        sys_log_print_uint(uptime);
         sys_log_new_line();
 	} else {
         /* printf("Network error\r\n"); */

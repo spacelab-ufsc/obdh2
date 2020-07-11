@@ -127,17 +127,17 @@ void csp_rtable_print(void) {
             /*        routes[i].interface->name, */
             /*        routes[i].mac == CSP_NODE_MAC ? i : routes[i].mac); */
             sys_log_print_event_from_module(SYS_LOG_INFO, LIBCSP_MODULE_NAME, "");
-            sys_log_print_dec(i);
+            sys_log_print_uint(i);
             sys_log_print_msg("  ");
             sys_log_print_str(routes[i].interface->name);
             sys_log_print_msg("  ");
-            sys_log_print_dec(routes[i].mac == CSP_NODE_MAC ? i : routes[i].mac);
+            sys_log_print_uint(routes[i].mac == CSP_NODE_MAC ? i : routes[i].mac);
             sys_log_new_line();
     /* printf("   *  %-9s  %u\r\n", routes[CSP_DEFAULT_ROUTE].interface->name, routes[CSP_DEFAULT_ROUTE].mac); */
     sys_log_print_event_from_module(SYS_LOG_INFO, LIBCSP_MODULE_NAME, "   *  ");
     sys_log_print_str(routes[CSP_DEFAULT_ROUTE].interface->name);
     sys_log_print_msg("  ");
-    sys_log_print_dec(routes[CSP_DEFAULT_ROUTE].mac);
+    sys_log_print_uint(routes[CSP_DEFAULT_ROUTE].mac);
     sys_log_new_line();
 
 }
