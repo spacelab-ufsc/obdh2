@@ -1,5 +1,5 @@
 /*
- * devices.h
+ * voltage_sensor.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,32 +21,40 @@
  */
 
 /**
- * \brief Devices layer.
+ * \brief Voltage sensor device implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.4.0
  * 
- * \date 26/10/2019
+ * \date 11/07/2020
  * 
- * \defgroup devices Devices
+ * \addtogroup voltage_sensor
  * \{
  */
 
-#ifndef DEVICES_H_
-#define DEVICES_H_
+#include <drivers/adc/adc.h>
 
-#include "radio/radio.h"
-#include "leds/leds.h"
-#include "eps/eps.h"
-#include "ttc/ttc.h"
-#include "antenna/antenna.h"
-#include "payload_edc/payload_edc.h"
-#include "temp_sensor/temp_sensor.h"
-#include "current_sensor/current_sensor.h"
-#include "voltage_sensor/voltage_sensor.h"
-#include "media/media.h"
+#include <system/sys_log/sys_log.h>
 
-#endif /* DEVICES_H_ */
+#include "voltage_sensor.h"
 
-/** \} End of devices group */
+int voltage_sensor_init()
+{
+    sys_log_print_event_from_module(SYS_LOG_INFO, VOLTAGE_SENSOR_MODULE_NAME, "Initializing voltage sensor...");
+    sys_log_new_line();
+
+    return -1;
+}
+
+int voltage_sensor_read_raw(uint16_t *val)
+{
+    return -1;
+}
+
+int voltage_sensor_read(uint16_t *volt)
+{
+    return -1;
+}
+
+/** \} End of voltage_sensor group */
