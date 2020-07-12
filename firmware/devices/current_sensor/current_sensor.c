@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.0
+ * \version 0.4.1
  * 
  * \date 11/07/2020
  * 
@@ -41,20 +41,54 @@
 
 int current_sensor_init()
 {
-    sys_log_print_event_from_module(SYS_LOG_INFO, CURRENT_SENSOR_MODULE_NAME, "Initializing current sensor...");
+    sys_log_print_event_from_module(SYS_LOG_INFO, CURRENT_SENSOR_MODULE_NAME, "Initializing the current sensor...");
     sys_log_new_line();
 
-    return -1;
+    if (adc_init(CURRENT_SENSOR_ADC_PORT, (adc_config_t){}) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, CURRENT_SENSOR_MODULE_NAME, "Error initializing the current sensor!");
+        sys_log_new_line();
+
+        return -1;
+    }
+
+    uint16_t cur = 0;
+    if (current_sensor_read(&cur) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, CURRENT_SENSOR_MODULE_NAME, "Error reading the current value!");
+        sys_log_new_line();
+
+        return -1;
+    }
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, CURRENT_SENSOR_MODULE_NAME, "Current input current: ");
+    sys_log_print_uint(cur);
+    sys_log_print_msg(" mA");
+    sys_log_new_line();
+
+    return 0;
 }
 
-int current_sensor_read_raw(uint16_t *cur)
+int current_sensor_read_raw(uint16_t *val)
 {
-    return -1;
+    return adc_read(CURRENT_SENSOR_ADC_PORT, val);
 }
 
 int current_sensor_read(float *cur)
 {
-    return -1;
+    uint16_t raw_cur = 0;
+
+    if (current_sensor_read_raw(&raw_cur) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, CURRENT_SENSOR_MODULE_NAME, "Error reading the raw current value!");
+        sys_log_new_line();
+
+        return -1;
+    }
+
+    *cur = (uint16_t)(1000*raw_cur*(ADC_AVCC/(ADC_RANGE*CURRENT_SENSOR_RL_VALUE_OHM*CURRENT_SENSOR_GAIN*CURRENT_SENSOR_RSENSE_VALUE_OHM)));
+
+    return 0;
 }
 
 /** \} End of current_sensor group */
