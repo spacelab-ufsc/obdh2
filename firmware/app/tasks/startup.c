@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.17
+ * \version 0.4.2
  * 
  * \date 04/12/2019
  * 
@@ -43,6 +43,7 @@
 #include <devices/eps/eps.h>
 #include <devices/radio/radio.h>
 #include <devices/payload_edc/payload_edc.h>
+#include <devices/current_sensor/current_sensor.h>
 
 #include <ngham/ngham.h>
 
@@ -86,6 +87,12 @@ void vTaskStartup(void *pvParameters)
 
     /* LEDs device initialization */
     if (leds_init() != 0)
+    {
+        error = true;
+    }
+
+    /* Current sensor device initialization */
+    if (current_sensor_init() != 0)
     {
         error = true;
     }
