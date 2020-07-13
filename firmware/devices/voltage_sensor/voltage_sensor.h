@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.0
+ * \version 0.4.2
  * 
  * \date 11/07/2020
  * 
@@ -39,7 +39,12 @@
 
 #include <stdint.h>
 
+#include <drivers/adc/adc.h>
+
 #define VOLTAGE_SENSOR_MODULE_NAME     "Voltage Sensor"
+
+#define VOLTAGE_SENSOR_ADC_PORT         ADC_PORT_4      /**< Voltage sensor ADC port (channel). */
+#define VOLTAGE_SENSOR_DIV              2.0             /**< Voltage divisor factor. */
 
 /**
  * \brief Voltage sensor device initialization routine.

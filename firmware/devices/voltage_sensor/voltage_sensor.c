@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.0
+ * \version 0.4.2
  * 
  * \date 11/07/2020
  * 
@@ -33,28 +33,60 @@
  * \{
  */
 
-#include <drivers/adc/adc.h>
-
 #include <system/sys_log/sys_log.h>
 
 #include "voltage_sensor.h"
 
 int voltage_sensor_init()
 {
-    sys_log_print_event_from_module(SYS_LOG_INFO, VOLTAGE_SENSOR_MODULE_NAME, "Initializing voltage sensor...");
+    sys_log_print_event_from_module(SYS_LOG_INFO, VOLTAGE_SENSOR_MODULE_NAME, "Initializing the voltage sensor...");
     sys_log_new_line();
 
-    return -1;
+    if (adc_init(VOLTAGE_SENSOR_ADC_PORT, (adc_config_t){}) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, VOLTAGE_SENSOR_MODULE_NAME, "Error initializing the voltage sensor!");
+        sys_log_new_line();
+
+        return -1;
+    }
+
+    uint16_t volt = 0;
+    if (voltage_sensor_read(&volt) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, VOLTAGE_SENSOR_MODULE_NAME, "Error reading the voltage value!");
+        sys_log_new_line();
+
+        return -1;
+    }
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, VOLTAGE_SENSOR_MODULE_NAME, "Current input voltage: ");
+    sys_log_print_uint(volt);
+    sys_log_print_msg(" mV");
+    sys_log_new_line();
+
+    return 0;
 }
 
 int voltage_sensor_read_raw(uint16_t *val)
 {
-    return -1;
+    return adc_read(VOLTAGE_SENSOR_ADC_PORT, val);
 }
 
 int voltage_sensor_read(uint16_t *volt)
 {
-    return -1;
+    uint16_t raw_volt = 0;
+
+    if (voltage_sensor_read_raw(&raw_volt) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, VOLTAGE_SENSOR_MODULE_NAME, "Error reading the raw voltage value!");
+        sys_log_new_line();
+
+        return -1;
+    }
+
+    *volt = (uint16_t)(1000*(float)raw_volt*ADC_AVCC*VOLTAGE_SENSOR_DIV/ADC_RANGE);
+
+    return 0;
 }
 
 /** \} End of voltage_sensor group */
