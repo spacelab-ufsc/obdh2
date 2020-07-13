@@ -1,5 +1,5 @@
 /*
- * read_temp.h
+ * read_sensors.h
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,35 +21,36 @@
  */
 
 /**
- * \brief Read uC temperature task implementation.
+ * \brief Read onboard sensors task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.16
+ * \version 0.4.4
  * 
- * \date 02/03/2020
+ * \date 2020/07/12
  * 
- * \addtogroup read_temp
+ * \addtogroup read_sensors
  * \{
  */
 
-#include "read_temp.h"
+#include "read_sensors.h"
 #include "startup.h"
 
-xTaskHandle xTaskReadTempHandle;
+xTaskHandle xTaskReadSensorsHandle;
 
-void vTaskReadTemp(void *pvParameters)
+void vTaskReadSensors(void *pvParameters)
 {
     /* Wait startup task to finish */
-    xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_TEMP_INIT_TIMEOUT_MS));
+    xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_SENSORS_INIT_TIMEOUT_MS));
 
     while(1)
     {
         TickType_t last_cycle = xTaskGetTickCount();
 
+        /* Task implementation here */
 
-        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_TEMP_PERIOD_MS));
+        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_SENSORS_PERIOD_MS));
     }
 }
 
-/** \} End of watchdog_reset group */
+/** \} End of read_sensors group */

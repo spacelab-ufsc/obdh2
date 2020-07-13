@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.14
+ * \version 0.4.4
  * 
  * \date 02/11/2019
  * 
@@ -44,7 +44,7 @@
 #include "heartbeat.h"
 #include "system_reset.h"
 #include "radio_reset.h"
-#include "read_temp.h"
+#include "read_sensors.h"
 #include "beacon.h"
 #include "uplink.h"
 #include "save_time.h"
@@ -100,12 +100,12 @@ void create_tasks()
     }
 #endif /* CONFIG_TASK_RADIO_RESET_ENABLED */
 
-#if CONFIG_TASK_READ_TEMP_ENABLED == 1
-    xTaskCreate(vTaskReadTemp, TASK_READ_TEMP_NAME, TASK_READ_TEMP_STACK_SIZE, NULL, TASK_READ_TEMP_PRIORITY, &xTaskReadTempHandle);
+#if CONFIG_TASK_READ_SENSORS_ENABLED == 1
+    xTaskCreate(vTaskReadSensors, TASK_READ_SENSORS_NAME, TASK_READ_SENSORS_STACK_SIZE, NULL, TASK_READ_SENSORS_PRIORITY, &xTaskReadSensorsHandle);
 
-    if (xTaskReadTempHandle == NULL)
+    if (xTaskReadSensorsHandle == NULL)
     {
-        /* Error creating the read tempearture task */
+        /* Error creating the read sensors task */
     }
 #endif /* CONFIG_TASK_READ_TEMP_ENABLED */
 
