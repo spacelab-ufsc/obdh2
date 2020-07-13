@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.3
+ * \version 0.4.4
  * 
  * \date 04/12/2019
  * 
@@ -45,6 +45,7 @@
 #include <devices/payload_edc/payload_edc.h>
 #include <devices/current_sensor/current_sensor.h>
 #include <devices/voltage_sensor/voltage_sensor.h>
+#include <devices/temp_sensor/temp_sensor.h>
 
 #include <ngham/ngham.h>
 
@@ -100,6 +101,12 @@ void vTaskStartup(void *pvParameters)
 
     /* Voltage sensor device initialization */
     if (voltage_sensor_init() != 0)
+    {
+        error = true;
+    }
+
+    /* Temperature sensor device initialization */
+    if (temp_sensor_init() != 0)
     {
         error = true;
     }
