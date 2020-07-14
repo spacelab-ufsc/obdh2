@@ -25,13 +25,19 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.4
+ * \version 0.4.5
  * 
  * \date 2020/07/12
  * 
  * \addtogroup read_sensors
  * \{
  */
+
+#include <devices/current_sensor/current_sensor.h>
+#include <devices/voltage_sensor/voltage_sensor.h>
+#include <devices/temp_sensor/temp_sensor.h>
+
+#include <app/data.h>
 
 #include "read_sensors.h"
 #include "startup.h"
@@ -47,7 +53,22 @@ void vTaskReadSensors(void *pvParameters)
     {
         TickType_t last_cycle = xTaskGetTickCount();
 
-        /* Task implementation here */
+        uint16_t buf = 0;
+
+        if (current_sensor_read_raw(&buf) == 0)
+        {
+            obdh_data_buf.obdh_current = buf;
+        }
+
+        if (voltage_sensor_read_raw(&buf) == 0)
+        {
+            obdh_data_buf.obdh_voltage = buf;
+        }
+
+        if (temp_sensor_read_raw(&buf) == 0)
+        {
+            obdh_data_buf.obdh_temp = buf;
+        }
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_SENSORS_PERIOD_MS));
     }

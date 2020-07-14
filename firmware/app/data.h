@@ -1,5 +1,5 @@
 /*
- * version.h
+ * data.h
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,29 +21,40 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief Data structures definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.4.5
  * 
- * \date 25/10/2019
+ * \date 2020/07/13
  * 
- * \defgroup version Version control
+ * \defgroup obdh_data OBDH Data
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#ifndef DATA_H_
+#define DATA_H_
 
-#define FIRMWARE_VERSION            "0.4.5"
+#include <stdint.h>
 
-#define FIRMWARE_STATUS             "Development"
+/**
+ * \brief OBDH data structure.
+ */
+typedef struct
+{
+    /* OBDH data */
+    uint16_t obdh_temp;             /**< OBDH uC temperature. */
+    uint16_t obdh_current;          /**< OBDH board current. */
+    uint16_t obdh_voltage;          /**< OBDH board voltage. */
+    /* EPS data */
+} obdh_data_t;
 
-#define FIRMWARE_AUTHOR             "SpaceLab"
+/**
+ * \brief OBDH data buffer.
+ */
+extern obdh_data_t obdh_data_buf;
 
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
+#endif /* DATA_H_ */
 
-#endif /* VERSION_H_ */
-
-/** \} End of version group */
+/** \} End of data group */
