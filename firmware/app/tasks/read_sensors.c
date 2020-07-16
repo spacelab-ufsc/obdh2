@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.5
+ * \version 0.4.6
  * 
  * \date 2020/07/12
  * 
@@ -37,7 +37,7 @@
 #include <devices/voltage_sensor/voltage_sensor.h>
 #include <devices/temp_sensor/temp_sensor.h>
 
-#include <app/data.h>
+#include <structs/satellite.h>
 
 #include "read_sensors.h"
 #include "startup.h"
@@ -55,20 +55,26 @@ void vTaskReadSensors(void *pvParameters)
 
         uint16_t buf = 0;
 
+        /* OBDH current */
         if (current_sensor_read_raw(&buf) == 0)
         {
-            obdh_data_buf.obdh_current = buf;
+            sat_data_buf.obdh.current = buf;
         }
 
+        /* OBDH voltage */
         if (voltage_sensor_read_raw(&buf) == 0)
         {
-            obdh_data_buf.obdh_voltage = buf;
+            sat_data_buf.obdh.voltage = buf;
         }
 
+        /* OBDH temperature */
         if (temp_sensor_read_raw(&buf) == 0)
         {
-            obdh_data_buf.obdh_temp = buf;
+            sat_data_buf.obdh.temperature = buf;
         }
+
+        /* Data timestamp */
+        sat_data_buf.obdh.timestamp = (uint32_t)xTaskGetTickCount();
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_SENSORS_PERIOD_MS));
     }
