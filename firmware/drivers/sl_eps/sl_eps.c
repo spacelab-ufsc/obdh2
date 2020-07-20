@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * sl_eps.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,37 +21,39 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief SpaceLab EPS driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.4.7
  * 
- * \date 26/10/2019
+ * \date 2020/07/18
  * 
- * \defgroup drivers Drivers
+ * \addtogroup sl_eps
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#include <config/config.h>
+#include <system/sys_log/sys_log.h>
 
-#include "edc/edc.h"
-#include "i2c/i2c.h"
-#include "isis_antenna/isis_antenna.h"
-#include "mt25ql01gbbb/mt25ql01gbbb.h"
-#include "spi/spi.h"
-#include "si446x/si446x.h"
-#include "uart/uart.h"
-#include "gpio/gpio.h"
-#include "tps382x/tps382x.h"
-#include "wdt/wdt.h"
-#include "tca4311a/tca4311a.h"
-#include "sl_eps/sl_eps.h"
-#include "sl_eps2/sl_eps2.h"
-#include "adc/adc.h"
-#include "flash/flash.h"
+#include "sl_eps.h"
 
-#endif /* DRIVERS_H_ */
+int sl_eps_init(sl_eps_config_t config)
+{
+#if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    sys_log_print_event_from_module(SYS_LOG_ERROR, SL_EPS_MODULE_NAME, "\"sl_eps_init\" not implemented!");
+    sys_log_new_line();
+#endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+    return -1;
+}
 
-/** \} End of drivers group */
+int sl_eps_read(sl_eps_data_t *data)
+{
+#if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    sys_log_print_event_from_module(SYS_LOG_ERROR, SL_EPS_MODULE_NAME, "\"sl_eps_read\" not implemented!");
+    sys_log_new_line();
+#endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+    return -1;
+}
+
+/** \} End of sl_eps group */
