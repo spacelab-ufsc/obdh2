@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.4
+ * \version 0.4.8
  * 
  * \date 01/11/2019
  * 
@@ -36,6 +36,8 @@
 
 #ifndef ANTENNA_H_
 #define ANTENNA_H_
+
+#define ANTENNA_MODULE_NAME         "Antenna"
 
 /**
  * \brief Antenna initialization.

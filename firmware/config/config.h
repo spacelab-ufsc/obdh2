@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.4
+ * \version 0.4.8
  * 
  * \date 26/10/2019
  * 
@@ -72,6 +72,9 @@
 
 /* Radio */
 #define SI446X_XO_TUNE_REG_VALUE                        97
+
+/* Drivers */
+#define ISIS_ANTENNA_ENABLED                            1
 
 #endif /* CONFIG_H_ */
 
