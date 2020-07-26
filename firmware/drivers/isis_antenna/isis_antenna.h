@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.10
+ * \version 0.4.9
  * 
  * \date 01/02/2020
  * 
@@ -40,20 +40,27 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-/* I2C addresses */
+#include <drivers/i2c/i2c.h>
+
+#define ISIS_ANTENNA_MODULE_NAME                "ISIS Antenna"
+
+/* I2C configuration */
+#define ISIS_ANTENNA_I2C_PORT                   I2C_PORT_2
+#define ISIS_ANTENNA_I2C_CLOCK_HZ               100000
 #define ISIS_ANTENNA_I2C_SLAVE_ADDRESS_UC_A     0x31
 #define ISIS_ANTENNA_I2C_SLAVE_ADDRESS_UC_B     0x32
+#define ISIS_ANTENNA_I2C_SLAVE_ADDRESS          ISIS_ANTENNA_I2C_SLAVE_ADDRESS_UC_A
 
 /* Status mask */
-#define ISIS_ANTENNA_STATUS_MASK    0x8888                  /**< Status mask (all antenna not deployed and disarmed). */
+#define ISIS_ANTENNA_STATUS_MASK                0x8888      /**< Status mask (all antenna not deployed and disarmed). */
 
-#define ISIS_ANTENNA_REF_VOLTAGE    3300                    /**< Reference voltage in millivolts. */
+#define ISIS_ANTENNA_REF_VOLTAGE                3300        /**< Reference voltage in millivolts. */
 
-#define ISIS_ANTENNA_MIN_TEMP        -50                    /**< Minimum read temperature. */
-#define ISIS_ANTENNA_MAX_TEMP       132                     /**< Maximum read temperature. */
+#define ISIS_ANTENNA_MIN_TEMP                   (-50)       /**< Minimum read temperature. */
+#define ISIS_ANTENNA_MAX_TEMP                   132         /**< Maximum read temperature. */
 
-#define ISIS_ANTENNA_TEMP_MIN_VOUT  630                     /**< Minimum output voltage of the temperature sensor. */
-#define ISIS_ANTENNA_TEMP_MAX_VOUT  2616                    /**< Maximum output voltage of the temperature sensor. */
+#define ISIS_ANTENNA_TEMP_MIN_VOUT              630         /**< Minimum output voltage of the temperature sensor. */
+#define ISIS_ANTENNA_TEMP_MAX_VOUT              2616        /**< Maximum output voltage of the temperature sensor. */
 
 /**
  * \brief Antennas number.
@@ -130,9 +137,9 @@ typedef struct
 /**
  * \brief Driver initialization.
  *
- * \return None.
+ * \return The status/error code.
  */
-void isis_antenna_init();
+int isis_antenna_init();
 
 /**
  * \brief Arm the antenna module.
@@ -279,51 +286,6 @@ bool isis_antenna_get_arming_status();
 uint16_t isis_antenna_get_temperature();
 
 /**
- * \brief I2C interface initialization.
- *
- * \return None.
- */
-void isis_antenna_i2c_init();
-
-/**
- * \brief Writes a byte in the I2C bus.
- *
- * \param[in] byte is the byte to write in the I2C bus.
- *
- * \return None.
- */
-void isis_antenna_i2c_write_byte(uint8_t byte);
-
-/**
- * \brief Writes data in the I2C bus.
- *
- * \param[in] data is an array of data to write in the I2C bus.
- *
- * \param[in] len is the length of the data.
- *
- * \return None.
- */
-void isis_antenna_i2c_write_data(uint8_t *data, uint8_t len);
-
-/**
- * \brief Read a byte from the I2C bus.
- *
- * \return The byte from the I2C bus.
- */
-uint8_t isis_antenna_i2c_read_byte();
-
-/**
- * \brief Read n bytes from the I2C bus.
- *
- * \param[in] data is a pointe to write the data from the I2C bus.
- *
- * \param[in] len is the length of the data.
- *
- * \return None.
- */
-void isis_antenna_i2c_read_data(uint8_t *data, uint8_t len);
-
-/**
  * \brief Seconds delay.
  *
  * \param[in] s is the delay in seconds.
@@ -340,15 +302,6 @@ void isis_antenna_delay_s(uint8_t s);
  * \return None.
  */
 void isis_antenna_delay_ms(uint16_t ms);
-
-/**
- * \brief Microseconds delay.
- *
- * \param[in] us is the delay in microseconds.
- *
- * \return None.
- */
-void isis_antenna_delay_us(uint32_t us);
 
 #endif /* ANTENNA_H_ */
 
