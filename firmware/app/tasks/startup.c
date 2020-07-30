@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.4
+ * \version 0.4.10
  * 
  * \date 04/12/2019
  * 
@@ -46,6 +46,7 @@
 #include <devices/current_sensor/current_sensor.h>
 #include <devices/voltage_sensor/voltage_sensor.h>
 #include <devices/temp_sensor/temp_sensor.h>
+#include <devices/antenna/antenna.h>
 
 #include <ngham/ngham.h>
 
@@ -135,6 +136,12 @@ void vTaskStartup(void *pvParameters)
 
     /* Payload EDC device initialization */
     if (payload_edc_init() != 0)
+    {
+        error = true;
+    }
+
+    /* Antenna device initialization */
+    if (antenna_init() != 0)
     {
         error = true;
     }
