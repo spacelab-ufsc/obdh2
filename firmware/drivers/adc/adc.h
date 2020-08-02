@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.1
+ * \version 0.4.1
  * 
  * \date 03/03/2020
  * 
@@ -38,6 +38,11 @@
 #define ADC_H_
 
 #include <stdint.h>
+
+#define ADC_MODULE_NAME     "ADC"
+
+#define ADC_AVCC            3.0     /**< ADC reference voltage. */
+#define ADC_RANGE           4095    /**< ADC resolution (12-bits) */
 
 /**
  * \brief ADC ports.

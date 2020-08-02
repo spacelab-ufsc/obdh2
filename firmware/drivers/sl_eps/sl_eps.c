@@ -1,5 +1,5 @@
 /*
- * read_temp.h
+ * sl_eps.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,35 +21,39 @@
  */
 
 /**
- * \brief Read uC temperature task implementation.
+ * \brief SpaceLab EPS driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.16
+ * \version 0.4.7
  * 
- * \date 02/03/2020
+ * \date 2020/07/18
  * 
- * \addtogroup read_temp
+ * \addtogroup sl_eps
  * \{
  */
 
-#include "read_temp.h"
-#include "startup.h"
+#include <config/config.h>
+#include <system/sys_log/sys_log.h>
 
-xTaskHandle xTaskReadTempHandle;
+#include "sl_eps.h"
 
-void vTaskReadTemp(void *pvParameters)
+int sl_eps_init(sl_eps_config_t config)
 {
-    /* Wait startup task to finish */
-    xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_TEMP_INIT_TIMEOUT_MS));
-
-    while(1)
-    {
-        TickType_t last_cycle = xTaskGetTickCount();
-
-
-        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_TEMP_PERIOD_MS));
-    }
+#if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    sys_log_print_event_from_module(SYS_LOG_ERROR, SL_EPS_MODULE_NAME, "\"sl_eps_init\" not implemented!");
+    sys_log_new_line();
+#endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+    return -1;
 }
 
-/** \} End of watchdog_reset group */
+int sl_eps_read(sl_eps_data_t *data)
+{
+#if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    sys_log_print_event_from_module(SYS_LOG_ERROR, SL_EPS_MODULE_NAME, "\"sl_eps_read\" not implemented!");
+    sys_log_new_line();
+#endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+    return -1;
+}
+
+/** \} End of sl_eps group */

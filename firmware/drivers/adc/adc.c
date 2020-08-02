@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.1
+ * \version 0.4.1
  * 
  * \date 03/03/2020
  * 
@@ -33,13 +33,29 @@
  * \{
  */
 
+#include <stdbool.h>
+
 #include <hal/adc10_a.h>
 #include <hal/adc12_a.h>
 
+#include <config/config.h>
+#include <system/sys_log/sys_log.h>
+
 #include "adc.h"
+
+bool adc_is_ready = false;
 
 int adc_init(adc_port_t port, adc_config_t config)
 {
+    if (adc_is_ready)
+    {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_WARNING, ADC_MODULE_NAME, "ADC driver already initialized!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        return 0;
+    }
+
     /* Reset REFMSTR to hand over control to ADC12_A ref control registers */
     REFCTL0 &= ~REFMSTR;
 
@@ -49,16 +65,21 @@ int adc_init(adc_port_t port, adc_config_t config)
     /* Enable sample timer */
     ADC12CTL1 = ADC12SHP | ADC12CONSEQ_1;
 
-    P6SEL |= (1 << 3) | (1 << 4);
+    P6SEL |= (1 << 0) | (1 << 1) | (1 << 2) | (1 << 3) | (1 << 4);
 
-    ADC12MCTL3 = ADC12SREF_2 | ADC12INCH_3;                 /* OBDH current-sense */
-    ADC12MCTL4 = ADC12SREF_2 | ADC12INCH_4;                 /* OBDH Voltage-sense */
-    ADC12MCTL5 = ADC12EOS | ADC12SREF_2 | ADC12INCH_10;     /* Temperature sensor */
+    ADC12MCTL0 = ADC12SREF_2 | ADC12INCH_0;                 /* Daughterboard ADC0. */
+    ADC12MCTL1 = ADC12SREF_2 | ADC12INCH_1;                 /* Daughterboard ADC1. */
+    ADC12MCTL2 = ADC12SREF_2 | ADC12INCH_2;                 /* Daughterboard ADC2. */
+    ADC12MCTL3 = ADC12SREF_2 | ADC12INCH_3;                 /* Current sensor. */
+    ADC12MCTL4 = ADC12SREF_2 | ADC12INCH_4;                 /* Voltage sensor. */
+    ADC12MCTL5 = ADC12EOS | ADC12SREF_2 | ADC12INCH_10;     /* Temperature sensor. */
 
     /* Allow ~100us (at default UCS settings) for REF to settle */
     adc_delay_ms(1);
 
     ADC12CTL0 |= ADC12ENC;
+
+    adc_is_ready = true;
 
     return 0;
 }

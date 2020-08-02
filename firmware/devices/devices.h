@@ -44,6 +44,7 @@
 #include "payload_edc/payload_edc.h"
 #include "temp_sensor/temp_sensor.h"
 #include "current_sensor/current_sensor.h"
+#include "voltage_sensor/voltage_sensor.h"
 #include "media/media.h"
 
 #endif /* DEVICES_H_ */
