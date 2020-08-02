@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.13
+ * \version 0.4.11
  * 
  * \date 21/04/2020
  * 
@@ -87,7 +87,7 @@ int media_init(media_t med);
  *
  * \return The status/error code.
  */
-int media_write(media_t med, uint32_t adr, uint8_t *data, uint16_t len);
+int media_write(media_t med, uint32_t adr, uint32_t *data, uint16_t len);
 
 /**
  * \brief Reads data from a given address of a media device.
@@ -107,7 +107,7 @@ int media_write(media_t med, uint32_t adr, uint8_t *data, uint16_t len);
  *
  * \return The status/error code.
  */
-int media_read(media_t med, uint32_t adr, uint8_t *data, uint16_t len);
+int media_read(media_t med, uint32_t adr, uint32_t *data, uint16_t len);
 
 /**
  * \brief Erases a memory region from a media device.

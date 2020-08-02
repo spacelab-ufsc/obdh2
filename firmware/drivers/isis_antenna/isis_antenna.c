@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.10
+ * \version 0.4.9
  * 
  * \date 01/02/2020
  * 
@@ -36,19 +36,21 @@
 #include <drivers/i2c/i2c.h>
 
 #include "isis_antenna.h"
-#include "isis_antenna_config.h"
 #include "isis_antenna_cmds.h"
 
 int isis_antenna_init()
 {
-    return i2c_init(I2C_PORT_2, (i2c_config_t){.speed_hz=100000});
+    return i2c_init(ISIS_ANTENNA_I2C_PORT, (i2c_config_t){.speed_hz=ISIS_ANTENNA_I2C_CLOCK_HZ});
 }
 
 bool isis_antenna_arm()
 {
     uint8_t cmd = ISIS_ANTENNA_CMD_ARM;
 
-    i2c_write(I2C_PORT_2, ISIS_ANTENNA_I2C_SLAVE_ADDRESS_UC_A, &cmd, 1);
+    if (i2c_write(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, &cmd, 1) != 0)
+    {
+        return false;
+    }
 
     isis_antenna_delay_ms(100);
 
@@ -57,7 +59,11 @@ bool isis_antenna_arm()
 
 bool isis_antenna_disarm()
 {
-    isis_antenna_i2c_write_byte(ISIS_ANTENNA_CMD_DISARM);
+    uint8_t cmd = ISIS_ANTENNA_CMD_DISARM;
+    if (i2c_write(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, &cmd, 1) != 0)
+    {
+        return false;
+    }
 
     isis_antenna_delay_ms(100);
 
@@ -71,7 +77,10 @@ void isis_antenna_start_sequential_deploy(uint8_t sec)
     cmd[0] = ISIS_ANTENNA_CMD_DEPLOY_SEQUENTIAL;
     cmd[1] = sec;
 
-    isis_antenna_i2c_write_data(cmd, 2);
+    if (i2c_write(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, cmd, 2) != 0)
+    {
+        return;
+    }
 
     isis_antenna_delay_ms(100);
 }
@@ -123,7 +132,10 @@ void isis_antenna_start_independent_deploy(uint8_t ant, uint8_t sec, uint8_t ovr
         }
     }
 
-    isis_antenna_i2c_write_data(cmd, 2);
+    if (i2c_write(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, cmd, 2) != 0)
+    {
+        return;
+    }
 
     isis_antenna_delay_ms(100);
 }
@@ -132,13 +144,20 @@ uint16_t isis_antenna_read_deployment_status_code()
 {
     uint16_t status_code = ISIS_ANTENNA_STATUS_MASK;    /* Initial state */
 
-    isis_antenna_i2c_write_byte(ISIS_ANTENNA_CMD_REPORT_DEPLOY_STATUS);
+    uint8_t cmd = ISIS_ANTENNA_CMD_REPORT_DEPLOY_STATUS;
+    if (i2c_write(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, &cmd, 1) != 0)
+    {
+        return 0xFFFF;
+    }
 
     isis_antenna_delay_ms(100);
 
     uint8_t status_bytes[2];
 
-    isis_antenna_i2c_read_data(status_bytes, 2);
+    if (i2c_read(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, status_bytes, 2) != 0)
+    {
+        return 0xFFFF;
+    }
 
     status_code = (uint16_t)(status_bytes[1] << 8) | status_bytes[0];
 
@@ -235,13 +254,20 @@ bool isis_antenna_get_arming_status()
 
 uint16_t isis_antenna_get_temperature()
 {
-    isis_antenna_i2c_write_byte(ISIS_ANTENNA_CMD_MEASURE_TEMPERATURE);
+    uint8_t cmd = ISIS_ANTENNA_CMD_MEASURE_TEMPERATURE;
+    if (i2c_write(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, &cmd, 1) != 0)
+    {
+        return 0xFFFF;
+    }
 
     isis_antenna_delay_ms(100);
 
     uint8_t temp_bytes[2];
 
-    isis_antenna_i2c_read_data(temp_bytes, 2);
+    if (i2c_read(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, temp_bytes, 2) != 0)
+    {
+        return 0xFFFF;
+    }
 
     uint16_t raw_data = (uint16_t)(temp_bytes[1] << 8) | temp_bytes[0];
 

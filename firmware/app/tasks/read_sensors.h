@@ -1,5 +1,5 @@
 /*
- * read_temp.c
+ * read_sensors.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,45 +21,45 @@
  */
 
 /**
- * \brief Read uC temperature task definition.
+ * \brief Read onboard sensors task definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.16
+ * \version 0.4.4
  * 
- * \date 02/03/2020
+ * \date 2020/07/12
  * 
- * \defgroup read_temp Read temperature
+ * \defgroup read_sensors Read sensors
  * \ingroup tasks
  * \{
  */
 
-#ifndef READ_TEMP_H_
-#define READ_TEMP_H_
+#ifndef READ_SENSORS_H_
+#define READ_SENSORS_H_
 
 #include <FreeRTOS.h>
 #include <task.h>
 
-#define TASK_READ_TEMP_NAME                 "ReadTemp"          /**< Task name. */
-#define TASK_READ_TEMP_STACK_SIZE           128                 /**< Stack size in bytes. */
-#define TASK_READ_TEMP_PRIORITY             3                   /**< Task priority. */
-#define TASK_READ_TEMP_PERIOD_MS            (60*1000)           /**< Task period in milliseconds. */
-#define TASK_READ_TEMP_INIT_TIMEOUT_MS      2000                /**< Wait time to initialize the task in milliseconds. */
+#define TASK_READ_SENSORS_NAME                  "Read Sensors"      /**< Task name. */
+#define TASK_READ_SENSORS_STACK_SIZE            128                 /**< Stack size in bytes. */
+#define TASK_READ_SENSORS_PRIORITY              3                   /**< Task priority. */
+#define TASK_READ_SENSORS_PERIOD_MS             (60*1000)           /**< Task period in milliseconds. */
+#define TASK_READ_SENSORS_INIT_TIMEOUT_MS       2000                /**< Wait time to initialize the task in milliseconds. */
 
 /**
- * \brief Watchdog reset handle.
+ * \brief Read sensors handle.
  */
-extern xTaskHandle xTaskReadTempHandle;
+extern xTaskHandle xTaskReadSensorsHandle;
 
 /**
- * \brief Read uC temperature task.
+ * \brief Read onboard sensors task.
  *
  * \param[in] pvParameters is a value that will passed as the task's parameter.
  *
  * \return None.
  */
-void vTaskReadTemp(void *pvParameters);
+void vTaskReadSensors(void *pvParameters);
 
-#endif /* READ_TEMP_H_ */
+#endif /* READ_SENSORS_H_ */
 
-/** \} End of read_temp group */
+/** \} End of read_sensors group */

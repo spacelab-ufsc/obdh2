@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.17
+ * \version 0.4.10
  * 
  * \date 04/12/2019
  * 
@@ -43,6 +43,10 @@
 #include <devices/eps/eps.h>
 #include <devices/radio/radio.h>
 #include <devices/payload_edc/payload_edc.h>
+#include <devices/current_sensor/current_sensor.h>
+#include <devices/voltage_sensor/voltage_sensor.h>
+#include <devices/temp_sensor/temp_sensor.h>
+#include <devices/antenna/antenna.h>
 
 #include <ngham/ngham.h>
 
@@ -90,6 +94,24 @@ void vTaskStartup(void *pvParameters)
         error = true;
     }
 
+    /* Current sensor device initialization */
+    if (current_sensor_init() != 0)
+    {
+        error = true;
+    }
+
+    /* Voltage sensor device initialization */
+    if (voltage_sensor_init() != 0)
+    {
+        error = true;
+    }
+
+    /* Temperature sensor device initialization */
+    if (temp_sensor_init() != 0)
+    {
+        error = true;
+    }
+
     /* EPS device initialization */
     if (eps_init() != 0)
     {
@@ -114,6 +136,12 @@ void vTaskStartup(void *pvParameters)
 
     /* Payload EDC device initialization */
     if (payload_edc_init() != 0)
+    {
+        error = true;
+    }
+
+    /* Antenna device initialization */
+    if (antenna_init() != 0)
     {
         error = true;
     }

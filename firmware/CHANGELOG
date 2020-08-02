@@ -1,5 +1,20 @@
 ===========================================
 
+v0.4 - 11/07/2020
+
+- NGHam library port
+- Changing the comments to the MISRA C:2004 style
+- ADC driver
+- Initial version of the PHJ driver and device
+- Adding the CSP protoco (libcsp v1.5.16)
+- Adding debug/log messages to the drivers
+- Si446x driver refactoring
+- Adding file system libraries (FatFS and Reliance Edge)
+- Last reset cause reading
+- Adding the JSMN v1.1.0 library
+
+===========================================
+
 v0.3 - 07/03/2020
 
 - EDC driver

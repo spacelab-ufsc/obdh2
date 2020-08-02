@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.0
+ * \version 0.4.1
  * 
  * \date 11/07/2020
  * 
@@ -39,7 +39,15 @@
 
 #include <stdint.h>
 
-#define CURRENT_SENSOR_MODULE_NAME      "Current Sensor"
+#include <drivers/adc/adc.h>
+
+#define CURRENT_SENSOR_MODULE_NAME          "Current Sensor"
+
+#define CURRENT_SENSOR_ADC_PORT             ADC_PORT_3      /**< Current sensor ADC port (channel). */
+
+#define CURRENT_SENSOR_RSENSE_VALUE_OHM     0.05            /**< Rsense resistor value in Ohms. */
+#define CURRENT_SENSOR_RL_VALUE_OHM         47000           /**< RL resistor value in Ohms. */
+#define CURRENT_SENSOR_GAIN                 0.005           /**< Current gain of max9934 in A/V. */
 
 /**
  * \brief Current sensor device initialization routine.

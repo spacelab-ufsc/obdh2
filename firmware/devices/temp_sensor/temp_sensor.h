@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.1
+ * \version 0.4.3
  * 
  * \date 17/03/2020
  * 
@@ -40,6 +40,11 @@
 #include <stdint.h>
 
 #define TEMP_SENSOR_MODULE_NAME     "Temperature Sensor"
+
+#define TEMP_SENSOR_ADC_PORT        ADC_PORT_5                  /**< Temperature sensors ADC port (channel). */
+
+#define TEMP_SENSOR_CAL_15V_30C     (*((unsigned int *)0x1A1A)) /**< Calibration constant for ADC 1.5-V ref., temp. 30 oC */
+#define TEMP_SENSOR_CAL_15V_85C     (*((unsigned int *)0x1A1C)) /**< Calibration constant for ADC 1.5-V ref., temp. 85 oC. */
 
 /**
  * \brief Temperature sensor device initialization routine.

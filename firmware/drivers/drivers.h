@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.5
+ * \version 0.4.7
  * 
  * \date 26/10/2019
  * 
@@ -47,6 +47,7 @@
 #include "tps382x/tps382x.h"
 #include "wdt/wdt.h"
 #include "tca4311a/tca4311a.h"
+#include "sl_eps/sl_eps.h"
 #include "sl_eps2/sl_eps2.h"
 #include "adc/adc.h"
 #include "flash/flash.h"

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.24
+ * \version 0.4.11
  * 
  * \date 21/07/2020
  * 
@@ -58,16 +58,16 @@ int media_init(media_t med)
     }
 }
 
-int media_write(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
+int media_write(media_t med, uint32_t adr, uint32_t *data, uint16_t len)
 {
     switch(med)
     {
         case MEDIA_INT_FLASH:
         {
             uint16_t i = 0;
-            for(i=0; i<len; i++)
+            for(i=0; i<len; i+=4)
             {
-                flash_write_single(data[i], (uint8_t*)(adr + i));
+                flash_write_long(data[i], (uint32_t*)(adr + i));
             }
 
             return 0;
@@ -85,16 +85,16 @@ int media_write(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
     }
 }
 
-int media_read(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
+int media_read(media_t med, uint32_t adr, uint32_t *data, uint16_t len)
 {
     switch(med)
     {
         case MEDIA_INT_FLASH:
         {
             uint16_t i = 0;
-            for(i=0; i<len; i++)
+            for(i=0; i<len; i+=4)
             {
-                data[i] = flash_read_single((uint8_t*)(adr + i));
+                data[i] = flash_read_long((uint32_t*)(adr + i));
             }
 
             return 0;

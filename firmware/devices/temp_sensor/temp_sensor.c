@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.12
+ * \version 0.4.3
  * 
  * \date 17/03/2020
  * 
@@ -41,20 +41,54 @@
 
 int temp_sensor_init()
 {
-    sys_log_print_event_from_module(SYS_LOG_INFO, TEMP_SENSOR_MODULE_NAME, "Initializing temperature sensor...");
+    sys_log_print_event_from_module(SYS_LOG_INFO, TEMP_SENSOR_MODULE_NAME, "Initializing the temperature sensor...");
     sys_log_new_line();
 
-    return -1;
+    if (adc_init(TEMP_SENSOR_ADC_PORT, (adc_config_t){}) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, TEMP_SENSOR_MODULE_NAME, "Error initializing the temperature sensor!");
+        sys_log_new_line();
+
+        return -1;
+    }
+
+    float temp = 0;
+    if (temp_sensor_read(&temp) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, TEMP_SENSOR_MODULE_NAME, "Error reading the temperature value!");
+        sys_log_new_line();
+
+        return -1;
+    }
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, TEMP_SENSOR_MODULE_NAME, "Current temperature: ");
+    sys_log_print_float(temp, 2);
+    sys_log_print_msg(" oC");
+    sys_log_new_line();
+
+    return 0;
 }
 
 int temp_sensor_read_raw(uint16_t *val)
 {
-    return -1;
+    return adc_read(TEMP_SENSOR_ADC_PORT, val);
 }
 
 int temp_sensor_read(float *temp)
 {
-    return -1;
+    uint16_t raw_temp = 0;
+
+    if (temp_sensor_read_raw(&raw_temp) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, TEMP_SENSOR_MODULE_NAME, "Error reading the raw temperature value!");
+        sys_log_new_line();
+
+        return -1;
+    }
+
+	*temp = (float)(((int32_t)raw_temp * 2 - TEMP_SENSOR_CAL_15V_30C) * (85 - 30)) / (TEMP_SENSOR_CAL_15V_85C - TEMP_SENSOR_CAL_15V_30C) + 30.0f;
+
+    return 0;
 }
 
 /** \} End of temp_sensor group */
