@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.8
+ * \version 0.4.12
  * 
  * \date 01/11/2019
  * 
@@ -54,16 +54,16 @@ int antenna_init()
     }
 
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 1 status=");
-    sys_log_print_msg(isis_antenna_get_antenna_status(ISIS_ANTENNA_ANT_1) ? "DEPLOYED" : "NOT DEPLOYED");
+    sys_log_print_msg(isis_antenna_get_antenna_status(ISIS_ANTENNA_ANT_1) == ISIS_ANTENNA_STATUS_DEPLOYED ? "DEPLOYED" : "NOT DEPLOYED");
     sys_log_new_line();
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 2 status=");
-    sys_log_print_msg(isis_antenna_get_antenna_status(ISIS_ANTENNA_ANT_2) ? "DEPLOYED" : "NOT DEPLOYED");
+    sys_log_print_msg(isis_antenna_get_antenna_status(ISIS_ANTENNA_ANT_2) == ISIS_ANTENNA_STATUS_DEPLOYED ? "DEPLOYED" : "NOT DEPLOYED");
     sys_log_new_line();
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 3 status=");
-    sys_log_print_msg(isis_antenna_get_antenna_status(ISIS_ANTENNA_ANT_3) ? "DEPLOYED" : "NOT DEPLOYED");
+    sys_log_print_msg(isis_antenna_get_antenna_status(ISIS_ANTENNA_ANT_3) == ISIS_ANTENNA_STATUS_DEPLOYED ? "DEPLOYED" : "NOT DEPLOYED");
     sys_log_new_line();
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 4 status=");
-    sys_log_print_msg(isis_antenna_get_antenna_status(ISIS_ANTENNA_ANT_4) ? "DEPLOYED" : "NOT DEPLOYED");
+    sys_log_print_msg(isis_antenna_get_antenna_status(ISIS_ANTENNA_ANT_4) == ISIS_ANTENNA_STATUS_DEPLOYED ? "DEPLOYED" : "NOT DEPLOYED");
     sys_log_new_line();
 
     return 0;
