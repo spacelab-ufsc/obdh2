@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.8
+ * \version 0.4.13
  * 
  * \date 26/10/2019
  * 
@@ -75,6 +75,9 @@
 
 /* Drivers */
 #define ISIS_ANTENNA_ENABLED                            1
+
+/* Memory addresses */
+#define CONFIG_MEM_ADR_SYS_TIME                         0
 
 #endif /* CONFIG_H_ */
 

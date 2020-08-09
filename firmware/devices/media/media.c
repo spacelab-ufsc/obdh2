@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.11
+ * \version 0.4.13
  * 
  * \date 21/07/2020
  * 
@@ -64,6 +64,9 @@ int media_write(media_t med, uint32_t adr, uint32_t *data, uint16_t len)
     {
         case MEDIA_INT_FLASH:
         {
+            /* Address index */
+            adr += FLASH_SEG_C_ADR;
+
             uint16_t i = 0;
             for(i=0; i<len; i+=4)
             {
@@ -91,6 +94,9 @@ int media_read(media_t med, uint32_t adr, uint32_t *data, uint16_t len)
     {
         case MEDIA_INT_FLASH:
         {
+            /* Address index */
+            adr += FLASH_SEG_C_ADR;
+
             uint16_t i = 0;
             for(i=0; i<len; i+=4)
             {
