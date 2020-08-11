@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.10
+ * \version 0.4.14
  * 
  * \date 04/12/2019
  * 
@@ -47,6 +47,7 @@
 #include <devices/voltage_sensor/voltage_sensor.h>
 #include <devices/temp_sensor/temp_sensor.h>
 #include <devices/antenna/antenna.h>
+#include <devices/media/media.h>
 
 #include <ngham/ngham.h>
 
@@ -87,6 +88,12 @@ void vTaskStartup(void *pvParameters)
     sys_log_print_event_from_module(SYS_LOG_INFO, TASK_STARTUP_NAME, "Last reset cause: ");
     sys_log_print_hex(system_get_reset_cause());
     sys_log_new_line();
+
+    /* Internal non-volatile memory initialization */
+    if (media_init(MEDIA_INT_FLASH) != 0)
+    {
+        error = true;
+    }
 
     /* LEDs device initialization */
     if (leds_init() != 0)

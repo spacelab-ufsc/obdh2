@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.17
+ * \version 0.4.14
  * 
  * \date 29/01/2020
  * 
@@ -37,6 +37,8 @@
 
 #include "system.h"
 
+sys_time_t sys_time = 0;
+
 void system_reset(void)
 {
     PMMCTL0 = PMMPW | PMMSWBOR;     /* Triggers a software BOR */
@@ -47,6 +49,21 @@ void system_reset(void)
 uint8_t system_get_reset_cause(void)
 {
     return (SYSRSTIV & 0xFF);
+}
+
+void system_set_time(sys_time_t tm)
+{
+    sys_time = tm;
+}
+
+void system_increment_time(void)
+{
+    sys_time++;
+}
+
+sys_time_t system_get_time(void)
+{
+    return sys_time;
 }
 
 /** \} End of system group */

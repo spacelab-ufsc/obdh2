@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.4
+ * \version 0.4.14
  * 
  * \date 02/11/2019
  * 
@@ -47,7 +47,7 @@
 #include "read_sensors.h"
 #include "beacon.h"
 #include "uplink.h"
-#include "save_time.h"
+#include "time_control.h"
 #include "csp_server.h"
 
 void create_tasks()
@@ -127,12 +127,12 @@ void create_tasks()
     }
 #endif /* CONFIG_TASK_UPLINK_ENABLED */
 
-#if CONFIG_TASK_SAVE_TIME_ENABLED == 1
-    xTaskCreate(vTaskSaveTime, TASK_SAVE_TIME_NAME, TASK_SAVE_TIME_STACK_SIZE, NULL, TASK_SAVE_TIME_PRIORITY, &xTaskSaveTimeHandle);
+#if CONFIG_TASK_TIME_CONTROL_ENABLED == 1
+    xTaskCreate(vTaskTimeControl, TASK_TIME_CONTROL_NAME, TASK_TIME_CONTROL_STACK_SIZE, NULL, TASK_TIME_CONTROL_PRIORITY, &xTaskTimeControlHandle);
 
-    if (xTaskSaveTimeHandle == NULL)
+    if (xTaskTimeControlHandle == NULL)
     {
-        /* Error creating the save time task */
+        /* Error creating the time control task */
     }
 #endif /* CONFIG_TASK_BEACON_ENABLED */
 
