@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.23
+ * \version 0.4.15
  * 
  * \date 01/06/2017
  * 
@@ -85,6 +85,8 @@ int si446x_configuration_init(uint8_t *p_set_prop_cmd, uint16_t p_set_prop_cmd_l
 
         cmd_start_pos += cmd_len + 1;
     }
+
+    return 0;
 }
 
 int si446x_part_info(si446x_part_info_t *part_info)
