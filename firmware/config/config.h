@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.14
+ * \version 0.4.16
  * 
  * \date 26/10/2019
  * 
@@ -47,6 +47,7 @@
 #define CONFIG_TASK_UPLINK_ENABLED                      1
 #define CONFIG_TASK_TIME_CONTROL_ENABLED                1
 #define CONFIG_TASK_CSP_SERVER_ENABLED                  0
+#define CONFIG_TASK_READ_EDC_ENABLED                    1
 
 /* Debug and log messages */
 #define CONFIG_DRIVERS_DEBUG_ENABLED                    0

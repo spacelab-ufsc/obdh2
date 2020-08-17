@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.14
+ * \version 0.4.16
  * 
  * \date 02/11/2019
  * 
@@ -49,6 +49,7 @@
 #include "uplink.h"
 #include "time_control.h"
 #include "csp_server.h"
+#include "read_edc.h"
 
 void create_tasks()
 {
@@ -144,6 +145,15 @@ void create_tasks()
         /* Error creating the CSP server task */
     }
 #endif /* CONFIG_TASK_CSP_SERVER_ENABLED */
+
+#if CONFIG_TASK_READ_EDC_ENABLED == 1
+    xTaskCreate(vTaskReadEDC, TASK_READ_EDC_NAME, TASK_READ_EDC_STACK_SIZE, NULL, TASK_READ_EDC_PRIORITY, &xTaskReadEDCHandle);
+
+    if (xTaskReadEDCHandle == NULL)
+    {
+        /* Error creating the read EDC task */
+    }
+#endif /* CONFIG_TASK_READ_EDC_ENABLED */
 
     create_event_groups();
 }
