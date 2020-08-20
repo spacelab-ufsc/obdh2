@@ -2,6 +2,81 @@
 FileName = PCB_OBDH_ALT.GBR
 AutoAperture = True
 *************************************************************
+Generating : Mechanical 17
+      File : PCB_OBDH_ALT.GM17
+
+    Adding Layer      : Mechanical 17
+
+
+Used DCodes :
+*************************************************************
+
+*************************************************************
+Generating : Mechanical 1
+      File : PCB_OBDH_ALT.GM1
+
+    Adding Layer      : Mechanical 1
+
+
+Used DCodes :
+    D10
+    D87
+    D115
+    D116
+    D117
+    D118
+    D119
+*************************************************************
+
+*************************************************************
+Generating : Keep-Out Layer
+      File : PCB_OBDH_ALT.GKO
+
+    Adding Layer      : Keep-Out Layer
+
+
+Used DCodes :
+    D10
+    D123
+*************************************************************
+
+*************************************************************
+Generating : Bottom Solder
+      File : PCB_OBDH_ALT.GBS
+
+    Adding Layer      : Bottom Solder
+
+    Adding Layer      : Bottom Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D10
+    D52
+    D53
+    D55
+    D57
+    D58
+    D59
+    D75
+    D76
+    D77
+    D78
+    D79
+    D80
+    D81
+    D82
+    D83
+    D107
+    D108
+    D109
+    D110
+    D111
+    D112
+*************************************************************
+
+*************************************************************
 Generating : Top Paste
       File : PCB_OBDH_ALT.GTP
 
@@ -13,6 +88,7 @@ Generating : Top Paste
 
 
 Used DCodes :
+    D23
     D24
     D25
     D26
@@ -41,178 +117,26 @@ Used DCodes :
 *************************************************************
 
 *************************************************************
-Generating : Mechanical 17
-      File : PCB_OBDH_ALT.GM17
+Generating : Top Overlay
+      File : PCB_OBDH_ALT.GTO
 
-    Adding Layer      : Mechanical 17
-
-
-Used DCodes :
-*************************************************************
-
-*************************************************************
-Generating : Mechanical 1
-      File : PCB_OBDH_ALT.GM1
-
-    Adding Layer      : Mechanical 1
+    Adding Layer      : Top Overlay
 
 
 Used DCodes :
     D10
-    D111
-    D112
-    D113
-    D114
-    D115
-    D116
-*************************************************************
-
-*************************************************************
-Generating : Top Pad Master
-      File : PCB_OBDH_ALT.GPT
-
-    Adding Layer      : Top Layer
-
-    Adding Layer      : Multi-Layer
-
-
-Used DCodes :
-    D24
-    D25
-    D26
-    D27
-    D28
-    D30
-    D31
-    D32
-    D33
-    D34
-    D35
-    D36
-    D37
-    D38
-    D39
-    D40
-    D41
-    D42
-    D43
-    D44
-    D46
-    D47
-    D48
-    D83
-    D84
-    D86
-    D87
-    D88
-    D89
-    D90
-    D91
-    D92
-    D93
-*************************************************************
-
-*************************************************************
-Generating : Bottom Paste
-      File : PCB_OBDH_ALT.GBP
-
-    Adding Layer      : Bottom Paste
-
-    Adding Layer      : Bottom Layer
-
-    Adding Layer      : Multi-Layer
-
-
-Used DCodes :
-    D27
-    D28
-    D30
-    D32
-    D33
-    D34
-    D96
-    D97
-    D98
-    D99
-    D100
-    D101
-*************************************************************
-
-*************************************************************
-Generating : Top Layer
-      File : PCB_OBDH_ALT.GTL
-
-    Adding Layer      : Top Layer
-
-    Adding Layer      : Multi-Layer
-
-
-Used DCodes :
-    D10
-    D24
-    D25
-    D26
-    D27
-    D28
-    D30
-    D31
-    D32
-    D33
-    D34
-    D35
-    D36
-    D37
-    D38
-    D39
-    D40
-    D41
-    D42
-    D43
-    D44
-    D46
-    D47
-    D48
-    D83
-    D84
-    D85
-    D86
-    D87
-    D88
-    D89
-    D90
-    D91
-    D92
-    D93
-    D94
-    D95
-*************************************************************
-
-*************************************************************
-Generating : ASM Top
-      File : PCB_OBDH_ALT.GM15
-
-    Adding Layer      : ASM Top
-
-
-Used DCodes :
-    D10
+    D11
+    D12
+    D13
     D14
+    D15
+    D16
+    D17
     D18
-    D118
-    D119
-*************************************************************
-
-*************************************************************
-Generating : ASM Bottom
-      File : PCB_OBDH_ALT.GM13
-
-    Adding Layer      : ASM Bottom
-
-
-Used DCodes :
-    D10
-    D18
-    D117
+    D19
+    D20
+    D21
+    D22
 *************************************************************
 
 *************************************************************
@@ -225,26 +149,45 @@ Generating : Bottom Pad Master
 
 
 Used DCodes :
+    D26
     D27
-    D28
-    D30
+    D29
+    D31
     D32
     D33
-    D34
-    D86
-    D87
-    D88
     D89
     D90
     D91
     D92
     D93
+    D94
+    D95
     D96
-    D97
-    D98
     D99
     D100
     D101
+    D102
+    D103
+    D104
+*************************************************************
+
+*************************************************************
+Generating : Bottom Overlay
+      File : PCB_OBDH_ALT.GBO
+
+    Adding Layer      : Bottom Overlay
+
+
+Used DCodes :
+    D10
+    D12
+    D15
+    D18
+    D19
+    D21
+    D22
+    D113
+    D114
 *************************************************************
 
 *************************************************************
@@ -294,70 +237,73 @@ Used DCodes :
     D80
     D81
     D82
+    D83
 *************************************************************
 
 *************************************************************
-Generating : Keep-Out Layer
-      File : PCB_OBDH_ALT.GKO
+Generating : Top Pad Master
+      File : PCB_OBDH_ALT.GPT
 
-    Adding Layer      : Keep-Out Layer
+    Adding Layer      : Top Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D23
+    D24
+    D25
+    D26
+    D27
+    D29
+    D30
+    D31
+    D32
+    D33
+    D34
+    D35
+    D36
+    D37
+    D38
+    D39
+    D40
+    D41
+    D42
+    D43
+    D44
+    D46
+    D47
+    D48
+    D84
+    D85
+    D89
+    D90
+    D91
+    D92
+    D93
+    D94
+    D95
+    D96
+*************************************************************
+
+*************************************************************
+Generating : ASM Bottom
+      File : PCB_OBDH_ALT.GM13
+
+    Adding Layer      : ASM Bottom
 
 
 Used DCodes :
     D10
+    D18
     D120
 *************************************************************
 
 *************************************************************
-Generating : Top Overlay
-      File : PCB_OBDH_ALT.GTO
+Generating : Bottom Paste
+      File : PCB_OBDH_ALT.GBP
 
-    Adding Layer      : Top Overlay
-
-
-Used DCodes :
-    D10
-    D11
-    D12
-    D13
-    D14
-    D15
-    D16
-    D17
-    D18
-    D19
-    D20
-    D21
-    D22
-    D23
-*************************************************************
-
-*************************************************************
-Generating : Bottom Overlay
-      File : PCB_OBDH_ALT.GBO
-
-    Adding Layer      : Bottom Overlay
-
-
-Used DCodes :
-    D10
-    D12
-    D15
-    D17
-    D18
-    D19
-    D20
-    D22
-    D23
-    D109
-    D110
-*************************************************************
-
-*************************************************************
-Generating : Bottom Solder
-      File : PCB_OBDH_ALT.GBS
-
-    Adding Layer      : Bottom Solder
+    Adding Layer      : Bottom Paste
 
     Adding Layer      : Bottom Layer
 
@@ -365,28 +311,18 @@ Generating : Bottom Solder
 
 
 Used DCodes :
-    D10
-    D52
-    D53
-    D55
-    D57
-    D58
-    D59
-    D74
-    D75
-    D76
-    D77
-    D78
-    D79
-    D80
-    D81
-    D82
+    D26
+    D27
+    D29
+    D31
+    D32
+    D33
+    D99
+    D100
+    D101
+    D102
     D103
     D104
-    D105
-    D106
-    D107
-    D108
 *************************************************************
 
 *************************************************************
@@ -400,15 +336,12 @@ Generating : Bottom Layer
 
 Used DCodes :
     D10
+    D26
     D27
-    D28
-    D30
+    D29
+    D31
     D32
     D33
-    D34
-    D86
-    D87
-    D88
     D89
     D90
     D91
@@ -423,5 +356,76 @@ Used DCodes :
     D100
     D101
     D102
+    D103
+    D104
+    D105
+    D106
+*************************************************************
+
+*************************************************************
+Generating : ASM Top
+      File : PCB_OBDH_ALT.GM15
+
+    Adding Layer      : ASM Top
+
+
+Used DCodes :
+    D10
+    D14
+    D18
+    D121
+    D122
+*************************************************************
+
+*************************************************************
+Generating : Top Layer
+      File : PCB_OBDH_ALT.GTL
+
+    Adding Layer      : Top Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D10
+    D23
+    D24
+    D25
+    D26
+    D27
+    D29
+    D30
+    D31
+    D32
+    D33
+    D34
+    D35
+    D36
+    D37
+    D38
+    D39
+    D40
+    D41
+    D42
+    D43
+    D44
+    D46
+    D47
+    D48
+    D84
+    D85
+    D86
+    D87
+    D88
+    D89
+    D90
+    D91
+    D92
+    D93
+    D94
+    D95
+    D96
+    D97
+    D98
 *************************************************************
 
