@@ -18,15 +18,14 @@
 	<a href="">
 		<img src="https://img.shields.io/badge/license-GPL3-red?style=for-the-badge">
 	</a>
-	<a href="">
+	<a href="https://github.com/spacelab-ufsc/obdh2/tree/dev/doc/build">
 		<img src="https://img.shields.io/badge/for%20more-here-lightgray?style=for-the-badge">
 	</a>
 </p>
 
 <p align="center">
   	<a href="#overview">Overview</a> •
-  	<a href="#subsystems">Subsystems</a> •
-  	<a href="#interfaces">Interfaces</a> •
+  	<a href="#architecture">Architecture</a> •
   	<a href="#development">Development</a> •
   	<a href="#version">Version</a> •
   	<a href="#license">License</a> •
@@ -41,9 +40,20 @@
 
 ## Overview
 
-## Subsystems
+The OBDH2 board is composed by the following main components: MCU, non-volatile memory, voltage monitor with watchdog timer, TTC interface, EPS interface, payloads interface, daughterboard interface, I2C buffers, RS-485 transceiver, and current sensor.
 
-## Interfaces
+## Architecture
+
+#### Hardware architecture diagram
+<p align="center">
+	<img width="70%" src="https://github.com/spacelab-ufsc/obdh2/blob/master/doc/figures/block_diagram.pdf">
+</p>
+
+#### Hardware interfaces diagram
+<p align="center">
+	<img width="70%" src="https://github.com/spacelab-ufsc/obdh2/blob/master/doc/figures/diagram_interfaces.pdf">
+</p>
+
 
 ## Development
 * Power-on the module
