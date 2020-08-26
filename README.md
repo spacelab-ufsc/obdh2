@@ -33,7 +33,7 @@
 </p>
 
 <p align="center">
-	<img width="100%" src="https://github.com/spacelab-ufsc/obdh2/blob/master/doc/figures/obdh2-pcb-side.png">
+	<img width="100%" src="https://github.com/spacelab-ufsc/obdh2/blob/master/doc/figures/obdh2-pcb-3d.png">
 </p>
 
 ## Overview
@@ -47,13 +47,13 @@ The SpaceLab OBDH2 (On-Board Data Handling 2.0) is one of the service modules de
 
 ## License
 
-This project is open-source and under the GPL-3.0 license, but some third-part files and libraries are subjected to specific terms and comercial use might be prohibited. Therefore, the purpose of the open access approach is to support further educational use and academic projects.
+This project is open-source and under the GPLv3 license, but some third-part files and libraries are subjected to specific terms and comercial use might be prohibited. Therefore, the purpose of the open access approach is to support further educational use and academic projects.
 
 ## Releases
 
 The OBDH2 software and hardware releases are synchronized in order to garantee compatibility. Then, using diferent versions might lead to unpredictable behavior. Refer to the [documentation](https://github.com/spacelab-ufsc/obdh2/tree/dev/doc/build) for compatibility notes.
 
-#### v0.4 (Development)
+#### v0.4
 	- Hardware:
 		- Adding a RS-485 header
 		- Adding a header for the debug/og UART port
@@ -77,7 +77,7 @@ The OBDH2 software and hardware releases are synchronized in order to garantee c
 		- Adding a chapter about the assembly instructions
 		- Adding tables with the fields of the RF packets
 
-#### v0.3 (Development)
+#### v0.3
 	- EDC driver
 	- Payload EDC device
 	- Si446x driver improvements
@@ -85,7 +85,7 @@ The OBDH2 software and hardware releases are synchronized in order to garantee c
 	- Fixing I2C driver
 	- General improvements and fixes
 
-#### v0.2 (Development)
+#### v0.2
 	- I2C driver
 	- SPI driver
 	- TCA4311A driver
@@ -93,14 +93,10 @@ The OBDH2 software and hardware releases are synchronized in order to garantee c
 	- Adding a Makefile to the firmware project
 	- General improvements in the hardware project
 
-#### v0.1 (Development)
+#### v0.1
 	- Prototype version of the hardware
 	- Initial documentation
 	- Base version of the firmware
-
-## Acknowledgements
-
-TBD!
 
 ## Notes
 
