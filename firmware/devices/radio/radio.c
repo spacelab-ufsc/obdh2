@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.23
+ * \version 0.4.15
  * 
  * \date 27/10/2019
  * 
@@ -229,7 +229,7 @@ int radio_recv(uint8_t *data, uint16_t len, uint32_t timeout_ms)
     uint16_t prop = SI446X_PROP_INT_CTL_ENABLE;
     uint8_t prop_param = 0x03;
 
-    if (si446x_set_property((uint8_t)(prop >> 8), 1, (uint8_t)(prop & 0xFF), prop_param, 1) != SI446X_SUCCESS)
+    if (si446x_set_property((uint8_t)(prop >> 8), 1, (uint8_t)(prop & 0xFF), &prop_param, 1) != SI446X_SUCCESS)
     {
         return -1;
     }
@@ -237,7 +237,7 @@ int radio_recv(uint8_t *data, uint16_t len, uint32_t timeout_ms)
     prop = SI446X_PROP_INT_CTL_PH_ENABLE;
     prop_param = 0x18;
 
-    if (si446x_set_property((uint8_t)(prop >> 8), 1, (uint8_t)(prop & 0xFF), prop_param, 1) != SI446X_SUCCESS)
+    if (si446x_set_property((uint8_t)(prop >> 8), 1, (uint8_t)(prop & 0xFF), &prop_param, 1) != SI446X_SUCCESS)
     {
         return -1;
     }
@@ -245,7 +245,7 @@ int radio_recv(uint8_t *data, uint16_t len, uint32_t timeout_ms)
     prop = SI446X_PROP_INT_CTL_MODEM_ENABLE;
     prop_param = 0x00;
 
-    if (si446x_set_property((uint8_t)(prop >> 8), 1, (uint8_t)(prop & 0xFF), prop_param, 1) != SI446X_SUCCESS)
+    if (si446x_set_property((uint8_t)(prop >> 8), 1, (uint8_t)(prop & 0xFF), &prop_param, 1) != SI446X_SUCCESS)
     {
         return -1;
     }

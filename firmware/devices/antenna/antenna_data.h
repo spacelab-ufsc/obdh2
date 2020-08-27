@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.7
+ * \version 0.4.14
  * 
  * \date 2020/07/24
  * 
@@ -42,7 +42,7 @@
 /**
  * \brief Antenna status type.
  */
-typedef uint8_t ant_status;
+typedef uint8_t ant_status_t;
 
 /**
  * \brief Antena report.

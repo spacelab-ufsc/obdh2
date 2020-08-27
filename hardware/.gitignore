@@ -1,6 +1,8 @@
-# Altium Designer Outputs
+# Altium version control and status files
 
-*.SchDocPreview
-OBDH_Eng_Model_2_ALT/History/
-OBDH_Eng_Model_2_ALT/__Previews/
-*.LOG
+*History
+*__Previews
+Project Outputs*
+*.log
+*.Dat
+Status Report.txt

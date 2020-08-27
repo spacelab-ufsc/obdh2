@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.17
+ * \version 0.4.14
  * 
  * \date 25/01/2020
  * 
@@ -39,6 +39,11 @@
 #include <stdint.h>
 
 #include "clocks.h"
+
+/**
+ * \brief System time type.
+ */
+typedef uint32_t sys_time_t;
 
 /**
  * \brief System reset.
@@ -78,6 +83,29 @@ void system_reset(void);
  * \endparblock
  */
 uint8_t system_get_reset_cause(void);
+
+/**
+ * \brief Sets the system time.
+ *
+ * \param[in] tm is the new system time value.
+ *
+ * \return None.
+ */
+void system_set_time(sys_time_t tm);
+
+/**
+ * \brief Increments the system time.
+ *
+ * \return None.
+ */
+void system_increment_time(void);
+
+/**
+ * \brief Gets the system time.
+ *
+ * \return The current system time.
+ */
+sys_time_t system_get_time(void);
 
 #endif /* SYSTEM_H_ */
 
