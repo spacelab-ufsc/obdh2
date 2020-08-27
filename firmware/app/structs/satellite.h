@@ -1,5 +1,5 @@
 /*
- * version.h
+ * satellite.h
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,29 +21,43 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief Satellite data structure definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.4.17
  * 
- * \date 25/10/2019
+ * \date 2020/07/16
  * 
- * \defgroup version Version control
+ * \defgroup sat_data sat Data
+ * \ingroup structs
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#ifndef SATELLITE_H_
+#define SATELLITE_H_
 
-#define FIRMWARE_VERSION            "0.4.17"
+#include <stdint.h>
 
-#define FIRMWARE_STATUS             "Development"
+#include <devices/eps/eps_data.h>
+#include <devices/antenna/antenna_data.h>
 
-#define FIRMWARE_AUTHOR             "SpaceLab"
+#include "obdh_data.h"
 
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
+/**
+ * \brief Satellite data.
+ */
+typedef struct
+{
+    obdh_data_t obdh;               /**< OBDH data. */
+    eps_data_t eps;                 /**< EPS data. */
+} sat_data_t;
 
-#endif /* VERSION_H_ */
+/**
+ * \brief Satellite data buffer.
+ */
+extern sat_data_t sat_data_buf;
 
-/** \} End of version group */
+#endif /* SATELLITE_H_ */
+
+/** \} End of sat_data group */

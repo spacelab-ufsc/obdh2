@@ -1,5 +1,5 @@
 /*
- * version.h
+ * satellite.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,29 +21,20 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief Satellite data structure implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.4.17
  * 
- * \date 25/10/2019
+ * \date 2020/07/16
  * 
- * \defgroup version Version control
+ * \addtogroup sat_data
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include "satellite.h"
 
-#define FIRMWARE_VERSION            "0.4.17"
+sat_data_t sat_data_buf;
 
-#define FIRMWARE_STATUS             "Development"
-
-#define FIRMWARE_AUTHOR             "SpaceLab"
-
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
-
-#endif /* VERSION_H_ */
-
-/** \} End of version group */
+/** \} End of sat_data group */
