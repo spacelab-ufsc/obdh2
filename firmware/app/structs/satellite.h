@@ -1,5 +1,5 @@
 /*
- * system.c
+ * satellite.h
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,49 +21,43 @@
  */
 
 /**
- * \brief System management routines implementation.
+ * \brief Satellite data structure definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.14
+ * \version 0.4.17
  * 
- * \date 29/01/2020
+ * \date 2020/07/16
  * 
- * \addtogroup system
+ * \defgroup sat_data sat Data
+ * \ingroup structs
  * \{
  */
 
-#include <msp430.h>
+#ifndef SATELLITE_H_
+#define SATELLITE_H_
 
-#include "system.h"
+#include <stdint.h>
 
-sys_time_t sys_time = 0;
+#include <devices/eps/eps_data.h>
+#include <devices/antenna/antenna_data.h>
 
-void system_reset(void)
+#include "obdh_data.h"
+
+/**
+ * \brief Satellite data.
+ */
+typedef struct
 {
-    PMMCTL0 = PMMPW | PMMSWBOR;     /* Triggers a software BOR */
+    obdh_data_t obdh;               /**< OBDH data. */
+    eps_data_t eps;                 /**< EPS data. */
+} sat_data_t;
 
-    WDTCTL = 0xDEAD;                /* Reset system by writing to the WDT register without using the proper password */
-}
+/**
+ * \brief Satellite data buffer.
+ */
+extern sat_data_t sat_data_buf;
 
-uint8_t system_get_reset_cause(void)
-{
-    return (SYSRSTIV & 0xFF);
-}
+#endif /* SATELLITE_H_ */
 
-void system_set_time(sys_time_t tm)
-{
-    sys_time = tm;
-}
-
-void system_increment_time(void)
-{
-    sys_time++;
-}
-
-sys_time_t system_get_time(void)
-{
-    return sys_time;
-}
-
-/** \} End of system group */
+/** \} End of sat_data group */

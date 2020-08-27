@@ -1,5 +1,5 @@
 /*
- * save_time.c
+ * read_edc.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,45 +21,45 @@
  */
 
 /**
- * \brief Save system time task definition.
+ * \brief Read EDC data task definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.2
+ * \version 0.4.15
  * 
- * \date 17/03/2020
+ * \date 2020/08/16
  * 
- * \defgroup save_time Save Time
+ * \defgroup read_edc Read EDC
  * \ingroup tasks
  * \{
  */
 
-#ifndef SAVE_TIME_H_
-#define SAVE_TIME_H_
+#ifndef READ_EDC_H_
+#define READ_EDC_H_
 
 #include <FreeRTOS.h>
 #include <task.h>
 
-#define TASK_SAVE_TIME_NAME                 "SaveTime"          /**< Task name. */
-#define TASK_SAVE_TIME_STACK_SIZE           128                 /**< Stack size in bytes. */
-#define TASK_SAVE_TIME_PRIORITY             3                   /**< Task priority. */
-#define TASK_SAVE_TIME_PERIOD_MS            (60*1000)           /**< Task period in milliseconds. */
-#define TASK_SAVE_TIME_INIT_TIMEOUT_MS      0                   /**< Wait time to initialize the task in milliseconds. */
+#define TASK_READ_EDC_NAME                  "EDC Task"          /**< Task name. */
+#define TASK_READ_EDC_STACK_SIZE            128                 /**< Stack size in bytes. */
+#define TASK_READ_EDC_PRIORITY              3                   /**< Task priority. */
+#define TASK_READ_EDC_PERIOD_MS             (60*1000)           /**< Task period in milliseconds. */
+#define TASK_READ_EDC_INIT_TIMEOUT_MS       2000                /**< Wait time to initialize the task in milliseconds. */
 
 /**
- * \brief Save system time handle.
+ * \brief Read EDC handle.
  */
-extern xTaskHandle xTaskSaveTimeHandle;
+extern xTaskHandle xTaskReadEDCHandle;
 
 /**
- * \brief Save system time task.
+ * \brief Read EDC task.
  *
  * \param[in] pvParameters is a value that will passed as the task's parameter.
  *
  * \return None.
  */
-void vTaskSaveTime(void *pvParameters);
+void vTaskReadEDC(void *pvParameters);
 
-#endif /* SAVE_TIME_H_ */
+#endif /* READ_EDC_H_ */
 
-/** \} End of save_time group */
+/** \} End of read_edc group */

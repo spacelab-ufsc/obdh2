@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.13
+ * \version 0.4.15
  * 
  * \date 18/04/2020
  * 
@@ -33,6 +33,7 @@
  * \{
  */
 
+#include <system/sys_log/sys_log.h>
 #include <devices/radio/radio.h>
 
 #include "uplink.h"
@@ -56,6 +57,16 @@ void vTaskUplink(void *pvParameters)
         if (radio_recv(data, len, TASK_UPLINK_PERIOD_MS) > 0)
         {
             /* Process packets here */
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_UPLINK_NAME, "Error during data reception! Trying again in ");
+            sys_log_print_uint(TASK_UPLINK_PERIOD_MS);
+            sys_log_print_msg(" ms...");
+            sys_log_new_line();
+
+            /* Wait TASK_UPLINK_PERIOD_MS milliseconds to try again */
+            vTaskDelay(pdMS_TO_TICKS(TASK_UPLINK_PERIOD_MS));
         }
     }
 }

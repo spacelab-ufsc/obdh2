@@ -1,5 +1,5 @@
 /*
- * system.c
+ * obdh_data.h
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,49 +21,37 @@
  */
 
 /**
- * \brief System management routines implementation.
+ * \brief OBDH data structure definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.14
+ * \version 0.4.17
  * 
- * \date 29/01/2020
+ * \date 2020/07/16
  * 
- * \addtogroup system
+ * \defgroup obdh_data OBDH Data
+ * \ingroup structs
  * \{
  */
 
-#include <msp430.h>
+#ifndef OBDH_DATA_H_
+#define OBDH_DATA_H_
 
-#include "system.h"
+#include <stdint.h>
 
-sys_time_t sys_time = 0;
-
-void system_reset(void)
+/**
+ * \brief OBDH data.
+ */
+typedef struct
 {
-    PMMCTL0 = PMMPW | PMMSWBOR;     /* Triggers a software BOR */
+    uint32_t timestamp;             /**< Data timestamp (system ticks). */
+    uint16_t temperature;           /**< uC raw temperature. */
+    uint16_t current;               /**< Board raw current. */
+    uint16_t voltage;               /**< Board raw voltage. */
+    uint8_t last_reset_cause;       /**< Last uC reset cause code. */
+    uint16_t reset_counter;         /**< uC reset counter. */
+} obdh_data_t;
 
-    WDTCTL = 0xDEAD;                /* Reset system by writing to the WDT register without using the proper password */
-}
+#endif /* OBDH_DATA_H_ */
 
-uint8_t system_get_reset_cause(void)
-{
-    return (SYSRSTIV & 0xFF);
-}
-
-void system_set_time(sys_time_t tm)
-{
-    sys_time = tm;
-}
-
-void system_increment_time(void)
-{
-    sys_time++;
-}
-
-sys_time_t system_get_time(void)
-{
-    return sys_time;
-}
-
-/** \} End of system group */
+/** \} End of obdh_data group */

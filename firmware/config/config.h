@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.8
+ * \version 0.4.16
  * 
  * \date 26/10/2019
  * 
@@ -45,8 +45,9 @@
 #define CONFIG_TASK_READ_SENSORS_ENABLED                1
 #define CONFIG_TASK_BEACON_ENABLED                      1
 #define CONFIG_TASK_UPLINK_ENABLED                      1
-#define CONFIG_TASK_SAVE_TIME_ENABLED                   1
+#define CONFIG_TASK_TIME_CONTROL_ENABLED                1
 #define CONFIG_TASK_CSP_SERVER_ENABLED                  0
+#define CONFIG_TASK_READ_EDC_ENABLED                    1
 
 /* Debug and log messages */
 #define CONFIG_DRIVERS_DEBUG_ENABLED                    0
@@ -75,6 +76,9 @@
 
 /* Drivers */
 #define ISIS_ANTENNA_ENABLED                            1
+
+/* Memory addresses */
+#define CONFIG_MEM_ADR_SYS_TIME                         0
 
 #endif /* CONFIG_H_ */
 

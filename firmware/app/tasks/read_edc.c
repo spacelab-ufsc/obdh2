@@ -1,5 +1,5 @@
 /*
- * system.c
+ * read_edc.h
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,49 +21,36 @@
  */
 
 /**
- * \brief System management routines implementation.
+ * \brief Read EDC task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.14
+ * \version 0.4.15
  * 
- * \date 29/01/2020
+ * \date 2020/08/16
  * 
- * \addtogroup system
+ * \addtogroup read_edc
  * \{
  */
 
-#include <msp430.h>
+#include "read_edc.h"
+#include "startup.h"
 
-#include "system.h"
+xTaskHandle xTaskReadEDCHandle;
 
-sys_time_t sys_time = 0;
-
-void system_reset(void)
+void vTaskReadEDC(void *pvParameters)
 {
-    PMMCTL0 = PMMPW | PMMSWBOR;     /* Triggers a software BOR */
+    /* Wait startup task to finish */
+    xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_EDC_INIT_TIMEOUT_MS));
 
-    WDTCTL = 0xDEAD;                /* Reset system by writing to the WDT register without using the proper password */
+    while(1)
+    {
+        TickType_t last_cycle = xTaskGetTickCount();
+
+        /* TODO */
+
+        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_EDC_PERIOD_MS));
+    }
 }
 
-uint8_t system_get_reset_cause(void)
-{
-    return (SYSRSTIV & 0xFF);
-}
-
-void system_set_time(sys_time_t tm)
-{
-    sys_time = tm;
-}
-
-void system_increment_time(void)
-{
-    sys_time++;
-}
-
-sys_time_t system_get_time(void)
-{
-    return sys_time;
-}
-
-/** \} End of system group */
+/** \} End of read_edc group */

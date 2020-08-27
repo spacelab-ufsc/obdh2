@@ -1,5 +1,5 @@
 /*
- * save_time.h
+ * satellite.c
  * 
  * Copyright (C) 2020, SpaceLab.
  * 
@@ -21,35 +21,20 @@
  */
 
 /**
- * \brief Save system time task implementation.
+ * \brief Satellite data structure implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.2
+ * \version 0.4.17
  * 
- * \date 17/03/2020
+ * \date 2020/07/16
  * 
- * \addtogroup save_time
+ * \addtogroup sat_data
  * \{
  */
 
-#include "save_time.h"
-#include "startup.h"
+#include "satellite.h"
 
-xTaskHandle xTaskSaveTimeHandle;
+sat_data_t sat_data_buf;
 
-void vTaskSaveTime(void *pvParameters)
-{
-    /* Wait startup task to finish */
-    xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_SAVE_TIME_INIT_TIMEOUT_MS));
-
-    while(1)
-    {
-        TickType_t last_cycle = xTaskGetTickCount();
-
-
-        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_SAVE_TIME_PERIOD_MS));
-    }
-}
-
-/** \} End of save_time group */
+/** \} End of sat_data group */
