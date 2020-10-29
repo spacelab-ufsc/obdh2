@@ -24,9 +24,11 @@
 
 \chapter{Hardware} \label{ch:hardware}
 
+The OBDH 2.0 architecture focus on low-power operation and low-cost production, maintaining performance and proposing different approaches to increase the overall reliability. Therefore, the board was developed using these criteria and the changes from the original design were necessary to improve bottlenecks and achieve the requirements of further space mission. In the following sections, the hardware design, interfaces, and standards are described in detail. The Figures \ref{fig:pcb-top}, \ref{fig:pcb-bottom} and \ref{fig:pcb-side} present 3D rendered images of the top, bottom and side views of the board, respectively.
+
 \begin{figure}[!ht]
     \begin{center}
-        \includegraphics[width=0.75\textwidth]{figures/obdh2-pcb-top.png}
+        \includegraphics[width=0.8\textwidth]{figures/obdh2-pcb-top.png}
         \caption{Top side of the PCB.}
         \label{fig:pcb-top}
     \end{center}
@@ -34,25 +36,35 @@
 
 \begin{figure}[!ht]
     \begin{center}
-        \includegraphics[width=0.75\textwidth]{figures/obdh2-pcb-bottom.png}
+        \includegraphics[width=0.8\textwidth]{figures/obdh2-pcb-bottom.png}
         \caption{Bottom side of the PCB.}
         \label{fig:pcb-bottom}
     \end{center}
 \end{figure}
 
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{figures/obdh2-pcb-side.png}
+        \caption{Side view of the PCB.}
+        \label{fig:pcb-side}
+    \end{center}
+\end{figure}
+
 \section{Interfaces}
+
+The \autoref{fig:diagram-interfaces} presents the board interfaces, which consists of communication with other modules, debug access points, and internal peripherals. From the perspective of the microcontroller, there are 6 individual and shared communication buses and the JTAG interface, in the following scheme: A0-SPI (shared with Radio, TTC, and external memory chip); A1-UART (shared with redundant payloads); A2-UART (dedicated for debug); B0-I2C (dedicated for the payload); B1-I2C (dedicated for the EPS); B2-I2C (dedicated for the Antenna module). Currently, ``\textit{Payload 1}'' and ``\textit{Payload 2}'' are ``\textit{Payload-X}'' and ``\textit{Payload EDC}'' respectively.
 
 \begin{figure}[!ht]
     \begin{center}
         \includegraphics[width=\textwidth]{figures/diagram_interfaces.pdf}
-        \caption{Interfaces diagram.}
+        \caption{Interfaces diagram. \textcolor{red}{need to add jtag, daughterboard connector and update the interfaces/payload}}
         \label{fig:diagram-interfaces}
     \end{center}
 \end{figure}
 
-Currently, ``\textit{Payload 1}'' and ``\textit{Payload 2}'' are ``\textit{Payload-X}'' and ``\textit{Payload EDC}'' respectively.
-
 \section{External Connectors}
+
+The external interfaces are connected to the microcontroller using different connector types: EPS, TTC, Radio, and Payloads through PC-104; Antenna module with 6H header and 6P picoblade connectors; JTAG through 14H header and 6P picoblade connectors; and debug access using a dedicated 2H header and shared with the JTAG connectors. The following topics describe these interfaces and present the connectors pinout.
 
 \subsection{PC-104}
 
