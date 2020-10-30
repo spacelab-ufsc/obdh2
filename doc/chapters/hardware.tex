@@ -113,11 +113,31 @@ The connector referred as PC-104 is a junction of two double row 28H headers (\t
         51-52              & -                & -                & I2C\_1\_SCL   & -             \\
         \bottomrule[1.5pt]
     \end{tabular}
-    \caption{PC-104 connector pinout. \textcolor{red}{Add additional interfaces and synchronize nomenclature}}
+    \caption{PC-104 connector pinout. \textcolor{red}{Synchronize nomenclature}}
     \label{tab:pc104-pins}
 \end{table}
 
 \subsection{Antenna Module}
+
+The communication with the Antenna module is performed through external connectors, which are presented in the \autoref{fig:ant-connectors}. Both connectors have the same connections, but the \ref{fig:ant-debug-connector} (6H header) is used for development and the \ref{fig:ant-main-connector} (6P picoblade) as the connector for the flight model. This interface consists of a dedicated I2C, power supply, and GPIO, which are described in the \autoref{tab:antenna-connector-pins}.
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{cllll}
+        \toprule[1.5pt]
+        \textit{Pin} & \textit{Row A} \\
+        \midrule
+        1            & VCC\_3V3\_ANT  \\
+        2            & VCC\_3V3\_ANT  \\
+        3            & I2C\_SDA       \\
+        4            & I2C\_SCL       \\
+        5            & GPIO           \\
+        6            & GND            \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{Antenna module connectors pinout.}
+    \label{tab:antenna-connector-pins}
+\end{table}
 
 \begin{figure}[!htb]
     \begin{center}
@@ -131,10 +151,49 @@ The connector referred as PC-104 is a junction of two double row 28H headers (\t
 
 \subsection{Programmer}
 
+The interface with the microcontroller programmer is performed through external connectors, which are presented in the \autoref{fig:jtag-connectors}. Both connectors have the same JTAG and UART interfaces, but the 14H header is used during development and the 6P picoblade (provide more compact and reliable attachment) as the connector for the flight model, which are described in the \autoref{tab:jtag-header-connector-pins} and \autoref{tab:jtag-picoblade-connector-pins}, respectively. This interface consists of a dedicated debug UART, a JTAG, and an external power supply. Also, to use this external supply, it is necessary to connect both pins of the 2H header jumper (P6).
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{cllll}
+        \toprule[1.5pt]
+        \textit{Pin [A-B]} & \textit{Row A} & \textit{Row B} \\
+        \midrule
+        1-2                & TDO\_TDI       & VCC\_3V3       \\
+        3-4                & -              & -              \\
+        5-6                & -              & -              \\
+        7-8                & TCK            & -              \\
+        9-10               & GND            & -              \\
+        11-12              & -              & UART\_TX       \\
+        13-14              & -              & UART\_RX       \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{Programmer header connector pinout.}
+    \label{tab:jtag-header-connector-pins}
+\end{table}
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{cllll}
+        \toprule[1.5pt]
+        \textit{Pin} & \textit{Row A} \\
+        \midrule
+        1            & VCC\_3V3       \\
+        2            & TDO\_TDI       \\
+        3            & TCK            \\
+        4            & UART\_TX       \\
+        5            & UART\_RX       \\
+        6            & GND            \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{Programmer picoblade connector pinout.}
+    \label{tab:jtag-picoblade-connector-pins}
+\end{table}
+
 \begin{figure}[!ht]
     \begin{center}
         \includegraphics[width=0.4\textwidth]{figures/jtag-connector.png}
-        \caption{JTAG connectors (P1 and P2).}
+        \caption{Programmer connectors (P1 and P2). \textcolor{red}{Add jumper in the image}}
         \label{fig:jtag-connectors}
     \end{center}
 \end{figure}
