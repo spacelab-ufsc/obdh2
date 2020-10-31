@@ -220,7 +220,7 @@ The daughterboard interface uses the Samtec FSI-110-D connector, which can be se
 
 \begin{figure}[!ht]
     \begin{center}
-        \includegraphics[width=0.35\textwidth]{figures/p3-connector.png}
+        \includegraphics[width=0.3\textwidth]{figures/p3-connector.png}
         \caption{Daughterboard connector (P3).}
         \label{fig:daughterboard-connector}
     \end{center}
@@ -256,7 +256,7 @@ The recommended shape and size of the daughterboard can be seen in the \autoref{
 
 \begin{figure}[!ht]
     \begin{center}
-        \includegraphics[width=0.45\textwidth]{figures/daughterboard-size.png}
+        \includegraphics[width=0.52\textwidth]{figures/daughterboard-size.png}
         \caption{Recommended shape and size of the daughterboard.}
         \label{fig:daughterboard-size}
     \end{center}
@@ -264,7 +264,7 @@ The recommended shape and size of the daughterboard can be seen in the \autoref{
 
 \begin{figure}[!ht]
     \begin{center}
-        \includegraphics[width=0.65\textwidth]{figures/daughterboard-integration.png}
+        \includegraphics[width=0.6\textwidth]{figures/daughterboard-integration.png}
         \caption{Illustrative daughterboard integration.}
         \label{fig:daughterboard-integration}
     \end{center}
@@ -295,31 +295,104 @@ The OBDH 2.0 uses a low-power and low-cost microcontroller family from Texas Ins
     \end{center}
 \end{figure}
 
-\subsection{Interfaces}
+\subsection{Interfaces Configuration}
 
-\subsubsection{USCI\_A0: SPI}
- Config: Chip Selects - 5, Length - 8bits, Phase - High, Polarity - Low, Endianness - MSB, Data Rate - 400kbps
+The microcontroller has 6 Universal Serial Communication Interfaces (USCI) that can be configured to operate with different protocols and parameters. These interfaces are connected to different modules and peripherals, as presented in the \autoref{fig:diagram-interfaces}. The Tables \ref{tab:usci-a0-config}, \ref{tab:usci-a1-config}, \ref{tab:usci-a2-config}, \ref{tab:usci-b0-config}, \ref{tab:usci-b1-config}, and \ref{tab:usci-b2-config} describe the interfaces configurations.
 
-\subsubsection{USCI\_A1: UART1}
-Config: Baundrate - 115200, Data Bits - 8 bits, Parity - None, Stop Bits - 1
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{lllllllll}
+        \toprule[1.5pt]
+        \textit{Interface} & \textit{Protocol} & \textit{Mode} & \textit{Length} & \textit{Phase} & \textit{Polarity} & \textit{Endianness} & \textit{Data Rate} \\
+        \midrule
+        USCI\_A0           & SPI               & Master        & 8 bits          & High           & Low               & MSB                 & 400 kbps  \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{USCI\_A0 configuration.}
+    \label{tab:usci-a0-config}
+\end{table}
 
-\subsubsection{USCI\_A2: UART0}
-Config: Baundrate - 115200, Data Bits - 8 bits, Parity - None, Stop Bits - 1
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{llllll}
+        \toprule[1.5pt]
+        \textit{Interface} & \textit{Protocol} & \textit{Data Bits} & \textit{Stop Bits} & \textit{Parity} & \textit{Data Rate} \\
+        \midrule
+        USCI\_A1           & UART1             & 8                  & 1                  & None            & 115200 bps  \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{USCI\_A1 configuration.}
+    \label{tab:usci-a1-config}
+\end{table}
 
-\subsubsection{USCI\_B0: I2C0}
-Config: Master, Slave Address Length - 7 bits, Data Rate - 100kbps
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{llllll}
+        \toprule[1.5pt]
+        \textit{Interface} & \textit{Protocol} & \textit{Data Bits} & \textit{Stop Bits} & \textit{Parity} & \textit{Data Rate} \\
+        \midrule
+        USCI\_A2           & UART0             & 8                  & 1                  & None            & 115200 bps  \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{USCI\_A2 configuration.}
+    \label{tab:usci-a2-config}
+\end{table}
 
-\subsubsection{USCI\_B0: I2C0}
-Config: Master, Slave Address Length - 7 bits, Data Rate - 100kbps
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{llllll}
+        \toprule[1.5pt]
+        \textit{Interface} & \textit{Protocol} & \textit{Mode}  & \textit{Slave Address Length} & \textit{Data Rate} \\
+        \midrule
+        USCI\_B0           & I2C0              & Master         & 7 bits                        & 100 kbps  \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{USCI\_B0 configuration.}
+    \label{tab:usci-b0-config}
+\end{table}
 
-\subsubsection{USCI\_B0: I2C1}
-Config: Master, Slave Address Length - 7 bits, Data Rate - 100kbps
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{llllll}
+        \toprule[1.5pt]
+        \textit{Interface} & \textit{Protocol} & \textit{Mode}  & \textit{Slave Address Length} & \textit{Data Rate} \\
+        \midrule
+        USCI\_B1           & I2C1              & Master         & 7 bits                        & 100 kbps  \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{USCI\_B1 configuration.}
+    \label{tab:usci-b1-config}
+\end{table}
 
-\subsubsection{USCI\_B0: I2C2}
-Config: Master, Slave Address Length - 7 bits, Data Rate - 100kbps
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{llllll}
+        \toprule[1.5pt]
+        \textit{Interface} & \textit{Protocol} & \textit{Mode}  & \textit{Slave Address Length} & \textit{Data Rate} \\
+        \midrule
+        USCI\_B2           & I2C2              & Master         & 7 bits                        & 100 kbps  \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{USCI\_B2 configuration.}
+    \label{tab:usci-b2-config}
+\end{table}
 
+
+\subsection{Clocks Configuration}
+
+Besides the internal clock sources, the microcontroller has two dedicated clock inputs for external crystals: the main clock and the auxiliary clock inputs. There are a 32MHz crystal and a 32.769kHz connected to these inputs, respectively. The first source is used for generating the Master Clock (MCLK) and the Subsystem Master Clock (SMCLK), which are used by the CPU and the internal peripheral modules. The second source is used for generating the Auxiliary Clock (ACLK) that handles the low-power modes and might be used for peripherals.
 
 \subsection{Pinout}
+
+An illustration of the microcontroller pinout positions can be seen in the \autoref{fig:msp430-pinout-positions}. The \autoref{tab:mcu-pinout} presents the OBDH 2.0 microcontroller pins assignment.
+
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=0.9\textwidth]{figures/msp430-pinout.png}
+        \caption{Microcontroller pinout positions.}
+        \label{fig:msp430-pinout-positions}
+    \end{center}
+\end{figure}
 
 \begin{longtable}{lcl}
     \toprule[1.5pt]
@@ -416,17 +489,9 @@ Config: Master, Slave Address Length - 7 bits, Data Rate - 100kbps
     -                 & 96                  & JTAG\_TDO\_TDI        \\
     -                 & 91                  & JTAG\_TCK             \\
     \bottomrule[1.5pt]
-    \caption{Microcontroller pinout.}
+    \caption{Microcontroller pinout and assignments.}
     \label{tab:mcu-pinout}
 \end{longtable}
-
-\begin{figure}[!ht]
-    \begin{center}
-        \includegraphics[width=0.78\textwidth]{figures/msp430-pinout.png}
-        \caption{Microcontroller pinout positions.}
-        \label{fig:msp430-pinout}
-    \end{center}
-\end{figure}
 
 \section{External Watchdog}
 
