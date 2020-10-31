@@ -551,3 +551,5 @@ The module features an RS-485 interface, which is connected to a 4H header (P8).
 \end{figure}
 
 \section{Voltage and Current Sensors}
+
+In order to monitor the board overall current and voltage, the module have a current sensor using a Maxim Integrated IC (MAX9934) and a buffered voltage divider circuit with a Texas Instruments IC (TLV341A). These circuits have direct analog outputs that are connected to ADC inputs. The microcontroller internal ADC peripheral has a dedicated input for a voltage reference, which is connected to the REF5030A IC. This device generates a precise 3V output that enhances the measures and convertions performed by the microcontroller. 
