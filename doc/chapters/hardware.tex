@@ -73,7 +73,7 @@ The connector referred as PC-104 is a junction of two double row 28H headers (\t
 
 \begin{figure}[!ht]
     \begin{center}
-        \includegraphics[width=0.85\textwidth]{figures/pc-104-scheme.png}
+        \includegraphics[width=0.75\textwidth]{figures/pc-104-scheme.png}
         \caption{Bottom view of PC-104 and simplified labels}
         \label{fig:pc-104-scheme}
     \end{center}
@@ -252,11 +252,11 @@ The pinout of the daughterboard interface are available in the \autoref{tab:daug
 
 \subsubsection{Guidelines}
 
-The recommended shape and size of the daughterboard can be seen in the \autoref{fig:daughterboard-size}.
+The recommended shape and size of the daughterboard can be seen in the \autoref{fig:daughterboard-size}. Besides that, there are mandatory and suggested elements placement: four M3 holes for mechanical attachment, required; contact connector pads (in light gray on the bottom layer), required; two debug headers in the left and bottom sides, suggested; and a general purpose flight model picoblade, suggested.
 
 \begin{figure}[!ht]
     \begin{center}
-        \includegraphics[width=0.6\textwidth]{figures/daughterboard-size.png}
+        \includegraphics[width=0.45\textwidth]{figures/daughterboard-size.png}
         \caption{Recommended shape and size of the daughterboard.}
         \label{fig:daughterboard-size}
     \end{center}
@@ -264,15 +264,60 @@ The recommended shape and size of the daughterboard can be seen in the \autoref{
 
 \begin{figure}[!ht]
     \begin{center}
-        \includegraphics[width=0.7\textwidth]{figures/daughterboard-integration.png}
-        \caption{Illustrative daughterboard integration. \textcolor{red}{Need update}}
+        \includegraphics[width=0.65\textwidth]{figures/daughterboard-integration.png}
+        \caption{Illustrative daughterboard integration.}
         \label{fig:daughterboard-integration}
     \end{center}
 \end{figure}
 
 \section{Microcontroller}
 
-MSP430F6659.
+The OBDH 2.0 uses a low-power and low-cost microcontroller family from Texas Instruments, the MSP430-F6659. This device provide sufficient performance for low and medium complexity software and algorithms, allowing the module to execute the required tasks. The \autoref{tab:msp430-summary} presents a summary of the main available features and \autoref{fig:msp430-diagram} shows the internal subsystems, descriptions, and peripherals. The microcontroller interfaces, configurations, and auxiliary components are described in the following topics.
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{cllllllll}
+        \toprule[1.5pt]
+        \textit{Flash} & \textit{SRAM} & \textit{Timers} & \textit{USCI} & \textit{ADC} & \textit{DAC} & \textit{GPIO} \\
+        \midrule
+        512KB  & 64KB  & 2  & 6 (SPI / I2C / UART)  & 12  & 2  & 74           \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{Microcontroller features summary.}
+    \label{tab:msp430-summary}
+\end{table}
+
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=\textwidth]{figures/msp430-diagram.png}
+        \caption{Microcontroller internal diagram.}
+        \label{fig:msp430-diagram}
+    \end{center}
+\end{figure}
+
+\subsection{Interfaces}
+
+\subsubsection{USCI\_A0: SPI}
+ Config: Chip Selects - 5, Length - 8bits, Phase - High, Polarity - Low, Endianness - MSB, Data Rate - 400kbps
+
+\subsubsection{USCI\_A1: UART1}
+Config: Baundrate - 115200, Data Bits - 8 bits, Parity - None, Stop Bits - 1
+
+\subsubsection{USCI\_A2: UART0}
+Config: Baundrate - 115200, Data Bits - 8 bits, Parity - None, Stop Bits - 1
+
+\subsubsection{USCI\_B0: I2C0}
+Config: Master, Slave Address Length - 7 bits, Data Rate - 100kbps
+
+\subsubsection{USCI\_B0: I2C0}
+Config: Master, Slave Address Length - 7 bits, Data Rate - 100kbps
+
+\subsubsection{USCI\_B0: I2C1}
+Config: Master, Slave Address Length - 7 bits, Data Rate - 100kbps
+
+\subsubsection{USCI\_B0: I2C2}
+Config: Master, Slave Address Length - 7 bits, Data Rate - 100kbps
+
 
 \subsection{Pinout}
 
@@ -374,6 +419,14 @@ MSP430F6659.
     \caption{Microcontroller pinout.}
     \label{tab:mcu-pinout}
 \end{longtable}
+
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=0.78\textwidth]{figures/msp430-pinout.png}
+        \caption{Microcontroller pinout positions.}
+        \label{fig:msp430-pinout}
+    \end{center}
+\end{figure}
 
 \section{External Watchdog}
 
