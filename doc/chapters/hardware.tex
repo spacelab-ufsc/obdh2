@@ -495,17 +495,15 @@ An illustration of the microcontroller pinout positions can be seen in the \auto
 
 \section{External Watchdog}
 
-Additionally to the internal watchdog timer of the microcontroller, to ensure a system reset in case of a software freeze, an external watchdog circuit is being used. For that, the TPS3823 IC from Texas Instruments was chosen. This IC is a voltage monitor with a watchdog timer circuit.
+Additionally to the internal watchdog timer of the microcontroller, to ensure a system reset in case of a software freeze, an external watchdog circuit is being used. For that, the TPS3823 IC from Texas Instruments was chosen. This IC is a voltage monitor with a watchdog timer feature. This circuit can be seen in the \autoref{fig:ext-wdt-circuit}.
 
 This circuit works this way: if the WDI pin remains high or low longer than the timeout period, then reset is triggered. The timer clears when reset is asserted or when WDI sees a rising edge or a falling edge.
 
 The watchdog timer task clears the TPS3823 timer by toggling the WDI pin at every 100 ms. If the WDI pin state stays unmodified for more than 1600 ms, the reset pin is cleared and the microcontroller is reseted.
 
-This circuit can be seen in the \autoref{fig:ext-wdt-circuit}.
-
 \begin{figure}[!ht]
     \begin{center}
-        \includegraphics[width=0.75\textwidth]{figures/ext-watchdog-circuit.png}
+        \includegraphics[width=0.65\textwidth]{figures/ext-watchdog-circuit.png}
         \caption{External watchdog timer circuit.}
         \label{fig:ext-wdt-circuit}
     \end{center}
@@ -513,6 +511,43 @@ This circuit can be seen in the \autoref{fig:ext-wdt-circuit}.
 
 \section{Non-Volatile Memory}
 
-The non-volatile memory is composed by a NOR flash memory with 1 Gb of capacity (or 128 MB). The used model is the Micron MT25QL01GBBB.
+The non-volatile memory model is the Micron MT25QL01GBBB, which is composed by a NOR flash architecture with 1 Gb of capacity (or 128 MB) and features extended SPI configurations. As can be seen in \autoref{fig:diagram-interfaces}, a SPI bus is used to communicate with this peripheral, using the \autoref{tab:usci-a0-config} configurations. Also, there are some control pins that are connected to microcontroller GPIOs: HOLD\#, RESET\#, and W\#. 
 
-As can be seen in \autoref{fig:diagram-interfaces}, a SPI bus is used to communicate with this peripheral.
+When RESET\# is driven LOW, the device is reset and the outputs are tri-stated. The HOLD\# signal pauses serial communications without deselecting or resetting the device, consequently outputs are tri-stated and inputs are ignored. The W\# signal handles as a write protection, which freezes the status register, turning its non-volatile bits read-only and preventing the write operation to be executed.
+
+
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=0.65\textwidth]{figures/ext-memory-circuit.png}
+        \caption{External memory circuit.}
+        \label{fig:ext-mem-circuit}
+    \end{center}
+\end{figure}
+
+\section{I2C Buffers}
+
+The microcontroller I2C interfaces have dedicated IC buffers, which improve the signal quality throughout the various connectors and offers reliability enhancements, since it protects the bus in case of failures. This measure was adopted in all the satellite modules due to previous failures in I2C buses. Using this scheme, the modules connected though this protocol might have shared connections without losing performance or reliability. 
+
+The buffer selected for this function is the Texas Instruments TCA4311 device. Besides the I2C inputs and outputs, it features control and status signals that are connected to GPIOs in the microcontroller: an enable and an operation ready status. Also, both inputs and outputs in these I2C lines have external pull-up resistors.
+
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=0.65\textwidth]{figures/i2c-buffer-circuit.png}
+        \caption{I2C buffer circuit.}
+        \label{fig:i2c-buffer-circuit}
+    \end{center}
+\end{figure}
+
+\section{RS-485 Transceiver}
+
+The module features an RS-485 interface, which is connected to a 4H header (P8). This interface uses a transceiver (THVD1451) to convert the incoming RS-485 signals to UART and vice-versa. The outputs are 120 ohm differential pairs that have termination resistors before connecting to the header pins.
+
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=0.65\textwidth]{figures/rs485-transceiver-circuit.png}
+        \caption{RS-485 transceiver circuit.}
+        \label{fig:rs485-transceiver-circuit}
+    \end{center}
+\end{figure}
+
+\section{Voltage and Current Sensors}
