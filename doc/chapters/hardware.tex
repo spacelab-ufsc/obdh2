@@ -1,7 +1,7 @@
 %
 % hardware.tex
 %
-% Copyright (C) 2019 by Universidade Federal de Santa Catarina.
+% Copyright (C) 2020 by Universidade Federal de Santa Catarina.
 %
 % OBDH 2.0 Documentation
 %
@@ -14,12 +14,13 @@
 % \brief Hardware chapter.
 %
 % \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+% \author André Martins Pio de Mattos <andrempmattos@gmail.com>
 %
 % \institution Universidade Federal de Santa Catarina (UFSC)
 %
-% \version 0.1.0
+% \version 0.5.0
 %
-% \date 20/10/2019
+% \date 2019/10/20
 %
 
 \chapter{Hardware} \label{ch:hardware}
@@ -272,7 +273,7 @@ The recommended shape and size of the daughterboard can be seen in the \autoref{
 
 \section{Microcontroller}
 
-The OBDH 2.0 uses a low-power and low-cost microcontroller family from Texas Instruments, the MSP430-F6659. This device provide sufficient performance for low and medium complexity software and algorithms, allowing the module to execute the required tasks. The \autoref{tab:msp430-summary} presents a summary of the main available features and \autoref{fig:msp430-diagram} shows the internal subsystems, descriptions, and peripherals. The microcontroller interfaces, configurations, and auxiliary components are described in the following topics.
+The OBDH 2.0 uses a low-power and low-cost microcontroller family from Texas Instruments, the MSP430F6659 \cite{msp430f6659}. This device provide sufficient performance for low and medium complexity software and algorithms, allowing the module to execute the required tasks. The \autoref{tab:msp430-summary} presents a summary of the main available features and \autoref{fig:msp430-diagram} shows the internal subsystems, descriptions, and peripherals. The microcontroller interfaces, configurations, and auxiliary components are described in the following topics.
 
 \begin{table}[!h]
     \centering
@@ -552,4 +553,4 @@ The module features an RS-485 interface, which is connected to a 4H header (P8).
 
 \section{Voltage and Current Sensors}
 
-In order to monitor the board overall current and voltage, the module have a current sensor using a Maxim Integrated IC (MAX9934) and a buffered voltage divider circuit with a Texas Instruments IC (TLV341A). These circuits have direct analog outputs that are connected to ADC inputs. The microcontroller internal ADC peripheral has a dedicated input for a voltage reference, which is connected to the REF5030A IC. This device generates a precise 3V output that enhances the measures and convertions performed by the microcontroller. 
+In order to monitor the board overall current and voltage, the module have a current sensor using a Maxim Integrated IC (MAX9934) and a buffered voltage divider circuit with a Texas Instruments IC (TLV341A). These circuits have direct analog outputs that are connected to ADC inputs. The microcontroller internal ADC peripheral has a dedicated input for a voltage reference, which is connected to the REF5030A IC. This device generates a precise 3V output that enhances the measures and convertions performed by the microcontroller.
