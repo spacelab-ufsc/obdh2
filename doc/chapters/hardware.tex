@@ -209,7 +209,7 @@ The interface with the microcontroller programmer is performed through external 
 
 \subsection{Daughterboard}
 
-The daughterboard interface uses the Samtec FSI-110-D connector, which can be seen in the \autoref{fig:samtec-connector}. This connector has metal contacts in format of arcs that are flexible and four polymer guide pins (a pair for top and bottom). When the daughterboard is attached, there is some pressure to this metal contacts that bend and create a meaningful pin connection to the daughterboard copper pads\footnote{These daughterboard pads are similar to the ones used as footprint in the OBDH, despite a slightly bigger size.}. A picture of this connector on the PCB can be seen in \autoref{fig:daughterboard-connector}.
+The daughterboard interface uses the Samtec FSI-110-D connector \cite{fsi-conn}, which can be seen in the \autoref{fig:samtec-connector}. This connector has metal contacts in format of arcs that are flexible and four polymer guide pins (a pair for top and bottom). When the daughterboard is attached, there is some pressure to this metal contacts that bend and create a meaningful pin connection to the daughterboard copper pads\footnote{These daughterboard pads are similar to the ones used as footprint in the OBDH, despite a slightly bigger size.}. A picture of this connector on the PCB can be seen in \autoref{fig:daughterboard-connector}.
 
 \begin{figure}[!ht]
     \begin{center}
@@ -496,7 +496,7 @@ An illustration of the microcontroller pinout positions can be seen in the \auto
 
 \section{External Watchdog}
 
-Additionally to the internal watchdog timer of the microcontroller, to ensure a system reset in case of a software freeze, an external watchdog circuit is being used. For that, the TPS3823 IC from Texas Instruments was chosen. This IC is a voltage monitor with a watchdog timer feature. This circuit can be seen in the \autoref{fig:ext-wdt-circuit}.
+Additionally to the internal watchdog timer of the microcontroller, to ensure a system reset in case of a software freeze, an external watchdog circuit is being used. For that, the TPS3823 IC from Texas Instruments \cite{tps382x} was chosen. This IC is a voltage monitor with a watchdog timer feature. This circuit can be seen in the \autoref{fig:ext-wdt-circuit}.
 
 This circuit works this way: if the WDI pin remains high or low longer than the timeout period, then reset is triggered. The timer clears when reset is asserted or when WDI sees a rising edge or a falling edge.
 
