@@ -17,9 +17,9 @@
 %
 % \institution Universidade Federal de Santa Catarina (UFSC)
 %
-% \version 0.1.0
+% \version 0.5.0
 %
-% \date 30/10/2019
+% \date 2019/10/30
 %
 
 \chapter{Firmware} \label{ch:firmware}
@@ -395,7 +395,29 @@ This telecommand request information from the EDC payload. When received, the OB
 
 \section{Operating System}
 
-FreeRTOS 10
+As operating system the FreeRTOS 10 \cite{freertos} is being used. FreeRTOS is a market-leading real-time operating system (RTOS) for microcontrollers and small microprocessors. Distributed freely under the MIT open source license, FreeRTOS includes a kernel and a growing set of IoT libraries suitable for use across all industry sectors. FreeRTOS is built with an emphasis on reliability and ease of use.
+
+The main configuration parameters of the operating system in this project are availabe in \autoref{tab:freertos-config}.
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{lrr}
+        \toprule[1.5pt]
+        \textbf{Parameter}       & \textbf{Value} & \textbf{Unit} \\
+        \midrule
+        Version                  & v10.2.0        & - \\
+        Tick rate (Hz)           & 1000           & Hz \\
+        CPU clock (HZ)           & 32             & MHz \\
+        Max. priorities          & 5              & - \\
+        Heap size                & 40960          & bytes \\
+        Max. length of task name & 20             & - \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{FreeRTOS main configuration parameters.}
+    \label{tab:freertos-config}
+\end{table}
+
+More details of the used configuration parameters can be seen in the file \textit{\href{https://github.com/spacelab-ufsc/obdh2/blob/master/firmware/config/FreeRTOSConfig.h}{firmware/config/FreeRTOSConfig.h}} from \cite{obdh2-repo}.
 
 \section{Hardware Abstraction Layer (HAL)}
 
