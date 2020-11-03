@@ -298,86 +298,28 @@ The OBDH 2.0 uses a low-power and low-cost microcontroller family from Texas Ins
 
 \subsection{Interfaces Configuration}
 
-The microcontroller has 6 Universal Serial Communication Interfaces (USCI) that can be configured to operate with different protocols and parameters. These interfaces are connected to different modules and peripherals, as presented in the \autoref{fig:diagram-interfaces}. The Tables \ref{tab:usci-a0-config}, \ref{tab:usci-a1-config}, \ref{tab:usci-a2-config}, \ref{tab:usci-b0-config}, \ref{tab:usci-b1-config}, and \ref{tab:usci-b2-config} describe the interfaces configurations.
+The microcontroller has 6 Universal Serial Communication Interfaces (USCI) that can be configured to operate with different protocols and parameters. These interfaces are connected to different modules and peripherals, as presented in the \autoref{fig:diagram-interfaces}. The \autoref{tab:usci-config} describes each interface configurations.
 
 \begin{table}[!h]
     \centering
-    \begin{tabular}{lllllllll}
+    \begin{tabular}{lrrrrl}
         \toprule[1.5pt]
-        \textit{Interface} & \textit{Protocol} & \textit{Mode} & \textit{Length} & \textit{Phase} & \textit{Polarity} & \textit{Endianness} & \textit{Data Rate} \\
+        \textit{Interface} & \textit{Protocol (Index)} & \textit{Mode} & \textit{Word Length} & \textit{Data Rate} & \textit{Configuration} \\
         \midrule
-        USCI\_A0           & SPI               & Master        & 8 bits          & High           & Low               & MSB                 & 400 kbps  \\
+        USCI\_A0           & SPI                       & Master        & 8 bits               & 400 kbps           & Phase: High \\
+                           &                           &               &                      &                    & Polarity: Low \\
+        USCI\_A1           & UART1                     & -             & 8 bits               & 115200 bps         & Stop bits: 1 \\
+                           &                           &               &                      &                    & Parity: None \\
+        USCI\_A2           & UART0                     & -             & 8 bits               & 115200 bps         & Stop bits: 1 \\
+                           &                           &               &                      &                    & Parity: None \\
+        USCI\_B0           & I2C0                      & Master        & 8 bits               & 100 kbps           & Adr. len: 7 bits \\
+        USCI\_B1           & I2C1                      & Master        & 8 bits               & 100 kbps           & Adr. len: 7 bits \\
+        USCI\_B2           & I2C2                      & Master        & 8 bits               & 100 kbps           & Adr. len: 7 bits \\
         \bottomrule[1.5pt]
     \end{tabular}
-    \caption{USCI\_A0 configuration.}
-    \label{tab:usci-a0-config}
+    \caption{USCI configuration.}
+    \label{tab:usci-config}
 \end{table}
-
-\begin{table}[!h]
-    \centering
-    \begin{tabular}{llllll}
-        \toprule[1.5pt]
-        \textit{Interface} & \textit{Protocol} & \textit{Data Bits} & \textit{Stop Bits} & \textit{Parity} & \textit{Data Rate} \\
-        \midrule
-        USCI\_A1           & UART1             & 8                  & 1                  & None            & 115200 bps  \\
-        \bottomrule[1.5pt]
-    \end{tabular}
-    \caption{USCI\_A1 configuration.}
-    \label{tab:usci-a1-config}
-\end{table}
-
-\begin{table}[!h]
-    \centering
-    \begin{tabular}{llllll}
-        \toprule[1.5pt]
-        \textit{Interface} & \textit{Protocol} & \textit{Data Bits} & \textit{Stop Bits} & \textit{Parity} & \textit{Data Rate} \\
-        \midrule
-        USCI\_A2           & UART0             & 8                  & 1                  & None            & 115200 bps  \\
-        \bottomrule[1.5pt]
-    \end{tabular}
-    \caption{USCI\_A2 configuration.}
-    \label{tab:usci-a2-config}
-\end{table}
-
-\begin{table}[!h]
-    \centering
-    \begin{tabular}{llllll}
-        \toprule[1.5pt]
-        \textit{Interface} & \textit{Protocol} & \textit{Mode}  & \textit{Slave Address Length} & \textit{Data Rate} \\
-        \midrule
-        USCI\_B0           & I2C0              & Master         & 7 bits                        & 100 kbps  \\
-        \bottomrule[1.5pt]
-    \end{tabular}
-    \caption{USCI\_B0 configuration.}
-    \label{tab:usci-b0-config}
-\end{table}
-
-\begin{table}[!h]
-    \centering
-    \begin{tabular}{llllll}
-        \toprule[1.5pt]
-        \textit{Interface} & \textit{Protocol} & \textit{Mode}  & \textit{Slave Address Length} & \textit{Data Rate} \\
-        \midrule
-        USCI\_B1           & I2C1              & Master         & 7 bits                        & 100 kbps  \\
-        \bottomrule[1.5pt]
-    \end{tabular}
-    \caption{USCI\_B1 configuration.}
-    \label{tab:usci-b1-config}
-\end{table}
-
-\begin{table}[!h]
-    \centering
-    \begin{tabular}{llllll}
-        \toprule[1.5pt]
-        \textit{Interface} & \textit{Protocol} & \textit{Mode}  & \textit{Slave Address Length} & \textit{Data Rate} \\
-        \midrule
-        USCI\_B2           & I2C2              & Master         & 7 bits                        & 100 kbps  \\
-        \bottomrule[1.5pt]
-    \end{tabular}
-    \caption{USCI\_B2 configuration.}
-    \label{tab:usci-b2-config}
-\end{table}
-
 
 \subsection{Clocks Configuration}
 
