@@ -440,3 +440,11 @@ NGHam \cite{ngham}, short for Next Generation Ham Radio, is a set of protocols f
         \label{fig:ngham-stack}
     \end{center}
 \end{figure}
+
+\subsection{CSP}
+
+The CubeSat Space Protocol (CSP) \cite{csp} is a small protocol stack written in C. CSP is designed to ease communication between distributed embedded systems in smaller networks, such as CubeSats. The design follows the TCP/IP model and includes a transport protocol, a routing protocol and several MAC-layer interfaces. The core of libcsp includes a router, a connection oriented socket API and message/connection pools.
+
+The idea is to give sub-system developers of CubeSats the same features of a TCP/IP stack, but without adding the huge overhead of the IP header. The small footprint and simple implementation allows a small 8-bit system to be fully connected on the network. This allows all subsystems to provide their services on the same network level, without any master node required. Using a service oriented architecture has several advantages compared to the traditional mater/slave topology used on many cubesats.
+
+The OBDH's firmware currently uses the version \href{https://github.com/GomSpace/libcsp/releases/tag/1.5.16}{v1.5.16} of the libcsp library.
