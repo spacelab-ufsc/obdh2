@@ -64,6 +64,28 @@ The \autoref{fig:diagram-interfaces} presents the board interfaces, which consis
     \end{center}
 \end{figure}
 
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{lrrr}
+        \toprule[1.5pt]
+        \textbf{Peripheral}     & \textbf{USCI} & \textbf{Protocol} & \textbf{Comm. Protocol} \\
+        \midrule
+        TTC                     & A0            & SPI               & FSP \\
+        Radio (downlink/link)   & A0            & SPI               & Radio config./NGHam \\
+        Non-Volatile Memory     & A0            & SPI               & - \\
+        Payload port            & A1            & UART              & -\footnotemark \\
+        PC (log messages)       & A2            & UART              & ANSI messages \\
+        Payload port            & B0            & I$^{2}$C          & -\footnotemark \\
+        EPS                     & B1            & I$^{2}$C          & CSP \\
+        Antenna Module          & B2            & I$^{2}$C          & \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{Boards interfaces.}
+    \label{tab:interfaces}
+\end{table}
+
+\footnotetext{The communication protocol of the payload ports depends of the used payload.}
+
 \section{External Connectors}
 
 The external interfaces are connected to the microcontroller using different connector types: EPS, TTC, Radio, and Payloads through PC-104; Antenna module with 6H header and 6P picoblade connectors; JTAG through 14H header and 6P picoblade connectors; and debug access using a dedicated 2H header and shared with the JTAG connectors. The following topics describe these interfaces and present the connectors pinout.
