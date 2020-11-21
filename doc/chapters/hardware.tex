@@ -172,7 +172,7 @@ The communication with the Antenna module is performed through external connecto
     \end{center}
 \end{figure}
 
-\subsection{Programmer and Debug}
+\subsection{Programmer and Debug} \label{sec:programer-and-debug}
 
 The interface with the microcontroller programmer is performed through external connectors, which are presented in the \autoref{fig:jtag-connectors}. Both connectors have the same JTAG and UART interfaces, but the 14H header is used during development and the 6P picoblade (provide more compact and reliable attachment) as the connector for the flight model, which are described in the \autoref{tab:jtag-header-connector-pins} and \autoref{tab:jtag-picoblade-connector-pins}, respectively. This interface consists of a dedicated debug UART, a JTAG, and an external power supply. The debug UART connection has another access point in a dedicated 2H header (P7), as shown in \autoref{fig:uart-debug-connector}. Also, to use this external supply, it is necessary to connect both pins of a 2H header jumper (P6).
 
