@@ -17,11 +17,11 @@ RevisionNamingSchemeGUID=
 [OutputGroup1]
 Name=obdh2_outputjob.outjob
 Description=
-TargetOutputMedium=Draftman_optional
+TargetOutputMedium=1-Board_Outputs
 VariantName=[No Variations]
 VariantScope=0
 CurrentConfigurationName=
-TargetPrinter=Virtual Printer
+TargetPrinter=Microsoft Print to PDF
 PrinterOptions=Record=PrinterOptions|Copies=1|Duplex=1|TrueTypeOptions=3|Collate=1|PrintJobKind=1|PrintWhat=1
 OutputMedium1=Print Job
 OutputMedium1_Type=Printer
@@ -48,7 +48,7 @@ OutputName1=assembly_pick_place
 OutputCategory1=Assembly
 OutputDocumentPath1=
 OutputVariantName1=
-OutputEnabled1=0
+OutputEnabled1=1
 OutputEnabled1_OutputMedium1=0
 OutputEnabled1_OutputMedium2=1
 OutputEnabled1_OutputMedium3=0
@@ -66,7 +66,7 @@ OutputName2=board_gerber
 OutputCategory2=Fabrication
 OutputDocumentPath2=
 OutputVariantName2=
-OutputEnabled2=0
+OutputEnabled2=1
 OutputEnabled2_OutputMedium1=0
 OutputEnabled2_OutputMedium2=2
 OutputEnabled2_OutputMedium3=0
@@ -100,7 +100,7 @@ OutputName4=board_nc_drill
 OutputCategory4=Fabrication
 OutputDocumentPath4=
 OutputVariantName4=
-OutputEnabled4=0
+OutputEnabled4=1
 OutputEnabled4_OutputMedium1=0
 OutputEnabled4_OutputMedium2=3
 OutputEnabled4_OutputMedium3=0
@@ -118,7 +118,7 @@ OutputName5=assembly_odb
 OutputCategory5=Fabrication
 OutputDocumentPath5=
 OutputVariantName5=
-OutputEnabled5=0
+OutputEnabled5=1
 OutputEnabled5_OutputMedium1=0
 OutputEnabled5_OutputMedium2=4
 OutputEnabled5_OutputMedium3=0
@@ -136,7 +136,7 @@ OutputName6=board_bom
 OutputCategory6=Report
 OutputDocumentPath6=
 OutputVariantName6=
-OutputEnabled6=0
+OutputEnabled6=1
 OutputEnabled6_OutputMedium1=0
 OutputEnabled6_OutputMedium2=6
 OutputEnabled6_OutputMedium3=0
@@ -150,24 +150,22 @@ OutputDefault6=0
 PageOptions6=Record=PageOptions|CenterHorizontal=True|CenterVertical=True|PrintScale=1.00|XCorrection=1.00|YCorrection=1.00|PrintKind=0|BorderSize=5000000|LeftOffset=0|BottomOffset=0|Orientation=2|PaperLength=1000|PaperWidth=1000|Scale=100|PaperSource=7|PrintQuality=-3|MediaType=1|DitherType=10|PrintScaleMode=1|PaperKind=A4|PaperIndex=9
 Configuration6_Name1=ColumnNameFormat
 Configuration6_Item1=CaptionAsName
-Configuration6_Name2=Filter
-Configuration6_Item2=545046300E5446696C74657257726170706572000D46696C7465722E416374697665090F46696C7465722E43726974657269610A04000000000000000000
-Configuration6_Name3=General
-Configuration6_Item3=OpenExported=False|AddToProject=False|ForceFit=False|NotFitted=True|Database=False|DatabasePriority=False|IncludePCBData=False|IncludeVaultData=False|IncludeAlternatives=False|ShowExportOptions=True|TemplateFilename=..\..\pcb-standard\pcb_templates\bom_model_simplified.xltx|BatchMode=5|FormWidth=950|FormHeight=659|SupplierProdQty=1|SupplierAutoQty=False|SupplierUseCachedPricing=False|SupplierCurrency=<none>|ViewType=0
-Configuration6_Name4=GroupOrder
-Configuration6_Item4=Comment=True|Fitted=True
-Configuration6_Name5=OutputConfigurationParameter1
-Configuration6_Item5=??
-Configuration6_Name6=SortOrder
-Configuration6_Item6=Quantity=Down
-Configuration6_Name7=VisibleOrder
-Configuration6_Item7=Comment=129|Description=86|Quantity=95|Designator=106|Fitted=252|Partnumber=100
-Configuration6_Name8=VisibleOrder_Base
-Configuration6_Item8=Line #=70|Comment=69|Description=95|Designator=94|Quantity=83|Manufacturer 1=116|Manufacturer Part Number 1=183|Manufacturer Lifecycle 1=159|Supplier 1=89|Supplier Part Number 1=155|Supplier Unit Price 1=139|Supplier Subtotal 1=133
-Configuration6_Name9=VisibleOrder_Consolidated
-Configuration6_Item9=Line #=100|Comment=100|Description=100|Designator=100|Quantity=100|Manufacturer 1=116|Manufacturer Part Number 1=183|Manufacturer Lifecycle 1=159|Supplier 1=89|Supplier Part Number 1=155|Supplier Unit Price 1=139|Supplier Subtotal 1=133
-Configuration6_Name10=VisibleOrder_Flat
-Configuration6_Item10=Line #=100|Comment=100|Description=100|Designator=100|Manufacturer 1=116|Manufacturer Part Number 1=183|Manufacturer Lifecycle 1=159|Supplier 1=89|Supplier Part Number 1=155|Supplier Unit Price 1=139|Supplier Subtotal 1=133
+Configuration6_Name2=General
+Configuration6_Item2=OpenExported=False|AddToProject=True|ReportBOMViolationsInMessages=False|ForceFit=False|NotFitted=True|Database=False|DatabasePriority=False|IncludePcbData=False|IncludeVaultData=False|IncludeCloudData=False|IncludeDocumentData=True|IncludeAlternatives=False|ShowExportOptions=True|TemplateFilename=..\..\pcb-standard\pcb_templates\bom_spacelab_template.xltx|TemplateVaultGuid=|TemplateItemGuid=|TemplateRevisionGuid=|BatchMode=5|FormWidth=950|FormHeight=659|SupplierProdQty=1|SupplierAutoQty=False|SupplierUseCachedPricing=False|SupplierCurrency=<none>|SolutionsPerItem=1|SuppliersPerSolution=1|ViewType=1|UseDirectApi=False|BomSetName=
+Configuration6_Name3=GroupOrder
+Configuration6_Item3=Partnumber=True
+Configuration6_Name4=OutputConfigurationParameter1
+Configuration6_Item4=??
+Configuration6_Name5=SortOrder
+Configuration6_Item5=Quantity=Down
+Configuration6_Name6=VisibleOrder
+Configuration6_Item6=Comment=129|Description=86|Quantity=95|Designator=106|Fitted=252|Partnumber=100
+Configuration6_Name7=VisibleOrder_Base
+Configuration6_Item7=Line #=70|Comment=69|Description=95|Designator=94|Quantity=83|Manufacturer 1=116|Manufacturer Part Number 1=183|Manufacturer Lifecycle 1=159|Supplier 1=89|Supplier Part Number 1=155|Supplier Unit Price 1=139|Supplier Subtotal 1=133
+Configuration6_Name8=VisibleOrder_Consolidated
+Configuration6_Item8=Line #=100|Comment=100|Description=100|Designator=100|Quantity=100|Manufacturer 1=116|Manufacturer Part Number 1=183|Manufacturer Lifecycle 1=159|Supplier 1=89|Supplier Part Number 1=155|Supplier Unit Price 1=139|Supplier Subtotal 1=133
+Configuration6_Name9=VisibleOrder_Flat
+Configuration6_Item9=Line #=100|Comment=100|Description=100|Designator=100|Manufacturer 1=116|Manufacturer Part Number 1=183|Manufacturer Lifecycle 1=159|Supplier 1=89|Supplier Part Number 1=155|Supplier Unit Price 1=139|Supplier Subtotal 1=133
 OutputType7=PDF3D
 OutputName7=pdf3d
 OutputCategory7=Documentation
@@ -362,7 +360,7 @@ OutputName12=board_drc
 OutputCategory12=Validation
 OutputDocumentPath12=
 OutputVariantName12=
-OutputEnabled12=0
+OutputEnabled12=1
 OutputEnabled12_OutputMedium1=0
 OutputEnabled12_OutputMedium2=7
 OutputEnabled12_OutputMedium3=0
@@ -476,7 +474,7 @@ OutputName16=assembly_test_point
 OutputCategory16=Fabrication
 OutputDocumentPath16=
 OutputVariantName16=
-OutputEnabled16=0
+OutputEnabled16=1
 OutputEnabled16_OutputMedium1=0
 OutputEnabled16_OutputMedium2=5
 OutputEnabled16_OutputMedium3=0
@@ -512,7 +510,7 @@ OutputName18=board_draftsman
 OutputCategory18=Documentation
 OutputDocumentPath18=board_draftsman.PCBDwf
 OutputVariantName18=
-OutputEnabled18=1
+OutputEnabled18=0
 OutputEnabled18_OutputMedium1=0
 OutputEnabled18_OutputMedium2=0
 OutputEnabled18_OutputMedium3=0
