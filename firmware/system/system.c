@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.14
+ * \version 0.5.1
  * 
  * \date 29/01/2020
  * 
@@ -34,6 +34,7 @@
  */
 
 #include <msp430.h>
+#include <drivers/gpio/gpio.h>
 
 #include "system.h"
 
@@ -64,6 +65,34 @@ void system_increment_time(void)
 sys_time_t system_get_time(void)
 {
     return sys_time;
+}
+
+sys_hw_version_t system_get_hw_version()
+{
+    gpio_pin_t bit_0_pin = GPIO_PIN_14;
+    gpio_pin_t bit_1_pin = GPIO_PIN_15;
+
+    /* Initializing bit 0 GPIO pin */
+    if (gpio_init(bit_0_pin, (gpio_config_t){.mode=GPIO_MODE_INPUT}) != 0)
+    {
+        return HW_VERSION_UNKNOWN;
+    }
+
+    /* Initializing bit 1 GPIO pin */
+    if (gpio_init(bit_1_pin, (gpio_config_t){.mode=GPIO_MODE_INPUT}) != 0)
+    {
+        return HW_VERSION_UNKNOWN;
+    }
+
+    int bit_0_state = gpio_get_state(bit_0_pin);
+    int bit_1_state = gpio_get_state(bit_1_pin);
+
+    if ((bit_0_state == -1) || (bit_1_state == -1))
+    {
+        return HW_VERSION_UNKNOWN;
+    }
+
+    return ((uint8_t)bit_1_state << 1) | (uint8_t)bit_0_state;
 }
 
 /** \} End of system group */

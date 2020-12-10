@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.14
+ * \version 0.5.1
  * 
  * \date 04/12/2019
  * 
@@ -71,6 +71,11 @@ void vTaskStartup(void *pvParameters)
     /* Print the FreeRTOS version */
     sys_log_print_event_from_module(SYS_LOG_INFO, TASK_STARTUP_NAME, "FreeRTOS ");
     sys_log_print_msg(tskKERNEL_VERSION_NUMBER);
+    sys_log_new_line();
+
+    /* Print the hardware version */
+    sys_log_print_event_from_module(SYS_LOG_INFO, TASK_STARTUP_NAME, "Hardware revision is ");
+    sys_log_print_uint(system_get_hw_version());
     sys_log_new_line();
 
     /* Print the system clocks */

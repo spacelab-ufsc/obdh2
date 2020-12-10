@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.14
+ * \version 0.5.1
  * 
- * \date 25/01/2020
+ * \date 2020/01/25
  * 
  * \defgroup system System
  * \{
@@ -41,9 +41,26 @@
 #include "clocks.h"
 
 /**
+ * \brief Hardware versions.
+ */
+typedef enum
+{
+    HW_VERSION_0=0,                 /**< Hardware version 0. */
+    HW_VERSION_1,                   /**< Hardware version 1. */
+    HW_VERSION_2,                   /**< Hardware version 2. */
+    HW_VERSION_3,                   /**< Hardware version 3. */
+    HW_VERSION_UNKNOWN=UINT8_MAX    /**< Hardware version unknown. */
+} hw_version_e;
+
+/**
  * \brief System time type.
  */
 typedef uint32_t sys_time_t;
+
+/**
+ * \brief Hardware version.
+ */
+typedef uint8_t sys_hw_version_t;
 
 /**
  * \brief System reset.
@@ -106,6 +123,23 @@ void system_increment_time(void);
  * \return The current system time.
  */
 sys_time_t system_get_time(void);
+
+/**
+ * \brief Gets the current hardware version.
+ *
+ * This funciton reads the state of the versioning GPIO pins.
+ *
+ * \return The current hardware version. It can be:
+ * \parblock
+ *      -\b HW_VERSION_0
+ *      -\b HW_VERSION_1
+ *      -\b HW_VERSION_2
+ *      -\b HW_VERSION_3
+ *      -\b HW_VERSION_UNKNOWN
+ *      .
+ * \endparblock
+ */
+sys_hw_version_t system_get_hw_version();
 
 #endif /* SYSTEM_H_ */
 
