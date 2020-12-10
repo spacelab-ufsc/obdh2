@@ -1,5 +1,5 @@
 SRC=main
-TARGET=obdh2_doc
+TARGET=slb-obdh2-doc-v0.5
 
 ifndef BUILD_DIR
 	BUILD_DIR=build
