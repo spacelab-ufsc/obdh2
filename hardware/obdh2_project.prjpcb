@@ -326,6 +326,65 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
 
+[Document18]
+DocumentPath=sources\board_draftsman.PCBDwf
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=
+
+[ProjectVariant1]
+UniqueID=E74517D3-3968-4114-8B30-127F7E3D76F1
+Description=dnp_variant
+AllowFabrication=0
+ParameterCount=0
+VariationCount=34
+Variation1=Designator=P8|UniqueId=\KXADETFJ\ANOLGHHP|Kind=1|AlternatePart= 
+Variation2=Designator=P5|UniqueId=\KXADETFJ\JGVMDKDU|Kind=1|AlternatePart= 
+Variation3=Designator=P2|UniqueId=\KXADETFJ\THQVLHVK|Kind=1|AlternatePart= 
+Variation4=Designator=P7|UniqueId=\KXADETFJ\NRLCKUKA|Kind=1|AlternatePart= 
+Variation5=Designator=P6|UniqueId=\KXADETFJ\EYBYWHKS|Kind=1|AlternatePart= 
+Variation6=Designator=J_PC1|UniqueId=\KXADETFJ\XXJLERWE|Kind=1|AlternatePart= 
+Variation7=Designator=J_PC2|UniqueId=\KXADETFJ\IWXUHHBP|Kind=1|AlternatePart= 
+Variation8=Designator=J_PC3|UniqueId=\KXADETFJ\NONGWXYO|Kind=1|AlternatePart= 
+Variation9=Designator=J_PC4|UniqueId=\KXADETFJ\IWDMKEKY|Kind=1|AlternatePart= 
+Variation10=Designator=J_PC5|UniqueId=\KXADETFJ\CKICWTPF|Kind=1|AlternatePart= 
+Variation11=Designator=J_PC6|UniqueId=\KXADETFJ\FRDOEJTH|Kind=1|AlternatePart= 
+Variation12=Designator=J_PC7|UniqueId=\KXADETFJ\CJVMSKIA|Kind=1|AlternatePart= 
+Variation13=Designator=J_PC11|UniqueId=\KXADETFJ\BBBOIPDX|Kind=1|AlternatePart= 
+Variation14=Designator=J_PC10|UniqueId=\KXADETFJ\FXYQASGJ|Kind=1|AlternatePart= 
+Variation15=Designator=J_PC9|UniqueId=\KXADETFJ\WTHDMLHR|Kind=1|AlternatePart= 
+Variation16=Designator=J_PC8|UniqueId=\KXADETFJ\PLGRPKYX|Kind=1|AlternatePart= 
+Variation17=Designator=R2|UniqueId=\KXADETFJ\AMNTUUST\PJFBVPCY\RNHWFONU|Kind=0|AlternatePart= 
+Variation18=Designator=D1|UniqueId=\KXADETFJ\AMNTUUST\PJFBVPCY\HERQVIYC|Kind=1|AlternatePart= 
+Variation19=Designator=R3|UniqueId=\KXADETFJ\AMNTUUST\PJFBVPCY\GCXQGTHE|Kind=0|AlternatePart= 
+Variation20=Designator=D2|UniqueId=\KXADETFJ\AMNTUUST\PJFBVPCY\PNPSTVGA|Kind=1|AlternatePart= 
+Variation21=Designator=R4|UniqueId=\KXADETFJ\AMNTUUST\PJFBVPCY\XRUEQYCR|Kind=0|AlternatePart= 
+Variation22=Designator=D3|UniqueId=\KXADETFJ\AMNTUUST\PJFBVPCY\NMAUHTUX|Kind=1|AlternatePart= 
+Variation23=Designator=R5|UniqueId=\KXADETFJ\AMNTUUST\PJFBVPCY\FFEJCVII|Kind=0|AlternatePart= 
+Variation24=Designator=D4|UniqueId=\KXADETFJ\AMNTUUST\PJFBVPCY\FTCASCAG|Kind=1|AlternatePart= 
+Variation25=Designator=R6|UniqueId=\KXADETFJ\AMNTUUST\PJFBVPCY\FPICRGEJ|Kind=0|AlternatePart= 
+Variation26=Designator=D5|UniqueId=\KXADETFJ\AMNTUUST\PJFBVPCY\AXIMAEXE|Kind=1|AlternatePart= 
+Variation27=Designator=R7|UniqueId=\KXADETFJ\AMNTUUST\PJFBVPCY\DOMPVKKN|Kind=0|AlternatePart= 
+Variation28=Designator=D6|UniqueId=\KXADETFJ\AMNTUUST\PJFBVPCY\TNYCPEBR|Kind=1|AlternatePart= 
+Variation29=Designator=J_V3|UniqueId=\KXADETFJ\AMNTUUST\PHVIHEUW\KEJUKHTP|Kind=1|AlternatePart= 
+Variation30=Designator=D7|UniqueId=\KXADETFJ\AMNTUUST\PHVIHEUW\FWKYAGSJ|Kind=1|AlternatePart= 
+Variation31=Designator=R12|UniqueId=\KXADETFJ\AMNTUUST\PHVIHEUW\PKCQAICI|Kind=0|AlternatePart= 
+Variation32=Designator=R13|UniqueId=\KXADETFJ\AMNTUUST\PHVIHEUW\XCWCQNBF|Kind=0|AlternatePart= 
+Variation33=Designator=D8|UniqueId=\KXADETFJ\AMNTUUST\PHVIHEUW\JLBPAKRE|Kind=1|AlternatePart= 
+Variation34=Designator=R38|UniqueId=\KXADETFJ\AMNTUUST\PHVIHEUW\FKQQCLMR|Kind=1|AlternatePart= 
+ParamVariationCount=0
+
 [GeneratedDocument1]
 DocumentPath=outputs\assembly_odb\assembly_odb.REP
 DItemRevisionGUID=
@@ -339,282 +398,278 @@ DocumentPath=outputs\assembly_test_point\assembly_test_point.ipc
 DItemRevisionGUID=
 
 [GeneratedDocument4]
-DocumentPath=outputs\board_bom\board_bom.csv
+DocumentPath=outputs\board_bom\board_bom.xlsx
 DItemRevisionGUID=
 
 [GeneratedDocument5]
-DocumentPath=.\outputs\board_bom\board_bom.xlsx
-DItemRevisionGUID=
-
-[GeneratedDocument6]
 DocumentPath=outputs\board_drc\board_drc.html
 DItemRevisionGUID=
 
-[GeneratedDocument7]
+[GeneratedDocument6]
 DocumentPath=outputs\board_gerber\board_gerber.EXTREP
 DItemRevisionGUID=
 
-[GeneratedDocument8]
+[GeneratedDocument7]
 DocumentPath=outputs\board_gerber\board_gerber.GBL
 DItemRevisionGUID=
 
-[GeneratedDocument9]
+[GeneratedDocument8]
 DocumentPath=outputs\board_gerber\board_gerber.GBO
 DItemRevisionGUID=
 
-[GeneratedDocument10]
+[GeneratedDocument9]
 DocumentPath=outputs\board_gerber\board_gerber.GBP
 DItemRevisionGUID=
 
-[GeneratedDocument11]
+[GeneratedDocument10]
 DocumentPath=outputs\board_gerber\board_gerber.GBS
 DItemRevisionGUID=
 
-[GeneratedDocument12]
+[GeneratedDocument11]
 DocumentPath=outputs\board_gerber\board_gerber.GD1
 DItemRevisionGUID=
 
-[GeneratedDocument13]
+[GeneratedDocument12]
 DocumentPath=outputs\board_gerber\board_gerber.GKO
 DItemRevisionGUID=
 
-[GeneratedDocument14]
+[GeneratedDocument13]
 DocumentPath=outputs\board_gerber\board_gerber.GM1
 DItemRevisionGUID=
 
-[GeneratedDocument15]
+[GeneratedDocument14]
 DocumentPath=outputs\board_gerber\board_gerber.GM2
 DItemRevisionGUID=
 
-[GeneratedDocument16]
+[GeneratedDocument15]
 DocumentPath=outputs\board_gerber\board_gerber.GM9
 DItemRevisionGUID=
 
-[GeneratedDocument17]
+[GeneratedDocument16]
 DocumentPath=outputs\board_gerber\board_gerber.GM16
 DItemRevisionGUID=
 
-[GeneratedDocument18]
+[GeneratedDocument17]
 DocumentPath=outputs\board_gerber\board_gerber.GTL
 DItemRevisionGUID=
 
-[GeneratedDocument19]
+[GeneratedDocument18]
 DocumentPath=outputs\board_gerber\board_gerber.GTO
 DItemRevisionGUID=
 
-[GeneratedDocument20]
+[GeneratedDocument19]
 DocumentPath=outputs\board_gerber\board_gerber.GTP
 DItemRevisionGUID=
 
-[GeneratedDocument21]
+[GeneratedDocument20]
 DocumentPath=outputs\board_gerber\board_gerber.GTS
 DItemRevisionGUID=
 
-[GeneratedDocument22]
+[GeneratedDocument21]
 DocumentPath=outputs\board_gerber\board_gerber.REP
 DItemRevisionGUID=
 
-[GeneratedDocument23]
+[GeneratedDocument22]
 DocumentPath=outputs\board_nc_drill\board_nc_drill.DRR
 DItemRevisionGUID=
 
-[GeneratedDocument24]
+[GeneratedDocument23]
 DocumentPath=outputs\board_nc_drill\board_nc_drill.LDP
 DItemRevisionGUID=
 
-[GeneratedDocument25]
+[GeneratedDocument24]
 DocumentPath=outputs\board_nc_drill\board_nc_drill.TXT
 DItemRevisionGUID=
 
-[GeneratedDocument26]
+[GeneratedDocument25]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\comp_+_bot\components
 DItemRevisionGUID=
 
-[GeneratedDocument27]
+[GeneratedDocument26]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\comp_+_top\components
 DItemRevisionGUID=
 
-[GeneratedDocument28]
+[GeneratedDocument27]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\eda\data
 DItemRevisionGUID=
 
-[GeneratedDocument29]
+[GeneratedDocument28]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\3d_body\features
 DItemRevisionGUID=
 
-[GeneratedDocument30]
+[GeneratedDocument29]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\bottom_layer\features
 DItemRevisionGUID=
 
-[GeneratedDocument31]
+[GeneratedDocument30]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\bottom_overlay\features
 DItemRevisionGUID=
 
-[GeneratedDocument32]
+[GeneratedDocument31]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\bottom_paste\features
 DItemRevisionGUID=
 
-[GeneratedDocument33]
+[GeneratedDocument32]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\bottom_solder\features
 DItemRevisionGUID=
 
-[GeneratedDocument34]
+[GeneratedDocument33]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\comp_+_bot\features
 DItemRevisionGUID=
 
-[GeneratedDocument35]
+[GeneratedDocument34]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\comp_+_top\features
 DItemRevisionGUID=
 
-[GeneratedDocument36]
+[GeneratedDocument35]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\dimension\features
 DItemRevisionGUID=
 
-[GeneratedDocument37]
+[GeneratedDocument36]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\drill\features
 DItemRevisionGUID=
 
-[GeneratedDocument38]
+[GeneratedDocument37]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\keep-out_layer\features
 DItemRevisionGUID=
 
-[GeneratedDocument39]
+[GeneratedDocument38]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\top_layer\features
 DItemRevisionGUID=
 
-[GeneratedDocument40]
+[GeneratedDocument39]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\top_overlay\features
 DItemRevisionGUID=
 
-[GeneratedDocument41]
+[GeneratedDocument40]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\top_paste\features
 DItemRevisionGUID=
 
-[GeneratedDocument42]
+[GeneratedDocument41]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\top_solder\features
 DItemRevisionGUID=
 
-[GeneratedDocument43]
+[GeneratedDocument42]
 DocumentPath=outputs\assembly_odb\odb\symbols\oval3.811x60.8976_135\features
 DItemRevisionGUID=
 
-[GeneratedDocument44]
+[GeneratedDocument43]
 DocumentPath=outputs\assembly_odb\odb\symbols\oval3.811x60.8976_225\features
 DItemRevisionGUID=
 
-[GeneratedDocument45]
+[GeneratedDocument44]
 DocumentPath=outputs\assembly_odb\odb\symbols\oval11.811x68.8976_135\features
 DItemRevisionGUID=
 
-[GeneratedDocument46]
+[GeneratedDocument45]
 DocumentPath=outputs\assembly_odb\odb\symbols\oval11.811x68.8976_225\features
 DItemRevisionGUID=
 
-[GeneratedDocument47]
+[GeneratedDocument46]
 DocumentPath=outputs\assembly_odb\odb\symbols\oval15.811x72.8976_135\features
 DItemRevisionGUID=
 
-[GeneratedDocument48]
+[GeneratedDocument47]
 DocumentPath=outputs\assembly_odb\odb\symbols\oval15.811x72.8976_225\features
 DItemRevisionGUID=
 
-[GeneratedDocument49]
+[GeneratedDocument48]
 DocumentPath=outputs\assembly_odb\odb\symbols\rect20x60_45\features
 DItemRevisionGUID=
 
-[GeneratedDocument50]
+[GeneratedDocument49]
 DocumentPath=outputs\assembly_odb\odb\symbols\rect20x60_135\features
 DItemRevisionGUID=
 
-[GeneratedDocument51]
+[GeneratedDocument50]
 DocumentPath=outputs\assembly_odb\odb\symbols\rect39.3701x51.1811_315\features
 DItemRevisionGUID=
 
-[GeneratedDocument52]
+[GeneratedDocument51]
 DocumentPath=outputs\assembly_odb\odb\symbols\rect41.3386x47.2441_135\features
 DItemRevisionGUID=
 
-[GeneratedDocument53]
+[GeneratedDocument52]
 DocumentPath=outputs\assembly_odb\odb\symbols\rect41.3386x47.2441_225\features
 DItemRevisionGUID=
 
-[GeneratedDocument54]
+[GeneratedDocument53]
 DocumentPath=outputs\assembly_odb\odb\symbols\rect41.3386x47.2441_315\features
 DItemRevisionGUID=
 
-[GeneratedDocument55]
+[GeneratedDocument54]
 DocumentPath=outputs\assembly_odb\odb\symbols\rect47.2441x60_45\features
 DItemRevisionGUID=
 
-[GeneratedDocument56]
+[GeneratedDocument55]
 DocumentPath=outputs\assembly_odb\odb\symbols\rect47.2441x60_135\features
 DItemRevisionGUID=
 
-[GeneratedDocument57]
+[GeneratedDocument56]
 DocumentPath=outputs\assembly_odb\odb\symbols\rect53.3701x65.1811_315\features
 DItemRevisionGUID=
 
-[GeneratedDocument58]
+[GeneratedDocument57]
 DocumentPath=outputs\assembly_odb\odb\symbols\rect55.3386x61.2441_135\features
 DItemRevisionGUID=
 
-[GeneratedDocument59]
+[GeneratedDocument58]
 DocumentPath=outputs\assembly_odb\odb\symbols\rect55.3386x61.2441_225\features
 DItemRevisionGUID=
 
-[GeneratedDocument60]
+[GeneratedDocument59]
 DocumentPath=outputs\assembly_odb\odb\symbols\rect55.3386x61.2441_315\features
 DItemRevisionGUID=
 
-[GeneratedDocument61]
+[GeneratedDocument60]
 DocumentPath=outputs\assembly_odb\odb\symbols\rect61.2441x74_45\features
 DItemRevisionGUID=
 
-[GeneratedDocument62]
+[GeneratedDocument61]
 DocumentPath=outputs\assembly_odb\odb\symbols\rect61.2441x74_135\features
 DItemRevisionGUID=
 
-[GeneratedDocument63]
+[GeneratedDocument62]
 DocumentPath=outputs\assembly_odb\odb\symbols\s47.2441_135\features
 DItemRevisionGUID=
 
-[GeneratedDocument64]
+[GeneratedDocument63]
 DocumentPath=outputs\assembly_odb\odb\symbols\s47.2441_315\features
 DItemRevisionGUID=
 
-[GeneratedDocument65]
+[GeneratedDocument64]
 DocumentPath=outputs\assembly_odb\odb\symbols\s61.2441_135\features
 DItemRevisionGUID=
 
-[GeneratedDocument66]
+[GeneratedDocument65]
 DocumentPath=outputs\assembly_odb\odb\symbols\s61.2441_315\features
 DItemRevisionGUID=
 
-[GeneratedDocument67]
+[GeneratedDocument66]
 DocumentPath=outputs\assembly_odb\odb\matrix\matrix
 DItemRevisionGUID=
 
-[GeneratedDocument68]
+[GeneratedDocument67]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\netlists\cadnet\netlist
 DItemRevisionGUID=
 
-[GeneratedDocument69]
+[GeneratedDocument68]
 DocumentPath=outputs\board_3dmodels\parasolid_3dmodel.x_t
 DItemRevisionGUID=
 
-[GeneratedDocument70]
+[GeneratedDocument69]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\profile
 DItemRevisionGUID=
 
-[GeneratedDocument71]
+[GeneratedDocument70]
 DocumentPath=outputs\board_3dmodels\step_3dmodel.step
 DItemRevisionGUID=
 
-[GeneratedDocument72]
+[GeneratedDocument71]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\stephdr
 DItemRevisionGUID=
 
-[GeneratedDocument73]
+[GeneratedDocument72]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\drill\tools
 DItemRevisionGUID=
 
@@ -623,8 +678,16 @@ Path=C:\Users\Vostro\Desktop\Hardware - Cópia\OBDH_Eng_Model_2_ALT\Sources\
 IncludeSubFolders=0
 
 [Parameter1]
+Name=DesignedBy
+Value=Andre M. P. Mattos
+
+[Parameter2]
 Name=ProductCode
 Value=OBDH2
+
+[Parameter3]
+Name=Revision
+Value=0.5
 
 [Configuration1]
 Name=Default Configuration
@@ -1427,36 +1490,6 @@ OutputName9=Specctra Design PCB
 OutputDocumentPath9=
 OutputVariantName9=
 OutputDefault9=0
-OutputType10=Ansoft Neutral
-OutputName10=Ansoft Neutral (AutoPCB)
-OutputDocumentPath10=
-OutputVariantName10=
-OutputDefault10=0
-OutputType11=HyperLynx
-OutputName11=HyperLynx (AutoPCB)
-OutputDocumentPath11=
-OutputVariantName11=
-OutputDefault11=0
-OutputType12=Orcad v7 Capture Design
-OutputName12=Orcad v7 Capture Design (AutoSCH)
-OutputDocumentPath12=
-OutputVariantName12=
-OutputDefault12=0
-OutputType13=P-CAD ASCII
-OutputName13=P-CAD ASCII (AutoPCB)
-OutputDocumentPath13=
-OutputVariantName13=
-OutputDefault13=0
-OutputType14=P-CAD V16 Schematic Design
-OutputName14=P-CAD V16 Schematic Design (AutoSCH)
-OutputDocumentPath14=
-OutputVariantName14=
-OutputDefault14=0
-OutputType15=SiSoft
-OutputName15=SiSoft (AutoPCB)
-OutputDocumentPath15=
-OutputVariantName15=
-OutputDefault15=0
 
 [OutputGroup10]
 Name=PostProcess Outputs
