@@ -41,6 +41,8 @@ The \autoref{fig:block-diagram-test} presents a simplified view of the module su
 
 \section{System Layers}
 
+As herein mentioned, the system is divided in various abstraction layers to favor high level firmware implementations. The \autoref{fig:system-layers} shows this scheme, which is composed of third-part drivers at the lowest layer above the hardware, the operating system as the base building block of the module, the devices handling implementation, and the application tasks in the highest layer. More details are provided in the \autoref{ch:firmware}.
+
 \begin{figure}[!ht]
     \begin{center}
         \includegraphics[width=0.4\textwidth]{figures/system_layers.pdf}
@@ -50,6 +52,14 @@ The \autoref{fig:block-diagram-test} presents a simplified view of the module su
 \end{figure}
 
 \section{Operation}
+
+The system operates through the sequencial execution of routines (tasks in the context of the operating system) that are scheduled and multiplexed along the time. Each routine has a priority and a periodicity, which determine the following execution, the set of functionalities currentely running, and the memory usage management. Besides this deterministic scheduling system, the routines have communication channels with each other through the usage of queues, which provides a robust synchorization scheme. In the \autoref{ch:firmware} the system operation and the internal nuances are described in detail. Then, this section use a top view user perspective to describe the module operation.
+
+\subsection{Execution Flow}
+% Add here a diagram showing a simple flowchart or use cases to represent how the OBDH works.  
+
+\subsection{Data Flow}
+% Add here a flowchart or diagram showing where and how the data is generated and transfered across diferent modules and peripherals.
 
 \subsection{Status LEDs} \label{sec:status-leds}
 
