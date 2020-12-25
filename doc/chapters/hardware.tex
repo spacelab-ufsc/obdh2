@@ -54,12 +54,14 @@ The OBDH 2.0 architecture focus on low-power operation and low-cost production, 
 
 \section{Interfaces}
 
+% Add jtag, daughterboard connector and update the interfaces/payload in the interface diagram
+
 The \autoref{fig:diagram-interfaces} presents the board interfaces, which consists of communication with other modules, debug access points, and internal peripherals. From the perspective of the microcontroller, there are 6 individual and shared communication buses and the JTAG interface, in the following scheme: A0-SPI (shared with Radio, TTC, and external memory chip); A1-UART (shared with redundant payloads); A2-UART (dedicated for debug); B0-I2C (dedicated for the payload); B1-I2C (dedicated for the EPS); B2-I2C (dedicated for the Antenna module). Currently, "\textit{Payload 1}" and "\textit{Payload 2}" are "\textit{Payload-X}" and "\textit{Payload EDC}" respectively.
 
 \begin{figure}[!ht]
     \begin{center}
         \includegraphics[width=\textwidth]{figures/diagram_interfaces.pdf}
-        \caption{Interfaces diagram. \textcolor{red}{need to add jtag, daughterboard connector and update the interfaces/payload}}
+        \caption{Interfaces diagram.}
         \label{fig:diagram-interfaces}
     \end{center}
 \end{figure}
@@ -90,7 +92,9 @@ The \autoref{fig:diagram-interfaces} presents the board interfaces, which consis
 
 The external interfaces are connected to the microcontroller using different connector types: EPS, TTC, Radio, and Payloads through PC-104; Antenna module with 6H header and 6P picoblade connectors; JTAG through 14H header and 6P picoblade connectors; and debug access using a dedicated 2H header and shared with the JTAG connectors. The following topics describe these interfaces and present the connectors pinout.
 
-\subsection{PC-104}
+\subsection{PC-104} \label{sec:pc104}
+
+% Synchronize nomenclature of the PC-104
 
 The connector referred as PC-104 is a junction of two double row 28H headers (\textit{SSW-126-04-G-D}). These connectors create a solid 104-pin interconnection across the different satellite modules. The \autoref{fig:pc-104-scheme} shows the PC-104 interface from the bottom side of the PCB, which allows visualize the simplified label scheme in the board. Also, the \autoref{tab:pc104-pins} provides the connector pinout\footnote{This pinout is simplified since additional interfaces were omitted. Refer to \textit{option sheet} in chapter \ref{ch:assembly}.} for the pins that are connected to the module. 
 
@@ -136,7 +140,7 @@ The connector referred as PC-104 is a junction of two double row 28H headers (\t
         51-52              & -                & -                & I2C\_1\_SCL   & -             \\
         \bottomrule[1.5pt]
     \end{tabular}
-    \caption{PC-104 connector pinout. \textcolor{red}{Synchronize nomenclature}}
+    \caption{PC-104 connector pinout.}
     \label{tab:pc104-pins}
 \end{table}
 
@@ -229,7 +233,7 @@ The interface with the microcontroller programmer is performed through external 
     \end{center}
 \end{figure}
 
-\subsection{Daughterboard}
+\subsection{Daughterboard} \label{sec:daughterboard-interface}
 
 The daughterboard interface uses the Samtec FSI-110-D connector \cite{fsi-conn}, which can be seen in the \autoref{fig:samtec-connector}. This connector has metal contacts in format of arcs that are flexible and four polymer guide pins (a pair for top and bottom). When the daughterboard is attached, there is some pressure to this metal contacts that bend and create a meaningful pin connection to the daughterboard copper pads\footnote{These daughterboard pads are similar to the ones used as footprint in the OBDH, despite a slightly bigger size.}. A picture of this connector on the PCB can be seen in \autoref{fig:daughterboard-connector}.
 
@@ -476,7 +480,7 @@ The watchdog timer task clears the TPS3823 timer by toggling the WDI pin at ever
 
 \section{Non-Volatile Memory}
 
-The non-volatile memory model is the Micron MT25QL01GBBB, which is composed by a NOR flash architecture with 1 Gb of capacity (or 128 MB) and features extended SPI configurations. As can be seen in \autoref{fig:diagram-interfaces}, a SPI bus is used to communicate with this peripheral, using the \autoref{tab:usci-a0-config} configurations. Also, there are some control pins that are connected to microcontroller GPIOs: HOLD\#, RESET\#, and W\#. 
+The non-volatile memory model is the Micron MT25QL01GBBB, which is composed by a NOR flash architecture with 1 Gb of capacity (or 128 MB) and features extended SPI configurations. As can be seen in \autoref{fig:diagram-interfaces}, a SPI bus is used to communicate with this peripheral, using the \autoref{tab:usci-config} configurations. Also, there are some control pins that are connected to microcontroller GPIOs: HOLD\#, RESET\#, and W\#. 
 
 When RESET\# is driven LOW, the device is reset and the outputs are tri-stated. The HOLD\# signal pauses serial communications without deselecting or resetting the device, consequently outputs are tri-stated and inputs are ignored. The W\# signal handles as a write protection, which freezes the status register, turning its non-volatile bits read-only and preventing the write operation to be executed.
 
