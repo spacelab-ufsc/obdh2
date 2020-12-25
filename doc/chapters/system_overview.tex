@@ -29,13 +29,13 @@ The board has a MSP430 low-power microcontroller that runs the firmware applicat
 
 \section{Block Diagram}
 
-The \autoref{fig:block-diagram-test} presents a simplified view of the module subsystems and interfaces. The microcontroller has a programming JTAG and 6 communication buses, divided in 3 different protocols (I2C, SPI and UART), that are shared between all the peripherals and external interfaces. Besides this channels, there are GPIO connections for various functions, from control ports to status pins. There is a non-volatile memory device to store the satellite data frames and critical status indicators. There are buffers and transceivers intended to allow secure and proper communication with external modules. A watchdog timer with voltage monitor and a current sensor are attached to the system for improving the overall reliability and generating essential housekeeping data. There is a generic daughterboard interface for extending the module capabilities with an auxiliary application board. Also, directly connected to the microcontroller, there is a UART debug interface. More details and descriptions about these components and interfaces are provided in the \autoref{ch:hardware}. 
+The \autoref{fig:block-diagram} presents a simplified view of the module subsystems and interfaces. The microcontroller has a programming JTAG and 6 communication buses, divided in 3 different protocols (I2C, SPI and UART), that are shared between all the peripherals and external interfaces. Besides this channels, there are GPIO connections for various functions, from control ports to status pins. There is a non-volatile memory device to store the satellite data frames and critical status indicators. There are buffers and transceivers intended to allow secure and proper communication with external modules. A watchdog timer with voltage monitor and a current sensor are attached to the system for improving the overall reliability and generating essential housekeeping data. There is a generic daughterboard interface for extending the module capabilities with an auxiliary application board. Also, directly connected to the microcontroller, there is a UART debug interface. More details and descriptions about these components and interfaces are provided in the \autoref{ch:hardware}. 
 
 \begin{figure}[!ht]
     \begin{center}
         \includegraphics[width=\textwidth]{figures/block_diagram.pdf}
         \caption{OBDH 2.0 Block diagram.}
-        \label{fig:block-diagram-test}
+        \label{fig:block-diagram}
     \end{center}
 \end{figure}
 
