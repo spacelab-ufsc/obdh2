@@ -56,7 +56,7 @@ The OBDH 2.0 architecture focus on low-power operation and low-cost production, 
 
 % Add jtag, daughterboard connector and update the interfaces/payload in the interface diagram
 
-The \autoref{fig:diagram-interfaces} presents the board interfaces, which consists of communication with other modules, debug access points, and internal peripherals. From the perspective of the microcontroller, there are 6 individual and shared communication buses and the JTAG interface, in the following scheme: A0-SPI (shared with Radio, TTC, and external memory chip); A1-UART (shared with redundant payloads); A2-UART (dedicated for debug); B0-I2C (dedicated for the payload); B1-I2C (dedicated for the EPS); B2-I2C (dedicated for the Antenna module). Currently, "\textit{Payload 1}" and "\textit{Payload 2}" are "\textit{Payload-X}" and "\textit{Payload EDC}" respectively.
+The \autoref{fig:diagram-interfaces} presents the board interfaces, which consists of communication with other modules, debug access points, and internal peripherals. From the perspective of the microcontroller, there are 6 individual and shared communication buses and the JTAG interface, in the following scheme: A0-SPI (shared with Radio, TTC, and external memory chip); A1-UART (shared with redundant payloads); A2-UART (dedicated for debug); B0-I2C (dedicated for the payload); B1-I2C (dedicated for the EPS); B2-I2C (dedicated for the Antenna module). Currently, "\textit{Payload 1}" and "\textit{Payload 2}" are "\textit{Payload-X}" and "\textit{Payload EDC\nomenclature{\textbf{EDC}}{\textit{Environmental Data Collector.}}}" respectively.
 
 \begin{figure}[!ht]
     \begin{center}
@@ -78,7 +78,8 @@ The \autoref{fig:diagram-interfaces} presents the board interfaces, which consis
         Payload port            & A1            & UART              & -\footnotemark \\
         PC (log messages)       & A2            & UART              & ANSI messages \\
         Payload port            & B0            & I$^{2}$C          & -\footnotemark \\
-        EPS                     & B1            & I$^{2}$C          & CSP \\
+        EPS                     & B1            & I$^{2}$C          & CSP\nomenclature{\textbf{CSP}}{\textit{CubeSat Space Protocol.}}
+ \\
         Antenna Module          & B2            & I$^{2}$C          & \\
         \bottomrule[1.5pt]
     \end{tabular}
@@ -253,7 +254,7 @@ The daughterboard interface uses the Samtec FSI-110-D connector \cite{fsi-conn},
     \end{center}
 \end{figure}
 
-The pinout of the daughterboard interface are available in the \autoref{tab:daugtherboard-connector-pins}. There are different power supply lines (OBDH, Antenna, and battery), communication buses (I2C and SPI), GPIO, and ADC interfaces available. Besides the GPIO and ADC pins, the other interfaces are shared with other modules and peripherals.
+The pinout of the daughterboard interface are available in the \autoref{tab:daugtherboard-connector-pins}. There are different power supply lines (OBDH, Antenna, and battery), communication buses (I2C and SPI), GPIO, and ADC\nomenclature{\textbf{ADC}}{\textit{Analog-to-Digital Converter.}} interfaces available. Besides the GPIO and ADC pins, the other interfaces are shared with other modules and peripherals.
 
 \begin{table}[!h]
     \centering
@@ -324,7 +325,7 @@ The OBDH 2.0 uses a low-power and low-cost microcontroller family from Texas Ins
 
 \subsection{Interfaces Configuration}
 
-The microcontroller has 6 Universal Serial Communication Interfaces (USCI) that can be configured to operate with different protocols and parameters. These interfaces are connected to different modules and peripherals, as presented in the \autoref{fig:diagram-interfaces}. The \autoref{tab:usci-config} describes each interface configurations.
+The microcontroller has 6 Universal Serial Communication Interfaces (USCI\nomenclature{\textbf{USCI}}{\textit{Universal Serial Communication Interfaces.}}) that can be configured to operate with different protocols and parameters. These interfaces are connected to different modules and peripherals, as presented in the \autoref{fig:diagram-interfaces}. The \autoref{tab:usci-config} describes each interface configurations.
 
 \begin{table}[!h]
     \centering
@@ -464,7 +465,7 @@ An illustration of the microcontroller pinout positions can be seen in the \auto
 
 \section{External Watchdog}
 
-Additionally to the internal watchdog timer of the microcontroller, to ensure a system reset in case of a software freeze, an external watchdog circuit is being used. For that, the TPS3823 IC from Texas Instruments \cite{tps382x} was chosen. This IC is a voltage monitor with a watchdog timer feature. This circuit can be seen in the \autoref{fig:ext-wdt-circuit}.
+Additionally to the internal watchdog timer of the microcontroller, to ensure a system reset in case of a software freeze, an external watchdog circuit is being used. For that, the TPS3823 IC\nomenclature{\textbf{IC}}{\textit{Integrated Circuit.}} from Texas Instruments \cite{tps382x} was chosen. This IC is a voltage monitor with a watchdog timer feature. This circuit can be seen in the \autoref{fig:ext-wdt-circuit}.
 
 This circuit works this way: if the WDI pin remains high or low longer than the timeout period, then reset is triggered. The timer clears when reset is asserted or when WDI sees a rising edge or a falling edge.
 
@@ -509,7 +510,7 @@ The buffer selected for this function is the Texas Instruments TCA4311 device. B
 
 \section{RS-485 Transceiver}
 
-The module features an RS-485 interface, which is connected to a 4H header (P8). This interface uses a transceiver (THVD1451) to convert the incoming RS-485 signals to UART and vice-versa. The outputs are 120 ohm differential pairs that have termination resistors before connecting to the header pins.
+The module features an RS-485 interface, which is connected to a 4H header (P8). This interface uses a transceiver (THVD1451) to convert the incoming RS-485 signals to UART and vice-versa. The outputs are $120\ \Omega$ differential pairs that have termination resistors before connecting to the header pins.
 
 \begin{figure}[!ht]
     \begin{center}
@@ -521,4 +522,4 @@ The module features an RS-485 interface, which is connected to a 4H header (P8).
 
 \section{Voltage and Current Sensors}
 
-In order to monitor the board overall current and voltage, the module have a current sensor using a Maxim Integrated IC (MAX9934) and a buffered voltage divider circuit with a Texas Instruments IC (TLV341A). These circuits have direct analog outputs that are connected to ADC inputs. The microcontroller internal ADC peripheral has a dedicated input for a voltage reference, which is connected to the REF5030A IC. This device generates a precise 3V output that enhances the measures and convertions performed by the microcontroller.
+In order to monitor the board overall current and voltage, the module have a current sensor using a Maxim Integrated IC (MAX9934) and a buffered voltage divider circuit with a Texas Instruments IC (TLV341A). These circuits have direct analog outputs that are connected to ADC inputs. The microcontroller internal ADC peripheral has a dedicated input for a voltage reference, which is connected to the REF5030A IC. This device generates a precise $3\ V$ output that enhances the measures and convertions performed by the microcontroller.
