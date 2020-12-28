@@ -56,7 +56,7 @@ The OBDH 2.0 architecture focus on low-power operation and low-cost production, 
 
 % Add jtag, daughterboard connector and update the interfaces/payload in the interface diagram
 
-The \autoref{fig:diagram-interfaces} presents the board interfaces, which consists of communication with other modules, debug access points, and internal peripherals. From the perspective of the microcontroller, there are 6 individual and shared communication buses and the JTAG interface, in the following scheme: A0-SPI (shared with Radio, TTC, and external memory chip); A1-UART (shared with redundant payloads); A2-UART (dedicated for debug); B0-I2C (dedicated for the payload); B1-I2C (dedicated for the EPS); B2-I2C (dedicated for the Antenna module). Currently, "\textit{Payload 1}" and "\textit{Payload 2}" are "\textit{Payload-X}" and "\textit{Payload EDC\nomenclature{\textbf{EDC}}{\textit{Environmental Data Collector.}}}" respectively.
+The \autoref{fig:diagram-interfaces} presents the board interfaces, which consists of communication with other modules, debug access points, and internal peripherals. From the perspective of the microcontroller, there are 6 individual and shared communication buses and the JTAG interface, in the following scheme: A0-SPI (shared with Radio, TTC, and external memory chip); A1-UART (shared with redundant payloads); A2-UART (dedicated for debug); B0-I2C (dedicated for the payload); B1-I2C (dedicated for the EPS); B2-I2C (dedicated for the Antenna module). Currently, ``\textit{Payload 1}'' and ``\textit{Payload 2}'' are ``\textit{Payload-X}'' and ``\textit{Payload EDC\nomenclature{\textbf{EDC}}{\textit{Environmental Data Collector.}}}'' respectively.
 
 \begin{figure}[!ht]
     \begin{center}
@@ -350,7 +350,7 @@ The microcontroller has 6 Universal Serial Communication Interfaces (USCI\nomenc
 
 \subsection{Clocks Configuration}
 
-Besides the internal clock sources, the microcontroller has two dedicated clock inputs for external crystals: the main clock and the auxiliary clock inputs. There are a 32MHz crystal and a 32.769kHz connected to these inputs, respectively. The first source is used for generating the Master Clock (MCLK) and the Subsystem Master Clock (SMCLK), which are used by the CPU and the internal peripheral modules. The second source is used for generating the Auxiliary Clock (ACLK) that handles the low-power modes and might be used for peripherals.
+Besides the internal clock sources, the microcontroller has two dedicated clock inputs for external crystals: the main clock and the auxiliary clock inputs. There are a $32\ MHz$ crystal and a $32.769\ kHz$ connected to these inputs, respectively. The first source is used for generating the Master Clock (MCLK) and the Subsystem Master Clock (SMCLK), which are used by the CPU and the internal peripheral modules. The second source is used for generating the Auxiliary Clock (ACLK) that handles the low-power modes and might be used for peripherals.
 
 \subsection{Pinout}
 
@@ -469,7 +469,7 @@ Additionally to the internal watchdog timer of the microcontroller, to ensure a 
 
 This circuit works this way: if the WDI pin remains high or low longer than the timeout period, then reset is triggered. The timer clears when reset is asserted or when WDI sees a rising edge or a falling edge.
 
-The watchdog timer task clears the TPS3823 timer by toggling the WDI pin at every 100 ms. If the WDI pin state stays unmodified for more than 1600 ms, the reset pin is cleared and the microcontroller is reseted.
+The watchdog timer task clears the TPS3823 timer by toggling the WDI pin at every $100\ ms$. If the WDI pin state stays unmodified for more than $1600\ ms$, the reset pin is cleared and the microcontroller is reseted.
 
 \begin{figure}[!ht]
     \begin{center}
