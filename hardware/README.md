@@ -63,6 +63,10 @@ The board design is a microcontroller based hardware connecting different interf
 
 ## Development
 
+#### Manufacture
+
+The folder [fabrication](https://github.com/spacelab-ufsc/obdh2/tree/master/hardware/fabrication) contain 3 "ready to go" files: the gerbers and nc_drills for manufacturing the board, the BOM with all required components, and the pick_place file for automated assembly. Additional files are avaliable in the [outputs](https://github.com/spacelab-ufsc/obdh2/tree/master/hardware/outputs) folder, which contain several useful files and documents, such as: 3D models, bill of materials, schematics, layout prints, and draftsman.
+
 #### Assembly
 
 The board has components that should not be soldered simultaneously. Refer to the [documentation](https://github.com/spacelab-ufsc/obdh2/tree/master/doc) in the "Assembly" chapter.
