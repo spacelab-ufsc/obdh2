@@ -18,6 +18,9 @@
     <a href="https://github.com/spacelab-ufsc/obdh2/commits/master">
         <img alt="GitHub last commit (branch)" src="https://img.shields.io/github/last-commit/spacelab-ufsc/obdh2/dev_hardware?style=for-the-badge">
     </a>
+    <a href="https://github.com/spacelab-ufsc/obdh2/issues">
+        <img alt="GitHub last commit (branch)" src="https://img.shields.io/github/issues/spacelab-ufsc/obdh2/hardware?style=for-the-badge">
+    </a>
     <a href="">
         <img src="https://img.shields.io/badge/CAD%20tool-altium%20v19.2-yellow?style=for-the-badge">
     </a>
