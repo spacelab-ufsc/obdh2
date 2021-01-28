@@ -1,12 +1,35 @@
 /*
- * brief PHJ driver definition.
+ * phj.h
  * 
- * Author: João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
+ * Copyright (C) 2021, SpaceLab.
  * 
- * Date: 30/03/2020
+ * This file is part of OBDH 2.0.
  * 
- * Issue #128
- *
+ * OBDH 2.0 is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * OBDH 2.0 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+
+/*
+ * \brief PHJ driver definition.
+ * 
+ * \author João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
+ * 
+ * \date 2020/03/30
+ * 
+ * \defgroup phj Payload Joinville
+ * \ingroup drivers
+ * \{
  */
 
 #ifndef PHJ_H_
@@ -46,3 +69,5 @@ int phj_check_converter();
 int phj_check_message();
 
 #endif /* PHJ_H_ */
+
+/** \} End of phj group */
