@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.1
+ * \version 0.5.2
  * 
  * \date 11/07/2020
  * 
@@ -66,13 +66,22 @@ int current_sensor_init();
 int current_sensor_read_raw(uint16_t *cur);
 
 /**
- * \brief Reads the current from the current sensor.
+ * \brief Converts a raw reading of the current sensor to a real current in mA.
+ *
+ * \param[in] raw is the raw reading of the current sensor.
+ *
+ * \return The converted current in mA.
+ */
+float current_sensor_raw_to_ma(uint16_t raw);
+
+/**
+ * \brief Reads the current from the current sensor in mA.
  *
  * \param[in,out] cur is a pointer to store the read current in mA.
  *
  * \return The status/error code.
  */
-int current_sensor_read(float *cur);
+int current_sensor_read_ma(float *cur);
 
 #endif /* CURRENT_SENSOR_H_ */
 

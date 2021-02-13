@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.1
+ * \version 0.5.2
  * 
  * \date 11/07/2020
  * 
@@ -53,7 +53,7 @@ int current_sensor_init()
     }
 
     uint16_t cur = 0;
-    if (current_sensor_read(&cur) != 0)
+    if (current_sensor_read_ma(&cur) != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, CURRENT_SENSOR_MODULE_NAME, "Error reading the current value!");
         sys_log_new_line();
@@ -74,7 +74,12 @@ int current_sensor_read_raw(uint16_t *val)
     return adc_read(CURRENT_SENSOR_ADC_PORT, val);
 }
 
-int current_sensor_read(float *cur)
+float current_sensor_raw_to_ma(uint16_t raw)
+{
+    return 1000*raw*(ADC_AVCC/(ADC_RANGE*CURRENT_SENSOR_RL_VALUE_OHM*CURRENT_SENSOR_GAIN*CURRENT_SENSOR_RSENSE_VALUE_OHM));
+}
+
+int current_sensor_read_ma(float *cur)
 {
     uint16_t raw_cur = 0;
 
@@ -86,7 +91,7 @@ int current_sensor_read(float *cur)
         return -1;
     }
 
-    *cur = (uint16_t)(1000*raw_cur*(ADC_AVCC/(ADC_RANGE*CURRENT_SENSOR_RL_VALUE_OHM*CURRENT_SENSOR_GAIN*CURRENT_SENSOR_RSENSE_VALUE_OHM)));
+    *cur = current_sensor_raw_to_ma(raw_cur);
 
     return 0;
 }
