@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.2
+ * \version 0.5.6
  * 
  * \date 11/07/2020
  * 
@@ -54,7 +54,7 @@
  *
  * \return The status/error code.
  */
-int current_sensor_init();
+int current_sensor_init(void);
 
 /**
  * \brief Reads the raw current from the current sensor.
@@ -72,7 +72,7 @@ int current_sensor_read_raw(uint16_t *cur);
  *
  * \return The converted current in mA.
  */
-float current_sensor_raw_to_ma(uint16_t raw);
+uint16_t current_sensor_raw_to_ma(uint16_t raw);
 
 /**
  * \brief Reads the current from the current sensor in mA.
@@ -81,7 +81,7 @@ float current_sensor_raw_to_ma(uint16_t raw);
  *
  * \return The status/error code.
  */
-int current_sensor_read_ma(float *cur);
+int current_sensor_read_ma(uint16_t *cur);
 
 #endif /* CURRENT_SENSOR_H_ */
 

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.2
+ * \version 0.5.6
  * 
  * \date 11/07/2020
  * 
@@ -39,12 +39,14 @@
 
 #include "current_sensor.h"
 
-int current_sensor_init()
+int current_sensor_init(void)
 {
     sys_log_print_event_from_module(SYS_LOG_INFO, CURRENT_SENSOR_MODULE_NAME, "Initializing the current sensor...");
     sys_log_new_line();
 
-    if (adc_init(CURRENT_SENSOR_ADC_PORT, (adc_config_t){}) != 0)
+    adc_config_t cur_sense_adc_config = {0};
+
+    if (adc_init(CURRENT_SENSOR_ADC_PORT, cur_sense_adc_config) != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, CURRENT_SENSOR_MODULE_NAME, "Error initializing the current sensor!");
         sys_log_new_line();
@@ -74,12 +76,12 @@ int current_sensor_read_raw(uint16_t *val)
     return adc_read(CURRENT_SENSOR_ADC_PORT, val);
 }
 
-float current_sensor_raw_to_ma(uint16_t raw)
+uint16_t current_sensor_raw_to_ma(uint16_t raw)
 {
-    return 1000*raw*(ADC_AVCC/(ADC_RANGE*CURRENT_SENSOR_RL_VALUE_OHM*CURRENT_SENSOR_GAIN*CURRENT_SENSOR_RSENSE_VALUE_OHM));
+    return (uint16_t)(1000*raw*(ADC_AVCC/(ADC_RANGE*CURRENT_SENSOR_RL_VALUE_OHM*CURRENT_SENSOR_GAIN*CURRENT_SENSOR_RSENSE_VALUE_OHM)));
 }
 
-int current_sensor_read_ma(float *cur)
+int current_sensor_read_ma(uint16_t *cur)
 {
     uint16_t raw_cur = 0;
 
