@@ -1,7 +1,7 @@
 /*
- * version.h
+ * adc_wrap.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -21,29 +21,48 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief ADC driver wrap implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.5.3
  * 
- * \date 25/10/2019
+ * \date 2021/02/13
  * 
- * \defgroup version Version control
+ * \addtogroup adc_wrap
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <setjmp.h>
+#include <float.h>
+#include <cmocka.h>
 
-#define FIRMWARE_VERSION            "0.5.3"
+#include "adc_wrap.h"
 
-#define FIRMWARE_STATUS             "Development"
+int __wrap_adc_init(adc_port_t port, adc_config_t config)
+{
+    check_expected(port);
 
-#define FIRMWARE_AUTHOR             "SpaceLab"
+    return 0;
+}
 
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
+int __wrap_adc_read(adc_port_t port, uint16_t *val)
+{
+    uint16_t adc_val;
 
-#endif /* VERSION_H_ */
+    check_expected(port);
 
-/** \} End of version group */
+    adc_val = mock_type(uint16_t);
+
+    if (val != NULL)
+    {
+        *val = adc_val;
+    }
+
+    return 0;
+}
+
+/** \} End of adc_wrap group */
