@@ -1,0 +1,3 @@
+*.o
+current_sensor_unit_test
+voltage_sensor_unit_test
