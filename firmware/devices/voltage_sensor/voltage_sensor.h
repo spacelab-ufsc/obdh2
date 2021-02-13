@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.2
+ * \version 0.5.8
  * 
  * \date 11/07/2020
  * 
@@ -51,7 +51,7 @@
  *
  * \return The status/error code.
  */
-int voltage_sensor_init();
+int voltage_sensor_init(void);
 
 /**
  * \brief Reads the raw voltage from the voltage sensor.
@@ -63,13 +63,22 @@ int voltage_sensor_init();
 int voltage_sensor_read_raw(uint16_t *val);
 
 /**
- * \brief Reads the voltage from the voltage sensor.
+ * \brief Converts a raw reading of the voltage sensor to a real voltage in mV.
+ *
+ * \param[in] raw is the raw reading of the voltage sensor.
+ *
+ * \return The converted voltage in mV.
+ */
+uint16_t voltage_sensor_raw_to_mv(uint16_t raw);
+
+/**
+ * \brief Reads the voltage from the voltage sensor in mV.
  *
  * \param[in,out] volt is a pointer to store the read voltage in mV.
  *
  * \return The status/error code.
  */
-int voltage_sensor_read(uint16_t *volt);
+int voltage_sensor_read_mv(uint16_t *volt);
 
 #endif /* VOLTAGE_SENSOR_H_ */
 
