@@ -1,7 +1,7 @@
 /*
  * sys_log_mutes.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  *
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  *
- * \version 0.3.11
+ * \version 0.5.5
  *
  * \date 03/11/2019
  *
@@ -33,6 +33,9 @@
  * \ingroup sys_log
  * \{
  */
+
+#include <FreeRTOS.h>
+#include <semphr.h>
 
 #include "sys_log.h"
 #include "sys_log_config.h"
