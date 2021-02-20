@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.5.14
  * 
- * \date 01/11/2019
+ * \date 2019/11/01
  * 
  * \addtogroup watchdog
  * \{
@@ -38,7 +38,7 @@
 
 #include "watchdog.h"
 
-int watchdog_init()
+int watchdog_init(void)
 {
     wdt_config_t int_wdt;
 
@@ -52,7 +52,7 @@ int watchdog_init()
     return wdt_init(int_wdt) | tps382x_init(ext_wdt);
 }
 
-void watchdog_reset()
+void watchdog_reset(void)
 {
     wdt_reset();
 
