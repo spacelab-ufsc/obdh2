@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.9
+ * \version 0.5.15
  * 
- * \date 01/02/2020
+ * \date 2020/02/01
  * 
  * \defgroup isis_antenna ISIS antenna
  * \ingroup drivers
@@ -139,21 +139,21 @@ typedef struct
  *
  * \return The status/error code.
  */
-int isis_antenna_init();
+int isis_antenna_init(void);
 
 /**
  * \brief Arm the antenna module.
  *
  * \return None.
  */
-bool isis_antenna_arm();
+bool isis_antenna_arm(void);
 
 /**
  * \brief Disarm the antenna module.
  *
  * \return None.
  */
-bool isis_antenna_disarm();
+bool isis_antenna_disarm(void);
 
 /**
  * \brief Executes a sequential deployment.
@@ -197,7 +197,7 @@ void isis_antenna_start_independent_deploy(uint8_t ant, uint8_t sec, uint8_t ovr
  *
  * \return The deployment status code (2 bytes).
  */
-uint16_t isis_antenna_read_deployment_status_code();
+uint16_t isis_antenna_read_deployment_status_code(void);
 
 /**
  * \brief Reads the deployment status.
@@ -206,7 +206,7 @@ uint16_t isis_antenna_read_deployment_status_code();
  *
  * \return The deployment status bits.
  */
-isis_antenna_status_t isis_antenna_read_deployment_status();
+isis_antenna_status_t isis_antenna_read_deployment_status(void);
 
 /**
  * \brief Gets the status of antenna.
@@ -276,14 +276,30 @@ uint8_t isis_antenna_get_burning(uint8_t ant);
  *
  * \return TRUE/FALSE if the antenna is armed or not.
  */
-bool isis_antenna_get_arming_status();
+bool isis_antenna_get_arming_status(void);
+
+/**
+ * \brief Gets the current raw temperature value.
+ *
+ * \return The read raw temperature.
+ */
+uint16_t isis_antenna_get_raw_temperature(void);
+
+/**
+ * \brief Converts a raw temperature reading to a real temperature.
+ *
+ * \param[in] raw is the raw temperature to convert.
+ *
+ * \return The converted temperature in Celsius.
+ */
+int16_t isis_antenna_raw_to_temp_c(uint16_t raw);
 
 /**
  * \brief Gets the temperature of the antenna module.
  *
- * \return The raw temperature value of the antenna system.
+ * \return The temperature value of the antenna system in Celsius.
  */
-uint16_t isis_antenna_get_temperature();
+int16_t isis_antenna_get_temperature(void);
 
 /**
  * \brief Seconds delay.
