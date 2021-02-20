@@ -1,7 +1,7 @@
 /*
  * antenna.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.12
+ * \version 0.5.16
  * 
- * \date 01/11/2019
+ * \date 2019/11/01
  * 
  * \addtogroup antenna
  * \{
@@ -53,17 +53,30 @@ int antenna_init()
         return -1;
     }
 
+    isis_antenna_status_t status = {0};
+
+    if (isis_antenna_read_deployment_status(&status) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "Error reading the antenna status!");
+        sys_log_new_line();
+
+        return -1;
+    }
+
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 1 status=");
-    sys_log_print_msg(isis_antenna_get_antenna_status(ISIS_ANTENNA_ANT_1) == ISIS_ANTENNA_STATUS_DEPLOYED ? "DEPLOYED" : "NOT DEPLOYED");
+    sys_log_print_msg(status.antenna_1.status == ISIS_ANTENNA_STATUS_DEPLOYED ? "DEPLOYED" : "NOT DEPLOYED");
     sys_log_new_line();
+
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 2 status=");
-    sys_log_print_msg(isis_antenna_get_antenna_status(ISIS_ANTENNA_ANT_2) == ISIS_ANTENNA_STATUS_DEPLOYED ? "DEPLOYED" : "NOT DEPLOYED");
+    sys_log_print_msg(status.antenna_2.status == ISIS_ANTENNA_STATUS_DEPLOYED ? "DEPLOYED" : "NOT DEPLOYED");
     sys_log_new_line();
+
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 3 status=");
-    sys_log_print_msg(isis_antenna_get_antenna_status(ISIS_ANTENNA_ANT_3) == ISIS_ANTENNA_STATUS_DEPLOYED ? "DEPLOYED" : "NOT DEPLOYED");
+    sys_log_print_msg(status.antenna_3.status == ISIS_ANTENNA_STATUS_DEPLOYED ? "DEPLOYED" : "NOT DEPLOYED");
     sys_log_new_line();
+
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 4 status=");
-    sys_log_print_msg(isis_antenna_get_antenna_status(ISIS_ANTENNA_ANT_4) == ISIS_ANTENNA_STATUS_DEPLOYED ? "DEPLOYED" : "NOT DEPLOYED");
+    sys_log_print_msg(status.antenna_4.status == ISIS_ANTENNA_STATUS_DEPLOYED ? "DEPLOYED" : "NOT DEPLOYED");
     sys_log_new_line();
 
     return 0;

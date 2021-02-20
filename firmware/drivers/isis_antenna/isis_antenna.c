@@ -1,7 +1,7 @@
 /*
  * isis_antenna.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.15
+ * \version 0.5.16
  * 
  * \date 2020/02/01
  * 
@@ -40,54 +40,85 @@
 
 int isis_antenna_init(void)
 {
-    return i2c_init(ISIS_ANTENNA_I2C_PORT, (i2c_config_t){.speed_hz=ISIS_ANTENNA_I2C_CLOCK_HZ});
+    i2c_config_t conf = {0};
+
+    conf.speed_hz = ISIS_ANTENNA_I2C_CLOCK_HZ;
+
+    return i2c_init(ISIS_ANTENNA_I2C_PORT, conf);
 }
 
-bool isis_antenna_arm(void)
+int isis_antenna_arm(void)
 {
     uint8_t cmd = ISIS_ANTENNA_CMD_ARM;
 
     if (i2c_write(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, &cmd, 1) != 0)
     {
-        return false;
+        return -1;
     }
 
     isis_antenna_delay_ms(100);
 
-    return isis_antenna_get_arming_status();
+    bool armed = false;
+
+    if (isis_antenna_get_arming_status(&armed) != 0)
+    {
+        return -1;
+    }
+
+    if (armed != true)
+    {
+        return -1;
+    }
+
+    return 0;
 }
 
-bool isis_antenna_disarm(void)
+int isis_antenna_disarm(void)
 {
     uint8_t cmd = ISIS_ANTENNA_CMD_DISARM;
+
     if (i2c_write(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, &cmd, 1) != 0)
     {
-        return false;
+        return -1;
     }
 
     isis_antenna_delay_ms(100);
 
-    return isis_antenna_get_arming_status() ? false : true;
+    bool armed = true;
+
+    if (isis_antenna_get_arming_status(&armed) != 0)
+    {
+        return -1;
+    }
+
+    if (armed != false)
+    {
+        return -1;
+    }
+
+    return 0;
 }
 
-void isis_antenna_start_sequential_deploy(uint8_t sec)
+int isis_antenna_start_sequential_deploy(uint8_t sec)
 {
-    uint8_t cmd[2];
+    uint8_t cmd[2] = {0};
 
     cmd[0] = ISIS_ANTENNA_CMD_DEPLOY_SEQUENTIAL;
     cmd[1] = sec;
 
     if (i2c_write(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, cmd, 2) != 0)
     {
-        return;
+        return -1;
     }
 
     isis_antenna_delay_ms(100);
+
+    return 0;
 }
 
-void isis_antenna_start_independent_deploy(uint8_t ant, uint8_t sec, uint8_t ovr)
+int isis_antenna_start_independent_deploy(uint8_t ant, uint8_t sec, uint8_t ovr)
 {
-    uint8_t cmd[2];
+    uint8_t cmd[2] = {0};
 
     cmd[1] = sec;
 
@@ -109,9 +140,10 @@ void isis_antenna_start_independent_deploy(uint8_t ant, uint8_t sec, uint8_t ovr
                 break;
             default:
                 cmd[0] = ISIS_ANTENNA_CMD_DISARM;
+                return -1;
         }
     }
-    else
+    else if (ovr == ISIS_ANTENNA_INDEPENDENT_DEPLOY_WITHOUT_OVERRIDE)
     {
         switch(ant)
         {
@@ -129,25 +161,33 @@ void isis_antenna_start_independent_deploy(uint8_t ant, uint8_t sec, uint8_t ovr
                 break;
             default:
                 cmd[0] = ISIS_ANTENNA_CMD_DISARM;
+                return -1;
         }
+    }
+    else
+    {
+        return -1;
     }
 
     if (i2c_write(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, cmd, 2) != 0)
     {
-        return;
+        return -1;
     }
 
     isis_antenna_delay_ms(100);
+
+    return 0;
 }
 
-uint16_t isis_antenna_read_deployment_status_code(void)
+int isis_antenna_read_deployment_status_code(uint16_t *status)
 {
     uint16_t status_code = ISIS_ANTENNA_STATUS_MASK;    /* Initial state */
 
     uint8_t cmd = ISIS_ANTENNA_CMD_REPORT_DEPLOY_STATUS;
+
     if (i2c_write(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, &cmd, 1) != 0)
     {
-        return 0xFFFF;
+        return -1;
     }
 
     isis_antenna_delay_ms(100);
@@ -156,122 +196,162 @@ uint16_t isis_antenna_read_deployment_status_code(void)
 
     if (i2c_read(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, status_bytes, 2) != 0)
     {
-        return 0xFFFF;
+        return -1;
     }
 
     status_code = (uint16_t)(status_bytes[1] << 8) | status_bytes[0];
 
-    return status_code;
+    *status = status_code;
+
+    return 0;
 }
 
-isis_antenna_status_t isis_antenna_read_deployment_status(void)
+int isis_antenna_read_deployment_status(isis_antenna_status_t *status)
 {
-    uint16_t status_code = isis_antenna_read_deployment_status_code();
+    uint16_t status_code = UINT16_MAX;
 
-    isis_antenna_status_t status;
+    if (isis_antenna_read_deployment_status_code(&status_code) != 0)
+    {
+        return -1;
+    }
 
-    status.code                 = status_code;
-    status.antenna_1.status     = (status_code >> 15) & 0x01;
-    status.antenna_1.timeout    = (status_code >> 14) & 0x01;
-    status.antenna_1.burning    = (status_code >> 13) & 0x01;
-    status.antenna_2.status     = (status_code >> 11) & 0x01;
-    status.antenna_2.timeout    = (status_code >> 10) & 0x01;
-    status.antenna_2.burning    = (status_code >> 9) & 0x01;
-    status.ignoring_switches    = (status_code >> 8) & 0x01;
-    status.antenna_3.status     = (status_code >> 7) & 0x01;
-    status.antenna_3.timeout    = (status_code >> 6) & 0x01;
-    status.antenna_3.burning    = (status_code >> 5) & 0x01;
-    status.independent_burn     = (status_code >> 4) & 0x01;
-    status.antenna_4.status     = (status_code >> 3) & 0x01;
-    status.antenna_4.timeout    = (status_code >> 2) & 0x01;
-    status.antenna_4.burning    = (status_code >> 1) & 0x01;
-    status.armed                = (status_code >> 0) & 0x01;
+    status->code                = status_code;
+    status->antenna_1.status    = (status_code >> 15) & 0x01;
+    status->antenna_1.timeout   = (status_code >> 14) & 0x01;
+    status->antenna_1.burning   = (status_code >> 13) & 0x01;
+    status->antenna_2.status    = (status_code >> 11) & 0x01;
+    status->antenna_2.timeout   = (status_code >> 10) & 0x01;
+    status->antenna_2.burning   = (status_code >> 9) & 0x01;
+    status->ignoring_switches   = (status_code >> 8) & 0x01;
+    status->antenna_3.status    = (status_code >> 7) & 0x01;
+    status->antenna_3.timeout   = (status_code >> 6) & 0x01;
+    status->antenna_3.burning   = (status_code >> 5) & 0x01;
+    status->independent_burn    = (status_code >> 4) & 0x01;
+    status->antenna_4.status    = (status_code >> 3) & 0x01;
+    status->antenna_4.timeout   = (status_code >> 2) & 0x01;
+    status->antenna_4.burning   = (status_code >> 1) & 0x01;
+    status->armed               = (status_code >> 0) & 0x01;
 
-    return status;
+    return 0;
 }
 
-uint8_t isis_antenna_get_antenna_status(uint8_t ant)
+int isis_antenna_get_antenna_status(uint8_t ant, uint8_t *ant_status)
 {
-    isis_antenna_status_t status = isis_antenna_read_deployment_status();
+    isis_antenna_status_t status = {0};
+
+    if (isis_antenna_read_deployment_status(&status) != 0)
+    {
+        return -1;
+    }
 
     switch(ant)
     {
         case ISIS_ANTENNA_ANT_1:
-            return status.antenna_1.status;
+            *ant_status = status.antenna_1.status;
         case ISIS_ANTENNA_ANT_2:
-            return status.antenna_2.status;
+            *ant_status = status.antenna_2.status;
         case ISIS_ANTENNA_ANT_3:
-            return status.antenna_3.status;
+            *ant_status = status.antenna_3.status;
         case ISIS_ANTENNA_ANT_4:
-            return status.antenna_4.status;
+            *ant_status = status.antenna_4.status;
         default:
-            return ISIS_ANTENNA_STATUS_DEPLOYED;
+            return -1;
     }
+
+    return 0;
 }
 
-uint8_t isis_antenna_get_antenna_timeout(uint8_t ant)
+int isis_antenna_get_antenna_timeout(uint8_t ant, uint8_t *ant_timeout)
 {
-    isis_antenna_status_t status = isis_antenna_read_deployment_status();
+    isis_antenna_status_t status = {0};
+
+    if (isis_antenna_read_deployment_status(&status) != 0)
+    {
+        return -1;
+    }
 
     switch(ant)
     {
         case ISIS_ANTENNA_ANT_1:
-            return status.antenna_1.timeout;
+            *ant_timeout = status.antenna_1.timeout;
         case ISIS_ANTENNA_ANT_2:
-            return status.antenna_2.timeout;
+            *ant_timeout = status.antenna_2.timeout;
         case ISIS_ANTENNA_ANT_3:
-            return status.antenna_3.timeout;
+            *ant_timeout = status.antenna_3.timeout;
         case ISIS_ANTENNA_ANT_4:
-            return status.antenna_4.timeout;
+            *ant_timeout = status.antenna_4.timeout;
         default:
-            return ISIS_ANTENNA_OTHER_CAUSE;
+            *ant_timeout = ISIS_ANTENNA_OTHER_CAUSE;
+            return -1;
     }
+
+    return 0;
 }
 
-uint8_t isis_antenna_get_burning(uint8_t ant)
+int isis_antenna_get_burning(uint8_t ant, uint8_t *ant_burn)
 {
-    isis_antenna_status_t status = isis_antenna_read_deployment_status();
+    isis_antenna_status_t status = {0};
+
+    if (isis_antenna_read_deployment_status(&status) != 0)
+    {
+        return -1;
+    }
 
     switch(ant)
     {
         case ISIS_ANTENNA_ANT_1:
-            return status.antenna_1.burning;
+            *ant_burn = status.antenna_1.burning;
         case ISIS_ANTENNA_ANT_2:
-            return status.antenna_2.burning;
+            *ant_burn = status.antenna_2.burning;
         case ISIS_ANTENNA_ANT_3:
-            return status.antenna_3.burning;
+            *ant_burn = status.antenna_3.burning;
         case ISIS_ANTENNA_ANT_4:
-            return status.antenna_4.burning;
+            *ant_burn = status.antenna_4.burning;
         default:
-            return ISIS_ANTENNA_BURN_INACTIVE;
+            *ant_burn = ISIS_ANTENNA_BURN_INACTIVE;
+            return -1;
     }
+
+    return 0;
 }
 
-bool isis_antenna_get_arming_status(void)
+int isis_antenna_get_arming_status(bool *armed)
 {
-    return (bool)isis_antenna_read_deployment_status().armed;
+    isis_antenna_status_t status = {0};
+
+    if (isis_antenna_read_deployment_status(&status) != 0)
+    {
+        return -1;
+    }
+
+    *armed = (bool)status.armed;
+
+    return 0;
 }
 
-uint16_t isis_antenna_get_raw_temperature(void)
+int isis_antenna_get_raw_temperature(uint16_t *temp)
 {
     uint8_t cmd = ISIS_ANTENNA_CMD_MEASURE_TEMPERATURE;
+
     if (i2c_write(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, &cmd, 1) != 0)
     {
-        return 0xFFFF;
+        return -1;
     }
 
     isis_antenna_delay_ms(100);
 
-    uint8_t temp_bytes[2];
+    uint8_t temp_bytes[2] = {0};
 
     if (i2c_read(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, temp_bytes, 2) != 0)
     {
-        return 0xFFFF;
+        return -1;
     }
 
     uint16_t raw_data = (uint16_t)(temp_bytes[1] << 8) | temp_bytes[0];
 
-    return raw_data;
+    *temp = raw_data;
+
+    return 0;
 }
 
 int16_t isis_antenna_raw_to_temp_c(uint16_t raw)
@@ -482,11 +562,18 @@ int16_t isis_antenna_raw_to_temp_c(uint16_t raw)
     else                        return INT16_MAX;
 }
 
-int16_t isis_antenna_get_temperature(void)
+int isis_antenna_get_temperature_c(int16_t *temp)
 {
-    uint16_t raw_temp = isis_antenna_get_raw_temperature();
+    uint16_t raw_temp = UINT16_MAX;
 
-    return isis_antenna_raw_to_temp_c(raw_temp);
+    if (isis_antenna_get_raw_temperature(&raw_temp) != 0)
+    {
+        return -1;
+    }
+
+    *temp = isis_antenna_raw_to_temp_c(raw_temp);
+
+    return 0;
 }
 
 /** \} End of isis_antenna group */
