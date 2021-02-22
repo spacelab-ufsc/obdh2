@@ -11,7 +11,7 @@ all:
 	$(CC) -noSplash -data $(CCS_WORKSPACE) -application com.ti.ccstudio.apps.projectBuild -ccs.projects $(TARGET)
 
 import:
-	$(CC) -noSplash -data $(CCS_WORKSPACE) -application com.ti.ccstudio.apps.projectImport -ccs.location .
+	$(CC) -noSplash -data $(CCS_WORKSPACE) -application com.ti.ccstudio.apps.projectImport -ccs.overwrite -ccs.location .
 
 flash:
 	$(FL) flash -c $(DEV_CONFIG_FILE) -l uniflash/user_files/settings/generated.ufsettings -s VerifyAfterProgramLoad=2 -e -f -v "$(IMG)" -n 0

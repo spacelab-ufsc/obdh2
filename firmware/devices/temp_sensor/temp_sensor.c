@@ -1,7 +1,7 @@
 /*
  * temp_sensor.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.3
+ * \version 0.5.9
  * 
  * \date 17/03/2020
  * 
@@ -39,12 +39,14 @@
 
 #include "temp_sensor.h"
 
-int temp_sensor_init()
+int temp_sensor_init(void)
 {
     sys_log_print_event_from_module(SYS_LOG_INFO, TEMP_SENSOR_MODULE_NAME, "Initializing the temperature sensor...");
     sys_log_new_line();
 
-    if (adc_init(TEMP_SENSOR_ADC_PORT, (adc_config_t){}) != 0)
+    adc_config_t temp_sense_adc_config = {0};
+
+    if (adc_init(TEMP_SENSOR_ADC_PORT, temp_sense_adc_config) != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, TEMP_SENSOR_MODULE_NAME, "Error initializing the temperature sensor!");
         sys_log_new_line();
@@ -53,7 +55,7 @@ int temp_sensor_init()
     }
 
     float temp = 0;
-    if (temp_sensor_read(&temp) != 0)
+    if (temp_sensor_read_c(&temp) != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, TEMP_SENSOR_MODULE_NAME, "Error reading the temperature value!");
         sys_log_new_line();
@@ -74,7 +76,12 @@ int temp_sensor_read_raw(uint16_t *val)
     return adc_read(TEMP_SENSOR_ADC_PORT, val);
 }
 
-int temp_sensor_read(float *temp)
+float temp_sensor_raw_to_c(uint16_t raw)
+{
+	return (float)(((int32_t)raw * 2 - TEMP_SENSOR_CAL_15V_30C) * (85 - 30)) / (TEMP_SENSOR_CAL_15V_85C - TEMP_SENSOR_CAL_15V_30C) + 30.0f;
+}
+
+int temp_sensor_read_c(float *temp)
 {
     uint16_t raw_temp = 0;
 
@@ -86,7 +93,7 @@ int temp_sensor_read(float *temp)
         return -1;
     }
 
-	*temp = (float)(((int32_t)raw_temp * 2 - TEMP_SENSOR_CAL_15V_30C) * (85 - 30)) / (TEMP_SENSOR_CAL_15V_85C - TEMP_SENSOR_CAL_15V_30C) + 30.0f;
+    *temp = temp_sensor_raw_to_c(raw_temp);
 
     return 0;
 }

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.12
+ * \version 0.5.11
  * 
  * \date 20/01/2020
  * 
@@ -55,7 +55,7 @@ typedef uint8_t led_t;
  *
  * \return The status/error code.
  */
-int leds_init();
+int leds_init(void);
 
 /**
  * \brief Sets a given LED.

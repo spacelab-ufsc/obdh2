@@ -1,7 +1,7 @@
 /*
  * temp_sensor.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.3
+ * \version 0.5.9
  * 
  * \date 17/03/2020
  * 
@@ -51,7 +51,7 @@
  *
  * \return The status/error code.
  */
-int temp_sensor_init();
+int temp_sensor_init(void);
 
 /**
  * \brief Reads the raw temperature from the temperature sensor.
@@ -63,13 +63,22 @@ int temp_sensor_init();
 int temp_sensor_read_raw(uint16_t *val);
 
 /**
- * \brief Reads the temperature from the temperature sensor.
+ * \brief Converts a raw reading of the temperature sensor to a real temperature in oC.
+ *
+ * \param[in] raw is the raw reading of the temperature.
+ *
+ * \return The converted temperature in Celsius.
+ */
+float temp_sensor_raw_to_c(uint16_t raw);
+
+/**
+ * \brief Reads the temperature from the temperature sensor in oC.
  *
  * \param[in,out] temp is a pointer to store the read temperature.
  *
  * \return The status/error code.
  */
-int temp_sensor_read(float *temp);
+int temp_sensor_read_c(float *temp);
 
 #endif /* TEMP_SENSOR_H_ */
 

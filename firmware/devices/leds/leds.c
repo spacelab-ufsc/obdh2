@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.12
+ * \version 0.5.11
  * 
  * \date 20/01/2020
  * 
@@ -38,7 +38,7 @@
 
 #include "leds.h"
 
-int leds_init()
+int leds_init(void)
 {
     sys_log_print_event_from_module(SYS_LOG_INFO, LEDS_MODULE_NAME, "Initializing system LEDs...");
     sys_log_new_line();
