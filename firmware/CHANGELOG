@@ -1,0 +1,59 @@
+===========================================
+
+v0.5 - 2020/08/27
+
+- Voltage sensor device
+- Current sensor device
+- Temperature sensor device
+- "Read sensors" task
+- Initial data structures
+- Importing the FSP library
+- Enabling the ISIS antenna driver
+- General fixes
+
+===========================================
+
+v0.4 - 2020/07/11
+
+- NGHam library port
+- Changing the comments to the MISRA C:2004 style
+- ADC driver
+- Initial version of the PHJ driver and device
+- Adding the CSP protoco (libcsp v1.5.16)
+- Adding debug/log messages to the drivers
+- Si446x driver refactoring
+- Adding file system libraries (FatFS and Reliance Edge)
+- Last reset cause reading
+- Adding the JSMN v1.1.0 library
+
+===========================================
+
+v0.3 - 2020/03/07
+
+- EDC driver
+- Payload EDC device
+- Si446x driver improvements
+- Using the fault LED to signalize boot errors
+- Fixing I2C driver
+- General improvements and fixes
+
+===========================================
+
+v0.2 - 2020/02/10
+
+- I2C driver
+- SPI driver
+- TCA4311A driver
+- Initial implementation of the EPS 2.0 driver
+- Adding a Makefile to the project
+
+===========================================
+
+v0.1 - 2020/01/27
+
+- First release
+- Prototype version of the hardware
+- Initial documentation
+- Base version of the firmware (FreeRTOS, watchdog, heartbeat and log messages)
+
+===========================================

@@ -87,6 +87,7 @@ The board requires external supply from the PC-104 connector or the JTAG program
 #### Debugging
 
 The debugging is performed through a serial UART port, using as default a baud rate of 115200, 1 stop bit, and no parity bit. The interface uses a log system standard to improve readability. Refer to the [documentation](https://github.com/spacelab-ufsc/obdh2/tree/master/doc) in the "Instructions" chapter.  
+
 #### Testing
 
 Automated testing is not avaliable yet.  
