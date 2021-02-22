@@ -24,6 +24,30 @@
 
 \chapter{Firmware} \label{ch:firmware}
 
+\section{Dependencies}
+
+The firmware depends on external libraries to access the embedded hardware or to communicate with other modules. A list of these libraries and the used version is available in \autoref{tab:fw-dependencies}.
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{L{5cm}R{4cm}}
+        \toprule[1.5pt]
+        \textit{Library}        & \textit{Version} \\
+        \midrule
+            MSP430 DriverLib    & v2.91.11.01 \\
+            FreeRTOS            & v10.2.1 \\
+            NGHam protocol      & - \\
+            libcsp              & v1.5.16 \\
+            FatFS               & R0.14 \\
+            Reliance Edge       & v2.4 \\
+            FreeMODBUS          & v1.6 \\
+            JSMN                & v1.1.0 \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{External libraries and dependencies of the firmware.}
+    \label{tab:fw-dependencies}
+\end{table}
+
 \section{Tasks}
 
 A list of the firmware tasks can be seen in the \autoref{tab:firmware-tasks}.
