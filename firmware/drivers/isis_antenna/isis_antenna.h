@@ -1,7 +1,7 @@
 /*
  * isis_antenna.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.9
+ * \version 0.5.16
  * 
- * \date 01/02/2020
+ * \date 2020/02/01
  * 
  * \defgroup isis_antenna ISIS antenna
  * \ingroup drivers
@@ -139,30 +139,30 @@ typedef struct
  *
  * \return The status/error code.
  */
-int isis_antenna_init();
+int isis_antenna_init(void);
 
 /**
  * \brief Arm the antenna module.
  *
- * \return None.
+ * \return The status/error code.
  */
-bool isis_antenna_arm();
+int isis_antenna_arm(void);
 
 /**
  * \brief Disarm the antenna module.
  *
- * \return None.
+ * \return The status/error code.
  */
-bool isis_antenna_disarm();
+int isis_antenna_disarm(void);
 
 /**
  * \brief Executes a sequential deployment.
  *
  * \param[in] sec is the sequential deployment total time in seconds.
  *
- * \return None.
+ * \return The status/error code.
  */
-void isis_antenna_start_sequential_deploy(uint8_t sec);
+int isis_antenna_start_sequential_deploy(uint8_t sec);
 
 /**
  * \brief 
@@ -187,7 +187,7 @@ void isis_antenna_start_sequential_deploy(uint8_t sec);
  *
  * \return None.
  */
-void isis_antenna_start_independent_deploy(uint8_t ant, uint8_t sec, uint8_t ovr);
+int isis_antenna_start_independent_deploy(uint8_t ant, uint8_t sec, uint8_t ovr);
 
 /**
  * \brief Reads the deployment status code.
@@ -195,18 +195,22 @@ void isis_antenna_start_independent_deploy(uint8_t ant, uint8_t sec, uint8_t ovr
  * Report the deployment status of the antenna system. This status contains
  * information for each antenna as well as system level information.
  *
- * \return The deployment status code (2 bytes).
+ * \param[in,out] status is a pointer to store the deployment status code (2 bytes).
+ *
+ * \return The status/error code.
  */
-uint16_t isis_antenna_read_deployment_status_code();
+int isis_antenna_read_deployment_status_code(uint16_t *status);
 
 /**
  * \brief Reads the deployment status.
  *
  * Send a command through I2C to read the deploy switches to know if the antennas were deployed.
  *
- * \return The deployment status bits.
+ * \param[in,out] status is a pointer to store the deployment status structure.
+ *
+ * \return The status/error code.
  */
-isis_antenna_status_t isis_antenna_read_deployment_status();
+int isis_antenna_read_deployment_status(isis_antenna_status_t *status);
 
 /**
  * \brief Gets the status of antenna.
@@ -220,14 +224,16 @@ isis_antenna_status_t isis_antenna_read_deployment_status();
  *      .
  * \endparblock
  *
- * \return The given antenna status:
+ * \param[in,out] ant_status is a pointer to store the given antenna status. It can be:
  * \parblock
  *      -\b ISIS_ANTENNA_STATUS_NOT_DEPLOYED
  *      -\b ISIS_ANTENNA_STATUS_DEPLOYED
  *      .
  * \endparblock
+ *
+ * \return The status/error code.
  */
-uint8_t isis_antenna_get_antenna_status(uint8_t ant);
+int isis_antenna_get_antenna_status(uint8_t ant, uint8_t *ant_status);
 
 /**
  * \brief Gets the timeout status of an antenna.
@@ -241,14 +247,16 @@ uint8_t isis_antenna_get_antenna_status(uint8_t ant);
  *      .
  * \endparblock
  *
- * \return The timeout flag:
+ * \param[in,out] is a pointer to store the timeout flag. It can be:
  * \parblock
  *      -\b ISIS_ANTENNA_TIMEOUT_CAUSE
  *      -\b ISIS_ANTENNA_OTHER_CAUSE
  *      .
  * \endparblock
+ *
+ * \return The status/error code.
  */
-uint8_t isis_antenna_get_antenna_timeout(uint8_t ant);
+int isis_antenna_get_antenna_timeout(uint8_t ant, uint8_t *ant_timeout);
 
 /**
  * \brief Gets the burn system status.
@@ -262,28 +270,52 @@ uint8_t isis_antenna_get_antenna_timeout(uint8_t ant);
  *      .
  * \endparblock
  *
- * \return .
+ * \param[in,out] ant_burn is a pointer to store the antenna burning flag. It can be:
  * \parblock
  *      -\b ISIS_ANTENNA_BURN_ACTIVE
  *      -\b ISIS_ANTENNA_BURN_INACTIVE
  *      .
  * \endparblock
+ *
+ * \return The status/error code.
  */
-uint8_t isis_antenna_get_burning(uint8_t ant);
+int isis_antenna_get_burning(uint8_t ant, uint8_t *ant_burn);
 
 /**
  * \brief Gets the arming status of the antennas.
  *
- * \return TRUE/FALSE if the antenna is armed or not.
+ * \param[in,out] armed is a pointer to store the antenna is armed flag.
+ *
+ * \return The status/error code.
  */
-bool isis_antenna_get_arming_status();
+int isis_antenna_get_arming_status(bool *armed);
+
+/**
+ * \brief Gets the current raw temperature value.
+ *
+ * \param[in,out] temp is a pointer to store the raw temperature.
+ *
+ * \return The status/error code.
+ */
+int isis_antenna_get_raw_temperature(uint16_t *temp);
+
+/**
+ * \brief Converts a raw temperature reading to a real temperature.
+ *
+ * \param[in] raw is the raw temperature to convert.
+ *
+ * \return The converted temperature in Celsius.
+ */
+int16_t isis_antenna_raw_to_temp_c(uint16_t raw);
 
 /**
  * \brief Gets the temperature of the antenna module.
  *
- * \return The raw temperature value of the antenna system.
+ * \param[in,out] temp is a pointer to store the temperature value of the antenna system in Celsius.
+ *
+ * \return The status/error code.
  */
-uint16_t isis_antenna_get_temperature();
+int isis_antenna_get_temperature_c(int16_t *temp);
 
 /**
  * \brief Seconds delay.

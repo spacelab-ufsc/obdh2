@@ -1,18 +1,39 @@
 /*
- * Brief PHJ driver implementation.
+ * phj.c
  * 
- * Author: João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
+ * Copyright (C) 2021, SpaceLab.
  * 
- * Date: 30/03/2020
+ * This file is part of OBDH 2.0.
  * 
- * Issue #128
+ * OBDH 2.0 is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * OBDH 2.0 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+
+/*
+ * \brief PHJ driver implementation.
+ * 
+ * \author João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
+ * 
+ * \date 2020/03/30
  *
+ * \addtogroup phj
+ * \{
  */
 
 #include <drivers/phj/phj.h>
 #include <math.h>
 #include <string.h>
-
 
 i2c_port_t phj_i2c_port;
 gpio_pin_t phj_gpio_pin;
@@ -72,3 +93,5 @@ int phj_check_message()
 
     return 0;
 }
+
+/** \} End of phj group */

@@ -1,7 +1,7 @@
 /*
  * sys_log.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.16
+ * \version 0.5.5
  * 
  * \date 03/11/2019
  * 
@@ -39,9 +39,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-
-#include <FreeRTOS.h>
-#include <semphr.h>
 
 /**
  * \brief Event types.
@@ -69,16 +66,11 @@ typedef enum
 } sys_log_colors_e;
 
 /**
- * \brief System log mutex.
- */
-extern SemaphoreHandle_t xSysLogSemaphore;
-
-/**
  * \brief Initialization of the system log.
  * 
  * \return The error/status code.
  */
-int sys_log_init();
+int sys_log_init(void);
 
 /**
  * \brief Sets the foreground color for the next log message.
@@ -107,7 +99,7 @@ void sys_log_set_color(uint8_t color);
  *
  * \return None.
  */
-void sys_log_reset_color();
+void sys_log_reset_color(void);
 
 /**
  * \brief Prints a general event.
@@ -168,7 +160,7 @@ void sys_log_print_str(char *str);
  *
  * \return None.
  */
-void sys_log_new_line();
+void sys_log_new_line(void);
 
 /**
  * \brief Prints a integer digit over the system log module.
@@ -248,28 +240,28 @@ void sys_log_print_byte(uint8_t byte);
  *
  * \return None.
  */
-void sys_log_print_system_time();
+void sys_log_print_system_time(void);
 
 /**
  * \brief Prints the license text and genreal firmware information.
  *
  * \return None.
  */
-void sys_log_print_license_msg();
+void sys_log_print_license_msg(void);
 
 /**
  * \brief Prints the splash screen of the firmware.
  *
  * \return None.
  */
-void sys_log_print_splash_screen();
+void sys_log_print_splash_screen(void);
 
 /**
  * \brief Writes the current firmware version.
  *
  * \return None.
  */
-void sys_log_print_firmware_version();
+void sys_log_print_firmware_version(void);
 
 /**
  * \brief Initialization of the system log UART port.
@@ -284,7 +276,7 @@ void sys_log_print_firmware_version();
  * 
  * \return TRUE/FALSE if successful or not.
  */
-bool sys_log_uart_init();
+bool sys_log_uart_init(void);
 
 /**
  * \brief Writes a byte over the UART port.
@@ -300,21 +292,21 @@ void sys_log_uart_write_byte(uint8_t byte);
  *
  * \return TRUE/FALSE if successful or not.
  */
-bool sys_log_mutex_create();
+bool sys_log_mutex_create(void);
 
 /**
  * \brief Holds the resource (system log module).
  *
  * \return TRUE/FALSE if successful or not.
  */
-bool sys_log_mutex_take();
+bool sys_log_mutex_take(void);
 
 /**
  * \brief Frees the resource (system log).
  *
  * \return TRUE/FALSE if successful or not.
  */
-bool sys_log_mutex_give();
+bool sys_log_mutex_give(void);
 
 #endif /* SYS_LOG_H_ */
 
