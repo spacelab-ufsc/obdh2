@@ -98,11 +98,3 @@ This repository containing firmware files is licensed under GPLv3 license.
 ## Notes
 
 Project under development!
-
-
-
-
-
-
-
-
