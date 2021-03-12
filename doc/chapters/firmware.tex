@@ -143,6 +143,47 @@ This task reads the internal temperature of the microcontroller of the OBDH at e
 
 .
 
+\section{Variables and Parameters}
+
+The internal variables and parameters of the OBDH firmware can be seen in \autoref{tab:vars-and-pars}.
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{lllC{1cm}}
+        \toprule[1.5pt]
+        \textbf{ID} & \textbf{Name/Description} & \textbf{Type} & \textbf{Length [bytes]} \\
+        \midrule
+        0 & Time counter in milliseconds                            & uint32    & 4 \\
+        1 & Temperature of the uC in Kelvin                         & uint16    & 2 \\
+        2 & Input current in mA                                     & uint16    & 2 \\
+        3 & Input voltage in mA                                     & uint16    & 2 \\
+        \multirow{18}{*}{4} & Last reset cause: & \multirow{18}{*}{uint8} & \multirow{18}{*}{1} \\
+          & - 0x00 = No interrupt pending                           &           &   \\
+          & - 0x02 = Brownout (BOR)                                 &           &   \\
+          & - 0x04 = RST/NMI (BOR)                                  &           &   \\
+          & - 0x06 = PMMSWBOR (BOR)                                 &           &   \\
+          & - 0x08 = Wakeup from LPMx.5 (BOR)                       &           &   \\
+          & - 0x0A = Security violation (BOR)                       &           &   \\
+          & - 0x0C = SVSL (POR)                                     &           &   \\
+          & - 0x0E = SVSH (POR)                                     &           &   \\
+          & - 0x10 = SVML\_OVP (POR)                                &           &   \\
+          & - 0x12 = SVMH\_OVP (POR)                                &           &   \\
+          & - 0x14 = PMMSWPOR (POR)                                 &           &   \\
+          & - 0x16 = WDT time out (PUC)                             &           &   \\
+          & - 0x18 = WDT password violation (PUC)                   &           &   \\
+          & - 0x1A = Flash password violation (PUC)                 &           &   \\
+          & - 0x1C = Reserved                                       &           &   \\
+          & - 0x1E = PERF peripheral/configuration area fetch (PUC) &           &   \\
+          & - 0x20 = PMM password violation (PUC)                   &           &   \\
+          & - 0x22 to 0x3E = Reserved                               &           &   \\
+        5 & Reset counter                                           & uint16    & 2 \\
+        6 & Last valid telecommand (uplink packet ID)               & uint8     & 1 \\
+        \bottomrule[1.5pt]
+    \end{tabular}
+    \caption{Variables and parameters of the OBDH 2.0.}
+    \label{tab:vars-and-pars}
+\end{table}
+
 \section{Telemetry}
 
 
