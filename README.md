@@ -24,12 +24,6 @@
 	<a href="https://github.com/spacelab-ufsc/obdh2/graphs/contributors">
 		<img alt="GitHub contributors" src="https://img.shields.io/github/contributors/spacelab-ufsc/obdh2?color=yellow&style=for-the-badge">
 	</a>
-	<a href="#license">
-		<img src="https://img.shields.io/badge/open--source-project-lightgray?style=for-the-badge">
-	</a>
-	<a href="https://github.com/spacelab-ufsc/obdh">
-		<img src="https://img.shields.io/badge/flight-heritage-lightgray?style=for-the-badge">
-	</a>
 </p>
 
 <p align="center">
