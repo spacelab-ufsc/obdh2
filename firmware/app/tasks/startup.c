@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.1
+ * \version 0.5.18
  * 
  * \date 04/12/2019
  * 
@@ -63,7 +63,7 @@ EventGroupHandle_t task_startup_status;
 
 void vTaskStartup(void *pvParameters)
 {
-    bool error = false;
+    unsigned int error_counter = 0;
 
     /* Logger device initialization */
     sys_log_init();
@@ -97,43 +97,43 @@ void vTaskStartup(void *pvParameters)
     /* Internal non-volatile memory initialization */
     if (media_init(MEDIA_INT_FLASH) != 0)
     {
-        error = true;
+        error_counter++;
     }
 
     /* LEDs device initialization */
     if (leds_init() != 0)
     {
-        error = true;
+        error_counter++;
     }
 
     /* Current sensor device initialization */
     if (current_sensor_init() != 0)
     {
-        error = true;
+        error_counter++;
     }
 
     /* Voltage sensor device initialization */
     if (voltage_sensor_init() != 0)
     {
-        error = true;
+        error_counter++;
     }
 
     /* Temperature sensor device initialization */
     if (temp_sensor_init() != 0)
     {
-        error = true;
+        error_counter++;
     }
 
     /* EPS device initialization */
     if (eps_init() != 0)
     {
-        error = true;
+        error_counter++;
     }
 
     /* Radio device initialization */
     if (radio_init() != 0)
     {
-        error = true;
+        error_counter++;
     }
 
     /* NGHam initialization */
@@ -143,24 +143,26 @@ void vTaskStartup(void *pvParameters)
     /* CSP initialization */
     if (startup_init_csp() != CSP_ERR_NONE)
     {
-        error = true;
+        error_counter++;
     }
 
     /* Payload EDC device initialization */
     if (payload_edc_init() != 0)
     {
-        error = true;
+        error_counter++;
     }
 
     /* Antenna device initialization */
     if (antenna_init() != 0)
     {
-        error = true;
+        error_counter++;
     }
 
-    if (error)
+    if (error_counter > 0)
     {
-        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_STARTUP_NAME, "Boot completed with ERRORS!");
+        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_STARTUP_NAME, "Boot completed with ");
+        sys_log_print_uint(error_counter);
+        sys_log_print_msg(" ERROR(S)!");
         sys_log_new_line();
 
         led_set(LED_FAULT);
