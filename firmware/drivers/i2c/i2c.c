@@ -1,7 +1,7 @@
 /*
  * i2c.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.9
+ * \version 0.5.20
  * 
- * \date 07/12/2019
+ * \date 2019/12/07
  * 
  * \addtogroup i2c
  * \{
@@ -66,7 +66,7 @@ int i2c_init(i2c_port_t port, i2c_config_t config)
             break;
         case I2C_PORT_1:
             base_address = USCI_B1_BASE;
-            GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P8, GPIO_PIN4 + GPIO_PIN5);
+            GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P8, GPIO_PIN5 + GPIO_PIN6);
             break;
         case I2C_PORT_2:
             base_address = USCI_B2_BASE;
