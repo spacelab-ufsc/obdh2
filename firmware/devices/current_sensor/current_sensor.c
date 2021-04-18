@@ -1,7 +1,7 @@
 /*
  * current_sensor.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.6
+ * \version 0.5.21
  * 
- * \date 11/07/2020
+ * \date 2020/07/11
  * 
  * \addtogroup current_sensor
  * \{
@@ -78,7 +78,7 @@ int current_sensor_read_raw(uint16_t *val)
 
 uint16_t current_sensor_raw_to_ma(uint16_t raw)
 {
-    return (uint16_t)(1000*raw*(ADC_AVCC/(ADC_RANGE*CURRENT_SENSOR_RL_VALUE_OHM*CURRENT_SENSOR_GAIN*CURRENT_SENSOR_RSENSE_VALUE_OHM)));
+    return (uint16_t)((1000UL*(uint32_t)raw*ADC_AVCC_MV)/(ADC_RANGE*CURRENT_SENSOR_RL_VALUE_KOHM*CURRENT_SENSOR_GAIN_MA_MV*CURRENT_SENSOR_RSENSE_VALUE_MOHM));
 }
 
 int current_sensor_read_ma(uint16_t *cur)
