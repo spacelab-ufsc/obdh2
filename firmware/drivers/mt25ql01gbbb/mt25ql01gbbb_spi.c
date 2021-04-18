@@ -1,7 +1,7 @@
 /*
  * mt25ql01gbbb_spi.c
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,34 +25,46 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.5.23
  * 
- * \date 15/11/2019
+ * \date 2019/11/15
  * 
  * \addtogroup mt25ql01gbbb
  * \{
  */
 
+#include <drivers/spi/spi.h>
+
 #include "mt25ql01gbbb.h"
 
-int mt25ql01gbbb_spi_init(mt25ql01gbbb_spi_config_t spi_config)
+#define MT25QL01GBBB_SPI_PORT           SPI_PORT_0
+#define MT25QL01GBBB_SPI_MODE           SPI_MODE_0
+#define MT25QL01GBBB_SPI_CLK_HZ         100000
+#define MT25QL01GBBB_SPI_CS_PIN         SPI_CS_2
+
+int mt25ql01gbbb_spi_init(void)
 {
-    return -1;
+    spi_config_t conf = {0};
+
+    conf.speed_hz   = MT25QL01GBBB_SPI_CLK_HZ;
+    conf.mode       = MT25QL01GBBB_SPI_MODE;
+
+    return spi_init(MT25QL01GBBB_SPI_PORT, conf);
 }
 
 int mt25ql01gbbb_spi_write(uint8_t *data, uint16_t len)
 {
-    return -1;
+    return spi_write(MT25QL01GBBB_SPI_PORT, MT25QL01GBBB_SPI_CS_PIN, data, len);
 }
 
 int mt25ql01gbbb_spi_read(uint8_t *data, uint16_t len)
 {
-    return -1;
+    return spi_read(MT25QL01GBBB_SPI_PORT, MT25QL01GBBB_SPI_CS_PIN, data, len);
 }
 
-int mt25ql01gbbb_spi_transfer()
+int mt25ql01gbbb_spi_transfer(uint8_t *wdata, uint8_t *rdata, uint16_t len)
 {
-    return -1;
+    return spi_transfer(MT25QL01GBBB_SPI_PORT, MT25QL01GBBB_SPI_CS_PIN, wdata, rdata, len);
 }
 
 /** \} End of mt25ql01gbbb group */

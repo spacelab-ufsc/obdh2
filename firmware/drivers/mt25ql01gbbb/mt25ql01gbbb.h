@@ -1,7 +1,7 @@
 /*
  * mt25ql01gbbb.h
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.5.23
  * 
- * \date 15/11/2019
+ * \date 2019/11/15
  * 
  * \defgroup mt25ql01gbbb MT25QL01GBBB
  * \ingroup drivers
@@ -38,35 +38,22 @@
 #define MT25QL01GBBB_H_
 
 #include <stdint.h>
-
-/* Registers */
-#define MT25QL01GBBB_REG_   0x00
-
-/* Commands */
-#define MT25QL01GBBB_CMD_   0x00
-
-/**
- * \brief SPI interface configuration.
- */
-typedef struct
-{
-    uint32_t clock_hz;          /**< Clock rate of the SPI communication in Hertz. */
-    uint8_t clock_phase;        /**< SPI clock phase. */
-    uint8_t clock_polarity;     /**< SPI clock polarity. */
-} mt25ql01gbbb_spi_config_t;
+#include <stdbool.h>
 
 /**
  * \brief Driver initialization.
  *
  * \return Error/status code.
  */
-int mt25ql01gbbb_init();
+int mt25ql01gbbb_init(void);
 
 /**
  * \brief Writes data to a given address.
  *
  * \param[in] adr is the address to write.
+ *
  * \param[in] data is an array of bytes to write.
+ *
  * \param[in] len is the number of bytes to write.
  *
  * \return Error/status code.
@@ -77,7 +64,9 @@ int mt25ql01gbbb_write(uint32_t adr, uint8_t *data, uint32_t len);
  * \brief Reads data from a given address.
  *
  * \param[in] adr is the address to write.
+ *
  * \param[in] data is an array of bytes to write.
+ *
  * \param[in] len is the number of bytes to write.
  *
  * \return Error/status code.
@@ -87,16 +76,15 @@ int mt25ql01gbbb_read(uint32_t adr, uint8_t *data, uint32_t len);
 /**
  * \brief SPI interface initialization.
  *
- * \param[in] spi_config
- *
  * \return Error/status code.
  */
-int mt25ql01gbbb_spi_init(mt25ql01gbbb_spi_config_t spi_config);
+int mt25ql01gbbb_spi_init(void);
 
 /**
  * \brief Writes the device using the SPI interface.
  *
  * \param[in] data is an array of bytes to write.
+ *
  * \param[in] len is the number of bytes to write.
  *
  * \return Error/status code.
@@ -107,6 +95,7 @@ int mt25ql01gbbb_spi_write(uint8_t *data, uint16_t len);
  * \brief Reads the device using the SPI interface.
  *
  * \param[in] data is an array to store the read bytes.
+ *
  * \param[in] len is the number of bytes to write.
  *
  * \return Error/status code.
@@ -116,9 +105,42 @@ int mt25ql01gbbb_spi_read(uint8_t *data, uint16_t len);
 /**
  * \brief SPI transfer operation (write and/or read).
  *
+ * \param[in,out] wdata is a pointer to the data to be written during the SPI transfer.
+ *
+ * \param[in,out] rdata is a pointer to store the read data during the SPI transfer.
+ *
+ * \param[in] len is the number of bytes of the transfer operation.
+ *
  * \return Error/status code.
  */
-int mt25ql01gbbb_spi_transfer();
+int mt25ql01gbbb_spi_transfer(uint8_t *wdata, uint8_t *rdata, uint16_t len);
+
+/**
+ * \brief Initialization of the GPIO pins.
+ *
+ * This function initializes the pins "HOLD" and "RESET".
+ *
+ * \return The error/status code.
+ */
+int mt25ql01gbbb_gpio_init(void);
+
+/**
+ * \brief Sets the state of the hold pin.
+ *
+ * \param[in] state is the state to set the hold pin (high/low or true/false).
+ *
+ * \return The error/status code.
+ */
+int mt25ql01gbbb_gpio_set_hold(bool state);
+
+/**
+ * \brief Sets the state of the reset pin.
+ *
+ * \param[in] state is the state to set the reset pin (high/low or true/false).
+ *
+ * \return The error/status code.
+ */
+int mt25ql01gbbb_gpio_set_reset(bool state);
 
 #endif /* MT25QL01GBBB_H_ */
 
