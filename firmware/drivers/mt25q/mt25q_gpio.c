@@ -1,5 +1,5 @@
 /*
- * mt25ql01gbbb.c
+ * mt25q_gpio.c
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
@@ -21,38 +21,56 @@
  */
 
 /**
- * \brief MT25QL01GBBB driver implementation.
+ * \brief MT25Q driver GPIO interface implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.23
+ * \version 0.5.24
  * 
- * \date 2019/11/15
+ * \date 2021/04/18
  * 
- * \addtogroup mt25ql01gbbb
+ * \addtogroup mt25q
  * \{
  */
 
-#include "mt25ql01gbbb.h"
+#include <drivers/gpio/gpio.h>
 
-int mt25ql01gbbb_init(void)
+#include "mt25q.h"
+
+#define MT25Q_GPIO_HOLD_PIN         GPIO_PIN_26
+#define MT25Q_GPIO_RESET_PIN        GPIO_PIN_27
+
+int mt25q_gpio_init(void)
 {
-    if (mt25ql01gbbb_gpio_init() != 0)
+    gpio_config_t conf = {0};
+
+    conf.mode = GPIO_MODE_OUTPUT;
+
+    if (gpio_init(MT25Q_GPIO_HOLD_PIN, conf) != 0)
     {
         return -1;
     }
 
+    mt25q_gpio_set_hold(false);
+
+    if (gpio_init(MT25Q_GPIO_RESET_PIN, conf) != 0)
+    {
+        return -1;
+    }
+
+    mt25q_gpio_set_reset(true);
+
     return 0;
 }
 
-int mt25ql01gbbb_write(uint32_t adr, uint8_t *data, uint32_t len)
+int mt25q_gpio_set_hold(bool state)
 {
-    return -1;
+    return gpio_set_state(MT25Q_GPIO_HOLD_PIN, state);
 }
 
-int mt25ql01gbbb_read(uint32_t adr, uint8_t *data, uint32_t len)
+int mt25q_gpio_set_reset(bool state)
 {
-    return -1;
+    return gpio_set_state(MT25Q_GPIO_RESET_PIN, state);
 }
 
-/** \} End of mt25ql01gbbb group */
+/** \} End of mt25q group */

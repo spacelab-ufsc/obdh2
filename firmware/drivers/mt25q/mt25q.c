@@ -1,5 +1,5 @@
 /*
- * version.h
+ * mt25q.c
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
@@ -21,29 +21,38 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief MT25Q driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.5.24
  * 
- * \date 2019/10/25
+ * \date 2019/11/15
  * 
- * \defgroup version Version control
+ * \addtogroup mt25q
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include "mt25q.h"
 
-#define FIRMWARE_VERSION            "0.5.24"
+int mt25q_init(void)
+{
+    if (mt25q_gpio_init() != 0)
+    {
+        return -1;
+    }
 
-#define FIRMWARE_STATUS             "Development"
+    return 0;
+}
 
-#define FIRMWARE_AUTHOR             "SpaceLab"
+int mt25q_write(uint32_t adr, uint8_t *data, uint32_t len)
+{
+    return -1;
+}
 
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
+int mt25q_read(uint32_t adr, uint8_t *data, uint32_t len)
+{
+    return -1;
+}
 
-#endif /* VERSION_H_ */
-
-/** \} End of version group */
+/** \} End of mt25q group */

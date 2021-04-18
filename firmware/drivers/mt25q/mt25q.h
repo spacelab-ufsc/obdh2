@@ -1,5 +1,5 @@
 /*
- * mt25ql01gbbb.h
+ * mt25q.h
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
@@ -21,21 +21,21 @@
  */
 
 /**
- * \brief MT25QL01GBBB driver definition.
+ * \brief MT25Q driver definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.23
+ * \version 0.5.24
  * 
  * \date 2019/11/15
  * 
- * \defgroup mt25ql01gbbb MT25QL01GBBB
+ * \defgroup mt25q MT25Q
  * \ingroup drivers
  * \{
  */
 
-#ifndef MT25QL01GBBB_H_
-#define MT25QL01GBBB_H_
+#ifndef MT25Q_H_
+#define MT25Q_H_
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -45,7 +45,7 @@
  *
  * \return Error/status code.
  */
-int mt25ql01gbbb_init(void);
+int mt25q_init(void);
 
 /**
  * \brief Writes data to a given address.
@@ -58,7 +58,7 @@ int mt25ql01gbbb_init(void);
  *
  * \return Error/status code.
  */
-int mt25ql01gbbb_write(uint32_t adr, uint8_t *data, uint32_t len);
+int mt25q_write(uint32_t adr, uint8_t *data, uint32_t len);
 
 /**
  * \brief Reads data from a given address.
@@ -71,14 +71,14 @@ int mt25ql01gbbb_write(uint32_t adr, uint8_t *data, uint32_t len);
  *
  * \return Error/status code.
  */
-int mt25ql01gbbb_read(uint32_t adr, uint8_t *data, uint32_t len);
+int mt25q_read(uint32_t adr, uint8_t *data, uint32_t len);
 
 /**
  * \brief SPI interface initialization.
  *
  * \return Error/status code.
  */
-int mt25ql01gbbb_spi_init(void);
+int mt25q_spi_init(void);
 
 /**
  * \brief Writes the device using the SPI interface.
@@ -89,7 +89,7 @@ int mt25ql01gbbb_spi_init(void);
  *
  * \return Error/status code.
  */
-int mt25ql01gbbb_spi_write(uint8_t *data, uint16_t len);
+int mt25q_spi_write(uint8_t *data, uint16_t len);
 
 /**
  * \brief Reads the device using the SPI interface.
@@ -100,7 +100,7 @@ int mt25ql01gbbb_spi_write(uint8_t *data, uint16_t len);
  *
  * \return Error/status code.
  */
-int mt25ql01gbbb_spi_read(uint8_t *data, uint16_t len);
+int mt25q_spi_read(uint8_t *data, uint16_t len);
 
 /**
  * \brief SPI transfer operation (write and/or read).
@@ -113,7 +113,7 @@ int mt25ql01gbbb_spi_read(uint8_t *data, uint16_t len);
  *
  * \return Error/status code.
  */
-int mt25ql01gbbb_spi_transfer(uint8_t *wdata, uint8_t *rdata, uint16_t len);
+int mt25q_spi_transfer(uint8_t *wdata, uint8_t *rdata, uint16_t len);
 
 /**
  * \brief Initialization of the GPIO pins.
@@ -122,7 +122,7 @@ int mt25ql01gbbb_spi_transfer(uint8_t *wdata, uint8_t *rdata, uint16_t len);
  *
  * \return The error/status code.
  */
-int mt25ql01gbbb_gpio_init(void);
+int mt25q_gpio_init(void);
 
 /**
  * \brief Sets the state of the hold pin.
@@ -131,7 +131,7 @@ int mt25ql01gbbb_gpio_init(void);
  *
  * \return The error/status code.
  */
-int mt25ql01gbbb_gpio_set_hold(bool state);
+int mt25q_gpio_set_hold(bool state);
 
 /**
  * \brief Sets the state of the reset pin.
@@ -140,8 +140,8 @@ int mt25ql01gbbb_gpio_set_hold(bool state);
  *
  * \return The error/status code.
  */
-int mt25ql01gbbb_gpio_set_reset(bool state);
+int mt25q_gpio_set_reset(bool state);
 
-#endif /* MT25QL01GBBB_H_ */
+#endif /* MT25Q_H_ */
 
-/** \} End of mt25ql01gbbb group */
+/** \} End of mt25q group */
