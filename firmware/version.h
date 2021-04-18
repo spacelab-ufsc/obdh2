@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.21
+ * \version 0.5.22
  * 
- * \date 25/10/2019
+ * \date 2019/10/25
  * 
  * \defgroup version Version control
  * \{
@@ -36,7 +36,7 @@
 #ifndef VERSION_H_
 #define VERSION_H_
 
-#define FIRMWARE_VERSION            "0.5.21"
+#define FIRMWARE_VERSION            "0.5.22"
 
 #define FIRMWARE_STATUS             "Development"
 
