@@ -1,7 +1,7 @@
 /*
  * read_sensors.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.6
+ * \version 0.5.29
  * 
  * \date 2020/07/12
  * 
@@ -56,13 +56,13 @@ void vTaskReadSensors(void *pvParameters)
         uint16_t buf = 0;
 
         /* OBDH current */
-        if (current_sensor_read_raw(&buf) == 0)
+        if (current_sensor_read_ma(&buf) == 0)
         {
             sat_data_buf.obdh.current = buf;
         }
 
         /* OBDH voltage */
-        if (voltage_sensor_read_raw(&buf) == 0)
+        if (voltage_sensor_read_mv(&buf) == 0)
         {
             sat_data_buf.obdh.voltage = buf;
         }
