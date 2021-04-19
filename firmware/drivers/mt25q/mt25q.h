@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.26
+ * \version 0.5.27
  * 
  * \date 2019/11/15
  * 
@@ -40,7 +40,22 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define MT25Q_MODULE_NAME       "MT25Q"
+#define MT25Q_MODULE_NAME               "MT25Q"
+
+#define MT25Q_MANUFACTURER_ID           0x20    /**< Manufacturer ID. */
+
+/* Memory type */
+#define MT25Q_MEMORY_TYPE_3V            0xBA    /**< 3 V. */
+#define MT25Q_MEMORY_TYPE_1V8           0xBB    /**< 1.8 V. */
+
+/* MT25Q memory capacity */
+#define MT25Q_MEMORY_CAPACITY_2GB       0x22    /**< 2 GB. */
+#define MT25Q_MEMORY_CAPACITY_1GB       0x21    /**< 1 GB. */
+#define MT25Q_MEMORY_CAPACITY_512MB     0x20    /**< 512 MB. */
+#define MT25Q_MEMORY_CAPACITY_256MB     0x19    /**< 256 MB. */
+#define MT25Q_MEMORY_CAPACITY_128MB     0x18    /**< 128 MB. */
+#define MT25Q_MEMORY_CAPACITY_64MB      0x17    /**< 64 MB. */
+
 
 /**
  * \brief Device ID structure.

@@ -1,7 +1,7 @@
 /*
  * media.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.14
+ * \version 0.5.27
  * 
- * \date 21/07/2020
+ * \date 2020/07/21
  * 
  * \addtogroup media
  * \{
@@ -36,6 +36,7 @@
 #include <system/sys_log/sys_log.h>
 
 #include <drivers/flash/flash.h>
+#include <drivers/mt25q/mt25q.h>
 
 #include "media.h"
 
@@ -46,10 +47,55 @@ int media_init(media_t med)
         case MEDIA_INT_FLASH:
             return flash_init();
         case MEDIA_NOR:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Initialization not implemented for the NOR memory!");
+            sys_log_print_event_from_module(SYS_LOG_INFO, MEDIA_MODULE_NAME, "Initializing NOR memory...");
             sys_log_new_line();
 
-            return -1;
+            if (mt25q_init() != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error initializing the NOR memory!");
+                sys_log_new_line();
+
+                return -1;
+            }
+
+            mt25q_dev_id_t dev_id = {0};
+
+            if (mt25q_read_device_id(&dev_id) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error reading the device ID of NOR memory!");
+                sys_log_new_line();
+
+                return -1;
+            }
+
+            if (dev_id.manufacturer_id != MT25Q_MANUFACTURER_ID)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Wrong device device ID! (expected=");
+                sys_log_print_hex(MT25Q_MANUFACTURER_ID);
+                sys_log_print_msg(", read=");
+                sys_log_print_hex(dev_id.manufacturer_id);
+                sys_log_print_msg(")");
+                sys_log_new_line();
+
+                return -1;
+            }
+
+            sys_log_print_event_from_module(SYS_LOG_INFO, MEDIA_MODULE_NAME, "MT25Q with ");
+
+            switch(dev_id.memory_capacity)
+            {
+                case MT25Q_MEMORY_CAPACITY_2GB:     sys_log_print_msg("2 Gb capacity detected!");       break;
+                case MT25Q_MEMORY_CAPACITY_1GB:     sys_log_print_msg("1 Gb capacity detected!");       break;
+                case MT25Q_MEMORY_CAPACITY_512MB:   sys_log_print_msg("512 Mb capacity detected!");     break;
+                case MT25Q_MEMORY_CAPACITY_256MB:   sys_log_print_msg("256 Mb capacity detected!");     break;
+                case MT25Q_MEMORY_CAPACITY_128MB:   sys_log_print_msg("128 Mb capacity detected!");     break;
+                case MT25Q_MEMORY_CAPACITY_64MB:    sys_log_print_msg("64 Mb capacity detected!");      break;
+                default:                            sys_log_print_msg("UNKNOWN capacity detected!");
+            }
+
+            sys_log_new_line();
+
+            return 0;
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Invalid storage media to initialize!");
             sys_log_new_line();
