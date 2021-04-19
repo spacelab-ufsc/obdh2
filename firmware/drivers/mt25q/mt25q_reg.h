@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.24
+ * \version 0.5.26
  * 
  * \date 2020/03/13
  * 
@@ -36,6 +36,11 @@
 
 #ifndef MT25Q_REG_H_
 #define MT25Q_REG_H_
+
+/* Read ID Operations */
+#define MT25Q_READ_ID_REG                                   0x9E    /**< Read ID register. */
+#define MT25Q_MULTIPLE_IO_READ_ID_REG                       0xAF    /**< Multiple I/O read ID register. */
+#define MT25Q_READ_SERIAL_FLASH_DISCOVERY_PARAMETER_REG     0x5A    /**< Read serial flash discovery parameter. */
 
 /* Read Register Operations */
 #define MT25Q_READ_STATUS_REG                               0x05    /**< Read status register. */

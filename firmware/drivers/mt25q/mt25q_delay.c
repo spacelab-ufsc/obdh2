@@ -1,5 +1,5 @@
 /*
- * mt25q.c
+ * mt25q_delay.c
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
@@ -21,69 +21,26 @@
  */
 
 /**
- * \brief MT25Q driver implementation.
+ * \brief MT25Q driver delay implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.5.26
  * 
- * \date 2019/11/15
+ * \date 2021/04/19
  * 
  * \addtogroup mt25q
  * \{
  */
 
+#include <FreeRTOS.h>
+#include <task.h>
+
 #include "mt25q.h"
-#include "mt25q_reg.h"
 
-int mt25q_init(void)
+void mt25q_delay_ms(uint32_t ms)
 {
-    if (mt25q_spi_init() != 0)
-    {
-        return -1;
-    }
-
-    if (mt25q_gpio_init() != 0)
-    {
-        return -1;
-    }
-
-    mt25q_delay_ms(100);
-
-    mt25q_gpio_set_reset(false);
-
-    mt25q_delay_ms(100);
-
-    mt25q_gpio_set_reset(true);
-
-    return 0;
-}
-
-int mt25q_read_device_id(mt25q_dev_id_t *dev_id)
-{
-    uint8_t cmd[4] = {MT25Q_READ_ID_REG, 0, 0, 0};
-    uint8_t ans[4] = {0};
-
-    if (mt25q_spi_transfer(cmd, ans, 4) != 0)
-    {
-        return -1;
-    }
-
-    dev_id->manufacturer_id  = ans[0];
-    dev_id->memory_type      = ans[1];
-    dev_id->memory_capacity  = ans[2];
-
-    return 0;
-}
-
-int mt25q_write(uint32_t adr, uint8_t *data, uint32_t len)
-{
-    return -1;
-}
-
-int mt25q_read(uint32_t adr, uint8_t *data, uint32_t len)
-{
-    return -1;
+    vTaskDelay(pdMS_TO_TICKS(ms));
 }
 
 /** \} End of mt25q group */

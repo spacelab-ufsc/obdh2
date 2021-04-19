@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.24
+ * \version 0.5.26
  * 
  * \date 2019/11/15
  * 
@@ -40,12 +40,33 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define MT25Q_MODULE_NAME       "MT25Q"
+
+/**
+ * \brief Device ID structure.
+ */
+typedef struct
+{
+    uint8_t manufacturer_id;
+    uint8_t memory_type;
+    uint8_t memory_capacity;
+} mt25q_dev_id_t;
+
 /**
  * \brief Driver initialization.
  *
- * \return Error/status code.
+ * \return The error/status code.
  */
 int mt25q_init(void);
+
+/**
+ * \brief Reads the device ID information.
+ *
+ * \param[in,out] dev_id is a pointer to store the read device ID.
+ *
+ * \return The error/status code.
+ */
+int mt25q_read_device_id(mt25q_dev_id_t *dev_id);
 
 /**
  * \brief Writes data to a given address.
@@ -141,6 +162,15 @@ int mt25q_gpio_set_hold(bool state);
  * \return The error/status code.
  */
 int mt25q_gpio_set_reset(bool state);
+
+/**
+ * \brief Milliseconds delay.
+ *
+ * \param[in] ms is the delay period in milliseconds.
+ *
+ * \return None.
+ */
+void mt25q_delay_ms(uint32_t ms);
 
 #endif /* MT25Q_H_ */
 

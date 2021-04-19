@@ -46,6 +46,7 @@ int mt25q_gpio_init(void)
 
     conf.mode = GPIO_MODE_OUTPUT;
 
+    /* HOLD pin */
     if (gpio_init(MT25Q_GPIO_HOLD_PIN, conf) != 0)
     {
         return -1;
@@ -53,6 +54,7 @@ int mt25q_gpio_init(void)
 
     mt25q_gpio_set_hold(false);
 
+    /* RESET pin */
     if (gpio_init(MT25Q_GPIO_RESET_PIN, conf) != 0)
     {
         return -1;
