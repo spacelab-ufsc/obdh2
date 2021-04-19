@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.21
+ * \version 0.5.27
  * 
  * \date 2020/07/11
  * 
@@ -76,7 +76,7 @@ int voltage_sensor_read_raw(uint16_t *val)
 
 uint16_t voltage_sensor_raw_to_mv(uint16_t raw)
 {
-    return (uint16_t)(raw*ADC_AVCC_MV*VOLTAGE_SENSOR_DIV/ADC_RANGE);
+    return (uint16_t)((uint32_t)raw*ADC_AVCC_MV*VOLTAGE_SENSOR_DIV/ADC_RANGE);
 }
 
 int voltage_sensor_read_mv(uint16_t *volt)
