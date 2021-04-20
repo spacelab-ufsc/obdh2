@@ -24,6 +24,8 @@
 
 \chapter{Test Report of v0.5 Version} \label{anx:test-report-v05}
 
+This appendix is a test report of the first manufactured and assembled PCB (version v0.5).
+
 \begin{itemize}
     \item PCB manufacturer: PCBWay (China)
     \item PCB assembly: PCBWay (China)
@@ -34,7 +36,23 @@
 
 \section{Visual Inspection}
 
-.
+The visual inspection is the first test executed when a new board is assembled. Performing this test on the v0.5 boards, no problems were found. The top view of the board can be seen in \autoref{fig:obdh2-v05-top}, the bottom view is available in \autoref{fig:obdh2-v05-bottom}.
+
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=\columnwidth]{figures/v05/obdh2-v05-top.jpg}
+        \caption{Top view of the OBDH 2.0 v0.5 board.}
+        \label{fig:obdh2-v05-top}
+    \end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=\columnwidth]{figures/v05/obdh2-v05-bottom.jpg}
+        \caption{Bottom view of the OBDH 2.0 v0.5 board.}
+        \label{fig:obdh2-v05-bottom}
+    \end{center}
+\end{figure}
 
 \section{Firmware Programming}
 
@@ -118,6 +136,18 @@ Material:
 
 \subsection{Input Current}
 
+\begin{figure}[!htb]
+    \begin{center}
+        \subfigure[Current sensing circuit.\label{fig:current-sensing-circuit-v05}]{\includegraphics[width=0.8\textwidth]{figures/v05/current-sensor-circuit.png}}
+
+        \subfigure[MAX9934 pinout.\label{fig:max9934-pinout}]{\includegraphics[width=0.4\textwidth]{figures/v05/max9934-top-view.png}}
+        ~
+        \subfigure[Current sensing layout (bottom layer).\label{fig:}]{\includegraphics[width=0.4\textwidth]{figures/v05/current-sensor-layout.png}}
+        \caption{.}
+        \label{fig:current-sensing-error-v05}
+    \end{center}
+\end{figure}
+
 \begin{figure}[!ht]
     \begin{center}
         \includegraphics[width=0.8\columnwidth]{figures/v05/log-current-sensor.png}
@@ -127,5 +157,29 @@ Material:
 \end{figure}
 
 \subsection{Temperature}
+
+.
+
+\section{Peripherals}
+
+\subsection{NOR Flash Memory}
+
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=0.7\columnwidth]{figures/v05/test-nor-memory.jpg}
+        \caption{Connections of the NOR flash memory test.}
+        \label{fig:test-nor-memory}
+    \end{center}
+\end{figure}
+
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=\columnwidth]{figures/v05/waveform-spi-mem.png}
+        \caption{Waveform of the NOR memory SPI.}
+        \label{fig:waveform-spi-mem}
+    \end{center}
+\end{figure}
+
+\section{Conclusion}
 
 .
