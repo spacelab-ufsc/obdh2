@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.24
+ * \version 0.5.31
  * 
  * \date 2021/04/18
  * 
@@ -52,7 +52,7 @@ int mt25q_gpio_init(void)
         return -1;
     }
 
-    mt25q_gpio_set_hold(false);
+    mt25q_gpio_set_hold(true);
 
     /* RESET pin */
     if (gpio_init(MT25Q_GPIO_RESET_PIN, conf) != 0)

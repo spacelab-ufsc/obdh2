@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.26
+ * \version 0.5.31
  * 
  * \date 2019/11/15
  * 
@@ -48,13 +48,7 @@ int mt25q_init(void)
         return -1;
     }
 
-    mt25q_delay_ms(100);
-
-    mt25q_gpio_set_reset(false);
-
-    mt25q_delay_ms(100);
-
-    mt25q_gpio_set_reset(true);
+    mt25q_delay_ms(10);
 
     return 0;
 }
@@ -69,9 +63,9 @@ int mt25q_read_device_id(mt25q_dev_id_t *dev_id)
         return -1;
     }
 
-    dev_id->manufacturer_id  = ans[0];
-    dev_id->memory_type      = ans[1];
-    dev_id->memory_capacity  = ans[2];
+    dev_id->manufacturer_id  = ans[1];
+    dev_id->memory_type      = ans[2];
+    dev_id->memory_capacity  = ans[3];
 
     return 0;
 }
