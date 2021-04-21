@@ -1,5 +1,5 @@
 <h1 align="center">
-    OBDH2 HARDWARE
+    OBDH 2.0 HARDWARE
     <br>
 </h1>
 
@@ -27,12 +27,6 @@
     <a href="#license">
         <img src="https://img.shields.io/badge/license-cern%20ohl%202-yellow?style=for-the-badge">
     </a>
-    <a href="https://github.com/spacelab-ufsc/obdh">
-        <img src="https://img.shields.io/badge/flight-heritage-lightgray?style=for-the-badge">
-    </a>
-    <a href="https://github.com/spacelab-ufsc/obdh2/tree/master/doc">
-        <img src="https://img.shields.io/badge/for%20more-here-lightgray?style=for-the-badge">
-    </a>
 </p>
 
 <p align="center">
@@ -52,7 +46,7 @@
 
 ## Overview
 
-The OBDH2 board is composed of the following main components: MCU, non-volatile memory, voltage monitor with watchdog timer, TTC interface, EPS interface, payloads interface, daughterboard interface, I2C buffers, RS-485 transceiver, and current sensor. It is a FR-4 standard 2 layers PCB with a CubeSat form factor shape and size (90mm x 93mm).
+The OBDH 2.0 board is composed of the following main components: MCU, non-volatile memory, voltage monitor with watchdog timer, TTC interface, EPS interface, payloads interface, daughterboard interface, I2C buffers, RS-485 transceiver, and current sensor. It is a FR-4 standard 2 layers PCB with a CubeSat form factor shape and size (90 x 93 mm).
 
 ## Architecture
 
@@ -76,7 +70,7 @@ The board has components that should not be soldered simultaneously. Refer to th
 
 #### Power-on procedure
 
-The board requires external supply from the PC-104 connector or the JTAG programmer interface. The following diagram present a simplified diagram of the board power. Refer to the [documentation](https://github.com/spacelab-ufsc/obdh2/tree/master/doc) in the "Instructions" chapter.  
+The board requires external supply from the PC-104 connector or the JTAG programmer interface. The following diagram present a simplified diagram of the board power. Refer to the [documentation](https://github.com/spacelab-ufsc/obdh2/tree/master/doc) in the "Instructions" chapter.
 
 <p align="center">
     <img width="70%" src="https://github.com/spacelab-ufsc/obdh2/blob/master/doc/figures/power-diagram.png">
@@ -86,11 +80,11 @@ The board requires external supply from the PC-104 connector or the JTAG program
 
 #### Debugging
 
-The debugging is performed through a serial UART port, using as default a baud rate of 115200, 1 stop bit, and no parity bit. The interface uses a log system standard to improve readability. Refer to the [documentation](https://github.com/spacelab-ufsc/obdh2/tree/master/doc) in the "Instructions" chapter.  
+The debugging is performed through a serial UART port, using as default a baud rate of 115200 bps, 1 stop bit, and no parity bit. The interface uses a log system standard to improve readability. Refer to the [documentation](https://github.com/spacelab-ufsc/obdh2/tree/master/doc) in the "Instructions" chapter.
 
 #### Testing
 
-Automated testing is not avaliable yet.  
+Automated testing is not avaliable yet.
 
 ## Version
 
@@ -103,5 +97,3 @@ This repository containing hardware files is licensed under CERN Open Hardware L
 ## Notes
 
 Project under development!
-
-
