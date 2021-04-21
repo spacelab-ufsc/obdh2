@@ -1,5 +1,18 @@
 ===========================================
 
+v0.6 - 2021/04/21
+
+- Routines to read the hardware version
+- Importing the Uniflash tool
+- Working version of the current and voltage sensor
+- Initial unit test
+- Improving the ISIS antenna driver
+- Initial driver of the internal RTC
+- Minimal driver of the MT25Q flash memory
+- General fixes and improvements
+
+===========================================
+
 v0.5 - 2020/08/27
 
 - Voltage sensor device
