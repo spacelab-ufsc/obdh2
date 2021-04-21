@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.30
+ * \version 0.5.32
  * 
  * \date 2019/12/07
  * 
@@ -204,11 +204,11 @@ int spi_init(spi_port_t port, spi_config_t config)
         switch(config.mode)
         {
             case SPI_MODE_0:
-                spi_params.clockPhase       = USCI_A_SPI_PHASE_DATA_CHANGED_ONFIRST_CAPTURED_ON_NEXT;
+                spi_params.clockPhase       = USCI_A_SPI_PHASE_DATA_CAPTURED_ONFIRST_CHANGED_ON_NEXT;
                 spi_params.clockPolarity    = USCI_A_SPI_CLOCKPOLARITY_INACTIVITY_LOW;
                 break;
             case SPI_MODE_1:
-                spi_params.clockPhase       = USCI_A_SPI_PHASE_DATA_CAPTURED_ONFIRST_CHANGED_ON_NEXT;
+                spi_params.clockPhase       = USCI_A_SPI_PHASE_DATA_CHANGED_ONFIRST_CAPTURED_ON_NEXT;
                 spi_params.clockPolarity    = USCI_A_SPI_CLOCKPOLARITY_INACTIVITY_LOW;
                 break;
             case SPI_MODE_2:
