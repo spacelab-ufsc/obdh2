@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.25
+ * \version 0.5.30
  * 
  * \date 2019/12/07
  * 
@@ -198,7 +198,7 @@ int spi_init(spi_port_t port, spi_config_t config)
         spi_params.selectClockSource        = USCI_A_SPI_CLOCKSOURCE_SMCLK;
         spi_params.clockSourceFrequency     = UCS_getSMCLK();
         spi_params.desiredSpiClock          = config.speed_hz;
-        spi_params.msbFirst                 = USCI_A_SPI_LSB_FIRST;
+        spi_params.msbFirst                 = USCI_A_SPI_MSB_FIRST;
 
         /* SPI mode */
         switch(config.mode)
