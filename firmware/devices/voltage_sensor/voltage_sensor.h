@@ -1,7 +1,7 @@
 /*
  * voltage_sensor.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.8
+ * \version 0.5.27
  * 
- * \date 11/07/2020
+ * \date 2020/07/11
  * 
  * \defgroup voltage_sensor Voltage Sensor
  * \ingroup devices
@@ -44,7 +44,7 @@
 #define VOLTAGE_SENSOR_MODULE_NAME     "Voltage Sensor"
 
 #define VOLTAGE_SENSOR_ADC_PORT         ADC_PORT_4      /**< Voltage sensor ADC port (channel). */
-#define VOLTAGE_SENSOR_DIV              2.0             /**< Voltage divisor factor. */
+#define VOLTAGE_SENSOR_DIV              2               /**< Voltage divisor factor. */
 
 /**
  * \brief Voltage sensor device initialization routine.

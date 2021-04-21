@@ -1,7 +1,7 @@
 /*
  * read_sensors.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.4
+ * \version 0.5.29
  * 
  * \date 2020/07/12
  * 
@@ -43,7 +43,7 @@
 #define TASK_READ_SENSORS_NAME                  "Read Sensors"      /**< Task name. */
 #define TASK_READ_SENSORS_STACK_SIZE            128                 /**< Stack size in bytes. */
 #define TASK_READ_SENSORS_PRIORITY              3                   /**< Task priority. */
-#define TASK_READ_SENSORS_PERIOD_MS             (60*1000)           /**< Task period in milliseconds. */
+#define TASK_READ_SENSORS_PERIOD_MS             (60000)             /**< Task period in milliseconds. */
 #define TASK_READ_SENSORS_INIT_TIMEOUT_MS       2000                /**< Wait time to initialize the task in milliseconds. */
 
 /**
