@@ -1,7 +1,7 @@
 /*
  * adc.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.1
+ * \version 0.5.21
  * 
- * \date 03/03/2020
+ * \date 2020/03/03
  * 
  * \defgroup adc ADC
  * \ingroup drivers
@@ -41,8 +41,9 @@
 
 #define ADC_MODULE_NAME     "ADC"
 
-#define ADC_AVCC            3.0     /**< ADC reference voltage. */
-#define ADC_RANGE           4095    /**< ADC resolution (12-bits) */
+#define ADC_AVCC_V          (3.0)       /**< ADC reference voltage in Volts. */
+#define ADC_AVCC_MV         (3000UL)    /**< ADC reference voltage in millivolts. */
+#define ADC_RANGE           (4095UL)    /**< ADC resolution (12-bits) */
 
 /**
  * \brief ADC ports.

@@ -1,7 +1,7 @@
 /*
  * drivers.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.7
+ * \version 0.5.24
  * 
- * \date 26/10/2019
+ * \date 2019/10/26
  * 
  * \defgroup drivers Drivers
  * \{
@@ -39,7 +39,7 @@
 #include "edc/edc.h"
 #include "i2c/i2c.h"
 #include "isis_antenna/isis_antenna.h"
-#include "mt25ql01gbbb/mt25ql01gbbb.h"
+#include "mt25q/mt25q.h"
 #include "spi/spi.h"
 #include "si446x/si446x.h"
 #include "uart/uart.h"

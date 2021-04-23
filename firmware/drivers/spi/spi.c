@@ -1,7 +1,7 @@
 /*
  * spi.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,13 +25,15 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.9
+ * \version 0.5.33
  * 
- * \date 07/12/2019
+ * \date 2019/12/07
  * 
  * \addtogroup spi
  * \{
  */
+
+#include <stdbool.h>
 
 #include <hal/usci_a_spi.h>
 #include <hal/usci_b_spi.h>
@@ -45,18 +47,38 @@
 
 #include "spi.h"
 
+bool spi_port_0_is_open = false;
+bool spi_port_1_is_open = false;
+bool spi_port_2_is_open = false;
+bool spi_port_3_is_open = false;
+bool spi_port_4_is_open = false;
+bool spi_port_5_is_open = false;
+
+/**
+ * \brief Checks if a SPI port is already initialized or not.
+ *
+ * \param[in] port is the port to verify the initialization status.
+ *
+ * \return TRUE/FALSE if the given port is already initialized or not.
+ */
+bool spi_check_port(spi_port_t port);
+
 int spi_setup_gpio(spi_port_t port)
 {
+    gpio_config_t conf = {0};
+
+    conf.mode = GPIO_MODE_OUTPUT;
+
     switch(port)
     {
         case SPI_PORT_0:
-            GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P2, GPIO_PIN0 + GPIO_PIN3 + GPIO_PIN4);
+            GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P2, GPIO_PIN0 + GPIO_PIN4 + GPIO_PIN5);
 
-            gpio_init(GPIO_PIN_5, (gpio_config_t){.mode=GPIO_MODE_OUTPUT});
-            gpio_init(GPIO_PIN_6, (gpio_config_t){.mode=GPIO_MODE_OUTPUT});
-            gpio_init(GPIO_PIN_28, (gpio_config_t){.mode=GPIO_MODE_OUTPUT});
-            gpio_init(GPIO_PIN_45, (gpio_config_t){.mode=GPIO_MODE_OUTPUT});
-            gpio_init(GPIO_PIN_46, (gpio_config_t){.mode=GPIO_MODE_OUTPUT});
+            gpio_init(GPIO_PIN_5, conf);
+            gpio_init(GPIO_PIN_6, conf);
+            gpio_init(GPIO_PIN_28, conf);
+            gpio_init(GPIO_PIN_45, conf);
+            gpio_init(GPIO_PIN_46, conf);
 
             /* Set all CS pins to high */
             gpio_set_state(GPIO_PIN_5, true);
@@ -141,6 +163,11 @@ int spi_select_slave(spi_port_t port, spi_cs_t cs, bool active)
 
 int spi_init(spi_port_t port, spi_config_t config)
 {
+    if (spi_check_port(port))
+    {
+        return 0;
+    }
+
     uint16_t base_address;
 
     switch(port)
@@ -171,25 +198,25 @@ int spi_init(spi_port_t port, spi_config_t config)
         spi_params.selectClockSource        = USCI_A_SPI_CLOCKSOURCE_SMCLK;
         spi_params.clockSourceFrequency     = UCS_getSMCLK();
         spi_params.desiredSpiClock          = config.speed_hz;
-        spi_params.msbFirst                 = USCI_A_SPI_LSB_FIRST;
+        spi_params.msbFirst                 = USCI_A_SPI_MSB_FIRST;
 
         /* SPI mode */
         switch(config.mode)
         {
             case SPI_MODE_0:
-                spi_params.clockPhase       = USCI_A_SPI_PHASE_DATA_CHANGED_ONFIRST_CAPTURED_ON_NEXT;
+                spi_params.clockPhase       = USCI_A_SPI_PHASE_DATA_CAPTURED_ONFIRST_CHANGED_ON_NEXT;
                 spi_params.clockPolarity    = USCI_A_SPI_CLOCKPOLARITY_INACTIVITY_LOW;
                 break;
             case SPI_MODE_1:
-                spi_params.clockPhase       = USCI_A_SPI_PHASE_DATA_CAPTURED_ONFIRST_CHANGED_ON_NEXT;
+                spi_params.clockPhase       = USCI_A_SPI_PHASE_DATA_CHANGED_ONFIRST_CAPTURED_ON_NEXT;
                 spi_params.clockPolarity    = USCI_A_SPI_CLOCKPOLARITY_INACTIVITY_LOW;
                 break;
             case SPI_MODE_2:
-                spi_params.clockPhase       = USCI_A_SPI_PHASE_DATA_CHANGED_ONFIRST_CAPTURED_ON_NEXT;
+                spi_params.clockPhase       = USCI_A_SPI_PHASE_DATA_CAPTURED_ONFIRST_CHANGED_ON_NEXT;
                 spi_params.clockPolarity    = USCI_A_SPI_CLOCKPOLARITY_INACTIVITY_HIGH;
                 break;
             case SPI_MODE_3:
-                spi_params.clockPhase       = USCI_A_SPI_PHASE_DATA_CAPTURED_ONFIRST_CHANGED_ON_NEXT;
+                spi_params.clockPhase       = USCI_A_SPI_PHASE_DATA_CHANGED_ONFIRST_CAPTURED_ON_NEXT;
                 spi_params.clockPolarity    = USCI_A_SPI_CLOCKPOLARITY_INACTIVITY_HIGH;
                 break;
             default:
@@ -257,6 +284,16 @@ int spi_init(spi_port_t port, spi_config_t config)
         }
 
         USCI_B_SPI_enable(base_address);
+    }
+
+    switch(port)
+    {
+        case SPI_PORT_0:    spi_port_0_is_open = true;  break;
+        case SPI_PORT_1:    spi_port_1_is_open = true;  break;
+        case SPI_PORT_2:    spi_port_2_is_open = true;  break;
+        case SPI_PORT_3:    spi_port_3_is_open = true;  break;
+        case SPI_PORT_4:    spi_port_4_is_open = true;  break;
+        case SPI_PORT_5:    spi_port_5_is_open = true;  break;
     }
 
     return 0;
@@ -333,6 +370,17 @@ int spi_write(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len)
             return -1;  /* Invalid SPI port */
     }
 
+    if (!spi_check_port(port))
+    {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error during writing: Port ");
+        sys_log_print_uint(port);
+        sys_log_print_msg(" is not initialized!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        return -1;
+    }
+
     /* Enable the CS pin */
     if (spi_select_slave(port, cs, true) != 0)
     {
@@ -371,6 +419,17 @@ int spi_read(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len)
             return -1;  /* Invalid SPI port */
     }
 
+    if (!spi_check_port(port))
+    {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error during writing: Port ");
+        sys_log_print_uint(port);
+        sys_log_print_msg(" is not initialized!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        return -1;
+    }
+
     /* Enable the CS pin */
     if (spi_select_slave(port, cs, true) != 0)
     {
@@ -405,6 +464,17 @@ int spi_transfer(spi_port_t port, spi_cs_t cs, uint8_t *wd, uint8_t *rd, uint16_
             return -1;  /* Invalid SPI port */
     }
 
+    if (!spi_check_port(port))
+    {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error during writing: Port ");
+        sys_log_print_uint(port);
+        sys_log_print_msg(" is not initialized!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        return -1;
+    }
+
     /* Enable the CS pin */
     if (spi_select_slave(port, cs, true) != 0)
     {
@@ -421,6 +491,20 @@ int spi_transfer(spi_port_t port, spi_cs_t cs, uint8_t *wd, uint8_t *rd, uint16_
     spi_select_slave(port, cs, false);
 
     return 0;
+}
+
+bool spi_check_port(spi_port_t port)
+{
+    switch(port)
+    {
+        case SPI_PORT_0:    return spi_port_0_is_open;
+        case SPI_PORT_1:    return spi_port_1_is_open;
+        case SPI_PORT_2:    return spi_port_2_is_open;
+        case SPI_PORT_3:    return spi_port_3_is_open;
+        case SPI_PORT_4:    return spi_port_4_is_open;
+        case SPI_PORT_5:    return spi_port_5_is_open;
+        default:            return false;
+    }
 }
 
 /** \} End of spi group */
