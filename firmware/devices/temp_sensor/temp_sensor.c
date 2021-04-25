@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.9
+ * \version 0.6.3
  * 
  * \date 17/03/2020
  * 
@@ -76,9 +76,14 @@ int temp_sensor_read_raw(uint16_t *val)
     return adc_read(TEMP_SENSOR_ADC_PORT, val);
 }
 
-float temp_sensor_raw_to_c(uint16_t raw)
+uint16_t temp_sensor_raw_to_c(uint16_t raw)
 {
-	return (float)(((int32_t)raw * 2 - TEMP_SENSOR_CAL_15V_30C) * (85 - 30)) / (TEMP_SENSOR_CAL_15V_85C - TEMP_SENSOR_CAL_15V_30C) + 30.0f;
+    return (raw - adc_temp_get_nref())/adc_temp_get_mref();
+}
+
+uint16_t temp_sensor_raw_to_k(uint16_t raw)
+{
+    return (uint16_t)(temp_sensor_raw_to_c(raw) + 273);
 }
 
 int temp_sensor_read_c(float *temp)
@@ -94,6 +99,23 @@ int temp_sensor_read_c(float *temp)
     }
 
     *temp = temp_sensor_raw_to_c(raw_temp);
+
+    return 0;
+}
+
+int temp_sensor_read_k(uint16_t *temp)
+{
+    uint16_t raw_temp = 0;
+
+    if (temp_sensor_read_raw(&raw_temp) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, TEMP_SENSOR_MODULE_NAME, "Error reading the raw temperature value!");
+        sys_log_new_line();
+
+        return -1;
+    }
+
+    *temp = temp_sensor_raw_to_k(raw_temp);
 
     return 0;
 }
