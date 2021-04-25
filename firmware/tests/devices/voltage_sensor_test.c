@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.7
+ * \version 0.6.3
  * 
  * \date 2021/02/13
  * 
@@ -45,11 +45,11 @@
 #include <tests/mockups/sys_log_wrap.h>
 #include <tests/mockups/adc_wrap.h>
 
-#define VOLTAGE_SENSOR_ADC_PORT         ADC_PORT_4
+#define VOLTAGE_SENSOR_ADC_PORT         ADC_PORT_9
 #define VOLTAGE_SENSOR_ADC_MIN_VAL      0
 #define VOLTAGE_SENSOR_ADC_MAX_VAL      0xFFF       /* 12-bit precision = 0xFFF */
 #define VOLTAGE_SENSOR_MIN_VAL_MV       0
-#define VOLTAGE_SENSOR_MAX_VAL_MV       (uint16_t)(1000.0*VOLTAGE_SENSOR_ADC_MAX_VAL*ADC_AVCC*VOLTAGE_SENSOR_DIV/ADC_RANGE)
+#define VOLTAGE_SENSOR_MAX_VAL_MV       (uint16_t)(1000.0*VOLTAGE_SENSOR_ADC_MAX_VAL*ADC_VREF_MV*VOLTAGE_SENSOR_DIV/ADC_RANGE)
 
 static void voltage_sensor_init_test(void **state)
 {

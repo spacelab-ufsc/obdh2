@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.10
+ * \version 0.6.3
  * 
  * \date 2021/02/13
  * 
@@ -45,7 +45,7 @@
 #include <tests/mockups/sys_log_wrap.h>
 #include <tests/mockups/adc_wrap.h>
 
-#define TEMP_SENSOR_ADC_PORT            ADC_PORT_5
+#define TEMP_SENSOR_ADC_PORT            ADC_PORT_0
 #define TEMP_SENSOR_ADC_MIN_VAL         0
 #define TEMP_SENSOR_ADC_MAX_VAL         0xFFF       /* 12-bit precision = 0xFFF */
 #define TEMP_SENSOR_MIN_VAL_C           0
