@@ -84,7 +84,7 @@ uint16_t temp_sensor_raw_to_k(uint16_t raw);
  *
  * \return The status/error code.
  */
-int temp_sensor_read_c(float *temp);
+int temp_sensor_read_c(uint16_t *temp);
 
 /**
  * \brief Reads the temperature from the temperature sensor in Kelvin.

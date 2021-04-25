@@ -27,7 +27,7 @@
  * 
  * \version 0.6.3
  * 
- * \date 17/03/2020
+ * \date 2020/03/17
  * 
  * \addtogroup temp_sensor
  * \{
@@ -54,7 +54,7 @@ int temp_sensor_init(void)
         return -1;
     }
 
-    float temp = 0;
+    uint16_t temp = 0;
     if (temp_sensor_read_c(&temp) != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, TEMP_SENSOR_MODULE_NAME, "Error reading the temperature value!");
@@ -64,7 +64,7 @@ int temp_sensor_init(void)
     }
 
     sys_log_print_event_from_module(SYS_LOG_INFO, TEMP_SENSOR_MODULE_NAME, "Current temperature: ");
-    sys_log_print_float(temp, 2);
+    sys_log_print_uint(temp);
     sys_log_print_msg(" oC");
     sys_log_new_line();
 
@@ -86,7 +86,7 @@ uint16_t temp_sensor_raw_to_k(uint16_t raw)
     return (uint16_t)(temp_sensor_raw_to_c(raw) + 273);
 }
 
-int temp_sensor_read_c(float *temp)
+int temp_sensor_read_c(uint16_t *temp)
 {
     uint16_t raw_temp = 0;
 
