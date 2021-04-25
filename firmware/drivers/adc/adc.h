@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.2
+ * \version 0.6.3
  * 
  * \date 2020/03/03
  * 
@@ -129,6 +129,20 @@ int adc_init(adc_port_t port, adc_config_t config);
  * \return The status/error code.
  */
 int adc_read(adc_port_t port, uint16_t *val);
+
+/**
+ * \brief Gets the mref value used to calibrate the sensor temperature.
+ *
+ * \return The mref value.
+ */
+float adc_temp_get_mref(void);
+
+/**
+ * \brief Gets the nref value used to calibrate the sensor temperature.
+ *
+ * \return The nref value.
+ */
+float adc_temp_get_nref(void);
 
 /**
  * \brief Milliseconds delay.

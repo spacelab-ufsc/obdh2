@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.2
+ * \version 0.6.3
  * 
  * \date 2020/03/03
  * 
@@ -39,6 +39,7 @@
 #include <hal/adc10_a.h>
 #include <hal/adc12_a.h>
 #include <hal/ref.h>
+#include <hal/tlv.h>
 
 #include <config/config.h>
 #include <system/sys_log/sys_log.h>
@@ -46,6 +47,12 @@
 #include "adc.h"
 
 bool adc_is_ready = false;
+
+float adc_mref = 0;
+float adc_nref = 0;
+
+uint8_t adc_cal_bytes;
+struct s_TLV_ADC_Cal_Data *adc_cal_data;
 
 int adc_init(adc_port_t port, adc_config_t config)
 {
@@ -61,7 +68,7 @@ int adc_init(adc_port_t port, adc_config_t config)
     /* Daughterboard, current and voltage sensor pins */
     GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P6, GPIO_PIN0 | GPIO_PIN1 | GPIO_PIN2 | GPIO_PIN3 | GPIO_PIN4);
 
-    ADC12_A_init(ADC12_A_BASE, ADC12_A_SAMPLEHOLDSOURCE_SC, ADC12_A_CLOCKSOURCE_SMCLK, ADC12_A_CLOCKDIVIDER_1);
+    ADC12_A_init(ADC12_A_BASE, ADC12_A_SAMPLEHOLDSOURCE_SC, ADC12_A_CLOCKSOURCE_ADC12OSC, ADC12_A_CLOCKDIVIDER_1);
 
     ADC12_A_enable(ADC12_A_BASE);
 
@@ -123,7 +130,7 @@ int adc_init(adc_port_t port, adc_config_t config)
 
     ADC12_A_configureMemory(ADC12_A_BASE, &param);
 
-    ADC12_A_clearInterrupt(ADC12_A_BASE, ADC12_A_IFG0 | ADC12_A_IFG8 | ADC12_A_IFG9);
+    ADC12_A_clearInterrupt(ADC12_A_BASE, ADC12_A_IFG0 | ADC12_A_IFG8 | ADC12_A_IFG9 | ADC12_A_IFG10 | ADC12_A_IFG11 | ADC12_A_IFG12);
 
     uint8_t i = 0;
     for(i=0; i<ADC_TIMOUT_MS; i++)
@@ -143,6 +150,12 @@ int adc_init(adc_port_t port, adc_config_t config)
     Ref_enableTempSensor(REF_BASE);
 
     adc_delay_ms(10);
+
+    /* Temperature sensor calibration data */
+    TLV_getInfo(TLV_TAG_ADCCAL, 0, &adc_cal_bytes, (uint16_t **)&adc_cal_data);
+
+    adc_mref = ((float)(adc_cal_data->adc_ref15_85_temp - adc_cal_data->adc_ref15_30_temp)) / (85 - 30);
+    adc_nref = adc_cal_data->adc_ref15_85_temp - adc_mref * 85;
 
     adc_is_ready = true;
 
@@ -520,6 +533,16 @@ int adc_read(adc_port_t port, uint16_t *val)
     ADC12_A_clearInterrupt(ADC12_A_BASE, ADC12_A_IFG0 | ADC12_A_IFG8 | ADC12_A_IFG9);
 
     return 0;
+}
+
+float adc_temp_get_mref(void)
+{
+    return adc_mref;
+}
+
+float adc_temp_get_nref(void)
+{
+    return adc_nref;
 }
 
 /** \} End of adc group */
