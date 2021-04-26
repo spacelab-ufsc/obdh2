@@ -1,7 +1,7 @@
 /*
  * adc.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.1
+ * \version 0.6.3
  * 
- * \date 03/03/2020
+ * \date 2020/03/03
  * 
  * \defgroup adc ADC
  * \ingroup drivers
@@ -41,8 +41,11 @@
 
 #define ADC_MODULE_NAME     "ADC"
 
-#define ADC_AVCC            3.0     /**< ADC reference voltage. */
-#define ADC_RANGE           4095    /**< ADC resolution (12-bits) */
+#define ADC_VREF_V          (3.0)       /**< ADC reference voltage in Volts. */
+#define ADC_VREF_MV         (3000UL)    /**< ADC reference voltage in millivolts. */
+#define ADC_RANGE           (4095UL)    /**< ADC resolution (12-bits) */
+
+#define ADC_TIMOUT_MS       100         /**< Timeout in milliseconds. */
 
 /**
  * \brief ADC ports.
@@ -126,6 +129,20 @@ int adc_init(adc_port_t port, adc_config_t config);
  * \return The status/error code.
  */
 int adc_read(adc_port_t port, uint16_t *val);
+
+/**
+ * \brief Gets the mref value used to calibrate the sensor temperature.
+ *
+ * \return The mref value.
+ */
+float adc_temp_get_mref(void);
+
+/**
+ * \brief Gets the nref value used to calibrate the sensor temperature.
+ *
+ * \return The nref value.
+ */
+float adc_temp_get_nref(void);
 
 /**
  * \brief Milliseconds delay.

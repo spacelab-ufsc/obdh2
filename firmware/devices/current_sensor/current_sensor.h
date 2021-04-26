@@ -1,7 +1,7 @@
 /*
  * current_sensor.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.6
+ * \version 0.6.2
  * 
- * \date 11/07/2020
+ * \date 2020/07/11
  * 
  * \defgroup current_sensor Current Sensor
  * \ingroup devices
@@ -43,11 +43,19 @@
 
 #define CURRENT_SENSOR_MODULE_NAME          "Current Sensor"
 
-#define CURRENT_SENSOR_ADC_PORT             ADC_PORT_3      /**< Current sensor ADC port (channel). */
+#define CURRENT_SENSOR_ADC_PORT             ADC_PORT_8      /**< Current sensor ADC port (channel). */
 
-#define CURRENT_SENSOR_RSENSE_VALUE_OHM     0.05            /**< Rsense resistor value in Ohms. */
-#define CURRENT_SENSOR_RL_VALUE_OHM         47000           /**< RL resistor value in Ohms. */
-#define CURRENT_SENSOR_GAIN                 0.005           /**< Current gain of max9934 in A/V. */
+/* Rsense value */
+#define CURRENT_SENSOR_RSENSE_VALUE_OHM     0.05            /**< Rsense resistor value in Ohm. */
+#define CURRENT_SENSOR_RSENSE_VALUE_MOHM    50              /**< Rsense resistor value in mOhm. */
+
+/* Rload value */
+#define CURRENT_SENSOR_RL_VALUE_OHM         1650            /**< RL resistor value in Ohms. */
+#define CURRENT_SENSOR_RL_VALUE_KOHM        1.65            /**< RL resistor value in kOhms. */
+
+/* Gain value */
+#define CURRENT_SENSOR_GAIN_A_V             0.025           /**< Current gain of max9934 in A/V. */
+#define CURRENT_SENSOR_GAIN_MA_MV           25              /**< Current gain of max9934 in mA/mV. */
 
 /**
  * \brief Current sensor device initialization routine.

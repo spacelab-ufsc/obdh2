@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.4
+ * \version 0.6.3
  * 
  * \date 2021/02/11
  * 
@@ -45,11 +45,11 @@
 #include <tests/mockups/sys_log_wrap.h>
 #include <tests/mockups/adc_wrap.h>
 
-#define CURRENT_SENSOR_ADC_PORT         ADC_PORT_3
+#define CURRENT_SENSOR_ADC_PORT         ADC_PORT_8
 #define CURRENT_SENSOR_ADC_MIN_VAL      0
 #define CURRENT_SENSOR_ADC_MAX_VAL      0xFFF       /* 12-bit precision = 0xFFF */
 #define CURRENT_SENSOR_MIN_VAL_MA       0
-#define CURRENT_SENSOR_MAX_VAL_MA       (uint16_t)(1000*CURRENT_SENSOR_ADC_MAX_VAL*(ADC_AVCC/(ADC_RANGE*CURRENT_SENSOR_RL_VALUE_OHM*CURRENT_SENSOR_GAIN*CURRENT_SENSOR_RSENSE_VALUE_OHM)))
+#define CURRENT_SENSOR_MAX_VAL_MA       (uint16_t)(1000*CURRENT_SENSOR_ADC_MAX_VAL*(ADC_VREF_MV/(ADC_RANGE*CURRENT_SENSOR_RL_VALUE_OHM*CURRENT_SENSOR_GAIN_A_V*CURRENT_SENSOR_RSENSE_VALUE_OHM)))
 
 static void current_sensor_init_test(void **state)
 {

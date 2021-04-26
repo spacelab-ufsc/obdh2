@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.9
+ * \version 0.6.3
  * 
- * \date 17/03/2020
+ * \date 2020/03/17
  * 
  * \defgroup temp_sensor Temperature Sensor
  * \ingroup devices
@@ -41,10 +41,7 @@
 
 #define TEMP_SENSOR_MODULE_NAME     "Temperature Sensor"
 
-#define TEMP_SENSOR_ADC_PORT        ADC_PORT_5                  /**< Temperature sensors ADC port (channel). */
-
-#define TEMP_SENSOR_CAL_15V_30C     (*((unsigned int *)0x1A1A)) /**< Calibration constant for ADC 1.5-V ref., temp. 30 oC */
-#define TEMP_SENSOR_CAL_15V_85C     (*((unsigned int *)0x1A1C)) /**< Calibration constant for ADC 1.5-V ref., temp. 85 oC. */
+#define TEMP_SENSOR_ADC_PORT        ADC_PORT_0                  /**< Temperature sensors ADC port (channel). */
 
 /**
  * \brief Temperature sensor device initialization routine.
@@ -69,7 +66,16 @@ int temp_sensor_read_raw(uint16_t *val);
  *
  * \return The converted temperature in Celsius.
  */
-float temp_sensor_raw_to_c(uint16_t raw);
+uint16_t temp_sensor_raw_to_c(uint16_t raw);
+
+/**
+ * \brief Converts a raw reading of the temperature sensor to a real temperature in Kelvin.
+ *
+ * \param[in] raw is the raw reading of the temperature.
+ *
+ * \return The converted temperature in Kelvin.
+ */
+uint16_t temp_sensor_raw_to_k(uint16_t raw);
 
 /**
  * \brief Reads the temperature from the temperature sensor in oC.
@@ -78,7 +84,16 @@ float temp_sensor_raw_to_c(uint16_t raw);
  *
  * \return The status/error code.
  */
-int temp_sensor_read_c(float *temp);
+int temp_sensor_read_c(uint16_t *temp);
+
+/**
+ * \brief Reads the temperature from the temperature sensor in Kelvin.
+ *
+ * \param[in,out] temp is a pointer to store the read temperature.
+ *
+ * \return The status/error code.
+ */
+int temp_sensor_read_k(uint16_t *temp);
 
 #endif /* TEMP_SENSOR_H_ */
 

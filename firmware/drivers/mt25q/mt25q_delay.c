@@ -1,7 +1,7 @@
 /*
- * mt25ql01gbbb.c
+ * mt25q_delay.c
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -21,33 +21,26 @@
  */
 
 /**
- * \brief MT25QL01GBBB driver implementation.
+ * \brief MT25Q driver delay implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.5.26
  * 
- * \date 15/11/2019
+ * \date 2021/04/19
  * 
- * \addtogroup mt25ql01gbbb
+ * \addtogroup mt25q
  * \{
  */
 
-#include "mt25ql01gbbb.h"
+#include <FreeRTOS.h>
+#include <task.h>
 
-int mt25ql01gbbb_init()
+#include "mt25q.h"
+
+void mt25q_delay_ms(uint32_t ms)
 {
-    return -1;
+    vTaskDelay(pdMS_TO_TICKS(ms));
 }
 
-int mt25ql01gbbb_write(uint32_t adr, uint8_t *data, uint32_t len)
-{
-    return -1;
-}
-
-int mt25ql01gbbb_read(uint32_t adr, uint8_t *data, uint32_t len)
-{
-    return -1;
-}
-
-/** \} End of mt25ql01gbbb group */
+/** \} End of mt25q group */
