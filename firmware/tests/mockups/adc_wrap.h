@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.3
+ * \version 0.6.4
  * 
  * \date 2021/02/13
  * 
@@ -85,6 +85,20 @@ int __wrap_adc_init(adc_port_t port, adc_config_t config);
  * \return The status/error code.
  */
 int __wrap_adc_read(adc_port_t port, uint16_t *val);
+
+/**
+ * \brief Gets the mref value used to calibrate the sensor temperature (mockup).
+ *
+ * \return The mref value.
+ */
+float __wrap_adc_temp_get_mref(void);
+
+/**
+ * \brief Gets the nref value used to calibrate the sensor temperature (mockup).
+ *
+ * \return The nref value.
+ */
+float __wrap_adc_temp_get_nref(void);
 
 #endif /* ADC_WRAP_H_ */
 

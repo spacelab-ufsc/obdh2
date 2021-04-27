@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.3
+ * \version 0.6.4
  * 
  * \date 2021/02/13
  * 
@@ -63,6 +63,20 @@ int __wrap_adc_read(adc_port_t port, uint16_t *val)
     }
 
     return 0;
+}
+
+float __wrap_adc_temp_get_mref(void)
+{
+    float mref = mock_type(float);
+
+    return mref;
+}
+
+float __wrap_adc_temp_get_nref(void)
+{
+    float nref = mock_type(float);
+
+    return nref;
 }
 
 /** \} End of adc_wrap group */
