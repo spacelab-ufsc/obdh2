@@ -31,6 +31,9 @@
     <a href="#license">
         <img src="https://img.shields.io/badge/license-GPL3-yellow?style=for-the-badge">
     </a>
+    <a href="#license">
+        <img src="https://img.shields.io/github/workflow/status/spacelab-ufsc/obdh2/Test%20Workflow?style=for-the-badge">
+    </a>
 </p>
 
 <p align="center">
