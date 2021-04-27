@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.3
+ * \version 0.6.4
  * 
  * \date 2020/03/17
  * 
@@ -66,7 +66,7 @@ int temp_sensor_read_raw(uint16_t *val);
  *
  * \return The converted temperature in Celsius.
  */
-uint16_t temp_sensor_raw_to_c(uint16_t raw);
+int16_t temp_sensor_raw_to_c(uint16_t raw);
 
 /**
  * \brief Converts a raw reading of the temperature sensor to a real temperature in Kelvin.
@@ -84,7 +84,7 @@ uint16_t temp_sensor_raw_to_k(uint16_t raw);
  *
  * \return The status/error code.
  */
-int temp_sensor_read_c(uint16_t *temp);
+int temp_sensor_read_c(int16_t *temp);
 
 /**
  * \brief Reads the temperature from the temperature sensor in Kelvin.

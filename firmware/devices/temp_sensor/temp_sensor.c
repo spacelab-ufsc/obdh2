@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.3
+ * \version 0.6.4
  * 
  * \date 2020/03/17
  * 
@@ -54,7 +54,7 @@ int temp_sensor_init(void)
         return -1;
     }
 
-    uint16_t temp = 0;
+    int16_t temp = 0;
     if (temp_sensor_read_c(&temp) != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, TEMP_SENSOR_MODULE_NAME, "Error reading the temperature value!");
@@ -64,7 +64,7 @@ int temp_sensor_init(void)
     }
 
     sys_log_print_event_from_module(SYS_LOG_INFO, TEMP_SENSOR_MODULE_NAME, "Current temperature: ");
-    sys_log_print_uint(temp);
+    sys_log_print_int(temp);
     sys_log_print_msg(" oC");
     sys_log_new_line();
 
@@ -76,17 +76,31 @@ int temp_sensor_read_raw(uint16_t *val)
     return adc_read(TEMP_SENSOR_ADC_PORT, val);
 }
 
-uint16_t temp_sensor_raw_to_c(uint16_t raw)
+int16_t temp_sensor_raw_to_c(uint16_t raw)
 {
-    return (raw - adc_temp_get_nref())/adc_temp_get_mref();
+    float buf = (raw - adc_temp_get_nref())/adc_temp_get_mref();
+
+    if (buf < (-273))
+    {
+        buf = (-273);
+    }
+
+    return (int16_t)buf;
 }
 
 uint16_t temp_sensor_raw_to_k(uint16_t raw)
 {
-    return (uint16_t)(temp_sensor_raw_to_c(raw) + 273);
+    int16_t temp_c = temp_sensor_raw_to_c(raw);
+
+    if (temp_c < 273)
+    {
+        temp_c = 273;
+    }
+
+    return (uint16_t)(temp_c + 273);
 }
 
-int temp_sensor_read_c(uint16_t *temp)
+int temp_sensor_read_c(int16_t *temp)
 {
     uint16_t raw_temp = 0;
 
