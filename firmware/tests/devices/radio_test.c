@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.17
+ * \version 0.6.4
  * 
  * \date 2021/02/21
  * 
@@ -42,10 +42,13 @@
 #include <cmocka.h>
 
 #include <devices/radio/radio.h>
-#include <tests/mockups/sys_log_wrap.h>
+#include <tests/mockups/si446x_wrap.h>
 
 static void radio_init_test(void **state)
 {
+    will_return(__wrap_si446x_spi_init, 0);
+    will_return(__wrap_si446x_reset, 0);
+
     int result = radio_init();
 
     assert_return_code(result, 0);
@@ -73,7 +76,7 @@ static void radio_available_test(void **state)
 {
     int result = radio_available();
 
-//    assert_return_code(result, 0);
+    assert_return_code(result, 0);
 }
 
 static void radio_sleep_test(void **state)
