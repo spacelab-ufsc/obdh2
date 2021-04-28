@@ -25,13 +25,13 @@
     <a href="https://github.com/spacelab-ufsc/obdh2/blob/master/firmware/main.c">
         <img src="https://img.shields.io/badge/language-C-green?style=for-the-badge">
     </a>
-    <a href="">
+    <a href="https://www.ti.com/tool/CCSTUDIO">
         <img src="https://img.shields.io/badge/IDE%20tool-CCS%20v9.0-yellow?style=for-the-badge">
     </a>
     <a href="#license">
         <img src="https://img.shields.io/badge/license-GPL3-yellow?style=for-the-badge">
     </a>
-    <a href="#license">
+    <a href="https://github.com/spacelab-ufsc/obdh2/actions">
         <img src="https://img.shields.io/github/workflow/status/spacelab-ufsc/obdh2/Test%20Workflow?style=for-the-badge">
     </a>
 </p>
