@@ -1,7 +1,7 @@
 /*
  * sl_eps2.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.6
+ * \version 0.6.7
  * 
- * \date 05/02/2020
+ * \date 2020/02/05
  * 
  * \addtogroup sl_eps2
  * \{
@@ -56,7 +56,7 @@ int sl_eps2_init(sl_eps2_config_t config)
 
 int sl_eps2_check_device(sl_eps2_config_t config)
 {
-    uint8_t buf = SL_EPS2_REG_DEVICE_ID;
+    uint32_t buf = SL_EPS2_REG_DEVICE_ID;
 
     if (tca4311a_write(config, SL_EPS2_SLAVE_ADR, &buf, 1) != TCA4311A_READY)
     {
@@ -78,7 +78,7 @@ int sl_eps2_check_device(sl_eps2_config_t config)
 
 int sl_eps2_write_reg(sl_eps2_config_t config, uint8_t adr, uint32_t val)
 {
-    uint8_t buf[5];
+    uint8_t buf[5] = {0};
 
     buf[0] = adr;
     buf[1] = (val >> 24) & 0xFF;
@@ -101,7 +101,7 @@ int sl_eps2_read_reg(sl_eps2_config_t config, uint8_t adr, uint32_t *val)
         return -1;
     }
 
-    uint8_t buf[4];
+    uint8_t buf[4] = {0};
 
     if (tca4311a_read(config, SL_EPS2_SLAVE_ADR, buf, 4) != TCA4311A_READY)
     {
@@ -116,44 +116,53 @@ int sl_eps2_read_reg(sl_eps2_config_t config, uint8_t adr, uint32_t *val)
     return 0;
 }
 
-int sl_eps2_read_battery_voltage(sl_eps2_config_t config, uint8_t bat, uint32_t *val)
+int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
 {
-    switch(bat)
-    {
-        case SL_EPS2_BATTERY_CELL_0:    return sl_eps2_read_reg(config, SL_EPS2_REG_BATTERY_0_VOLTAGE, val);
-        case SL_EPS2_BATTERY_CELL_1:    return sl_eps2_read_reg(config, SL_EPS2_REG_BATTERY_1_VOLTAGE, val);
-        default:
-            return -1;  /* Invalid battery cell */
-    }
+    return -1;
 }
 
-int sl_eps2_read_battery_charge(sl_eps2_config_t config, uint32_t *val)
+int sl_eps2_read_time_counter(sl_eps2_config_t config, uint32_t *val)
 {
-    return sl_eps2_read_reg(config, SL_EPS2_REG_BATTERY_CHARGE, val);
+    return sl_eps2_read_reg(config, SL_EPS2_REG_TIME_COUNTER_MS, val);
 }
 
-int sl_eps2_read_solar_panel_current(sl_eps2_config_t config, uint8_t sp, uint32_t *val)
+int sl_eps2_read_battery_voltage(sl_eps2_config_t config, sl_eps2_voltage_t *val)
+{
+    return sl_eps2_read_reg(config, SL_EPS2_REG_BATTERY_VOLT_MV, val);
+}
+
+int sl_eps2_read_battery_current(sl_eps2_config_t config, sl_eps2_current_t *val)
+{
+    return sl_eps2_read_reg(config, SL_EPS2_REG_BATTERY_CUR_MA, val);
+}
+
+int sl_eps2_read_battery_charge(sl_eps2_config_t config, sl_eps2_charge_t *val)
+{
+    return sl_eps2_read_reg(config, SL_EPS2_REG_BATTERY_CHARGE_MAH, val);
+}
+
+int sl_eps2_read_solar_panel_current(sl_eps2_config_t config, uint8_t sp, sl_eps2_current_t *val)
 {
     switch(sp)
     {
-        case SL_EPS2_SOLAR_PANEL_0:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_0_CUR, val);
-        case SL_EPS2_SOLAR_PANEL_1:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_1_CUR, val);
-        case SL_EPS2_SOLAR_PANEL_2:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_2_CUR, val);
-        case SL_EPS2_SOLAR_PANEL_3:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_3_CUR, val);
-        case SL_EPS2_SOLAR_PANEL_4:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_4_CUR, val);
-        case SL_EPS2_SOLAR_PANEL_5:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_5_CUR, val);
+        case SL_EPS2_SOLAR_PANEL_0:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_MY_CUR_MA, val);
+        case SL_EPS2_SOLAR_PANEL_1:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_PY_CUR_MA, val);
+        case SL_EPS2_SOLAR_PANEL_2:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_MX_CUR_MA, val);
+        case SL_EPS2_SOLAR_PANEL_3:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_PX_CUR_MA, val);
+        case SL_EPS2_SOLAR_PANEL_4:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_MZ_CUR_MA, val);
+        case SL_EPS2_SOLAR_PANEL_5:     return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_PZ_CUR_MA, val);
         default:
             return -1;  /* Invalid solar panel */
     }
 }
 
-int sl_eps2_read_solar_panel_voltage(sl_eps2_config_t config, uint8_t sp, uint32_t *val)
+int sl_eps2_read_solar_panel_voltage(sl_eps2_config_t config, uint8_t sp, sl_eps2_voltage_t *val)
 {
     switch(sp)
     {
-        case SL_EPS2_SOLAR_PANEL_30:    return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_30_VOLT, val);
-        case SL_EPS2_SOLAR_PANEL_14:    return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_14_VOLT, val);
-        case SL_EPS2_SOLAR_PANEL_52:    return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_52_VOLT, val);
+        case SL_EPS2_SOLAR_PANEL_30:    return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_MY_PX_VOLT_MV, val);
+        case SL_EPS2_SOLAR_PANEL_14:    return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_MX_PZ_VOLT_MV, val);
+        case SL_EPS2_SOLAR_PANEL_52:    return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_MZ_PY_VOLT_MV, val);
         default:
             return -1;  /* Invalid solar panel set */
     }

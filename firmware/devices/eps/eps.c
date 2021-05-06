@@ -1,7 +1,7 @@
 /*
  * eps.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.16
+ * \version 0.6.7
  * 
- * \date 01/02/2020
+ * \date 2020/02/01
  * 
  * \addtogroup eps
  * \{
@@ -41,7 +41,7 @@
 
 sl_eps2_config_t eps_config;
 
-int eps_init()
+int eps_init(void)
 {
     sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "Initializing EPS device...");
     sys_log_new_line();
@@ -67,31 +67,20 @@ int eps_init()
 
 int eps_get_bat_voltage(eps_bat_voltage_t *bat_volt)
 {
-    int err_0 = sl_eps2_read_battery_voltage(eps_config, SL_EPS2_BATTERY_CELL_0, &bat_volt->cell_0);
+/*    int err = sl_eps2_read_battery_voltage(eps_config, SL_EPS2_BATTERY_CELL_0, &bat_volt->cell_0);
 
-    int err_1 = sl_eps2_read_battery_voltage(eps_config, SL_EPS2_BATTERY_CELL_1, &bat_volt->cell_1);
-
-    if (err_0 != 0)
+    if (err != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery voltage from cell 0! (error ");
-        sys_log_print_int(err_0);
+        sys_log_print_int(err);
         sys_log_print_msg(")");
         sys_log_new_line();
 
         return -1;
     }
 
-    if (err_0 != 0)
-    {
-        sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery voltage from cell 1! (error ");
-        sys_log_print_int(err_1);
-        sys_log_print_msg(")");
-        sys_log_new_line();
-
-        return -1;
-    }
-
-    return 0;
+    return 0;*/
+    return -1;
 }
 
 int eps_get_bat_current(uint32_t *bat_cur)
@@ -101,7 +90,7 @@ int eps_get_bat_current(uint32_t *bat_cur)
 
 int eps_get_bat_charge(uint32_t *charge)
 {
-    int err = sl_eps2_read_battery_charge(eps_config, charge);
+/*    int err = sl_eps2_read_battery_charge(eps_config, charge);
 
     if (err != 0)
     {
@@ -113,12 +102,13 @@ int eps_get_bat_charge(uint32_t *charge)
         return -1;
     }
 
-    return 0;
+    return 0;*/
+    return -1;
 }
 
 int eps_get_data(eps_data_t *data)
 {
-    int err = 0;
+/*    int err = 0;
 
     if (eps_get_bat_voltage(&data->bat_voltage) != 0)
     {
@@ -130,7 +120,8 @@ int eps_get_data(eps_data_t *data)
         err = -1;
     }
 
-    return err;
+    return err;*/
+    return -1;
 }
 
 /** \} End of eps group */
