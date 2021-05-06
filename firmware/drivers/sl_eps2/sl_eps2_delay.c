@@ -1,5 +1,5 @@
 /*
- * version.h
+ * sl_eps2_delay.c
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
@@ -21,29 +21,26 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief SpaceLab EPS 2.0 driver delay implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.6.8
  * 
- * \date 2019/10/25
+ * \date 2021/05/06
  * 
- * \defgroup version Version control
+ * \addtogroup sl_eps2
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include <FreeRTOS.h>
+#include <task.h>
 
-#define FIRMWARE_VERSION            "0.6.8"
+#include "sl_eps2.h"
 
-#define FIRMWARE_STATUS             "Development"
+void sl_eps2_delay_ms(uint32_t ms)
+{
+    vTaskDelay(pdMS_TO_TICKS(ms));
+}
 
-#define FIRMWARE_AUTHOR             "SpaceLab"
-
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
-
-#endif /* VERSION_H_ */
-
-/** \} End of version group */
+/** \} End of sl_eps2 group */

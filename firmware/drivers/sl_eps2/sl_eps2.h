@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.7
+ * \version 0.6.8
  * 
  * \date 2020/02/01
  * 
@@ -349,6 +349,15 @@ int sl_eps2_read_solar_panel_current(sl_eps2_config_t config, uint8_t sp, sl_eps
  * \return The status/error code.
  */
 int sl_eps2_read_solar_panel_voltage(sl_eps2_config_t config, uint8_t sp, sl_eps2_voltage_t *val);
+
+/**
+ * \brief Milliseconds delay.
+ *
+ * \param[in] ms is the time to delay in milliseconds.
+ *
+ * \return None.
+ */
+void sl_eps2_delay_ms(uint32_t ms);
 
 #endif /* SL_EPS2_H_ */
 

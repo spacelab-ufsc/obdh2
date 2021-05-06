@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.7
+ * \version 0.6.8
  * 
  * \date 2020/02/05
  * 
@@ -33,11 +33,40 @@
  * \{
  */
 
+#include <stdbool.h>
+
 #include <drivers/tca4311a/tca4311a.h>
 #include <drivers/i2c/i2c.h>
 #include <drivers/gpio/gpio.h>
 
 #include "sl_eps2.h"
+
+#define SL_EPS2_CRC8_INITIAL_VALUE          0       /**< CRC8-CCITT initial value. */
+#define SL_EPS2_CRC8_POLYNOMIAL             0x07    /**< CRC8-CCITT polynomial. */
+
+/**
+ * \brief Computes the CRC-8 of a sequence of bytes.
+ *
+ * \param[in] data is an array of data to compute the CRC-8.
+ *
+ * \param[in] len is the number of bytes of the given array.
+ *
+ * \return The computed CRC-8 value of the given data.
+ */
+uint8_t sl_eps2_crc8(uint8_t *data, uint8_t len);
+
+/**
+ * \brief Checks the CRC value of a given sequence of bytes.
+ *
+ * \param[in] data is the data to check the CRC.
+ *
+ * \param[in] len is the number of bytes to check the CRC value.
+ *
+ * \param[in] crc is the CRC-8 value to check.
+ *
+ * \return TRUE/FALSE if the given CRC value is correct or not.
+ */
+bool sl_eps2_check_crc(uint8_t *data, uint8_t len, uint8_t crc);
 
 int sl_eps2_init(sl_eps2_config_t config)
 {
@@ -56,16 +85,11 @@ int sl_eps2_init(sl_eps2_config_t config)
 
 int sl_eps2_check_device(sl_eps2_config_t config)
 {
-    uint32_t buf = SL_EPS2_REG_DEVICE_ID;
+    uint32_t buf = 0;
 
-    if (tca4311a_write(config, SL_EPS2_SLAVE_ADR, &buf, 1) != TCA4311A_READY)
+    if (sl_eps2_read_reg(config, SL_EPS2_REG_DEVICE_ID, &buf) != 0)
     {
-        return -1;      /* Error writing the command */
-    }
-
-    if (tca4311a_read(config, SL_EPS2_SLAVE_ADR, &buf, 1) != TCA4311A_READY)
-    {
-        return -1;      /* Error reading the command result */
+        return -1;
     }
 
     if (buf != SL_EPS2_DEVICE_ID)
@@ -78,15 +102,16 @@ int sl_eps2_check_device(sl_eps2_config_t config)
 
 int sl_eps2_write_reg(sl_eps2_config_t config, uint8_t adr, uint32_t val)
 {
-    uint8_t buf[5] = {0};
+    uint8_t buf[1+4+1] = {0};
 
     buf[0] = adr;
     buf[1] = (val >> 24) & 0xFF;
     buf[2] = (val >> 16) & 0xFF;
     buf[3] = (val >> 8)  & 0xFF;
     buf[4] = (val >> 0)  & 0xFF;
+    buf[5] = sl_eps2_crc8(buf, 5);
 
-    if (tca4311a_write(config, SL_EPS2_SLAVE_ADR, buf, 5) != TCA4311A_READY)
+    if (tca4311a_write(config, SL_EPS2_SLAVE_ADR, buf, 6) != TCA4311A_READY)
     {
         return -1;
     }
@@ -96,14 +121,24 @@ int sl_eps2_write_reg(sl_eps2_config_t config, uint8_t adr, uint32_t val)
 
 int sl_eps2_read_reg(sl_eps2_config_t config, uint8_t adr, uint32_t *val)
 {
-    if (tca4311a_write_byte(config, SL_EPS2_SLAVE_ADR, adr) != TCA4311A_READY)
+    uint8_t buf[1+4+1] = {0};
+
+    buf[0] = adr;
+    buf[1] = sl_eps2_crc8(buf, 1);
+
+    if (tca4311a_write(config, SL_EPS2_SLAVE_ADR, buf, 2) != TCA4311A_READY)
     {
         return -1;
     }
 
-    uint8_t buf[4] = {0};
+    sl_eps2_delay_ms(5);
 
-    if (tca4311a_read(config, SL_EPS2_SLAVE_ADR, buf, 4) != TCA4311A_READY)
+    if (tca4311a_read(config, SL_EPS2_SLAVE_ADR, buf, 5) != TCA4311A_READY)
+    {
+        return -1;
+    }
+
+    if (!sl_eps2_check_crc(buf, 4, buf[4]))
     {
         return -1;
     }
@@ -166,6 +201,36 @@ int sl_eps2_read_solar_panel_voltage(sl_eps2_config_t config, uint8_t sp, sl_eps
         default:
             return -1;  /* Invalid solar panel set */
     }
+}
+
+uint8_t sl_eps2_crc8(uint8_t *data, uint8_t len)
+{
+    uint8_t crc = SL_EPS2_CRC8_INITIAL_VALUE;
+
+    while(len--)
+    {
+        crc ^= *data++;
+
+        uint8_t j = 0;
+        for (j=0; j<8; j++)
+        {
+            crc = (crc << 1) ^ ((crc & 0x80)? SL_EPS2_CRC8_POLYNOMIAL : 0);
+        }
+
+        crc &= 0xFF;
+    }
+
+    return crc;
+}
+
+bool sl_eps2_check_crc(uint8_t *data, uint8_t len, uint8_t crc)
+{
+    if (crc != sl_eps2_crc8(data, len))
+    {
+        return false;
+    }
+
+    return true;
 }
 
 /** \} End of sl_eps2 group */
