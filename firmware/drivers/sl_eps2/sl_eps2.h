@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.8
+ * \version 0.6.9
  * 
  * \date 2020/02/01
  * 
@@ -105,12 +105,12 @@ in %. */
  */
 typedef enum
 {
-    SL_EPS2_SOLAR_PANEL_0=0,    /**< Panel 0. */
-    SL_EPS2_SOLAR_PANEL_1,      /**< Panel 1. */
-    SL_EPS2_SOLAR_PANEL_2,      /**< Panel 2. */
-    SL_EPS2_SOLAR_PANEL_3,      /**< Panel 3. */
-    SL_EPS2_SOLAR_PANEL_4,      /**< Panel 4. */
-    SL_EPS2_SOLAR_PANEL_5       /**< Panel 5. */
+    SL_EPS2_SOLAR_PANEL_0=0,                            /**< Panel 0. */
+    SL_EPS2_SOLAR_PANEL_1,                              /**< Panel 1. */
+    SL_EPS2_SOLAR_PANEL_2,                              /**< Panel 2. */
+    SL_EPS2_SOLAR_PANEL_3,                              /**< Panel 3. */
+    SL_EPS2_SOLAR_PANEL_4,                              /**< Panel 4. */
+    SL_EPS2_SOLAR_PANEL_5                               /**< Panel 5. */
 } sl_eps2_solar_panels_e;
 
 /**
@@ -118,10 +118,47 @@ typedef enum
  */
 typedef enum
 {
-    SL_EPS2_SOLAR_PANEL_30=0,   /**< Solar panel -Y +X. */
-    SL_EPS2_SOLAR_PANEL_14,     /**< Solar panel -X +Z. */
-    SL_EPS2_SOLAR_PANEL_52      /**< Solar panel -Z +Y. */
+    SL_EPS2_SOLAR_PANEL_3_0=0,                          /**< Solar panel -Y +X. */
+    SL_EPS2_SOLAR_PANEL_1_4,                            /**< Solar panel -X +Z. */
+    SL_EPS2_SOLAR_PANEL_5_2                             /**< Solar panel -Z +Y. */
 } sl_eps2_solar_panels_sets_e;
+
+/**
+ * \brief Solar panels MPPTs.
+ */
+typedef enum
+{
+    SL_EPS2_MPPT_1=0,                                   /**< MPPT 1. */
+    SL_EPS2_MPPT_2,                                     /**< MPPT 2. */
+    SL_EPS2_MPPT_3                                      /**< MPPT 3. */
+} sl_eps2_mppt_e;
+
+/**
+ * \brief MPPT modes.
+ */
+typedef enum
+{
+    SL_EPS2_MPPT_MODE_AUTOMATIC=0,                      /**< MPPT mode = automatic. */
+    SL_EPS2_MPPT_MODE_MANUAL                            /**< MPPT mode = manual. */
+} sl_eps2_mppt_mode_e;
+
+/**
+ * \brief Battery heaters.
+ */
+typedef enum
+{
+    SL_EPS2_HEATER_1=0,                                 /**< Battery heater 1. */
+    SL_EPS2_HEATER_2                                    /**< Battery heater 2. */
+} sl_eps2_heater_e;
+
+/**
+ * \brief Heater modes.
+ */
+typedef enum
+{
+    SL_EPS2_HEATER_MODE_AUTOMATIC=0,                    /**< Heater mode = automatic. */
+    SL_EPS2_HEATER_MODE_MANUAL                          /**< Heater mode = manual. */
+} sl_eps2_heater_mode_e;
 
 /**
  * \brief Configuration parameters structure of the driver.
@@ -199,8 +236,6 @@ typedef struct
     uint8_t                 rsrc;
     sl_eps2_duty_cycle_t    battery_heater_1_duty_cycle;
     sl_eps2_duty_cycle_t    battery_heater_2_duty_cycle;
-    uint8_t                 hardware_version;
-    uint32_t                firmware_version;
     uint8_t                 mppt_1_mode;
     uint8_t                 mppt_2_mode;
     uint8_t                 mppt_3_mode;
@@ -277,7 +312,119 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data);
 int sl_eps2_read_time_counter(sl_eps2_config_t config, uint32_t *val);
 
 /**
- * \brief Reads the current battery voltage in mV.
+ * \brief Reads the temperature of  the EPS microncontroller.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read temperature.
+ *
+ * \note The unit ot the read temperature is Kelvin.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_read_temp(sl_eps2_config_t config, sl_eps2_temp_t *val);
+
+/**
+ * \brief Reads the input current (uC circuit) of the EPS module.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read current.
+ *
+ * \note The unit of the read current is mA.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_read_current(sl_eps2_config_t config, sl_eps2_current_t *val);
+
+/**
+ * \brief Reads the last reset cause ID of the EPS.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read reset cause ID.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_read_reset_cause(sl_eps2_config_t config, uint8_t *val);
+
+/**
+ * \brief Reads the reset counter value of the EPS module.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read reset counter value.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_read_reset_counter(sl_eps2_config_t config, uint16_t *val);
+
+/**
+ * \brief Reads the voltage of a given solar panel set.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] sp is the solar panel set to read the voltage. It can be:
+ * \parblock
+ *      -\b SL_EPS2_SOLAR_PANEL_3_0
+ *      -\b SL_EPS2_SOLAR_PANEL_1_4
+ *      -\b SL_EPS2_SOLAR_PANEL_5_2
+ *      .
+ * \endparblock
+ *
+ * \param[in,out] val is a pointer to read the solar panel voltage.
+ *
+ * \note The unit of the read voltage is \b mV.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_read_solar_panel_voltage(sl_eps2_config_t config, uint8_t sp, uint16_t *val);
+
+/**
+ * \brief Reads the current of a given solar panel in mA.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] sp is the solar panel to read the current. It can be:
+ * \parblock
+ *      -\b SL_EPS2_SOLAR_PANEL_0
+ *      -\b SL_EPS2_SOLAR_PANEL_1
+ *      -\b SL_EPS2_SOLAR_PANEL_2
+ *      -\b SL_EPS2_SOLAR_PANEL_3
+ *      -\b SL_EPS2_SOLAR_PANEL_4
+ *      -\b SL_EPS2_SOLAR_PANEL_5
+ *      .
+ * \endparblock
+ *
+ * \param[in,out] val is a pointer to store the current value of the given solar panel current.
+ *
+ * \note The unit of the read current is \b mA.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_read_solar_panel_current(sl_eps2_config_t config, uint8_t sp, sl_eps2_current_t *val);
+
+/**
+ * \brief Reads the current duty cycle of a given MPPT.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] mppt is the MPPT to read the duty cycle. It can be:
+ * \parblock
+ *      -\b SL_EPS2_MPPT_1
+ *      -\b SL_EPS2_MPPT_2
+ *      -\b SL_EPS2_MPPT_3
+ *      .
+ * \endparblock
+ *
+ * \param[in,out] val is a pointer to store the read duty cycle.
+ *
+ * \reutrn The status/error code.
+ */
+int sl_eps2_read_mppt_duty_cycle(sl_eps2_config_t config, uint8_t mppt, sl_eps2_duty_cycle_t *val);
+
+/**
+ * \brief Reads the current battery voltage in \b mV.
  *
  * \param[in] config is a structure with the configuration parameters of the driver.
  *
@@ -299,7 +446,7 @@ int sl_eps2_read_battery_voltage(sl_eps2_config_t config, sl_eps2_voltage_t *val
 int sl_eps2_read_battery_current(sl_eps2_config_t config, sl_eps2_current_t *val);
 
 /**
- * \brief Reads the battery charge in mAh.
+ * \brief Reads the battery charge in \b mAh.
  *
  * \param[in] config is a structure with the configuration parameters of the driver.
  *
@@ -310,45 +457,73 @@ int sl_eps2_read_battery_current(sl_eps2_config_t config, sl_eps2_current_t *val
 int sl_eps2_read_battery_charge(sl_eps2_config_t config, sl_eps2_charge_t *val);
 
 /**
- * \brief Reads the current of a given solar panel in mA.
+ * \brief Reads the hardware version of the EPS 2.0 module.
  *
  * \param[in] config is a structure with the configuration parameters of the driver.
  *
- * \param[in] sp is the solar panel to read the current. It can be:
- * \parblock
- *      -\b SL_EPS2_SOLAR_PANEL_0
- *      -\b SL_EPS2_SOLAR_PANEL_1
- *      -\b SL_EPS2_SOLAR_PANEL_2
- *      -\b SL_EPS2_SOLAR_PANEL_3
- *      -\b SL_EPS2_SOLAR_PANEL_4
- *      -\b SL_EPS2_SOLAR_PANEL_5
- *      .
- * \endparblock
- *
- * \param[in,out] val is a pointer to store the current value of the given solar panel current.
+ * \param[in,out] val is a pointer to store the read hardware version.
  *
  * \return The status/error code.
  */
-int sl_eps2_read_solar_panel_current(sl_eps2_config_t config, uint8_t sp, sl_eps2_current_t *val);
+int sl_eps2_read_hardware_version(sl_eps2_config_t config, uint8_t *val);
 
 /**
- * \brief Reads the voltage of a given solar panel set in mV.
+ * \brief Reads the firmware version of the EPS 2.0 module.
  *
  * \param[in] config is a structure with the configuration parameters of the driver.
  *
- * \param[sp] sp is the solar panel set to read the voltage. It can be:
- * \parblock
- *      -\b SL_EPS2_SOLAR_PANEL_30
- *      -\b SL_EPS2_SOLAR_PANEL_14
- *      -\b SL_EPS2_SOLAR_PANEL_52
- *      .
- * \endparblock
- *
- * \param[in,out] val is a pointer to store the current value of the given solar panel voltage.
+ * \param[in,out] val is a pointer to store the read firmware version.
  *
  * \return The status/error code.
  */
-int sl_eps2_read_solar_panel_voltage(sl_eps2_config_t config, uint8_t sp, sl_eps2_voltage_t *val);
+int sl_eps2_read_firmware_version(sl_eps2_config_t config, uint32_t *val);
+
+/**
+ * \brief Sets the operation mode of a given MPPT.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] mppt is the MPPT to set the operation mode. It can be:
+ * \parblock
+ *      -\b SL_EPS2_MPPT_1
+ *      -\b SL_EPS2_MPPT_2
+ *      -\b SL_EPS2_MPPT_3
+ *      .
+ * \endparblock
+ *
+ * \param[in] mode is the operation mode to set in the given MPPT. It can be:
+ * \parblock
+ *      -\b SL_EPS2_MPPT_MODE_AUTOMATIC
+ *      -\b SL_EPS2_MPPT_MODE_MANUAL
+ *      .
+ * \endparblock
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_set_mppt_mode(sl_eps2_config_t config, uint8_t mppt, uint8_t mode);
+
+/**
+ * \brief Sets the operation mode of a given heater.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] heater is the heater to set the operation mode. It can be:
+ * \parblock
+ *      -\b SL_EPS2_HEATER_1
+ *      -\b SL_EPS2_HEATER_2
+ *      .
+ * \endparblock
+ *
+ * \param[in] mode is the heater mode to set. It can be:
+ * \parblock
+ *      -\b SL_EPS2_HEATER_MODE_AUTOMATIC
+ *      -\b SL_EPS2_HEATER_MODE_MANUAL
+ *      .
+ * \endparblock
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_set_heater_mode(sl_eps2_config_t config, uint8_t heater, uint8_t mode);
 
 /**
  * \brief Milliseconds delay.
