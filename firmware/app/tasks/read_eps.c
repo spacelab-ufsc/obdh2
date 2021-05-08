@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.10
+ * \version 0.6.11
  * 
  * \date 2021/05/08
  * 
@@ -33,6 +33,7 @@
  * \{
  */
 
+#include <system/sys_log/sys_log.h>
 #include <devices/eps/eps.h>
 
 #include <structs/satellite.h>
@@ -51,7 +52,17 @@ void vTaskReadEPS(void *pvParameters)
     {
         TickType_t last_cycle = xTaskGetTickCount();
 
-        /* Task implementation here */
+        if (eps_init() != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_EPS_NAME, "Error initializing the EPS device!");
+            sys_log_new_line();
+        }
+
+        if (eps_get_data(&sat_data_buf.eps) != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_EPS_NAME, "Error reading data from the EPS device!");
+            sys_log_new_line();
+        }
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_EPS_PERIOD_MS));
     }

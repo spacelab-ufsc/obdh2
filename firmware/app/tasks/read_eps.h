@@ -1,5 +1,5 @@
 /*
- * read_sensors.h
+ * read_eps.h
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
