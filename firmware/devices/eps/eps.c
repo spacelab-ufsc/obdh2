@@ -33,6 +33,8 @@
  * \{
  */
 
+#include <stdbool.h>
+
 #include <system/sys_log/sys_log.h>
 
 #include <drivers/sl_eps2/sl_eps2.h>
@@ -41,8 +43,15 @@
 
 sl_eps2_config_t eps_config;
 
+bool eps_is_open = false;
+
 int eps_init(void)
 {
+    if (eps_is_open)
+    {
+        return 0;   /* EPS device already initialized */
+    }
+
     sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "Initializing EPS device...");
     sys_log_new_line();
 
@@ -61,6 +70,8 @@ int eps_init(void)
 
         return -1;
     }
+
+    eps_is_open = true;
 
     return 0;
 }

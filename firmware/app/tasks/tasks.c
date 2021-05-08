@@ -1,7 +1,7 @@
 /*
  * tasks.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.16
+ * \version 0.6.10
  * 
- * \date 02/11/2019
+ * \date 2019/11/02
  * 
  * \addtogroup tasks
  * \{
@@ -50,6 +50,7 @@
 #include "time_control.h"
 #include "csp_server.h"
 #include "read_edc.h"
+#include "read_eps.h"
 
 void create_tasks()
 {
@@ -154,6 +155,15 @@ void create_tasks()
         /* Error creating the read EDC task */
     }
 #endif /* CONFIG_TASK_READ_EDC_ENABLED */
+
+#if CONFIG_TASK_READ_EPS_ENABLED == 1
+    xTaskCreate(vTaskReadEPS, TASK_READ_EPS_NAME, TASK_READ_EPS_STACK_SIZE, NULL, TASK_READ_EPS_PRIORITY, &xTaskReadEPSHandle);
+
+    if (xTaskReadEPSHandle == NULL)
+    {
+        /* Error creating the read EPS task */
+    }
+#endif /* CONFIG_TASK_READ_EPS_ENABLED */
 
     create_event_groups();
 }

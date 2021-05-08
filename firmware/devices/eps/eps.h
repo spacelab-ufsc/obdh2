@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.7
+ * \version 0.6.10
  * 
  * \date 2020/02/01
  * 
@@ -39,26 +39,9 @@
 
 #include <stdint.h>
 
+#include "eps_data.h"
+
 #define EPS_MODULE_NAME         "EPS"
-
-/**
- * \brief EPS battery voltage.
- */
-typedef struct
-{
-    uint32_t cell_0;                /**< Battery cell 0 voltage. */
-    uint32_t cell_1;                /**< Battery cell 1 voltage. */
-} eps_bat_voltage_t;
-
-/**
- * \brief EPS data structure.
- */
-typedef struct
-{
-    eps_bat_voltage_t bat_voltage;  /**< Battery voltage. */
-    uint32_t bat_current;           /**< Battery current. */
-    uint32_t bat_charge;            /**< Battery charge. */
-} eps_data_t;
 
 /**
  * \brief Initialization of the EPS device.

@@ -1,5 +1,5 @@
 /*
- * version.h
+ * read_eps.c
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
@@ -21,29 +21,40 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief Read EPS data task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.6.10
  * 
- * \date 2019/10/25
+ * \date 2021/05/08
  * 
- * \defgroup version Version control
+ * \addtogroup read_eps
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include <devices/eps/eps.h>
 
-#define FIRMWARE_VERSION            "0.6.10"
+#include <structs/satellite.h>
 
-#define FIRMWARE_STATUS             "Development"
+#include "read_eps.h"
+#include "startup.h"
 
-#define FIRMWARE_AUTHOR             "SpaceLab"
+xTaskHandle xTaskReadEPSHandle;
 
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
+void vTaskReadEPS(void *pvParameters)
+{
+    /* Wait startup task to finish */
+    xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_EPS_INIT_TIMEOUT_MS));
 
-#endif /* VERSION_H_ */
+    while(1)
+    {
+        TickType_t last_cycle = xTaskGetTickCount();
 
-/** \} End of version group */
+        /* Task implementation here */
+
+        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_EPS_PERIOD_MS));
+    }
+}
+
+/** \} End of read_eps group */
