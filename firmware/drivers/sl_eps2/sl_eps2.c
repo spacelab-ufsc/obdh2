@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.9
+ * \version 0.6.12
  * 
  * \date 2020/02/05
  * 
@@ -199,6 +199,11 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
         return -1;
     }
 
+    if (sl_eps2_read_solar_panel_voltage(config, SL_EPS2_SOLAR_PANEL_ALL, &(data->solar_panel_output_voltage)) != 0)
+    {
+        return -1;
+    }
+
     /* Solar panel current */
     if (sl_eps2_read_solar_panel_current(config, SL_EPS2_SOLAR_PANEL_0, &(data->solar_panel_current_my)) != 0)
     {
@@ -246,6 +251,48 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
         return -1;
     }
 
+    /* Main power bus voltage */
+    if (sl_eps2_read_main_bus_voltage(config, &(data->main_power_bus_voltage)) != 0)
+    {
+        return -1;
+    }
+
+    /* RTDs temperature */
+    if (sl_eps2_read_rtd_temperature(config, SL_EPS2_REG_RTD0_TEMP_K, &(data->rtd_0_temperature)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_eps2_read_rtd_temperature(config, SL_EPS2_REG_RTD1_TEMP_K, &(data->rtd_1_temperature)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_eps2_read_rtd_temperature(config, SL_EPS2_REG_RTD2_TEMP_K, &(data->rtd_2_temperature)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_eps2_read_rtd_temperature(config, SL_EPS2_REG_RTD3_TEMP_K, &(data->rtd_3_temperature)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_eps2_read_rtd_temperature(config, SL_EPS2_REG_RTD4_TEMP_K, &(data->rtd_4_temperature)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_eps2_read_rtd_temperature(config, SL_EPS2_REG_RTD5_TEMP_K, &(data->rtd_5_temperature)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_eps2_read_rtd_temperature(config, SL_EPS2_REG_RTD6_TEMP_K, &(data->rtd_6_temperature)) != 0)
+    {
+        return -1;
+    }
+
     return 0;
 }
 
@@ -281,6 +328,7 @@ int sl_eps2_read_solar_panel_voltage(sl_eps2_config_t config, uint8_t sp, uint16
         case SL_EPS2_SOLAR_PANEL_3_0:   return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_MY_PX_VOLT_MV, (uint32_t*)val);
         case SL_EPS2_SOLAR_PANEL_1_4:   return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_MX_PZ_VOLT_MV, (uint32_t*)val);
         case SL_EPS2_SOLAR_PANEL_5_2:   return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_MZ_PY_VOLT_MV, (uint32_t*)val);
+        case SL_EPS2_SOLAR_PANEL_ALL:   return sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_TOTAL_VOLT_MV, (uint32_t*)val);
         default:                        return -1;  /* Invalid solar panel set */
     }
 }
@@ -307,6 +355,26 @@ int sl_eps2_read_mppt_duty_cycle(sl_eps2_config_t config, uint8_t mppt, sl_eps2_
         case SL_EPS2_MPPT_2:    return sl_eps2_read_reg(config, SL_EPS2_REG_MPPT_2_DUTY_CYCLE, (uint32_t*)val);
         case SL_EPS2_MPPT_3:    return sl_eps2_read_reg(config, SL_EPS2_REG_MPPT_3_DUTY_CYCLE, (uint32_t*)val);
         default:                return -1;  /* Invalid MPPT */
+    }
+}
+
+int sl_eps2_read_main_bus_voltage(sl_eps2_config_t config, sl_eps2_voltage_t *val)
+{
+    return sl_eps2_read_reg(config, SL_EPS2_REG_MAIN_POWER_BUS_VOLT_MV, (uint32_t*)val);
+}
+
+int sl_eps2_read_rtd_temperature(sl_eps2_config_t config, uint8_t rtd, sl_eps2_temp_t *val)
+{
+    switch(rtd)
+    {
+        case SL_EPS2_RTD_0:     return sl_eps2_read_reg(config, SL_EPS2_REG_RTD0_TEMP_K, (uint32_t*)val);
+        case SL_EPS2_RTD_1:     return sl_eps2_read_reg(config, SL_EPS2_REG_RTD1_TEMP_K, (uint32_t*)val);
+        case SL_EPS2_RTD_2:     return sl_eps2_read_reg(config, SL_EPS2_REG_RTD2_TEMP_K, (uint32_t*)val);
+        case SL_EPS2_RTD_3:     return sl_eps2_read_reg(config, SL_EPS2_REG_RTD3_TEMP_K, (uint32_t*)val);
+        case SL_EPS2_RTD_4:     return sl_eps2_read_reg(config, SL_EPS2_REG_RTD4_TEMP_K, (uint32_t*)val);
+        case SL_EPS2_RTD_5:     return sl_eps2_read_reg(config, SL_EPS2_REG_RTD5_TEMP_K, (uint32_t*)val);
+        case SL_EPS2_RTD_6:     return sl_eps2_read_reg(config, SL_EPS2_REG_RTD6_TEMP_K, (uint32_t*)val);
+        default:                return -1;
     }
 }
 

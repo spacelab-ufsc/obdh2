@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.9
+ * \version 0.6.12
  * 
  * \date 2020/02/01
  * 
@@ -110,18 +110,12 @@ typedef enum
     SL_EPS2_SOLAR_PANEL_2,                              /**< Panel 2. */
     SL_EPS2_SOLAR_PANEL_3,                              /**< Panel 3. */
     SL_EPS2_SOLAR_PANEL_4,                              /**< Panel 4. */
-    SL_EPS2_SOLAR_PANEL_5                               /**< Panel 5. */
-} sl_eps2_solar_panels_e;
-
-/**
- * \brief Solar panels sets.
- */
-typedef enum
-{
-    SL_EPS2_SOLAR_PANEL_3_0=0,                          /**< Solar panel -Y +X. */
+    SL_EPS2_SOLAR_PANEL_5,                              /**< Panel 5. */
+    SL_EPS2_SOLAR_PANEL_3_0,                            /**< Solar panel -Y +X. */
     SL_EPS2_SOLAR_PANEL_1_4,                            /**< Solar panel -X +Z. */
-    SL_EPS2_SOLAR_PANEL_5_2                             /**< Solar panel -Z +Y. */
-} sl_eps2_solar_panels_sets_e;
+    SL_EPS2_SOLAR_PANEL_5_2,                            /**< Solar panel -Z +Y. */
+    SL_EPS2_SOLAR_PANEL_ALL                             /**< All solar panels. */
+} sl_eps2_solar_panels_e;
 
 /**
  * \brief Solar panels MPPTs.
@@ -159,6 +153,20 @@ typedef enum
     SL_EPS2_HEATER_MODE_AUTOMATIC=0,                    /**< Heater mode = automatic. */
     SL_EPS2_HEATER_MODE_MANUAL                          /**< Heater mode = manual. */
 } sl_eps2_heater_mode_e;
+
+/**
+ * \brief RTDs.
+ */
+typedef enum
+{
+    SL_EPS2_RTD_0=0,                                    /**< RTD 0. */
+    SL_EPS2_RTD_1,                                      /**< RTD 1. */
+    SL_EPS2_RTD_2,                                      /**< RTD 2. */
+    SL_EPS2_RTD_3,                                      /**< RTD 3. */
+    SL_EPS2_RTD_4,                                      /**< RTD 4. */
+    SL_EPS2_RTD_5,                                      /**< RTD 5. */
+    SL_EPS2_RTD_6                                       /**< RTD 6. */
+} sl_eps2_rtd_e;
 
 /**
  * \brief Configuration parameters structure of the driver.
@@ -369,6 +377,7 @@ int sl_eps2_read_reset_counter(sl_eps2_config_t config, uint16_t *val);
  *      -\b SL_EPS2_SOLAR_PANEL_3_0
  *      -\b SL_EPS2_SOLAR_PANEL_1_4
  *      -\b SL_EPS2_SOLAR_PANEL_5_2
+ *      -\b SL_EPS2_SOLAR_PANEL_ALL
  *      .
  * \endparblock
  *
@@ -419,9 +428,45 @@ int sl_eps2_read_solar_panel_current(sl_eps2_config_t config, uint8_t sp, sl_eps
  *
  * \param[in,out] val is a pointer to store the read duty cycle.
  *
- * \reutrn The status/error code.
+ * \return The status/error code.
  */
 int sl_eps2_read_mppt_duty_cycle(sl_eps2_config_t config, uint8_t mppt, sl_eps2_duty_cycle_t *val);
+
+/**
+ * \brief Reads the voltage (in \b mV) of the main power bus.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read voltage of the main power bus.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_read_main_bus_voltage(sl_eps2_config_t config, sl_eps2_voltage_t *val);
+
+/**
+ * \brief Reads the temperature of a given RTD.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] rtd is the RTD to read the temperature. It can be:
+ * \parblock
+ *      -\b SL_EPS2_RTD_0
+ *      -\b SL_EPS2_RTD_1
+ *      -\b SL_EPS2_RTD_2
+ *      -\b SL_EPS2_RTD_3
+ *      -\b SL_EPS2_RTD_4
+ *      -\b SL_EPS2_RTD_5
+ *      -\b SL_EPS2_RTD_6
+ *      .
+ * \endparblock
+ *
+ * \param[in,out] val is a pointer to store the read RTD temperature.
+ *
+ * \note The unit of the read temperature if \b K.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_read_rtd_temperature(sl_eps2_config_t config, uint8_t rtd, sl_eps2_temp_t *val);
 
 /**
  * \brief Reads the current battery voltage in \b mV.
