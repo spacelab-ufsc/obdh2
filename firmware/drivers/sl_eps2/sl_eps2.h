@@ -81,14 +81,10 @@
 #define SL_EPS2_REG_BAT_MONITOR_STATUS          32      /**< Battery monitor status register. */
 #define SL_EPS2_REG_BAT_MONITOR_PROTECTION      33      /**< Battery monitor protection register. */
 #define SL_EPS2_REG_BAT_MONITOR_CYCLE_COUNTER   34      /**< Battery monitor cycle counter. */
-#define SL_EPS2_REG_BAT_MONITOR_RAAC_MAH        35      /**< Battery monitor Remaining Active-Absolute Capacity (RAAC) in
-mAh. */
-#define SL_EPS2_REG_BAT_MONITOR_RSAC_MAH        36      /**< Battery monitor Remaining Standby-Absolute Capacity (RSAC)
-in mAh. */
-#define SL_EPS2_REG_BAT_MONITOR_RARC_PERC       37      /**< Battery monitor Remaining Active-Relative Capacity (RARC) in
-%. */
-#define SL_EPS2_REG_BAT_MONITOR_RSRC_PERC       38      /**< Battery monitor Remaining Standby-Relative Capacity (RSRC)
-in %. */
+#define SL_EPS2_REG_BAT_MONITOR_RAAC_MAH        35      /**< Battery monitor Remaining Active-Absolute Capacity (RAAC) in mAh. */
+#define SL_EPS2_REG_BAT_MONITOR_RSAC_MAH        36      /**< Battery monitor Remaining Standby-Absolute Capacity (RSAC) in mAh. */
+#define SL_EPS2_REG_BAT_MONITOR_RARC_PERC       37      /**< Battery monitor Remaining Active-Relative Capacity (RARC) in %. */
+#define SL_EPS2_REG_BAT_MONITOR_RSRC_PERC       38      /**< Battery monitor Remaining Standby-Relative Capacity (RSRC) in %. */
 #define SL_EPS2_REG_BAT_HEATER_1_DUTY_CYCLE     39      /**< Battery heater 1 duty cycle in %. */
 #define SL_EPS2_REG_BAT_HEATER_2_DUTY_CYCLE     40      /**< Battery heater 2 duty cycle in %. */
 #define SL_EPS2_REG_HARDWARE_VERSION            41      /**< Hardware version. */
@@ -169,6 +165,16 @@ typedef enum
 } sl_eps2_rtd_e;
 
 /**
+ * \brief Battery current types.
+ */
+typedef enum
+{
+    SL_EPS2_BATTERY_CURRENT=0,                          /**< Current battery current. */
+    SL_EPS2_BATTERY_AVERAGE_CURRENT,                    /**< Average battery current. */
+    SL_EPS2_BATTERY_ACC_CURRENT                         /**< Accumulated battery current. */
+} sl_eps2_bat_cur_e;
+
+/**
  * \brief Configuration parameters structure of the driver.
  */
 typedef tca4311a_config_t sl_eps2_config_t;
@@ -238,8 +244,8 @@ typedef struct
     uint8_t                 battery_monitor_status;
     uint8_t                 battery_monitor_protection;
     uint8_t                 battery_monitor_cycle_counter;
-    uint16_t                raac;
-    uint16_t                rsac;
+    sl_eps2_charge_t        raac;
+    sl_eps2_charge_t        rsac;
     uint8_t                 rarc;
     uint8_t                 rsrc;
     sl_eps2_duty_cycle_t    battery_heater_1_duty_cycle;
@@ -484,11 +490,19 @@ int sl_eps2_read_battery_voltage(sl_eps2_config_t config, sl_eps2_voltage_t *val
  *
  * \param[in] config is a structure with the configuration parameters of the driver.
  *
+ * \param[in] cur is current type to read. It can be:
+ * \parblock
+ *      -\b SL_EPS2_BATTERY_CURRENT
+ *      -\b SL_EPS2_BATTERY_AVERAGE_CURRENT
+ *      -\b SL_EPS2_BATTERY_ACC_CURRENT
+ *      .
+ * \endparblock
+ *
  * \param[in,out] val is a pointer to store the current value of the battery current.
  *
  * \return The status/error code.
  */
-int sl_eps2_read_battery_current(sl_eps2_config_t config, sl_eps2_current_t *val);
+int sl_eps2_read_battery_current(sl_eps2_config_t config, uint8_t cur, sl_eps2_current_t *val);
 
 /**
  * \brief Reads the battery charge in \b mAh.
@@ -500,6 +514,112 @@ int sl_eps2_read_battery_current(sl_eps2_config_t config, sl_eps2_current_t *val
  * \return The status/error code.
  */
 int sl_eps2_read_battery_charge(sl_eps2_config_t config, sl_eps2_charge_t *val);
+
+/**
+ * \brief Reads the battery monitor temperature in \b K.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read temperature from the battery monitor.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_read_battery_monitor_temp(sl_eps2_config_t config, sl_eps2_temp_t *val);
+
+/**
+ * \brief Reads the battery monitor status.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the battery monitor status value.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_read_battery_monitor_status(sl_eps2_config_t config, uint8_t *val);
+
+/**
+ * \brief Reads the battery monitor protection register.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the protection register value.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_read_battery_monitor_protection(sl_eps2_config_t config, uint8_t *val);
+
+/**
+ * \brief Reads the cycle counter of the battery monitor.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the cycle counter value.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_read_battery_monitor_cycle_counter(sl_eps2_config_t config, uint8_t *val);
+
+/**
+ * \brief Reads the battery monitor RAAC value in \b mAh.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read RAAC value.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_read_battery_monitor_raac(sl_eps2_config_t config, sl_eps2_charge_t *val);
+
+/**
+ * \brief Reads the battery monitor RSAC value in \b mAh.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a poiter to store the read RSAC value.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_read_battery_monitor_rsac(sl_eps2_config_t config, sl_eps2_charge_t *val);
+
+/**
+ * \brief Reads the battery monitor RARC value.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read RARC value.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_read_battery_monitor_rarc(sl_eps2_config_t config, uint8_t *val);
+
+/**
+ * \brief Reads the battery monitor RSRC value.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read RSRC value.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_read_battery_monitor_rsrc(sl_eps2_config_t config, uint8_t *val);
+
+/**
+ * \brief Reads the current duty cycle of a given heater.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] heater is the heater to read the duty cycle. It can be:
+ * \parblock
+ *      -\b SL_EPS2_HEATER_1
+ *      -\b SL_EPS2_HEATER_2
+ *      .
+ * \endparblock
+ *
+ * \param[in,out] val is a pointer to store the read duty cycle.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_read_heater_duty_cycle(sl_eps2_config_t config, uint8_t heater, sl_eps2_duty_cycle_t *val);
 
 /**
  * \brief Reads the hardware version of the EPS 2.0 module.
@@ -548,6 +668,25 @@ int sl_eps2_read_firmware_version(sl_eps2_config_t config, uint32_t *val);
 int sl_eps2_set_mppt_mode(sl_eps2_config_t config, uint8_t mppt, uint8_t mode);
 
 /**
+ * \brief Gets the operation mode of a given MPPT.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] mppt is the MPPT to get the operation mode. It can be:
+ * \parblock
+ *      -\b SL_EPS2_MPPT_1
+ *      -\b SL_EPS2_MPPT_2
+ *      -\b SL_EPS2_MPPT_3
+ *      .
+ * \endparblock
+ *
+ * \param[in,out] val is a pointer to store the read MPPT mode.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_get_mppt_mode(sl_eps2_config_t config, uint8_t mppt, uint8_t *val);
+
+/**
  * \brief Sets the operation mode of a given heater.
  *
  * \param[in] config is a structure with the configuration parameters of the driver.
@@ -569,6 +708,24 @@ int sl_eps2_set_mppt_mode(sl_eps2_config_t config, uint8_t mppt, uint8_t mode);
  * \return The status/error code.
  */
 int sl_eps2_set_heater_mode(sl_eps2_config_t config, uint8_t heater, uint8_t mode);
+
+/**
+ * \brief Gets the operation mode of a given heater.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] heater is the heater to get the operation mode. It can be:
+ * \parblock
+ *      -\b SL_EPS2_HEATER_1
+ *      -\b SL_EPS2_HEATER_2
+ *      .
+ * \endparblock
+ *
+ * \param[in,out] val is a pointer to store the read opeartion mode of the given heater.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_get_heater_mode(sl_eps2_config_t config, uint8_t heater, uint8_t *val);
 
 /**
  * \brief Milliseconds delay.

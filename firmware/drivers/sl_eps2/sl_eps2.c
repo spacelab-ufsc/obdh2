@@ -293,6 +293,102 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
         return -1;
     }
 
+    /* Battery voltage */
+    if (sl_eps2_read_battery_voltage(config, &(data->battery_voltage)) != 0)
+    {
+        return -1;
+    }
+
+    /* Battery current */
+    if (sl_eps2_read_battery_current(config, SL_EPS2_REG_BATTERY_CUR_MA, &(data->battery_current)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_eps2_read_battery_current(config, SL_EPS2_REG_BATTERY_AVEG_CUR_MA, &(data->battery_average_current)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_eps2_read_battery_current(config, SL_EPS2_REG_BATTERY_ACC_CUR_MA, &(data->battery_acc_current)) != 0)
+    {
+        return -1;
+    }
+
+    /* Battery charge */
+    if (sl_eps2_read_battery_charge(config, &(data->battery_charge)) != 0)
+    {
+        return -1;
+    }
+
+    /* Battery monitor */
+    if (sl_eps2_read_battery_monitor_temp(config, &(data->battery_monitor_temperature)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_eps2_read_battery_monitor_status(config, &(data->battery_monitor_status)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_eps2_read_battery_monitor_protection(config, &(data->battery_monitor_protection)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_eps2_read_battery_monitor_cycle_counter(config, &(data->battery_monitor_cycle_counter)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_eps2_read_battery_monitor_raac(config, &(data->raac)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_eps2_read_battery_monitor_rsac(config, &(data->rsac)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_eps2_read_battery_monitor_rarc(config, &(data->rarc)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_eps2_read_battery_monitor_rsrc(config, &(data->rsrc)) != 0)
+    {
+        return -1;
+    }
+
+    /* MPPT mode */
+    if (sl_eps2_get_mppt_mode(config, SL_EPS2_MPPT_1, &(data->mppt_1_mode)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_eps2_get_mppt_mode(config, SL_EPS2_MPPT_2, &(data->mppt_2_mode)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_eps2_get_mppt_mode(config, SL_EPS2_MPPT_3, &(data->mppt_3_mode)) != 0)
+    {
+        return -1;
+    }
+
+    /* Heater mode */
+    if (sl_eps2_get_heater_mode(config, SL_EPS2_HEATER_1, &(data->battery_heater_1_mode)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_eps2_get_heater_mode(config, SL_EPS2_HEATER_2, &(data->battery_heater_2_mode)) != 0)
+    {
+        return -1;
+    }
+
     return 0;
 }
 
@@ -374,7 +470,7 @@ int sl_eps2_read_rtd_temperature(sl_eps2_config_t config, uint8_t rtd, sl_eps2_t
         case SL_EPS2_RTD_4:     return sl_eps2_read_reg(config, SL_EPS2_REG_RTD4_TEMP_K, (uint32_t*)val);
         case SL_EPS2_RTD_5:     return sl_eps2_read_reg(config, SL_EPS2_REG_RTD5_TEMP_K, (uint32_t*)val);
         case SL_EPS2_RTD_6:     return sl_eps2_read_reg(config, SL_EPS2_REG_RTD6_TEMP_K, (uint32_t*)val);
-        default:                return -1;
+        default:                return -1;  /* Invalid RTD */
     }
 }
 
@@ -383,14 +479,70 @@ int sl_eps2_read_battery_voltage(sl_eps2_config_t config, sl_eps2_voltage_t *val
     return sl_eps2_read_reg(config, SL_EPS2_REG_BATTERY_VOLT_MV, (uint32_t*)val);
 }
 
-int sl_eps2_read_battery_current(sl_eps2_config_t config, sl_eps2_current_t *val)
+int sl_eps2_read_battery_current(sl_eps2_config_t config, uint8_t cur, sl_eps2_current_t *val)
 {
-    return sl_eps2_read_reg(config, SL_EPS2_REG_BATTERY_CUR_MA, (uint32_t*)val);
+    switch(cur)
+    {
+        case SL_EPS2_BATTERY_CURRENT:           return sl_eps2_read_reg(config, SL_EPS2_REG_BATTERY_CUR_MA, (uint32_t*)val);
+        case SL_EPS2_BATTERY_AVERAGE_CURRENT:   return sl_eps2_read_reg(config, SL_EPS2_REG_BATTERY_AVEG_CUR_MA, (uint32_t*)val);
+        case SL_EPS2_BATTERY_ACC_CURRENT:       return sl_eps2_read_reg(config, SL_EPS2_REG_BATTERY_ACC_CUR_MA, (uint32_t*)val);
+        default:                                return -1;  /* Invalid current option */
+    }
 }
 
 int sl_eps2_read_battery_charge(sl_eps2_config_t config, sl_eps2_charge_t *val)
 {
     return sl_eps2_read_reg(config, SL_EPS2_REG_BATTERY_CHARGE_MAH, (uint32_t*)val);
+}
+
+int sl_eps2_read_battery_monitor_temp(sl_eps2_config_t config, sl_eps2_temp_t *val)
+{
+    return sl_eps2_read_reg(config, SL_EPS2_REG_BAT_MONITOR_TEMP_K, (uint32_t*)val);
+}
+
+int sl_eps2_read_battery_monitor_status(sl_eps2_config_t config, uint8_t *val)
+{
+    return sl_eps2_read_reg(config, SL_EPS2_REG_BAT_MONITOR_STATUS, (uint32_t*)val);
+}
+
+int sl_eps2_read_battery_monitor_protection(sl_eps2_config_t config, uint8_t *val)
+{
+    return sl_eps2_read_reg(config, SL_EPS2_REG_BAT_MONITOR_PROTECTION, (uint32_t*)val);
+}
+
+int sl_eps2_read_battery_monitor_cycle_counter(sl_eps2_config_t config, uint8_t *val)
+{
+    return sl_eps2_read_reg(config, SL_EPS2_REG_BAT_MONITOR_CYCLE_COUNTER, (uint32_t*)val);
+}
+
+int sl_eps2_read_battery_monitor_raac(sl_eps2_config_t config, sl_eps2_charge_t *val)
+{
+    return sl_eps2_read_reg(config, SL_EPS2_REG_BAT_MONITOR_RAAC_MAH, (uint32_t*)val);
+}
+
+int sl_eps2_read_battery_monitor_rsac(sl_eps2_config_t config, sl_eps2_charge_t *val)
+{
+    return sl_eps2_read_reg(config, SL_EPS2_REG_BAT_MONITOR_RSAC_MAH, (uint32_t*)val);
+}
+
+int sl_eps2_read_battery_monitor_rarc(sl_eps2_config_t config, uint8_t *val)
+{
+    return sl_eps2_read_reg(config, SL_EPS2_REG_BAT_MONITOR_RARC_PERC, (uint32_t*)val);
+}
+
+int sl_eps2_read_battery_monitor_rsrc(sl_eps2_config_t config, uint8_t *val)
+{
+    return sl_eps2_read_reg(config, SL_EPS2_REG_BAT_MONITOR_RSRC_PERC, (uint32_t*)val);
+}
+
+int sl_eps2_read_heater_duty_cycle(sl_eps2_config_t config, uint8_t heater, sl_eps2_duty_cycle_t *val)
+{
+    switch(heater)
+    {
+        case SL_EPS2_HEATER_1:  return sl_eps2_read_reg(config, SL_EPS2_REG_BAT_HEATER_1_DUTY_CYCLE, (uint32_t*)val);
+        case SL_EPS2_HEATER_2:  return sl_eps2_read_reg(config, SL_EPS2_REG_BAT_HEATER_2_DUTY_CYCLE, (uint32_t*)val);
+        default:                return -1;  /* Invalid heater */
+    }
 }
 
 int sl_eps2_read_hardware_version(sl_eps2_config_t config, uint8_t *val)
@@ -414,14 +566,21 @@ int sl_eps2_set_mppt_mode(sl_eps2_config_t config, uint8_t mppt, uint8_t mode)
 
     switch(mppt)
     {
-        case SL_EPS2_MPPT_1:
-            return sl_eps2_write_reg(config, SL_EPS2_REG_MPPT_1_MODE, (uint32_t)mode);
-        case SL_EPS2_MPPT_2:
-            return sl_eps2_write_reg(config, SL_EPS2_REG_MPPT_2_MODE, (uint32_t)mode);
-        case SL_EPS2_MPPT_3:
-            return sl_eps2_write_reg(config, SL_EPS2_REG_MPPT_3_MODE, (uint32_t)mode);
-        default:
-            return -1;  /* Invalid MPPT */
+        case SL_EPS2_MPPT_1:    return sl_eps2_write_reg(config, SL_EPS2_REG_MPPT_1_MODE, (uint32_t)mode);
+        case SL_EPS2_MPPT_2:    return sl_eps2_write_reg(config, SL_EPS2_REG_MPPT_2_MODE, (uint32_t)mode);
+        case SL_EPS2_MPPT_3:    return sl_eps2_write_reg(config, SL_EPS2_REG_MPPT_3_MODE, (uint32_t)mode);
+        default:                return -1;  /* Invalid MPPT */
+    }
+}
+
+int sl_eps2_get_mppt_mode(sl_eps2_config_t config, uint8_t mppt, uint8_t *val)
+{
+    switch(mppt)
+    {
+        case SL_EPS2_MPPT_1:    return sl_eps2_read_reg(config, SL_EPS2_REG_MPPT_1_MODE, (uint32_t*)val);
+        case SL_EPS2_MPPT_2:    return sl_eps2_read_reg(config, SL_EPS2_REG_MPPT_2_MODE, (uint32_t*)val);
+        case SL_EPS2_MPPT_3:    return sl_eps2_read_reg(config, SL_EPS2_REG_MPPT_3_MODE, (uint32_t*)val);
+        default:                return -1;  /* Invalid MPPT */
     }
 }
 
@@ -436,12 +595,19 @@ int sl_eps2_set_heater_mode(sl_eps2_config_t config, uint8_t heater, uint8_t mod
 
     switch(heater)
     {
-        case SL_EPS2_HEATER_1:
-            return sl_eps2_write_reg(config, SL_EPS2_REG_BAT_HEATER_1_MODE, (uint32_t)mode);
-        case SL_EPS2_HEATER_2:
-            return sl_eps2_write_reg(config, SL_EPS2_REG_BAT_HEATER_2_MODE, (uint32_t)mode);
-        default:
-            return -1;  /* Invalid heater */
+        case SL_EPS2_HEATER_1:  return sl_eps2_write_reg(config, SL_EPS2_REG_BAT_HEATER_1_MODE, (uint32_t)mode);
+        case SL_EPS2_HEATER_2:  return sl_eps2_write_reg(config, SL_EPS2_REG_BAT_HEATER_2_MODE, (uint32_t)mode);
+        default:                return -1;  /* Invalid heater */
+    }
+}
+
+int sl_eps2_get_heater_mode(sl_eps2_config_t config, uint8_t heater, uint8_t *val)
+{
+    switch(heater)
+    {
+        case SL_EPS2_HEATER_1:  return sl_eps2_read_reg(config, SL_EPS2_HEATER_1, (uint32_t*)val);
+        case SL_EPS2_HEATER_2:  return sl_eps2_read_reg(config, SL_EPS2_HEATER_2, (uint32_t*)val);
+        default:                return -1;  /* Invalid heater */
     }
 }
 
