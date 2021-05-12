@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * sl_ttc2_delay.c
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
@@ -21,38 +21,26 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief SpaceLab TTC 2.0 driver delay implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.12
+ * \version 0.6.13
  * 
- * \date 2019/10/26
+ * \date 2021/05/12
  * 
- * \defgroup drivers Drivers
+ * \addtogroup sl_ttc2
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#include <FreeRTOS.h>
+#include <task.h>
 
-#include "edc/edc.h"
-#include "i2c/i2c.h"
-#include "isis_antenna/isis_antenna.h"
-#include "mt25q/mt25q.h"
-#include "spi/spi.h"
-#include "si446x/si446x.h"
-#include "uart/uart.h"
-#include "gpio/gpio.h"
-#include "tps382x/tps382x.h"
-#include "wdt/wdt.h"
-#include "tca4311a/tca4311a.h"
-#include "sl_eps/sl_eps.h"
-#include "sl_eps2/sl_eps2.h"
-#include "adc/adc.h"
-#include "flash/flash.h"
-#include "sl_ttc2/sl_ttc2.h"
+#include "sl_ttc2.h"
 
-#endif /* DRIVERS_H_ */
+void sl_ttc2_delay_ms(uint32_t ms)
+{
+    vTaskDelay(pdMS_TO_TICKS(ms));
+}
 
-/** \} End of drivers group */
+/** \} End of sl_ttc2 group */
