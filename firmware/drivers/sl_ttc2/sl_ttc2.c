@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.13
+ * \version 0.6.14
  * 
  * \date 2021/05/12
  * 
@@ -34,6 +34,8 @@
  */
 
 #include <stdbool.h>
+
+#include <config/config.h>
 
 #include <drivers/tca4311a/tca4311a.h>
 #include <drivers/i2c/i2c.h>
@@ -70,12 +72,46 @@ bool sl_ttc2_check_crc(uint8_t *data, uint8_t len, uint8_t crc);
 
 int sl_ttc2_init(sl_ttc2_config_t config)
 {
-    return -1;
+    if (spi_init(config.port, config.port_config) != 0)
+    {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error initializing the SPI port!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        return -1;
+    }
+
+    if (sl_ttc2_check_device(config) != 0)
+    {
+        return -1;
+    }
+
+    return 0;
 }
 
 int sl_ttc2_check_device(sl_ttc2_config_t config)
 {
-    return -1;
+    uint16_t id = UINT16_MAX;
+
+    if (sl_ttc2_read_device_id(config, &id) != 0)
+    {
+        return -1;
+    }
+
+    if (config.id != id)
+    {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error checking the device! (read=");
+        sys_log_print_hex(id);
+        sys_log_print_msg(", expected=");
+        sys_log_print_hex(config.id);
+        sys_log_print_msg(")");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        return -1;
+    }
+
+    return 0;
 }
 
 int sl_ttc2_write_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t val)
@@ -90,82 +126,219 @@ int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
 
 int sl_ttc2_read_hk_data(sl_ttc2_config_t config, sl_ttc2_hk_data_t *data)
 {
-    return -1;
+    /* Time counter */
+    if (sl_ttc2_read_time_counter(config, &(data->time_counter)) != 0)
+    {
+        return -1;
+    }
+
+    /* Reset counter */
+    if (sl_ttc2_read_reset_counter(config, &(data->reset_counter)) != 0)
+    {
+        return -1;
+    }
+
+    /* Last reset cause */
+    if (sl_ttc2_read_reset_cause(config, &(data->last_reset_cause)) != 0)
+    {
+        return -1;
+    }
+
+    /* MCU power */
+    if (sl_ttc2_read_voltage(config, SL_TTC2_VOLTAGE_MCU, &(data->voltage_mcu)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_ttc2_read_current(config, SL_TTC2_CURRENT_MCU, &(data->current_mcu)) != 0)
+    {
+        return -1;
+    }
+
+    /* MCU temperature */
+    if (sl_ttc2_read_temp(config, SL_TTC2_TEMP_MCU, &(data->temperature_mcu)) != 0)
+    {
+        return -1;
+    }
+
+    /* Radio power */
+    if (sl_ttc2_read_voltage(config, SL_TTC2_VOLTAGE_RADIO, &(data->voltage_radio)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_ttc2_read_current(config, SL_TTC2_CURRENT_RADIO, &(data->current_radio)) != 0)
+    {
+        return -1;
+    }
+
+    /* Radio temperature */
+    if (sl_ttc2_read_temp(config, SL_TTC2_TEMP_RADIO, &(data->temperature_radio)) != 0)
+    {
+        return -1;
+    }
+
+    /* Last valid telecommand */
+    if (sl_ttc2_read_last_valid_tc(config, &(data->last_valid_tc)) != 0)
+    {
+        return -1;
+    }
+
+    /* RSSI */
+    if (sl_ttc2_read_rssi(config, &(data->rssi_last_valid_tc)) != 0)
+    {
+        return -1;
+    }
+
+    /* Antenna data */
+    if (sl_ttc2_read_temp(config, SL_TTC2_TEMP_ANTENNA, &(data->temperature_antenna)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_ttc2_read_antenna_status(config, &(data->antenna_status)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_ttc2_read_antenna_deployment_status(config, &(data->deployment_status)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_ttc2_read_antenna_deployment_hibernation_status(config, &(data->hibernation_status)) != 0)
+    {
+        return -1;
+    }
+
+    /* Packet counter */
+    if (sl_ttc2_read_pkt_counter(config, SL_TTC2_TX_PKT, &(data->tx_packet_counter)) != 0)
+    {
+        return -1;
+    }
+
+    if (sl_ttc2_read_pkt_counter(config, SL_TTC2_RX_PKT, &(data->rx_packet_counter)) != 0)
+    {
+        return -1;
+    }
+
+    return 0;
 }
 
 int sl_ttc2_read_device_id(sl_ttc2_config_t config, uint16_t *val)
 {
-    return -1;
+    return sl_ttc2_read_reg(config, SL_TTC2_REG_DEVICE_ID, (uint32_t*)val);
 }
 
 int sl_ttc2_read_hardware_version(sl_ttc2_config_t config, uint8_t *val)
 {
-    return -1;
+    return sl_ttc2_read_reg(config, SL_TTC2_REG_HARDWARE_VERSION, (uint32_t*)val);
 }
 
 int sl_ttc2_read_firmware_version(sl_ttc2_config_t config, uint32_t *val)
 {
-    return -1;
+    return sl_ttc2_read_reg(config, SL_TTC2_REG_FIRMWARE_VERSION, val);
 }
 
 int sl_ttc2_read_time_counter(sl_ttc2_config_t config, uint32_t *val)
 {
-    return -1;
+    return sl_ttc2_read_reg(config, SL_TTC2_REG_TIME_COUNTER, val);
 }
 
 int sl_ttc2_read_reset_counter(sl_ttc2_config_t config, uint16_t *val)
 {
-    return -1;
+    return sl_ttc2_read_reg(config, SL_TTC2_REG_RESET_COUNTER, (uint32_t*)val);
 }
 
 int sl_ttc2_read_reset_cause(sl_ttc2_config_t config, uint8_t *val)
 {
-    return -1;
+    return sl_ttc2_read_reg(config, SL_TTC2_REG_LAST_RESET_CAUSE, (uint32_t*)val);
 }
 
 int sl_ttc2_read_voltage(sl_ttc2_config_t config, uint8_t volt, sl_ttc2_voltage_t *val)
 {
-    return -1;
+    switch(volt)
+    {
+        case SL_TTC2_VOLTAGE_MCU:       return sl_ttc2_read_reg(config, SL_TTC2_REG_INPUT_VOLTAGE_MCU, (uint32_t*)val);
+        case SL_TTC2_VOLTAGE_RADIO:     return sl_ttc2_read_reg(config, SL_TTC2_REG_INPUT_VOLTAGE_RADIO, (uint32_t*)val);
+        default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the voltage! Invalid voltage type!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            return -1;
+    }
 }
 
 int sl_ttc2_read_current(sl_ttc2_config_t config, uint8_t cur, sl_ttc2_current_t *val)
 {
-    return -1;
+    switch(cur)
+    {
+        case SL_TTC2_CURRENT_MCU:       return sl_ttc2_read_reg(config, SL_TTC2_CURRENT_MCU, (uint32_t*)val);
+        case SL_TTC2_CURRENT_RADIO:     return sl_ttc2_read_reg(config, SL_TTC2_CURRENT_RADIO, (uint32_t*)val);
+        default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the current! Invalid current type!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            return -1;
+    }
 }
 
 int sl_ttc2_read_temp(sl_ttc2_config_t config, uint8_t temp, sl_ttc2_temp_t *val)
 {
-    return -1;
+    switch(temp)
+    {
+        case SL_TTC2_TEMP_MCU:          return sl_ttc2_read_reg(config, SL_TTC2_REG_TEMPERATURE_MCU, (uint32_t*)val);
+        case SL_TTC2_TEMP_RADIO:        return sl_ttc2_read_reg(config, SL_TTC2_REG_TEMPERATURE_RADIO, (uint32_t*)val);
+        case SL_TTC2_TEMP_ANTENNA:      return sl_ttc2_read_reg(config, SL_TTC2_REG_TEMPERATURE_ANTENNA, (uint32_t*)val);
+        default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the temperature! Invalid temperature type!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            return -1;
+    }
 }
 
 int sl_ttc2_read_last_valid_tc(sl_ttc2_config_t config, uint8_t *val)
 {
-    return -1;
+    return sl_ttc2_read_reg(config, SL_TTC2_REG_LAST_VALID_TC, (uint32_t*)val);
 }
 
 int sl_ttc2_read_rssi(sl_ttc2_config_t config, sl_ttc2_rssi_t *val)
 {
-    return -1;
+    return sl_ttc2_read_reg(config, SL_TTC2_REG_RSSI_LAST_VALID_TC, (uint32_t*)val);
 }
 
 int sl_ttc2_read_antenna_status(sl_ttc2_config_t config, uint16_t *val)
 {
-    return -1;
+    return sl_ttc2_read_reg(config, SL_TTC2_REG_ANTENNA_STATUS, (uint32_t*)val);
 }
 
 int sl_ttc2_read_antenna_deployment_status(sl_ttc2_config_t config, uint8_t *val)
 {
-    return -1;
+    return sl_ttc2_read_reg(config, SL_TTC2_REG_ANTENNA_DEPLOYMENT_STATUS, (uint32_t*)val);
 }
 
 int sl_ttc2_read_antenna_deployment_hibernation_status(sl_ttc2_config_t config, uint8_t *val)
 {
-    return -1;
+    return sl_ttc2_read_reg(config, SL_TTC2_REG_ANTENNA_DEP_HIB_STATUS, (uint32_t*)val);
 }
 
 int sl_ttc2_read_pkt_counter(sl_ttc2_config_t config, uint8_t pkt, uint32_t *val)
 {
-    return -1;
+    switch(pkt)
+    {
+        case SL_TTC2_TX_PKT:    return sl_ttc2_read_reg(config, SL_TTC2_REG_TX_PACKET_COUNTER, val);
+        case SL_TTC2_RX_PKT:    return sl_ttc2_read_reg(config, SL_TTC2_REG_RX_PACKET_COUNTER, val);
+        default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the packet counter! Invalid packet type!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            return -1;
+    }
 }
 
 uint8_t sl_ttc2_crc8(uint8_t *data, uint8_t len)

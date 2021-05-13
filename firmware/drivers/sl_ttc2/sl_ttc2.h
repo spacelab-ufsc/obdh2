@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.13
+ * \version 0.6.14
  * 
  * \date 2021/05/12
  * 
@@ -41,6 +41,8 @@
 
 #include <drivers/spi/spi.h>
 
+#define SL_TTC2_MODULE_NAME                     "SpaceLab TTC 2.0"
+
 /* TTC 2.0 IDs */
 #define SL_TTC2_DEVICE_ID_RADIO_1               0xCC2A  /**< TTC 2.0 device ID (radio 1). */
 #define SL_TTC2_DEVICE_ID_RADIO_2               0xCC2B  /**< TTC 2.0 device ID (radio 2). */
@@ -49,7 +51,7 @@
 #define SL_TTC2_REG_DEVICE_ID                   0       /**< Device ID (0xCC2A or 0xCC2B). */
 #define SL_TTC2_REG_HARDWARE_VERSION            1       /**< Hardware version. */
 #define SL_TTC2_REG_FIRMWARE_VERSION            2       /**< Firmware version. */
-#define SL_TTC2_REG_TIME_COUNTER_MS             3       /**< Time counter in millseconds. */
+#define SL_TTC2_REG_TIME_COUNTER                3       /**< Time counter in millseconds. */
 #define SL_TTC2_REG_RESET_COUNTER               4       /**< Reset counter. */
 #define SL_TTC2_REG_LAST_RESET_CAUSE            5       /**< Last reset cause. */
 #define SL_TTC2_REG_INPUT_VOLTAGE_MCU           6       /**< Input voltage of the uC in mV. */
