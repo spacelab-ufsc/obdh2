@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.14
+ * \version 0.6.15
  * 
  * \date 2021/05/12
  * 
@@ -36,26 +36,20 @@
 #include <stdbool.h>
 
 #include <config/config.h>
-
-#include <drivers/tca4311a/tca4311a.h>
-#include <drivers/i2c/i2c.h>
-#include <drivers/gpio/gpio.h>
+#include <system/sys_log/sys_log.h>
 
 #include "sl_ttc2.h"
 
-#define SL_TTC2_CRC8_INITIAL_VALUE          0       /**< CRC8-CCITT initial value. */
-#define SL_TTC2_CRC8_POLYNOMIAL             0x07    /**< CRC8-CCITT polynomial. */
-
 /**
- * \brief Computes the CRC-8 of a sequence of bytes.
+ * \brief Computes the CRC-16 of a sequence of bytes.
  *
- * \param[in] data is an array of data to compute the CRC-8.
+ * \param[in] data is an array of data to compute the CRC-16.
  *
  * \param[in] len is the number of bytes of the given array.
  *
- * \return The computed CRC-8 value of the given data.
+ * \return The computed CRC-16 value of the given data.
  */
-uint8_t sl_ttc2_crc8(uint8_t *data, uint8_t len);
+uint16_t sl_ttc2_crc16(uint8_t *data, uint16_t len);
 
 /**
  * \brief Checks the CRC value of a given sequence of bytes.
@@ -64,11 +58,11 @@ uint8_t sl_ttc2_crc8(uint8_t *data, uint8_t len);
  *
  * \param[in] len is the number of bytes to check the CRC value.
  *
- * \param[in] crc is the CRC-8 value to check.
+ * \param[in] crc is the CRC-16 value to check.
  *
  * \return TRUE/FALSE if the given CRC value is correct or not.
  */
-bool sl_ttc2_check_crc(uint8_t *data, uint8_t len, uint8_t crc);
+bool sl_ttc2_check_crc(uint8_t *data, uint16_t len, uint16_t crc);
 
 int sl_ttc2_init(sl_ttc2_config_t config)
 {
@@ -116,26 +110,29 @@ int sl_ttc2_check_device(sl_ttc2_config_t config)
 
 int sl_ttc2_write_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t val)
 {
-    uint8_t buf[6] = {0};
+    uint8_t buf[7] = {0};
 
     buf[0] = adr;
     buf[1] = (val >> 24) & 0xFF;
     buf[2] = (val >> 16) & 0xFF;
     buf[3] = (val >> 8)  & 0xFF;
     buf[4] = (val >> 0)  & 0xFF;
-    buf[5] = sl_ttc2_crc8(buf, 5);
 
-    return spi_write(config.port, config.cs_pin, buf, 6);
+    uint16_t crc = sl_ttc2_crc16(buf, 5);
+    buf[5] = (crc >> 8) & 0xFF;
+    buf[6] = (crc >> 0) & 0xFF;
+
+    return spi_write(config.port, config.cs_pin, buf, 7);
 }
 
 int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
 {
-    uint8_t wbuf[6] = {0};
-    uint8_t rbuf[6] = {0};
+    uint8_t wbuf[7] = {0};
+    uint8_t rbuf[7] = {0};
 
     wbuf[0] = adr;
 
-    if (spi_transfer(config.port, config.cs_pin, wbuf, rbuf, 6) != 0)
+    if (spi_transfer(config.port, config.cs_pin, wbuf, rbuf, 7) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the register ");
@@ -148,7 +145,7 @@ int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
 
     rbuf[0] = adr;
 
-    if (!sl_ttc2_check_crc(rbuf, 5, rbuf[5]))
+    if (!sl_ttc2_check_crc(rbuf, 5, ((uint16_t)rbuf[5] << 8) | (uint16_t)rbuf[6]))
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the register ");
@@ -384,29 +381,24 @@ int sl_ttc2_read_pkt_counter(sl_ttc2_config_t config, uint8_t pkt, uint32_t *val
     }
 }
 
-uint8_t sl_ttc2_crc8(uint8_t *data, uint8_t len)
+uint16_t sl_ttc2_crc16(uint8_t *data, uint16_t len)
 {
-    uint8_t crc = SL_TTC2_CRC8_INITIAL_VALUE;
+    uint8_t x;
+    uint16_t crc = 0;   /* Initial value */
 
     while(len--)
     {
-        crc ^= *data++;
-
-        uint8_t j = 0;
-        for (j=0; j<8; j++)
-        {
-            crc = (crc << 1) ^ ((crc & 0x80)? SL_TTC2_CRC8_POLYNOMIAL : 0);
-        }
-
-        crc &= 0xFF;
+        x = crc >> 8 ^ *data++;
+        x ^= x >> 4;
+        crc = (crc << 8) ^ ((uint16_t)(x << 12)) ^ ((uint16_t)(x << 5)) ^ ((uint16_t)x);
     }
 
     return crc;
 }
 
-bool sl_ttc2_check_crc(uint8_t *data, uint8_t len, uint8_t crc)
+bool sl_ttc2_check_crc(uint8_t *data, uint16_t len, uint16_t crc)
 {
-    if (crc != sl_ttc2_crc8(data, len))
+    if (crc != sl_ttc2_crc16(data, len))
     {
         return false;
     }
