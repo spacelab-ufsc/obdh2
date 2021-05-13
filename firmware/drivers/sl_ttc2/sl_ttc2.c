@@ -93,7 +93,32 @@ int sl_ttc2_read_hk_data(sl_ttc2_config_t config, sl_ttc2_hk_data_t *data)
     return -1;
 }
 
+int sl_ttc2_read_device_id(sl_ttc2_config_t config, uint16_t *val)
+{
+    return -1;
+}
+
+int sl_ttc2_read_hardware_version(sl_ttc2_config_t config, uint8_t *val)
+{
+    return -1;
+}
+
+int sl_ttc2_read_firmware_version(sl_ttc2_config_t config, uint32_t *val)
+{
+    return -1;
+}
+
 int sl_ttc2_read_time_counter(sl_ttc2_config_t config, uint32_t *val)
+{
+    return -1;
+}
+
+int sl_ttc2_read_reset_counter(sl_ttc2_config_t config, uint16_t *val)
+{
+    return -1;
+}
+
+int sl_ttc2_read_reset_cause(sl_ttc2_config_t config, uint8_t *val)
 {
     return -1;
 }
@@ -113,22 +138,32 @@ int sl_ttc2_read_temp(sl_ttc2_config_t config, uint8_t temp, sl_ttc2_temp_t *val
     return -1;
 }
 
-int sl_ttc2_read_reset_cause(sl_ttc2_config_t config, uint8_t *val)
+int sl_ttc2_read_last_valid_tc(sl_ttc2_config_t config, uint8_t *val)
 {
     return -1;
 }
 
-int sl_ttc2_read_reset_counter(sl_ttc2_config_t config, uint16_t *val)
+int sl_ttc2_read_rssi(sl_ttc2_config_t config, sl_ttc2_rssi_t *val)
 {
     return -1;
 }
 
-int sl_ttc2_read_hardware_version(sl_ttc2_config_t config, uint8_t *val)
+int sl_ttc2_read_antenna_status(sl_ttc2_config_t config, uint16_t *val)
 {
     return -1;
 }
 
-int sl_ttc2_read_firmware_version(sl_ttc2_config_t config, uint32_t *val)
+int sl_ttc2_read_antenna_deployment_status(sl_ttc2_config_t config, uint8_t *val)
+{
+    return -1;
+}
+
+int sl_ttc2_read_antenna_deployment_hibernation_status(sl_ttc2_config_t config, uint8_t *val)
+{
+    return -1;
+}
+
+int sl_ttc2_read_pkt_counter(sl_ttc2_config_t config, uint8_t pkt, uint32_t *val)
 {
     return -1;
 }
