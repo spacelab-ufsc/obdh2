@@ -116,12 +116,55 @@ int sl_ttc2_check_device(sl_ttc2_config_t config)
 
 int sl_ttc2_write_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t val)
 {
-    return -1;
+    uint8_t buf[6] = {0};
+
+    buf[0] = adr;
+    buf[1] = (val >> 24) & 0xFF;
+    buf[2] = (val >> 16) & 0xFF;
+    buf[3] = (val >> 8)  & 0xFF;
+    buf[4] = (val >> 0)  & 0xFF;
+    buf[5] = sl_ttc2_crc8(buf, 5);
+
+    return spi_write(config.port, config.cs_pin, buf, 6);
 }
 
 int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
 {
-    return -1;
+    uint8_t wbuf[6] = {0};
+    uint8_t rbuf[6] = {0};
+
+    wbuf[0] = adr;
+
+    if (spi_transfer(config.port, config.cs_pin, wbuf, rbuf, 6) != 0)
+    {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the register ");
+        sys_log_print_hex(adr);
+        sys_log_print_msg("! Error during SPI transfer!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        return -1;
+    }
+
+    rbuf[0] = adr;
+
+    if (!sl_ttc2_check_crc(rbuf, 5, rbuf[5]))
+    {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the register ");
+        sys_log_print_hex(adr);
+        sys_log_print_msg("! Invalid data!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        return -1;
+    }
+
+    *val = ((uint32_t)rbuf[1] << 24) |
+           ((uint32_t)rbuf[2] << 16) |
+           ((uint32_t)rbuf[3] << 8)  |
+           ((uint32_t)rbuf[4] << 0);
+
+    return 0;
 }
 
 int sl_ttc2_read_hk_data(sl_ttc2_config_t config, sl_ttc2_hk_data_t *data)
