@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.14
+ * \version 0.6.16
  * 
  * \date 2021/05/12
  * 
@@ -37,6 +37,7 @@
 #ifndef SL_TTC2_H_
 #define SL_TTC2_H_
 
+#include <stdbool.h>
 #include <stdint.h>
 
 #include <drivers/spi/spi.h>
@@ -47,7 +48,14 @@
 #define SL_TTC2_DEVICE_ID_RADIO_1               0xCC2A  /**< TTC 2.0 device ID (radio 1). */
 #define SL_TTC2_DEVICE_ID_RADIO_2               0xCC2B  /**< TTC 2.0 device ID (radio 2). */
 
-/* TTC 2.0 registers */
+/* TTC 2.0 Commands */
+#define SL_TTC2_CMD_NOP                         0       /**< No operation. */
+#define SL_TTC2_CMD_READ_REG                    1       /**< Read register command. */
+#define SL_TTC2_CMD_WRITE_REG                   2       /**< Write register command. */
+#define SL_TTC2_CMD_TRANSMIT_PKT                3       /**< Transmit packet command. */
+#define SL_TTC2_CMD_RECEIVE_PKT                 4       /**< Receive packet command. */
+
+/* TTC 2.0 Registers */
 #define SL_TTC2_REG_DEVICE_ID                   0       /**< Device ID (0xCC2A or 0xCC2B). */
 #define SL_TTC2_REG_HARDWARE_VERSION            1       /**< Hardware version. */
 #define SL_TTC2_REG_FIRMWARE_VERSION            2       /**< Firmware version. */
@@ -66,8 +74,12 @@
 #define SL_TTC2_REG_ANTENNA_STATUS              15      /**< Antenna module status bits. */
 #define SL_TTC2_REG_ANTENNA_DEPLOYMENT_STATUS   16      /**< Antenna deployment status (0=never executed, 1=executed). */
 #define SL_TTC2_REG_ANTENNA_DEP_HIB_STATUS      17      /**< Antenna deployment hibernation status (0=never executed, 1=executed). */
-#define SL_TTC2_REG_TX_PACKET_COUNTER           18      /**< TX packet counter. */
-#define SL_TTC2_REG_RX_PACKET_COUNTER           19      /**< RX packet counter. */
+#define SL_TTC2_REG_TX_ENABLE                   18      /**< TX enable (0=off, 1=on). */
+#define SL_TTC2_REG_TX_PACKET_COUNTER           19      /**< TX packet counter. */
+#define SL_TTC2_REG_RX_PACKET_COUNTER           20      /**< RX packet counter. */
+#define SL_TTC2_REG_FIFO_TX_PACKET              21      /**< Number of packets in the TX FIFO. */
+#define SL_TTC2_REG_FIFO_RX_PACKET              22      /**< Number of packets in the RX FIFO. */
+#define SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO 23      /**< Number of bytes of the first available packet in the RX buffer. /
 
 /**
  * \brief Temperature type.
@@ -401,6 +413,28 @@ int sl_ttc2_read_antenna_deployment_status(sl_ttc2_config_t config, uint8_t *val
 int sl_ttc2_read_antenna_deployment_hibernation_status(sl_ttc2_config_t config, uint8_t *val);
 
 /**
+ * \brief Reads the TX enable flag.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read TX enable flag.
+ *
+ * \return The status/error code.
+ */
+int sl_ttc2_read_tx_enable(sl_ttc2_config_t config, uint8_t *val);
+
+/**
+ * \brief Sets the TX enable flag of the TTC.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] en is TRUE/FALSE to enable/disable the transmitter.
+ *
+ * \return The status/error code.
+ */
+int sl_ttc2_set_tx_enable(sl_ttc2_config_t config, bool en);
+
+/**
  * \brief Reads the packet counter value (transmitted or received).
  *
  * \param[in] config is a structure with the configuration parameters of the driver.
@@ -417,6 +451,70 @@ int sl_ttc2_read_antenna_deployment_hibernation_status(sl_ttc2_config_t config, 
  * \return The status/error code.
  */
 int sl_ttc2_read_pkt_counter(sl_ttc2_config_t config, uint8_t pkt, uint32_t *val);
+
+/**
+ * \brief Reads the number of packets available in a given FIFO (TX or RX).
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] pkt is packet type FIFO to read. It can be:
+ * \parblock
+ *      -\b SL_TTC2_TX_PKT
+ *      -\b SL_TTC2_RX_PKT
+ *      .
+ * \endparblock
+ *
+ * \param[in,out] val is a pointer to store the read value.
+ *
+ * \return The status/error code.
+ */
+int sl_ttc2_read_fifo_pkts(sl_ttc2_config_t config, uint8_t pkt, uint8_t *val);
+
+/**
+ * \brief Reads the register with the number of bytes of the first available packet in the RX FIFO.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read value.
+ *
+ * \return The status/error code.
+ */
+int sl_ttc2_read_len_rx_pkt_in_fifo(sl_ttc2_config_t config, uint16_t *val);
+
+/**
+ * \brief Verifies the number available RX packets to read.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \return The number of available packets to read (-1 on error).
+ */
+int sl_ttc2_check_pkt_avail(sl_ttc2_config_t config);
+
+/**
+ * \brief Transmit packet command.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] data is the data to transmit.
+ *
+ * \param[in] len is the number of bytes to transmit.
+ *
+ * \return The status/error code.
+ */
+int sl_ttc2_transmit_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t len);
+
+/**
+ * \brief Reads a received packet.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] data is a pointer to store the read packet.
+ *
+ * \param[in,out] len is a pointer to store the length of the read packet (in bytes).
+ *
+ * \return The status/error code.
+ */
+int sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len);
 
 /**
  * \brief Milliseconds delay.

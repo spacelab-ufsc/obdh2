@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.15
+ * \version 0.6.16
  * 
  * \date 2021/05/12
  * 
@@ -33,7 +33,7 @@
  * \{
  */
 
-#include <stdbool.h>
+#include <string.h>
 
 #include <config/config.h>
 #include <system/sys_log/sys_log.h>
@@ -110,29 +110,43 @@ int sl_ttc2_check_device(sl_ttc2_config_t config)
 
 int sl_ttc2_write_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t val)
 {
-    uint8_t buf[7] = {0};
+    uint8_t buf[8] = {0};
 
-    buf[0] = adr;
-    buf[1] = (val >> 24) & 0xFF;
-    buf[2] = (val >> 16) & 0xFF;
-    buf[3] = (val >> 8)  & 0xFF;
-    buf[4] = (val >> 0)  & 0xFF;
+    /* Command ID */
+    buf[0] = SL_TTC2_CMD_WRITE_REG;
 
+    /* Register address */
+    buf[1] = adr;
+
+    /* Register data */
+    buf[2] = (val >> 24) & 0xFF;
+    buf[3] = (val >> 16) & 0xFF;
+    buf[4] = (val >> 8)  & 0xFF;
+    buf[5] = (val >> 0)  & 0xFF;
+
+    /* Checksum (CRC16) */
     uint16_t crc = sl_ttc2_crc16(buf, 5);
-    buf[5] = (crc >> 8) & 0xFF;
-    buf[6] = (crc >> 0) & 0xFF;
+    buf[6] = (crc >> 8) & 0xFF;
+    buf[7] = (crc >> 0) & 0xFF;
 
-    return spi_write(config.port, config.cs_pin, buf, 7);
+    return spi_write(config.port, config.cs_pin, buf, 8);
 }
 
 int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
 {
-    uint8_t wbuf[7] = {0};
-    uint8_t rbuf[7] = {0};
+    uint8_t wbuf[8] = {0};
+    uint8_t rbuf[8] = {0};
 
-    wbuf[0] = adr;
+    /* Command ID */
+    wbuf[0] = SL_TTC2_CMD_READ_REG;
+    rbuf[0] = SL_TTC2_CMD_READ_REG;
 
-    if (spi_transfer(config.port, config.cs_pin, wbuf, rbuf, 7) != 0)
+    /* Register address */
+    wbuf[1] = adr;
+    rbuf[1] = adr;
+
+    /* Register data + Checksum */
+    if (spi_transfer(config.port, config.cs_pin, wbuf, rbuf, 8) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the register ");
@@ -143,9 +157,7 @@ int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
         return -1;
     }
 
-    rbuf[0] = adr;
-
-    if (!sl_ttc2_check_crc(rbuf, 5, ((uint16_t)rbuf[5] << 8) | (uint16_t)rbuf[6]))
+    if (!sl_ttc2_check_crc(rbuf, 6, ((uint16_t)rbuf[6] << 8) | (uint16_t)rbuf[7]))
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the register ");
@@ -156,10 +168,10 @@ int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
         return -1;
     }
 
-    *val = ((uint32_t)rbuf[1] << 24) |
-           ((uint32_t)rbuf[2] << 16) |
-           ((uint32_t)rbuf[3] << 8)  |
-           ((uint32_t)rbuf[4] << 0);
+    *val = ((uint32_t)rbuf[2] << 24) |
+           ((uint32_t)rbuf[3] << 16) |
+           ((uint32_t)rbuf[4] << 8)  |
+           ((uint32_t)rbuf[5] << 0);
 
     return 0;
 }
@@ -366,6 +378,16 @@ int sl_ttc2_read_antenna_deployment_hibernation_status(sl_ttc2_config_t config, 
     return sl_ttc2_read_reg(config, SL_TTC2_REG_ANTENNA_DEP_HIB_STATUS, (uint32_t*)val);
 }
 
+int sl_ttc2_read_tx_enable(sl_ttc2_config_t config, uint8_t *val)
+{
+    return sl_ttc2_read_reg(config, SL_TTC2_REG_TX_ENABLE, (uint32_t*)val);
+}
+
+int sl_ttc2_set_tx_enable(sl_ttc2_config_t config, bool en)
+{
+    return sl_ttc2_write_reg(config, SL_TTC2_REG_TX_ENABLE, (uint32_t)en);
+}
+
 int sl_ttc2_read_pkt_counter(sl_ttc2_config_t config, uint8_t pkt, uint32_t *val)
 {
     switch(pkt)
@@ -379,6 +401,84 @@ int sl_ttc2_read_pkt_counter(sl_ttc2_config_t config, uint8_t pkt, uint32_t *val
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
             return -1;
     }
+}
+
+int sl_ttc2_read_fifo_pkts(sl_ttc2_config_t config, uint8_t pkt, uint8_t *val)
+{
+    switch(pkt)
+    {
+        case SL_TTC2_TX_PKT:    return sl_ttc2_read_reg(config, SL_TTC2_REG_FIFO_TX_PACKET, val);
+        case SL_TTC2_RX_PKT:    return sl_ttc2_read_reg(config, SL_TTC2_REG_FIFO_RX_PACKET, val);
+        default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the FIFO buffer! Invalid packet type!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            return -1;
+    }
+}
+
+int sl_ttc2_read_len_rx_pkt_in_fifo(sl_ttc2_config_t config, uint16_t *val)
+{
+    return sl_ttc2_read_reg(config, SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO, (uint32_t*)val);
+}
+
+int sl_ttc2_check_pkt_avail(sl_ttc2_config_t config)
+{
+    uint8_t pkts = 0;
+
+    if (sl_ttc2_read_fifo_pkts(config, SL_TTC2_REG_FIFO_RX_PACKET, &pkts) != 0)
+    {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the available RX packets!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        return -1;
+    }
+
+    return pkts;
+}
+
+int sl_ttc2_transmit_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t len)
+{
+    uint8_t buf[1+220+2] = {0};
+
+    buf[0] = SL_TTC2_CMD_TRANSMIT_PKT;
+
+    memcpy(buf+1, data, len);
+
+    uint16_t crc = sl_ttc2_crc16(buf, 1+len);
+
+    buf[1+len] = (crc >> 8) & 0xFF;
+    buf[1+len] = (crc >> 0) & 0xFF;
+
+    return spi_write(config.port, config.cs_pin, buf, 1+len+2);
+}
+
+int sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len)
+{
+    uint8_t wbuf[2] = {0};
+
+    wbuf[0] = SL_TTC2_CMD_RECEIVE_PKT;
+    data[0] = SL_TTC2_CMD_RECEIVE_PKT;
+
+    if (sl_ttc2_read_len_rx_pkt_in_fifo(config, len) != 0)
+    {
+        return -1;
+    }
+
+    if (spi_transfer(config.port, config.cs_pin, wbuf, data, 1+(*len)+2) != 0)
+    {
+        return -1;
+    }
+
+    if (!sl_ttc2_check_crc(data, 1+(*len), sl_ttc2_crc16(data, 1+(*len))))
+    {
+        *len = 0;
+        return -1;
+    }
+
+    return 0;
 }
 
 uint16_t sl_ttc2_crc16(uint8_t *data, uint16_t len)
