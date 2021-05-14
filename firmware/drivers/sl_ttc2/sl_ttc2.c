@@ -478,6 +478,8 @@ int sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len)
         return -1;
     }
 
+    memcpy(data, data+1, *len);
+
     return 0;
 }
 

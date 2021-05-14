@@ -1,7 +1,7 @@
 /*
  * ttc.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.0
+ * \version 0.6.17
  * 
- * \date 01/02/2020
+ * \date 2020/02/01
  * 
  * \addtogroup ttc
  * \{
@@ -35,17 +35,32 @@
 
 #include "ttc.h"
 
-int ttc_init()
+int ttc_init(ttc_config_t config)
 {
     return -1;
 }
 
-int ttc_enter_hibernation(uint32_t period_min)
+int ttc_get_data(ttc_config_t config, ttc_data_t *data)
 {
     return -1;
 }
 
-int ttc_leave_hibernation()
+int ttc_send(ttc_config_t config, uint8_t *data, uint16_t len)
+{
+    return -1;
+}
+
+int ttc_avail(ttc_config_t config)
+{
+    return -1;
+}
+
+int ttc_enter_hibernation(ttc_config_t config)
+{
+    return -1;
+}
+
+int ttc_leave_hibernation(ttc_config_t config)
 {
     return -1;
 }
