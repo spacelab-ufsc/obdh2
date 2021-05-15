@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.28
+ * \version 0.6.23
  * 
  * \date 2019/12/04
  * 
@@ -36,6 +36,7 @@
 #include <stdbool.h>
 
 #include <config/config.h>
+#include <system/system.h>
 #include <system/sys_log/sys_log.h>
 #include <system/clocks.h>
 #include <devices/watchdog/watchdog.h>

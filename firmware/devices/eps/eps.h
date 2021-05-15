@@ -1,7 +1,7 @@
 /*
  * eps.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.18
+ * \version 0.6.10
  * 
- * \date 01/02/2020
+ * \date 2020/02/01
  * 
  * \defgroup eps EPS
  * \ingroup devices
@@ -39,33 +39,16 @@
 
 #include <stdint.h>
 
+#include "eps_data.h"
+
 #define EPS_MODULE_NAME         "EPS"
-
-/**
- * \brief EPS battery voltage.
- */
-typedef struct
-{
-    uint32_t cell_0;                /**< Battery cell 0 voltage. */
-    uint32_t cell_1;                /**< Battery cell 1 voltage. */
-} eps_bat_voltage_t;
-
-/**
- * \brief EPS data structure.
- */
-typedef struct
-{
-    eps_bat_voltage_t bat_voltage;  /**< Battery voltage. */
-    uint32_t bat_current;           /**< Battery current. */
-    uint32_t bat_charge;            /**< Battery charge. */
-} eps_data_t;
 
 /**
  * \brief Initialization of the EPS device.
  *
  * \return The status/error code.
  */
-int eps_init();
+int eps_init(void);
 
 /**
  * \brief Gets the battery voltage from the EPS module.

@@ -25,8 +25,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
 
-#ifndef I2C_H_
-#define I2C_H_
+#ifndef I2C_DRV_H_
+#define I2C_DRV_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -100,7 +100,7 @@ typedef void (*i2c_callback_t) (i2c_frame_t * frame, void * pxTaskWoken);
    @param callback If this value is set, the driver will call this function instead of using an RX queue
    @return Error code
 */
-int i2c_init(int handle, int mode, uint8_t addr, uint16_t speed, int queue_len_tx, int queue_len_rx, i2c_callback_t callback);
+int i2c_init_drv(int handle, int mode, uint8_t addr, uint16_t speed, int queue_len_tx, int queue_len_rx, i2c_callback_t callback);
 
 /**
    User I2C transmit function.

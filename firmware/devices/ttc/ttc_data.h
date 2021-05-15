@@ -1,5 +1,5 @@
 /*
- * adc_wrap.c
+ * ttc_data.h
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
@@ -21,62 +21,29 @@
  */
 
 /**
- * \brief ADC driver wrap implementation.
+ * \brief TTC data structure definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.4
+ * \version 0.6.22
  * 
- * \date 2021/02/13
+ * \date 2021/05/15
  * 
- * \addtogroup adc_wrap
+ * \defgroup ttc_data TTC Data
+ * \ingroup ttc
  * \{
  */
 
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <setjmp.h>
-#include <float.h>
-#include <cmocka.h>
+#ifndef TTC_DATA_H_
+#define TTC_DATA_H_
 
-#include "adc_wrap.h"
+#include "drivers/sl_ttc2/sl_ttc2.h"
 
-int __wrap_adc_init(adc_port_t port, adc_config_t config)
-{
-    check_expected(port);
+/**
+ * \brief TTC data.
+ */
+typedef sl_ttc2_hk_data_t ttc_data_t;
 
-    return 0;
-}
+#endif /* TTC_DATA_H_ */
 
-int __wrap_adc_read(adc_port_t port, uint16_t *val)
-{
-    uint16_t adc_val;
-
-    check_expected(port);
-
-    adc_val = mock_type(uint16_t);
-
-    if (val != NULL)
-    {
-        *val = adc_val;
-    }
-
-    return 0;
-}
-
-float __wrap_adc_temp_get_mref(void)
-{
-    float mref = mock_type(float);
-
-    return mref;
-}
-
-float __wrap_adc_temp_get_nref(void)
-{
-    float nref = mock_type(float);
-
-    return nref;
-}
-
-/** \} End of adc_wrap group */
+/** \} End of ttc_data group */

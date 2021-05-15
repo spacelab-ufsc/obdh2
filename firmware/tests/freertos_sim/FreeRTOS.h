@@ -1,5 +1,5 @@
 /*
- * adc_wrap.c
+ * FreeRTOS.h
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
@@ -21,62 +21,31 @@
  */
 
 /**
- * \brief ADC driver wrap implementation.
+ * \brief FreeRTOS simulation definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.4
+ * \version 0.6.5
  * 
- * \date 2021/02/13
+ * \date 2021/04/27
  * 
- * \addtogroup adc_wrap
+ * \defgroup freertos_sim FreeRTOS
+ * \ingroup tests
  * \{
  */
 
-#include <stdarg.h>
-#include <stddef.h>
+#ifndef FREERTOS_SIM_H_
+#define FREERTOS_SIM_H_
+
 #include <stdint.h>
-#include <setjmp.h>
-#include <float.h>
-#include <cmocka.h>
 
-#include "adc_wrap.h"
+#define pdMS_TO_TICKS(x)    (x)
 
-int __wrap_adc_init(adc_port_t port, adc_config_t config)
-{
-    check_expected(port);
+/**
+ * \brief Tick type.
+ */
+typedef uint32_t TickType_t;
 
-    return 0;
-}
+#endif /* FREERTOS_SIM_H_ */
 
-int __wrap_adc_read(adc_port_t port, uint16_t *val)
-{
-    uint16_t adc_val;
-
-    check_expected(port);
-
-    adc_val = mock_type(uint16_t);
-
-    if (val != NULL)
-    {
-        *val = adc_val;
-    }
-
-    return 0;
-}
-
-float __wrap_adc_temp_get_mref(void)
-{
-    float mref = mock_type(float);
-
-    return mref;
-}
-
-float __wrap_adc_temp_get_nref(void)
-{
-    float nref = mock_type(float);
-
-    return nref;
-}
-
-/** \} End of adc_wrap group */
+/** \} End of freertos_sim group */

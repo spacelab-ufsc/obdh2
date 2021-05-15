@@ -1,5 +1,5 @@
 /*
- * adc_wrap.c
+ * sl_eps2_delay.c
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
@@ -21,62 +21,26 @@
  */
 
 /**
- * \brief ADC driver wrap implementation.
+ * \brief SpaceLab EPS 2.0 driver delay implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.4
+ * \version 0.6.8
  * 
- * \date 2021/02/13
+ * \date 2021/05/06
  * 
- * \addtogroup adc_wrap
+ * \addtogroup sl_eps2
  * \{
  */
 
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <setjmp.h>
-#include <float.h>
-#include <cmocka.h>
+#include <FreeRTOS.h>
+#include <task.h>
 
-#include "adc_wrap.h"
+#include "sl_eps2.h"
 
-int __wrap_adc_init(adc_port_t port, adc_config_t config)
+void sl_eps2_delay_ms(uint32_t ms)
 {
-    check_expected(port);
-
-    return 0;
+    vTaskDelay(pdMS_TO_TICKS(ms));
 }
 
-int __wrap_adc_read(adc_port_t port, uint16_t *val)
-{
-    uint16_t adc_val;
-
-    check_expected(port);
-
-    adc_val = mock_type(uint16_t);
-
-    if (val != NULL)
-    {
-        *val = adc_val;
-    }
-
-    return 0;
-}
-
-float __wrap_adc_temp_get_mref(void)
-{
-    float mref = mock_type(float);
-
-    return mref;
-}
-
-float __wrap_adc_temp_get_nref(void)
-{
-    float nref = mock_type(float);
-
-    return nref;
-}
-
-/** \} End of adc_wrap group */
+/** \} End of sl_eps2 group */

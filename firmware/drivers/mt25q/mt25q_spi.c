@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.24
+ * \version 0.6.6
  * 
  * \date 2019/11/15
  * 
@@ -65,6 +65,31 @@ int mt25q_spi_read(uint8_t *data, uint16_t len)
 int mt25q_spi_transfer(uint8_t *wdata, uint8_t *rdata, uint16_t len)
 {
     return spi_transfer(MT25Q_SPI_PORT, MT25Q_SPI_CS_PIN, wdata, rdata, len);
+}
+
+int mt25q_spi_select(void)
+{
+    return spi_select_slave(MT25Q_SPI_PORT, MT25Q_SPI_CS_PIN, true);
+}
+
+int mt25q_spi_unselect(void)
+{
+    return spi_select_slave(MT25Q_SPI_PORT, MT25Q_SPI_CS_PIN, false);
+}
+
+int mt25q_spi_write_only(uint8_t *data, uint16_t len)
+{
+    return spi_write(MT25Q_SPI_PORT, SPI_CS_NONE, data, len);
+}
+
+int mt25q_spi_read_only(uint8_t *data, uint16_t len)
+{
+    return spi_read(MT25Q_SPI_PORT, SPI_CS_NONE, data, len);
+}
+
+int mt25q_spi_transfer_only(uint8_t *wdata, uint8_t *rdata, uint16_t len)
+{
+    return spi_transfer(MT25Q_SPI_PORT, SPI_CS_NONE, wdata, rdata, len);
 }
 
 /** \} End of mt25q group */
