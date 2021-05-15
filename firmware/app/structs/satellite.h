@@ -1,7 +1,7 @@
 /*
  * satellite.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.17
+ * \version 0.6.23
  * 
  * \date 2020/07/16
  * 
@@ -40,7 +40,7 @@
 #include <stdint.h>
 
 #include <devices/eps/eps_data.h>
-#include <devices/antenna/antenna_data.h>
+#include <devices/ttc/ttc_data.h>
 
 #include "obdh_data.h"
 
@@ -51,6 +51,8 @@ typedef struct
 {
     obdh_data_t obdh;               /**< OBDH data. */
     eps_data_t eps;                 /**< EPS data. */
+    ttc_data_t ttc_0;               /**< TTC 0 data. */
+    ttc_data_t ttc_1;               /**< TTC 1 data. */
 } sat_data_t;
 
 /**

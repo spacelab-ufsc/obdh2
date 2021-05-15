@@ -1,7 +1,7 @@
 /*
  * eps_data.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.17
+ * \version 0.6.10
  * 
  * \date 2020/07/16
  * 
@@ -39,67 +39,17 @@
 
 #include <stdint.h>
 
-/**
- * \brief Battery cell data.
- */
-typedef struct
-{
-    uint16_t voltage;               /**< Raw voltage. */
-    uint32_t temperature;           /**< Raw temperature. */
-    uint8_t heater_duty_cycle;      /**< Heater raw duty cycle. */
-} eps_bat_cell_t;
+#include <drivers/sl_eps2/sl_eps2.h>
 
 /**
- * \brief Battery data.
+ * \brief EPS data structure.
  */
-typedef struct
-{
-    eps_bat_cell_t cell_0;          /**< Cell 0 data. */
-    eps_bat_cell_t cell_1;          /**< Cell 1 data. */
-    uint16_t current;               /**< Raw current. */
-    uint16_t average_current;       /**< Raw average current. */
-    uint16_t accumulated_current;   /**< Raw accumulated current. */
-} eps_bat_t;
+typedef sl_eps2_data_t eps_data_t;
 
 /**
- * \brief Battery monitor data.
+ * \brief EPS battery voltage type.
  */
-typedef struct
-{
-    uint16_t temperature;           /**< Raw temperature. */
-    uint16_t current;               /**< Raw current. */
-    uint16_t charge;                /**< Raw battery charge. */
-} eps_bat_monitor_t;
-
-/**
- * \brief Solar panel data.
- */
-typedef struct
-{
-    uint16_t pos_x_current;         /**< Raw +x current. */
-    uint16_t neg_x_current;         /**< Raw -x current. */
-    uint16_t pos_y_current;         /**< Raw +y current. */
-    uint16_t neg_y_current;         /**< Raw -y current. */
-    uint16_t pos_z_current;         /**< Raw +z current. */
-    uint16_t neg_z_current;         /**< Raw -z current. */
-    uint16_t neg_y_pos_x_voltage;   /**< Raw -y +x voltage. */
-    uint16_t neg_x_pos_z_voltage;   /**< Raw -x +z voltage. */
-    uint16_t neg_z_pos_y_voltage;   /**< Raw -z +y voltage. */
-} eps_solar_panel_t;
-
-/**
- * \brief EPS data.
- */
-typedef struct
-{
-    uint32_t timestamp;             /**< Data timestamp (system ticks). */
-    uint16_t temperature;           /**< uC raw temperature. */
-    eps_bat_t battery;              /**< Battery data. */
-    eps_bat_monitor_t bat_monitor;  /**< Battery monitor data. */
-    eps_solar_panel_t solar_panel;  /**< Solar panel data. */
-    uint16_t main_bus_voltage;      /**< Main bus raw voltage. */
-    uint16_t vpanels_voltage;       /**< vpanels raw voltage. */
-} eps_data_t;
+typedef sl_eps2_voltage_t eps_bat_voltage_t;
 
 #endif /* EPS_DATA_H_ */
 

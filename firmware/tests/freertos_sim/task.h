@@ -1,5 +1,5 @@
 /*
- * adc_wrap.c
+ * task.h
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
@@ -21,62 +21,36 @@
  */
 
 /**
- * \brief ADC driver wrap implementation.
+ * \brief FreeRTOS task simulation definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.6.4
  * 
- * \date 2021/02/13
+ * \date 2021/04/27
  * 
- * \addtogroup adc_wrap
+ * \defgroup task_sim FreeRTOS task
+ * \ingroup tests
  * \{
  */
 
-#include <stdarg.h>
-#include <stddef.h>
+#ifndef TASK_SIM_H_
+#define TASK_SIM_H_
+
 #include <stdint.h>
-#include <setjmp.h>
-#include <float.h>
-#include <cmocka.h>
+#include <unistd.h>
 
-#include "adc_wrap.h"
+#include "FreeRTOS.h"
 
-int __wrap_adc_init(adc_port_t port, adc_config_t config)
-{
-    check_expected(port);
+#define vTaskDelay(x)       usleep(1000*x)
 
-    return 0;
-}
+/**
+ * \brief Gets the system tick count since the begining.
+ *
+ * \return The tick count in milliseconds.
+ */
+TickType_t xTaskGetTickCount(void);
 
-int __wrap_adc_read(adc_port_t port, uint16_t *val)
-{
-    uint16_t adc_val;
+#endif /* TASK_SIM_H_ */
 
-    check_expected(port);
-
-    adc_val = mock_type(uint16_t);
-
-    if (val != NULL)
-    {
-        *val = adc_val;
-    }
-
-    return 0;
-}
-
-float __wrap_adc_temp_get_mref(void)
-{
-    float mref = mock_type(float);
-
-    return mref;
-}
-
-float __wrap_adc_temp_get_nref(void)
-{
-    float nref = mock_type(float);
-
-    return nref;
-}
-
-/** \} End of adc_wrap group */
+/** \} End of task_sim group */

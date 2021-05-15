@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.33
+ * \version 0.6.5
  * 
  * \date 2019/12/07
  * 
@@ -126,6 +126,7 @@ int spi_select_slave(spi_port_t port, spi_cs_t cs, bool active)
                 case SPI_CS_2:      gpio_set_state(GPIO_PIN_28, !active);     break;
                 case SPI_CS_3:      gpio_set_state(GPIO_PIN_45, !active);     break;
                 case SPI_CS_4:      gpio_set_state(GPIO_PIN_46, !active);     break;
+                case SPI_CS_NONE:                                             break;
                 default:
                 #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
                     sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error selecting a slave from port 0: Invalid CS pin!");

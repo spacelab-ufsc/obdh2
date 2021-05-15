@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.10
+ * \version 0.6.4
  * 
  * \date 2021/02/13
  * 
@@ -45,11 +45,15 @@
 #include <tests/mockups/sys_log_wrap.h>
 #include <tests/mockups/adc_wrap.h>
 
-#define TEMP_SENSOR_ADC_PORT            ADC_PORT_5
+#define TEMP_SENSOR_ADC_PORT            ADC_PORT_0
 #define TEMP_SENSOR_ADC_MIN_VAL         0
 #define TEMP_SENSOR_ADC_MAX_VAL         0xFFF       /* 12-bit precision = 0xFFF */
-#define TEMP_SENSOR_MIN_VAL_C           0
-#define TEMP_SENSOR_MAX_VAL_C           ((float)(((int32_t)TEMP_SENSOR_ADC_MAX_VAL * 2 - TEMP_SENSOR_CAL_15V_30C) * (85 - 30)) / (TEMP_SENSOR_CAL_15V_85C - TEMP_SENSOR_CAL_15V_30C) + 30.0f)
+#define TEMP_SENSOR_ADC_MREF_VAL        6.5999999
+#define TEMP_SENSOR_ADC_NREF_VAL        1949.0
+#define TEMP_SENSOR_MIN_VAL_C           (-273)
+#define TEMP_SENSOR_MAX_VAL_C           358
+#define TEMP_SENSOR_MIN_VAL_K           0
+#define TEMP_SENSOR_MAX_VAL_K           (TEMP_SENSOR_MAX_VAL_C + 273)
 
 static void temp_sensor_init_test(void **state)
 {
@@ -57,6 +61,8 @@ static void temp_sensor_init_test(void **state)
     expect_value(__wrap_adc_read, port, TEMP_SENSOR_ADC_PORT);
 
     will_return(__wrap_adc_read, 1024);
+    will_return(__wrap_adc_temp_get_mref, TEMP_SENSOR_ADC_MREF_VAL);
+    will_return(__wrap_adc_temp_get_nref, TEMP_SENSOR_ADC_NREF_VAL);
 
     int result = temp_sensor_init();
 
@@ -88,9 +94,27 @@ static void temp_sensor_raw_to_c_test(void **state)
 
     for(i=TEMP_SENSOR_ADC_MIN_VAL; i<=TEMP_SENSOR_ADC_MAX_VAL; i++)
     {
-        float temp_c = temp_sensor_raw_to_c(i);
+        will_return(__wrap_adc_temp_get_mref, TEMP_SENSOR_ADC_MREF_VAL);
+        will_return(__wrap_adc_temp_get_nref, TEMP_SENSOR_ADC_NREF_VAL);
 
-        assert_in_range((int)temp_c, (int)TEMP_SENSOR_MIN_VAL_C, (int)TEMP_SENSOR_MAX_VAL_C);
+        int16_t temp_c = temp_sensor_raw_to_c(i);
+
+        assert_in_range(temp_c+300, TEMP_SENSOR_MIN_VAL_C+300, TEMP_SENSOR_MAX_VAL_C+300);
+    }
+}
+
+static void temp_sensor_raw_to_k_test(void **state)
+{
+    uint16_t i = 0;
+
+    for(i=TEMP_SENSOR_ADC_MIN_VAL; i<=TEMP_SENSOR_ADC_MAX_VAL; i++)
+    {
+        will_return(__wrap_adc_temp_get_mref, TEMP_SENSOR_ADC_MREF_VAL);
+        will_return(__wrap_adc_temp_get_nref, TEMP_SENSOR_ADC_NREF_VAL);
+
+        uint16_t temp_k = temp_sensor_raw_to_k(i);
+
+        assert_in_range(temp_k, TEMP_SENSOR_MIN_VAL_K, TEMP_SENSOR_MAX_VAL_K);
     }
 }
 
@@ -103,13 +127,36 @@ static void temp_sensor_read_c_test(void **state)
         expect_value(__wrap_adc_read, port, TEMP_SENSOR_ADC_PORT);
 
         will_return(__wrap_adc_read, i);
+        will_return(__wrap_adc_temp_get_mref, TEMP_SENSOR_ADC_MREF_VAL);
+        will_return(__wrap_adc_temp_get_nref, TEMP_SENSOR_ADC_NREF_VAL);
 
-        float temp_c = FLT_MAX;
+        int16_t temp_c = INT16_MAX;
 
         int result = temp_sensor_read_c(&temp_c);
 
         assert_return_code(result, 0);
-        assert_in_range((int)temp_c, (int)TEMP_SENSOR_MIN_VAL_C, (int)TEMP_SENSOR_MAX_VAL_C);
+        assert_in_range(temp_c+300, TEMP_SENSOR_MIN_VAL_C+300, TEMP_SENSOR_MAX_VAL_C+300);
+    }
+}
+
+static void temp_sensor_read_k_test(void **state)
+{
+    uint16_t i = 0;
+
+    for(i=TEMP_SENSOR_ADC_MIN_VAL; i<=TEMP_SENSOR_ADC_MAX_VAL; i++)
+    {
+        expect_value(__wrap_adc_read, port, TEMP_SENSOR_ADC_PORT);
+
+        will_return(__wrap_adc_read, i);
+        will_return(__wrap_adc_temp_get_mref, TEMP_SENSOR_ADC_MREF_VAL);
+        will_return(__wrap_adc_temp_get_nref, TEMP_SENSOR_ADC_NREF_VAL);
+
+        uint16_t temp_k = UINT16_MAX;
+
+        int result = temp_sensor_read_k(&temp_k);
+
+        assert_return_code(result, 0);
+        assert_in_range(temp_k+200, TEMP_SENSOR_MIN_VAL_K+200, TEMP_SENSOR_MAX_VAL_K+200);
     }
 }
 
@@ -119,7 +166,9 @@ int main(void)
         cmocka_unit_test(temp_sensor_init_test),
         cmocka_unit_test(temp_sensor_read_raw_test),
         cmocka_unit_test(temp_sensor_raw_to_c_test),
+        cmocka_unit_test(temp_sensor_raw_to_k_test),
         cmocka_unit_test(temp_sensor_read_c_test),
+        cmocka_unit_test(temp_sensor_read_k_test),
     };
 
     return cmocka_run_group_tests(temp_sensor_tests, NULL, NULL);

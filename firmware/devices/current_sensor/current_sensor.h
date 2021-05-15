@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.21
+ * \version 0.6.2
  * 
  * \date 2020/07/11
  * 
@@ -43,7 +43,7 @@
 
 #define CURRENT_SENSOR_MODULE_NAME          "Current Sensor"
 
-#define CURRENT_SENSOR_ADC_PORT             ADC_PORT_3      /**< Current sensor ADC port (channel). */
+#define CURRENT_SENSOR_ADC_PORT             ADC_PORT_8      /**< Current sensor ADC port (channel). */
 
 /* Rsense value */
 #define CURRENT_SENSOR_RSENSE_VALUE_OHM     0.05            /**< Rsense resistor value in Ohm. */

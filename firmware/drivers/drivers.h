@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.24
+ * \version 0.6.12
  * 
  * \date 2019/10/26
  * 
@@ -51,6 +51,7 @@
 #include "sl_eps2/sl_eps2.h"
 #include "adc/adc.h"
 #include "flash/flash.h"
+#include "sl_ttc2/sl_ttc2.h"
 
 #endif /* DRIVERS_H_ */
 

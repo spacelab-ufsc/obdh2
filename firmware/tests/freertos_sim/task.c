@@ -1,5 +1,5 @@
 /*
- * adc_wrap.c
+ * task.c
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
@@ -21,62 +21,51 @@
  */
 
 /**
- * \brief ADC driver wrap implementation.
+ * \brief FreeRTOS task simulation implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.6.4
  * 
- * \date 2021/02/13
+ * \date 2021/04/27
  * 
- * \addtogroup adc_wrap
+ * \addtogroup task_sim
  * \{
  */
 
-#include <stdarg.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <setjmp.h>
-#include <float.h>
-#include <cmocka.h>
+#define _POSIX_C_SOURCE 200809L
 
-#include "adc_wrap.h"
+#include <math.h>
+#include <time.h>
 
-int __wrap_adc_init(adc_port_t port, adc_config_t config)
+#include "task.h"
+
+uint64_t initial_time_ms = 0;
+
+TickType_t xTaskGetTickCount(void)
 {
-    check_expected(port);
+    long ms;    /* Milliseconds */
+    time_t s;   /* Seconds */
+    struct timespec spec;
 
-    return 0;
-}
+    clock_gettime(CLOCK_REALTIME, &spec);
 
-int __wrap_adc_read(adc_port_t port, uint16_t *val)
-{
-    uint16_t adc_val;
-
-    check_expected(port);
-
-    adc_val = mock_type(uint16_t);
-
-    if (val != NULL)
+    s = spec.tv_sec;
+    ms = round(spec.tv_nsec / 1.0e6);   /* Convert nanoseconds to milliseconds */
+    if (ms > 999)
     {
-        *val = adc_val;
+        s++;
+        ms = 0;
     }
 
-    return 0;
+    uint64_t timestamp_ms = (1000*(uint64_t)s) + ms;
+
+    if (initial_time_ms == 0)
+    {
+        initial_time_ms = timestamp_ms;
+    }
+
+    return timestamp_ms - initial_time_ms;
 }
 
-float __wrap_adc_temp_get_mref(void)
-{
-    float mref = mock_type(float);
-
-    return mref;
-}
-
-float __wrap_adc_temp_get_nref(void)
-{
-    float nref = mock_type(float);
-
-    return nref;
-}
-
-/** \} End of adc_wrap group */
+/** \} End of task_sim group */

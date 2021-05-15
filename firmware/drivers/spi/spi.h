@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.9
+ * \version 0.6.5
  * 
- * \date 07/12/2019
+ * \date 2019/12/07
  * 
  * \defgroup spi SPI
  * \ingroup drivers
@@ -68,7 +68,8 @@ typedef enum
     SPI_CS_6,           /**< SPI chip select 6. */
     SPI_CS_7,           /**< SPI chip select 7. */
     SPI_CS_8,           /**< SPI chip select 8. */
-    SPI_CS_9            /**< SPI chip select 9. */
+    SPI_CS_9,           /**< SPI chip select 9. */
+    SPI_CS_NONE         /**< No SPI chip select. */
 } spi_cs_e;
 
 /**
@@ -146,6 +147,7 @@ int spi_init(spi_port_t port, spi_config_t config);
  *      -\b SPI_CS_7
  *      -\b SPI_CS_8
  *      -\b SPI_CS_9
+ *      -\b SPI_CS_NONE
  *      .
  * \endparblock
  *
@@ -180,6 +182,7 @@ int spi_write(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len);
  *      -\b SPI_CS_7
  *      -\b SPI_CS_8
  *      -\b SPI_CS_9
+ *      -\b SPI_CS_NONE
  *      .
  * \endparblock
  *
@@ -214,6 +217,7 @@ int spi_read(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len);
  *      -\b SPI_CS_7
  *      -\b SPI_CS_8
  *      -\b SPI_CS_9
+ *      -\b SPI_CS_NONE
  *      .
  * \endparblock
  *
