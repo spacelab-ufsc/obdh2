@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.12
+ * \version 0.6.24
  * 
  * \date 2020/02/05
  * 
@@ -171,6 +171,8 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
         return -1;
     }
 
+    sl_eps2_delay_ms(5);
+
     /* Last reset cause */
     if (sl_eps2_read_reset_cause(config, &(data->last_reset_cause)) != 0)
     {
@@ -189,6 +191,8 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
         return -1;
     }
 
+    sl_eps2_delay_ms(5);
+
     if (sl_eps2_read_solar_panel_voltage(config, SL_EPS2_SOLAR_PANEL_1_4, &(data->solar_panel_voltage_mx_pz)) != 0)
     {
         return -1;
@@ -203,6 +207,8 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
     {
         return -1;
     }
+
+    sl_eps2_delay_ms(5);
 
     /* Solar panel current */
     if (sl_eps2_read_solar_panel_current(config, SL_EPS2_SOLAR_PANEL_0, &(data->solar_panel_current_my)) != 0)
@@ -220,6 +226,8 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
         return -1;
     }
 
+    sl_eps2_delay_ms(5);
+
     if (sl_eps2_read_solar_panel_current(config, SL_EPS2_SOLAR_PANEL_3, &(data->solar_panel_current_px)) != 0)
     {
         return -1;
@@ -234,6 +242,8 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
     {
         return -1;
     }
+
+    sl_eps2_delay_ms(5);
 
     /* MPPT duty cycle */
     if (sl_eps2_read_mppt_duty_cycle(config, SL_EPS2_MPPT_1, &(data->mppt_1_duty_cycle)) != 0)
@@ -250,6 +260,8 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
     {
         return -1;
     }
+
+    sl_eps2_delay_ms(5);
 
     /* Main power bus voltage */
     if (sl_eps2_read_main_bus_voltage(config, &(data->main_power_bus_voltage)) != 0)
@@ -268,6 +280,8 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
         return -1;
     }
 
+    sl_eps2_delay_ms(5);
+
     if (sl_eps2_read_rtd_temperature(config, SL_EPS2_REG_RTD2_TEMP_K, &(data->rtd_2_temperature)) != 0)
     {
         return -1;
@@ -282,6 +296,8 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
     {
         return -1;
     }
+
+    sl_eps2_delay_ms(5);
 
     if (sl_eps2_read_rtd_temperature(config, SL_EPS2_REG_RTD5_TEMP_K, &(data->rtd_5_temperature)) != 0)
     {
@@ -299,6 +315,8 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
         return -1;
     }
 
+    sl_eps2_delay_ms(5);
+
     /* Battery current */
     if (sl_eps2_read_battery_current(config, SL_EPS2_REG_BATTERY_CUR_MA, &(data->battery_current)) != 0)
     {
@@ -314,6 +332,8 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
     {
         return -1;
     }
+
+    sl_eps2_delay_ms(5);
 
     /* Battery charge */
     if (sl_eps2_read_battery_charge(config, &(data->battery_charge)) != 0)
@@ -332,6 +352,8 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
         return -1;
     }
 
+    sl_eps2_delay_ms(5);
+
     if (sl_eps2_read_battery_monitor_protection(config, &(data->battery_monitor_protection)) != 0)
     {
         return -1;
@@ -346,6 +368,8 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
     {
         return -1;
     }
+
+    sl_eps2_delay_ms(5);
 
     if (sl_eps2_read_battery_monitor_rsac(config, &(data->rsac)) != 0)
     {
@@ -362,6 +386,8 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
         return -1;
     }
 
+    sl_eps2_delay_ms(5);
+
     /* MPPT mode */
     if (sl_eps2_get_mppt_mode(config, SL_EPS2_MPPT_1, &(data->mppt_1_mode)) != 0)
     {
@@ -377,6 +403,8 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
     {
         return -1;
     }
+
+    sl_eps2_delay_ms(5);
 
     /* Heater mode */
     if (sl_eps2_get_heater_mode(config, SL_EPS2_HEATER_1, &(data->battery_heater_1_mode)) != 0)
