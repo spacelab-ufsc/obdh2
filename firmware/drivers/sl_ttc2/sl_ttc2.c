@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.18
+ * \version 0.6.21
  * 
  * \date 2021/05/12
  * 
@@ -75,6 +75,8 @@ int sl_ttc2_init(sl_ttc2_config_t config)
         return -1;
     }
 
+    sl_ttc2_delay_ms(10);
+
     if (sl_ttc2_check_device(config) != 0)
     {
         return -1;
@@ -92,44 +94,36 @@ int sl_ttc2_check_device(sl_ttc2_config_t config)
         return -1;
     }
 
-    switch(config.id)
+    uint16_t ref_id = 0;
+
+    if (config.id == SL_TTC2_RADIO_0)
     {
-        case SL_TTC2_RADIO_0:
-            if (id != SL_TTC2_DEVICE_ID_RADIO_0)
-            {
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
-                sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error checking the device! (read=");
-                sys_log_print_hex(id);
-                sys_log_print_msg(", expected=");
-                sys_log_print_hex(SL_TTC2_DEVICE_ID_RADIO_0);
-                sys_log_print_msg(")");
-                sys_log_new_line();
-            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-                return -1;
-            }
+        ref_id = SL_TTC2_DEVICE_ID_RADIO_0;
+    }
+    else if (config.id == SL_TTC2_RADIO_1)
+    {
+        ref_id = SL_TTC2_DEVICE_ID_RADIO_1;
+    }
+    else
+    {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error checking the device! Invalid radio index!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        return -1;
+    }
 
-            break;
-        case SL_TTC2_RADIO_1:
-            if (id != SL_TTC2_DEVICE_ID_RADIO_1)
-            {
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
-                sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error checking the device! (read=");
-                sys_log_print_hex(id);
-                sys_log_print_msg(", expected=");
-                sys_log_print_hex(SL_TTC2_DEVICE_ID_RADIO_1);
-                sys_log_print_msg(")");
-                sys_log_new_line();
-            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-                return -1;
-            }
-
-            break;
-        default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
-            sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error checking the device! Invalid radio index!");
-            sys_log_new_line();
-        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-            return -1;
+    if (id != ref_id)
+    {
+    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error checking the device! (read=");
+        sys_log_print_hex(id);
+        sys_log_print_msg(", expected=");
+        sys_log_print_hex(ref_id);
+        sys_log_print_msg(")");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        return -1;
     }
 
     return 0;
@@ -223,6 +217,8 @@ int sl_ttc2_read_hk_data(sl_ttc2_config_t config, sl_ttc2_hk_data_t *data)
         return -1;
     }
 
+    sl_ttc2_delay_ms(5);
+
     /* MCU power */
     if (sl_ttc2_read_voltage(config, SL_TTC2_VOLTAGE_MCU, &(data->voltage_mcu)) != 0)
     {
@@ -240,6 +236,8 @@ int sl_ttc2_read_hk_data(sl_ttc2_config_t config, sl_ttc2_hk_data_t *data)
         return -1;
     }
 
+    sl_ttc2_delay_ms(5);
+
     /* Radio power */
     if (sl_ttc2_read_voltage(config, SL_TTC2_VOLTAGE_RADIO, &(data->voltage_radio)) != 0)
     {
@@ -256,6 +254,8 @@ int sl_ttc2_read_hk_data(sl_ttc2_config_t config, sl_ttc2_hk_data_t *data)
     {
         return -1;
     }
+
+    sl_ttc2_delay_ms(5);
 
     /* Last valid telecommand */
     if (sl_ttc2_read_last_valid_tc(config, &(data->last_valid_tc)) != 0)
@@ -275,6 +275,8 @@ int sl_ttc2_read_hk_data(sl_ttc2_config_t config, sl_ttc2_hk_data_t *data)
         return -1;
     }
 
+    sl_ttc2_delay_ms(5);
+
     if (sl_ttc2_read_antenna_status(config, &(data->antenna_status)) != 0)
     {
         return -1;
@@ -289,6 +291,8 @@ int sl_ttc2_read_hk_data(sl_ttc2_config_t config, sl_ttc2_hk_data_t *data)
     {
         return -1;
     }
+
+    sl_ttc2_delay_ms(5);
 
     /* Packet counter */
     if (sl_ttc2_read_pkt_counter(config, SL_TTC2_TX_PKT, &(data->tx_packet_counter)) != 0)
@@ -434,8 +438,8 @@ int sl_ttc2_read_fifo_pkts(sl_ttc2_config_t config, uint8_t pkt, uint8_t *val)
 {
     switch(pkt)
     {
-        case SL_TTC2_TX_PKT:    return sl_ttc2_read_reg(config, SL_TTC2_REG_FIFO_TX_PACKET, val);
-        case SL_TTC2_RX_PKT:    return sl_ttc2_read_reg(config, SL_TTC2_REG_FIFO_RX_PACKET, val);
+        case SL_TTC2_TX_PKT:    return sl_ttc2_read_reg(config, SL_TTC2_REG_FIFO_TX_PACKET, (uint32_t*)val);
+        case SL_TTC2_RX_PKT:    return sl_ttc2_read_reg(config, SL_TTC2_REG_FIFO_RX_PACKET, (uint32_t*)val);
         default:
         #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
             sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the FIFO buffer! Invalid packet type!");
