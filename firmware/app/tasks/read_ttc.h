@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.20
+ * \version 0.6.23
  * 
  * \date 2021/05/14
  * 
@@ -41,7 +41,7 @@
 #include <task.h>
 
 #define TASK_READ_TTC_NAME                      "Read TTC"          /**< Task name. */
-#define TASK_READ_TTC_STACK_SIZE                128                 /**< Stack size in bytes. */
+#define TASK_READ_TTC_STACK_SIZE                384                 /**< Stack size in bytes. */
 #define TASK_READ_TTC_PRIORITY                  3                   /**< Task priority. */
 #define TASK_READ_TTC_PERIOD_MS                 (60000)             /**< Task period in milliseconds. */
 #define TASK_READ_TTC_INIT_TIMEOUT_MS           2000                /**< Wait time to initialize the task in milliseconds. */

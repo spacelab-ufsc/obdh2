@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.20
+ * \version 0.6.23
  * 
  * \date 2021/05/14
  * 
@@ -52,7 +52,29 @@ void vTaskReadTTC(void *pvParameters)
     {
         TickType_t last_cycle = xTaskGetTickCount();
 
-        /* TODO */
+        if (ttc_init(TTC_0) != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_TTC_NAME, "Error initializing the TTC device!");
+            sys_log_new_line();
+        }
+
+        if (ttc_init(TTC_1) != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_TTC_NAME, "Error initializing the TTC device!");
+            sys_log_new_line();
+        }
+
+        if (ttc_get_data(TTC_0, &sat_data_buf.ttc_0) != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_TTC_NAME, "Error reading data from the TTC 0 device!");
+            sys_log_new_line();
+        }
+
+        if (ttc_get_data(TTC_1, &sat_data_buf.ttc_1) != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_TTC_NAME, "Error reading data from the TTC 1 device!");
+            sys_log_new_line();
+        }
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_TTC_PERIOD_MS));
     }
