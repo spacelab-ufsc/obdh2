@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.17
+ * \version 0.6.22
  * 
  * \date 2020/02/01
  * 
@@ -40,6 +40,7 @@
 #include <stdint.h>
 
 #include "drivers/sl_ttc2/sl_ttc2.h"
+#include "ttc_data.h"
 
 #define TTC_MODULE_NAME         "TTC"
 
@@ -49,34 +50,53 @@
 typedef sl_ttc2_config_t ttc_config_t;
 
 /**
- * \brief TTC data.
+ * \brief TTC devices.
  */
-typedef sl_ttc2_hk_data_t ttc_data_t;
+typedef enum
+{
+    TTC_0=0,        /**< TTC 0. */
+    TTC_1           /**< TTC 1. */
+} ttc_e;
 
 /**
  * \brief Initialization routine of the TTC device.
  *
- * \param[in] config is the configuration parameters of the TTC device.
+ * \param[in] dev is the TTC device to initialized. It can be:
+ * \parblock
+ *      -\b TTC_0
+ *      -\b TTC_1
+ *      .
+ * \endparblock
  *
  * \return The status/error code.
  */
-int ttc_init(ttc_config_t config);
+int ttc_init(ttc_e dev);
 
 /**
  * \brief Reads the housekeeping data from the TTC device.
  *
- * \param[in] config is the configuration parameters of the TTC device.
+ * \param[in] dev is the TTC device to initialized. It can be:
+ * \parblock
+ *      -\b TTC_0
+ *      -\b TTC_1
+ *      .
+ * \endparblock
  *
  * \param[in,out] data is a pointer to store the read TTC data.
  *
  * \return The status/error code.
  */
-int ttc_get_data(ttc_config_t config, ttc_data_t *data);
+int ttc_get_data(ttc_e dev, ttc_data_t *data);
 
 /**
  * \brief Sends a downlink packet to the TTC device.
  *
- * \param[in] config is the configuration parameters of the TTC device.
+ * \param[in] dev is the TTC device to initialized. It can be:
+ * \parblock
+ *      -\b TTC_0
+ *      -\b TTC_1
+ *      .
+ * \endparblock
  *
  * \param[in] data is the data to transmit.
  *
@@ -84,12 +104,17 @@ int ttc_get_data(ttc_config_t config, ttc_data_t *data);
  *
  * \return The status/error code.
  */
-int ttc_send(ttc_config_t config, uint8_t *data, uint16_t len);
+int ttc_send(ttc_e dev, uint8_t *data, uint16_t len);
 
 /**
  * \brief Receives an uplink packet from the TTC device.
  *
- * \param[in] config is the configuration parameters of the TTC device.
+ * \param[in] dev is the TTC device to initialized. It can be:
+ * \parblock
+ *      -\b TTC_0
+ *      -\b TTC_1
+ *      .
+ * \endparblock
  *
  * \param[in,out] data is a pointer to store the received packet.
  *
@@ -97,34 +122,49 @@ int ttc_send(ttc_config_t config, uint8_t *data, uint16_t len);
  *
  * \return The status/error code.
  */
-int ttc_recv(ttc_config_t config, uint8_t *data, uint16_t *len);
+int ttc_recv(ttc_e dev, uint8_t *data, uint16_t *len);
 
 /**
  * \brief Gets the number available packets to read.
  *
- * \param[in] config is the configuration parameters of the TTC device.
+ * \param[in] dev is the TTC device to initialized. It can be:
+ * \parblock
+ *      -\b TTC_0
+ *      -\b TTC_1
+ *      .
+ * \endparblock
  *
  * \return The status/error code.
  */
-int ttc_avail(ttc_config_t config);
+int ttc_avail(ttc_e dev);
 
 /**
  * \brief Enables the TTC hibernation for a given period.
  *
- * \param[in] config is the configuration parameters of the TTC device.
+ * \param[in] dev is the TTC device to initialized. It can be:
+ * \parblock
+ *      -\b TTC_0
+ *      -\b TTC_1
+ *      .
+ * \endparblock
  *
  * \return The status/error code.
  */
-int ttc_enter_hibernation(ttc_config_t config);
+int ttc_enter_hibernation(ttc_e dev);
 
 /**
  * \brief Disables the TTC hibernation.
  *
- * \param[in] config is the configuration parameters of the TTC device.
+ * \param[in] dev is the TTC device to initialized. It can be:
+ * \parblock
+ *      -\b TTC_0
+ *      -\b TTC_1
+ *      .
+ * \endparblock
  *
  * \return The status/error code.
  */
-int ttc_leave_hibernation(ttc_config_t config);
+int ttc_leave_hibernation(ttc_e dev);
 
 #endif /* TTC_H_ */
 

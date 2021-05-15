@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.19
+ * \version 0.6.22
  * 
  * \date 2020/02/01
  * 
@@ -33,21 +33,71 @@
  * \{
  */
 
+#include <stdbool.h>
+
 #include <system/sys_log/sys_log.h>
+#include <drivers/spi/spi.h>
 
 #include "ttc.h"
 
-int ttc_init(ttc_config_t config)
+ttc_config_t ttc_0_config = {0};
+ttc_config_t ttc_1_config = {0};
+
+bool ttc_0_is_open = false;
+bool ttc_1_is_open = false;
+
+int ttc_init(ttc_e dev)
 {
+    ttc_config_t ttc_config = {0};
+
+    switch(dev)
+    {
+        case TTC_0:
+            if (ttc_0_is_open)
+            {
+                return 0;   /* TTC 0 device already initialized */
+            }
+
+            ttc_0_config.port                   = SPI_PORT_0;
+            ttc_0_config.cs_pin                 = SPI_CS_0;
+            ttc_0_config.port_config.speed_hz   = 100000;
+            ttc_0_config.port_config.mode       = SPI_MODE_0;
+            ttc_0_config.id                     = SL_TTC2_RADIO_0;
+
+            ttc_config = ttc_0_config;
+
+            break;
+        case TTC_1:
+            if (ttc_1_is_open)
+            {
+                return 0;   /* TTC 1 device already initialized */
+            }
+
+            ttc_1_config.port                   = SPI_PORT_0;
+            ttc_1_config.cs_pin                 = SPI_CS_1;
+            ttc_1_config.port_config.speed_hz   = 100000;
+            ttc_1_config.port_config.mode       = SPI_MODE_0;
+            ttc_1_config.id                     = SL_TTC2_RADIO_1;
+
+            ttc_config = ttc_1_config;
+
+            break;
+        default:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Error initializing the TTC device! Invalid device!");
+            sys_log_new_line();
+
+            return -1;
+    }
+
     sys_log_print_event_from_module(SYS_LOG_INFO, TTC_MODULE_NAME, "Initializing TTC device ");
-    sys_log_print_uint(config.id);
+    sys_log_print_uint(ttc_config.id);
     sys_log_print_msg("...");
     sys_log_new_line();
 
-    if (sl_ttc2_init(config) != 0)
+    if (sl_ttc2_init(ttc_config) != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Error initializing the TTC device ");
-        sys_log_print_uint(config.id);
+        sys_log_print_uint(ttc_config.id);
         sys_log_print_msg("!");
         sys_log_new_line();
 
@@ -55,10 +105,10 @@ int ttc_init(ttc_config_t config)
     }
 
     uint8_t hw_ver = 0;
-    if (sl_ttc2_read_hardware_version(config, &hw_ver) != 0)
+    if (sl_ttc2_read_hardware_version(ttc_config, &hw_ver) != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Error reading the hardware version of the TTC device ");
-        sys_log_print_uint(config.id);
+        sys_log_print_uint(ttc_config.id);
         sys_log_print_msg("!");
         sys_log_new_line();
 
@@ -66,10 +116,10 @@ int ttc_init(ttc_config_t config)
     }
 
     uint32_t fw_ver = 0;
-    if (sl_ttc2_read_firmware_version(config, &fw_ver) != 0)
+    if (sl_ttc2_read_firmware_version(ttc_config, &fw_ver) != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Error reading the firmware version of the TTC device ");
-        sys_log_print_uint(config.id);
+        sys_log_print_uint(ttc_config.id);
         sys_log_print_msg("!");
         sys_log_new_line();
 
@@ -83,25 +133,44 @@ int ttc_init(ttc_config_t config)
     sys_log_print_msg(")");
     sys_log_new_line();
 
+    switch(dev)
+    {
+        case TTC_0:     ttc_0_is_open = true;
+        case TTC_1:     ttc_1_is_open = true;
+    }
+
     return 0;
 }
 
-int ttc_get_data(ttc_config_t config, ttc_data_t *data)
+int ttc_get_data(ttc_e dev, ttc_data_t *data)
 {
-    if (sl_ttc2_check_device(config) != 0)
+    ttc_config_t ttc_config = {0};
+
+    switch(dev)
+    {
+        case TTC_0:     ttc_config = ttc_0_config;  break;
+        case TTC_1:     ttc_config = ttc_1_config;  break;
+        default:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Error initializing the TTC device! Invalid device!");
+            sys_log_new_line();
+
+            return -1;
+    }
+
+    if (sl_ttc2_check_device(ttc_config) != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Error reading the data from the TTC device ");
-        sys_log_print_uint(config.id);
+        sys_log_print_uint(ttc_config.id);
         sys_log_print_msg("! No device detected!");
         sys_log_new_line();
 
         return -1;
     }
 
-    if (sl_ttc2_read_hk_data(config, data) != 0)
+    if (sl_ttc2_read_hk_data(ttc_config, data) != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Error reading the data from the TTC device ");
-        sys_log_print_uint(config.id);
+        sys_log_print_uint(ttc_config.id);
         sys_log_print_msg("!");
         sys_log_new_line();
 
@@ -111,22 +180,35 @@ int ttc_get_data(ttc_config_t config, ttc_data_t *data)
     return 0;
 }
 
-int ttc_send(ttc_config_t config, uint8_t *data, uint16_t len)
+int ttc_send(ttc_e dev, uint8_t *data, uint16_t len)
 {
-    if (sl_ttc2_check_device(config) != 0)
+    ttc_config_t ttc_config = {0};
+
+    switch(dev)
+    {
+        case TTC_0:     ttc_config = ttc_0_config;  break;
+        case TTC_1:     ttc_config = ttc_1_config;  break;
+        default:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Error initializing the TTC device! Invalid device!");
+            sys_log_new_line();
+
+            return -1;
+    }
+
+    if (sl_ttc2_check_device(ttc_config) != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Error sending data to the TTC device ");
-        sys_log_print_uint(config.id);
+        sys_log_print_uint(ttc_config.id);
         sys_log_print_msg("! No device detected!");
         sys_log_new_line();
 
         return -1;
     }
 
-    if (sl_ttc2_transmit_packet(config, data, len) != 0)
+    if (sl_ttc2_transmit_packet(ttc_config, data, len) != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Error sending data to the TTC device ");
-        sys_log_print_uint(config.id);
+        sys_log_print_uint(ttc_config.id);
         sys_log_print_msg("!");
         sys_log_new_line();
 
@@ -136,14 +218,27 @@ int ttc_send(ttc_config_t config, uint8_t *data, uint16_t len)
     return 0;
 }
 
-int ttc_recv(ttc_config_t config, uint8_t *data, uint16_t *len)
+int ttc_recv(ttc_e dev, uint8_t *data, uint16_t *len)
 {
-    if (ttc_avail(config) <= 0)
+    ttc_config_t ttc_config = {0};
+
+    switch(dev)
+    {
+        case TTC_0:     ttc_config = ttc_0_config;  break;
+        case TTC_1:     ttc_config = ttc_1_config;  break;
+        default:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Error sending data! Invalid device!");
+            sys_log_new_line();
+
+            return -1;
+    }
+
+    if (ttc_avail(dev) <= 0)
     {
         return -1;  /* No packet to receive! */
     }
 
-    if (sl_ttc2_read_packet(config, data, len) != 0)
+    if (sl_ttc2_read_packet(ttc_config, data, len) != 0)
     {
         return -1;
     }
@@ -151,19 +246,58 @@ int ttc_recv(ttc_config_t config, uint8_t *data, uint16_t *len)
     return 0;
 }
 
-int ttc_avail(ttc_config_t config)
+int ttc_avail(ttc_e dev)
 {
-    return sl_ttc2_check_pkt_avail(config);
+    ttc_config_t ttc_config = {0};
+
+    switch(dev)
+    {
+        case TTC_0:     ttc_config = ttc_0_config;  break;
+        case TTC_1:     ttc_config = ttc_1_config;  break;
+        default:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Error checking packet availability! Invalid device!");
+            sys_log_new_line();
+
+            return -1;
+    }
+
+    return sl_ttc2_check_pkt_avail(ttc_config);
 }
 
-int ttc_enter_hibernation(ttc_config_t config)
+int ttc_enter_hibernation(ttc_e dev)
 {
-    return sl_ttc2_set_tx_enable(config, false);
+    ttc_config_t ttc_config = {0};
+
+    switch(dev)
+    {
+        case TTC_0:     ttc_config = ttc_0_config;  break;
+        case TTC_1:     ttc_config = ttc_1_config;  break;
+        default:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Error enabling hibernation! Invalid device!");
+            sys_log_new_line();
+
+            return -1;
+    }
+
+    return sl_ttc2_set_tx_enable(ttc_config, false);
 }
 
-int ttc_leave_hibernation(ttc_config_t config)
+int ttc_leave_hibernation(ttc_e dev)
 {
-    return sl_ttc2_set_tx_enable(config, true);
+    ttc_config_t ttc_config = {0};
+
+    switch(dev)
+    {
+        case TTC_0:     ttc_config = ttc_0_config;  break;
+        case TTC_1:     ttc_config = ttc_1_config;  break;
+        default:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Error disabling hibernation! Invalid device!");
+            sys_log_new_line();
+
+            return -1;
+    }
+
+    return sl_ttc2_set_tx_enable(ttc_config, true);
 }
 
 /** \} End of ttc group */
