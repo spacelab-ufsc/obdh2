@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.16
+ * \version 0.6.18
  * 
  * \date 2021/05/12
  * 
@@ -45,8 +45,8 @@
 #define SL_TTC2_MODULE_NAME                     "SpaceLab TTC 2.0"
 
 /* TTC 2.0 IDs */
-#define SL_TTC2_DEVICE_ID_RADIO_1               0xCC2A  /**< TTC 2.0 device ID (radio 1). */
-#define SL_TTC2_DEVICE_ID_RADIO_2               0xCC2B  /**< TTC 2.0 device ID (radio 2). */
+#define SL_TTC2_DEVICE_ID_RADIO_0               0xCC2A  /**< TTC 2.0 device ID (radio 1). */
+#define SL_TTC2_DEVICE_ID_RADIO_1               0xCC2B  /**< TTC 2.0 device ID (radio 2). */
 
 /* TTC 2.0 Commands */
 #define SL_TTC2_CMD_NOP                         0       /**< No operation. */
@@ -79,7 +79,7 @@
 #define SL_TTC2_REG_RX_PACKET_COUNTER           20      /**< RX packet counter. */
 #define SL_TTC2_REG_FIFO_TX_PACKET              21      /**< Number of packets in the TX FIFO. */
 #define SL_TTC2_REG_FIFO_RX_PACKET              22      /**< Number of packets in the RX FIFO. */
-#define SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO 23      /**< Number of bytes of the first available packet in the RX buffer. /
+#define SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO 23      /**< Number of bytes of the first available packet in the RX buffer. */
 
 /**
  * \brief Temperature type.
@@ -100,6 +100,15 @@ typedef uint16_t sl_ttc2_current_t;
  * \brief RSSI type.
  */
 typedef uint16_t sl_ttc2_rssi_t;
+
+/**
+ * \brief Radio ID.
+ */
+typedef enum
+{
+    SL_TTC2_RADIO_0=0,                                  /**< TTC radio 0. */
+    SL_TTC2_RADIO_1                                     /**< TTC radio 1. */
+} sl_ttc2_radio_e;
 
 /**
  * \brief Voltage types.

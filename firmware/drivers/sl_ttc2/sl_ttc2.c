@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.16
+ * \version 0.6.18
  * 
  * \date 2021/05/12
  * 
@@ -92,17 +92,44 @@ int sl_ttc2_check_device(sl_ttc2_config_t config)
         return -1;
     }
 
-    if (config.id != id)
+    switch(config.id)
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
-        sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error checking the device! (read=");
-        sys_log_print_hex(id);
-        sys_log_print_msg(", expected=");
-        sys_log_print_hex(config.id);
-        sys_log_print_msg(")");
-        sys_log_new_line();
-    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;
+        case SL_TTC2_RADIO_0:
+            if (id != SL_TTC2_DEVICE_ID_RADIO_0)
+            {
+            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error checking the device! (read=");
+                sys_log_print_hex(id);
+                sys_log_print_msg(", expected=");
+                sys_log_print_hex(SL_TTC2_DEVICE_ID_RADIO_0);
+                sys_log_print_msg(")");
+                sys_log_new_line();
+            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                return -1;
+            }
+
+            break;
+        case SL_TTC2_RADIO_1:
+            if (id != SL_TTC2_DEVICE_ID_RADIO_1)
+            {
+            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error checking the device! (read=");
+                sys_log_print_hex(id);
+                sys_log_print_msg(", expected=");
+                sys_log_print_hex(SL_TTC2_DEVICE_ID_RADIO_1);
+                sys_log_print_msg(")");
+                sys_log_new_line();
+            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                return -1;
+            }
+
+            break;
+        default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error checking the device! Invalid radio index!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            return -1;
     }
 
     return 0;
