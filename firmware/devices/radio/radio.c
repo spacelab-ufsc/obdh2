@@ -1,7 +1,7 @@
 /*
  * radio.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.15
+ * \version 0.6.26
  * 
- * \date 27/10/2019
+ * \date 2019/10/27
  * 
  * \addtogroup radio
  * \{
@@ -68,7 +68,7 @@ int radio_init()
     }
 
     /* Verifies the device ID */
-    si446x_part_info_t part_info;
+    si446x_part_info_t part_info = {0};
 
     if (si446x_part_info(&part_info) != SI446X_SUCCESS)
     {
@@ -126,7 +126,7 @@ int radio_init()
     }
 
     /* FIFO reset */
-    si446x_fifo_info_t fifo_info;
+    si446x_fifo_info_t fifo_info = {0};
 
     if (si446x_fifo_info(true, true, &fifo_info) != SI446X_SUCCESS)
     {
@@ -159,7 +159,7 @@ int radio_send(uint8_t *data, uint16_t len, uint32_t timeout_ms)
     }
 
     /* FIFO reset */
-    si446x_fifo_info_t fifo_info;
+    si446x_fifo_info_t fifo_info = {0};
 
     if (si446x_fifo_info(true, true, &fifo_info) != SI446X_SUCCESS)
     {
@@ -179,7 +179,7 @@ int radio_send(uint8_t *data, uint16_t len, uint32_t timeout_ms)
     }
 
     /* Clear interrupts */
-    si446x_int_status_t int_status;
+    si446x_int_status_t int_status = {0};
 
     if (si446x_get_int_status(0, 0, 0, &int_status) != SI446X_SUCCESS)
     {
@@ -203,7 +203,7 @@ int radio_send(uint8_t *data, uint16_t len, uint32_t timeout_ms)
 
     while(timeout_ms--)
     {
-        si446x_get_int_status(0, 0, 0, &int_status);
+        int ret = si446x_get_int_status(0, 0, 0, &int_status);
 
         if (int_status.ph_status & SI446X_INT_STATUS_PACKET_SENT)
         {
@@ -211,6 +211,11 @@ int radio_send(uint8_t *data, uint16_t len, uint32_t timeout_ms)
         }
 
         si446x_delay_ms(10);
+    }
+
+    if (timeout_ms == 0)
+    {
+        return -1;  /* Timeout reached */
     }
 
     return 0;
@@ -273,7 +278,7 @@ int radio_recv(uint8_t *data, uint16_t len, uint32_t timeout_ms)
             sys_log_new_line();
 
             /* Clear interrupts */
-            si446x_int_status_t int_status;
+            si446x_int_status_t int_status = {0};
 
             si446x_get_int_status(0, 0, 0, &int_status);
 
@@ -288,13 +293,13 @@ int radio_recv(uint8_t *data, uint16_t len, uint32_t timeout_ms)
 
 int radio_available()
 {
-    si446x_int_status_t int_status;
+    si446x_int_status_t int_status = {0};
 
     si446x_get_int_status(0, 0, 0, &int_status);
 
     if ((int_status.ph_status | SI446X_INT_STATUS_PACKET_RX) > 0)
     {
-        si446x_fifo_info_t fifo_info;
+        si446x_fifo_info_t fifo_info = {0};
 
         si446x_fifo_info(false, false, &fifo_info);
 
