@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.10
+ * \version 0.6.20
  * 
  * \date 2019/11/02
  * 
@@ -51,6 +51,7 @@
 #include "csp_server.h"
 #include "read_edc.h"
 #include "read_eps.h"
+#include "read_ttc.h"
 
 void create_tasks()
 {
@@ -164,6 +165,15 @@ void create_tasks()
         /* Error creating the read EPS task */
     }
 #endif /* CONFIG_TASK_READ_EPS_ENABLED */
+
+#if CONFIG_TASK_READ_TTC_ENABLED == 1
+    xTaskCreate(vTaskReadTTC, TASK_READ_TTC_NAME, TASK_READ_TTC_STACK_SIZE, NULL, TASK_READ_TTC_PRIORITY, &xTaskReadTTCHandle);
+
+    if (xTaskReadTTCHandle == NULL)
+    {
+        /* Error creating the read TTC task */
+    }
+#endif /* CONFIG_TASK_READ_TTC_ENABLED */
 
     create_event_groups();
 }

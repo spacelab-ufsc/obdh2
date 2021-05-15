@@ -1,5 +1,5 @@
 /*
- * version.h
+ * read_ttc.c
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
@@ -21,29 +21,41 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief Read TTC data task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.6.20
  * 
- * \date 2019/10/25
+ * \date 2021/05/14
  * 
- * \defgroup version Version control
+ * \addtogroup read_ttc
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include <system/sys_log/sys_log.h>
+#include <devices/ttc/ttc.h>
 
-#define FIRMWARE_VERSION            "0.6.20"
+#include <structs/satellite.h>
 
-#define FIRMWARE_STATUS             "Development"
+#include "read_ttc.h"
+#include "startup.h"
 
-#define FIRMWARE_AUTHOR             "SpaceLab"
+xTaskHandle xTaskReadTTCHandle;
 
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
+void vTaskReadTTC(void *pvParameters)
+{
+    /* Wait startup task to finish */
+    xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_TTC_INIT_TIMEOUT_MS));
 
-#endif /* VERSION_H_ */
+    while(1)
+    {
+        TickType_t last_cycle = xTaskGetTickCount();
 
-/** \} End of version group */
+        /* TODO */
+
+        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_TTC_PERIOD_MS));
+    }
+}
+
+/** \} End of read_ttc group */
