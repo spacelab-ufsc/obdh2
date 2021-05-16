@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.5
+ * \version 0.6.28
  * 
  * \date 2019/12/07
  * 
@@ -38,6 +38,7 @@
 #define SPI_H_
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #define SPI_MODULE_NAME         "SPI"
 
@@ -123,6 +124,39 @@ typedef uint8_t spi_cs_t;
  * \return The status/error code.
  */
 int spi_init(spi_port_t port, spi_config_t config);
+
+/**
+ * \brief Selects or unselects an SPI device.
+ *
+ * \param[in] port is the SPI port of the device to select. It can be:
+ * \parblock
+ *      -\b SPI_PORT_0
+ *      -\b SPI_PORT_1
+ *      -\b SPI_PORT_2
+ *      .
+ * \endparblock
+ *
+ * \param[in] cs is the chip select pin of the device to select. It can be:
+ * \parblock
+ *      -\b SPI_CS_0
+ *      -\b SPI_CS_1
+ *      -\b SPI_CS_2
+ *      -\b SPI_CS_3
+ *      -\b SPI_CS_4
+ *      -\b SPI_CS_5
+ *      -\b SPI_CS_6
+ *      -\b SPI_CS_7
+ *      -\b SPI_CS_8
+ *      -\b SPI_CS_9
+ *      -\b SPI_CS_NONE
+ *      .
+ * \endparblock
+ *
+ * \param[in] active is TRUE/FALSE to select/unselect the SPI device.
+ *
+ * \return The status/error code.
+ */
+int spi_select_slave(spi_port_t port, spi_cs_t cs, bool active);
 
 /**
  * \brief Writes data to a given SPI port.
