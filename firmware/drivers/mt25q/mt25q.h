@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.0
+ * \version 0.6.27
  * 
  * \date 2019/11/15
  * 
@@ -40,29 +40,43 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define MT25Q_MODULE_NAME               "MT25Q"
+#define MT25Q_MODULE_NAME                   "MT25Q"
 
-#define MT25Q_MANUFACTURER_ID           0x20    /**< Manufacturer ID. */
+#define MT25Q_MANUFACTURER_ID               0x20        /**< Manufacturer ID. */
 
 /* Memory type */
-#define MT25Q_MEMORY_TYPE_3V            0xBA    /**< 3 V. */
-#define MT25Q_MEMORY_TYPE_1V8           0xBB    /**< 1.8 V. */
+#define MT25Q_MEMORY_TYPE_3V                0xBA        /**< 3 V. */
+#define MT25Q_MEMORY_TYPE_1V8               0xBB        /**< 1.8 V. */
 
 /* MT25Q memory capacity */
-#define MT25Q_MEMORY_CAPACITY_2GB       0x22    /**< 2 Gb. */
-#define MT25Q_MEMORY_CAPACITY_1GB       0x21    /**< 1 Gb. */
-#define MT25Q_MEMORY_CAPACITY_512MB     0x20    /**< 512 Mb. */
-#define MT25Q_MEMORY_CAPACITY_256MB     0x19    /**< 256 Mb. */
-#define MT25Q_MEMORY_CAPACITY_128MB     0x18    /**< 128 Mb. */
-#define MT25Q_MEMORY_CAPACITY_64MB      0x17    /**< 64 Mb. */
+#define MT25Q_MEMORY_CAPACITY_2GB           0x22        /**< 2 Gb. */
+#define MT25Q_MEMORY_CAPACITY_1GB           0x21        /**< 1 Gb. */
+#define MT25Q_MEMORY_CAPACITY_512MB         0x20        /**< 512 Mb. */
+#define MT25Q_MEMORY_CAPACITY_256MB         0x19        /**< 256 Mb. */
+#define MT25Q_MEMORY_CAPACITY_128MB         0x18        /**< 128 Mb. */
+#define MT25Q_MEMORY_CAPACITY_64MB          0x17        /**< 64 Mb. */
 
 /* Write in progress status */
-#define MT25Q_READY                     0       /**< The memory is ready to write data. */
-#define MT25Q_BUSY                      1       /**< The memoty is busy writing data. */
+#define MT25Q_READY                         0           /**< The memory is ready to write data. */
+#define MT25Q_BUSY                          1           /**< The memoty is busy writing data. */
 
 /* Write protection */
-#define MT25Q_WRITE_DISABLED            0       /**< Write operations disabled. */
-#define MT25Q_WRITE_ENABLED             1       /**< Write operations enabled. */
+#define MT25Q_WRITE_DISABLED                0           /**< Write operations disabled. */
+#define MT25Q_WRITE_ENABLED                 1           /**< Write operations enabled. */
+
+#define MT25Q_DISCOVERY_TABLE_1             0x0C        /**< Discovery table 1. */
+#define MT25Q_DTABLE_1_SECTOR_DESCRIPTOR    0x1C        /**< Discovery table 1 sector descriptor. */
+#define MT25Q_DTABLE_1_FLASH_SIZE           0x04        /**< Discovery table 1 flash size. */
+
+#define MT25Q_SIZE_16MB                     0x01000000  /**< 16 MB in bytes. */
+#define MT25Q_SIZE_64MB                     0x04000000  /**< 64 MB in bytes. */
+#define MT25Q_SIZE_128MB                    0x08000000  /**< 128 MB in bytes. */
+#define MT25Q_SIZE_256MB                    0x10000000  /**< 256 MB in bytes. */
+
+/**
+ * \brief Sector type.
+ */
+typedef uint16_t mt25q_sector_t;
 
 /**
  * \brief Device ID structure.
@@ -75,6 +89,40 @@ typedef struct
 } mt25q_dev_id_t;
 
 /**
+ * \brief Flash description structure.
+ */
+typedef struct
+{
+    uint32_t id;
+    uint32_t type;
+    uint32_t starting_address;
+    uint32_t address_mask;
+    uint32_t size;
+    uint32_t otp_size;
+    uint32_t die_count;
+    uint32_t die_size;
+    uint32_t die_size_bit;
+
+    uint32_t sector_size;
+    uint32_t sector_size_bit;
+    uint32_t sector_count;
+    uint32_t sector_erase_cmd;
+
+    uint32_t sub_sector_size;
+    uint32_t sub_sector_size_bit;
+    uint32_t sub_sector_count;
+    uint32_t sub_sector_erase_cmd;
+
+    uint32_t page_size;
+    uint32_t page_count;
+
+    uint32_t buffer_size;
+    uint32_t data_width;
+
+    uint8_t num_adr_byte;
+} flash_description_t;
+
+/**
  * \brief Status structure.
  */
 typedef struct
@@ -85,6 +133,15 @@ typedef struct
     uint8_t write_enable_latch;                 /**< The device always powers up with this bit cleared to prevent inadvertent WRITE, PROGRAM, or ERASE operation. */
     uint8_t write_in_progress;                  /**< Indicates a command cycle is in progress. */
 } mt25q_status_t;
+
+/**
+ * \brief Address modes.
+ */
+typedef enum
+{
+    MT25Q_ADDRESS_MODE_3_BYTE=3,                /**< 3 byte address mode. */
+    MT25Q_ADDRESS_MODE_4_BYTE                   /**< 4 byte address mode. */
+} mt25q_address_mode_e;
 
 /**
  * \brief Driver initialization.
@@ -124,6 +181,15 @@ int mt25q_reset(void);
  * \return The status/error code.
  */
 int mt25q_read_device_id(mt25q_dev_id_t *dev_id);
+
+/**
+ * \brief Reads the description data of the flash memory.
+ *
+ * \param[in,out] fdo is a pointer to store the read data into a flash description structure.
+ *
+ * \return The status/error code.
+ */
+int mt25q_read_flash_description(flash_description_t *fdo);
 
 /**
  * \brief Reads the status register.
@@ -193,6 +259,15 @@ int mt25q_write_disable(void);
 bool mt25q_is_busy(void);
 
 /**
+ * \brief Erases a given memory sector.
+ *
+ * \param[in] sector is the memory sector to erase.
+ *
+ * \return The status/error code.
+ */
+int mt25q_erase(mt25q_sector_t sector);
+
+/**
  * \brief Writes data to a given address.
  *
  * \param[in] adr is the address to write.
@@ -203,7 +278,7 @@ bool mt25q_is_busy(void);
  *
  * \return The status/error code.
  */
-int mt25q_write(uint32_t adr, uint8_t *data, uint32_t len);
+int mt25q_write(uint32_t adr, uint8_t *data, uint16_t len);
 
 /**
  * \brief Reads data from a given address.
@@ -216,7 +291,30 @@ int mt25q_write(uint32_t adr, uint8_t *data, uint32_t len);
  *
  * \return The status/error code.
  */
-int mt25q_read(uint32_t adr, uint8_t *data, uint32_t len);
+int mt25q_read(uint32_t adr, uint8_t *data, uint16_t len);
+
+/**
+ * \brief Gets the maximum address value of the memory.
+ *
+ * \return The maximum address value of the memory.
+ */
+uint32_t mt25q_get_max_address(void);
+
+/**
+ * \brief Enables the 4-byte address mode.
+ *
+ * \return The status/error code.
+ */
+int mt25q_enter_4_byte_address_mode(void);
+
+/**
+ * \brief Reads the flag status register.
+ *
+ * \param[in,out] flag is a pointer to store the read value of the flag status.
+ *
+ * \return The status/error code.
+ */
+int mt25q_read_flag_status_register(uint8_t *flag);
 
 /**
  * \brief SPI interface initialization.
@@ -259,6 +357,55 @@ int mt25q_spi_read(uint8_t *data, uint16_t len);
  * \return The status/error code.
  */
 int mt25q_spi_transfer(uint8_t *wdata, uint8_t *rdata, uint16_t len);
+
+/**
+ * \brief Selects the device manually (CS pin low).
+ *
+ * \return The status/error code.
+ */
+int mt25q_spi_select(void);
+
+/**
+ * \brief Unselects the device manually (CS pin high).
+ *
+ * \return The status/error code.
+ */
+int mt25q_spi_unselect(void);
+
+/**
+ * \brief Writes data without automatically select the device.
+ *
+ * \param[in] data is a pointer to the bytes to write.
+ *
+ * \param[in] len is the number of bytes to write.
+ *
+ * \return The status/error code.
+ */
+int mt25q_spi_write_only(uint8_t *data, uint16_t len);
+
+/**
+ * \brief Reads data without automatically select the device.
+ *
+ * \param[in,out] data is a pointer to to store the read bytes.
+ *
+ * \param[in] len is the number of bytes to read.
+ *
+ * \return The status/error code.
+ */
+int mt25q_spi_read_only(uint8_t *data, uint16_t len);
+
+/**
+ * \brief Transfer data without automatically select the device.
+ *
+ * \param[in] wdata is a pointer to the bytes to write.
+ *
+ * \param[in,out] rdata is a pointer to store the read bytes.
+ *
+ * \param[in] len is the number of bytes to transfer (read and write at the same time).
+ *
+ * \return The status/error code.
+ */
+int mt25q_spi_transfer_only(uint8_t *wdata, uint8_t *rdata, uint16_t len);
 
 /**
  * \brief Initialization of the GPIO pins.

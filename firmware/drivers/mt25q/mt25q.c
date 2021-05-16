@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.0
+ * \version 0.6.27
  * 
  * \date 2019/11/15
  * 
@@ -33,10 +33,29 @@
  * \{
  */
 
+#include <string.h>
+
 #include "mt25q.h"
 #include "mt25q_reg.h"
 
 #define MT25Q_DUMMY_BYTE        0x00
+
+flash_description_t fdo = {0};
+
+/**
+ * \brief Writes data into the memory.
+ *
+ * \param[in] adr is the address to write.
+ *
+ * \param[in] data is an array of bytes to write.
+ *
+ * \param[in] len is the number of bytes to write.
+ *
+ * \param[in] instr is the SPI instruction.
+ *
+ * \return The status/error code.
+ */
+int mt25q_gen_program(uint32_t adr, uint8_t *data, uint32_t len, uint8_t instr);
 
 int mt25q_init(void)
 {
@@ -51,6 +70,11 @@ int mt25q_init(void)
     }
 
     mt25q_delay_ms(10);
+
+    if (mt25q_read_flash_description(&fdo) != 0)
+    {
+        return -1;
+    }
 
     return 0;
 }
@@ -68,6 +92,126 @@ int mt25q_read_device_id(mt25q_dev_id_t *dev_id)
     dev_id->manufacturer_id  = ans[1];
     dev_id->memory_type      = ans[2];
     dev_id->memory_capacity  = ans[3];
+
+    return 0;
+}
+
+int mt25q_read_flash_description(flash_description_t *fdo)
+{
+    /* Read device ID */
+    mt25q_dev_id_t dev_id = {0};
+
+    if (mt25q_read_device_id(&dev_id) != 0)
+    {
+        return -1;
+    }
+
+    /* Check the manufacturer */
+    if (dev_id.manufacturer_id != MT25Q_MANUFACTURER_ID)
+    {
+        return -1;  /* Unexpected manufacturer! */
+    }
+
+    uint32_t device = ((uint32_t)dev_id.manufacturer_id << 16) |
+                      ((uint32_t)dev_id.memory_type << 8) |
+                      ((uint32_t)dev_id.memory_capacity);
+
+    fdo->id = device;
+
+    device &= 0xFF;
+    if (device >= 0x20)
+    {
+        device -= 6;    /* WTF?? */
+    }
+
+    fdo->size = 1 << device;
+    fdo->num_adr_byte = 3;
+
+    /* Read the discovery parameter signature */
+    uint8_t cmd[350] = {MT25Q_DUMMY_BYTE};
+    uint8_t ans[350] = {MT25Q_DUMMY_BYTE};
+
+    cmd[0] = MT25Q_READ_SERIAL_FLASH_DISCOVERY_PARAMETER_REG;
+
+    if (mt25q_spi_transfer(cmd, ans, 350) != 0)
+    {
+        return -1;
+    }
+
+    /* Remove the SPI command, address and dummy clocks */
+    memcpy(ans, ans+5, 350);    /* 5 = SPI command + address + dummy clocksy */
+
+    /* Check if the read data is valid */
+    if (memcmp(ans, "SFDP", 4))
+    {
+        return -1;  /* Not flash description data */
+    }
+
+    /* The parameter table pointer is at MT25Q_DISCOVERY_TABLE_1 */
+    uint32_t table_address = (uint32_t)ans[MT25Q_DISCOVERY_TABLE_1] |
+                             ((uint32_t)ans[MT25Q_DISCOVERY_TABLE_1 + 1] << 8) |
+                             ((uint32_t)ans[MT25Q_DISCOVERY_TABLE_1 + 2] << 16);
+
+    /* Get the official device size in bytes */
+    fdo->size = (*((uint32_t*)&ans[table_address + MT25Q_DTABLE_1_FLASH_SIZE]) + 1)/8;
+
+    /* Get the largest sector size and the sector count, and take one sub-sector size and sub-sector count. */
+    /* The first two sector definitions have the definitions that we use - usually 4K and 64K. */
+    uint32_t t_offset = table_address + MT25Q_DTABLE_1_SECTOR_DESCRIPTOR + 2;
+
+    if (ans[t_offset] != 0)
+    {
+        fdo->sector_size_bit        = ans[t_offset];
+        fdo->sector_size            = 1 << ans[t_offset];
+        fdo->sector_count           = fdo->size / fdo->sector_size;
+        fdo->sector_erase_cmd       = ans[t_offset + 1];
+
+        fdo->sub_sector_size_bit    = ans[t_offset - 2];
+        fdo->sub_sector_size        = 1 << ans[t_offset - 2];
+        fdo->sub_sector_count       = fdo->size / fdo->sub_sector_size;
+        fdo->sub_sector_erase_cmd   = ans[t_offset - 1];
+    }
+
+    /* Hard-coded flash parameters */
+    fdo->page_size      = 0x100;
+    fdo->page_count     = fdo->size / fdo->page_size;
+    fdo->address_mask   = 0xFF;
+
+    fdo->otp_size = 0x40;
+
+    /* Initial Die information */
+    if (fdo->size > MT25Q_SIZE_64MB)
+    {
+        fdo->die_count      = fdo->size / MT25Q_SIZE_64MB;
+        fdo->die_size       = MT25Q_SIZE_64MB;
+        fdo->die_size_bit   = 26;
+    }
+
+    /* Auto detect address mode */
+    if (fdo->size > MT25Q_SIZE_16MB)
+    {
+        uint8_t flag = 0;
+
+        if (mt25q_enter_4_byte_address_mode() != 0)
+        {
+            return -1;
+        }
+
+        /* Verify current address mode */
+        if (mt25q_read_flag_status_register(&flag) != 0)
+        {
+            return -1;
+        }
+
+        if (flag & 1)   /* Test addressing bit of flag status reg (bit 0) */
+        {
+            fdo->num_adr_byte = MT25Q_ADDRESS_MODE_4_BYTE;
+        }
+    }
+    else
+    {
+        fdo->num_adr_byte = MT25Q_ADDRESS_MODE_3_BYTE;
+    }
 
     return 0;
 }
@@ -205,13 +349,287 @@ bool mt25q_is_busy(void)
     }
 }
 
-int mt25q_write(uint32_t adr, uint8_t *data, uint32_t len)
+int mt25q_erase(mt25q_sector_t sector)
 {
-    return -1;
+    /* Validate the sector number input */
+    if (fdo.sector_count < sector)
+    {
+        return -1;  /* The sector does not exist! */
+    }
+
+    uint32_t sector_adr = sector << fdo.sector_size_bit;
+
+	/* Check whether any previous Write, Program or Erase cycle is on-going */
+    if (mt25q_is_busy())
+    {
+        return -1;
+    }
+
+    /* Disable Write protection */
+    if (mt25q_write_enable() != 0)
+    {
+        return -1;
+    }
+
+    uint8_t cmd = fdo.sector_erase_cmd;
+    uint8_t adr_arr[4] = {0};
+
+    if (fdo.num_adr_byte == MT25Q_ADDRESS_MODE_3_BYTE)
+    {
+        adr_arr[0] = (uint8_t)((sector_adr >> 16) & 0xFF);
+        adr_arr[1] = (uint8_t)((sector_adr >> 8) & 0xFF);
+        adr_arr[2] = (uint8_t)((sector_adr >> 0) & 0xFF);
+    }
+    else
+    {
+        adr_arr[0] = (uint8_t)((sector_adr >> 24) & 0xFF);
+        adr_arr[1] = (uint8_t)((sector_adr >> 16) & 0xFF);
+        adr_arr[2] = (uint8_t)((sector_adr >> 8) & 0xFF);
+        adr_arr[3] = (uint8_t)((sector_adr >> 0) & 0xFF);
+    }
+
+    if (mt25q_spi_select() != 0)
+    {
+        return -1;
+    }
+
+    /* Write the erase command */
+    if (mt25q_spi_write_only(&cmd, 1) != 0)
+    {
+        return -1;
+    }
+
+    /* Write the address */
+    if (mt25q_spi_write_only(adr_arr, fdo.num_adr_byte) != 0)
+    {
+        return -1;
+    }
+
+    if (mt25q_spi_unselect() != 0)
+    {
+        return -1;
+    }
+
+    mt25q_delay_ms(1000);
+
+    return 0;
 }
 
-int mt25q_read(uint32_t adr, uint8_t *data, uint32_t len)
+int mt25q_write(uint32_t adr, uint8_t *data, uint16_t len)
 {
+    if (mt25q_write_enable() != 0)
+    {
+        return -1;
+    }
+
+    /* Computing the starting alignment, i.e. the distance from the page boundary */
+    uint16_t data_offset = (fdo.page_size - (adr & fdo.address_mask) ) & fdo.address_mask;
+
+    if (data_offset > len)
+    {
+        data_offset = len;
+    }
+
+    if (data_offset > 0)
+    {
+        if (mt25q_gen_program(adr, data, data_offset, MT25Q_PAGE_PROGRAM) != 0)
+        {
+            return -1;
+        }
+    }
+
+    for(; (data_offset + fdo.page_size) < len; data_offset+=fdo.page_size)
+    {
+        if (mt25q_gen_program(adr + data_offset, data + data_offset, fdo.page_size, MT25Q_PAGE_PROGRAM) != 0)
+        {
+            return -1;
+        }
+    }
+
+    if (len > data_offset)
+    {
+        return mt25q_gen_program(adr + data_offset, data + data_offset, (len - data_offset), MT25Q_PAGE_PROGRAM);
+    }
+
+    return 0;
+}
+
+int mt25q_read(uint32_t adr, uint8_t *data, uint16_t len)
+{
+	/* Validate address input */
+    if (adr > mt25q_get_max_address())
+    {
+        return -1;
+    }
+
+    uint8_t cmd = MT25Q_READ;
+    uint8_t adr_arr[4] = {0};
+
+    if (fdo.num_adr_byte == MT25Q_ADDRESS_MODE_3_BYTE)
+    {
+        adr_arr[0] = (uint8_t)((adr >> 16) & 0xFF);
+        adr_arr[1] = (uint8_t)((adr >> 8) & 0xFF);
+        adr_arr[2] = (uint8_t)((adr >> 0) & 0xFF);
+    }
+    else
+    {
+        adr_arr[0] = (uint8_t)((adr >> 24) & 0xFF);
+        adr_arr[1] = (uint8_t)((adr >> 16) & 0xFF);
+        adr_arr[2] = (uint8_t)((adr >> 8) & 0xFF);
+        adr_arr[3] = (uint8_t)((adr >> 0) & 0xFF);
+    }
+
+    if (mt25q_spi_select() != 0)
+    {
+        return -1;
+    }
+
+    /* Write the READ command */
+    if (mt25q_spi_write_only(&cmd, 1) != 0)
+    {
+        return -1;
+    }
+
+    /* Write the address */
+    if (mt25q_spi_write_only(adr_arr, fdo.num_adr_byte) != 0)
+    {
+        return -1;
+    }
+
+    /* Read the data */
+    if (mt25q_spi_read_only(data, len) != 0)
+    {
+        return -1;
+    }
+
+    if (mt25q_spi_unselect() != 0)
+    {
+        return -1;
+    }
+
+    return 0;
+}
+
+uint32_t mt25q_get_max_address(void)
+{
+    return fdo.size;
+}
+
+int mt25q_enter_4_byte_address_mode(void)
+{
+    uint8_t cmd = MT25Q_ENTER_4_BYTE_ADDRESS_MODE;
+    uint8_t ans = MT25Q_DUMMY_BYTE;
+
+    if (mt25q_spi_transfer(&cmd, &ans, 1) != 0)
+    {
+        return -1;
+    }
+
+    /* verify current addr mode */
+    uint8_t flag = 0;
+    if (mt25q_read_flag_status_register(&flag) != 0)
+    {
+        return -1;
+    }
+
+    if (flag & 1)
+    {
+        fdo.num_adr_byte = MT25Q_ADDRESS_MODE_4_BYTE;
+    }
+    else
+    {
+        fdo.num_adr_byte = MT25Q_ADDRESS_MODE_3_BYTE;
+    }
+
+    return 0;
+}
+
+int mt25q_read_flag_status_register(uint8_t *flag)
+{
+    uint8_t cmd[2] = {MT25Q_READ_FLAG_STATUS_REGISTER, MT25Q_DUMMY_BYTE};
+    uint8_t ans[2] = {MT25Q_DUMMY_BYTE};
+
+    if (mt25q_spi_transfer(cmd, ans, 2) != 0)
+    {
+        return -1;
+    }
+
+    *flag = ans[1];
+
+    return 0;
+}
+
+int mt25q_gen_program(uint32_t adr, uint8_t *data, uint32_t len, uint8_t instr)
+{
+	/* Validate address input */
+    if (adr > mt25q_get_max_address())
+    {
+        return -1;
+    }
+
+	/* Check whether any previous Write, Program or Erase cycle is on-going */
+    if (mt25q_is_busy())
+    {
+        return -1;
+    }
+
+    uint8_t cmd = instr;
+    uint8_t adr_arr[4] = {0};
+
+    if (fdo.num_adr_byte == MT25Q_ADDRESS_MODE_3_BYTE)
+    {
+        adr_arr[0] = (uint8_t)((adr >> 16) & 0xFF);
+        adr_arr[1] = (uint8_t)((adr >> 8) & 0xFF);
+        adr_arr[2] = (uint8_t)((adr >> 0) & 0xFF);
+    }
+    else
+    {
+        adr_arr[0] = (uint8_t)((adr >> 24) & 0xFF);
+        adr_arr[1] = (uint8_t)((adr >> 16) & 0xFF);
+        adr_arr[2] = (uint8_t)((adr >> 8) & 0xFF);
+        adr_arr[3] = (uint8_t)((adr >> 0) & 0xFF);
+    }
+
+    if (mt25q_spi_select() != 0)
+    {
+        return -1;
+    }
+
+    /* Write the PROGRAM command */
+    if (mt25q_spi_write_only(&cmd, 1) != 0)
+    {
+        return -1;
+    }
+
+    /* Write the address */
+    if (mt25q_spi_write_only(adr_arr, fdo.num_adr_byte) != 0)
+    {
+        return -1;
+    }
+
+    /* Write the data */
+    if (mt25q_spi_write_only(data, len) != 0)
+    {
+        return -1;
+    }
+
+    if (mt25q_spi_unselect() != 0)
+    {
+        return -1;
+    }
+
+    uint16_t i = 0;
+    for(i=0; i<len/10; i++)
+    {
+        if (!mt25q_is_busy())
+        {
+            return 0;
+        }
+
+        mt25q_delay_ms(1);
+    }
+
+    /* Timeout reached */
     return -1;
 }
 
