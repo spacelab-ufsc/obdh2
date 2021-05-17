@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.27
+ * \version 0.6.31
  * 
  * \date 2019/11/15
  * 
@@ -315,6 +315,15 @@ int mt25q_enter_4_byte_address_mode(void);
  * \return The status/error code.
  */
 int mt25q_read_flag_status_register(uint8_t *flag);
+
+/**
+ * \brief Gets the flash description structure of the device.
+ *
+ * \param[in,out] fl_descr is a pointer to copy the flash description structure.
+ *
+ * \return The status/error code.
+ */
+int mt25q_get_flash_description(flash_description_t *fl_descr);
 
 /**
  * \brief SPI interface initialization.

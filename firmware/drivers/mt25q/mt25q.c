@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.27
+ * \version 0.6.31
  * 
  * \date 2019/11/15
  * 
@@ -555,6 +555,13 @@ int mt25q_read_flag_status_register(uint8_t *flag)
     }
 
     *flag = ans[1];
+
+    return 0;
+}
+
+int mt25q_get_flash_description(flash_description_t *fl_descr)
+{
+    fl_descr = &fdo;
 
     return 0;
 }

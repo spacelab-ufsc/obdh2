@@ -43,15 +43,13 @@
     These examples may be useful to you as a reference; if you are lucky, one of
     them might even work for you.
 */
-#error "FreeRTOS block device not implemented"
+//#error "FreeRTOS block device not implemented"
 
 
 /*  If you need to include headers to access your block device, do so here.  For
     example, if you are using an SD card driver whose interfaces are defined in
-    sd.h, that would be included here.
-#include <foobar.h>
-*/
-
+    sd.h, that would be included here.*/
+#include <devices/media/media.h>
 
 /** @brief Initialize a disk.
 
@@ -70,15 +68,11 @@ static REDSTATUS DiskOpen(
 {
     REDSTATUS       ret;
 
-    /*  Avoid warnings about unused function parameters.
-    */
-    (void)bVolNum;
-    (void)mode;
-
-    /*  Insert code here to open/initialize the block device.
-    */
-    REDERROR();
-    ret = -RED_ENOSYS;
+    ret = media_init(MEDIA_NOR);
+    if (ret != 0)
+    {
+        REDERROR();
+    }
 
     return ret;
 }
@@ -96,18 +90,10 @@ static REDSTATUS DiskOpen(
 static REDSTATUS DiskClose(
     uint8_t     bVolNum)
 {
-    REDSTATUS   ret;
-
-    /*  Avoid warnings about unused function parameters.
-    */
+    /*  Avoid warnings about unused function parameters */
     (void)bVolNum;
 
-    /*  Insert code here to close/deinitialize the block device.
-    */
-    REDERROR();
-    ret = -RED_ENOSYS;
-
-    return ret;
+    return 0;
 }
 
 
@@ -130,15 +116,21 @@ static REDSTATUS DiskGetGeometry(
 {
     REDSTATUS   ret;
 
-    /*  Avoid warnings about unused function parameters.
-    */
+    /*  Avoid warnings about unused function parameters */
     (void)bVolNum;
-    (void)pInfo;
 
-    /*  Insert code here to read the block device geometry.
-    */
-    REDERROR();
-    ret = -RED_ENOSYS;
+    media_info_t fdo;
+
+    ret = media_get_info(MEDIA_NOR, &fdo);
+    if (ret != 0)
+    {
+        REDERROR();
+    }
+    else
+    {
+        pInfo->ulSectorSize = fdo.sector_size;
+        pInfo->ullSectorCount = fdo.sector_count;
+    }
 
     return ret;
 }
@@ -165,17 +157,11 @@ static REDSTATUS DiskRead(
 {
     REDSTATUS   ret;
 
-    /*  Avoid warnings about unused function parameters.
-    */
-    (void)bVolNum;
-    (void)ullSectorStart;
-    (void)ulSectorCount;
-    (void)pBuffer;
-
-    /*  Insert code here to read sectors from the block device.
-    */
-    REDERROR();
-    ret = -RED_ENOSYS;
+    ret = media_read(MEDIA_NOR, (uint32_t)ullSectorStart, (uint8_t*)pBuffer, (uint16_t)ulSectorCount);
+    if (ret != 0)
+    {
+        REDERROR();
+    }
 
     return ret;
 }
@@ -204,17 +190,11 @@ static REDSTATUS DiskWrite(
 {
     REDSTATUS   ret;
 
-    /*  Avoid warnings about unused function parameters.
-    */
-    (void)bVolNum;
-    (void)ullSectorStart;
-    (void)ulSectorCount;
-    (void)pBuffer;
-
-    /*  Insert code here to write sectors to the block device.
-    */
-    REDERROR();
-    ret = -RED_ENOSYS;
+    ret = media_write(MEDIA_NOR, (uint32_t)ullSectorStart, (uint8_t*)pBuffer, (uint16_t)ulSectorCount);
+    if (ret != 0)
+    {
+        REDERROR();
+    }
 
     return ret;
 }
@@ -235,16 +215,11 @@ static REDSTATUS DiskFlush(
 {
     REDSTATUS   ret;
 
-    /*  Avoid warnings about unused function parameters.
-    */
-    (void)bVolNum;
-
-    /*  Insert code here to flush the block device.  If writing to the block
-        device is inherently synchronous (no hardware or software cache), then
-        this can do nothing and return success.
-    */
-    REDERROR();
-    ret = -RED_ENOSYS;
+    ret = media_erase(MEDIA_NOR, bVolNum);
+    if (ret != 0)
+    {
+        REDERROR();
+    }
 
     return ret;
 }

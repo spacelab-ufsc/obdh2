@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.28
+ * \version 0.6.31
  * 
  * \date 2020/07/21
  * 
@@ -40,7 +40,7 @@
 
 #include "media.h"
 
-int media_init(media_t med)
+int media_init(media_e med)
 {
     switch(med)
     {
@@ -104,7 +104,7 @@ int media_init(media_t med)
     }
 }
 
-int media_write(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
+int media_write(media_e med, uint32_t adr, uint8_t *data, uint16_t len)
 {
     switch(med)
     {
@@ -139,7 +139,7 @@ int media_write(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
     }
 }
 
-int media_read(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
+int media_read(media_e med, uint32_t adr, uint8_t *data, uint16_t len)
 {
     switch(med)
     {
@@ -174,16 +174,16 @@ int media_read(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
     }
 }
 
-int media_erase(media_t med, uint32_t adr)
+int media_erase(media_e med, uint8_t vol)
 {
     switch(med)
     {
         case MEDIA_INT_FLASH:
-            flash_write_single(0xFF, (uint8_t*)adr);
+            flash_write_single(0xFF, (uint8_t*)vol);
 
             return 0;
         case MEDIA_NOR:
-            if (mt25q_erase(0) != 0)
+            if (mt25q_erase(vol) != 0)
             {
                 sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error erasing the NOR memory!!");
                 sys_log_new_line();
@@ -194,6 +194,20 @@ int media_erase(media_t med, uint32_t adr)
             return 0;
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Invalid storage media to erase!");
+            sys_log_new_line();
+
+            return -1;
+    }
+}
+
+int media_get_info(media_e med, media_info_t *fdo)
+{
+    switch(med)
+    {
+        case MEDIA_INT_FLASH:   return 0;
+        case MEDIA_NOR:         return mt25q_get_flash_description(fdo);
+        default:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Invalid storage media to get the information!");
             sys_log_new_line();
 
             return -1;
