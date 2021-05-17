@@ -31,6 +31,7 @@
 
 #include <redosdeviations.h>
 
+#include <system/sys_log/sys_log.h>
 
 /** @brief Invoke the native assertion handler.
 
@@ -44,12 +45,12 @@ void RedOsAssertFail(
     uint32_t    ulLineNum)
 {
   #if REDCONF_OUTPUT == 1
-    IGNORE_ERRORS(PRINT_ASSERT(pszFileName, ulLineNum));
+    sys_log_print_event_from_module(SYS_LOG_ERROR, "Reliance Edge", "Assertion failed in \"");
+    sys_log_print_msg(pszFileName);
+    sys_log_print_msg("\" at line ");
+    sys_log_print_uint(ulLineNum);
+    sys_log_new_line();
   #endif
-
-    while(true)
-    {
-    }
 }
 
 #endif

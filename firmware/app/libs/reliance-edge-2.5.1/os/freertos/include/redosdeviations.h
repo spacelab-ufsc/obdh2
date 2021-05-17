@@ -32,7 +32,7 @@
 #if REDCONF_OUTPUT == 1
 /*  Needed for PRINT_ASSERT() and OUTPUT_CHARACTER().
 */
-#include <stdio.h>
+//#include <stdio.h>
 #endif
 
 
@@ -49,7 +49,7 @@
     As Rule 21.6 is required, a separate deviation record is required.
 */
 #define PRINT_ASSERT(file, line) \
-    printf("Assertion failed in \"%s\" at line %u\n\r", ((file) == NULL) ? "" : (file), (unsigned)(line))
+//    printf("Assertion failed in \"%s\" at line %u\n\r", ((file) == NULL) ? "" : (file), (unsigned)(line))
 #endif
 
 

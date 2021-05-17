@@ -38,10 +38,10 @@ void RedSignOn(void)
         arguments, since this function is called from the driver and cannot use
         functions that violate MISRA-C:2012.
     */
-    RedOsOutputString(RED_PRODUCT_NAME "\n");
-    RedOsOutputString(RED_PRODUCT_EDITION "\n");
-    RedOsOutputString(RED_PRODUCT_LEGAL "\n");
-    RedOsOutputString(RED_PRODUCT_PATENT "\n");
+    RedOsOutputString(RED_PRODUCT_NAME);
+    RedOsOutputString(RED_PRODUCT_EDITION);
+    RedOsOutputString(RED_PRODUCT_LEGAL);
+    RedOsOutputString(RED_PRODUCT_PATENT);
 
   #else
 

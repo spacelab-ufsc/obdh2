@@ -644,12 +644,12 @@ void RedVolCriticalError(
   #if REDCONF_READ_ONLY == 0
     if(!gpRedVolume->fReadOnly)
     {
-        RedOsOutputString("Critical file system error in Reliance Edge, setting volume to READONLY\n");
+        RedOsOutputString("Critical file system error in Reliance Edge, setting volume to READONLY");
     }
     else
   #endif
     {
-        RedOsOutputString("Critical file system error in Reliance Edge (volume already READONLY)\n");
+        RedOsOutputString("Critical file system error in Reliance Edge (volume already READONLY)");
     }
   #endif
 
