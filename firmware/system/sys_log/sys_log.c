@@ -1,7 +1,7 @@
 /*
  * sys_log.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.16
+ * \version 0.6.30
  * 
- * \date 03/11/2019
+ * \date 2019/11/03
  * 
  * \addtogroup sys_log
  * \{
@@ -68,6 +68,11 @@ int sys_log_init()
         sys_log_print_msg(" <");
         sys_log_print_msg(FIRMWARE_AUTHOR_EMAIL);
         sys_log_print_msg(">");
+        sys_log_new_line();
+        sys_log_print_msg("Compiled:\t");
+        sys_log_print_msg(__DATE__);
+        sys_log_print_msg(" at ");
+        sys_log_print_msg(__TIME__);
         sys_log_new_line();
         sys_log_print_msg("===================================================================");
         sys_log_new_line();
@@ -405,9 +410,8 @@ void sys_log_print_splash_screen()
 
 void sys_log_print_firmware_version()
 {
-    sys_log_print_msg("[ ");
+    sys_log_print_msg("v");
     sys_log_print_msg(FIRMWARE_VERSION);
-    sys_log_print_msg(" ]");
 }
 
 /** \} End of sys_log group */
