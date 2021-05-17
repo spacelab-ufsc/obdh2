@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.23
+ * \version 0.6.32
  * 
  * \date 2019/12/04
  * 
@@ -121,12 +121,6 @@ void vTaskStartup(void *pvParameters)
 
     /* Temperature sensor device initialization */
     if (temp_sensor_init() != 0)
-    {
-        error_counter++;
-    }
-
-    /* External NOR memory initialization */
-    if (media_init(MEDIA_NOR) != 0)
     {
         error_counter++;
     }
