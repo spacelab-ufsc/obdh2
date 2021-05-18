@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.31
+ * \version 0.6.33
  * 
  * \date 2020/07/21
  * 
@@ -130,6 +130,8 @@ int media_write(media_e med, uint32_t adr, uint8_t *data, uint16_t len)
                 return -1;
             }
 
+            mt25q_delay_ms(5);
+
             return 0;
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Invalid storage media to write!");
@@ -200,17 +202,17 @@ int media_erase(media_e med, uint8_t vol)
     }
 }
 
-int media_get_info(media_e med, media_info_t *fdo)
+media_info_t media_get_info(media_e med)
 {
     switch(med)
     {
-        case MEDIA_INT_FLASH:   return 0;
-        case MEDIA_NOR:         return mt25q_get_flash_description(fdo);
+        case MEDIA_INT_FLASH:   return (media_info_t){0};
+        case MEDIA_NOR:         return mt25q_get_flash_description();
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Invalid storage media to get the information!");
             sys_log_new_line();
 
-            return -1;
+            return (media_info_t){0};
     }
 }
 

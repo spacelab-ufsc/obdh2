@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.31
+ * \version 0.6.33
  * 
  * \date 2020/04/21
  * 
@@ -137,11 +137,9 @@ int media_erase(media_e med, uint8_t vol);
  *      .
  * \endparblock
  *
- * \param[in,out] fdo .
- *
- * \return The status/error code.
+ * \return The media info structure.
  */
-int media_get_info(media_e med, media_info_t *fdo);
+media_info_t media_get_info(media_e med);
 
 #endif /* MEDIA_H_ */
 
