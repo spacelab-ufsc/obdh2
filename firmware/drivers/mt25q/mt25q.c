@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.31
+ * \version 0.6.33
  * 
  * \date 2019/11/15
  * 
@@ -162,12 +162,23 @@ int mt25q_read_flash_description(flash_description_t *fdo)
     if (ans[t_offset] != 0)
     {
         fdo->sector_size_bit        = ans[t_offset];
-        fdo->sector_size            = 1 << ans[t_offset];
+        /* fdo->sector_size            = (1 << (ans[t_offset])); */
+        fdo->sector_size            = 1;
+        uint8_t i = 0;
+        for(i=0; i<ans[t_offset]; i++)
+        {
+            fdo->sector_size        = (fdo->sector_size << 1);
+        }
         fdo->sector_count           = fdo->size / fdo->sector_size;
         fdo->sector_erase_cmd       = ans[t_offset + 1];
 
         fdo->sub_sector_size_bit    = ans[t_offset - 2];
-        fdo->sub_sector_size        = 1 << ans[t_offset - 2];
+        /* fdo->sub_sector_size        = (1 << (ans[t_offset - 2])); */
+        fdo->sub_sector_size        = 1;
+        for(i=0; i<ans[t_offset-2]; i++)
+        {
+            fdo->sub_sector_size    = (fdo->sub_sector_size << 1);
+        }
         fdo->sub_sector_count       = fdo->size / fdo->sub_sector_size;
         fdo->sub_sector_erase_cmd   = ans[t_offset - 1];
     }
@@ -357,7 +368,12 @@ int mt25q_erase(mt25q_sector_t sector)
         return -1;  /* The sector does not exist! */
     }
 
-    uint32_t sector_adr = sector << fdo.sector_size_bit;
+    uint32_t sector_adr = sector;
+    uint8_t i = 0;
+    for(i=0; i<fdo.sector_size_bit; i++)
+    {
+        sector_adr <<= 1;
+    }
 
 	/* Check whether any previous Write, Program or Erase cycle is on-going */
     if (mt25q_is_busy())
@@ -410,7 +426,7 @@ int mt25q_erase(mt25q_sector_t sector)
         return -1;
     }
 
-    mt25q_delay_ms(1000);
+    mt25q_delay_ms(100);
 
     return 0;
 }
@@ -559,11 +575,9 @@ int mt25q_read_flag_status_register(uint8_t *flag)
     return 0;
 }
 
-int mt25q_get_flash_description(flash_description_t *fl_descr)
+flash_description_t mt25q_get_flash_description(void)
 {
-    fl_descr = &fdo;
-
-    return 0;
+    return fdo;
 }
 
 int mt25q_gen_program(uint32_t adr, uint8_t *data, uint32_t len, uint8_t instr)
@@ -626,14 +640,14 @@ int mt25q_gen_program(uint32_t adr, uint8_t *data, uint32_t len, uint8_t instr)
     }
 
     uint16_t i = 0;
-    for(i=0; i<len/10; i++)
+    for(i=0; i<len; i++)
     {
         if (!mt25q_is_busy())
         {
             return 0;
         }
 
-        mt25q_delay_ms(1);
+        mt25q_delay_ms(5);
     }
 
     /* Timeout reached */
