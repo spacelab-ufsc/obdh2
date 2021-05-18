@@ -114,23 +114,17 @@ static REDSTATUS DiskGetGeometry(
     uint8_t     bVolNum,
     BDEVINFO   *pInfo)
 {
-    REDSTATUS   ret;
+    REDSTATUS   ret = 0;
 
     /*  Avoid warnings about unused function parameters */
     (void)bVolNum;
 
-    media_info_t fdo;
+    media_info_t fdo = media_get_info(MEDIA_NOR);
 
-    ret = media_get_info(MEDIA_NOR, &fdo);
-    if (ret != 0)
-    {
-        REDERROR();
-    }
-    else
-    {
-        pInfo->ulSectorSize = fdo.sector_size;
-        pInfo->ullSectorCount = fdo.sector_count;
-    }
+//    pInfo->ulSectorSize = fdo.sector_size;
+//    pInfo->ullSectorCount = fdo.sector_count;
+    pInfo->ulSectorSize = 256;
+    pInfo->ullSectorCount = 524288;
 
     return ret;
 }
@@ -156,8 +150,9 @@ static REDSTATUS DiskRead(
     void       *pBuffer)
 {
     REDSTATUS   ret;
+    uint32_t    ulSectorSize = gaRedBdevInfo[bVolNum].ulSectorSize;
 
-    ret = media_read(MEDIA_NOR, (uint32_t)ullSectorStart, (uint8_t*)pBuffer, (uint16_t)ulSectorCount);
+    ret = media_read(MEDIA_NOR, ullSectorStart*ulSectorSize, CAST_VOID_PTR_TO_UINT8_PTR(pBuffer), ulSectorSize*ulSectorCount);
     if (ret != 0)
     {
         REDERROR();
@@ -189,8 +184,9 @@ static REDSTATUS DiskWrite(
     const void *pBuffer)
 {
     REDSTATUS   ret;
+    uint32_t    ulSectorSize = gaRedBdevInfo[bVolNum].ulSectorSize;
 
-    ret = media_write(MEDIA_NOR, (uint32_t)ullSectorStart, (uint8_t*)pBuffer, (uint16_t)ulSectorCount);
+    ret = media_write(MEDIA_NOR, ullSectorStart*ulSectorSize, CAST_VOID_PTR_TO_UINT8_PTR(pBuffer), ulSectorSize*ulSectorCount);
     if (ret != 0)
     {
         REDERROR();
@@ -213,15 +209,7 @@ static REDSTATUS DiskWrite(
 static REDSTATUS DiskFlush(
     uint8_t     bVolNum)
 {
-    REDSTATUS   ret;
-
-    ret = media_erase(MEDIA_NOR, bVolNum);
-    if (ret != 0)
-    {
-        REDERROR();
-    }
-
-    return ret;
+    return 0;
 }
 
 #endif /* REDCONF_READ_ONLY == 0 */
