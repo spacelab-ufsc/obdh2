@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.6
+ * \version 0.6.34
  * 
  * \date 2019/11/15
  * 
@@ -33,13 +33,14 @@
  * \{
  */
 
+#include <config/config.h>
 #include <drivers/spi/spi.h>
 
 #include "mt25q.h"
 
 #define MT25Q_SPI_PORT          SPI_PORT_0
 #define MT25Q_SPI_MODE          SPI_MODE_0
-#define MT25Q_SPI_CLK_HZ        100000
+#define MT25Q_SPI_CLK_HZ        CONFIG_SPI_PORT_0_SPEED_BPS
 #define MT25Q_SPI_CS_PIN        SPI_CS_2
 
 int mt25q_spi_init(void)
