@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.33
+ * \version 0.6.36
  * 
  * \date 2020/07/21
  * 
@@ -176,21 +176,56 @@ int media_read(media_e med, uint32_t adr, uint8_t *data, uint16_t len)
     }
 }
 
-int media_erase(media_e med, uint8_t vol)
+int media_erase(media_e med, media_erase_e type, uint32_t sector)
 {
     switch(med)
     {
         case MEDIA_INT_FLASH:
-            flash_write_single(0xFF, (uint8_t*)vol);
+            flash_write_single(0xFF, (uint8_t*)sector);
 
             return 0;
         case MEDIA_NOR:
-            if (mt25q_erase(vol) != 0)
+            switch(type)
             {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error erasing the NOR memory!!");
-                sys_log_new_line();
+                case MEDIA_ERASE_DIE:
+                    if (mt25q_die_erase(sector) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error erasing the die ");
+                        sys_log_print_uint(sector);
+                        sys_log_print_msg(" of the NOR memory!");
+                        sys_log_new_line();
 
-                return -1;
+                        return -1;
+                    }
+
+                    break;
+                case MEDIA_ERASE_SECTOR:
+                    if (mt25q_sector_erase(sector) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error erasing the sector ");
+                        sys_log_print_uint(sector);
+                        sys_log_print_msg(" of the NOR memory!");
+                        sys_log_new_line();
+
+                        return -1;
+                    }
+
+                    break;
+                case MEDIA_ERASE_SUB_SECTOR:
+                    if (mt25q_sub_sector_erase(sector) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error erasing the sub-sector ");
+                        sys_log_print_uint(sector);
+                        sys_log_print_msg(" of the NOR memory!");
+                        sys_log_new_line();
+
+                        return -1;
+                    }
+
+                    break;
+                default:
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error erasing the NOR memory! Invalid erase operation!");
+                    sys_log_new_line();
             }
 
             return 0;

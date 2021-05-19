@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.33
+ * \version 0.6.36
  * 
  * \date 2020/04/21
  * 
@@ -51,6 +51,16 @@ typedef enum
     MEDIA_INT_FLASH=0,      /**< Internal flash memory. */
     MEDIA_NOR               /**< NOR flash memory. */
 } media_e;
+
+/**
+ * \brief Erase operation types.
+ */
+typedef enum
+{
+    MEDIA_ERASE_DIE=0,      /**< Erases the whole die. */
+    MEDIA_ERASE_SECTOR,     /**< Erases a sector. */
+    MEDIA_ERASE_SUB_SECTOR  /**< Erases a sub-sector. */
+} media_erase_e;
 
 /**
  * \brief Media info type.
@@ -121,11 +131,19 @@ int media_read(media_e med, uint32_t adr, uint8_t *data, uint16_t len);
  *      .
  * \endparblock
  *
- * \param[in] adr is the address to erase.
+ * \param[in] type is the erase operation type. It can be:
+ * \parblock
+ *      -\b MEDIA_ERASE_DIE
+ *      -\b MEDIA_ERASE_SECTOR
+ *      -\b MEDIA_ERASE_SUB_SECTOR
+ *      .
+ * \endparblock
+ *
+ * \param[in] sector is the sector number to erase.
  *
  * \return The status/error code.
  */
-int media_erase(media_e med, uint8_t vol);
+int media_erase(media_e med, media_erase_e type, uint32_t sector);
 
 /**
  * \brief Gets the info about the media.
