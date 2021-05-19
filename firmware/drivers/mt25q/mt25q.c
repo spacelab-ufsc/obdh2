@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.33
+ * \version 0.6.35
  * 
  * \date 2019/11/15
  * 
@@ -360,7 +360,103 @@ bool mt25q_is_busy(void)
     }
 }
 
-int mt25q_erase(mt25q_sector_t sector)
+int mt25q_die_erase(mt25q_sector_t die)
+{
+    /* Validate the sector number input */
+    if (die >= fdo.die_count)
+    {
+        return -1;
+    }
+
+    uint32_t die_adr = die;
+    uint16_t i = 0;
+    for(i=0; i<fdo.die_size_bit; i++)
+    {
+        die_adr <<= 1;
+    }
+
+	/* Check whether any previous Write, Program or Erase cycle is on-going */
+    if (mt25q_is_busy())
+    {
+        return -1;
+    }
+
+    /* Disable Write protection */
+    if (mt25q_write_enable() != 0)
+    {
+        return -1;
+    }
+
+    uint8_t cmd = MT25Q_DIE_ERASE;
+    uint8_t adr_arr[4] = {0};
+
+    if (fdo.num_adr_byte == MT25Q_ADDRESS_MODE_3_BYTE)
+    {
+        adr_arr[0] = (uint8_t)((die_adr >> 16) & 0xFF);
+        adr_arr[1] = (uint8_t)((die_adr >> 8) & 0xFF);
+        adr_arr[2] = (uint8_t)((die_adr >> 0) & 0xFF);
+    }
+    else
+    {
+        adr_arr[0] = (uint8_t)((die_adr >> 24) & 0xFF);
+        adr_arr[1] = (uint8_t)((die_adr >> 16) & 0xFF);
+        adr_arr[2] = (uint8_t)((die_adr >> 8) & 0xFF);
+        adr_arr[3] = (uint8_t)((die_adr >> 0) & 0xFF);
+    }
+
+    if (mt25q_spi_select() != 0)
+    {
+        return -1;
+    }
+
+    /* Write the erase command */
+    if (mt25q_spi_write_only(&cmd, 1) != 0)
+    {
+        return -1;
+    }
+
+    /* Write the address */
+    if (mt25q_spi_write_only(adr_arr, fdo.num_adr_byte) != 0)
+    {
+        return -1;
+    }
+
+    if (mt25q_spi_unselect() != 0)
+    {
+        return -1;
+    }
+
+    /* Wait till complete */
+    for(i=0; i<MT25Q_SECTOR_ERASE_TIMEOUT_MS; i++)
+    {
+        if (!mt25q_is_busy())
+        {
+            break;
+        }
+
+        mt25q_delay_ms(1);
+    }
+
+    uint8_t flag = 0;
+    if (mt25q_read_flag_status_register(&flag) != 0)
+    {
+        return -1;
+    }
+
+    if (mt25q_clear_flag_status_register() != 0)
+    {
+        return -1;
+    }
+
+    if (i >= MT25Q_SECTOR_ERASE_TIMEOUT_MS)
+    {
+        return -1;  /* Timeout reached */
+    }
+
+    return 0;
+}
+
+int mt25q_sector_erase(mt25q_sector_t sector)
 {
     /* Validate the sector number input */
     if (fdo.sector_count < sector)
@@ -369,7 +465,7 @@ int mt25q_erase(mt25q_sector_t sector)
     }
 
     uint32_t sector_adr = sector;
-    uint8_t i = 0;
+    uint16_t i = 0;
     for(i=0; i<fdo.sector_size_bit; i++)
     {
         sector_adr <<= 1;
@@ -426,7 +522,128 @@ int mt25q_erase(mt25q_sector_t sector)
         return -1;
     }
 
-    mt25q_delay_ms(100);
+    /* Wait till complete */
+    for(i=0; i<MT25Q_SECTOR_ERASE_TIMEOUT_MS; i++)
+    {
+        if (!mt25q_is_busy())
+        {
+            break;
+        }
+
+        mt25q_delay_ms(1);
+    }
+
+    uint8_t flag = 0;
+    if (mt25q_read_flag_status_register(&flag) != 0)
+    {
+        return -1;
+    }
+
+    if (mt25q_clear_flag_status_register() != 0)
+    {
+        return -1;
+    }
+
+    if (i >= MT25Q_SECTOR_ERASE_TIMEOUT_MS)
+    {
+        return -1;  /* Timeout reached */
+    }
+
+    return 0;
+}
+
+int mt25q_sub_sector_erase(mt25q_sector_t sub)
+{
+    /* Validate the sector number input */
+    if(sub >= fdo.sub_sector_count)
+    {
+        return -1;  /* The sector does not exist! */
+    }
+
+    uint32_t sub_sector_adr = sub;
+    uint16_t i = 0;
+    for(i=0; i<fdo.sub_sector_size_bit; i++)
+    {
+        sub_sector_adr <<= 1;
+    }
+
+	/* Check whether any previous Write, Program or Erase cycle is on-going */
+    if (mt25q_is_busy())
+    {
+        return -1;
+    }
+
+    /* Disable Write protection */
+    if (mt25q_write_enable() != 0)
+    {
+        return -1;
+    }
+
+    uint8_t cmd = fdo.sub_sector_erase_cmd;
+    uint8_t adr_arr[4] = {0};
+
+    if (fdo.num_adr_byte == MT25Q_ADDRESS_MODE_3_BYTE)
+    {
+        adr_arr[0] = (uint8_t)((sub_sector_adr >> 16) & 0xFF);
+        adr_arr[1] = (uint8_t)((sub_sector_adr >> 8) & 0xFF);
+        adr_arr[2] = (uint8_t)((sub_sector_adr >> 0) & 0xFF);
+    }
+    else
+    {
+        adr_arr[0] = (uint8_t)((sub_sector_adr >> 24) & 0xFF);
+        adr_arr[1] = (uint8_t)((sub_sector_adr >> 16) & 0xFF);
+        adr_arr[2] = (uint8_t)((sub_sector_adr >> 8) & 0xFF);
+        adr_arr[3] = (uint8_t)((sub_sector_adr >> 0) & 0xFF);
+    }
+
+    if (mt25q_spi_select() != 0)
+    {
+        return -1;
+    }
+
+    /* Write the erase command */
+    if (mt25q_spi_write_only(&cmd, 1) != 0)
+    {
+        return -1;
+    }
+
+    /* Write the address */
+    if (mt25q_spi_write_only(adr_arr, fdo.num_adr_byte) != 0)
+    {
+        return -1;
+    }
+
+    if (mt25q_spi_unselect() != 0)
+    {
+        return -1;
+    }
+
+    /* Wait till complete */
+    for(i=0; i<MT25Q_SECTOR_ERASE_TIMEOUT_MS; i++)
+    {
+        if (!mt25q_is_busy())
+        {
+            break;
+        }
+
+        mt25q_delay_ms(1);
+    }
+
+    uint8_t flag = 0;
+    if (mt25q_read_flag_status_register(&flag) != 0)
+    {
+        return -1;
+    }
+
+    if (mt25q_clear_flag_status_register() != 0)
+    {
+        return -1;
+    }
+
+    if (i >= MT25Q_SECTOR_ERASE_TIMEOUT_MS)
+    {
+        return -1;  /* Timeout reached */
+    }
 
     return 0;
 }
@@ -541,7 +758,7 @@ int mt25q_enter_4_byte_address_mode(void)
         return -1;
     }
 
-    /* verify current addr mode */
+    /* Verify current addr mode */
     uint8_t flag = 0;
     if (mt25q_read_flag_status_register(&flag) != 0)
     {
@@ -571,6 +788,18 @@ int mt25q_read_flag_status_register(uint8_t *flag)
     }
 
     *flag = ans[1];
+
+    return 0;
+}
+
+int mt25q_clear_flag_status_register(void)
+{
+    uint8_t cmd = MT25Q_CLEAR_FLAG_STATUS_REGISTER;
+
+    if (mt25q_spi_write(&cmd, 1) != 0)
+    {
+        return -1;
+    }
 
     return 0;
 }
@@ -639,19 +868,36 @@ int mt25q_gen_program(uint32_t adr, uint8_t *data, uint32_t len, uint8_t instr)
         return -1;
     }
 
+    /* Wait till complete */
     uint16_t i = 0;
-    for(i=0; i<len; i++)
+    for(i=0; i<MT25Q_PROGRAM_TIMEOUT_MS; i++)
     {
         if (!mt25q_is_busy())
         {
-            return 0;
+            break;
         }
 
-        mt25q_delay_ms(5);
+        mt25q_delay_ms(1);
+    }
+
+    uint8_t flag = 0;
+    if (mt25q_read_flag_status_register(&flag) != 0)
+    {
+        return -1;
+    }
+
+    if (mt25q_clear_flag_status_register() != 0)
+    {
+        return -1;
     }
 
     /* Timeout reached */
-    return -1;
+    if (i >= MT25Q_PROGRAM_TIMEOUT_MS)
+    {
+        return -1;
+    }
+
+    return 0;
 }
 
 /** \} End of mt25q group */

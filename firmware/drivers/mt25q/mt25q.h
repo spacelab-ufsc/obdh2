@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.33
+ * \version 0.6.35
  * 
  * \date 2019/11/15
  * 
@@ -72,6 +72,9 @@
 #define MT25Q_SIZE_64MB                     0x04000000  /**< 64 MB in bytes. */
 #define MT25Q_SIZE_128MB                    0x08000000  /**< 128 MB in bytes. */
 #define MT25Q_SIZE_256MB                    0x10000000  /**< 256 MB in bytes. */
+
+#define MT25Q_SECTOR_ERASE_TIMEOUT_MS       3000        /**< Sector erase timeout in milliseconds. */
+#define MT25Q_PROGRAM_TIMEOUT_MS            1000        /**< Program timeout in milliseconds. */
 
 /**
  * \brief Sector type.
@@ -192,6 +195,13 @@ int mt25q_read_device_id(mt25q_dev_id_t *dev_id);
 int mt25q_read_flash_description(flash_description_t *fdo);
 
 /**
+ * \brief Clears the flag status register.
+ *
+ * \return The status/error code.
+ */
+int mt25q_clear_flag_status_register(void);
+
+/**
  * \brief Reads the status register.
  *
  * Can be read continuously and at any time, including during a PROGRAM, ERASE, or WRITE operation.
@@ -259,13 +269,31 @@ int mt25q_write_disable(void);
 bool mt25q_is_busy(void);
 
 /**
+ * \brief Erases the whole die.
+ *
+ * \param[in] die is the die number to erase.
+ *
+ * \return The status/error code.
+ */
+int mt25q_die_erase(mt25q_sector_t die);
+
+/**
  * \brief Erases a given memory sector.
  *
  * \param[in] sector is the memory sector to erase.
  *
  * \return The status/error code.
  */
-int mt25q_erase(mt25q_sector_t sector);
+int mt25q_sector_erase(mt25q_sector_t sector);
+
+/**
+ * \brief Erases a given memory sub-sector.
+ *
+ * \param[in] sub is the memory sub-sector to erase.
+ *
+ * \return The status/error code.
+ */
+int mt25q_sub_sector_erase(mt25q_sector_t sub);
 
 /**
  * \brief Writes data to a given address.
