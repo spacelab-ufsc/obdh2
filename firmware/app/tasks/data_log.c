@@ -1,5 +1,5 @@
 /*
- * version.h
+ * data_log.c
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
@@ -21,29 +21,40 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief Data log task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.6.39
  * 
- * \date 2019/10/25
+ * \date 2021/05/24
  * 
- * \defgroup version Version control
+ * \addtogroup data_log
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include <system/sys_log/sys_log.h>
 
-#define FIRMWARE_VERSION            "0.6.39"
+#include "data_log.h"
+#include "startup.h"
 
-#define FIRMWARE_STATUS             "Development"
+#include <devices/media/media.h>
 
-#define FIRMWARE_AUTHOR             "Gabriel Mariano Marcelino"
+xTaskHandle xTaskDataLogHandle;
 
-#define FIRMWARE_AUTHOR_EMAIL       "gabriel.mm8@gmail.com"
+void vTaskDataLog(void *pvParameters)
+{
+    /* Wait startup task to finish */
+    xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_DATA_LOG_INIT_TIMEOUT_MS));
 
-#endif /* VERSION_H_ */
+    while(1)
+    {
+        TickType_t last_cycle = xTaskGetTickCount();
 
-/** \} End of version group */
+        /* TODO */
+
+        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_DATA_LOG_PERIOD_MS));
+    }
+}
+
+/** \} End of file_system group */

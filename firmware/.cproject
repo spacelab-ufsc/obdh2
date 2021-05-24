@@ -56,9 +56,6 @@
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/config"/>
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/freertos/portable/CCS/MSP430X"/>
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/app/libs/libcsp-1.5.16/include"/>
-									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/app/libs/reliance-edge-2.5.1/include"/>
-									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/app/libs/reliance-edge-2.5.1/os/freertos/include"/>
-									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/app/libs/reliance-edge-2.5.1/core/include"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.MSP430_18.12.compilerID.ADVICE__POWER.1792356630" name="Enable checking of ULP power rules (--advice:power)" superClass="com.ti.ccstudio.buildDefinitions.MSP430_18.12.compilerID.ADVICE__POWER" useByScannerDiscovery="false" value="all" valueType="string"/>
 								<option id="com.ti.ccstudio.buildDefinitions.MSP430_18.12.compilerID.OPT_LEVEL.1099029684" name="Optimization level (--opt_level, -O)" superClass="com.ti.ccstudio.buildDefinitions.MSP430_18.12.compilerID.OPT_LEVEL" value="com.ti.ccstudio.buildDefinitions.MSP430_18.12.compilerID.OPT_LEVEL.off" valueType="enumerated"/>
