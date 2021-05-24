@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.35
+ * \version 0.6.37
  * 
  * \date 2019/11/15
  * 
@@ -663,9 +663,19 @@ int mt25q_write(uint32_t adr, uint8_t *data, uint16_t len)
         data_offset = len;
     }
 
+    uint8_t prog_instr = 0xFF;
+    if (fdo.num_adr_byte == MT25Q_ADDRESS_MODE_3_BYTE)
+    {
+        prog_instr = MT25Q_PAGE_PROGRAM;
+    }
+    else
+    {
+        prog_instr = MT25Q_4_BYTE_PAGE_PROGRAM;
+    }
+
     if (data_offset > 0)
     {
-        if (mt25q_gen_program(adr, data, data_offset, MT25Q_PAGE_PROGRAM) != 0)
+        if (mt25q_gen_program(adr, data, data_offset, prog_instr) != 0)
         {
             return -1;
         }
@@ -673,7 +683,7 @@ int mt25q_write(uint32_t adr, uint8_t *data, uint16_t len)
 
     for(; (data_offset + fdo.page_size) < len; data_offset+=fdo.page_size)
     {
-        if (mt25q_gen_program(adr + data_offset, data + data_offset, fdo.page_size, MT25Q_PAGE_PROGRAM) != 0)
+        if (mt25q_gen_program(adr + data_offset, data + data_offset, fdo.page_size, prog_instr) != 0)
         {
             return -1;
         }
@@ -681,7 +691,7 @@ int mt25q_write(uint32_t adr, uint8_t *data, uint16_t len)
 
     if (len > data_offset)
     {
-        return mt25q_gen_program(adr + data_offset, data + data_offset, (len - data_offset), MT25Q_PAGE_PROGRAM);
+        return mt25q_gen_program(adr + data_offset, data + data_offset, (len - data_offset), prog_instr);
     }
 
     return 0;
@@ -889,6 +899,11 @@ int mt25q_gen_program(uint32_t adr, uint8_t *data, uint32_t len, uint8_t instr)
     if (mt25q_clear_flag_status_register() != 0)
     {
         return -1;
+    }
+
+    if ((flag & MT25Q_REG_FLAG_STATUS_PROGRAM) || (flag & MT25Q_REG_FLAG_STATUS_PROTECTION))
+    {
+        return -1;  /* Program failure or protection error */
     }
 
     /* Timeout reached */
