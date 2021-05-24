@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.6.38
  * 
  * \date 11/01/2020
  * 
@@ -41,7 +41,7 @@
 #include <task.h>
 
 #define TASK_WATCHDOG_RESET_NAME                    "WatchdogReset"     /**< Task name. */
-#define TASK_WATCHDOG_RESET_STACK_SIZE              128                 /**< Stack size in bytes. */
+#define TASK_WATCHDOG_RESET_STACK_SIZE              150                 /**< Stack size in bytes. */
 #define TASK_WATCHDOG_RESET_PRIORITY                1                   /**< Task priority. */
 #define TASK_WATCHDOG_RESET_PERIOD_MS               100                 /**< Task period in milliseconds. */
 #define TASK_WATCHDOG_RESET_INITIAL_DELAY_MS        0                   /**< Delay, in milliseconds, before the first execution. */
