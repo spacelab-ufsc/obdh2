@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.8
+ * \version 0.6.40
  * 
- * \date 04/12/2019
+ * \date 2019/12/04
  * 
  * \defgroup startup Startup
  * \ingroup tasks
@@ -42,7 +42,7 @@
 #include <event_groups.h>
 
 #define TASK_STARTUP_NAME                   "Startup"
-#define TASK_STARTUP_STACK_SIZE             1024
+#define TASK_STARTUP_STACK_SIZE             350
 #define TASK_STARTUP_PRIORITY               5
 
 /* Status done bit position */

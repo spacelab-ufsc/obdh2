@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.32
+ * \version 0.6.40
  * 
  * \date 2019/12/04
  * 
@@ -97,6 +97,12 @@ void vTaskStartup(void *pvParameters)
 
     /* Internal non-volatile memory initialization */
     if (media_init(MEDIA_INT_FLASH) != 0)
+    {
+        error_counter++;
+    }
+
+    /* NOR memory initialization */
+    if (media_init(MEDIA_NOR) != 0)
     {
         error_counter++;
     }

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.39
+ * \version 0.6.40
  * 
  * \date 2021/05/24
  * 
@@ -41,10 +41,18 @@
 #include <task.h>
 
 #define TASK_DATA_LOG_NAME                      "Data Log"          /**< Task name. */
-#define TASK_DATA_LOG_STACK_SIZE                1000                /**< Stack size in bytes. */
+#define TASK_DATA_LOG_STACK_SIZE                225                 /**< Stack size in bytes. */
 #define TASK_DATA_LOG_PRIORITY                  3                   /**< Task priority. */
 #define TASK_DATA_LOG_PERIOD_MS                 (600000UL)          /**< Task period in milliseconds. */
 #define TASK_DATA_LOG_INIT_TIMEOUT_MS           2000                /**< Wait time to initialize the task in milliseconds. */
+
+/**
+ * \brief Data IDs.
+ */
+typedef enum
+{
+    DATA_LOG_HK_DATA_ID=1,
+} data_log_id_t;
 
 /**
  * \brief Data log handle.
