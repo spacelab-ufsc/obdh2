@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.40
+ * \version 0.7.0
  * 
  * \date 2019/12/04
  * 
@@ -95,53 +95,69 @@ void vTaskStartup(void *pvParameters)
     sys_log_print_hex(system_get_reset_cause());
     sys_log_new_line();
 
+#if CONFIG_DEV_MEDIA_INT_ENABLED == 1
     /* Internal non-volatile memory initialization */
     if (media_init(MEDIA_INT_FLASH) != 0)
     {
         error_counter++;
     }
+#endif /* CONFIG_DEV_MEDIA_INT_ENABLED */
 
+#if CONFIG_DEV_MEDIA_NOR_ENABLED == 1
     /* NOR memory initialization */
     if (media_init(MEDIA_NOR) != 0)
     {
         error_counter++;
     }
+#endif /* CONFIG_DEV_MEDIA_NOR_ENABLED */
 
+#if CONFIG_DEV_LEDS_ENABLED == 1
     /* LEDs device initialization */
     if (leds_init() != 0)
     {
         error_counter++;
     }
+#endif /* CONFIG_DEV_LEDS_ENABLED */
 
+#if CONFIG_DEV_CURRENT_SENSOR_ENABLED == 1
     /* Current sensor device initialization */
     if (current_sensor_init() != 0)
     {
         error_counter++;
     }
+#endif /* CONFIG_DEV_CURRENT_SENSOR_ENABLED */
 
+#if CONFIG_DEV_VOLTAGE_SENSOR_ENABLED == 1
     /* Voltage sensor device initialization */
     if (voltage_sensor_init() != 0)
     {
         error_counter++;
     }
+#endif /* CONFIG_DEV_VOLTAGE_SENSOR_ENABLED */
 
+#if CONFIG_DEV_TEMP_SENSOR_ENABLED == 1
     /* Temperature sensor device initialization */
     if (temp_sensor_init() != 0)
     {
         error_counter++;
     }
+#endif /* CONFIG_DEV_TEMP_SENSOR_ENABLED */
 
+#if CONFIG_DEV_EPS_ENABLED == 1
     /* EPS device initialization */
     if (eps_init() != 0)
     {
         error_counter++;
     }
+#endif /* CONFIG_DEV_EPS_ENABLED */
 
+#if CONFIG_DEV_RADIO_ENABLED == 1
     /* Radio device initialization */
     if (radio_init() != 0)
     {
         error_counter++;
     }
+#endif /* CONFIG_DEV_RADIO_ENABLED */
 
     /* NGHam initialization */
     ngham_init_arrays();
@@ -153,17 +169,21 @@ void vTaskStartup(void *pvParameters)
         error_counter++;
     }
 
+#if CONFIG_DEV_PAYLOAD_EDC_ENABLED == 1
     /* Payload EDC device initialization */
     if (payload_edc_init() != 0)
     {
         error_counter++;
     }
+#endif /* CONFIG_DEV_PAYLOAD_EDC_ENABLED */
 
+#if CONFIG_DEV_ANTENNA_ENABLED == 1
     /* Antenna device initialization */
     if (antenna_init() != 0)
     {
         error_counter++;
     }
+#endif /* CONFIG_DEV_ANTENNA_ENABLED */
 
     if (error_counter > 0)
     {
