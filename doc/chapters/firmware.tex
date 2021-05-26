@@ -32,16 +32,12 @@ The firmware depends on external libraries to access the embedded hardware or to
     \centering
     \begin{tabular}{L{5cm}R{4cm}}
         \toprule[1.5pt]
-        \textit{Library}        & \textit{Version} \\
+        \textbf{Library}        & \textbf{Version} \\
         \midrule
             MSP430 DriverLib    & v2.91.11.01 \\
             FreeRTOS            & v10.2.1 \\
             NGHam protocol      & - \\
             libcsp              & v1.5.16 \\
-            FatFS               & R0.14 \\
-            Reliance Edge       & v2.4 \\
-            FreeMODBUS          & v1.6 \\
-            JSMN                & v1.1.0 \\
         \bottomrule[1.5pt]
     \end{tabular}
     \caption{External libraries and dependencies of the firmware.}
@@ -56,7 +52,7 @@ A list of the firmware tasks can be seen in the \autoref{tab:firmware-tasks}.
     \centering
     \begin{tabular}{lccccc}
         \toprule[1.5pt]
-        \textit{Name}          & \textit{Priority} & \textit{Initial delay [ms]} & \textit{Period [ms]} & \textit{Stack [bytes]} \\
+        \textbf{Name}          & \textbf{Priority} & \textbf{Initial delay [ms]} & \textbf{Period [ms]} & \textbf{Stack [bytes]} \\
         \midrule
         Startup (boot)         & Highest           & 0                           & Aperiodic            & 500                    \\
         Deployment hibernation & Highest           & 0                           & Aperiodic            & TBD                    \\

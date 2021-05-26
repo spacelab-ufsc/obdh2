@@ -111,7 +111,7 @@ The connector referred as PC-104 is a junction of two double row 28H headers (\t
     \centering
     \begin{tabular}{cllll}
         \toprule[1.5pt]
-        \textit{Pin [A-B]} & \textit{H1A}     & \textit{H1B}     & \textit{H2A}  & \textit{H2B}  \\
+        \textbf{Pin [A-B]} & \textbf{H1A}     & \textbf{H1B}     & \textbf{H2A}  & \textbf{H2B}  \\
         \midrule
         1-2                & -                & -                & -             & -             \\
         3-4                & -                & -                & GPIO\_4       & GPIO\_5       \\
@@ -153,7 +153,7 @@ The communication with the Antenna module is performed through external connecto
     \centering
     \begin{tabular}{cllll}
         \toprule[1.5pt]
-        \textit{Pin} & \textit{Row} \\
+        \textbf{Pin} & \textbf{Row} \\
         \midrule
         1            & VCC\_3V3\_ANT  \\
         2            & VCC\_3V3\_ANT  \\
@@ -193,7 +193,7 @@ The interface with the microcontroller programmer is performed through external 
     \centering
     \begin{tabular}{cllll}
         \toprule[1.5pt]
-        \textit{Pin [A-B]} & \textit{Row A} & \textit{Row B} \\
+        \textbf{Pin [A-B]} & \textbf{Row A} & \textbf{Row B} \\
         \midrule
         1-2                & TDO\_TDI       & VCC\_3V3       \\
         3-4                & -              & -              \\
@@ -212,7 +212,7 @@ The interface with the microcontroller programmer is performed through external 
     \centering
     \begin{tabular}{cllll}
         \toprule[1.5pt]
-        \textit{Pin} & \textit{Row} \\
+        \textbf{Pin} & \textbf{Row} \\
         \midrule
         1            & VCC\_3V3       \\
         2            & TDO\_TDI       \\
@@ -260,7 +260,7 @@ The pinout of the daughterboard interface are available in the \autoref{tab:daug
     \centering
     \begin{tabular}{cllll}
         \toprule[1.5pt]
-        \textit{Pin [A-B]} & \textit{Row A} & \textit{Row B} \\
+        \textbf{Pin [A-B]} & \textbf{Row A} & \textbf{Row B} \\
         \midrule
         1-2                & VCC\_3V3       & GND            \\
         3-4                & VCC\_3V3\_ANT  & GND            \\
@@ -306,7 +306,7 @@ The OBDH 2.0 uses a low-power and low-cost microcontroller family from Texas Ins
     \centering
     \begin{tabular}{cllllllll}
         \toprule[1.5pt]
-        \textit{Flash} & \textit{SRAM} & \textit{Timers} & \textit{USCI} & \textit{ADC} & \textit{DAC} & \textit{GPIO} \\
+        \textbf{Flash} & \textbf{SRAM} & \textbf{Timers} & \textbf{USCI} & \textbf{ADC} & \textbf{DAC} & \textbf{GPIO} \\
         \midrule
         512KB  & 64KB  & 2  & 6 (SPI / I2C / UART)  & 12  & 2  & 74           \\
         \bottomrule[1.5pt]
@@ -331,7 +331,7 @@ The microcontroller has 6 Universal Serial Communication Interfaces (USCI\nomenc
     \centering
     \begin{tabular}{lrrrrl}
         \toprule[1.5pt]
-        \textit{Interface} & \textit{Protocol (Index)} & \textit{Mode} & \textit{Word Length} & \textit{Data Rate} & \textit{Configuration} \\
+        \textbf{Interface} & \textbf{Protocol (Index)} & \textbf{Mode} & \textbf{Word Length} & \textbf{Data Rate} & \textbf{Configuration} \\
         \midrule
         USCI\_A0           & SPI                       & Master        & 8 bits               & 400 kbps           & Phase: High \\
                            &                           &               &                      &                    & Polarity: Low \\
@@ -366,7 +366,7 @@ An illustration of the microcontroller pinout positions can be seen in the \auto
 
 \begin{longtable}{lcl}
     \toprule[1.5pt]
-    \textit{Pin Code} & \textit{Pin Number} & \textit{Signal}       \\
+    \textbf{Pin Code} & \textbf{Pin Number} & \textbf{Signal}       \\
     \midrule
     P1.0              & 34                  & MAIN\_RADIO\_ENABLE   \\
     P1.1              & 35                  & MAIN\_RADIO\_GPIO0    \\
