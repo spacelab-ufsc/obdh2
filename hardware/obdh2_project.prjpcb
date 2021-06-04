@@ -28,7 +28,7 @@ DItemRevisionGUID=
 ReportSuppressedErrorsInMessages=0
 FSMCodingStyle=eFMSDropDownList_OneProcess
 FSMEncodingStyle=eFMSDropDownList_OneHot
-OutputPath=
+OutputPath=Project Outputs for obdh2_project
 LogFolderPath=
 ManagedProjectGUID=
 IncludeDesignInRelease=0
@@ -343,6 +343,23 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
 
+[Document19]
+DocumentPath=outputs\camtastic_fabrication_v07.cam
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=
+
 [ProjectVariant1]
 UniqueID=E74517D3-3968-4114-8B30-127F7E3D76F1
 Description=dnp_variant
@@ -386,290 +403,650 @@ Variation34=Designator=R38|UniqueId=\KXADETFJ\AMNTUUST\PHVIHEUW\FKQQCLMR|Kind=1|
 ParamVariationCount=0
 
 [GeneratedDocument1]
-DocumentPath=outputs\assembly_odb\assembly_odb.REP
+DocumentPath=.\outputs\assembly_odb\assembly_odb.REP
 DItemRevisionGUID=
 
 [GeneratedDocument2]
-DocumentPath=outputs\assembly_pick_place\assembly_pick_place.txt
+DocumentPath=outputs\assembly_odb\assembly_odb.REP
 DItemRevisionGUID=
 
 [GeneratedDocument3]
-DocumentPath=outputs\assembly_test_point\assembly_test_point.ipc
+DocumentPath=.\outputs\assembly_pick_place\assembly_pick_place.txt
 DItemRevisionGUID=
 
 [GeneratedDocument4]
-DocumentPath=outputs\board_bom\board_bom.xlsx
+DocumentPath=outputs\assembly_pick_place\assembly_pick_place.txt
 DItemRevisionGUID=
 
 [GeneratedDocument5]
-DocumentPath=outputs\board_drc\board_drc.html
+DocumentPath=.\outputs\assembly_test_point\assembly_test_point.ipc
 DItemRevisionGUID=
 
 [GeneratedDocument6]
-DocumentPath=outputs\board_gerber\board_gerber.EXTREP
+DocumentPath=outputs\assembly_test_point\assembly_test_point.ipc
 DItemRevisionGUID=
 
 [GeneratedDocument7]
-DocumentPath=outputs\board_gerber\board_gerber.GBL
+DocumentPath=.\outputs\board_bom\board_bom.xls
 DItemRevisionGUID=
 
 [GeneratedDocument8]
-DocumentPath=outputs\board_gerber\board_gerber.GBO
+DocumentPath=outputs\board_bom\board_bom.xlsx
 DItemRevisionGUID=
 
 [GeneratedDocument9]
-DocumentPath=outputs\board_gerber\board_gerber.GBP
+DocumentPath=.\outputs\board_drc\board_drc.html
 DItemRevisionGUID=
 
 [GeneratedDocument10]
-DocumentPath=outputs\board_gerber\board_gerber.GBS
+DocumentPath=outputs\board_drc\board_drc.html
 DItemRevisionGUID=
 
 [GeneratedDocument11]
-DocumentPath=outputs\board_gerber\board_gerber.GD1
+DocumentPath=.\outputs\board_gerber\board_gerber.EXTREP
 DItemRevisionGUID=
 
 [GeneratedDocument12]
-DocumentPath=outputs\board_gerber\board_gerber.GKO
+DocumentPath=outputs\board_gerber\board_gerber.EXTREP
 DItemRevisionGUID=
 
 [GeneratedDocument13]
-DocumentPath=outputs\board_gerber\board_gerber.GM1
+DocumentPath=.\outputs\board_gerber\board_gerber.GBL
 DItemRevisionGUID=
 
 [GeneratedDocument14]
-DocumentPath=outputs\board_gerber\board_gerber.GM2
+DocumentPath=outputs\board_gerber\board_gerber.GBL
 DItemRevisionGUID=
 
 [GeneratedDocument15]
-DocumentPath=outputs\board_gerber\board_gerber.GM9
+DocumentPath=.\outputs\board_gerber\board_gerber.GBO
 DItemRevisionGUID=
 
 [GeneratedDocument16]
-DocumentPath=outputs\board_gerber\board_gerber.GM16
+DocumentPath=outputs\board_gerber\board_gerber.GBO
 DItemRevisionGUID=
 
 [GeneratedDocument17]
-DocumentPath=outputs\board_gerber\board_gerber.GTL
+DocumentPath=.\outputs\board_gerber\board_gerber.GBP
 DItemRevisionGUID=
 
 [GeneratedDocument18]
-DocumentPath=outputs\board_gerber\board_gerber.GTO
+DocumentPath=outputs\board_gerber\board_gerber.GBP
 DItemRevisionGUID=
 
 [GeneratedDocument19]
-DocumentPath=outputs\board_gerber\board_gerber.GTP
+DocumentPath=.\outputs\board_gerber\board_gerber.GBS
 DItemRevisionGUID=
 
 [GeneratedDocument20]
-DocumentPath=outputs\board_gerber\board_gerber.GTS
+DocumentPath=outputs\board_gerber\board_gerber.GBS
 DItemRevisionGUID=
 
 [GeneratedDocument21]
-DocumentPath=outputs\board_gerber\board_gerber.REP
+DocumentPath=.\outputs\board_gerber\board_gerber.GD1
 DItemRevisionGUID=
 
 [GeneratedDocument22]
-DocumentPath=outputs\board_nc_drill\board_nc_drill.DRR
+DocumentPath=outputs\board_gerber\board_gerber.GD1
 DItemRevisionGUID=
 
 [GeneratedDocument23]
-DocumentPath=outputs\board_nc_drill\board_nc_drill.LDP
+DocumentPath=.\outputs\board_gerber\board_gerber.GKO
 DItemRevisionGUID=
 
 [GeneratedDocument24]
-DocumentPath=outputs\board_nc_drill\board_nc_drill.TXT
+DocumentPath=outputs\board_gerber\board_gerber.GKO
 DItemRevisionGUID=
 
 [GeneratedDocument25]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\comp_+_bot\components
+DocumentPath=.\outputs\board_gerber\board_gerber.GM1
 DItemRevisionGUID=
 
 [GeneratedDocument26]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\comp_+_top\components
+DocumentPath=outputs\board_gerber\board_gerber.GM1
 DItemRevisionGUID=
 
 [GeneratedDocument27]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\eda\data
+DocumentPath=.\outputs\board_gerber\board_gerber.GM2
 DItemRevisionGUID=
 
 [GeneratedDocument28]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\3d_body\features
+DocumentPath=outputs\board_gerber\board_gerber.GM2
 DItemRevisionGUID=
 
 [GeneratedDocument29]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\bottom_layer\features
+DocumentPath=.\outputs\board_gerber\board_gerber.GM9
 DItemRevisionGUID=
 
 [GeneratedDocument30]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\bottom_overlay\features
+DocumentPath=outputs\board_gerber\board_gerber.GM9
 DItemRevisionGUID=
 
 [GeneratedDocument31]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\bottom_paste\features
+DocumentPath=.\outputs\board_gerber\board_gerber.GM16
 DItemRevisionGUID=
 
 [GeneratedDocument32]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\bottom_solder\features
+DocumentPath=outputs\board_gerber\board_gerber.GM16
 DItemRevisionGUID=
 
 [GeneratedDocument33]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\comp_+_bot\features
+DocumentPath=.\outputs\board_gerber\board_gerber.GTL
 DItemRevisionGUID=
 
 [GeneratedDocument34]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\comp_+_top\features
+DocumentPath=outputs\board_gerber\board_gerber.GTL
 DItemRevisionGUID=
 
 [GeneratedDocument35]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\dimension\features
+DocumentPath=.\outputs\board_gerber\board_gerber.GTO
 DItemRevisionGUID=
 
 [GeneratedDocument36]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\drill\features
+DocumentPath=outputs\board_gerber\board_gerber.GTO
 DItemRevisionGUID=
 
 [GeneratedDocument37]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\keep-out_layer\features
+DocumentPath=.\outputs\board_gerber\board_gerber.GTP
 DItemRevisionGUID=
 
 [GeneratedDocument38]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\top_layer\features
+DocumentPath=outputs\board_gerber\board_gerber.GTP
 DItemRevisionGUID=
 
 [GeneratedDocument39]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\top_overlay\features
+DocumentPath=.\outputs\board_gerber\board_gerber.GTS
 DItemRevisionGUID=
 
 [GeneratedDocument40]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\top_paste\features
+DocumentPath=outputs\board_gerber\board_gerber.GTS
 DItemRevisionGUID=
 
 [GeneratedDocument41]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\top_solder\features
+DocumentPath=.\outputs\board_gerber\board_gerber.REP
 DItemRevisionGUID=
 
 [GeneratedDocument42]
-DocumentPath=outputs\assembly_odb\odb\symbols\oval3.811x60.8976_135\features
+DocumentPath=outputs\board_gerber\board_gerber.REP
 DItemRevisionGUID=
 
 [GeneratedDocument43]
-DocumentPath=outputs\assembly_odb\odb\symbols\oval3.811x60.8976_225\features
+DocumentPath=.\fabrication\board_layout.DRR
 DItemRevisionGUID=
 
 [GeneratedDocument44]
-DocumentPath=outputs\assembly_odb\odb\symbols\oval11.811x68.8976_135\features
+DocumentPath=.\fabrication\board_layout.EXTREP
 DItemRevisionGUID=
 
 [GeneratedDocument45]
-DocumentPath=outputs\assembly_odb\odb\symbols\oval11.811x68.8976_225\features
+DocumentPath=.\fabrication\board_layout.GBL
 DItemRevisionGUID=
 
 [GeneratedDocument46]
-DocumentPath=outputs\assembly_odb\odb\symbols\oval15.811x72.8976_135\features
+DocumentPath=.\fabrication\board_layout.GBO
 DItemRevisionGUID=
 
 [GeneratedDocument47]
-DocumentPath=outputs\assembly_odb\odb\symbols\oval15.811x72.8976_225\features
+DocumentPath=.\fabrication\board_layout.GBP
 DItemRevisionGUID=
 
 [GeneratedDocument48]
-DocumentPath=outputs\assembly_odb\odb\symbols\rect20x60_45\features
+DocumentPath=.\fabrication\board_layout.GBS
 DItemRevisionGUID=
 
 [GeneratedDocument49]
-DocumentPath=outputs\assembly_odb\odb\symbols\rect20x60_135\features
+DocumentPath=.\fabrication\board_layout.GD1
 DItemRevisionGUID=
 
 [GeneratedDocument50]
-DocumentPath=outputs\assembly_odb\odb\symbols\rect39.3701x51.1811_315\features
+DocumentPath=.\fabrication\board_layout.GKO
 DItemRevisionGUID=
 
 [GeneratedDocument51]
-DocumentPath=outputs\assembly_odb\odb\symbols\rect41.3386x47.2441_135\features
+DocumentPath=.\fabrication\board_layout.GM1
 DItemRevisionGUID=
 
 [GeneratedDocument52]
-DocumentPath=outputs\assembly_odb\odb\symbols\rect41.3386x47.2441_225\features
+DocumentPath=.\fabrication\board_layout.GM2
 DItemRevisionGUID=
 
 [GeneratedDocument53]
-DocumentPath=outputs\assembly_odb\odb\symbols\rect41.3386x47.2441_315\features
+DocumentPath=.\fabrication\board_layout.GM9
 DItemRevisionGUID=
 
 [GeneratedDocument54]
-DocumentPath=outputs\assembly_odb\odb\symbols\rect47.2441x60_45\features
+DocumentPath=.\fabrication\board_layout.GM16
 DItemRevisionGUID=
 
 [GeneratedDocument55]
-DocumentPath=outputs\assembly_odb\odb\symbols\rect47.2441x60_135\features
+DocumentPath=.\fabrication\board_layout.GTL
 DItemRevisionGUID=
 
 [GeneratedDocument56]
-DocumentPath=outputs\assembly_odb\odb\symbols\rect53.3701x65.1811_315\features
+DocumentPath=.\fabrication\board_layout.GTO
 DItemRevisionGUID=
 
 [GeneratedDocument57]
-DocumentPath=outputs\assembly_odb\odb\symbols\rect55.3386x61.2441_135\features
+DocumentPath=.\fabrication\board_layout.GTP
 DItemRevisionGUID=
 
 [GeneratedDocument58]
-DocumentPath=outputs\assembly_odb\odb\symbols\rect55.3386x61.2441_225\features
+DocumentPath=.\fabrication\board_layout.GTS
 DItemRevisionGUID=
 
 [GeneratedDocument59]
-DocumentPath=outputs\assembly_odb\odb\symbols\rect55.3386x61.2441_315\features
+DocumentPath=.\fabrication\board_layout.LDP
 DItemRevisionGUID=
 
 [GeneratedDocument60]
-DocumentPath=outputs\assembly_odb\odb\symbols\rect61.2441x74_45\features
+DocumentPath=.\fabrication\board_layout.REP
 DItemRevisionGUID=
 
 [GeneratedDocument61]
-DocumentPath=outputs\assembly_odb\odb\symbols\rect61.2441x74_135\features
+DocumentPath=.\fabrication\board_layout.TXT
 DItemRevisionGUID=
 
 [GeneratedDocument62]
-DocumentPath=outputs\assembly_odb\odb\symbols\s47.2441_135\features
+DocumentPath=.\outputs\board_nc_drill\board_nc_drill.DRR
 DItemRevisionGUID=
 
 [GeneratedDocument63]
-DocumentPath=outputs\assembly_odb\odb\symbols\s47.2441_315\features
+DocumentPath=outputs\board_nc_drill\board_nc_drill.DRR
 DItemRevisionGUID=
 
 [GeneratedDocument64]
-DocumentPath=outputs\assembly_odb\odb\symbols\s61.2441_135\features
+DocumentPath=.\outputs\board_nc_drill\board_nc_drill.LDP
 DItemRevisionGUID=
 
 [GeneratedDocument65]
-DocumentPath=outputs\assembly_odb\odb\symbols\s61.2441_315\features
+DocumentPath=outputs\board_nc_drill\board_nc_drill.LDP
 DItemRevisionGUID=
 
 [GeneratedDocument66]
-DocumentPath=outputs\assembly_odb\odb\matrix\matrix
+DocumentPath=.\outputs\board_nc_drill\board_nc_drill.TXT
 DItemRevisionGUID=
 
 [GeneratedDocument67]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\netlists\cadnet\netlist
+DocumentPath=outputs\board_nc_drill\board_nc_drill.TXT
 DItemRevisionGUID=
 
 [GeneratedDocument68]
-DocumentPath=outputs\board_3dmodels\parasolid_3dmodel.x_t
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\layers\comp_+_bot\components
 DItemRevisionGUID=
 
 [GeneratedDocument69]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\profile
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\layers\comp_+_top\components
 DItemRevisionGUID=
 
 [GeneratedDocument70]
-DocumentPath=outputs\board_3dmodels\step_3dmodel.step
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\comp_+_bot\components
 DItemRevisionGUID=
 
 [GeneratedDocument71]
-DocumentPath=outputs\assembly_odb\odb\steps\pcb\stephdr
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\comp_+_top\components
 DItemRevisionGUID=
 
 [GeneratedDocument72]
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\eda\data
+DItemRevisionGUID=
+
+[GeneratedDocument73]
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\eda\data
+DItemRevisionGUID=
+
+[GeneratedDocument74]
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\layers\3d_body\features
+DItemRevisionGUID=
+
+[GeneratedDocument75]
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\layers\bottom_layer\features
+DItemRevisionGUID=
+
+[GeneratedDocument76]
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\layers\bottom_overlay\features
+DItemRevisionGUID=
+
+[GeneratedDocument77]
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\layers\bottom_paste\features
+DItemRevisionGUID=
+
+[GeneratedDocument78]
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\layers\bottom_solder\features
+DItemRevisionGUID=
+
+[GeneratedDocument79]
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\layers\comp_+_bot\features
+DItemRevisionGUID=
+
+[GeneratedDocument80]
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\layers\comp_+_top\features
+DItemRevisionGUID=
+
+[GeneratedDocument81]
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\layers\dimension\features
+DItemRevisionGUID=
+
+[GeneratedDocument82]
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\layers\drill\features
+DItemRevisionGUID=
+
+[GeneratedDocument83]
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\layers\keep-out_layer\features
+DItemRevisionGUID=
+
+[GeneratedDocument84]
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\layers\top_layer\features
+DItemRevisionGUID=
+
+[GeneratedDocument85]
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\layers\top_overlay\features
+DItemRevisionGUID=
+
+[GeneratedDocument86]
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\layers\top_paste\features
+DItemRevisionGUID=
+
+[GeneratedDocument87]
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\layers\top_solder\features
+DItemRevisionGUID=
+
+[GeneratedDocument88]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\oval3.811x60.8976_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument89]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\oval3.811x60.8976_225\features
+DItemRevisionGUID=
+
+[GeneratedDocument90]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\oval11.811x68.8976_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument91]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\oval11.811x68.8976_225\features
+DItemRevisionGUID=
+
+[GeneratedDocument92]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\oval15.811x72.8976_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument93]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\oval15.811x72.8976_225\features
+DItemRevisionGUID=
+
+[GeneratedDocument94]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\rect20x60_45\features
+DItemRevisionGUID=
+
+[GeneratedDocument95]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\rect20x60_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument96]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\rect39.3701x51.1811_315\features
+DItemRevisionGUID=
+
+[GeneratedDocument97]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\rect41.3386x47.2441_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument98]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\rect41.3386x47.2441_225\features
+DItemRevisionGUID=
+
+[GeneratedDocument99]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\rect41.3386x47.2441_315\features
+DItemRevisionGUID=
+
+[GeneratedDocument100]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\rect47.2441x60_45\features
+DItemRevisionGUID=
+
+[GeneratedDocument101]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\rect47.2441x60_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument102]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\rect53.3701x65.1811_315\features
+DItemRevisionGUID=
+
+[GeneratedDocument103]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\rect55.3386x61.2441_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument104]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\rect55.3386x61.2441_225\features
+DItemRevisionGUID=
+
+[GeneratedDocument105]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\rect55.3386x61.2441_315\features
+DItemRevisionGUID=
+
+[GeneratedDocument106]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\rect61.2441x74_45\features
+DItemRevisionGUID=
+
+[GeneratedDocument107]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\rect61.2441x74_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument108]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\s47.2441_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument109]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\s47.2441_315\features
+DItemRevisionGUID=
+
+[GeneratedDocument110]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\s61.2441_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument111]
+DocumentPath=.\outputs\assembly_odb\odb\symbols\s61.2441_315\features
+DItemRevisionGUID=
+
+[GeneratedDocument112]
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\3d_body\features
+DItemRevisionGUID=
+
+[GeneratedDocument113]
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\bottom_layer\features
+DItemRevisionGUID=
+
+[GeneratedDocument114]
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\bottom_overlay\features
+DItemRevisionGUID=
+
+[GeneratedDocument115]
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\bottom_paste\features
+DItemRevisionGUID=
+
+[GeneratedDocument116]
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\bottom_solder\features
+DItemRevisionGUID=
+
+[GeneratedDocument117]
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\comp_+_bot\features
+DItemRevisionGUID=
+
+[GeneratedDocument118]
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\comp_+_top\features
+DItemRevisionGUID=
+
+[GeneratedDocument119]
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\dimension\features
+DItemRevisionGUID=
+
+[GeneratedDocument120]
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\drill\features
+DItemRevisionGUID=
+
+[GeneratedDocument121]
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\keep-out_layer\features
+DItemRevisionGUID=
+
+[GeneratedDocument122]
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\top_layer\features
+DItemRevisionGUID=
+
+[GeneratedDocument123]
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\top_overlay\features
+DItemRevisionGUID=
+
+[GeneratedDocument124]
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\top_paste\features
+DItemRevisionGUID=
+
+[GeneratedDocument125]
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\top_solder\features
+DItemRevisionGUID=
+
+[GeneratedDocument126]
+DocumentPath=outputs\assembly_odb\odb\symbols\oval3.811x60.8976_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument127]
+DocumentPath=outputs\assembly_odb\odb\symbols\oval3.811x60.8976_225\features
+DItemRevisionGUID=
+
+[GeneratedDocument128]
+DocumentPath=outputs\assembly_odb\odb\symbols\oval11.811x68.8976_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument129]
+DocumentPath=outputs\assembly_odb\odb\symbols\oval11.811x68.8976_225\features
+DItemRevisionGUID=
+
+[GeneratedDocument130]
+DocumentPath=outputs\assembly_odb\odb\symbols\oval15.811x72.8976_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument131]
+DocumentPath=outputs\assembly_odb\odb\symbols\oval15.811x72.8976_225\features
+DItemRevisionGUID=
+
+[GeneratedDocument132]
+DocumentPath=outputs\assembly_odb\odb\symbols\rect20x60_45\features
+DItemRevisionGUID=
+
+[GeneratedDocument133]
+DocumentPath=outputs\assembly_odb\odb\symbols\rect20x60_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument134]
+DocumentPath=outputs\assembly_odb\odb\symbols\rect39.3701x51.1811_315\features
+DItemRevisionGUID=
+
+[GeneratedDocument135]
+DocumentPath=outputs\assembly_odb\odb\symbols\rect41.3386x47.2441_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument136]
+DocumentPath=outputs\assembly_odb\odb\symbols\rect41.3386x47.2441_225\features
+DItemRevisionGUID=
+
+[GeneratedDocument137]
+DocumentPath=outputs\assembly_odb\odb\symbols\rect41.3386x47.2441_315\features
+DItemRevisionGUID=
+
+[GeneratedDocument138]
+DocumentPath=outputs\assembly_odb\odb\symbols\rect47.2441x60_45\features
+DItemRevisionGUID=
+
+[GeneratedDocument139]
+DocumentPath=outputs\assembly_odb\odb\symbols\rect47.2441x60_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument140]
+DocumentPath=outputs\assembly_odb\odb\symbols\rect53.3701x65.1811_315\features
+DItemRevisionGUID=
+
+[GeneratedDocument141]
+DocumentPath=outputs\assembly_odb\odb\symbols\rect55.3386x61.2441_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument142]
+DocumentPath=outputs\assembly_odb\odb\symbols\rect55.3386x61.2441_225\features
+DItemRevisionGUID=
+
+[GeneratedDocument143]
+DocumentPath=outputs\assembly_odb\odb\symbols\rect55.3386x61.2441_315\features
+DItemRevisionGUID=
+
+[GeneratedDocument144]
+DocumentPath=outputs\assembly_odb\odb\symbols\rect61.2441x74_45\features
+DItemRevisionGUID=
+
+[GeneratedDocument145]
+DocumentPath=outputs\assembly_odb\odb\symbols\rect61.2441x74_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument146]
+DocumentPath=outputs\assembly_odb\odb\symbols\s47.2441_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument147]
+DocumentPath=outputs\assembly_odb\odb\symbols\s47.2441_315\features
+DItemRevisionGUID=
+
+[GeneratedDocument148]
+DocumentPath=outputs\assembly_odb\odb\symbols\s61.2441_135\features
+DItemRevisionGUID=
+
+[GeneratedDocument149]
+DocumentPath=outputs\assembly_odb\odb\symbols\s61.2441_315\features
+DItemRevisionGUID=
+
+[GeneratedDocument150]
+DocumentPath=.\outputs\assembly_odb\odb\matrix\matrix
+DItemRevisionGUID=
+
+[GeneratedDocument151]
+DocumentPath=outputs\assembly_odb\odb\matrix\matrix
+DItemRevisionGUID=
+
+[GeneratedDocument152]
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\netlists\cadnet\netlist
+DItemRevisionGUID=
+
+[GeneratedDocument153]
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\netlists\cadnet\netlist
+DItemRevisionGUID=
+
+[GeneratedDocument154]
+DocumentPath=outputs\board_3dmodels\parasolid_3dmodel.x_t
+DItemRevisionGUID=
+
+[GeneratedDocument155]
+DocumentPath=.\fabrication\Pick Place for board_layout.txt
+DItemRevisionGUID=
+
+[GeneratedDocument156]
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\profile
+DItemRevisionGUID=
+
+[GeneratedDocument157]
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\profile
+DItemRevisionGUID=
+
+[GeneratedDocument158]
+DocumentPath=outputs\board_3dmodels\step_3dmodel.step
+DItemRevisionGUID=
+
+[GeneratedDocument159]
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\stephdr
+DItemRevisionGUID=
+
+[GeneratedDocument160]
+DocumentPath=outputs\assembly_odb\odb\steps\pcb\stephdr
+DItemRevisionGUID=
+
+[GeneratedDocument161]
+DocumentPath=.\outputs\assembly_odb\odb\steps\pcb\layers\drill\tools
+DItemRevisionGUID=
+
+[GeneratedDocument162]
 DocumentPath=outputs\assembly_odb\odb\steps\pcb\layers\drill\tools
 DItemRevisionGUID=
 
@@ -736,7 +1113,7 @@ SCH_HasExpandLogicalToPhysicalSheets=-1
 SaveSettingsToOutJob=0
 
 [Generic_EDE]
-OutputDir=
+OutputDir=Project Outputs for obdh2_project
 
 [OutputGroup1]
 Name=Netlist Outputs

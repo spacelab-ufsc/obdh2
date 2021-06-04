@@ -14,35 +14,29 @@ Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.
 
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\top_overlay\attrlist
 
-Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\top_solder\features
-
-Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\top_solder\attrlist
-
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\top_paste\features
 
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\top_paste\attrlist
+
+Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\top_solder\features
+
+Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\top_solder\attrlist
 
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\top_layer\features
 
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\top_layer\attrlist
 
-Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\bottom_solder\features
-
-Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\bottom_solder\attrlist
-
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\bottom_layer\features
 
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\bottom_layer\attrlist
 
+Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\bottom_solder\features
+
+Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\bottom_solder\attrlist
+
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\bottom_paste\features
 
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\bottom_paste\attrlist
-
-Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\drill\features
-
-Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\drill\attrlist
-
-Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\drill\tools
 
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\bottom_overlay\features
 
@@ -59,6 +53,12 @@ Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\dimension\features
 
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\dimension\attrlist
+
+Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\drill\features
+
+Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\drill\attrlist
+
+Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\drill\tools
 
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\steps\pcb\layers\comp_+_top\features
 
@@ -94,14 +94,6 @@ Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.
 
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect20x60_45\features
 
-Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\oval15.811x72.8976_225\features
-
-Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\oval15.811x72.8976_135\features
-
-Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect53.3701x65.1811_315\features
-
-Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect55.3386x61.2441_225\features
-
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect39.3701x51.1811_315\features
 
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect41.3386x47.2441_225\features
@@ -110,6 +102,14 @@ Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.
 
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\oval3.811x60.8976_135\features
 
+Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\oval15.811x72.8976_225\features
+
+Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\oval15.811x72.8976_135\features
+
+Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect53.3701x65.1811_315\features
+
+Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect55.3386x61.2441_225\features
+
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\oval11.811x68.8976_225\features
 
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\oval11.811x68.8976_135\features
@@ -117,18 +117,6 @@ Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect39.3701x51.1811_315\features
 
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect41.3386x47.2441_225\features
-
-Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect61.2441x74_135\features
-
-Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect55.3386x61.2441_135\features
-
-Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\s61.2441_135\features
-
-Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect55.3386x61.2441_315\features
-
-Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\s61.2441_315\features
-
-Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect61.2441x74_45\features
 
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect47.2441x60_135\features
 
@@ -141,6 +129,18 @@ Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\s47.2441_315\features
 
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect47.2441x60_45\features
+
+Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect61.2441x74_135\features
+
+Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect55.3386x61.2441_135\features
+
+Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\s61.2441_135\features
+
+Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect55.3386x61.2441_315\features
+
+Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\s61.2441_315\features
+
+Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect61.2441x74_45\features
 
 Generated File : C:\Users\Sidney&Viviane\Documents\Andre\GitHub\obdh2\hardware\.\outputs\assembly_odb\odb\symbols\rect47.2441x60_135\features
 

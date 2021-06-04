@@ -1,5 +1,5 @@
-Error Report for  - Users\SIDNEY~1\AppData\Local\Temp\Pro488.tmp
-26/08/2020 19:33:40
+Error Report for  - Users\SIDNEY~1\AppData\Local\Temp\Pro879B.tmp
+03/06/2021 18:03:03
 
 Warning arcs were not exported.
 
@@ -57,8 +57,6 @@ Warning pad shape change for U9-41 from rounded 11.811mil,68.898mil to rectangul
 Warning pad shape change for U9-58 from rounded 11.811mil,68.898mil to rectangular 11.811mil,57.087mil
 Warning pad shape change for U9-59 from rounded 11.811mil,68.898mil to rectangular 11.811mil,57.087mil
 Warning pad shape change for U9-62 from rounded 11.811mil,68.898mil to rectangular 11.811mil,57.087mil
-Warning pad shape change for U9-68 from rounded 11.811mil,68.898mil to rectangular 11.811mil,57.087mil
-Warning pad shape change for U9-69 from rounded 11.811mil,68.898mil to rectangular 11.811mil,57.087mil
 Warning pad shape change for U9-76 from rounded 11.811mil,68.898mil to rectangular 11.811mil,57.087mil
 Warning pad shape change for U9-77 from rounded 11.811mil,68.898mil to rectangular 11.811mil,57.087mil
 Warning pad shape change for U9-78 from rounded 11.811mil,68.898mil to rectangular 11.811mil,57.087mil
@@ -98,6 +96,8 @@ Warning pad shape change for U9-7 from rounded 11.811mil,68.898mil to rectangula
 Warning pad shape change for U9-8 from rounded 11.811mil,68.898mil to rectangular 11.811mil,57.087mil
 Warning pad shape change for U9-2 from rounded 11.811mil,68.898mil to rectangular 11.811mil,57.087mil
 Warning pad shape change for U9-3 from rounded 11.811mil,68.898mil to rectangular 11.811mil,57.087mil
+Warning pad shape change for U9-69 from rounded 11.811mil,68.898mil to rectangular 11.811mil,57.087mil
+Warning pad shape change for U9-68 from rounded 11.811mil,68.898mil to rectangular 11.811mil,57.087mil
 Pad name H1-32 too long.
 Pad name H1-31 too long.
 Pad name H1-30 too long.
