@@ -2,67 +2,6 @@
 FileName = board_gerber.GBR
 AutoAperture = True
 *************************************************************
-Generating : Drill Drawing
-      File : board_gerber.GD1
-
-    Adding Layer      : Board Edge
-
-    Adding Drill Pair : Top Layer-Bottom Layer
-
-    Adding Layer      : Drill Drawing
-
-
-Used DCodes :
-    D10
-    D102
-    D118
-    D119
-*************************************************************
-
-*************************************************************
-Generating : Board Edge
-      File : board_gerber.GM9
-
-    Adding Layer      : Board Edge
-
-    Adding Layer      : Board Edge
-
-
-Used DCodes :
-    D10
-*************************************************************
-
-*************************************************************
-Generating : Keep-Out Layer
-      File : board_gerber.GKO
-
-    Adding Layer      : Keep-Out Layer
-
-    Adding Layer      : Board Edge
-
-
-Used DCodes :
-    D10
-    D16
-    D117
-*************************************************************
-
-*************************************************************
-Generating : 3D Body
-      File : board_gerber.GM1
-
-    Adding Layer      : 3D Body
-
-    Adding Layer      : Board Edge
-
-
-Used DCodes :
-    D10
-    D114
-    D115
-*************************************************************
-
-*************************************************************
 Generating : Bottom Solder
       File : board_gerber.GBS
 
@@ -92,13 +31,14 @@ Used DCodes :
     D79
     D80
     D81
-    D104
-    D105
+    D82
     D106
     D107
     D108
     D109
     D110
+    D111
+    D112
 *************************************************************
 
 *************************************************************
@@ -145,6 +85,24 @@ Used DCodes :
 *************************************************************
 
 *************************************************************
+Generating : Drill Drawing
+      File : board_gerber.GD1
+
+    Adding Layer      : Board Edge
+
+    Adding Drill Pair : Top Layer-Bottom Layer
+
+    Adding Layer      : Drill Drawing
+
+
+Used DCodes :
+    D10
+    D104
+    D120
+    D121
+*************************************************************
+
+*************************************************************
 Generating : Bottom Paste
       File : board_gerber.GBP
 
@@ -165,76 +123,6 @@ Used DCodes :
     D44
     D45
     D47
-    D95
-    D96
-    D97
-    D98
-    D99
-    D100
-    D101
-*************************************************************
-
-*************************************************************
-Generating : Dimension
-      File : board_gerber.GM2
-
-    Adding Layer      : Dimension
-
-    Adding Layer      : Board Edge
-
-
-Used DCodes :
-    D10
-    D16
-*************************************************************
-
-*************************************************************
-Generating : Sheet
-      File : board_gerber.GM16
-
-    Adding Layer      : Sheet
-
-    Adding Layer      : Board Edge
-
-
-Used DCodes :
-    D10
-    D16
-    D18
-    D102
-    D116
-*************************************************************
-
-*************************************************************
-Generating : Bottom Layer
-      File : board_gerber.GBL
-
-    Adding Layer      : Bottom Layer
-
-    Adding Layer      : Board Edge
-
-    Adding Layer      : Multi-Layer
-
-
-Used DCodes :
-    D10
-    D16
-    D23
-    D39
-    D42
-    D44
-    D45
-    D47
-    D87
-    D88
-    D89
-    D90
-    D91
-    D92
-    D93
-    D94
-    D95
-    D96
     D97
     D98
     D99
@@ -242,81 +130,6 @@ Used DCodes :
     D101
     D102
     D103
-*************************************************************
-
-*************************************************************
-Generating : Top Layer
-      File : board_gerber.GTL
-
-    Adding Layer      : Top Layer
-
-    Adding Layer      : Board Edge
-
-    Adding Layer      : Multi-Layer
-
-
-Used DCodes :
-    D10
-    D16
-    D22
-    D23
-    D24
-    D25
-    D26
-    D27
-    D28
-    D29
-    D30
-    D31
-    D34
-    D35
-    D36
-    D37
-    D38
-    D39
-    D40
-    D41
-    D42
-    D43
-    D44
-    D45
-    D46
-    D47
-    D82
-    D83
-    D84
-    D85
-    D86
-    D87
-    D88
-    D89
-    D90
-    D91
-    D92
-    D93
-    D94
-*************************************************************
-
-*************************************************************
-Generating : Bottom Overlay
-      File : board_gerber.GBO
-
-    Adding Layer      : Bottom Overlay
-
-    Adding Layer      : Board Edge
-
-
-Used DCodes :
-    D10
-    D12
-    D14
-    D16
-    D18
-    D20
-    D21
-    D111
-    D112
-    D113
 *************************************************************
 
 *************************************************************
@@ -369,6 +182,7 @@ Used DCodes :
     D79
     D80
     D81
+    D82
 *************************************************************
 
 *************************************************************
@@ -393,5 +207,195 @@ Used DCodes :
     D19
     D20
     D21
+*************************************************************
+
+*************************************************************
+Generating : Bottom Layer
+      File : board_gerber.GBL
+
+    Adding Layer      : Bottom Layer
+
+    Adding Layer      : Board Edge
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D10
+    D16
+    D23
+    D39
+    D42
+    D44
+    D45
+    D47
+    D88
+    D89
+    D90
+    D91
+    D92
+    D93
+    D94
+    D95
+    D96
+    D97
+    D98
+    D99
+    D100
+    D101
+    D102
+    D103
+    D104
+    D105
+*************************************************************
+
+*************************************************************
+Generating : Bottom Overlay
+      File : board_gerber.GBO
+
+    Adding Layer      : Bottom Overlay
+
+    Adding Layer      : Board Edge
+
+
+Used DCodes :
+    D10
+    D12
+    D14
+    D16
+    D18
+    D20
+    D21
+    D113
+    D114
+    D115
+*************************************************************
+
+*************************************************************
+Generating : Dimension
+      File : board_gerber.GM2
+
+    Adding Layer      : Dimension
+
+    Adding Layer      : Board Edge
+
+
+Used DCodes :
+    D10
+    D16
+*************************************************************
+
+*************************************************************
+Generating : Keep-Out Layer
+      File : board_gerber.GKO
+
+    Adding Layer      : Keep-Out Layer
+
+    Adding Layer      : Board Edge
+
+
+Used DCodes :
+    D10
+    D16
+    D119
+*************************************************************
+
+*************************************************************
+Generating : 3D Body
+      File : board_gerber.GM1
+
+    Adding Layer      : 3D Body
+
+    Adding Layer      : Board Edge
+
+
+Used DCodes :
+    D10
+    D116
+    D117
+*************************************************************
+
+*************************************************************
+Generating : Board Edge
+      File : board_gerber.GM9
+
+    Adding Layer      : Board Edge
+
+    Adding Layer      : Board Edge
+
+
+Used DCodes :
+    D10
+*************************************************************
+
+*************************************************************
+Generating : Sheet
+      File : board_gerber.GM16
+
+    Adding Layer      : Sheet
+
+    Adding Layer      : Board Edge
+
+
+Used DCodes :
+    D10
+    D16
+    D18
+    D104
+    D118
+*************************************************************
+
+*************************************************************
+Generating : Top Layer
+      File : board_gerber.GTL
+
+    Adding Layer      : Top Layer
+
+    Adding Layer      : Board Edge
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D10
+    D16
+    D22
+    D23
+    D24
+    D25
+    D26
+    D27
+    D28
+    D29
+    D30
+    D31
+    D34
+    D35
+    D36
+    D37
+    D38
+    D39
+    D40
+    D41
+    D42
+    D43
+    D44
+    D45
+    D46
+    D47
+    D83
+    D84
+    D85
+    D86
+    D87
+    D88
+    D89
+    D90
+    D91
+    D92
+    D93
+    D94
+    D95
+    D96
 *************************************************************
 
