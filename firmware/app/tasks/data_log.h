@@ -1,7 +1,7 @@
 /*
- * startup.h
+ * data_log.h
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -21,61 +21,53 @@
  */
 
 /**
- * \brief Startup task definition.
+ * \brief Data log task definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.6.40
  * 
- * \date 2019/12/04
+ * \date 2021/05/24
  * 
- * \defgroup startup Startup
+ * \defgroup data_log Data Log
  * \ingroup tasks
  * \{
  */
 
-#ifndef STARTUP_H_
-#define STARTUP_H_
+#ifndef DATA_LOG_H_
+#define DATA_LOG_H_
 
 #include <FreeRTOS.h>
 #include <task.h>
-#include <event_groups.h>
 
-#define TASK_STARTUP_NAME                   "Startup"
-#define TASK_STARTUP_STACK_SIZE             350
-#define TASK_STARTUP_PRIORITY               5
-
-/* Status done bit position */
-#define TASK_STARTUP_DONE                   (1 << 0)
+#define TASK_DATA_LOG_NAME                      "Data Log"          /**< Task name. */
+#define TASK_DATA_LOG_STACK_SIZE                225                 /**< Stack size in bytes. */
+#define TASK_DATA_LOG_PRIORITY                  3                   /**< Task priority. */
+#define TASK_DATA_LOG_PERIOD_MS                 (600000UL)          /**< Task period in milliseconds. */
+#define TASK_DATA_LOG_INIT_TIMEOUT_MS           2000                /**< Wait time to initialize the task in milliseconds. */
 
 /**
- * \brief Startup task handle.
+ * \brief Data IDs.
  */
-extern xTaskHandle xTaskStartupHandle;
+typedef enum
+{
+    DATA_LOG_HK_DATA_ID=1,
+} data_log_id_t;
 
 /**
- * \brief Startup status event group.
+ * \brief Data log handle.
  */
-extern EventGroupHandle_t task_startup_status;
+extern xTaskHandle xTaskDataLogHandle;
 
 /**
- * \brief System startup task.
- *
- * This task runs in a single shot (non-periodic). After it's conclusion, it is deleted.
+ * \brief Data log task.
  *
  * \param[in] pvParameters is a value that will passed as the task's parameter.
  *
  * \return None.
  */
-void vTaskStartup(void *pvParameters);
+void vTaskDataLog(void *pvParameters);
 
-/**
- * \brief CSP initialization.
- *
- * \return The status/error code.
- */
-int startup_init_csp();
+#endif /* DATA_LOG_H_ */
 
-#endif /* STARTUP_H_ */
-
-/** \} End of startup group */
+/** \} End of data_log group */

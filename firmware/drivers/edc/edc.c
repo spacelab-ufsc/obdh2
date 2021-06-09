@@ -185,7 +185,7 @@ int16_t edc_get_state_pkg(uint8_t *status)
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading an state packet! Invalid frame ID (");
         sys_log_print_hex(status[0]);
-        sys_log_print_msg(")!")
+        sys_log_print_msg(")!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         return -1;  /* Invalid data! */
@@ -222,7 +222,7 @@ int16_t edc_get_ptt_pkg(uint8_t *pkg)
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading a PTT packet! Invalid frame ID (");
         sys_log_print_hex(pkg[0]);
-        sys_log_print_msg(")!")
+        sys_log_print_msg(")!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         return -1;  /* Invalid data! */
@@ -259,7 +259,7 @@ int16_t edc_get_hk_pkg(uint8_t *hk)
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading a HK packet! Invalid frame ID (");
         sys_log_print_hex(hk[0]);
-        sys_log_print_msg(")!")
+        sys_log_print_msg(")!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         return -1;  /* Invalid data! */
@@ -296,7 +296,7 @@ int16_t edc_get_adc_seq(uint8_t *seq)
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading an ADC sequence! Invalid frame ID (");
         sys_log_print_hex(seq[0]);
-        sys_log_print_msg(")!")
+        sys_log_print_msg(")!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         return -1;  /* Invalid data! */
