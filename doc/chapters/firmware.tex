@@ -1,7 +1,7 @@
 %
 % firmware.tex
 %
-% Copyright (C) 2020 by Universidade Federal de Santa Catarina.
+% Copyright (C) 2021 by Universidade Federal de Santa Catarina.
 %
 % OBDH 2.0 Documentation
 %
@@ -17,7 +17,7 @@
 %
 % \institution Universidade Federal de Santa Catarina (UFSC)
 %
-% \version 0.5.0
+% \version 0.7.0
 %
 % \date 2019/10/30
 %
@@ -32,16 +32,12 @@ The firmware depends on external libraries to access the embedded hardware or to
     \centering
     \begin{tabular}{L{5cm}R{4cm}}
         \toprule[1.5pt]
-        \textit{Library}        & \textit{Version} \\
+        \textbf{Library}        & \textbf{Version} \\
         \midrule
             MSP430 DriverLib    & v2.91.11.01 \\
             FreeRTOS            & v10.2.1 \\
             NGHam protocol      & - \\
             libcsp              & v1.5.16 \\
-            FatFS               & R0.14 \\
-            Reliance Edge       & v2.4 \\
-            FreeMODBUS          & v1.6 \\
-            JSMN                & v1.1.0 \\
         \bottomrule[1.5pt]
     \end{tabular}
     \caption{External libraries and dependencies of the firmware.}
@@ -56,23 +52,24 @@ A list of the firmware tasks can be seen in the \autoref{tab:firmware-tasks}.
     \centering
     \begin{tabular}{lccccc}
         \toprule[1.5pt]
-        \textit{Name}          & \textit{Priority} & \textit{Initial delay [ms]} & \textit{Period [ms]} & \textit{Stack [bytes]} \\
+        \textbf{Name}          & \textbf{Priority} & \textbf{Initial delay [ms]} & \textbf{Period [ms]} & \textbf{Stack [bytes]} \\
         \midrule
-        Startup (boot)         & Highest           & 0                           & Aperiodic            & 500                    \\
-        Deployment hibernation & Highest           & 0                           & Aperiodic            & TBD                    \\
-        Antenna deployment     & Highest           & 0                           & Aperiodic            & TBD                    \\
-        Watchdog reset         & Lowest            & 0                           & 100                  & 128                    \\
-        Heartbeat              & Lowest            & 0                           & 500                  & 128                    \\
-        Beacon                 & Medium            & 1000                        & 60000                & 2000                   \\
-        Uplink                 & Low               & 1000                        & 10000                & 500                    \\
-        EPS reading            & Medium            & 5000                        & 60000                & TBD                    \\
-        EDC reading            & High              & 5000                        & 1000                 & TBD                    \\
-        Payload X reading      & Medium            & 5000                        & 5000                 & TBD                    \\
-        TTC writing            & Medium            & 5000                        & 10000                & TBD                    \\
-        Radio periodoc reset   & Medium            & 600000                      & 600000               & 128                    \\
-        System reset           & High              & 0                           & 36000000             & 128                    \\
-        Read temperature       & Medium            & 0                           & 60000                & 128                    \\
-        CSP Server             & Lowest            & 0                           & 500                  & 1024                   \\
+        Startup (boot)         & Highest & 0      & Aperiodic & 350  \\
+        Deployment hibernation & Highest & 0      & Aperiodic & TBD  \\
+        Antenna deployment     & Highest & 0      & Aperiodic & TBD  \\
+        Watchdog reset         & Lowest  & 0      & 100       & 150  \\
+        Heartbeat              & Lowest  & 0      & 500       & 160  \\
+        Beacon                 & Medium  & 1000   & 60000     & 2000 \\
+        Uplink                 & Low     & 1000   & 10000     & 500  \\
+        EPS reading            & Medium  & 5000   & 60000     & 384  \\
+        EDC reading            & High    & 5000   & 60000     & 128  \\
+        Payload X reading      & Medium  & 5000   & 5000      & TBD  \\
+        TTC writing            & Medium  & 5000   & 10000     & TBD  \\
+        Radio periodoc reset   & Medium  & 600000 & 600000    & 128  \\
+        System reset           & High    & 0      & 36000000  & 128  \\
+        Read sensors           & Medium  & 0      & 60000     & 140  \\
+        CSP Server             & Lowest  & 0      & 500       & 1024 \\
+        Data log               & Medium  & 0      & 600000    & 225  \\
         \bottomrule[1.5pt]
     \end{tabular}
     \caption{Firmware tasks.}
@@ -135,13 +132,18 @@ The heartbeat task keeps blinking a LED (``\textit{System LED}'' in \autoref{fig
 
 This task resets the microcontroller by software at every 10 hours. This can be useful to cleanup possible wrong values in variables, repeat the antenna deployment routine (limited to $n$ times), cleanup the RAM memory, etc.
 
-\subsection{Read temperature}
+\subsection{Read sensors}
 
-This task reads the internal temperature of the microcontroller of the OBDH at every 60 seconds.
+This task reads the internal sensors of the OBDH at every 60 seconds.
 
 \subsection{CSP Server}
 
 .
+
+
+\subsection{Data log}
+
+This tasks saves the housekeeping data of the satellite in the flash memory at every 10 minutes.
 
 \section{Variables and Parameters}
 
@@ -232,7 +234,7 @@ The beacon packet is transmitted at every 1 minute and contains a basic telemetr
         Last reset cause   & Last reset cause ID    & 1 \\
         System time        & System time in ticks   & 4 \\
         Radio temperature  & Raw radio temperature  & 4 \\
-        Last TC RSSI       & Raw RSSI value         & 2??? \\
+        Last TC RSSI       & Raw RSSI value         & 2 \\
         Last received TC   & Last received TC ID    & 1 \\
         Battery 1 voltage  & Raw battery 1 voltage  & 2 \\
         Battery 2 voltage  & Raw battery 2 voltage  & 2 \\
@@ -511,9 +513,9 @@ As the Hardware Abstraction Layer (HAL\nomenclature{\textbf{HAL}}{\textit{Hardwa
 
 The DriverLib is meant to provide a ``software'' layer to the programmer in order to facilitate higher level of programming compared to direct register accesses. By using the high level software APIs provided by DriverLib, users can create powerful and intuitive code which is highly portable between not only devices within the MSP430 platform, but between different families in the MSP430/MSP432 platforms.
 
-\section{File System}
+\section{Memory Management}
 
-As file system, the Reliance Edge library is used \cite{reliance_edge} (version 2.4). Reliance Edge is a failsafe filesystem with an small footprint, targeting critical embedded systems with fewer resources. It works with a broad array of storage media including: eMMC, SD/MMC, NVRAM, USB mass storage and SATA (or PATA) disk.
+.
 
 \section{Protocols}
 
