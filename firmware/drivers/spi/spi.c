@@ -25,15 +25,13 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.5
+ * \version 0.6.28
  * 
  * \date 2019/12/07
  * 
  * \addtogroup spi
  * \{
  */
-
-#include <stdbool.h>
 
 #include <hal/usci_a_spi.h>
 #include <hal/usci_b_spi.h>

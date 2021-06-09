@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.27
+ * \version 0.6.36
  * 
  * \date 2020/07/21
  * 
@@ -40,7 +40,7 @@
 
 #include "media.h"
 
-int media_init(media_t med)
+int media_init(media_e med)
 {
     switch(med)
     {
@@ -104,7 +104,7 @@ int media_init(media_t med)
     }
 }
 
-int media_write(media_t med, uint32_t adr, uint32_t *data, uint16_t len)
+int media_write(media_e med, uint32_t adr, uint8_t *data, uint16_t len)
 {
     switch(med)
     {
@@ -116,16 +116,23 @@ int media_write(media_t med, uint32_t adr, uint32_t *data, uint16_t len)
             uint16_t i = 0;
             for(i=0; i<len; i+=4)
             {
-                flash_write_long(data[i], (uint32_t*)(adr + i));
+                flash_write_long((uint32_t)data[i], (uint32_t*)(adr + i));
             }
 
             return 0;
         }
         case MEDIA_NOR:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Write operation not implemented for the NOR memory!");
-            sys_log_new_line();
+            if (mt25q_write(adr, data, len) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error writing data to the NOR memory!");
+                sys_log_new_line();
 
-            return -1;
+                return -1;
+            }
+
+            mt25q_delay_ms(5);
+
+            return 0;
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Invalid storage media to write!");
             sys_log_new_line();
@@ -134,7 +141,7 @@ int media_write(media_t med, uint32_t adr, uint32_t *data, uint16_t len)
     }
 }
 
-int media_read(media_t med, uint32_t adr, uint32_t *data, uint16_t len)
+int media_read(media_e med, uint32_t adr, uint8_t *data, uint16_t len)
 {
     switch(med)
     {
@@ -146,16 +153,21 @@ int media_read(media_t med, uint32_t adr, uint32_t *data, uint16_t len)
             uint16_t i = 0;
             for(i=0; i<len; i+=4)
             {
-                data[i] = flash_read_long((uint32_t*)(adr + i));
+                data[i] = (uint8_t)flash_read_long((uint32_t*)(adr + i));
             }
 
             return 0;
         }
         case MEDIA_NOR:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Read operation not implemented for the NOR memory!");
-            sys_log_new_line();
+            if (mt25q_read(adr, data, len) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error reading data from the NOR memory!");
+                sys_log_new_line();
 
-            return -1;
+                return -1;
+            }
+
+            return 0;
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Invalid storage media to read!");
             sys_log_new_line();
@@ -164,24 +176,78 @@ int media_read(media_t med, uint32_t adr, uint32_t *data, uint16_t len)
     }
 }
 
-int media_erase(media_t med, uint32_t adr)
+int media_erase(media_e med, media_erase_e type, uint32_t sector)
 {
     switch(med)
     {
         case MEDIA_INT_FLASH:
-            flash_write_single(0xFF, (uint8_t*)adr);
+            flash_write_single(0xFF, (uint8_t*)sector);
 
             return 0;
         case MEDIA_NOR:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Erase operation not implemented for the NOR memory!");
-            sys_log_new_line();
+            switch(type)
+            {
+                case MEDIA_ERASE_DIE:
+                    if (mt25q_die_erase(sector) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error erasing the die ");
+                        sys_log_print_uint(sector);
+                        sys_log_print_msg(" of the NOR memory!");
+                        sys_log_new_line();
 
-            return -1;
+                        return -1;
+                    }
+
+                    break;
+                case MEDIA_ERASE_SECTOR:
+                    if (mt25q_sector_erase(sector) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error erasing the sector ");
+                        sys_log_print_uint(sector);
+                        sys_log_print_msg(" of the NOR memory!");
+                        sys_log_new_line();
+
+                        return -1;
+                    }
+
+                    break;
+                case MEDIA_ERASE_SUB_SECTOR:
+                    if (mt25q_sub_sector_erase(sector) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error erasing the sub-sector ");
+                        sys_log_print_uint(sector);
+                        sys_log_print_msg(" of the NOR memory!");
+                        sys_log_new_line();
+
+                        return -1;
+                    }
+
+                    break;
+                default:
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error erasing the NOR memory! Invalid erase operation!");
+                    sys_log_new_line();
+            }
+
+            return 0;
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Invalid storage media to erase!");
             sys_log_new_line();
 
             return -1;
+    }
+}
+
+media_info_t media_get_info(media_e med)
+{
+    switch(med)
+    {
+        case MEDIA_INT_FLASH:   return (media_info_t){0};
+        case MEDIA_NOR:         return mt25q_get_flash_description();
+        default:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Invalid storage media to get the information!");
+            sys_log_new_line();
+
+            return (media_info_t){0};
     }
 }
 

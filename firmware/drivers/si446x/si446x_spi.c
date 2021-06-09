@@ -1,7 +1,7 @@
 /*
  * si446x_spi.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.19
+ * \version 0.6.34
  * 
- * \date 29/07/2017
+ * \date 2017/07/29
  * 
  * \defgroup si446x_spi SPI
  * \ingroup si446x
@@ -36,12 +36,13 @@
 
 #include <stdint.h>
 
+#include <config/config.h>
 #include <drivers/spi/spi.h>
 #include <drivers/gpio/gpio.h>
 
 int si446x_spi_init()
 {
-    return spi_init(SPI_PORT_0, (spi_config_t){.speed_hz=100000, .mode=SPI_MODE_1});
+    return spi_init(SPI_PORT_0, (spi_config_t){.speed_hz=CONFIG_SPI_PORT_0_SPEED_BPS, .mode=SPI_MODE_1});
 }
 
 int si446x_spi_transfer(uint8_t *wd, uint8_t *rd, uint16_t len)

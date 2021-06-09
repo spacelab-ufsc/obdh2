@@ -1,7 +1,7 @@
 /*
  * media.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.11
+ * \version 0.6.36
  * 
- * \date 21/04/2020
+ * \date 2020/04/21
  * 
  * \defgroup media Media
  * \ingroup devices
@@ -39,6 +39,8 @@
 
 #include <stdint.h>
 
+#include <drivers/mt25q/mt25q.h>
+
 #define MEDIA_MODULE_NAME           "Media"
 
 /**
@@ -48,12 +50,22 @@ typedef enum
 {
     MEDIA_INT_FLASH=0,      /**< Internal flash memory. */
     MEDIA_NOR               /**< NOR flash memory. */
-} media_types_e;
+} media_e;
 
 /**
- * \brief Media type.
+ * \brief Erase operation types.
  */
-typedef uint8_t media_t;
+typedef enum
+{
+    MEDIA_ERASE_DIE=0,      /**< Erases the whole die. */
+    MEDIA_ERASE_SECTOR,     /**< Erases a sector. */
+    MEDIA_ERASE_SUB_SECTOR  /**< Erases a sub-sector. */
+} media_erase_e;
+
+/**
+ * \brief Media info type.
+ */
+typedef flash_description_t media_info_t;
 
 /**
  * \brief Media initialization.
@@ -67,7 +79,7 @@ typedef uint8_t media_t;
  *
  * \return The status/error code.
  */
-int media_init(media_t med);
+int media_init(media_e med);
 
 /**
  * \brief Writes data into a given address of a media device.
@@ -87,7 +99,7 @@ int media_init(media_t med);
  *
  * \return The status/error code.
  */
-int media_write(media_t med, uint32_t adr, uint32_t *data, uint16_t len);
+int media_write(media_e med, uint32_t adr, uint8_t *data, uint16_t len);
 
 /**
  * \brief Reads data from a given address of a media device.
@@ -107,7 +119,7 @@ int media_write(media_t med, uint32_t adr, uint32_t *data, uint16_t len);
  *
  * \return The status/error code.
  */
-int media_read(media_t med, uint32_t adr, uint32_t *data, uint16_t len);
+int media_read(media_e med, uint32_t adr, uint8_t *data, uint16_t len);
 
 /**
  * \brief Erases a memory region from a media device.
@@ -119,11 +131,33 @@ int media_read(media_t med, uint32_t adr, uint32_t *data, uint16_t len);
  *      .
  * \endparblock
  *
- * \param[in] adr is the address to erase.
+ * \param[in] type is the erase operation type. It can be:
+ * \parblock
+ *      -\b MEDIA_ERASE_DIE
+ *      -\b MEDIA_ERASE_SECTOR
+ *      -\b MEDIA_ERASE_SUB_SECTOR
+ *      .
+ * \endparblock
+ *
+ * \param[in] sector is the sector number to erase.
  *
  * \return The status/error code.
  */
-int media_erase(media_t med, uint32_t adr);
+int media_erase(media_e med, media_erase_e type, uint32_t sector);
+
+/**
+ * \brief Gets the info about the media.
+ *
+ * \param[in] med is the storage media to erase. It can be:
+ * \parblock
+ *      -\b MEDIA_INT_FLASH
+ *      -\b MEDIA_NOR
+ *      .
+ * \endparblock
+ *
+ * \return The media info structure.
+ */
+media_info_t media_get_info(media_e med);
 
 #endif /* MEDIA_H_ */
 

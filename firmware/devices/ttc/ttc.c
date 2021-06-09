@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.22
+ * \version 0.6.34
  * 
  * \date 2020/02/01
  * 
@@ -35,6 +35,7 @@
 
 #include <stdbool.h>
 
+#include <config/config.h>
 #include <system/sys_log/sys_log.h>
 #include <drivers/spi/spi.h>
 
@@ -60,7 +61,7 @@ int ttc_init(ttc_e dev)
 
             ttc_0_config.port                   = SPI_PORT_0;
             ttc_0_config.cs_pin                 = SPI_CS_0;
-            ttc_0_config.port_config.speed_hz   = 100000;
+            ttc_0_config.port_config.speed_hz   = CONFIG_SPI_PORT_0_SPEED_BPS;
             ttc_0_config.port_config.mode       = SPI_MODE_0;
             ttc_0_config.id                     = SL_TTC2_RADIO_0;
 
@@ -75,7 +76,7 @@ int ttc_init(ttc_e dev)
 
             ttc_1_config.port                   = SPI_PORT_0;
             ttc_1_config.cs_pin                 = SPI_CS_1;
-            ttc_1_config.port_config.speed_hz   = 100000;
+            ttc_1_config.port_config.speed_hz   = CONFIG_SPI_PORT_0_SPEED_BPS;
             ttc_1_config.port_config.mode       = SPI_MODE_0;
             ttc_1_config.id                     = SL_TTC2_RADIO_1;
 

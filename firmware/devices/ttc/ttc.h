@@ -39,7 +39,8 @@
 
 #include <stdint.h>
 
-#include "drivers/sl_ttc2/sl_ttc2.h"
+#include <drivers/sl_ttc2/sl_ttc2.h>
+
 #include "ttc_data.h"
 
 #define TTC_MODULE_NAME         "TTC"
