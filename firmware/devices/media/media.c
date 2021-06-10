@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.36
+ * \version 0.7.1
  * 
  * \date 2020/07/21
  * 
@@ -40,12 +40,20 @@
 
 #include "media.h"
 
-int media_init(media_e med)
+int media_init(media_t med)
 {
     switch(med)
     {
         case MEDIA_INT_FLASH:
             return flash_init();
+        case MEDIA_FRAM:
+            sys_log_print_event_from_module(SYS_LOG_INFO, MEDIA_MODULE_NAME, "Initializing FRAM memory...");
+            sys_log_new_line();
+
+            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "The initialization of the FRAM media is not implemented!");
+            sys_log_new_line();
+
+            return -1;
         case MEDIA_NOR:
             sys_log_print_event_from_module(SYS_LOG_INFO, MEDIA_MODULE_NAME, "Initializing NOR memory...");
             sys_log_new_line();
@@ -104,7 +112,7 @@ int media_init(media_e med)
     }
 }
 
-int media_write(media_e med, uint32_t adr, uint8_t *data, uint16_t len)
+int media_write(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
 {
     switch(med)
     {
@@ -121,6 +129,11 @@ int media_write(media_e med, uint32_t adr, uint8_t *data, uint16_t len)
 
             return 0;
         }
+        case MEDIA_FRAM:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "The write operation of the FRAM media is not implemented!");
+            sys_log_new_line();
+
+            return -1;
         case MEDIA_NOR:
             if (mt25q_write(adr, data, len) != 0)
             {
@@ -141,7 +154,7 @@ int media_write(media_e med, uint32_t adr, uint8_t *data, uint16_t len)
     }
 }
 
-int media_read(media_e med, uint32_t adr, uint8_t *data, uint16_t len)
+int media_read(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
 {
     switch(med)
     {
@@ -158,6 +171,11 @@ int media_read(media_e med, uint32_t adr, uint8_t *data, uint16_t len)
 
             return 0;
         }
+        case MEDIA_FRAM:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "The read operation of the FRAM media is not implemented!");
+            sys_log_new_line();
+
+            return -1;
         case MEDIA_NOR:
             if (mt25q_read(adr, data, len) != 0)
             {
@@ -176,7 +194,7 @@ int media_read(media_e med, uint32_t adr, uint8_t *data, uint16_t len)
     }
 }
 
-int media_erase(media_e med, media_erase_e type, uint32_t sector)
+int media_erase(media_t med, media_erase_t type, uint32_t sector)
 {
     switch(med)
     {
@@ -184,6 +202,11 @@ int media_erase(media_e med, media_erase_e type, uint32_t sector)
             flash_write_single(0xFF, (uint8_t*)sector);
 
             return 0;
+        case MEDIA_FRAM:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "The erase operation of the FRAM media is not implemented!");
+            sys_log_new_line();
+
+            return -1;
         case MEDIA_NOR:
             switch(type)
             {
@@ -237,11 +260,12 @@ int media_erase(media_e med, media_erase_e type, uint32_t sector)
     }
 }
 
-media_info_t media_get_info(media_e med)
+media_info_t media_get_info(media_t med)
 {
     switch(med)
     {
         case MEDIA_INT_FLASH:   return (media_info_t){0};
+        case MEDIA_FRAM:        return (media_info_t){0};
         case MEDIA_NOR:         return mt25q_get_flash_description();
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Invalid storage media to get the information!");
