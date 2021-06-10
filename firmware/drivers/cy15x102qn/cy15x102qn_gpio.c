@@ -1,5 +1,5 @@
 /*
- * drivers.h
+ * cy15x102qn_gpio.c
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
@@ -21,39 +21,47 @@
  */
 
 /**
- * \brief Drivers layer definition.
+ * \brief CY15x102QN driver GPIO interface implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.7.1
  * 
- * \date 2019/10/26
+ * \date 2021/04/18
  * 
- * \defgroup drivers Drivers
+ * \addtogroup cy15x102qn
  * \{
  */
 
-#ifndef DRIVERS_H_
-#define DRIVERS_H_
+#include <drivers/gpio/gpio.h>
 
-#include "edc/edc.h"
-#include "i2c/i2c.h"
-#include "isis_antenna/isis_antenna.h"
-#include "mt25q/mt25q.h"
-#include "spi/spi.h"
-#include "si446x/si446x.h"
-#include "uart/uart.h"
-#include "gpio/gpio.h"
-#include "tps382x/tps382x.h"
-#include "wdt/wdt.h"
-#include "tca4311a/tca4311a.h"
-#include "sl_eps/sl_eps.h"
-#include "sl_eps2/sl_eps2.h"
-#include "adc/adc.h"
-#include "flash/flash.h"
-#include "sl_ttc2/sl_ttc2.h"
-#include "cy15x102qn/cy15x102qn.h"
+#include "cy15x102qn.h"
 
-#endif /* DRIVERS_H_ */
+#define CY15X102QN_GPIO_WP_PIN      GPIO_PIN_62
 
-/** \} End of drivers group */
+int cy15x102qn_gpio_init(void)
+{
+    gpio_config_t conf = {0};
+
+    conf.mode = GPIO_MODE_OUTPUT;
+
+    /* WP pin */
+    if (gpio_init(CY15X102QN_GPIO_WP_PIN, conf) != 0)
+    {
+        return -1;
+    }
+
+    return cy15x102qn_gpio_set_write_protect();
+}
+
+int cy15x102qn_gpio_set_write_protect(void)
+{
+    return gpio_set_state(CY15X102QN_GPIO_WP_PIN, true);
+}
+
+int cy15x102qn_gpio_clear_write_protect(void)
+{
+    return gpio_set_state(CY15X102QN_GPIO_WP_PIN, false);
+}
+
+/** \} End of cy15x102qn group */
