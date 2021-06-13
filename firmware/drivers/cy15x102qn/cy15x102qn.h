@@ -51,7 +51,7 @@
 #define CY15X102QN_OPCODE_FSTRD             0x0B    /**< Fast read memory data. */
 #define CY15X102QN_OPCODE_SSWR              0x42    /**< Special Sector Write. */
 #define CY15X102QN_OPCODE_SSRD              0x4B    /**< Special Sector Read. */
-#define CY15X102QN_OPCODE_RDIR              0x9F    /**< Read device ID. */
+#define CY15X102QN_OPCODE_RDID              0x9F    /**< Read device ID. */
 #define CY15X102QN_OPCODE_RUID              0x4C    /**< Read Unique ID. */
 #define CY15X102QN_OPCODE_WRSN              0xC2    /**< Write Serial Number. */
 #define CY15X102QN_OPCODE_SNR               0xC3    /**< Read Serial Number. */
@@ -268,7 +268,7 @@ int cy15x102qn_fast_read(uint32_t adr, uint8_t *data, uint32_t len);
  * \note The special sector F-RAM memory guarantees to retain data integrity up to three cycles of standard
  * reflow soldering.
  *
- * \param[in] adr is the special sector address to write.
+ * \param[in] adr is the special sector address to write (8-bits).
  *
  * \param[in] data is the data to write in the special sector.
  *
@@ -278,7 +278,7 @@ int cy15x102qn_fast_read(uint32_t adr, uint8_t *data, uint32_t len);
  *
  * \return The stauts/error code
  */
-int cy15x102qn_special_sector_write(uint32_t adr, uint8_t *data, uint16_t len);
+int cy15x102qn_special_sector_write(uint8_t adr, uint8_t *data, uint16_t len);
 
 /**
  * \brief Special Sector Read (SSRD, 4Bh).
@@ -295,7 +295,7 @@ int cy15x102qn_special_sector_write(uint32_t adr, uint8_t *data, uint16_t len);
  * \note The special sector F-RAM memory guarantees to retain data integrity up to three cycles of standard
  * reflow soldering.
  *
- * \param[in] is the special sector address to read.
+ * \param[in] is the special sector address to read (8-bits).
  *
  * \param[in] data is a pointer to store the read data.
  *
@@ -305,7 +305,7 @@ int cy15x102qn_special_sector_write(uint32_t adr, uint8_t *data, uint16_t len);
  *
  * \return The stauts/error code
  */
-int cy15x102qn_special_sector_read(uint32_t adr, uint8_t *data, uint16_t len);
+int cy15x102qn_special_sector_read(uint8_t adr, uint8_t *data, uint16_t len);
 
 /**
  * \brief Read Device ID (RDID, 9Fh).
