@@ -33,64 +33,60 @@
  * \{
  */
 
-#include <config/config.h>
 #include <drivers/spi/spi.h>
 
 #include "cy15x102qn.h"
 
-#define CY15X102QN_SPI_PORT     SPI_PORT_0
 #define CY15X102QN_SPI_MODE     SPI_MODE_0
-#define CY15X102QN_SPI_CLK_HZ   CONFIG_SPI_PORT_0_SPEED_BPS
-#define CY15X102QN_SPI_CS_PIN   SPI_CS_5
 
-int cy15x102qn_spi_init(void)
+int cy15x102qn_spi_init(cy15x102qn_config_t *conf)
 {
-    spi_config_t conf = {0};
+    spi_config_t spi_conf = {0};
 
-    conf.speed_hz   = CY15X102QN_SPI_CLK_HZ;
-    conf.mode       = CY15X102QN_SPI_MODE;
+    spi_conf.speed_hz   = conf->clock_hz;
+    spi_conf.mode       = CY15X102QN_SPI_MODE;
 
-    return spi_init(CY15X102QN_SPI_PORT, conf);
+    return spi_init(conf->port, spi_conf);
 }
 
-int cy15x102qn_spi_write(uint8_t *data, uint16_t len)
+int cy15x102qn_spi_write(cy15x102qn_config_t *conf, uint8_t *data, uint16_t len)
 {
-    return spi_write(CY15X102QN_SPI_PORT, CY15X102QN_SPI_CS_PIN, data, len);
+    return spi_write(conf->port, conf->cs_pin, data, len);
 }
 
-int cy15x102qn_spi_read(uint8_t *data, uint16_t len)
+int cy15x102qn_spi_read(cy15x102qn_config_t *conf, uint8_t *data, uint16_t len)
 {
-    return spi_read(CY15X102QN_SPI_PORT, CY15X102QN_SPI_CS_PIN, data, len);
+    return spi_read(conf->port, conf->cs_pin, data, len);
 }
 
-int cy15x102qn_spi_transfer(uint8_t *wdata, uint8_t *rdata, uint16_t len)
+int cy15x102qn_spi_transfer(cy15x102qn_config_t *conf, uint8_t *wdata, uint8_t *rdata, uint16_t len)
 {
-    return spi_transfer(CY15X102QN_SPI_PORT, CY15X102QN_SPI_CS_PIN, wdata, rdata, len);
+    return spi_transfer(conf->port, conf->cs_pin, wdata, rdata, len);
 }
 
-int cy15x102qn_spi_select(void)
+int cy15x102qn_spi_select(cy15x102qn_config_t *conf)
 {
-    return spi_select_slave(CY15X102QN_SPI_PORT, CY15X102QN_SPI_CS_PIN, true);
+    return spi_select_slave(conf->port, conf->cs_pin, true);
 }
 
-int cy15x102qn_spi_unselect(void)
+int cy15x102qn_spi_unselect(cy15x102qn_config_t *conf)
 {
-    return spi_select_slave(CY15X102QN_SPI_PORT, CY15X102QN_SPI_CS_PIN, false);
+    return spi_select_slave(conf->port, conf->cs_pin, false);
 }
 
-int cy15x102qn_spi_write_only(uint8_t *data, uint16_t len)
+int cy15x102qn_spi_write_only(cy15x102qn_config_t *conf, uint8_t *data, uint16_t len)
 {
-    return spi_write(CY15X102QN_SPI_PORT, SPI_CS_NONE, data, len);
+    return spi_write(conf->port, SPI_CS_NONE, data, len);
 }
 
-int cy15x102qn_spi_read_only(uint8_t *data, uint16_t len)
+int cy15x102qn_spi_read_only(cy15x102qn_config_t *conf, uint8_t *data, uint16_t len)
 {
-    return spi_read(CY15X102QN_SPI_PORT, SPI_CS_NONE, data, len);
+    return spi_read(conf->port, SPI_CS_NONE, data, len);
 }
 
-int cy15x102qn_spi_transfer_only(uint8_t *wdata, uint8_t *rdata, uint16_t len)
+int cy15x102qn_spi_transfer_only(cy15x102qn_config_t *conf, uint8_t *wdata, uint8_t *rdata, uint16_t len)
 {
-    return spi_transfer(CY15X102QN_SPI_PORT, SPI_CS_NONE, wdata, rdata, len);
+    return spi_transfer(conf->port, SPI_CS_NONE, wdata, rdata, len);
 }
 
 /** \} End of cy15x102qn group */

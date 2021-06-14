@@ -41,9 +41,9 @@
 
 #define CY15X102QN_DUMMY_BYTE   0x00
 
-int cy15x102qn_init(void)
+int cy15x102qn_init(cy15x102qn_config_t *conf)
 {
-    if (cy15x102qn_spi_init() != 0)
+    if (cy15x102qn_spi_init(conf) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error initializing the SPI interface!");
@@ -52,7 +52,7 @@ int cy15x102qn_init(void)
         return -1;
     }
 
-    if (cy15x102qn_gpio_init() != 0)
+    if (cy15x102qn_gpio_init(conf) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error initializing the GPIO pins!");
@@ -64,11 +64,11 @@ int cy15x102qn_init(void)
     return 0;
 }
 
-int cy15x102qn_set_write_enable(void)
+int cy15x102qn_set_write_enable(cy15x102qn_config_t *conf)
 {
     uint8_t cmd = CY15X102QN_OPCODE_WREN;
 
-    if (cy15x102qn_spi_write(&cmd, 1) != 0)
+    if (cy15x102qn_spi_write(conf, &cmd, 1) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the WREN command!");
@@ -80,11 +80,11 @@ int cy15x102qn_set_write_enable(void)
     return 0;
 }
 
-int cy15x102qn_reset_write_enable(void)
+int cy15x102qn_reset_write_enable(cy15x102qn_config_t *conf)
 {
     uint8_t cmd = CY15X102QN_OPCODE_WRDI;
 
-    if (cy15x102qn_spi_write(&cmd, 1) != 0)
+    if (cy15x102qn_spi_write(conf, &cmd, 1) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the WRDI command!");
@@ -96,12 +96,12 @@ int cy15x102qn_reset_write_enable(void)
     return 0;
 }
 
-int cy15x102qn_read_status_reg(cy15x102qn_status_t *status)
+int cy15x102qn_read_status_reg(cy15x102qn_config_t *conf, cy15x102qn_status_t *status)
 {
     uint8_t cmd[2] = {CY15X102QN_OPCODE_RDSR, 0};
     uint8_t ans[2] = {0};
 
-    if (cy15x102qn_spi_transfer(cmd, ans, 2) != 0)
+    if (cy15x102qn_spi_transfer(conf, cmd, ans, 2) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the RDSR command!");
@@ -115,13 +115,13 @@ int cy15x102qn_read_status_reg(cy15x102qn_status_t *status)
     return 0;
 }
 
-int cy15x102qn_write_status_reg(cy15x102qn_status_t status)
+int cy15x102qn_write_status_reg(cy15x102qn_config_t *conf, cy15x102qn_status_t status)
 {
     uint8_t cmd[2] = {CY15X102QN_OPCODE_WRSR, 0};
 
     cmd[1] = status;
 
-    if (cy15x102qn_spi_write(cmd, 2) != 0)
+    if (cy15x102qn_spi_write(conf, cmd, 2) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the WRSR command!");
@@ -133,7 +133,7 @@ int cy15x102qn_write_status_reg(cy15x102qn_status_t status)
     return 0;
 }
 
-int cy15x102qn_write(uint32_t adr, uint8_t *data, uint32_t len)
+int cy15x102qn_write(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uint32_t len)
 {
     uint8_t cmd = CY15X102QN_OPCODE_WRITE;
     uint8_t adr_arr[3] = {0xFF};
@@ -142,42 +142,48 @@ int cy15x102qn_write(uint32_t adr, uint8_t *data, uint32_t len)
     adr_arr[1] = (adr >> 8) & 0xFF;
     adr_arr[2] = adr & 0xFF;
 
-    if (cy15x102qn_spi_select() != 0)
+    if (cy15x102qn_spi_select(conf) != 0)
     {
         return -1;
     }
 
     /* Write opcode */
-    if (cy15x102qn_spi_write_only(&cmd, 1) != 0)
+    if (cy15x102qn_spi_write_only(conf, &cmd, 1) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during WRITE command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        cy15x102qn_spi_unselect(conf);
+
         return -1;
     }
 
     /* Write address */
-    if (cy15x102qn_spi_write_only(adr, 3) != 0)
+    if (cy15x102qn_spi_write_only(conf, adr, 3) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the address during WRITE command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        cy15x102qn_spi_unselect(conf);
+
         return -1;
     }
 
     /* Write data */
-    if (cy15x102qn_spi_write_only(data, len) != 0)
+    if (cy15x102qn_spi_write_only(conf, data, len) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the data during WRITE command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        cy15x102qn_spi_unselect(conf);
+
         return -1;
     }
 
-    if (cy15x102qn_spi_unselect() != 0)
+    if (cy15x102qn_spi_unselect(conf) != 0)
     {
         return -1;
     }
@@ -185,7 +191,7 @@ int cy15x102qn_write(uint32_t adr, uint8_t *data, uint32_t len)
     return 0;
 }
 
-int cy15x102qn_read(uint32_t adr, uint8_t *data, uint32_t len)
+int cy15x102qn_read(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uint32_t len)
 {
     uint8_t cmd = CY15X102QN_OPCODE_READ;
     uint8_t adr_arr[3] = {0xFF};
@@ -194,48 +200,48 @@ int cy15x102qn_read(uint32_t adr, uint8_t *data, uint32_t len)
     adr_arr[1] = (adr >> 8) & 0xFF;
     adr_arr[2] = adr & 0xFF;
 
-    if (cy15x102qn_spi_select() != 0)
+    if (cy15x102qn_spi_select(conf) != 0)
     {
         return -1;
     }
 
     /* Write opcode */
-    if (cy15x102qn_spi_write_only(&cmd, 1) != 0)
+    if (cy15x102qn_spi_write_only(conf, &cmd, 1) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during READ command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        cy15x102qn_spi_unselect();
+        cy15x102qn_spi_unselect(conf);
 
         return -1;
     }
 
     /* Write address */
-    if (cy15x102qn_spi_write_only(adr, 3) != 0)
+    if (cy15x102qn_spi_write_only(conf, adr, 3) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the address during READ command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        cy15x102qn_spi_unselect();
+        cy15x102qn_spi_unselect(conf);
 
         return -1;
     }
 
     /* Read data */
-    if (cy15x102qn_spi_read_only(data, len) != 0)
+    if (cy15x102qn_spi_read_only(conf, data, len) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error reading the data during READ command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        cy15x102qn_spi_unselect();
+        cy15x102qn_spi_unselect(conf);
 
         return -1;
     }
 
-    if (cy15x102qn_spi_unselect() != 0)
+    if (cy15x102qn_spi_unselect(conf) != 0)
     {
         return -1;
     }
@@ -243,7 +249,7 @@ int cy15x102qn_read(uint32_t adr, uint8_t *data, uint32_t len)
     return 0;
 }
 
-int cy15x102qn_fast_read(uint32_t adr, uint8_t *data, uint32_t len)
+int cy15x102qn_fast_read(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uint32_t len)
 {
     uint8_t cmd = CY15X102QN_OPCODE_FSTRD;
     uint8_t adr_arr[3] = {0xFF};
@@ -253,60 +259,60 @@ int cy15x102qn_fast_read(uint32_t adr, uint8_t *data, uint32_t len)
     adr_arr[1] = (adr >> 8) & 0xFF;
     adr_arr[2] = adr & 0xFF;
 
-    if (cy15x102qn_spi_select() != 0)
+    if (cy15x102qn_spi_select(conf) != 0)
     {
         return -1;
     }
 
     /* Write opcode */
-    if (cy15x102qn_spi_write_only(&cmd, 1) != 0)
+    if (cy15x102qn_spi_write_only(conf, &cmd, 1) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during FSTRD command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        cy15x102qn_spi_unselect();
+        cy15x102qn_spi_unselect(conf);
 
         return -1;
     }
 
     /* Write address */
-    if (cy15x102qn_spi_write_only(adr, 3) != 0)
+    if (cy15x102qn_spi_write_only(conf, adr, 3) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the address during FSTRD command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        cy15x102qn_spi_unselect();
+        cy15x102qn_spi_unselect(conf);
 
         return -1;
     }
 
     /* Write dummy byte */
-    if (cy15x102qn_spi_write_only(&dummy, 1) != 0)
+    if (cy15x102qn_spi_write_only(conf, &dummy, 1) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the dummy byte during FSTRD command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        cy15x102qn_spi_unselect();
+        cy15x102qn_spi_unselect(conf);
 
         return -1;
     }
 
     /* Read data */
-    if (cy15x102qn_spi_read_only(data, len) != 0)
+    if (cy15x102qn_spi_read_only(conf, data, len) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error reading the data during READ command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        cy15x102qn_spi_unselect();
+        cy15x102qn_spi_unselect(conf);
 
         return -1;
     }
 
-    if (cy15x102qn_spi_unselect() != 0)
+    if (cy15x102qn_spi_unselect(conf) != 0)
     {
         return -1;
     }
@@ -314,46 +320,52 @@ int cy15x102qn_fast_read(uint32_t adr, uint8_t *data, uint32_t len)
     return 0;
 }
 
-int cy15x102qn_special_sector_write(uint8_t adr, uint8_t *data, uint16_t len)
+int cy15x102qn_special_sector_write(cy15x102qn_config_t *conf, uint8_t adr, uint8_t *data, uint16_t len)
 {
     uint8_t cmd = CY15X102QN_OPCODE_SSWR;
 
-    if (cy15x102qn_spi_select() != 0)
+    if (cy15x102qn_spi_select(conf) != 0)
     {
         return -1;
     }
 
     /* Write opcode */
-    if (cy15x102qn_spi_write_only(&cmd, 1) != 0)
+    if (cy15x102qn_spi_write_only(conf, &cmd, 1) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during SSWR command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        cy15x102qn_spi_unselect(conf);
+
         return -1;
     }
 
     /* Write address */
-    if (cy15x102qn_spi_write_only(&adr, 1) != 0)
+    if (cy15x102qn_spi_write_only(conf, &adr, 1) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the address during SSWR command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        cy15x102qn_spi_unselect(conf);
+
         return -1;
     }
 
     /* Write data */
-    if (cy15x102qn_spi_write_only(data, len) != 0)
+    if (cy15x102qn_spi_write_only(conf, data, len) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the data during SSWR command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        cy15x102qn_spi_unselect(conf);
+
         return -1;
     }
 
-    if (cy15x102qn_spi_unselect() != 0)
+    if (cy15x102qn_spi_unselect(conf) != 0)
     {
         return -1;
     }
@@ -361,52 +373,52 @@ int cy15x102qn_special_sector_write(uint8_t adr, uint8_t *data, uint16_t len)
     return 0;
 }
 
-int cy15x102qn_special_sector_read(uint8_t adr, uint8_t *data, uint16_t len)
+int cy15x102qn_special_sector_read(cy15x102qn_config_t *conf, uint8_t adr, uint8_t *data, uint16_t len)
 {
     uint8_t cmd = CY15X102QN_OPCODE_SSRD;
 
-    if (cy15x102qn_spi_select() != 0)
+    if (cy15x102qn_spi_select(conf) != 0)
     {
         return -1;
     }
 
     /* Write opcode */
-    if (cy15x102qn_spi_write_only(&cmd, 1) != 0)
+    if (cy15x102qn_spi_write_only(conf, &cmd, 1) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during SSRD command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        cy15x102qn_spi_unselect();
+        cy15x102qn_spi_unselect(conf);
 
         return -1;
     }
 
     /* Write address */
-    if (cy15x102qn_spi_write_only(&adr, 1) != 0)
+    if (cy15x102qn_spi_write_only(conf, &adr, 1) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the address during SSRD command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        cy15x102qn_spi_unselect();
+        cy15x102qn_spi_unselect(conf);
 
         return -1;
     }
 
     /* Read data */
-    if (cy15x102qn_spi_read_only(data, len) != 0)
+    if (cy15x102qn_spi_read_only(conf, data, len) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error reading the data during SSRD command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        cy15x102qn_spi_unselect();
+        cy15x102qn_spi_unselect(conf);
 
         return -1;
     }
 
-    if (cy15x102qn_spi_unselect() != 0)
+    if (cy15x102qn_spi_unselect(conf) != 0)
     {
         return -1;
     }
@@ -414,41 +426,41 @@ int cy15x102qn_special_sector_read(uint8_t adr, uint8_t *data, uint16_t len)
     return 0;
 }
 
-int cy15x102qn_read_device_id(cy15x102qn_device_id_t *id)
+int cy15x102qn_read_device_id(cy15x102qn_config_t *conf, cy15x102qn_device_id_t *id)
 {
     uint8_t cmd = CY15X102QN_OPCODE_RDID;
     uint8_t raw_id[9] = {0};
 
-    if (cy15x102qn_spi_select() != 0)
+    if (cy15x102qn_spi_select(conf) != 0)
     {
         return -1;
     }
 
     /* Write opcode */
-    if (cy15x102qn_spi_write_only(&cmd, 1) != 0)
+    if (cy15x102qn_spi_write_only(conf, &cmd, 1) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during RDID command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        cy15x102qn_spi_unselect();
+        cy15x102qn_spi_unselect(conf);
 
         return -1;
     }
 
     /* Read data */
-    if (cy15x102qn_spi_read_only(raw_id, 9) != 0)
+    if (cy15x102qn_spi_read_only(conf, raw_id, 9) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error reading the data during RDID command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        cy15x102qn_spi_unselect();
+        cy15x102qn_spi_unselect(conf);
 
         return -1;
     }
 
-    if (cy15x102qn_spi_unselect() != 0)
+    if (cy15x102qn_spi_unselect(conf) != 0)
     {
         return -1;
     }
@@ -471,41 +483,41 @@ int cy15x102qn_read_device_id(cy15x102qn_device_id_t *id)
     return 0;
 }
 
-int cy15x102qn_read_unique_id(cy15x102qn_uid_t *uid)
+int cy15x102qn_read_unique_id(cy15x102qn_config_t *conf, cy15x102qn_uid_t *uid)
 {
     uint8_t cmd = CY15X102QN_OPCODE_RUID;
     uint8_t raw_uid[8] = {0};
 
-    if (cy15x102qn_spi_select() != 0)
+    if (cy15x102qn_spi_select(conf) != 0)
     {
         return -1;
     }
 
     /* Write opcode */
-    if (cy15x102qn_spi_write_only(&cmd, 1) != 0)
+    if (cy15x102qn_spi_write_only(conf, &cmd, 1) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during RUID command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        cy15x102qn_spi_unselect();
+        cy15x102qn_spi_unselect(conf);
 
         return -1;
     }
 
     /* Read data */
-    if (cy15x102qn_spi_read_only(raw_uid, 8) != 0)
+    if (cy15x102qn_spi_read_only(conf, raw_uid, 8) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error reading the data during RUID command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        cy15x102qn_spi_unselect();
+        cy15x102qn_spi_unselect(conf);
 
         return -1;
     }
 
-    if (cy15x102qn_spi_unselect() != 0)
+    if (cy15x102qn_spi_unselect(conf) != 0)
     {
         return -1;
     }
@@ -522,7 +534,7 @@ int cy15x102qn_read_unique_id(cy15x102qn_uid_t *uid)
     return 0;
 }
 
-int cy15x102qn_write_serial_number(cy15x102qn_serial_number_t s_num)
+int cy15x102qn_write_serial_number(cy15x102qn_config_t *conf, cy15x102qn_serial_number_t s_num)
 {
     uint8_t cmd = CY15X102QN_OPCODE_WRSN;
     uint8_t s_num_arr[8] = {0xFF};
@@ -536,32 +548,36 @@ int cy15x102qn_write_serial_number(cy15x102qn_serial_number_t s_num)
     s_num_arr[6] = s_num.unique_number & 0xFF;
     s_num_arr[7] = s_num.crc;
 
-    if (cy15x102qn_spi_select() != 0)
+    if (cy15x102qn_spi_select(conf) != 0)
     {
         return -1;
     }
 
     /* Write opcode */
-    if (cy15x102qn_spi_write_only(&cmd, 1) != 0)
+    if (cy15x102qn_spi_write_only(conf, &cmd, 1) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during WRSN command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        cy15x102qn_spi_unselect(conf);
+
         return -1;
     }
 
     /* Write data */
-    if (cy15x102qn_spi_write_only(s_num_arr, 8) != 0)
+    if (cy15x102qn_spi_write_only(conf, s_num_arr, 8) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the data during WRSN command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        cy15x102qn_spi_unselect(conf);
+
         return -1;
     }
 
-    if (cy15x102qn_spi_unselect() != 0)
+    if (cy15x102qn_spi_unselect(conf) != 0)
     {
         return -1;
     }
@@ -569,41 +585,41 @@ int cy15x102qn_write_serial_number(cy15x102qn_serial_number_t s_num)
     return 0;
 }
 
-int cy15x102qn_read_serial_number(cy15x102qn_serial_number_t *s_num)
+int cy15x102qn_read_serial_number(cy15x102qn_config_t *conf, cy15x102qn_serial_number_t *s_num)
 {
     uint8_t cmd = CY15X102QN_OPCODE_SNR;
     uint8_t raw_snr[8] = {0xFF};
 
-    if (cy15x102qn_spi_select() != 0)
+    if (cy15x102qn_spi_select(conf) != 0)
     {
         return -1;
     }
 
     /* Write opcode */
-    if (cy15x102qn_spi_write_only(&cmd, 1) != 0)
+    if (cy15x102qn_spi_write_only(conf, &cmd, 1) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during SNR command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        cy15x102qn_spi_unselect();
+        cy15x102qn_spi_unselect(conf);
 
         return -1;
     }
 
     /* Read data */
-    if (cy15x102qn_spi_read_only(raw_snr, 8) != 0)
+    if (cy15x102qn_spi_read_only(conf, raw_snr, 8) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error reading the data during SNR command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        cy15x102qn_spi_unselect();
+        cy15x102qn_spi_unselect(conf);
 
         return -1;
     }
 
-    if (cy15x102qn_spi_unselect() != 0)
+    if (cy15x102qn_spi_unselect(conf) != 0)
     {
         return -1;
     }
@@ -617,11 +633,11 @@ int cy15x102qn_read_serial_number(cy15x102qn_serial_number_t *s_num)
     return 0;
 }
 
-int cy15x102qn_deep_power_down_mode(void)
+int cy15x102qn_deep_power_down_mode(cy15x102qn_config_t *conf)
 {
     uint8_t cmd = CY15X102QN_OPCODE_DPD;
 
-    if (cy15x102qn_spi_write(&cmd, 1) != 0)
+    if (cy15x102qn_spi_write(conf, &cmd, 1) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the DPD command!");
@@ -633,11 +649,11 @@ int cy15x102qn_deep_power_down_mode(void)
     return 0;
 }
 
-int cy15x102qn_hibernate_mode(void)
+int cy15x102qn_hibernate_mode(cy15x102qn_config_t *conf)
 {
     uint8_t cmd = CY15X102QN_OPCODE_HBN;
 
-    if (cy15x102qn_spi_write(&cmd, 1) != 0)
+    if (cy15x102qn_spi_write(conf, &cmd, 1) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the HBN command!");

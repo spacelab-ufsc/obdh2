@@ -37,31 +37,29 @@
 
 #include "cy15x102qn.h"
 
-#define CY15X102QN_GPIO_WP_PIN      GPIO_PIN_62
-
-int cy15x102qn_gpio_init(void)
+int cy15x102qn_gpio_init(cy15x102qn_config_t *conf)
 {
-    gpio_config_t conf = {0};
+    gpio_config_t gpio_conf = {0};
 
-    conf.mode = GPIO_MODE_OUTPUT;
+    gpio_conf.mode = GPIO_MODE_OUTPUT;
 
     /* WP pin */
-    if (gpio_init(CY15X102QN_GPIO_WP_PIN, conf) != 0)
+    if (gpio_init(conf->wp_pin, gpio_conf) != 0)
     {
         return -1;
     }
 
-    return cy15x102qn_gpio_set_write_protect();
+    return cy15x102qn_gpio_set_write_protect(conf);
 }
 
-int cy15x102qn_gpio_set_write_protect(void)
+int cy15x102qn_gpio_set_write_protect(cy15x102qn_config_t *conf)
 {
-    return gpio_set_state(CY15X102QN_GPIO_WP_PIN, true);
+    return gpio_set_state(conf->wp_pin, true);
 }
 
-int cy15x102qn_gpio_clear_write_protect(void)
+int cy15x102qn_gpio_clear_write_protect(cy15x102qn_config_t *conf)
 {
-    return gpio_set_state(CY15X102QN_GPIO_WP_PIN, false);
+    return gpio_set_state(conf->wp_pin, false);
 }
 
 /** \} End of cy15x102qn group */

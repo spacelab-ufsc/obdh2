@@ -39,6 +39,9 @@
 
 #include <stdint.h>
 
+#include <drivers/spi/spi.h>
+#include <drivers/gpio/gpio.h>
+
 #define CY15X102QN_MODULE_NAME              "CY15X102QN"
 
 /* Commands */
@@ -95,11 +98,24 @@ typedef struct
 } cy15x102qn_serial_number_t;
 
 /**
+ * \brief Configuration parameters.
+ */
+typedef struct
+{
+    spi_port_t port;                                /**< SPI port. */
+    spi_cs_t cs_pin;                                /**< Chip-Select pin. */
+    uint32_t clock_hz;                              /**< SPI clock in Hertz. */
+    gpio_pin_t wp_pin;                              /**< Write protection GPIO pin. */
+} cy15x102qn_config_t;
+
+/**
  * \brief Driver initialization.
+ *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
  *
  * \return The status/error code.
  */
-int cy15x102qn_init(void);
+int cy15x102qn_init(cy15x102qn_config_t *conf);
 
 /**
  * \brief Set Write Enable Latch (WREN, 06h).
@@ -116,11 +132,13 @@ int cy15x102qn_init(void);
  * WRITE, a SSWR, or a WRSN operation. This prevents further writes to the Status Register or the F-RAM array
  * without another WREN command.
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \see Excelon-Auto 2-Mbit (256K x 8) Automotive-E Serial (SPI) F-RAM.
  *
  * \return The stauts/error code
  */
-int cy15x102qn_set_write_enable(void);
+int cy15x102qn_set_write_enable(cy15x102qn_config_t *conf);
 
 /**
  * \brief Reset Write Enable Latch (WRDI, 04h).
@@ -128,11 +146,13 @@ int cy15x102qn_set_write_enable(void);
  * The WRDI command disables all write activity by clearing the Write Enable Latch. Verify that the writes are
  * disabled by reading the WEL bit in the Status Register and verify that WEL is equal to '0'.
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \see Excelon-Auto 2-Mbit (256K x 8) Automotive-E Serial (SPI) F-RAM.
  *
  * \return The stauts/error code
  */
-int cy15x102qn_reset_write_enable(void);
+int cy15x102qn_reset_write_enable(cy15x102qn_config_t *conf);
 
 /**
  * \brief Read Status Register (RDSR, 05h).
@@ -141,13 +161,15 @@ int cy15x102qn_reset_write_enable(void);
  * register provides information about the current state of the write-protection features. Following the RDSR
  * opcode, the CY15X102QN will return one byte with the contents of the Status Register.
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \param[in,out] status is a pointer to store the status bits of the device.
  *
  * \see Excelon-Auto 2-Mbit (256K x 8) Automotive-E Serial (SPI) F-RAM.
  *
  * \return The stauts/error code
  */
-int cy15x102qn_read_status_reg(cy15x102qn_status_t *status);
+int cy15x102qn_read_status_reg(cy15x102qn_config_t *conf, cy15x102qn_status_t *status);
 
 /**
  * \brief Write Status Register (WRSR, 01h).
@@ -158,13 +180,15 @@ int cy15x102qn_read_status_reg(cy15x102qn_status_t *status);
  * the memory array. Before sending the WRSR command, the user must send a WREN command to enable writes.
  * Executing a WRSR command is a write operation and therefore, clears the Write Enable Latch.
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \param[in] status is the new status bits value.
  *
  * \see Excelon-Auto 2-Mbit (256K x 8) Automotive-E Serial (SPI) F-RAM.
  *
  * \return The stauts/error code
  */
-int cy15x102qn_write_status_reg(cy15x102qn_status_t status);
+int cy15x102qn_write_status_reg(cy15x102qn_config_t *conf, cy15x102qn_status_t status);
 
 /**
  * \brief Write Operation (WRITE, 02h).
@@ -186,6 +210,8 @@ int cy15x102qn_write_status_reg(cy15x102qn_status_t status);
  *
  * \note If power is lost in the middle of the write operation, only the last completed byte will be written.
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \param[in] adr is the address to write the given data.
  *
  * \param[in] data is the data to write.
@@ -196,7 +222,7 @@ int cy15x102qn_write_status_reg(cy15x102qn_status_t status);
  *
  * \return The stauts/error code
  */
-int cy15x102qn_write(uint32_t adr, uint8_t *data, uint32_t len);
+int cy15x102qn_write(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uint32_t len);
 
 /**
  * \brief Read Operation (READ, 03h).
@@ -210,6 +236,8 @@ int cy15x102qn_write(uint32_t adr, uint8_t *data, uint32_t len);
  * counter will roll over to 00000h. Data is read on MSb first. The rising edge of CS terminates a read
  * operation and tristates the SO pin.
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \param[in] adr is the address to read.
  *
  * \param[in,out] data is a pointer to store the read data.
@@ -220,7 +248,7 @@ int cy15x102qn_write(uint32_t adr, uint8_t *data, uint32_t len);
  *
  * \return The stauts/error code
  */
-int cy15x102qn_read(uint32_t adr, uint8_t *data, uint32_t len);
+int cy15x102qn_read(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uint32_t len);
 
 /**
  * \brief Fast Read Operation (FAST_READ, 0Bh).
@@ -240,6 +268,8 @@ int cy15x102qn_read(uint32_t adr, uint8_t *data, uint32_t len);
  * bits. Hence, Axh essentially represents 16 different 8-bit values which shouldn't be transmitted as the
  * dummy byte. 00h is typically used as the dummy byte in most use cases.
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \param[in] adr is the address to read.
  *
  * \param[in,out] data is a pointer to store the read data.
@@ -250,7 +280,7 @@ int cy15x102qn_read(uint32_t adr, uint8_t *data, uint32_t len);
  *
  * \return The stauts/error code
  */
-int cy15x102qn_fast_read(uint32_t adr, uint8_t *data, uint32_t len);
+int cy15x102qn_fast_read(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uint32_t len);
 
 /**
  * \brief Special Sector Write (SSWR, 42h).
@@ -268,6 +298,8 @@ int cy15x102qn_fast_read(uint32_t adr, uint8_t *data, uint32_t len);
  * \note The special sector F-RAM memory guarantees to retain data integrity up to three cycles of standard
  * reflow soldering.
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \param[in] adr is the special sector address to write (8-bits).
  *
  * \param[in] data is the data to write in the special sector.
@@ -278,7 +310,7 @@ int cy15x102qn_fast_read(uint32_t adr, uint8_t *data, uint32_t len);
  *
  * \return The stauts/error code
  */
-int cy15x102qn_special_sector_write(uint8_t adr, uint8_t *data, uint16_t len);
+int cy15x102qn_special_sector_write(cy15x102qn_config_t *conf, uint8_t adr, uint8_t *data, uint16_t len);
 
 /**
  * \brief Special Sector Read (SSRD, 4Bh).
@@ -295,6 +327,8 @@ int cy15x102qn_special_sector_write(uint8_t adr, uint8_t *data, uint16_t len);
  * \note The special sector F-RAM memory guarantees to retain data integrity up to three cycles of standard
  * reflow soldering.
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \param[in] is the special sector address to read (8-bits).
  *
  * \param[in] data is a pointer to store the read data.
@@ -305,7 +339,7 @@ int cy15x102qn_special_sector_write(uint8_t adr, uint8_t *data, uint16_t len);
  *
  * \return The stauts/error code
  */
-int cy15x102qn_special_sector_read(uint8_t adr, uint8_t *data, uint16_t len);
+int cy15x102qn_special_sector_read(cy15x102qn_config_t *conf, uint8_t adr, uint8_t *data, uint16_t len);
 
 /**
  * \brief Read Device ID (RDID, 9Fh).
@@ -321,13 +355,15 @@ int cy15x102qn_special_sector_read(uint8_t adr, uint8_t *data, uint16_t len);
  * \note The least significant data byte (Byte 0) shifts out first and the most significant data byte (Byte 8)
  * shifts out last.
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \param[in,out] id is a pointer to store the read device ID.
  *
  * \see Excelon-Auto 2-Mbit (256K x 8) Automotive-E Serial (SPI) F-RAM.
  *
  * \return The stauts/error code
  */
-int cy15x102qn_read_device_id(cy15x102qn_device_id_t *id);
+int cy15x102qn_read_device_id(cy15x102qn_config_t *conf, cy15x102qn_device_id_t *id);
 
 /**
  * \brief Read Unique ID (RUID, 4Ch).
@@ -341,13 +377,15 @@ int cy15x102qn_read_device_id(cy15x102qn_device_id_t *id);
  * \note The unique ID registers are guaranteed to retain data integrity of up to three cycles of the standard
  * reflow soldering.
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \param[in] uid is a pointer to store the read unique ID.
  *
  * \see Excelon-Auto 2-Mbit (256K x 8) Automotive-E Serial (SPI) F-RAM.
  *
  * \return The stauts/error code
  */
-int cy15x102qn_read_unique_id(cy15x102qn_uid_t *uid);
+int cy15x102qn_read_unique_id(cy15x102qn_config_t *conf, cy15x102qn_uid_t *uid);
 
 /**
  * \brief Write Serial Number (WRSN, C2h).
@@ -365,13 +403,15 @@ int cy15x102qn_read_unique_id(cy15x102qn_uid_t *uid);
  * 8-byte serial number into the serial number register. The factory default value for the 8-byte Serial Number
  * is '0000000000000000h'.
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \param[in] s_num is the serial number to write.
  *
  * \see Excelon-Auto 2-Mbit (256K x 8) Automotive-E Serial (SPI) F-RAM.
  *
  * \return The stauts/error code
  */
-int cy15x102qn_write_serial_number(cy15x102qn_serial_number_t s_num);
+int cy15x102qn_write_serial_number(cy15x102qn_config_t *conf, cy15x102qn_serial_number_t s_num);
 
 /**
  * \brief Read Serial Number (RDSN, C3h).
@@ -385,13 +425,15 @@ int cy15x102qn_write_serial_number(cy15x102qn_serial_number_t s_num);
  * \note The least significant data byte (Byte 0) shifts out first and the most significant data byte (Byte 7)
  * shifts out last.
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \param[in,out] s_num is a pointer to store the read serial number.
  *
  * \see Excelon-Auto 2-Mbit (256K x 8) Automotive-E Serial (SPI) F-RAM.
  *
  * \return The stauts/error code
  */
-int cy15x102qn_read_serial_number(cy15x102qn_serial_number_t *s_num);
+int cy15x102qn_read_serial_number(cy15x102qn_config_t *conf, cy15x102qn_serial_number_t *s_num);
 
 /**
  * \brief Deep Power-Down Mode (DPD, BAh).
@@ -405,11 +447,13 @@ int cy15x102qn_read_serial_number(cy15x102qn_serial_number_t *s_num);
  * by sending a dummy command cycle or toggling CS alone while SCK and I/Os are don’t care. The I/Os remain in
  * hi-Z state during the wakeup from deep power-down.
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \see Excelon-Auto 2-Mbit (256K x 8) Automotive-E Serial (SPI) F-RAM.
  *
  * \return The stauts/error code
  */
-int cy15x102qn_deep_power_down_mode(void);
+int cy15x102qn_deep_power_down_mode(cy15x102qn_config_t *conf);
 
 /**
  * \brief Hibernate Mode (HBN, B9h).
@@ -422,21 +466,27 @@ int cy15x102qn_deep_power_down_mode(void);
  * an opcode within the wakeup period. To exit the Hibernate mode, the controller may send a "dummy" read, for
  * example, and wait for the remaining tEXTHIB time.
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \see Excelon-Auto 2-Mbit (256K x 8) Automotive-E Serial (SPI) F-RAM.
  *
  * \return The stauts/error code
  */
-int cy15x102qn_hibernate_mode(void);
+int cy15x102qn_hibernate_mode(cy15x102qn_config_t *conf);
 
 /**
  * \brief SPI interface initialization.
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \return The status/error code.
  */
-int cy15x102qn_spi_init(void);
+int cy15x102qn_spi_init(cy15x102qn_config_t *conf);
 
 /**
  * \brief Writes the device using the SPI interface.
+ *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
  *
  * \param[in] data is an array of bytes to write.
  *
@@ -444,10 +494,12 @@ int cy15x102qn_spi_init(void);
  *
  * \return The status/error code.
  */
-int cy15x102qn_spi_write(uint8_t *data, uint16_t len);
+int cy15x102qn_spi_write(cy15x102qn_config_t *conf, uint8_t *data, uint16_t len);
 
 /**
  * \brief Reads the device using the SPI interface.
+ *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
  *
  * \param[in] data is an array to store the read bytes.
  *
@@ -455,10 +507,12 @@ int cy15x102qn_spi_write(uint8_t *data, uint16_t len);
  *
  * \return The status/error code.
  */
-int cy15x102qn_spi_read(uint8_t *data, uint16_t len);
+int cy15x102qn_spi_read(cy15x102qn_config_t *conf, uint8_t *data, uint16_t len);
 
 /**
  * \brief SPI transfer operation (write and/or read).
+ *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
  *
  * \param[in,out] wdata is a pointer to the data to be written during the SPI transfer.
  *
@@ -468,24 +522,30 @@ int cy15x102qn_spi_read(uint8_t *data, uint16_t len);
  *
  * \return The status/error code.
  */
-int cy15x102qn_spi_transfer(uint8_t *wdata, uint8_t *rdata, uint16_t len);
+int cy15x102qn_spi_transfer(cy15x102qn_config_t *conf, uint8_t *wdata, uint8_t *rdata, uint16_t len);
 
 /**
  * \brief Selects the device manually (CS pin low).
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \return The status/error code.
  */
-int cy15x102qn_spi_select(void);
+int cy15x102qn_spi_select(cy15x102qn_config_t *conf);
 
 /**
  * \brief Unselects the device manually (CS pin high).
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \return The status/error code.
  */
-int cy15x102qn_spi_unselect(void);
+int cy15x102qn_spi_unselect(cy15x102qn_config_t *conf);
 
 /**
  * \brief Writes data without automatically select the device.
+ *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
  *
  * \param[in] data is a pointer to the bytes to write.
  *
@@ -493,10 +553,12 @@ int cy15x102qn_spi_unselect(void);
  *
  * \return The status/error code.
  */
-int cy15x102qn_spi_write_only(uint8_t *data, uint16_t len);
+int cy15x102qn_spi_write_only(cy15x102qn_config_t *conf, uint8_t *data, uint16_t len);
 
 /**
  * \brief Reads data without automatically select the device.
+ *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
  *
  * \param[in,out] data is a pointer to to store the read bytes.
  *
@@ -504,10 +566,12 @@ int cy15x102qn_spi_write_only(uint8_t *data, uint16_t len);
  *
  * \return The status/error code.
  */
-int cy15x102qn_spi_read_only(uint8_t *data, uint16_t len);
+int cy15x102qn_spi_read_only(cy15x102qn_config_t *conf, uint8_t *data, uint16_t len);
 
 /**
  * \brief Transfer data without automatically select the device.
+ *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
  *
  * \param[in] wdata is a pointer to the bytes to write.
  *
@@ -517,7 +581,7 @@ int cy15x102qn_spi_read_only(uint8_t *data, uint16_t len);
  *
  * \return The status/error code.
  */
-int cy15x102qn_spi_transfer_only(uint8_t *wdata, uint8_t *rdata, uint16_t len);
+int cy15x102qn_spi_transfer_only(cy15x102qn_config_t *conf, uint8_t *wdata, uint8_t *rdata, uint16_t len);
 
 /**
  * \brief Initialization of the GPIO pins.
@@ -533,23 +597,29 @@ int cy15x102qn_spi_transfer_only(uint8_t *wdata, uint8_t *rdata, uint16_t len);
  *
  * \note This pin can also be tied to VDD if not used.
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \return The status/error code.
  */
-int cy15x102qn_gpio_init(void);
+int cy15x102qn_gpio_init(cy15x102qn_config_t *conf);
 
 /**
  * \brief Sets the state of the hold pin.
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \return The status/error code.
  */
-int cy15x102qn_gpio_set_write_protect(void);
+int cy15x102qn_gpio_set_write_protect(cy15x102qn_config_t *conf);
 
 /**
  * \brief Sets the state of the reset pin.
  *
+ * \param[in,out] conf is a pointer to the configuration parameters of the device.
+ *
  * \return The status/error code.
  */
-int cy15x102qn_gpio_clear_write_protect(void);
+int cy15x102qn_gpio_clear_write_protect(cy15x102qn_config_t *conf);
 
 #endif /* CY15X102QN_H_ */
 
