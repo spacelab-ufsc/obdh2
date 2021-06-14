@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.1
+ * \version 0.7.2
  * 
  * \date 2020/07/21
  * 
@@ -33,12 +33,16 @@
  * \{
  */
 
+#include <config/config.h>
 #include <system/sys_log/sys_log.h>
 
 #include <drivers/flash/flash.h>
 #include <drivers/mt25q/mt25q.h>
+#include <drivers/cy15x102qn/cy15x102qn.h>
 
 #include "media.h"
+
+cy15x102qn_config_t fram_conf = {0};
 
 int media_init(media_t med)
 {
@@ -50,10 +54,20 @@ int media_init(media_t med)
             sys_log_print_event_from_module(SYS_LOG_INFO, MEDIA_MODULE_NAME, "Initializing FRAM memory...");
             sys_log_new_line();
 
-            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "The initialization of the FRAM media is not implemented!");
-            sys_log_new_line();
+            fram_conf.port      = SPI_PORT_0;
+            fram_conf.cs_pin    = SPI_CS_5;
+            fram_conf.clock_hz  = CONFIG_SPI_PORT_0_SPEED_BPS;
+            fram_conf.wp_pin    = GPIO_PIN_62;
 
-            return -1;
+            if (cy15x102qn_init(&fram_conf) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error initializing the FRAM memory!");
+                sys_log_new_line();
+
+                return -1;
+            }
+
+            return 0;
         case MEDIA_NOR:
             sys_log_print_event_from_module(SYS_LOG_INFO, MEDIA_MODULE_NAME, "Initializing NOR memory...");
             sys_log_new_line();
