@@ -144,10 +144,15 @@ int media_write(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
             return 0;
         }
         case MEDIA_FRAM:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "The write operation of the FRAM media is not implemented!");
-            sys_log_new_line();
+            if (cy15x102qn_write(&fram_conf, adr, data, len) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error wriring data to the FRAM memory!");
+                sys_log_new_line();
 
-            return -1;
+                return -1;
+            }
+
+            return 0;
         case MEDIA_NOR:
             if (mt25q_write(adr, data, len) != 0)
             {
@@ -186,8 +191,11 @@ int media_read(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
             return 0;
         }
         case MEDIA_FRAM:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "The read operation of the FRAM media is not implemented!");
-            sys_log_new_line();
+            if (cy15x102qn_read(&fram_conf, adr, data, len) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error reading data from the FRAM memory!");
+                sys_log_new_line();
+            }
 
             return -1;
         case MEDIA_NOR:
