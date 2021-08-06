@@ -5,6 +5,7 @@ TARGET_LEDS=leds_unit_test
 TARGET_WATCHDOG=watchdog_unit_test
 TARGET_RADIO=radio_unit_test
 TARGET_TTC=ttc_unit_test
+TARGET_EPS=eps_unit_test
 
 ifndef BUILD_DIR
 	BUILD_DIR=$(CURDIR)
@@ -17,6 +18,8 @@ FLAGS=-fpic -std=c99 -Wall -pedantic -Wshadow -Wpointer-arith -Wcast-qual -Wstri
 RADIO_TEST_FLAGS=-fpic -std=c99 -Wall -pedantic -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -I$(INC) -I../../config/ -I../../tests/freertos_sim/ -Wl,--wrap=sys_log_print_event_from_module,--wrap=sys_log_new_line,--wrap=sys_log_print_msg,--wrap=sys_log_print_uint,--wrap=sys_log_print_int,--wrap=sys_log_print_hex,--wrap=sys_log_print_float,--wrap=si446x_reset,--wrap=si446x_part_info,--wrap=si446x_part_info,--wrap=si446x_configuration_init,--wrap=si446x_set_property,--wrap=si446x_set_property,--wrap=si446x_fifo_info,--wrap=si446x_write_tx_fifo,--wrap=si446x_spi_init,--wrap=si446x_get_int_status,--wrap=si446x_start_tx,--wrap=si446x_delay_ms,--wrap=si446x_change_state,--wrap=si446x_read_rx_fifo,--wrap=si446x_start_rx
 
 TTC_TEST_FLAGS=-fpic -std=c99 -Wall -pedantic -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -I$(INC) -I../../config/ -Wl,--wrap=sys_log_print_event_from_module,--wrap=sys_log_new_line,--wrap=sys_log_print_msg,--wrap=sys_log_print_uint,--wrap=sys_log_print_int,--wrap=sys_log_print_hex,--wrap=sys_log_print_float,--wrap=sl_ttc2_init,--wrap=sl_ttc2_check_device,--wrap=sl_ttc2_write_reg,--wrap=sl_ttc2_read_reg,--wrap=sl_ttc2_read_hk_data,--wrap=sl_ttc2_read_device_id,--wrap=sl_ttc2_read_hardware_version,--wrap=sl_ttc2_read_firmware_version,--wrap=sl_ttc2_read_time_counter,--wrap=sl_ttc2_read_reset_counter,--wrap=sl_ttc2_read_reset_cause,--wrap=sl_ttc2_read_voltage,--wrap=sl_ttc2_read_current,--wrap=sl_ttc2_read_temp,--wrap=sl_ttc2_read_last_valid_tc,--wrap=sl_ttc2_read_rssi,--wrap=sl_ttc2_read_antenna_status,--wrap=sl_ttc2_read_antenna_deployment_status,--wrap=sl_ttc2_read_antenna_deployment_hibernation_status,--wrap=sl_ttc2_read_tx_enable,--wrap=sl_ttc2_set_tx_enable,--wrap=sl_ttc2_read_pkt_counter,--wrap=sl_ttc2_read_fifo_pkts,--wrap=sl_ttc2_read_len_rx_pkt_in_fifo,--wrap=sl_ttc2_check_pkt_avail,--wrap=sl_ttc2_transmit_packet,--wrap=sl_ttc2_read_packet,--wrap=sl_ttc2_delay_ms
+
+EPS_TEST_FLAGS=-fpic -std=c99 -Wall -pedantic -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -I$(INC) -I../../config/ -Wl,--wrap=sys_log_print_event_from_module,--wrap=sys_log_new_line,--wrap=sys_log_print_msg,--wrap=sys_log_print_uint,--wrap=sys_log_print_int,--wrap=sys_log_print_hex,--wrap=sys_log_print_float,--wrap=sl_eps2_init,--wrap=sl_eps2_check_device,--wrap=sl_eps2_write_reg,--wrap=sl_eps2_read_reg,--wrap=sl_eps2_read_data,--wrap=sl_eps2_read_time_counter,--wrap=sl_eps2_read_temp,--wrap=sl_eps2_read_current,--wrap=sl_eps2_read_reset_cause,--wrap=sl_eps2_read_reset_counter,--wrap=sl_eps2_read_solar_panel_voltage,--wrap=sl_eps2_read_solar_panel_current,--wrap=sl_eps2_read_mppt_duty_cycle,--wrap=sl_eps2_read_main_bus_voltage,--wrap=sl_eps2_read_rtd_temperature,--wrap=sl_eps2_read_battery_voltage,--wrap=sl_eps2_read_battery_current,--wrap=sl_eps2_read_battery_charge,--wrap=sl_eps2_read_battery_monitor_temp,--wrap=sl_eps2_read_battery_monitor_status,--wrap=sl_eps2_read_battery_monitor_protection,--wrap=sl_eps2_read_battery_monitor_cycle_counter,--wrap=sl_eps2_read_battery_monitor_raac,--wrap=sl_eps2_read_battery_monitor_rsac,--wrap=sl_eps2_read_battery_monitor_rarc,--wrap=sl_eps2_read_battery_monitor_rsrc,--wrap=sl_eps2_read_heater_duty_cycle,--wrap=sl_eps2_read_hardware_version,--wrap=sl_eps2_read_firmware_version,--wrap=sl_eps2_set_mppt_mode,--wrap=sl_eps2_get_mppt_mode,--wrap=sl_eps2_set_heater_mode,--wrap=sl_eps2_get_heater_mode,--wrap=sl_eps2_delay_ms
 
 .PHONY: all
 all: current_sensor_test voltage_sensor_test temp_sensor_test leds_test watchdog_test radio_test
@@ -49,6 +52,10 @@ radio_test: $(BUILD_DIR)/radio.o $(BUILD_DIR)/radio_test.o $(BUILD_DIR)/sys_log_
 ttc_test: $(BUILD_DIR)/ttc.o $(BUILD_DIR)/ttc_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/sl_ttc2_wrap.o
 	$(CC) $(TTC_TEST_FLAGS) $(BUILD_DIR)/ttc.o $(BUILD_DIR)/ttc_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/sl_ttc2_wrap.o -o $(BUILD_DIR)/$(TARGET_TTC) -lm -lcmocka
 
+.PHONY: eps_test
+eps_test: $(BUILD_DIR)/eps.o $(BUILD_DIR)/eps_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/sl_eps2_wrap.o
+	$(CC) $(EPS_TEST_FLAGS) $(BUILD_DIR)/eps.o $(BUILD_DIR)/eps_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/sl_eps2_wrap.o -o $(BUILD_DIR)/$(TARGET_EPS) -lm -lcmocka
+
 $(BUILD_DIR)/current_sensor.o: ../../devices/current_sensor/current_sensor.c
 	$(CC) $(FLAGS) -c $< -o $@
 
@@ -69,6 +76,9 @@ $(BUILD_DIR)/radio.o: ../../devices/radio/radio.c
 
 $(BUILD_DIR)/ttc.o: ../../devices/ttc/ttc.c
 	$(CC) $(TTC_TEST_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/eps.o: ../../devices/eps/eps.c
+	$(CC) $(EPS_TEST_FLAGS) -c $< -o $@
 
 $(BUILD_DIR)/current_sensor_test.o: current_sensor_test.c
 	$(CC) $(FLAGS) -c $< -o $@
@@ -91,6 +101,9 @@ $(BUILD_DIR)/radio_test.o: radio_test.c
 $(BUILD_DIR)/ttc_test.o: ttc_test.c
 	$(CC) $(TTC_TEST_FLAGS) -c $< -o $@
 
+$(BUILD_DIR)/eps_test.o: eps_test.c
+	$(CC) $(EPS_TEST_FLAGS) -c $< -o $@
+
 $(BUILD_DIR)/sys_log_wrap.o: ../mockups/sys_log_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
@@ -112,10 +125,12 @@ $(BUILD_DIR)/si446x_wrap.o: ../mockups/si446x_wrap.c
 $(BUILD_DIR)/sl_ttc2_wrap.o: ../mockups/sl_ttc2_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
+$(BUILD_DIR)/sl_eps2_wrap.o: ../mockups/sl_eps2_wrap.c
+	$(CC) $(FLAGS) -c $< -o $@
+
 $(BUILD_DIR)/task.o: ../freertos_sim/task.c
 	$(CC) $(RADIO_TEST_FLAGS) -c $< -o $@
 
 .PHONY: clean
 clean:
-	rm $(BUILD_DIR)/$(TARGET_CURRENT_SENSOR) $(BUILD_DIR)/$(TARGET_VOLTAGE_SENSOR) $(BUILD_DIR)/$(TARGET_TEMP_SENSOR) $(BUILD_DIR)/$(TARGET_LEDS) $(BUILD_DIR)/$(TARGET_WATCHDOG) $(BUILD_DIR)/$(TARGET_RADIO) $(BUILD_DIR)/$(TARGET_TTC) $(BUILD_DIR)/*.o
-
+	rm $(BUILD_DIR)/$(TARGET_CURRENT_SENSOR) $(BUILD_DIR)/$(TARGET_VOLTAGE_SENSOR) $(BUILD_DIR)/$(TARGET_TEMP_SENSOR) $(BUILD_DIR)/$(TARGET_LEDS) $(BUILD_DIR)/$(TARGET_WATCHDOG) $(BUILD_DIR)/$(TARGET_RADIO) $(BUILD_DIR)/$(TARGET_TTC) $(BUILD_DIR)/$(TARGET_EPS) $(BUILD_DIR)/*.o
