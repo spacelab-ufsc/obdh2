@@ -6,6 +6,7 @@ TARGET_WATCHDOG=watchdog_unit_test
 TARGET_RADIO=radio_unit_test
 TARGET_TTC=ttc_unit_test
 TARGET_EPS=eps_unit_test
+TARGET_ANTENNA=antenna_unit_test
 
 ifndef BUILD_DIR
 	BUILD_DIR=$(CURDIR)
@@ -21,8 +22,10 @@ TTC_TEST_FLAGS=-fpic -std=c99 -Wall -pedantic -Wshadow -Wpointer-arith -Wcast-qu
 
 EPS_TEST_FLAGS=-fpic -std=c99 -Wall -pedantic -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -I$(INC) -I../../config/ -Wl,--wrap=sys_log_print_event_from_module,--wrap=sys_log_new_line,--wrap=sys_log_print_msg,--wrap=sys_log_print_uint,--wrap=sys_log_print_int,--wrap=sys_log_print_hex,--wrap=sys_log_print_float,--wrap=sl_eps2_init,--wrap=sl_eps2_check_device,--wrap=sl_eps2_write_reg,--wrap=sl_eps2_read_reg,--wrap=sl_eps2_read_data,--wrap=sl_eps2_read_time_counter,--wrap=sl_eps2_read_temp,--wrap=sl_eps2_read_current,--wrap=sl_eps2_read_reset_cause,--wrap=sl_eps2_read_reset_counter,--wrap=sl_eps2_read_solar_panel_voltage,--wrap=sl_eps2_read_solar_panel_current,--wrap=sl_eps2_read_mppt_duty_cycle,--wrap=sl_eps2_read_main_bus_voltage,--wrap=sl_eps2_read_rtd_temperature,--wrap=sl_eps2_read_battery_voltage,--wrap=sl_eps2_read_battery_current,--wrap=sl_eps2_read_battery_charge,--wrap=sl_eps2_read_battery_monitor_temp,--wrap=sl_eps2_read_battery_monitor_status,--wrap=sl_eps2_read_battery_monitor_protection,--wrap=sl_eps2_read_battery_monitor_cycle_counter,--wrap=sl_eps2_read_battery_monitor_raac,--wrap=sl_eps2_read_battery_monitor_rsac,--wrap=sl_eps2_read_battery_monitor_rarc,--wrap=sl_eps2_read_battery_monitor_rsrc,--wrap=sl_eps2_read_heater_duty_cycle,--wrap=sl_eps2_read_hardware_version,--wrap=sl_eps2_read_firmware_version,--wrap=sl_eps2_set_mppt_mode,--wrap=sl_eps2_get_mppt_mode,--wrap=sl_eps2_set_heater_mode,--wrap=sl_eps2_get_heater_mode,--wrap=sl_eps2_delay_ms
 
+ANTENNA_TEST_FLAGS=-fpic -std=c99 -Wall -pedantic -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -I$(INC) -I../../config/ -Wl,--wrap=sys_log_print_event_from_module,--wrap=sys_log_new_line,--wrap=sys_log_print_msg,--wrap=sys_log_print_uint,--wrap=sys_log_print_int,--wrap=sys_log_print_hex,--wrap=sys_log_print_float,--wrap=isis_antenna_init,--wrap=isis_antenna_arm,--wrap=isis_antenna_disarm,--wrap=isis_antenna_start_sequential_deploy,--wrap=isis_antenna_start_independent_deploy,--wrap=isis_antenna_read_deployment_status_code,--wrap=isis_antenna_read_deployment_status,--wrap=isis_antenna_get_antenna_status,--wrap=isis_antenna_get_antenna_timeout,--wrap=isis_antenna_get_burning,--wrap=isis_antenna_get_arming_status,--wrap=isis_antenna_get_raw_temperature,--wrap=isis_antenna_raw_to_temp_c,--wrap=isis_antenna_get_temperature_c,--wrap=isis_antenna_delay_s,--wrap=isis_antenna_delay_ms
+
 .PHONY: all
-all: current_sensor_test voltage_sensor_test temp_sensor_test leds_test watchdog_test radio_test
+all: current_sensor_test voltage_sensor_test temp_sensor_test leds_test watchdog_test radio_test ttc_test eps_test antenna_test
 
 .PHONY: current_sensor_test
 current_sensor_test: $(BUILD_DIR)/current_sensor.o $(BUILD_DIR)/current_sensor_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/adc_wrap.o
@@ -56,6 +59,10 @@ ttc_test: $(BUILD_DIR)/ttc.o $(BUILD_DIR)/ttc_test.o $(BUILD_DIR)/sys_log_wrap.o
 eps_test: $(BUILD_DIR)/eps.o $(BUILD_DIR)/eps_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/sl_eps2_wrap.o
 	$(CC) $(EPS_TEST_FLAGS) $(BUILD_DIR)/eps.o $(BUILD_DIR)/eps_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/sl_eps2_wrap.o -o $(BUILD_DIR)/$(TARGET_EPS) -lm -lcmocka
 
+.PHONY: antenna_test
+antenna_test: $(BUILD_DIR)/antenna.o $(BUILD_DIR)/antenna_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/isis_antenna_wrap.o
+	$(CC) $(ANTENNA_TEST_FLAGS) $(BUILD_DIR)/antenna.o $(BUILD_DIR)/antenna_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/isis_antenna_wrap.o -o $(BUILD_DIR)/$(TARGET_ANTENNA) -lm -lcmocka
+
 $(BUILD_DIR)/current_sensor.o: ../../devices/current_sensor/current_sensor.c
 	$(CC) $(FLAGS) -c $< -o $@
 
@@ -79,6 +86,9 @@ $(BUILD_DIR)/ttc.o: ../../devices/ttc/ttc.c
 
 $(BUILD_DIR)/eps.o: ../../devices/eps/eps.c
 	$(CC) $(EPS_TEST_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/antenna.o: ../../devices/antenna/antenna.c
+	$(CC) $(ANTENNA_TEST_FLAGS) -c $< -o $@
 
 $(BUILD_DIR)/current_sensor_test.o: current_sensor_test.c
 	$(CC) $(FLAGS) -c $< -o $@
@@ -104,6 +114,9 @@ $(BUILD_DIR)/ttc_test.o: ttc_test.c
 $(BUILD_DIR)/eps_test.o: eps_test.c
 	$(CC) $(EPS_TEST_FLAGS) -c $< -o $@
 
+$(BUILD_DIR)/antenna_test.o: antenna_test.c
+	$(CC) $(ANTENNA_TEST_FLAGS) -c $< -o $@
+
 $(BUILD_DIR)/sys_log_wrap.o: ../mockups/sys_log_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
@@ -128,9 +141,12 @@ $(BUILD_DIR)/sl_ttc2_wrap.o: ../mockups/sl_ttc2_wrap.c
 $(BUILD_DIR)/sl_eps2_wrap.o: ../mockups/sl_eps2_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
+$(BUILD_DIR)/isis_antenna_wrap.o: ../mockups/isis_antenna_wrap.c
+	$(CC) $(FLAGS) -c $< -o $@
+
 $(BUILD_DIR)/task.o: ../freertos_sim/task.c
 	$(CC) $(RADIO_TEST_FLAGS) -c $< -o $@
 
 .PHONY: clean
 clean:
-	rm $(BUILD_DIR)/$(TARGET_CURRENT_SENSOR) $(BUILD_DIR)/$(TARGET_VOLTAGE_SENSOR) $(BUILD_DIR)/$(TARGET_TEMP_SENSOR) $(BUILD_DIR)/$(TARGET_LEDS) $(BUILD_DIR)/$(TARGET_WATCHDOG) $(BUILD_DIR)/$(TARGET_RADIO) $(BUILD_DIR)/$(TARGET_TTC) $(BUILD_DIR)/$(TARGET_EPS) $(BUILD_DIR)/*.o
+	rm $(BUILD_DIR)/$(TARGET_CURRENT_SENSOR) $(BUILD_DIR)/$(TARGET_VOLTAGE_SENSOR) $(BUILD_DIR)/$(TARGET_TEMP_SENSOR) $(BUILD_DIR)/$(TARGET_LEDS) $(BUILD_DIR)/$(TARGET_WATCHDOG) $(BUILD_DIR)/$(TARGET_RADIO) $(BUILD_DIR)/$(TARGET_TTC) $(BUILD_DIR)/$(TARGET_EPS) $(BUILD_DIR)/$(TARGET_ANTENNA) $(BUILD_DIR)/*.o
