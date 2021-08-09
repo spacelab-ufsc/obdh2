@@ -46,57 +46,65 @@
 
 static void antenna_init_test(void **state)
 {
-    expect_function_call(__wrap_isis_antenna_init);
+    int i = 0;
+    for(i=-256; i<256; i++)     /* Reduce the test range to avoid a long execution time */
+    {
+        if (i == 0)
+        {
+            int j = 0;
+            for(j=-256; j<256; j++)
+            {
+                expect_function_call(__wrap_isis_antenna_init);
+                will_return(__wrap_isis_antenna_init, i);
 
-    /* Status code */
-    will_return(__wrap_isis_antenna_read_deployment_status, 0);
+                will_return(__wrap_isis_antenna_read_deployment_status, 0);                                 /* Status code */
+                will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_STATUS_NOT_DEPLOYED);  /* Antenna 1 status */
+                will_return(__wrap_isis_antenna_read_deployment_status, 0);                                 /* Antenna 1 timeout */
+                will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_BURN_INACTIVE);        /* Antenna 1 burning */
+                will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_STATUS_NOT_DEPLOYED);  /* Antenna 2 status */
+                will_return(__wrap_isis_antenna_read_deployment_status, 0);                                 /* Antenna 2 timeout */
+                will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_BURN_INACTIVE);        /* Antenna 2 burning */
+                will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_STATUS_NOT_DEPLOYED);  /* Antenna 3 status */
+                will_return(__wrap_isis_antenna_read_deployment_status, 0);                                 /* Antenna 3 timeout */
+                will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_BURN_INACTIVE);        /* Antenna 3 burning */
+                will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_STATUS_NOT_DEPLOYED);  /* Antenna 4 status */
+                will_return(__wrap_isis_antenna_read_deployment_status, 0);                                 /* Antenna 4 timeout */
+                will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_BURN_INACTIVE);        /* Antenna 4 burning */
+                will_return(__wrap_isis_antenna_read_deployment_status, 0);                                 /* Ignoring switches */
+                will_return(__wrap_isis_antenna_read_deployment_status, 0);                                 /* Independent burn */
+                will_return(__wrap_isis_antenna_read_deployment_status, 0);                                 /* Armed */
 
-    /* Antenna 1 status */
-    will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_STATUS_NOT_DEPLOYED);
+                will_return(__wrap_isis_antenna_read_deployment_status, j);
 
-    /* Antenna 1 timeout */
-    will_return(__wrap_isis_antenna_read_deployment_status, 0);
+                int result = antenna_init();
 
-    /* Antenna 1 burning */
-    will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_BURN_INACTIVE);
+                if (j == 0)
+                {
+                    assert_return_code(result, 0);
+                }
+                else
+                {
+                    assert_int_equal(result, -1);
+                }
+            }
+        }
+        else
+        {
+            expect_function_call(__wrap_isis_antenna_init);
+            will_return(__wrap_isis_antenna_init, i);
 
-    /* Antenna 2 status */
-    will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_STATUS_NOT_DEPLOYED);
+            int result = antenna_init();
 
-    /* Antenna 2 timeout */
-    will_return(__wrap_isis_antenna_read_deployment_status, 0);
-
-    /* Antenna 2 burning */
-    will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_BURN_INACTIVE);
-
-    /* Antenna 3 status */
-    will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_STATUS_NOT_DEPLOYED);
-
-    /* Antenna 3 timeout */
-    will_return(__wrap_isis_antenna_read_deployment_status, 0);
-
-    /* Antenna 3 burning */
-    will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_BURN_INACTIVE);
-
-    /* Antenna 4 status */
-    will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_STATUS_NOT_DEPLOYED);
-
-    /* Antenna 4 timeout */
-    will_return(__wrap_isis_antenna_read_deployment_status, 0);
-
-    /* Antenna 4 burning */
-    will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_BURN_INACTIVE);
-
-    /* Ignoring switches */
-    will_return(__wrap_isis_antenna_read_deployment_status, 0);
-
-    /* Independent burn */
-    will_return(__wrap_isis_antenna_read_deployment_status, 0);
-
-    /* Armed */
-    will_return(__wrap_isis_antenna_read_deployment_status, 0);
-
-    antenna_init();
+            if (i == 0)
+            {
+                assert_return_code(result, 0);
+            }
+            else
+            {
+                assert_int_equal(result, -1);
+            }
+        }
+    }
 }
 
 static void antenna_get_status_test(void **state)
