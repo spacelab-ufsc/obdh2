@@ -42,9 +42,61 @@
 #include <cmocka.h>
 
 #include <devices/antenna/antenna.h>
+#include <drivers/isis_antenna/isis_antenna.h>
 
 static void antenna_init_test(void **state)
 {
+    expect_function_call(__wrap_isis_antenna_init);
+
+    /* Status code */
+    will_return(__wrap_isis_antenna_read_deployment_status, 0);
+
+    /* Antenna 1 status */
+    will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_STATUS_NOT_DEPLOYED);
+
+    /* Antenna 1 timeout */
+    will_return(__wrap_isis_antenna_read_deployment_status, 0);
+
+    /* Antenna 1 burning */
+    will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_BURN_INACTIVE);
+
+    /* Antenna 2 status */
+    will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_STATUS_NOT_DEPLOYED);
+
+    /* Antenna 2 timeout */
+    will_return(__wrap_isis_antenna_read_deployment_status, 0);
+
+    /* Antenna 2 burning */
+    will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_BURN_INACTIVE);
+
+    /* Antenna 3 status */
+    will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_STATUS_NOT_DEPLOYED);
+
+    /* Antenna 3 timeout */
+    will_return(__wrap_isis_antenna_read_deployment_status, 0);
+
+    /* Antenna 3 burning */
+    will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_BURN_INACTIVE);
+
+    /* Antenna 4 status */
+    will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_STATUS_NOT_DEPLOYED);
+
+    /* Antenna 4 timeout */
+    will_return(__wrap_isis_antenna_read_deployment_status, 0);
+
+    /* Antenna 4 burning */
+    will_return(__wrap_isis_antenna_read_deployment_status, ISIS_ANTENNA_BURN_INACTIVE);
+
+    /* Ignoring switches */
+    will_return(__wrap_isis_antenna_read_deployment_status, 0);
+
+    /* Independent burn */
+    will_return(__wrap_isis_antenna_read_deployment_status, 0);
+
+    /* Armed */
+    will_return(__wrap_isis_antenna_read_deployment_status, 0);
+
+    antenna_init();
 }
 
 static void antenna_get_status_test(void **state)
