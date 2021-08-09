@@ -45,81 +45,188 @@
 
 int __wrap_isis_antenna_init(void)
 {
+    function_called();
+
     return 0;
 }
 
 int __wrap_isis_antenna_arm(void)
 {
+    function_called();
+
     return 0;
 }
 
 int __wrap_isis_antenna_disarm(void)
 {
+    function_called();
+
     return 0;
 }
 
 int __wrap_isis_antenna_start_sequential_deploy(uint8_t sec)
 {
+    function_called();
+
     return 0;
 }
 
 int __wrap_isis_antenna_start_independent_deploy(uint8_t ant, uint8_t sec, uint8_t ovr)
 {
+    check_expected(ant);
+    check_expected(ovr);
+
     return 0;
 }
 
 int __wrap_isis_antenna_read_deployment_status_code(uint16_t *status)
 {
+    uint16_t status_val = mock_type(uint16_t);
+
+    if (status != NULL)
+    {
+        *status = status_val;
+    }
+
     return 0;
 }
 
 int __wrap_isis_antenna_read_deployment_status(isis_antenna_status_t *status)
 {
+    uint16_t code_val           = mock_type(uint16_t);
+    uint8_t ant_1_status_val    = mock_type(uint8_t);
+    uint8_t ant_1_timeout_val   = mock_type(uint8_t);
+    uint8_t ant_1_burning_val   = mock_type(uint8_t);
+    uint8_t ant_2_status_val    = mock_type(uint8_t);
+    uint8_t ant_2_timeout_val   = mock_type(uint8_t);
+    uint8_t ant_2_burning_val   = mock_type(uint8_t);
+    uint8_t ant_3_status_val    = mock_type(uint8_t);
+    uint8_t ant_3_timeout_val   = mock_type(uint8_t);
+    uint8_t ant_3_burning_val   = mock_type(uint8_t);
+    uint8_t ant_4_status_val    = mock_type(uint8_t);
+    uint8_t ant_4_timeout_val   = mock_type(uint8_t);
+    uint8_t ant_4_burning_bal   = mock_type(uint8_t);
+    uint8_t ignoring_switches   = mock_type(uint8_t);
+    uint8_t independent_burn    = mock_type(uint8_t);
+    uint8_t armed               = mock_type(uint8_t);
+
+    if (status != NULL)
+    {
+        status->code                = code_val;
+        status->antenna_1.status    = ant_1_status_val;
+        status->antenna_1.timeout   = ant_1_timeout_val;
+        status->antenna_1.burning   = ant_1_burning_val;
+        status->antenna_2.status    = ant_2_status_val;
+        status->antenna_2.timeout   = ant_2_timeout_val;
+        status->antenna_2.burning   = ant_2_burning_val;
+        status->antenna_3.status    = ant_3_status_val;
+        status->antenna_3.timeout   = ant_3_timeout_val;
+        status->antenna_3.burning   = ant_3_burning_val;
+        status->antenna_4.status    = ant_4_status_val;
+        status->antenna_4.timeout   = ant_4_timeout_val;
+        status->antenna_4.burning   = ant_4_burning_bal;
+        status->ignoring_switches   = ignoring_switches;
+        status->independent_burn    = independent_burn;
+        status->armed               = armed;
+    }
+
     return 0;
 }
 
 int __wrap_isis_antenna_get_antenna_status(uint8_t ant, uint8_t *ant_status)
 {
+    check_expected(ant);
+
+    uint8_t status_val = mock_type(uint8_t);
+
+    if (ant_status != NULL)
+    {
+        *ant_status = status_val;
+    }
+
     return 0;
 }
 
 int __wrap_isis_antenna_get_antenna_timeout(uint8_t ant, uint8_t *ant_timeout)
 {
+    check_expected(ant);
+
+    uint8_t ant_timeout_val = mock_type(uint8_t);
+
+    if (ant_timeout != NULL)
+    {
+        *ant_timeout = ant_timeout_val;
+    }
+
     return 0;
 }
 
 int __wrap_isis_antenna_get_burning(uint8_t ant, uint8_t *ant_burn)
 {
+    check_expected(ant);
+
+    uint8_t ant_burn_val = mock_type(uint8_t);
+
+    if (ant_burn != NULL)
+    {
+        *ant_burn = ant_burn_val;
+    }
+
     return 0;
 }
 
 int __wrap_isis_antenna_get_arming_status(bool *armed)
 {
+    bool armed_val = mock_type(bool);
+
+    if (armed != NULL)
+    {
+        *armed = armed_val;
+    }
+
     return 0;
 }
 
 int __wrap_isis_antenna_get_raw_temperature(uint16_t *temp)
 {
+    uint16_t temp_val = mock_type(uint16_t);
+
+    if (temp != NULL)
+    {
+        *temp = temp_val;
+    }
+
     return 0;
 }
 
 int16_t __wrap_isis_antenna_raw_to_temp_c(uint16_t raw)
 {
-    return 0;
+    return mock_type(int16_t);
 }
 
 int __wrap_isis_antenna_get_temperature_c(int16_t *temp)
 {
+    int16_t temp_val = mock_type(int16_t);
+
+    if (temp != NULL)
+    {
+        *temp = temp_val;
+    }
+
     return 0;
 }
 
-void __wriap_isis_antenna_delay_s(uint8_t s)
+void __wrap_isis_antenna_delay_s(uint8_t s)
 {
+    function_called();
+
     return;
 }
 
-void __wriap_isis_antenna_delay_ms(uint16_t ms)
+void __wrap_isis_antenna_delay_ms(uint16_t ms)
 {
+    function_called();
+
     return;
 }
 

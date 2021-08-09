@@ -69,9 +69,9 @@ int16_t __wrap_isis_antenna_raw_to_temp_c(uint16_t raw);
 
 int __wrap_isis_antenna_get_temperature_c(int16_t *temp);
 
-void __wriap_isis_antenna_delay_s(uint8_t s);
+void __wrap_isis_antenna_delay_s(uint8_t s);
 
-void __wriap_isis_antenna_delay_ms(uint16_t ms);
+void __wrap_isis_antenna_delay_ms(uint16_t ms);
 
 #endif /* ISIS_ANTENNA_WRAP_H_ */
 
