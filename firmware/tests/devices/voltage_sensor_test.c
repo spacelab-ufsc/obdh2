@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.3
+ * \version 0.7.2
  * 
  * \date 2021/02/13
  * 
@@ -56,11 +56,11 @@ static void voltage_sensor_init_test(void **state)
     expect_value(__wrap_adc_init, port, VOLTAGE_SENSOR_ADC_PORT);
     expect_value(__wrap_adc_read, port, VOLTAGE_SENSOR_ADC_PORT);
 
+    will_return(__wrap_adc_init, 0);
     will_return(__wrap_adc_read, 1024);
+    will_return(__wrap_adc_read, 0);
 
-    int result = voltage_sensor_init();
-
-    assert_return_code(result, 0);
+    assert_return_code(voltage_sensor_init(), 0);
 }
 
 static void voltage_sensor_read_raw_test(void **state)
@@ -72,6 +72,7 @@ static void voltage_sensor_read_raw_test(void **state)
         expect_value(__wrap_adc_read, port, VOLTAGE_SENSOR_ADC_PORT);
 
         will_return(__wrap_adc_read, i);
+        will_return(__wrap_adc_read, 0);
 
         uint16_t raw_voltage = UINT16_MAX;
 
@@ -103,6 +104,7 @@ static void voltage_sensor_read_mv_test(void **state)
         expect_value(__wrap_adc_read, port, VOLTAGE_SENSOR_ADC_PORT);
 
         will_return(__wrap_adc_read, i);
+        will_return(__wrap_adc_read, 0);
 
         uint16_t voltage_mv = UINT16_MAX;
 

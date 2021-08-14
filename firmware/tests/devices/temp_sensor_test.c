@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.4
+ * \version 0.7.2
  * 
  * \date 2021/02/13
  * 
@@ -60,13 +60,13 @@ static void temp_sensor_init_test(void **state)
     expect_value(__wrap_adc_init, port, TEMP_SENSOR_ADC_PORT);
     expect_value(__wrap_adc_read, port, TEMP_SENSOR_ADC_PORT);
 
+    will_return(__wrap_adc_init, 0);
     will_return(__wrap_adc_read, 1024);
+    will_return(__wrap_adc_read, 0);
     will_return(__wrap_adc_temp_get_mref, TEMP_SENSOR_ADC_MREF_VAL);
     will_return(__wrap_adc_temp_get_nref, TEMP_SENSOR_ADC_NREF_VAL);
 
-    int result = temp_sensor_init();
-
-    assert_return_code(result, 0);
+    assert_return_code(temp_sensor_init(), 0);
 }
 
 static void temp_sensor_read_raw_test(void **state)
@@ -78,6 +78,7 @@ static void temp_sensor_read_raw_test(void **state)
         expect_value(__wrap_adc_read, port, TEMP_SENSOR_ADC_PORT);
 
         will_return(__wrap_adc_read, i);
+        will_return(__wrap_adc_read, 0);
 
         uint16_t raw_temp = UINT16_MAX;
 
@@ -112,9 +113,7 @@ static void temp_sensor_raw_to_k_test(void **state)
         will_return(__wrap_adc_temp_get_mref, TEMP_SENSOR_ADC_MREF_VAL);
         will_return(__wrap_adc_temp_get_nref, TEMP_SENSOR_ADC_NREF_VAL);
 
-        uint16_t temp_k = temp_sensor_raw_to_k(i);
-
-        assert_in_range(temp_k, TEMP_SENSOR_MIN_VAL_K, TEMP_SENSOR_MAX_VAL_K);
+        assert_in_range(temp_sensor_raw_to_k(i), TEMP_SENSOR_MIN_VAL_K, TEMP_SENSOR_MAX_VAL_K);
     }
 }
 
@@ -127,6 +126,7 @@ static void temp_sensor_read_c_test(void **state)
         expect_value(__wrap_adc_read, port, TEMP_SENSOR_ADC_PORT);
 
         will_return(__wrap_adc_read, i);
+        will_return(__wrap_adc_read, 0);
         will_return(__wrap_adc_temp_get_mref, TEMP_SENSOR_ADC_MREF_VAL);
         will_return(__wrap_adc_temp_get_nref, TEMP_SENSOR_ADC_NREF_VAL);
 
@@ -148,6 +148,7 @@ static void temp_sensor_read_k_test(void **state)
         expect_value(__wrap_adc_read, port, TEMP_SENSOR_ADC_PORT);
 
         will_return(__wrap_adc_read, i);
+        will_return(__wrap_adc_read, 0);
         will_return(__wrap_adc_temp_get_mref, TEMP_SENSOR_ADC_MREF_VAL);
         will_return(__wrap_adc_temp_get_nref, TEMP_SENSOR_ADC_NREF_VAL);
 

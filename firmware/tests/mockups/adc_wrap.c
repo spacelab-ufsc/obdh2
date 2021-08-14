@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.4
+ * \version 0.7.2
  * 
  * \date 2021/02/13
  * 
@@ -46,37 +46,31 @@ int __wrap_adc_init(adc_port_t port, adc_config_t config)
 {
     check_expected(port);
 
-    return 0;
+    return mock_type(int);
 }
 
 int __wrap_adc_read(adc_port_t port, uint16_t *val)
 {
-    uint16_t adc_val;
-
     check_expected(port);
 
-    adc_val = mock_type(uint16_t);
+    uint16_t adc_val = mock_type(uint16_t);
 
     if (val != NULL)
     {
         *val = adc_val;
     }
 
-    return 0;
+    return mock_type(int);
 }
 
 float __wrap_adc_temp_get_mref(void)
 {
-    float mref = mock_type(float);
-
-    return mref;
+    return mock_type(float);
 }
 
 float __wrap_adc_temp_get_nref(void)
 {
-    float nref = mock_type(float);
-
-    return nref;
+    return mock_type(float);
 }
 
 /** \} End of adc_wrap group */
