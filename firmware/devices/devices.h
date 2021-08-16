@@ -1,7 +1,7 @@
 /*
  * devices.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.0
+ * \version 0.7.3
  * 
- * \date 26/10/2019
+ * \date 2019/10/26
  * 
  * \defgroup devices Devices
  * \{
@@ -46,6 +46,7 @@
 #include "current_sensor/current_sensor.h"
 #include "voltage_sensor/voltage_sensor.h"
 #include "media/media.h"
+#include "payload/payload.h"
 
 #endif /* DEVICES_H_ */
 

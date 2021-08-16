@@ -1,5 +1,5 @@
 /*
- * version.h
+ * payload.c
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
@@ -21,29 +21,45 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief Payload device implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.7.3
  * 
- * \date 2019/10/25
+ * \date 2021/08/15
  * 
- * \defgroup version Version control
+ * \addtogroup payload
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include <system/sys_log/sys_log.h>
 
-#define FIRMWARE_VERSION            "0.7.3"
+#include "payload.h"
 
-#define FIRMWARE_STATUS             "Development"
+int payload_init(payload_t pl)
+{
+    return -1;
+}
 
-#define FIRMWARE_AUTHOR             "Gabriel Mariano Marcelino"
+int payload_enable(payload_t pl)
+{
+    return -1;
+}
 
-#define FIRMWARE_AUTHOR_EMAIL       "gabriel.mm8@gmail.com"
+int payload_disable(payload_t pl)
+{
+    return -1;
+}
 
-#endif /* VERSION_H_ */
+int payload_write_cmd(payload_t pl, payload_cmd_t cmd)
+{
+    return -1;
+}
 
-/** \} End of version group */
+int payload_get_data(payload_t pl, uint8_t *data, uint32_t *len)
+{
+    return -1;
+}
+
+/** \} End of payload group */

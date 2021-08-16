@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.16
+ * \version 0.7.3
  * 
  * \date 2019/11/01
  * 
@@ -39,7 +39,7 @@
 
 #include "antenna.h"
 
-int antenna_init()
+int antenna_init(void)
 {
 #if ISIS_ANTENNA_ENABLED == 1
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Initializing...");
@@ -88,12 +88,12 @@ int antenna_init()
 #endif /* ANTENNA_DRIVER */
 }
 
-int antenna_get_status()
+int antenna_get_status(void)
 {
     return -1;
 }
 
-int antenna_deploy()
+int antenna_deploy(void)
 {
     return -1;
 }
