@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.3
+ * \version 0.7.4
  * 
  * \date 2021/08/15
  * 
@@ -46,11 +46,20 @@
  */
 typedef enum
 {
-    PAYLOAD_EDC=0,          /**< Payload EDC. */
-    PAYLOAD_X,              /**< Payload-X. */
-    PAYLOAD_PHJ,            /**< Payload PHJ. */
-    PAYLOAD_HARSH           /**< Payload Harsh. */
+    PAYLOAD_EDC=0,              /**< Payload EDC. */
+    PAYLOAD_X,                  /**< Payload-X. */
+    PAYLOAD_PHJ,                /**< Payload PHJ. */
+    PAYLOAD_HARSH               /**< Payload Harsh. */
 } payload_t;
+
+/**
+ * \brief Payload data ID.
+ */
+typedef enum
+{
+    PAYLOAD_EDC_RAW_STATE=0,    /**< EDC raw state. */
+    PAYLOAD_EDC_RAW_HK          /**< EDC raw housekeeping. */
+} payload_data_id_t;
 
 /**
  * \brief Payload command.
@@ -135,13 +144,20 @@ int payload_write_cmd(payload_t pl, payload_cmd_t cmd);
  *      .
  * \endparblock
  *
+ * param[in] id is the data ID. It can be:
+ * \parblock
+ *      -\b PAYLOAD_EDC_RAW_STATE
+ *      -\b PAYLOAD_EDC_RAW_HK
+ *      .
+ * \endparblock
+ *
  * \param[in,out] data is a pointer to the read data from the payload device.
  *
  * \param[in,out] len is the number of bytes returned by the payload device.
  *
  * \return The status/error code.
  */
-int payload_get_data(payload_t pl, uint8_t *data, uint32_t *len);
+int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t *len);
 
 #endif /* PAYLOAD_H_ */
 
