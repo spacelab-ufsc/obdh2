@@ -20,6 +20,8 @@
 * Current Sensor
 * EPS
 * LEDs
+* Media
+* Payload
 * Radio
 * Temperature Sensor
 * Voltage Sensor
