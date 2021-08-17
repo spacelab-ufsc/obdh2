@@ -45,6 +45,9 @@
 
 int __wrap_edc_init(edc_config_t config)
 {
+    check_expected(config.port);
+    check_expected(config.bitrate);
+
     return mock_type(int);
 }
 
@@ -100,7 +103,7 @@ int16_t __wrap_edc_get_state_pkg(uint8_t *status)
 {
     if (status != NULL)
     {
-        *status = mock_ptr_type(uint8_t*);
+        status = mock_ptr_type(uint8_t*);
     }
 
     return mock_type(int16_t);
@@ -110,7 +113,7 @@ int16_t __wrap_edc_get_ptt_pkg(uint8_t *pkg)
 {
     if (pkg != NULL)
     {
-        *pkg = mock_ptr_type(uint8_t*);
+        pkg = mock_ptr_type(uint8_t*);
     }
 
     return mock_type(int16_t);
@@ -120,7 +123,7 @@ int16_t __wrap_edc_get_hk_pkg(uint8_t *hk)
 {
     if (hk != NULL)
     {
-        *hk = mock_ptr_type(uint8_t*);
+        hk = mock_ptr_type(uint8_t*);
     }
 
     return mock_type(int16_t);
@@ -130,7 +133,7 @@ int16_t __wrap_edc_get_adc_seq(uint8_t *seq)
 {
     if (seq != NULL)
     {
-        *seq = mock_ptr_type(uint8_t*);
+        seq = mock_ptr_type(uint8_t*);
     }
 
     return mock_type(int16_t);

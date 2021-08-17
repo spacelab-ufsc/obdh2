@@ -8,6 +8,7 @@ TARGET_TTC=ttc_unit_test
 TARGET_EPS=eps_unit_test
 TARGET_ANTENNA=antenna_unit_test
 TARGET_MEDIA=media_unit_test
+TARGET_PAYLOAD=payload_unit_test
 
 ifndef BUILD_DIR
 	BUILD_DIR=$(CURDIR)
@@ -37,8 +38,10 @@ ANTENNA_TEST_FLAGS=$(FLAGS),--wrap=isis_antenna_init,--wrap=isis_antenna_arm,--w
 
 MEDIA_TEST_FLAGS=$(FLAGS),--wrap=flash_init,--wrap=flash_write,--wrap=flash_write_single,--wrap=flash_read_single,--wrap=flash_write_long,--wrap=flash_read_long,--wrap=flash_erase,--wrap=mt25q_init,--wrap=mt25q_reset,--wrap=mt25q_read_device_id,--wrap=mt25q_read_flash_description,--wrap=mt25q_clear_flag_status_register,--wrap=mt25q_read_status,--wrap=mt25q_enter_deep_power_down,--wrap=mt25q_release_from_deep_power_down,--wrap=mt25q_write_enable,--wrap=mt25q_write_disable,--wrap=mt25q_is_busy,--wrap=mt25q_die_erase,--wrap=mt25q_sector_erase,--wrap=mt25q_sub_sector_erase,--wrap=mt25q_write,--wrap=mt25q_read,--wrap=mt25q_get_max_address,--wrap=mt25q_enter_4_byte_address_mode,--wrap=mt25q_read_flag_status_register,--wrap=mt25q_get_flash_description,--wrap=mt25q_spi_init,--wrap=mt25q_spi_write,--wrap=mt25q_spi_read,--wrap=mt25q_spi_transfer,--wrap=mt25q_spi_select,--wrap=mt25q_spi_unselect,--wrap=mt25q_spi_write_only,--wrap=mt25q_spi_read_only,--wrap=mt25q_spi_transfer_only,--wrap=mt25q_gpio_init,--wrap=mt25q_gpio_set_hold,--wrap=mt25q_gpio_set_reset,--wrap=mt25q_delay_ms,--wrap=cy15x102qn_init,--wrap=cy15x102qn_set_write_enable,--wrap=cy15x102qn_reset_write_enable,--wrap=cy15x102qn_read_status_reg,--wrap=cy15x102qn_write_status_reg,--wrap=cy15x102qn_write,--wrap=cy15x102qn_read,--wrap=cy15x102qn_fast_read,--wrap=cy15x102qn_special_sector_write,--wrap=cy15x102qn_special_sector_read,--wrap=cy15x102qn_read_device_id,--wrap=cy15x102qn_read_unique_id,--wrap=cy15x102qn_write_serial_number,--wrap=cy15x102qn_read_serial_number,--wrap=cy15x102qn_deep_power_down_mode,--wrap=cy15x102qn_hibernate_mode,--wrap=cy15x102qn_spi_init,--wrap=cy15x102qn_spi_write,--wrap=cy15x102qn_spi_read,--wrap=cy15x102qn_spi_transfer,--wrap=cy15x102qn_spi_select,--wrap=cy15x102qn_spi_unselect,--wrap=cy15x102qn_spi_write_only,--wrap=cy15x102qn_spi_read_only,--wrap=cy15x102qn_spi_transfer_only,--wrap=cy15x102qn_gpio_init,--wrap=cy15x102qn_gpio_set_write_protect,--wrap=cy15x102qn_gpio_clear_write_protect
 
+PAYLOAD_TEST_FLAGS=$(FLAGS),--wrap=edc_init,--wrap=edc_write_cmd,--wrap=edc_read,--wrap=edc_check_device,--wrap=edc_set_rtc_time,--wrap=edc_pop_ptt_pkg,--wrap=edc_pause_ptt_task,--wrap=edc_resume_ptt_task,--wrap=edc_start_adc_task,--wrap=edc_get_state_pkg,--wrap=edc_get_ptt_pkg,--wrap=edc_get_hk_pkg,--wrap=edc_get_adc_seq,--wrap=edc_echo,--wrap=edc_calc_checksum,--wrap=edc_get_state,--wrap=edc_get_hk,--wrap=edc_delay_ms
+
 .PHONY: all
-all: current_sensor_test voltage_sensor_test temp_sensor_test leds_test watchdog_test radio_test ttc_test eps_test antenna_test media_test
+all: current_sensor_test voltage_sensor_test temp_sensor_test leds_test watchdog_test radio_test ttc_test eps_test antenna_test media_test payload_test
 
 .PHONY: current_sensor_test
 current_sensor_test: $(BUILD_DIR)/current_sensor.o $(BUILD_DIR)/current_sensor_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/adc_wrap.o
@@ -80,6 +83,10 @@ antenna_test: $(BUILD_DIR)/antenna.o $(BUILD_DIR)/antenna_test.o $(BUILD_DIR)/sy
 media_test: $(BUILD_DIR)/media.o $(BUILD_DIR)/media_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/flash_wrap.o $(BUILD_DIR)/mt25q_wrap.o $(BUILD_DIR)/cy15x102qn_wrap.o
 	$(CC) $(MEDIA_TEST_FLAGS) $(BUILD_DIR)/media.o $(BUILD_DIR)/media_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/flash_wrap.o $(BUILD_DIR)/mt25q_wrap.o $(BUILD_DIR)/cy15x102qn_wrap.o -o $(BUILD_DIR)/$(TARGET_MEDIA) -lm -lcmocka
 
+.PHONY: payload_test
+payload_test: $(BUILD_DIR)/payload.o $(BUILD_DIR)/payload_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/edc_wrap.o
+	$(CC) $(PAYLOAD_TEST_FLAGS) $(BUILD_DIR)/payload.o $(BUILD_DIR)/payload_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/edc_wrap.o -o $(BUILD_DIR)/$(TARGET_PAYLOAD) -lm -lcmocka
+
 # Devices
 $(BUILD_DIR)/current_sensor.o: ../../devices/current_sensor/current_sensor.c
 	$(CC) $(CURRENT_SENSOR_TEST_FLAGS) -c $< -o $@
@@ -111,6 +118,9 @@ $(BUILD_DIR)/antenna.o: ../../devices/antenna/antenna.c
 $(BUILD_DIR)/media.o: ../../devices/media/media.c
 	$(CC) $(MEDIA_TEST_FLAGS) -c $< -o $@
 
+$(BUILD_DIR)/payload.o: ../../devices/payload/payload.c
+	$(CC) $(PAYLOAD_TEST_FLAGS) -c $< -o $@
+
 # Tests
 $(BUILD_DIR)/current_sensor_test.o: current_sensor_test.c
 	$(CC) $(CURRENT_SENSOR_TEST_FLAGS) -c $< -o $@
@@ -141,6 +151,9 @@ $(BUILD_DIR)/antenna_test.o: antenna_test.c
 
 $(BUILD_DIR)/media_test.o: media_test.c
 	$(CC) $(MEDIA_TEST_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/payload_test.o: payload_test.c
+	$(CC) $(PAYLOAD_TEST_FLAGS) -c $< -o $@
 
 # Mockups
 $(BUILD_DIR)/sys_log_wrap.o: ../mockups/sys_log_wrap.c
@@ -179,9 +192,12 @@ $(BUILD_DIR)/mt25q_wrap.o: ../mockups/mt25q_wrap.c
 $(BUILD_DIR)/cy15x102qn_wrap.o: ../mockups/cy15x102qn_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
+$(BUILD_DIR)/edc_wrap.o: ../mockups/edc_wrap.c
+	$(CC) $(FLAGS) -c $< -o $@
+
 $(BUILD_DIR)/task.o: ../freertos_sim/task.c
 	$(CC) $(FLAGS) -c $< -o $@
 
 .PHONY: clean
 clean:
-	rm $(BUILD_DIR)/$(TARGET_CURRENT_SENSOR) $(BUILD_DIR)/$(TARGET_VOLTAGE_SENSOR) $(BUILD_DIR)/$(TARGET_TEMP_SENSOR) $(BUILD_DIR)/$(TARGET_LEDS) $(BUILD_DIR)/$(TARGET_WATCHDOG) $(BUILD_DIR)/$(TARGET_RADIO) $(BUILD_DIR)/$(TARGET_TTC) $(BUILD_DIR)/$(TARGET_EPS) $(BUILD_DIR)/$(TARGET_ANTENNA) $(BUILD_DIR)/$(TARGET_MEDIA) $(BUILD_DIR)/*.o
+	rm $(BUILD_DIR)/$(TARGET_CURRENT_SENSOR) $(BUILD_DIR)/$(TARGET_VOLTAGE_SENSOR) $(BUILD_DIR)/$(TARGET_TEMP_SENSOR) $(BUILD_DIR)/$(TARGET_LEDS) $(BUILD_DIR)/$(TARGET_WATCHDOG) $(BUILD_DIR)/$(TARGET_RADIO) $(BUILD_DIR)/$(TARGET_TTC) $(BUILD_DIR)/$(TARGET_EPS) $(BUILD_DIR)/$(TARGET_ANTENNA) $(BUILD_DIR)/$(TARGET_MEDIA) $(BUILD_DIR)/$(TARGET_PAYLOAD) $(BUILD_DIR)/*.o

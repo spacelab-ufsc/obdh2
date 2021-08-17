@@ -8,3 +8,5 @@ radio_unit_test
 ttc_unit_test
 eps_unit_test
 antenna_unit_test
+media_unit_test
+payload_unit_test
