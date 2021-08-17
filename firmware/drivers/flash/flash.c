@@ -1,7 +1,7 @@
 /*
  * flash.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.5
+ * \version 0.7.4
  * 
- * \date 17/03/2020
+ * \date 2020/03/17
  * 
  * \addtogroup flash
  * \{
@@ -41,7 +41,7 @@ char *flash_ptr;
 
 long *current_flash_ptr;
 
-int flash_init()
+int flash_init(void)
 {
     return 0;
 }

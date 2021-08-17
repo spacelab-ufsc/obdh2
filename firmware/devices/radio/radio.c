@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.26
+ * \version 0.7.4
  * 
  * \date 2019/10/27
  * 
@@ -44,7 +44,7 @@
 
 #include "radio.h"
 
-int radio_init()
+int radio_init(void)
 {
     sys_log_print_event_from_module(SYS_LOG_INFO, RADIO_MODULE_NAME, "Initializing radio device...");
     sys_log_new_line();
@@ -291,7 +291,7 @@ int radio_recv(uint8_t *data, uint16_t len, uint32_t timeout_ms)
     return 0;
 }
 
-int radio_available()
+int radio_available(void)
 {
     si446x_int_status_t int_status = {0};
 
@@ -311,7 +311,7 @@ int radio_available()
     }
 }
 
-int radio_sleep()
+int radio_sleep(void)
 {
     if (si446x_change_state(SI446X_SLEEP_STATE) != SI446X_SUCCESS)
     {

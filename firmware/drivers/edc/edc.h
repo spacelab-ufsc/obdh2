@@ -1,7 +1,7 @@
 /*
  * edc.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.12
+ * \version 0.7.4
  * 
- * \date 27/10/2019
+ * \date 2019/10/27
  * 
  * \defgroup edc EDC
  * \ingroup drivers
@@ -163,7 +163,7 @@ int edc_read(uint8_t *data, uint16_t len);
  *
  * \return The status/error code.
  */
-int edc_check_device();
+int edc_check_device(void);
 
 /**
  * \brief Sets the RTC time.
@@ -181,7 +181,7 @@ int edc_set_rtc_time(uint32_t time);
  *
  * \return The status/error code.
  */
-int edc_pop_ptt_pkg();
+int edc_pop_ptt_pkg(void);
 
 /**
  * \brief Pauses the PTT decoding task.
@@ -190,14 +190,14 @@ int edc_pop_ptt_pkg();
  *
  * \return The status/error code.
  */
-int edc_pause_ptt_task();
+int edc_pause_ptt_task(void);
 
 /**
  * \brief Resumes the PTT decoding task.
  *
  * \return The status/error code.
  */
-int edc_resume_ptt_task();
+int edc_resume_ptt_task(void);
 
 /**
  * \brief Starts the ADC sampling task.
@@ -206,7 +206,7 @@ int edc_resume_ptt_task();
  *
  * \return The status/error code.
  */
-int edc_start_adc_task();
+int edc_start_adc_task(void);
 
 /**
  * \brief Gets the system state frame.
@@ -324,7 +324,7 @@ int16_t edc_get_adc_seq(uint8_t *seq);
  *
  * \return The status/error code.
  */
-int edc_echo();
+int edc_echo(void);
 
 /**
  * \brief Calculates the checksum of an array of bytes.

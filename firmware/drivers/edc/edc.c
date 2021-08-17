@@ -1,7 +1,7 @@
 /*
  * edc.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.12
+ * \version 0.7.4
  * 
- * \date 27/10/2019
+ * \date 2019/10/27
  * 
  * \addtogroup edc
  * \{
@@ -111,7 +111,7 @@ int edc_read(uint8_t *data, uint16_t len)
     return i2c_read(edc_i2c_port, EDC_SLAVE_ADDRESS, data, len);
 }
 
-int edc_check_device()
+int edc_check_device(void)
 {
     uint8_t status[EDC_FRAME_STATE_LEN];
 
@@ -137,22 +137,22 @@ int edc_set_rtc_time(uint32_t time)
     return edc_write_cmd(rtc_cmd);
 }
 
-int edc_pop_ptt_pkg()
+int edc_pop_ptt_pkg(void)
 {
     return edc_write_cmd((edc_cmd_t){.id=EDC_CMD_PTT_POP});
 }
 
-int edc_pause_ptt_task()
+int edc_pause_ptt_task(void)
 {
     return edc_write_cmd((edc_cmd_t){.id=EDC_CMD_PTT_PAUSE});
 }
 
-int edc_resume_ptt_task()
+int edc_resume_ptt_task(void)
 {
     return edc_write_cmd((edc_cmd_t){.id=EDC_CMD_PTT_RESUME});
 }
 
-int edc_start_adc_task()
+int edc_start_adc_task(void)
 {
     return edc_write_cmd((edc_cmd_t){.id=EDC_CMD_SAMPLER_START});
 }
@@ -305,7 +305,7 @@ int16_t edc_get_adc_seq(uint8_t *seq)
     return EDC_FRAME_ADC_SEQ_LEN;
 }
 
-int edc_echo()
+int edc_echo(void)
 {
     return edc_write_cmd((edc_cmd_t){.id=EDC_CMD_ECHO});
 }
