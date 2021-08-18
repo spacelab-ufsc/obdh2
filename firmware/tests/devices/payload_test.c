@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.4
+ * \version 0.7.6
  * 
  * \date 2021/08/16
  * 
@@ -41,8 +41,10 @@
 #include <float.h>
 #include <cmocka.h>
 
+#include <drivers/gpio/gpio.h>
 #include <devices/payload/payload.h>
 #include <tests/mockups/edc_wrap.h>
+#include <tests/mockups/phj_wrap.h>
 
 static void payload_init_test(void **state)
 {
@@ -68,7 +70,18 @@ static void payload_init_test(void **state)
 
     assert_return_code(payload_init(PAYLOAD_EDC), 0);
 //    assert_return_code(payload_init(PAYLOAD_X), 0);
-//    assert_return_code(payload_init(PAYLOAD_PHJ), 0);
+
+    expect_value(__wrap_phj_init_i2c, config.port, I2C_PORT_0);
+    expect_value(__wrap_phj_init_i2c, config.bitrate, 400000);
+
+    will_return(__wrap_phj_init_i2c, 0);
+
+    expect_value(__wrap_phj_init_gpio, config.pin, GPIO_PIN_0);
+    expect_value(__wrap_phj_init_gpio, config.mode, GPIO_MODE_INPUT);
+
+    will_return(__wrap_phj_init_gpio, 0);
+
+    assert_return_code(payload_init(PAYLOAD_PHJ), 0);
 //    assert_return_code(payload_init(PAYLOAD_HARSH), 0);
 }
 
