@@ -71,13 +71,13 @@ int phj_read(uint8_t *data, uint16_t len)
 }
 
 /* Check the converter's health */
-int phj_check_converter()
+int phj_check_converter(void)
 {
     return gpio_get_state(phj_gpio_pin);
 }
 
 /* Check for comunication errors */
-int phj_check_message()
+int phj_check_message(void)
 {
     uint8_t status[PHJ_FRAME_STATE_LEN];
 

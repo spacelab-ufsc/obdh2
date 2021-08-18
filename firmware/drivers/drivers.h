@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.1
+ * \version 0.7.6
  * 
  * \date 2019/10/26
  * 
@@ -53,6 +53,7 @@
 #include "flash/flash.h"
 #include "sl_ttc2/sl_ttc2.h"
 #include "cy15x102qn/cy15x102qn.h"
+#include "phj/phj.h"
 
 #endif /* DRIVERS_H_ */
 
