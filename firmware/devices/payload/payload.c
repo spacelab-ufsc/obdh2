@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.4
+ * \version 0.7.5
  * 
  * \date 2021/08/15
  * 
@@ -85,11 +85,20 @@ int payload_init(payload_t pl)
             return 0;
         }
         case PAYLOAD_X:
-            break;
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: init() not implemented yet");
+            sys_log_new_line();
+
+            return -1;
         case PAYLOAD_PHJ:
-            break;
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "PHJ: init() not implemented yet!");
+            sys_log_new_line();
+
+            return -1;
         case PAYLOAD_HARSH:
-            break;
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Harsh: init() not implemented yet!");
+            sys_log_new_line();
+
+            return -1;
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Invalid payload to initialize!");
             sys_log_new_line();
@@ -113,11 +122,20 @@ int payload_enable(payload_t pl)
 
             return 0;
         case PAYLOAD_X:
-            break;
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: enable() routine not implemented yet!");
+            sys_log_new_line();
+
+            return -1;
         case PAYLOAD_PHJ:
-            break;
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "PHJ: enable() routine not implemented yet!");
+            sys_log_new_line();
+
+            return -1;
         case PAYLOAD_HARSH:
-            break;
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Harsh: enable() routine not implemented yet!");
+            sys_log_new_line();
+
+            return -1;
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC: Invalid payload to enable!");
             sys_log_new_line();
@@ -141,11 +159,20 @@ int payload_disable(payload_t pl)
 
             return 0;
         case PAYLOAD_X:
-            break;
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: disable() routine not implemented yet!");
+            sys_log_new_line();
+
+            return -1;
         case PAYLOAD_PHJ:
-            break;
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "PHJ: disable() routine not implemented yet!");
+            sys_log_new_line();
+
+            return -1;
         case PAYLOAD_HARSH:
-            break;
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Harsh: disable() routine not implemented yet!");
+            sys_log_new_line();
+
+            return -1;
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Invalid payload to disable!");
             sys_log_new_line();
@@ -159,13 +186,25 @@ int payload_write_cmd(payload_t pl, payload_cmd_t cmd)
     switch(pl)
     {
         case PAYLOAD_EDC:
-            break;
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC: write_cmd() routine not implemented yet!");
+            sys_log_new_line();
+
+            return -1;
         case PAYLOAD_X:
-            break;
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: write_cmd() routine not implemented yet!");
+            sys_log_new_line();
+
+            return -1;
         case PAYLOAD_PHJ:
-            break;
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "PHJ: write_cmd() routine not implemented yet!");
+            sys_log_new_line();
+
+            return -1;
         case PAYLOAD_HARSH:
-            break;
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Harsh: write_cmd() routine not implemented yet!");
+            sys_log_new_line();
+
+            return -1;
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Invalid payload to write command!");
             sys_log_new_line();
@@ -211,14 +250,27 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
                     return 0;
                 }
                 default:
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC: Invalid data ID!");
+                    sys_log_new_line();
+
+                    return -1;
             }
         }
         case PAYLOAD_X:
-            break;
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: get_data() routine not implemented yet!");
+            sys_log_new_line();
+
+            return -1;
         case PAYLOAD_PHJ:
-            break;
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "PHJ: get_data() routine not implemented yet!");
+            sys_log_new_line();
+
+            return -1;
         case PAYLOAD_HARSH:
-            break;
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Harsh: get_data() routine not implemented yet!");
+            sys_log_new_line();
+
+            return -1;
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Invalid payload to get data!");
             sys_log_new_line();

@@ -1,2 +1,0 @@
-# Payload EDC device
-
