@@ -1,0 +1,58 @@
+#
+# static-analysis-workflow.yml
+#
+# Copyright (C) 2021, SpaceLab.
+#
+# This file is part of OBDH 2.0.
+#
+# OBDH 2.0 is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# OBDH 2.0 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+#
+#
+
+
+name: Static Analysis
+
+on:
+  push:
+    branches: [ dev_firmware ]
+  pull_request:
+    branches: [ master, dev, dev_firmware]
+
+  # 'workflow_dispatch' allows manual execution
+  # of this workflow under the repository's 'Actions' tab
+  workflow_dispatch:
+
+jobs:
+
+  cppcheck-analysis:
+    name: cppcheck-analysis
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install CppCheck
+        run: sudo apt install -y cppcheck
+
+      - name: Execute CppCheck on devices files
+        run: cppcheck --error-exitcode=-1 firmware/devices/
+
+      - name: Execute CppCheck on system files
+        run: cppcheck --error-exitcode=-1 firmware/system/
+
+      - name: Execute CppCheck on main files
+        run: cppcheck --error-exitcode=-1 main.c version.h
