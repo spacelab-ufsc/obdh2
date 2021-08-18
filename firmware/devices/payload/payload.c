@@ -24,8 +24,9 @@
  * \brief Payload device implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
  * 
- * \version 0.7.5
+ * \version 0.7.6
  * 
  * \date 2021/08/15
  * 
@@ -35,7 +36,9 @@
 
 #include <system/sys_log/sys_log.h>
 
+#include <drivers/gpio/gpio.h>
 #include <drivers/edc/edc.h>
+#include <drivers/phj/phj.h>
 
 #include "payload.h"
 
@@ -90,10 +93,34 @@ int payload_init(payload_t pl)
 
             return -1;
         case PAYLOAD_PHJ:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "PHJ: init() not implemented yet!");
-            sys_log_new_line();
+        {
+            phj_config_i2c config_i2c;
+            phj_config_gpio config_gpio;
 
-            return -1;
+            config_i2c.port = I2C_PORT_0;
+            config_i2c.bitrate = 400000;
+
+            if (phj_init_i2c(config_i2c) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "PHJ: Error initializing the I2C configuration!");
+                sys_log_new_line();
+
+                return -1;
+            }
+
+            config_gpio.pin = GPIO_PIN_0;
+            config_gpio.mode = GPIO_MODE_INPUT;
+
+            if (phj_init_gpio(config_gpio) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "PHJ: Error initializing the GPIO configuration!");
+                sys_log_new_line();
+
+                return -1;
+            }
+
+            return 0;
+        }
         case PAYLOAD_HARSH:
             sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Harsh: init() not implemented yet!");
             sys_log_new_line();
