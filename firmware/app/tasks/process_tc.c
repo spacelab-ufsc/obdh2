@@ -1,5 +1,5 @@
 /*
- * version.h
+ * process_tc.c
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
@@ -21,29 +21,44 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief Process TC task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.7.7
  * 
- * \date 2019/10/25
+ * \date 2021/07/06
  * 
- * \defgroup version Version control
+ * \addtogroup process_tc
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include <config/config.h>
 
-#define FIRMWARE_VERSION            "0.7.7"
+#include <system/sys_log/sys_log.h>
+#include <devices/ttc/ttc.h>
 
-#define FIRMWARE_STATUS             "Development"
+#include "process_tc.h"
+#include "startup.h"
 
-#define FIRMWARE_AUTHOR             "Gabriel Mariano Marcelino"
+xTaskHandle xTaskProcessTCHandle;
 
-#define FIRMWARE_AUTHOR_EMAIL       "gabriel.mm8@gmail.com"
+void vTaskProcessTC(void *pvParameters)
+{
+    /* Wait startup task to finish */
+    xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_PROCESS_TC_INIT_TIMEOUT_MS));
 
-#endif /* VERSION_H_ */
+    /* Delay before the first cycle */
+    vTaskDelay(pdMS_TO_TICKS(TASK_PROCESS_TC_INITIAL_DELAY_MS));
 
-/** \} End of version group */
+    while(1)
+    {
+        TickType_t last_cycle = xTaskGetTickCount();
+
+        /* TODO */
+
+        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_PROCESS_TC_PERIOD_MS));
+    }
+}
+
+/** \} End of process_tc group */

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.0
+ * \version 0.7.7
  * 
  * \date 2019/10/26
  * 
@@ -51,6 +51,7 @@
 #define CONFIG_TASK_READ_EPS_ENABLED                    1
 #define CONFIG_TASK_READ_TTC_ENABLED                    1
 #define CONFIG_TASK_DATA_LOG_ENABLED                    1
+#define CONFIG_TASK_PROCESS_TC_ENABLED                  1
 
 /* Devices */
 #define CONFIG_DEV_MEDIA_INT_ENABLED                    1
@@ -71,6 +72,18 @@
 
 /* Packets IDs */
 #define CONFIG_PKT_ID_BEACON                            0x10
+#define CONFIG_PKT_ID_UPLINK_PING_REQ                   0x40
+#define CONFIG_PKT_ID_UPLINK_DATA_REQ                   0x41
+#define CONFIG_PKT_ID_UPLINK_BROADCAST_MSG              0x42
+#define CONFIG_PKT_ID_UPLINK_ENTER_HIBERNATION          0x43
+#define CONFIG_PKT_ID_UPLINK_LEAVE_HIBERNATION          0x44
+#define CONFIG_PKT_ID_UPLINK_ACTIVATE_MODULE            0x45
+#define CONFIG_PKT_ID_UPLINK_DEACTIVATE_MODULE          0x46
+#define CONFIG_PKT_ID_UPLINK_ACTIVATE_PAYLOAD           0x47
+#define CONFIG_PKT_ID_UPLINK_DEACTIVATE_PAYLOAD         0x48
+#define CONFIG_PKT_ID_UPLINK_ERASE_MEMORY               0x49
+#define CONFIG_PKT_ID_UPLINK_FORCE_RESET                0x4A
+#define CONFIG_PKT_ID_UPLINK_GET_PAYLOAD_DATA           0x4B
 
 /* CSP */
 #define CONFIG_CSP_ENABLED                              0
