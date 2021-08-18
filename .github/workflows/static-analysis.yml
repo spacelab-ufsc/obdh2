@@ -55,4 +55,4 @@ jobs:
         run: cppcheck --error-exitcode=-1 firmware/system/
 
       - name: Execute CppCheck on main files
-        run: cppcheck --error-exitcode=-1 main.c version.h
+        run: cppcheck --error-exitcode=-1 firmware/main.c firmware/version.h
