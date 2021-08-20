@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.2
+ * \version 0.7.7
  * 
  * \date 2021/08/08
  * 
@@ -45,97 +45,154 @@
 
 int __wrap_mt25q_init(void)
 {
-    return 0;
+    return mock_type(int);
 }
 
 int __wrap_mt25q_reset(void)
 {
-    return 0;
+    return mock_type(int);
 }
 
 int __wrap_mt25q_read_device_id(mt25q_dev_id_t *dev_id)
 {
-    return 0;
+    check_expected(dev_id->manufacturer_id);
+    check_expected(dev_id->memory_type);
+    check_expected(dev_id->memory_capacity);
+
+    return mock_type(int);
 }
 
 int __wrap_mt25q_read_flash_description(flash_description_t *fdo)
 {
-    return 0;
+    check_expected(fdo->id);
+    check_expected(fdo->type);
+    check_expected(fdo->starting_address);
+    check_expected(fdo->address_mask);
+    check_expected(fdo->size);
+    check_expected(fdo->otp_size);
+    check_expected(fdo->die_count);
+    check_expected(fdo->die_size);
+    check_expected(fdo->die_size_bit);
+    check_expected(fdo->sector_size);
+    check_expected(fdo->sector_size_bit);
+    check_expected(fdo->sector_count);
+    check_expected(fdo->sector_erase_cmd);
+    check_expected(fdo->sub_sector_size);
+    check_expected(fdo->sub_sector_size_bit);
+    check_expected(fdo->sub_sector_count);
+    check_expected(fdo->sub_sector_erase_cmd);
+    check_expected(fdo->page_size);
+    check_expected(fdo->page_count);
+    check_expected(fdo->buffer_size);
+    check_expected(fdo->data_width);
+    check_expected(fdo->num_adr_byte);
+
+    return mock_type(int);
 }
 
 int __wrap_mt25q_clear_flag_status_register(void)
 {
-    return 0;
+    return mock_type(int);
 }
 
 int __wrap_mt25q_read_status(mt25q_status_t *status)
 {
-    return 0;
+    check_expected(status->write_enable);
+    check_expected(status->top_bottom);
+    check_expected(status->bp);
+    check_expected(status->write_enable_latch);
+    check_expected(status->write_in_progress);
+
+    return mock_type(int);
 }
 
 int __wrap_mt25q_enter_deep_power_down(void)
 {
-    return 0;
+    return mock_type(int);
 }
 
 int __wrap_mt25q_release_from_deep_power_down(void)
 {
-    return 0;
+    return mock_type(int);
 }
 
 int __wrap_mt25q_write_enable(void)
 {
-    return 0;
+    return mock_type(int);
 }
 
 int __wrap_mt25q_write_disable(void)
 {
-    return 0;
+    return mock_type(int);
 }
 
 bool __wrap_mt25q_is_busy(void)
 {
-    return true;
+    return mock_type(bool);
 }
 
 int __wrap_mt25q_die_erase(mt25q_sector_t die)
 {
-    return 0;
+    check_expected(die);
+
+    return mock_type(int);
 }
 
 int __wrap_mt25q_sector_erase(mt25q_sector_t sector)
 {
-    return 0;
+    check_expected(sector);
+
+    return mock_type(int);
 }
 
 int __wrap_mt25q_sub_sector_erase(mt25q_sector_t sub)
 {
-    return 0;
+    check_expected(sub);
+
+    return mock_type(int);
 }
 
 int __wrap_mt25q_write(uint32_t adr, uint8_t *data, uint16_t len)
 {
-    return 0;
+    check_expected(adr);
+    check_expected_ptr(data);
+    check_expected(len);
+
+    return mock_type(int);
 }
 
 int __wrap_mt25q_read(uint32_t adr, uint8_t *data, uint16_t len)
 {
-    return 0;
+    check_expected(adr);
+
+    if (data != NULL)
+    {
+        data = mock_ptr_type(uint8_t*);
+    }
+
+    check_expected(len);
+
+    return mock_type(int);
 }
 
 uint32_t __wrap_mt25q_get_max_address(void)
 {
-    return 0;
+    return mock_type(int);
 }
 
 int __wrap_mt25q_enter_4_byte_address_mode(void)
 {
-    return 0;
+    return mock_type(int);
 }
 
 int __wrap_mt25q_read_flag_status_register(uint8_t *flag)
 {
-    return 0;
+    if (flag != NULL)
+    {
+        *flag = mock_type(uint8_t);
+    }
+
+    return mock_type(int);
 }
 
 flash_description_t __wrap_mt25q_get_flash_description(void)
@@ -147,66 +204,110 @@ flash_description_t __wrap_mt25q_get_flash_description(void)
 
 int __wrap_mt25q_spi_init(void)
 {
-    return 0;
+    return mock_type(int);
 }
 
 int __wrap_mt25q_spi_write(uint8_t *data, uint16_t len)
 {
-    return 0;
+    check_expected_ptr(data);
+    check_expected(len);
+
+    return mock_type(int);
 }
 
 int __wrap_mt25q_spi_read(uint8_t *data, uint16_t len)
 {
-    return 0;
+    if (data != NULL)
+    {
+        data = mock_ptr_type(uint8_t*);
+    }
+
+    check_expected(len);
+
+    return mock_type(int);
 }
 
 int __wrap_mt25q_spi_transfer(uint8_t *wdata, uint8_t *rdata, uint16_t len)
 {
-    return 0;
+    check_expected_ptr(wdata);
+
+    if (rdata != NULL)
+    {
+        rdata = mock_ptr_type(uint8_t*);
+    }
+
+    check_expected(len);
+
+    return mock_type(int);
 }
 
 int __wrap_mt25q_spi_select(void)
 {
-    return 0;
+    return mock_type(int);
 }
 
 int __wrap_mt25q_spi_unselect(void)
 {
-    return 0;
+    return mock_type(int);
 }
 
 int __wrap_mt25q_spi_write_only(uint8_t *data, uint16_t len)
 {
-    return 0;
+    check_expected_ptr(data);
+    check_expected(len);
+
+    return mock_type(int);
 }
 
 int __wrap_mt25q_spi_read_only(uint8_t *data, uint16_t len)
 {
-    return 0;
+    if (data != NULL)
+    {
+        data = mock_ptr_type(uint8_t*);
+    }
+
+    check_expected(len);
+
+    return mock_type(int);
 }
 
 int __wrap_mt25q_spi_transfer_only(uint8_t *wdata, uint8_t *rdata, uint16_t len)
 {
-    return 0;
+    check_expected_ptr(wdata);
+
+    if (rdata != NULL)
+    {
+        rdata = mock_ptr_type(uint8_t*);
+    }
+
+    check_expected(len);
+
+    return mock_type(int);
 }
 
 int __wrap_mt25q_gpio_init(void)
 {
-    return 0;
+    return mock_type(int);
 }
 
 int __wrap_mt25q_gpio_set_hold(bool state)
 {
-    return 0;
+    check_expected(state);
+
+    return mock_type(int);
 }
 
 int __wrap_mt25q_gpio_set_reset(bool state)
 {
-    return 0;
+    check_expected(state);
+
+    return mock_type(int);
 }
 
 void __wrap_mt25q_delay_ms(uint32_t ms)
 {
+    check_expected(ms);
+
     return;
 }
 
