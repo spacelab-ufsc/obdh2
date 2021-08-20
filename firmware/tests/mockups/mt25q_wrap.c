@@ -55,37 +55,43 @@ int __wrap_mt25q_reset(void)
 
 int __wrap_mt25q_read_device_id(mt25q_dev_id_t *dev_id)
 {
-    check_expected(dev_id->manufacturer_id);
-    check_expected(dev_id->memory_type);
-    check_expected(dev_id->memory_capacity);
+    if (dev_id != NULL)
+    {
+        dev_id->manufacturer_id = mock_type(uint8_t);
+        dev_id->memory_type     = mock_type(uint8_t);
+        dev_id->memory_capacity = mock_type(uint8_t);
+    }
 
     return mock_type(int);
 }
 
 int __wrap_mt25q_read_flash_description(flash_description_t *fdo)
 {
-    check_expected(fdo->id);
-    check_expected(fdo->type);
-    check_expected(fdo->starting_address);
-    check_expected(fdo->address_mask);
-    check_expected(fdo->size);
-    check_expected(fdo->otp_size);
-    check_expected(fdo->die_count);
-    check_expected(fdo->die_size);
-    check_expected(fdo->die_size_bit);
-    check_expected(fdo->sector_size);
-    check_expected(fdo->sector_size_bit);
-    check_expected(fdo->sector_count);
-    check_expected(fdo->sector_erase_cmd);
-    check_expected(fdo->sub_sector_size);
-    check_expected(fdo->sub_sector_size_bit);
-    check_expected(fdo->sub_sector_count);
-    check_expected(fdo->sub_sector_erase_cmd);
-    check_expected(fdo->page_size);
-    check_expected(fdo->page_count);
-    check_expected(fdo->buffer_size);
-    check_expected(fdo->data_width);
-    check_expected(fdo->num_adr_byte);
+    if (fdo != NULL)
+    {
+        fdo->id                     = mock_type(uint32_t);
+        fdo->type                   = mock_type(uint32_t);
+        fdo->starting_address       = mock_type(uint32_t);
+        fdo->address_mask           = mock_type(uint32_t);
+        fdo->size                   = mock_type(uint32_t);
+        fdo->otp_size               = mock_type(uint32_t);
+        fdo->die_count              = mock_type(uint32_t);
+        fdo->die_size               = mock_type(uint32_t);
+        fdo->die_size_bit           = mock_type(uint32_t);
+        fdo->sector_size            = mock_type(uint32_t);
+        fdo->sector_size_bit        = mock_type(uint32_t);
+        fdo->sector_count           = mock_type(uint32_t);
+        fdo->sector_erase_cmd       = mock_type(uint32_t);
+        fdo->sub_sector_size        = mock_type(uint32_t);
+        fdo->sub_sector_size_bit    = mock_type(uint32_t);
+        fdo->sub_sector_count       = mock_type(uint32_t);
+        fdo->sub_sector_erase_cmd   = mock_type(uint32_t);
+        fdo->page_size              = mock_type(uint32_t);
+        fdo->page_count             = mock_type(uint32_t);
+        fdo->buffer_size            = mock_type(uint32_t);
+        fdo->data_width             = mock_type(uint32_t);
+        fdo->num_adr_byte           = mock_type(uint8_t);
+    }
 
     return mock_type(int);
 }
@@ -167,7 +173,11 @@ int __wrap_mt25q_read(uint32_t adr, uint8_t *data, uint16_t len)
 
     if (data != NULL)
     {
-        data = mock_ptr_type(uint8_t*);
+        uint16_t i = 0;
+        for(i=0; i<len; i++)
+        {
+            data[i] = mock_type(uint8_t);
+        }
     }
 
     check_expected(len);
@@ -198,6 +208,29 @@ int __wrap_mt25q_read_flag_status_register(uint8_t *flag)
 flash_description_t __wrap_mt25q_get_flash_description(void)
 {
     flash_description_t fdo = {0};
+
+    fdo.id                      = mock_type(uint32_t);
+    fdo.type                    = mock_type(uint32_t);
+    fdo.starting_address        = mock_type(uint32_t);
+    fdo.address_mask            = mock_type(uint32_t);
+    fdo.size                    = mock_type(uint32_t);
+    fdo.otp_size                = mock_type(uint32_t);
+    fdo.die_count               = mock_type(uint32_t);
+    fdo.die_size                = mock_type(uint32_t);
+    fdo.die_size_bit            = mock_type(uint32_t);
+    fdo.sector_size             = mock_type(uint32_t);
+    fdo.sector_size_bit         = mock_type(uint32_t);
+    fdo.sector_count            = mock_type(uint32_t);
+    fdo.sector_erase_cmd        = mock_type(uint32_t);
+    fdo.sub_sector_size         = mock_type(uint32_t);
+    fdo.sub_sector_size_bit     = mock_type(uint32_t);
+    fdo.sub_sector_count        = mock_type(uint32_t);
+    fdo.sub_sector_erase_cmd    = mock_type(uint32_t);
+    fdo.page_size               = mock_type(uint32_t);
+    fdo.page_count              = mock_type(uint32_t);
+    fdo.buffer_size             = mock_type(uint32_t);
+    fdo.data_width              = mock_type(uint32_t);
+    fdo.num_adr_byte            = mock_type(uint8_t);
 
     return fdo;
 }
@@ -306,7 +339,7 @@ int __wrap_mt25q_gpio_set_reset(bool state)
 
 void __wrap_mt25q_delay_ms(uint32_t ms)
 {
-    check_expected(ms);
+    function_called();
 
     return;
 }
