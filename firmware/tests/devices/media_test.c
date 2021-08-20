@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.2
+ * \version 0.7.7
  * 
  * \date 2021/08/07
  * 
@@ -41,29 +41,178 @@
 #include <float.h>
 #include <cmocka.h>
 
+#include <stdlib.h>
+
 #include <devices/media/media.h>
 #include <drivers/flash/flash.h>
 #include <drivers/mt25q/mt25q.h>
 #include <drivers/cy15x102qn/cy15x102qn.h>
 
+unsigned int generate_random(unsigned int l, unsigned int r);
+
 static void media_init_test(void **state)
 {
+    will_return(__wrap_mt25q_init, 0);
+
+    will_return(__wrap_mt25q_read_device_id, MT25Q_MANUFACTURER_ID);
+    will_return(__wrap_mt25q_read_device_id, MT25Q_MEMORY_TYPE_3V);
+    will_return(__wrap_mt25q_read_device_id, MT25Q_MEMORY_CAPACITY_1GB);
+
+    will_return(__wrap_mt25q_read_device_id, 0);
+
+    assert_return_code(media_init(MEDIA_NOR), 0);
 }
 
 static void media_write_test(void **state)
 {
+    uint8_t data_val[256] = {0xFF};
+
+    uint32_t adr_val = UINT32_MAX;
+
+    for(adr_val=0; adr_val<=UINT16_MAX; adr_val++)
+    {
+        unsigned int len_val = generate_random(1, 256);
+
+        unsigned int i = 0;
+        for(i=0; i<len_val; i++)
+        {
+            data_val[i] = generate_random(0, 255);
+        }
+
+        expect_value(__wrap_mt25q_write, adr, adr_val);
+        expect_memory(__wrap_mt25q_write, data, (void*)data_val, len_val);
+        expect_value(__wrap_mt25q_write, len, len_val);
+
+        will_return(__wrap_mt25q_write, 0);
+
+        expect_function_call(__wrap_mt25q_delay_ms);
+
+        assert_return_code(media_write(MEDIA_NOR, adr_val, data_val, len_val), 0);
+    }
 }
 
 static void media_read_test(void **state)
 {
+    uint8_t data_val[256] = {0xFF};
+
+    uint32_t adr_val = UINT32_MAX;
+
+    for(adr_val=0; adr_val<=UINT16_MAX; adr_val++)
+    {
+        unsigned int len_val = generate_random(1, 256);
+
+        unsigned int i = 0;
+        for(i=0; i<len_val; i++)
+        {
+            data_val[i] = generate_random(0, 255);
+        }
+
+        expect_value(__wrap_mt25q_read, adr, adr_val);
+
+        for(i=0; i<len_val; i++)
+        {
+            will_return(__wrap_mt25q_read, data_val[i]);
+        }
+
+        expect_value(__wrap_mt25q_read, len, len_val);
+
+        will_return(__wrap_mt25q_read, 0);
+
+        uint8_t data_buf[256] = {0xFF};
+
+        assert_return_code(media_read(MEDIA_NOR, adr_val, data_buf, len_val), 0);
+
+        assert_memory_equal((void*)data_buf, (void*)data_val, len_val);
+    }
 }
 
 static void media_erase_test(void **state)
 {
+    media_erase_t erase_type = UINT16_MAX;
+
+    for(erase_type=0; erase_type<=UINT16_MAX; erase_type++)
+    {
+        switch(erase_type)
+        {
+            case MEDIA_ERASE_DIE:
+                expect_value(__wrap_mt25q_die_erase, die, 0);
+
+                will_return(__wrap_mt25q_die_erase, 0);
+
+                assert_return_code(media_erase(MEDIA_NOR, erase_type, 0), 0);
+
+                break;
+            case MEDIA_ERASE_SECTOR:
+                expect_value(__wrap_mt25q_sector_erase, sector, 0);
+
+                will_return(__wrap_mt25q_sector_erase, 0);
+
+                assert_return_code(media_erase(MEDIA_NOR, erase_type, 0), 0);
+
+                break;
+            case MEDIA_ERASE_SUB_SECTOR:
+                expect_value(__wrap_mt25q_sub_sector_erase, sub, 0);
+
+                will_return(__wrap_mt25q_sub_sector_erase, 0);
+
+                assert_return_code(media_erase(MEDIA_NOR, erase_type, 0), 0);
+
+                break;
+            default:
+                assert_return_code(media_erase(MEDIA_NOR, erase_type, 0), -1);
+        }
+    }
 }
 
 static void media_get_info_test(void **state)
 {
+    will_return(__wrap_mt25q_get_flash_description, 0);
+    will_return(__wrap_mt25q_get_flash_description, 1);
+    will_return(__wrap_mt25q_get_flash_description, 2);
+    will_return(__wrap_mt25q_get_flash_description, 3);
+    will_return(__wrap_mt25q_get_flash_description, 4);
+    will_return(__wrap_mt25q_get_flash_description, 5);
+    will_return(__wrap_mt25q_get_flash_description, 6);
+    will_return(__wrap_mt25q_get_flash_description, 7);
+    will_return(__wrap_mt25q_get_flash_description, 8);
+    will_return(__wrap_mt25q_get_flash_description, 9);
+    will_return(__wrap_mt25q_get_flash_description, 10);
+    will_return(__wrap_mt25q_get_flash_description, 11);
+    will_return(__wrap_mt25q_get_flash_description, 12);
+    will_return(__wrap_mt25q_get_flash_description, 13);
+    will_return(__wrap_mt25q_get_flash_description, 14);
+    will_return(__wrap_mt25q_get_flash_description, 15);
+    will_return(__wrap_mt25q_get_flash_description, 16);
+    will_return(__wrap_mt25q_get_flash_description, 17);
+    will_return(__wrap_mt25q_get_flash_description, 18);
+    will_return(__wrap_mt25q_get_flash_description, 19);
+    will_return(__wrap_mt25q_get_flash_description, 20);
+    will_return(__wrap_mt25q_get_flash_description, 21);
+
+    media_info_t info = media_get_info(MEDIA_NOR);
+
+    assert_true(info.id                     == 0);
+    assert_true(info.type                   == 1);
+    assert_true(info.starting_address       == 2);
+    assert_true(info.address_mask           == 3);
+    assert_true(info.size                   == 4);
+    assert_true(info.otp_size               == 5);
+    assert_true(info.die_count              == 6);
+    assert_true(info.die_size               == 7);
+    assert_true(info.die_size_bit           == 8);
+    assert_true(info.sector_size            == 9);
+    assert_true(info.sector_size_bit        == 10);
+    assert_true(info.sector_count           == 11);
+    assert_true(info.sector_erase_cmd       == 12);
+    assert_true(info.sub_sector_size        == 13);
+    assert_true(info.sub_sector_size_bit    == 14);
+    assert_true(info.sub_sector_count       == 15);
+    assert_true(info.sub_sector_erase_cmd   == 16);
+    assert_true(info.page_size              == 17);
+    assert_true(info.page_count             == 18);
+    assert_true(info.buffer_size            == 19);
+    assert_true(info.data_width             == 20);
+    assert_true(info.num_adr_byte           == 21);
 }
 
 int main(void)
@@ -77,6 +226,11 @@ int main(void)
     };
 
     return cmocka_run_group_tests(media_tests, NULL, NULL);
+}
+
+unsigned int generate_random(unsigned int l, unsigned int r)
+{
+    return (rand() % (r - l + 1)) + l;
 }
 
 /** \} End of media_test group */
