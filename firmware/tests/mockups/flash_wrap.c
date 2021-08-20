@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.2
+ * \version 0.7.7
  * 
  * \date 2021/08/07
  * 
@@ -45,36 +45,51 @@
 
 int __wrap_flash_init(void)
 {
-    return 0;
+    return mock_type(int);
 }
 
 void __wrap_flash_write(uint8_t *data, uint16_t len)
 {
+    check_expected_ptr(data);
+    check_expected(len);
+
     return;
 }
 
 void __wrap_flash_write_single(uint8_t data, uint8_t *addr)
 {
+    check_expected(data);
+    check_expected_ptr(addr);
+
     return;
 }
 
 uint8_t __wrap_flash_read_single(uint8_t *addr)
 {
-    return 0;
+    check_expected_ptr(addr);
+
+    return mock_type(uint8_t);
 }
 
 void __wrap_flash_write_long(uint32_t data, uint32_t *addr)
 {
+    check_expected(data);
+    check_expected_ptr(addr);
+
     return;
 }
 
 uint32_t __wrap_flash_read_long(uint32_t *addr)
 {
-    return 0;
+    check_expected_ptr(addr);
+
+    return mock_type(uint8_t);
 }
 
 void __wrap_flash_erase(uint32_t *region)
 {
+    check_expected_ptr(region);
+
     return;
 }
 
