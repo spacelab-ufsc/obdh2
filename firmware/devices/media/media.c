@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.2
+ * \version 0.7.8
  * 
  * \date 2020/07/21
  * 
@@ -197,7 +197,7 @@ int media_read(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
                 sys_log_new_line();
             }
 
-            return -1;
+            return 0;
         case MEDIA_NOR:
             if (mt25q_read(adr, data, len) != 0)
             {
@@ -225,10 +225,8 @@ int media_erase(media_t med, media_erase_t type, uint32_t sector)
 
             return 0;
         case MEDIA_FRAM:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "The erase operation of the FRAM media is not implemented!");
-            sys_log_new_line();
-
-            return -1;
+            /* The FRAM memory does not have an erase operation */
+            return 0;
         case MEDIA_NOR:
             switch(type)
             {
