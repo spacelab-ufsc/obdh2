@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.2
+ * \version 0.7.7
  * 
  * \date 2021/08/06
  * 
@@ -46,10 +46,28 @@
 
 static void eps_init_test(void **state)
 {
+    expect_value(__wrap_sl_eps2_init, config.i2c_port, I2C_PORT_1);
+    expect_value(__wrap_sl_eps2_init, config.i2c_config.speed_hz, 100000);
+    expect_value(__wrap_sl_eps2_init, config.en_pin, GPIO_PIN_17);
+    expect_value(__wrap_sl_eps2_init, config.ready_pin, GPIO_PIN_20);
+
+    will_return(__wrap_sl_eps2_init, 0);
+
+    assert_return_code(eps_init(), 0);
 }
 
 static void eps_get_bat_voltage_test(void **state)
 {
+//    expect_value(__wrap_sl_eps2_read_battery_voltage, config.i2c_port, I2C_PORT_1);
+//    expect_value(__wrap_sl_eps2_read_battery_voltage, config.i2c_config.speed_hz, 100000);
+//    expect_value(__wrap_sl_eps2_read_battery_voltage, config.en_pin, GPIO_PIN_17);
+//    expect_value(__wrap_sl_eps2_read_battery_voltage, config.ready_pin, GPIO_PIN_20);
+//
+//    will_return(__wrap_sl_eps2_read_battery_voltage, 0);
+//
+//    will_return(__wrap_sl_eps2_read_battery_voltage, 0);
+//
+//    assert_return_code(eps_get_bat_voltage(), 0);
 }
 
 static void eps_get_bat_current_test(void **state)
