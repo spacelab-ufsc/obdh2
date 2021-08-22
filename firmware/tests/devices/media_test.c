@@ -48,10 +48,26 @@
 #include <drivers/mt25q/mt25q.h>
 #include <drivers/cy15x102qn/cy15x102qn.h>
 
+#define MEDIA_FRAM_SPI_PORT         SPI_PORT_0
+#define MEDIA_FRAM_SPI_CS_PIN       SPI_CS_5
+#define MEDIA_FRAM_SPI_CLOCK_HZ     1000000UL
+#define MEDIA_FRAM_WP_PIN           GPIO_PIN_62
+
 unsigned int generate_random(unsigned int l, unsigned int r);
 
 static void media_init_test(void **state)
 {
+    /* FRAM memory */
+    expect_value(__wrap_cy15x102qn_init, conf->port, MEDIA_FRAM_SPI_PORT);
+    expect_value(__wrap_cy15x102qn_init, conf->cs_pin, MEDIA_FRAM_SPI_CS_PIN);
+    expect_value(__wrap_cy15x102qn_init, conf->clock_hz, MEDIA_FRAM_SPI_CLOCK_HZ);
+    expect_value(__wrap_cy15x102qn_init, conf->wp_pin, MEDIA_FRAM_WP_PIN);
+
+    will_return(__wrap_cy15x102qn_init, 0);
+
+    assert_return_code(media_init(MEDIA_FRAM), 0);
+
+    /* NOR memory */
     will_return(__wrap_mt25q_init, 0);
 
     will_return(__wrap_mt25q_read_device_id, MT25Q_MANUFACTURER_ID);
@@ -69,6 +85,26 @@ static void media_write_test(void **state)
 
     uint32_t adr_val = UINT32_MAX;
 
+    /* FRAM memory */
+    for(adr_val=0; adr_val<=UINT16_MAX; adr_val++)
+    {
+        unsigned int len_val = generate_random(1, 256);
+
+        expect_value(__wrap_cy15x102qn_write, conf->port, MEDIA_FRAM_SPI_PORT);
+        expect_value(__wrap_cy15x102qn_write, conf->cs_pin, MEDIA_FRAM_SPI_CS_PIN);
+        expect_value(__wrap_cy15x102qn_write, conf->clock_hz, MEDIA_FRAM_SPI_CLOCK_HZ);
+        expect_value(__wrap_cy15x102qn_write, conf->wp_pin, MEDIA_FRAM_WP_PIN);
+
+        expect_value(__wrap_cy15x102qn_write, adr, adr_val);
+        expect_memory(__wrap_cy15x102qn_write, data, (void*)data_val, len_val);
+        expect_value(__wrap_cy15x102qn_write, len, len_val);
+
+        will_return(__wrap_cy15x102qn_write, 0);
+
+        assert_return_code(media_write(MEDIA_FRAM, adr_val, data_val, len_val), 0);
+    }
+
+    /* NOR memory */
     for(adr_val=0; adr_val<=UINT16_MAX; adr_val++)
     {
         unsigned int len_val = generate_random(1, 256);
@@ -97,6 +133,41 @@ static void media_read_test(void **state)
 
     uint32_t adr_val = UINT32_MAX;
 
+    /* FRAM memory */
+    for(adr_val=0; adr_val<=UINT16_MAX; adr_val++)
+    {
+        unsigned int len_val = generate_random(1, 256);
+
+        expect_value(__wrap_cy15x102qn_read, conf->port, MEDIA_FRAM_SPI_PORT);
+        expect_value(__wrap_cy15x102qn_read, conf->cs_pin, MEDIA_FRAM_SPI_CS_PIN);
+        expect_value(__wrap_cy15x102qn_read, conf->clock_hz, MEDIA_FRAM_SPI_CLOCK_HZ);
+        expect_value(__wrap_cy15x102qn_read, conf->wp_pin, MEDIA_FRAM_WP_PIN);
+
+        unsigned int i = 0;
+        for(i=0; i<len_val; i++)
+        {
+            data_val[i] = generate_random(0, 255);
+        }
+
+        expect_value(__wrap_cy15x102qn_read, adr, adr_val);
+
+        for(i=0; i<len_val; i++)
+        {
+            will_return(__wrap_cy15x102qn_read, data_val[i]);
+        }
+
+        expect_value(__wrap_cy15x102qn_read, len, len_val);
+
+        will_return(__wrap_cy15x102qn_read, 0);
+
+        uint8_t data_buf[256] = {0xFF};
+
+        assert_return_code(media_read(MEDIA_FRAM, adr_val, data_buf, len_val), 0);
+
+        assert_memory_equal((void*)data_buf, (void*)data_val, len_val);
+    }
+
+    /* NOR memory */
     for(adr_val=0; adr_val<=UINT16_MAX; adr_val++)
     {
         unsigned int len_val = generate_random(1, 256);
@@ -130,6 +201,13 @@ static void media_erase_test(void **state)
 {
     media_erase_t erase_type = UINT16_MAX;
 
+    /* FRAM memory */
+    for(erase_type=0; erase_type<=UINT16_MAX; erase_type++)
+    {
+        assert_return_code(media_erase(MEDIA_FRAM, erase_type, 0), 0);
+    }
+
+    /* NOR memory */
     for(erase_type=0; erase_type<=UINT16_MAX; erase_type++)
     {
         switch(erase_type)
@@ -166,6 +244,33 @@ static void media_erase_test(void **state)
 
 static void media_get_info_test(void **state)
 {
+    /* FRAM memory */
+    media_info_t info = media_get_info(MEDIA_FRAM);
+
+    assert_true(info.id                     == 0);
+    assert_true(info.type                   == 0);
+    assert_true(info.starting_address       == 0);
+    assert_true(info.address_mask           == 0);
+    assert_true(info.size                   == 0);
+    assert_true(info.otp_size               == 0);
+    assert_true(info.die_count              == 0);
+    assert_true(info.die_size               == 0);
+    assert_true(info.die_size_bit           == 0);
+    assert_true(info.sector_size            == 0);
+    assert_true(info.sector_size_bit        == 0);
+    assert_true(info.sector_count           == 0);
+    assert_true(info.sector_erase_cmd       == 0);
+    assert_true(info.sub_sector_size        == 0);
+    assert_true(info.sub_sector_size_bit    == 0);
+    assert_true(info.sub_sector_count       == 0);
+    assert_true(info.sub_sector_erase_cmd   == 0);
+    assert_true(info.page_size              == 0);
+    assert_true(info.page_count             == 0);
+    assert_true(info.buffer_size            == 0);
+    assert_true(info.data_width             == 0);
+    assert_true(info.num_adr_byte           == 0);
+
+    /* NOR memory */
     will_return(__wrap_mt25q_get_flash_description, 0);
     will_return(__wrap_mt25q_get_flash_description, 1);
     will_return(__wrap_mt25q_get_flash_description, 2);
@@ -189,7 +294,7 @@ static void media_get_info_test(void **state)
     will_return(__wrap_mt25q_get_flash_description, 20);
     will_return(__wrap_mt25q_get_flash_description, 21);
 
-    media_info_t info = media_get_info(MEDIA_NOR);
+    info = media_get_info(MEDIA_NOR);
 
     assert_true(info.id                     == 0);
     assert_true(info.type                   == 1);
