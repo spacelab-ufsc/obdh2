@@ -6,6 +6,7 @@
 * CY15x102QN
 * Flash
 * GPIO
+* I2C
 * ISIS Antenna
 * MT25Q
 * Si446x
