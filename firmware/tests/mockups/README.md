@@ -14,6 +14,7 @@
 * SpaceLab TTC 2.0
 * SPI
 * TPS382x
+* UART
 * Watchdog
 
 ## Devices
