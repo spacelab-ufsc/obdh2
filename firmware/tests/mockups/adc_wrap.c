@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.2
+ * \version 0.7.8
  * 
  * \date 2021/02/13
  * 
@@ -53,11 +53,9 @@ int __wrap_adc_read(adc_port_t port, uint16_t *val)
 {
     check_expected(port);
 
-    uint16_t adc_val = mock_type(uint16_t);
-
     if (val != NULL)
     {
-        *val = adc_val;
+        *val = mock_type(uint16_t);
     }
 
     return mock_type(int);
