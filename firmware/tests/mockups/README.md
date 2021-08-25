@@ -12,6 +12,7 @@
 * Si446x
 * SpaceLab EPS 2.0
 * SpaceLab TTC 2.0
+* SPI
 * TPS382x
 * Watchdog
 
