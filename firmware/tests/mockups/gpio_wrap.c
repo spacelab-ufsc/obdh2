@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.9
+ * \version 0.7.8
  * 
  * \date 2021/02/13
  * 
@@ -46,8 +46,9 @@
 int __wrap_gpio_init(gpio_pin_t pin, gpio_config_t config)
 {
     check_expected(pin);
+    check_expected(config.mode);
 
-    return 0;
+    return mock_type(int);
 }
 
 int __wrap_gpio_set_state(gpio_pin_t pin, bool level)
@@ -55,7 +56,7 @@ int __wrap_gpio_set_state(gpio_pin_t pin, bool level)
     check_expected(pin);
     check_expected(level);
 
-    return 0;
+    return mock_type(int);
 }
 
 int __wrap_gpio_get_state(gpio_pin_t pin)
@@ -78,7 +79,7 @@ int __wrap_gpio_toggle(gpio_pin_t pin)
 {
     check_expected(pin);
 
-    return 0;
+    return mock_type(int);
 }
 
 /** \} End of gpio_wrap group */

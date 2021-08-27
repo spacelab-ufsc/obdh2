@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.10
+ * \version 0.7.8
  * 
  * \date 2021/02/16
  * 
@@ -55,11 +55,14 @@
 static void leds_init_test(void **state)
 {
     expect_value(__wrap_gpio_init, pin, LED_SYSTEM_GPIO_PIN);
+    expect_value(__wrap_gpio_init, config.mode, GPIO_MODE_OUTPUT);
+    will_return(__wrap_gpio_init, 0);
+
     expect_value(__wrap_gpio_init, pin, LED_FAULT_GPIO_PIN);
+    expect_value(__wrap_gpio_init, config.mode, GPIO_MODE_OUTPUT);
+    will_return(__wrap_gpio_init, 0);
 
-    int result = leds_init();
-
-    assert_return_code(result, 0);
+    assert_return_code(leds_init(), 0);
 }
 
 static void led_set_test(void **state)
@@ -72,24 +75,22 @@ static void led_set_test(void **state)
             expect_value(__wrap_gpio_set_state, pin, LED_SYSTEM_GPIO_PIN);
             expect_value(__wrap_gpio_set_state, level, true);
 
-            int result = led_set(i);
+            will_return(__wrap_gpio_set_state, 0);
 
-            assert_return_code(result, 0);
+            assert_return_code(led_set(i), 0);
         }
         else if (i == LED_FAULT_NUM)
         {
             expect_value(__wrap_gpio_set_state, pin, LED_FAULT_GPIO_PIN);
             expect_value(__wrap_gpio_set_state, level, true);
 
-            int result = led_set(i);
+            will_return(__wrap_gpio_set_state, 0);
 
-            assert_return_code(result, 0);
+            assert_return_code(led_set(i), 0);
         }
         else
         {
-            int result = led_set(i);
-
-            assert_true(result != 0);
+            assert_true(led_set(i) != 0);
         }
     }
 }
@@ -104,24 +105,22 @@ static void led_clear_test(void **state)
             expect_value(__wrap_gpio_set_state, pin, LED_SYSTEM_GPIO_PIN);
             expect_value(__wrap_gpio_set_state, level, false);
 
-            int result = led_clear(i);
+            will_return(__wrap_gpio_set_state, 0);
 
-            assert_return_code(result, 0);
+            assert_return_code(led_clear(i), 0);
         }
         else if (i == LED_FAULT_NUM)
         {
             expect_value(__wrap_gpio_set_state, pin, LED_FAULT_GPIO_PIN);
             expect_value(__wrap_gpio_set_state, level, false);
 
-            int result = led_clear(i);
+            will_return(__wrap_gpio_set_state, 0);
 
-            assert_return_code(result, 0);
+            assert_return_code(led_clear(i), 0);
         }
         else
         {
-            int result = led_clear(i);
-
-            assert_true(result != 0);
+            assert_true(led_clear(i) != 0);
         }
     }
 }
@@ -135,23 +134,21 @@ static void led_toggle_test(void **state)
         {
             expect_value(__wrap_gpio_toggle, pin, LED_SYSTEM_GPIO_PIN);
 
-            int result = led_toggle(i);
+            will_return(__wrap_gpio_toggle, 0);
 
-            assert_return_code(result, 0);
+            assert_return_code(led_toggle(i), 0);
         }
         else if (i == LED_FAULT_NUM)
         {
             expect_value(__wrap_gpio_toggle, pin, LED_FAULT_GPIO_PIN);
 
-            int result = led_toggle(i);
+            will_return(__wrap_gpio_toggle, 0);
 
-            assert_return_code(result, 0);
+            assert_return_code(led_toggle(i), 0);
         }
         else
         {
-            int result = led_toggle(i);
-
-            assert_true(result != 0);
+            assert_true(led_toggle(i) != 0);
         }
     }
 }
