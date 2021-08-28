@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.2
+ * \version 0.7.8
  * 
  * \date 2021/02/11
  * 
@@ -42,8 +42,6 @@
 #include <cmocka.h>
 
 #include <devices/current_sensor/current_sensor.h>
-#include <tests/mockups/sys_log_wrap.h>
-#include <tests/mockups/adc_wrap.h>
 
 #define CURRENT_SENSOR_ADC_PORT         ADC_PORT_8
 #define CURRENT_SENSOR_ADC_MIN_VAL      0

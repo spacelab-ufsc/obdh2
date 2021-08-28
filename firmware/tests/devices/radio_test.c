@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.4
+ * \version 0.7.8
  * 
  * \date 2021/02/21
  * 
@@ -42,7 +42,7 @@
 #include <cmocka.h>
 
 #include <devices/radio/radio.h>
-#include <tests/mockups/si446x_wrap.h>
+#include <drivers/si446x/si446x.h>
 
 #define RADIO_ID    0x4463
 

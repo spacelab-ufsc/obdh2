@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.6
+ * \version 0.7.8
  * 
  * \date 2021/08/16
  * 
@@ -41,10 +41,9 @@
 #include <float.h>
 #include <cmocka.h>
 
-#include <drivers/gpio/gpio.h>
 #include <devices/payload/payload.h>
-#include <tests/mockups/edc_wrap.h>
-#include <tests/mockups/phj_wrap.h>
+#include <drivers/gpio/gpio.h>
+#include <drivers/i2c/i2c.h>
 
 static void payload_init_test(void **state)
 {

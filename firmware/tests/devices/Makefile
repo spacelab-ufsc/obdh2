@@ -156,46 +156,46 @@ $(BUILD_DIR)/payload_test.o: payload_test.c
 	$(CC) $(PAYLOAD_TEST_FLAGS) -c $< -o $@
 
 # Mockups
-$(BUILD_DIR)/sys_log_wrap.o: ../mockups/sys_log_wrap.c
+$(BUILD_DIR)/sys_log_wrap.o: ../mockups/system/sys_log_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(BUILD_DIR)/adc_wrap.o: ../mockups/adc_wrap.c
+$(BUILD_DIR)/adc_wrap.o: ../mockups/drivers/adc_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(BUILD_DIR)/gpio_wrap.o: ../mockups/gpio_wrap.c
+$(BUILD_DIR)/gpio_wrap.o: ../mockups/drivers/gpio_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(BUILD_DIR)/wdt_wrap.o: ../mockups/wdt_wrap.c
+$(BUILD_DIR)/wdt_wrap.o: ../mockups/drivers/wdt_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(BUILD_DIR)/tps382x_wrap.o: ../mockups/tps382x_wrap.c
+$(BUILD_DIR)/tps382x_wrap.o: ../mockups/drivers/tps382x_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(BUILD_DIR)/si446x_wrap.o: ../mockups/si446x_wrap.c
+$(BUILD_DIR)/si446x_wrap.o: ../mockups/drivers/si446x_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(BUILD_DIR)/sl_ttc2_wrap.o: ../mockups/sl_ttc2_wrap.c
+$(BUILD_DIR)/sl_ttc2_wrap.o: ../mockups/drivers/sl_ttc2_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(BUILD_DIR)/sl_eps2_wrap.o: ../mockups/sl_eps2_wrap.c
+$(BUILD_DIR)/sl_eps2_wrap.o: ../mockups/drivers/sl_eps2_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(BUILD_DIR)/isis_antenna_wrap.o: ../mockups/isis_antenna_wrap.c
+$(BUILD_DIR)/isis_antenna_wrap.o: ../mockups/drivers/isis_antenna_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(BUILD_DIR)/flash_wrap.o: ../mockups/flash_wrap.c
+$(BUILD_DIR)/flash_wrap.o: ../mockups/drivers/flash_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(BUILD_DIR)/mt25q_wrap.o: ../mockups/mt25q_wrap.c
+$(BUILD_DIR)/mt25q_wrap.o: ../mockups/drivers/mt25q_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(BUILD_DIR)/cy15x102qn_wrap.o: ../mockups/cy15x102qn_wrap.c
+$(BUILD_DIR)/cy15x102qn_wrap.o: ../mockups/drivers/cy15x102qn_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(BUILD_DIR)/edc_wrap.o: ../mockups/edc_wrap.c
+$(BUILD_DIR)/edc_wrap.o: ../mockups/drivers/edc_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(BUILD_DIR)/phj_wrap.o: ../mockups/phj_wrap.c
+$(BUILD_DIR)/phj_wrap.o: ../mockups/drivers/phj_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
 $(BUILD_DIR)/task.o: ../freertos_sim/task.c
