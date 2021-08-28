@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.12
+ * \version 0.7.8
  * 
  * \date 2021/02/16
  * 
@@ -56,9 +56,9 @@ static void watchdog_init_test(void **state)
 
     expect_value(__wrap_tps382x_init, config.wdi_pin, WATCHDOG_EXTERNAL_PIN);
 
-    int result = watchdog_init();
+    will_return(__wrap_wdt_init, 0);
 
-    assert_return_code(result, 0);
+    assert_return_code(watchdog_init(), 0);
 }
 
 static void watchdog_reset_test(void **state)

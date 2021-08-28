@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.11
+ * \version 0.7.8
  * 
  * \date 2021/02/16
  * 
@@ -48,7 +48,7 @@ int __wrap_wdt_init(wdt_config_t config)
     check_expected(config.clk_src);
     check_expected(config.clk_div);
 
-    return 0;
+    return mock_type(int);
 }
 
 void __wrap_wdt_reset(void)
