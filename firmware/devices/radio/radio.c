@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.4
+ * \version 0.7.10
  * 
  * \date 2019/10/27
  * 
@@ -91,9 +91,9 @@ int radio_init(void)
     }
 
     /* Loading configuration parameters from WDS */
-    uint8_t si446x_config[] = {RADIO_CONFIGURATION_DATA_ARRAY};
+    uint8_t si446x_config[] = RADIO_CONFIGURATION_DATA_ARRAY;
 
-    if (si446x_configuration_init(si446x_config , sizeof(si446x_config )-1) != SI446X_SUCCESS)
+    if (si446x_configuration_init(si446x_config , sizeof(si446x_config)-1) != SI446X_SUCCESS)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, RADIO_MODULE_NAME, "Error loading the configuration parameters!");
         sys_log_new_line();
