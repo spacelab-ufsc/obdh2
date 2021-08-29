@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.4
+ * \version 0.7.8
  * 
  * \date 2021/04/27
  * 
@@ -127,7 +127,7 @@ int __wrap_si446x_set_cmd(uint8_t *cmd, uint16_t cmd_len);
 
 int __wrap_si446x_get_cmd(uint8_t *cmd, uint16_t cmd_len, uint8_t *result, uint16_t result_len);
 
-int __wrap_si446x_spi_init();
+int __wrap_si446x_spi_init(void);
 
 int __wrap_si446x_spi_transfer(uint8_t *wd, uint8_t *rd, uint16_t len);
 
@@ -137,11 +137,11 @@ int __wrap_si446x_spi_write(uint8_t *data, uint16_t len);
 
 int __wrap_si446x_spi_read(uint8_t *data, uint16_t len);
 
-int __wrap_si446x_gpio_init();
+int __wrap_si446x_gpio_init(void);
 
 int __wrap_si446x_gpio_write_sdn(bool state);
 
-int __wrap_si446x_gpio_read_nirq();
+int __wrap_si446x_gpio_read_nirq(void);
 
 void __wrap_si446x_delay_ms(uint32_t ms);
 
