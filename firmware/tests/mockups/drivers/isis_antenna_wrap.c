@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.2
+ * \version 0.7.9
  * 
  * \date 2021/08/07
  * 
@@ -81,11 +81,9 @@ int __wrap_isis_antenna_start_independent_deploy(uint8_t ant, uint8_t sec, uint8
 
 int __wrap_isis_antenna_read_deployment_status_code(uint16_t *status)
 {
-    uint16_t status_val = mock_type(uint16_t);
-
     if (status != NULL)
     {
-        *status = status_val;
+        *status = mock_type(uint16_t);
     }
 
     return mock_type(int);
@@ -137,11 +135,9 @@ int __wrap_isis_antenna_get_antenna_status(uint8_t ant, uint8_t *ant_status)
 {
     check_expected(ant);
 
-    uint8_t status_val = mock_type(uint8_t);
-
     if (ant_status != NULL)
     {
-        *ant_status = status_val;
+        *ant_status = mock_type(uint8_t);
     }
 
     return mock_type(int);
@@ -151,11 +147,9 @@ int __wrap_isis_antenna_get_antenna_timeout(uint8_t ant, uint8_t *ant_timeout)
 {
     check_expected(ant);
 
-    uint8_t ant_timeout_val = mock_type(uint8_t);
-
     if (ant_timeout != NULL)
     {
-        *ant_timeout = ant_timeout_val;
+        *ant_timeout = mock_type(uint8_t);
     }
 
     return mock_type(int);
@@ -165,11 +159,9 @@ int __wrap_isis_antenna_get_burning(uint8_t ant, uint8_t *ant_burn)
 {
     check_expected(ant);
 
-    uint8_t ant_burn_val = mock_type(uint8_t);
-
     if (ant_burn != NULL)
     {
-        *ant_burn = ant_burn_val;
+        *ant_burn = mock_type(uint8_t);
     }
 
     return mock_type(int);
@@ -177,11 +169,9 @@ int __wrap_isis_antenna_get_burning(uint8_t ant, uint8_t *ant_burn)
 
 int __wrap_isis_antenna_get_arming_status(bool *armed)
 {
-    bool armed_val = mock_type(bool);
-
     if (armed != NULL)
     {
-        *armed = armed_val;
+        *armed = mock_type(bool);
     }
 
     return mock_type(int);
@@ -189,11 +179,9 @@ int __wrap_isis_antenna_get_arming_status(bool *armed)
 
 int __wrap_isis_antenna_get_raw_temperature(uint16_t *temp)
 {
-    uint16_t temp_val = mock_type(uint16_t);
-
     if (temp != NULL)
     {
-        *temp = temp_val;
+        *temp = mock_type(uint16_t);
     }
 
     return mock_type(int);
@@ -206,11 +194,9 @@ int16_t __wrap_isis_antenna_raw_to_temp_c(uint16_t raw)
 
 int __wrap_isis_antenna_get_temperature_c(int16_t *temp)
 {
-    int16_t temp_val = mock_type(int16_t);
-
     if (temp != NULL)
     {
-        *temp = temp_val;
+        *temp = mock_type(int16_t);
     }
 
     return mock_type(int);

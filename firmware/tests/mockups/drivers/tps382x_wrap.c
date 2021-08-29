@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.11
+ * \version 0.7.9
  * 
  * \date 2021/02/17
  * 
@@ -47,7 +47,7 @@ int __wrap_tps382x_init(tps382x_config_t config)
 {
     check_expected(config.wdi_pin);
 
-    return 0;
+    return mock_type(int);
 }
 
 void __wrap_tps382x_trigger(tps382x_config_t config)

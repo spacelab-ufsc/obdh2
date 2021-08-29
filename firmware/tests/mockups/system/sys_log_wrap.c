@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.3
+ * \version 0.7.9
  * 
  * \date 2021/02/13
  * 
@@ -33,13 +33,19 @@
  * \{
  */
 
+#include <stdarg.h>
+#include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
+#include <setjmp.h>
+#include <float.h>
+#include <cmocka.h>
 
 #include "sys_log_wrap.h"
 
 int __wrap_sys_log_init(void)
 {
-    return 0;
+    return mock_type(int);
 }
 
 void __wrap_sys_log_print_event(uint8_t type, const char *event)
