@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.1
+ * \version 0.7.11
  * 
  * \date 2021/06/04
  * 
@@ -160,7 +160,7 @@ int cy15x102qn_write(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uin
     }
 
     /* Write address */
-    if (cy15x102qn_spi_write_only(conf, adr, 3) != 0)
+    if (cy15x102qn_spi_write_only(conf, adr_arr, 3) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the address during WRITE command!");
@@ -218,7 +218,7 @@ int cy15x102qn_read(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uint
     }
 
     /* Write address */
-    if (cy15x102qn_spi_write_only(conf, adr, 3) != 0)
+    if (cy15x102qn_spi_write_only(conf, adr_arr, 3) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the address during READ command!");
@@ -277,7 +277,7 @@ int cy15x102qn_fast_read(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data,
     }
 
     /* Write address */
-    if (cy15x102qn_spi_write_only(conf, adr, 3) != 0)
+    if (cy15x102qn_spi_write_only(conf, adr_arr, 3) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the address during FSTRD command!");
