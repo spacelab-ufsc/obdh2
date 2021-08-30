@@ -41,31 +41,196 @@
 #include <float.h>
 #include <cmocka.h>
 
+#include <config/config.h>
 #include <drivers/spi/spi.h>
 #include <drivers/gpio/gpio.h>
+#include <drivers/cy15x102qn/cy15x102qn.h>
+
+#define CY15X102QN_SPI_PORT         SPI_PORT_0
+#define CY15X102QN_SPI_CS           SPI_CS_5
+#define CY15X102QN_SPI_CLOCK_HZ     1000000UL
+#define CY15X102QN_SPI_MODE         SPI_MODE_0
+#define CY15X102QN_GPIO_WP_PIN      GPIO_PIN_62
 
 static void cy15x102qn_init_test(void **state)
 {
+    /* SPI init */
+    expect_value(__wrap_spi_init, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_init, config.speed_hz, CY15X102QN_SPI_CLOCK_HZ);
+    expect_value(__wrap_spi_init, config.mode, CY15X102QN_SPI_MODE);
+
+    will_return(__wrap_spi_init, 0);
+
+    /* GPIO init */
+    expect_value(__wrap_gpio_init, pin, CY15X102QN_GPIO_WP_PIN);
+    expect_value(__wrap_gpio_init, config.mode, GPIO_MODE_OUTPUT);
+
+    will_return(__wrap_gpio_init, 0);
+
+    /* GPIO set state */
+    expect_value(__wrap_gpio_set_state, pin, CY15X102QN_GPIO_WP_PIN);
+    expect_value(__wrap_gpio_set_state, level, true);
+
+    will_return(__wrap_gpio_set_state, 0);
+
+    cy15x102qn_config_t conf = {0};
+
+    conf.port       = CY15X102QN_SPI_PORT;
+    conf.cs_pin     = CY15X102QN_SPI_CS;
+    conf.clock_hz   = CY15X102QN_SPI_CLOCK_HZ;
+    conf.wp_pin     = CY15X102QN_GPIO_WP_PIN;
+
+    assert_return_code(cy15x102qn_init(&conf), 0);
 }
 
 static void cy15x102qn_set_write_enable_test(void **state)
 {
+    uint8_t cmd = CY15X102QN_OPCODE_WREN;
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, CY15X102QN_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
+    cy15x102qn_config_t conf = {0};
+
+    conf.port       = CY15X102QN_SPI_PORT;
+    conf.cs_pin     = CY15X102QN_SPI_CS;
+    conf.clock_hz   = CY15X102QN_SPI_CLOCK_HZ;
+    conf.wp_pin     = CY15X102QN_GPIO_WP_PIN;
+
+    assert_return_code(cy15x102qn_set_write_enable(&conf), 0);
 }
 
 static void cy15x102qn_reset_write_enable_test(void **state)
 {
+    uint8_t cmd = CY15X102QN_OPCODE_WRDI;
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, CY15X102QN_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
+    cy15x102qn_config_t conf = {0};
+
+    conf.port       = CY15X102QN_SPI_PORT;
+    conf.cs_pin     = CY15X102QN_SPI_CS;
+    conf.clock_hz   = CY15X102QN_SPI_CLOCK_HZ;
+    conf.wp_pin     = CY15X102QN_GPIO_WP_PIN;
+
+    assert_return_code(cy15x102qn_reset_write_enable(&conf), 0);
 }
 
 static void cy15x102qn_read_status_reg_test(void **state)
 {
+    uint8_t cmd[2] = {CY15X102QN_OPCODE_RDSR, 0};
+    uint8_t ans[2] = {0, 0x12};
+
+    expect_value(__wrap_spi_transfer, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_transfer, cs, CY15X102QN_SPI_CS);
+    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 2);
+    expect_value(__wrap_spi_transfer, len, 2);
+
+    will_return(__wrap_spi_transfer, ans[0]);
+    will_return(__wrap_spi_transfer, ans[1]);
+    will_return(__wrap_spi_transfer, 0);
+
+    cy15x102qn_config_t conf = {0};
+
+    conf.port       = CY15X102QN_SPI_PORT;
+    conf.cs_pin     = CY15X102QN_SPI_CS;
+    conf.clock_hz   = CY15X102QN_SPI_CLOCK_HZ;
+    conf.wp_pin     = CY15X102QN_GPIO_WP_PIN;
+
+    cy15x102qn_status_t stat = 0;
+
+    assert_return_code(cy15x102qn_read_status_reg(&conf, &stat), 0);
+    assert_int_equal(stat, ans[1]);
 }
 
 static void cy15x102qn_write_status_reg_test(void **state)
 {
+    uint8_t cmd[2] = {CY15X102QN_OPCODE_WRSR, 0x12};
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, CY15X102QN_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)cmd, 2);
+    expect_value(__wrap_spi_write, len, 2);
+
+    will_return(__wrap_spi_write, 0);
+
+    cy15x102qn_config_t conf = {0};
+
+    conf.port       = CY15X102QN_SPI_PORT;
+    conf.cs_pin     = CY15X102QN_SPI_CS;
+    conf.clock_hz   = CY15X102QN_SPI_CLOCK_HZ;
+    conf.wp_pin     = CY15X102QN_GPIO_WP_PIN;
+
+    cy15x102qn_status_t stat = 0x12;
+
+    assert_return_code(cy15x102qn_write_status_reg(&conf, stat), 0);
 }
 
 static void cy15x102qn_write_test(void **state)
 {
+    /* Select device */
+    expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
+    expect_value(__wrap_spi_select_slave, active, true);
+
+    will_return(__wrap_spi_select_slave, 0);
+
+    /* Write opcode */
+    uint8_t cmd = CY15X102QN_OPCODE_WRITE;
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
+    expect_memory(__wrap_spi_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
+    /* Write address */
+    uint8_t adr[3] = {0x01, 0x02, 0x03};
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
+    expect_memory(__wrap_spi_write, data, (void*)adr, 3);
+    expect_value(__wrap_spi_write, len, 3);
+
+    will_return(__wrap_spi_write, 0);
+
+    /* Write data */
+    uint8_t data[5] = {0x21, 0x8F, 0x96, 0xFC, 0x32};
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
+    expect_memory(__wrap_spi_write, data, (void*)data, 5);
+    expect_value(__wrap_spi_write, len, 5);
+
+    will_return(__wrap_spi_write, 0);
+
+    /* Unselect device */
+    expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
+    expect_value(__wrap_spi_select_slave, active, false);
+
+    will_return(__wrap_spi_select_slave, 0);
+
+    cy15x102qn_config_t conf = {0};
+
+    conf.port       = CY15X102QN_SPI_PORT;
+    conf.cs_pin     = CY15X102QN_SPI_CS;
+    conf.clock_hz   = CY15X102QN_SPI_CLOCK_HZ;
+    conf.wp_pin     = CY15X102QN_GPIO_WP_PIN;
+
+    uint32_t adr32 = ((uint32_t)adr[0] << 16) | ((uint32_t)adr[1] << 8) | adr[2];
+
+    assert_return_code(cy15x102qn_write(&conf, adr32, data, 5), 0);
 }
 
 static void cy15x102qn_read_test(void **state)

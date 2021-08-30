@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.8
+ * \version 0.7.10
  * 
  * \date 2021/08/25
  * 
@@ -93,10 +93,10 @@ int __wrap_spi_transfer(spi_port_t port, spi_cs_t cs, uint8_t *wd, uint8_t *rd, 
 {
     check_expected(port);
     check_expected(cs);
-    check_expected_ptr(data);
+    check_expected_ptr(wd);
     check_expected(len);
 
-    if (data != NULL)
+    if (rd != NULL)
     {
         uint16_t i = 0;
         for(i=0; i<len; i++)
