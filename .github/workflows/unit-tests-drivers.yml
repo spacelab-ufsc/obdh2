@@ -1,5 +1,5 @@
 #
-# test-workflow.yml
+# unit-tests-drivers.yml
 #
 # Copyright (C) 2021, SpaceLab.
 #
@@ -21,7 +21,7 @@
 #
 
 
-name: Test Workflow
+name: Drivers Unit Tests
 
 on:
   push:
@@ -53,7 +53,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Create JSON file
-        run: python3 .github/workflows/deployJSON.py --source firmware/tests/devices/
+        run: python3 .github/workflows/deployJSON.py --source firmware/tests/drivers/
 
       - name: Resulting JSON file for matrix generation
         run: echo "$(cat .github/workflows/test-list.json)"
@@ -93,7 +93,7 @@ jobs:
         run: echo "Generating make file for $MAKE_TARGET"
 
       - name: Generate Test File
-        run: cd firmware/tests/devices && make $MAKE_TARGET
+        run: cd firmware/tests/drivers && make $MAKE_TARGET
 
       - name: Signal running test
         run: echo "Running $TEST_FILE"
