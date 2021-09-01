@@ -1,4 +1,5 @@
 TARGET_CY15X102QN=cy15x102qn_unit_test
+TARGET_TPS382X=tps382x_unit_test
 
 ifndef BUILD_DIR
 	BUILD_DIR=$(CURDIR)
@@ -10,12 +11,18 @@ FLAGS=-fpic -std=c99 -Wall -pedantic -Wshadow -Wpointer-arith -Wcast-qual -Wstri
 
 CY15X102QN_TEST_FLAGS=$(FLAGS),--wrap=spi_init,--wrap=spi_select_slave,--wrap=spi_write,--wrap=spi_read,--wrap=spi_transfer,--wrap=gpio_init,--wrap=gpio_set_state,--wrap=gpio_get_state,--wrap=gpio_toggle
 
+TPS382X_TEST_FLAGS=$(FLAGS),--wrap=gpio_init,--wrap=gpio_set_state,--wrap=gpio_get_state,--wrap=gpio_toggle
+
 .PHONY: all
-all: cy15x102qn_test 
+all: cy15x102qn_test tps382x_test
 
 .PHONY: cy15x102qn_test
 cy15x102qn_test: $(BUILD_DIR)/cy15x102qn.o $(BUILD_DIR)/cy15x102qn_gpio.o $(BUILD_DIR)/cy15x102qn_spi.o $(BUILD_DIR)/cy15x102qn_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o
 	$(CC) $(CY15X102QN_TEST_FLAGS) $(BUILD_DIR)/cy15x102qn.o $(BUILD_DIR)/cy15x102qn_gpio.o $(BUILD_DIR)/cy15x102qn_spi.o $(BUILD_DIR)/cy15x102qn_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o -o $(BUILD_DIR)/$(TARGET_CY15X102QN) -lcmocka
+
+.PHONY: tps382x_test
+tps382x_test: $(BUILD_DIR)/tps382x.o $(BUILD_DIR)/tps382x_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/gpio_wrap.o
+	$(CC) $(TPS382X_TEST_FLAGS) $(BUILD_DIR)/tps382x.o $(BUILD_DIR)/tps382x_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/gpio_wrap.o -o $(BUILD_DIR)/$(TARGET_TPS382X) -lcmocka
 
 # Drivers
 $(BUILD_DIR)/cy15x102qn.o: ../../drivers/cy15x102qn/cy15x102qn.c
@@ -27,9 +34,15 @@ $(BUILD_DIR)/cy15x102qn_gpio.o: ../../drivers/cy15x102qn/cy15x102qn_gpio.c
 $(BUILD_DIR)/cy15x102qn_spi.o: ../../drivers/cy15x102qn/cy15x102qn_spi.c
 	$(CC) $(CY15X102QN_TEST_FLAGS) -c $< -o $@
 
+$(BUILD_DIR)/tps382x.o: ../../drivers/tps382x/tps382x.c
+	$(CC) $(TPS382X_TEST_FLAGS) -c $< -o $@
+
 # Tests
 $(BUILD_DIR)/cy15x102qn_test.o: cy15x102qn_test.c
 	$(CC) $(CY15X102QN_TEST_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/tps382x_test.o: tps382x_test.c
+	$(CC) $(TPS382X_TEST_FLAGS) -c $< -o $@
 
 # Mockups
 $(BUILD_DIR)/sys_log_wrap.o: ../mockups/system/sys_log_wrap.c
@@ -55,4 +68,4 @@ $(BUILD_DIR)/task.o: ../freertos_sim/task.c
 
 .PHONY: clean
 clean:
-	rm $(BUILD_DIR)/$(TARGET_CY15X102QN) $(BUILD_DIR)/*.o
+	rm $(BUILD_DIR)/$(TARGET_CY15X102QN) $(BUILD_DIR)/$(TARGET_TPS382X) $(BUILD_DIR)/*.o
