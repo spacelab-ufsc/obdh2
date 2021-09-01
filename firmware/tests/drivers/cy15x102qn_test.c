@@ -211,10 +211,150 @@ static void cy15x102qn_write_test(void **state)
 
 static void cy15x102qn_read_test(void **state)
 {
+    /* Select device */
+    expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
+    expect_value(__wrap_spi_select_slave, active, true);
+
+    will_return(__wrap_spi_select_slave, 0);
+
+    /* Write opcode */
+    uint8_t cmd = CY15X102QN_OPCODE_READ;
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
+    expect_memory(__wrap_spi_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
+    /* Write address */
+    uint32_t adr = generate_random(0, CY15X102QN_MAX_ADDRESS);
+
+    uint8_t adr_arr[3] = {0x00};
+
+    adr_arr[0] = (uint8_t)(adr >> 16) & 0xFF;
+    adr_arr[1] = (uint8_t)(adr >> 8) & 0xFF;
+    adr_arr[2] = (uint8_t)(adr >> 0) & 0xFF;
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
+    expect_memory(__wrap_spi_write, data, (void*)adr_arr, 3);
+    expect_value(__wrap_spi_write, len, 3);
+
+    will_return(__wrap_spi_write, 0);
+
+    /* Read data */
+    uint8_t data[256] = {0xFF};
+    uint16_t data_len = generate_random(1, 256);
+
+    expect_value(__wrap_spi_read, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_read, cs, SPI_CS_NONE);
+    expect_value(__wrap_spi_read, len, data_len);
+
+    uint16_t i = 0;
+    for(i=0; i<data_len; i++)
+    {
+        data[i] = generate_random(0, 255);
+        will_return(__wrap_spi_read, data[i]);
+    }
+
+    will_return(__wrap_spi_read, 0);
+
+    /* Unselect device */
+    expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
+    expect_value(__wrap_spi_select_slave, active, false);
+
+    will_return(__wrap_spi_select_slave, 0);
+
+    uint8_t data_res[256] = {0xFF};
+
+    assert_return_code(cy15x102qn_read(&conf, adr, data_res, data_len), 0);
+
+    for(i=0; i<data_len; i++)
+    {
+        assert_int_equal(data[i], data_res[i]);
+    }
 }
 
 static void cy15x102qn_fast_read_test(void **state)
 {
+    /* Select device */
+    expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
+    expect_value(__wrap_spi_select_slave, active, true);
+
+    will_return(__wrap_spi_select_slave, 0);
+
+    /* Write opcode */
+    uint8_t cmd = CY15X102QN_OPCODE_FSTRD;
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
+    expect_memory(__wrap_spi_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
+    /* Write address */
+    uint32_t adr = generate_random(0, CY15X102QN_MAX_ADDRESS);
+
+    uint8_t adr_arr[3] = {0x00};
+
+    adr_arr[0] = (uint8_t)(adr >> 16) & 0xFF;
+    adr_arr[1] = (uint8_t)(adr >> 8) & 0xFF;
+    adr_arr[2] = (uint8_t)(adr >> 0) & 0xFF;
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
+    expect_memory(__wrap_spi_write, data, (void*)adr_arr, 3);
+    expect_value(__wrap_spi_write, len, 3);
+
+    will_return(__wrap_spi_write, 0);
+
+    /* Write dummy byte */
+    uint8_t dummy = 0x00;
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
+    expect_memory(__wrap_spi_write, data, (void*)&dummy, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
+    /* Read data */
+    uint8_t data[256] = {0xFF};
+    uint16_t data_len = generate_random(1, 256);
+
+    expect_value(__wrap_spi_read, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_read, cs, SPI_CS_NONE);
+    expect_value(__wrap_spi_read, len, data_len);
+
+    uint16_t i = 0;
+    for(i=0; i<data_len; i++)
+    {
+        data[i] = generate_random(0, 255);
+        will_return(__wrap_spi_read, data[i]);
+    }
+
+    will_return(__wrap_spi_read, 0);
+
+    /* Unselect device */
+    expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
+    expect_value(__wrap_spi_select_slave, active, false);
+
+    will_return(__wrap_spi_select_slave, 0);
+
+    uint8_t data_res[256] = {0xFF};
+
+    assert_return_code(cy15x102qn_fast_read(&conf, adr, data_res, data_len), 0);
+
+    for(i=0; i<data_len; i++)
+    {
+        assert_int_equal(data[i], data_res[i]);
+    }
 }
 
 static void cy15x102qn_special_sector_write_test(void **state)
@@ -235,18 +375,136 @@ static void cy15x102qn_read_unique_id_test(void **state)
 
 static void cy15x102qn_write_serial_number_test(void **state)
 {
+    /* Select device */
+    expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
+    expect_value(__wrap_spi_select_slave, active, true);
+
+    will_return(__wrap_spi_select_slave, 0);
+
+    /* Write opcode */
+    uint8_t cmd = CY15X102QN_OPCODE_WRSN;
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
+    expect_memory(__wrap_spi_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
+    /* Write serial number */
+    uint8_t data[8] = {0xFF};
+
+    uint16_t i = 0;
+    for(i=0; i<8; i++)
+    {
+        data[i] = generate_random(0, 255);
+    }
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
+    expect_memory(__wrap_spi_write, data, (void*)data, 8);
+    expect_value(__wrap_spi_write, len, 8);
+
+    will_return(__wrap_spi_write, 0);
+
+    /* Unselect device */
+    expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
+    expect_value(__wrap_spi_select_slave, active, false);
+
+    will_return(__wrap_spi_select_slave, 0);
+
+    cy15x102qn_serial_number_t ser_num = {0};
+
+    ser_num.customer_id     = ((uint16_t)data[0] << 8) | data[1];
+    ser_num.unique_number   = ((uint64_t)data[2] << 32) | ((uint64_t)data[3] << 24) | ((uint64_t)data[4] << 16) |
+                              ((uint64_t)data[5] << 8) | data[6];
+    ser_num.crc             = data[7];
+
+    assert_return_code(cy15x102qn_write_serial_number(&conf, ser_num), 0);
 }
 
 static void cy15x102qn_read_serial_number_test(void **state)
 {
+    /* Select device */
+    expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
+    expect_value(__wrap_spi_select_slave, active, true);
+
+    will_return(__wrap_spi_select_slave, 0);
+
+    /* Write opcode */
+    uint8_t cmd = CY15X102QN_OPCODE_SNR;
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
+    expect_memory(__wrap_spi_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
+    /* Read serial number */
+    expect_value(__wrap_spi_read, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_read, cs, SPI_CS_NONE);
+    expect_value(__wrap_spi_read, len, 8);
+
+    uint8_t ser_num_data[8] = {0xFF};
+
+    uint16_t i = 0;
+    for(i=0; i<8; i++)
+    {
+        ser_num_data[i] = generate_random(1, 256);
+
+        will_return(__wrap_spi_read, ser_num_data[i]);
+    }
+
+    will_return(__wrap_spi_read, 0);
+
+    /* Unselect device */
+    expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
+    expect_value(__wrap_spi_select_slave, active, false);
+
+    will_return(__wrap_spi_select_slave, 0);
+
+    cy15x102qn_serial_number_t ser_num = {0};
+
+    assert_return_code(cy15x102qn_read_serial_number(&conf, &ser_num), 0);
+
+    assert_int_equal(ser_num.customer_id, ((uint16_t)ser_num_data[0] << 8) | (uint16_t)ser_num_data[1]);
+    assert_int_equal(ser_num.unique_number, ((uint64_t)ser_num_data[2] << 32) | ((uint64_t)ser_num_data[3] << 24) |
+                                            ((uint64_t)ser_num_data[4] << 16) | ((uint64_t)ser_num_data[5] << 8) |
+                                            (uint64_t)ser_num_data[6]);
+    assert_int_equal(ser_num.crc, ser_num_data[7]);
 }
 
 static void cy15x102qn_deep_power_down_mode_test(void **state)
 {
+    uint8_t cmd = CY15X102QN_OPCODE_DPD;
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, CY15X102QN_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
+    assert_return_code(cy15x102qn_deep_power_down_mode(&conf), 0);
 }
 
 static void cy15x102qn_hibernate_mode_test(void **state)
 {
+    uint8_t cmd = CY15X102QN_OPCODE_HBN;
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, CY15X102QN_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
+    assert_return_code(cy15x102qn_hibernate_mode(&conf), 0);
 }
 
 static void cy15x102qn_spi_init_test(void **state)
@@ -303,7 +561,14 @@ static void cy15x102qn_spi_read_test(void **state)
 
     will_return(__wrap_spi_read, 0);
 
-    assert_return_code(cy15x102qn_spi_read(&conf, data_test, len_test), 0);
+    uint8_t data_res[256] = {0xFF};
+
+    assert_return_code(cy15x102qn_spi_read(&conf, data_res, len_test), 0);
+
+    for(i=0; i<len_test; i++)
+    {
+        assert_int_equal(data_test[i], data_res[i]);
+    }
 }
 
 static void cy15x102qn_spi_transfer_test(void **state)
