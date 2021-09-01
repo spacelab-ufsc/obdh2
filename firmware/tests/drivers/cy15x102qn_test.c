@@ -359,18 +359,251 @@ static void cy15x102qn_fast_read_test(void **state)
 
 static void cy15x102qn_special_sector_write_test(void **state)
 {
+    /* Select device */
+    expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
+    expect_value(__wrap_spi_select_slave, active, true);
+
+    will_return(__wrap_spi_select_slave, 0);
+
+    /* Write opcode */
+    uint8_t cmd = CY15X102QN_OPCODE_SSWR;
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
+    expect_memory(__wrap_spi_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
+    /* Write address */
+    uint32_t adr = generate_random(0, 255);
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
+    expect_memory(__wrap_spi_write, data, (void*)&adr, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
+    /* Write data */
+    uint8_t data[256] = {0xFF};
+    uint16_t data_len = generate_random(1, 256);
+
+    uint16_t i = 0;
+    for(i=0; i<data_len; i++)
+    {
+        data[i] = generate_random(0, 255);
+    }
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
+    expect_memory(__wrap_spi_write, data, (void*)data, data_len);
+    expect_value(__wrap_spi_write, len, data_len);
+
+    will_return(__wrap_spi_write, 0);
+
+    /* Unselect device */
+    expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
+    expect_value(__wrap_spi_select_slave, active, false);
+
+    will_return(__wrap_spi_select_slave, 0);
+
+    assert_return_code(cy15x102qn_special_sector_write(&conf, adr, data, data_len), 0);
 }
 
 static void cy15x102qn_special_sector_read_test(void **state)
 {
+    /* Select device */
+    expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
+    expect_value(__wrap_spi_select_slave, active, true);
+
+    will_return(__wrap_spi_select_slave, 0);
+
+    /* Write opcode */
+    uint8_t cmd = CY15X102QN_OPCODE_SSRD;
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
+    expect_memory(__wrap_spi_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
+    /* Write address */
+    uint32_t adr = generate_random(0, 255);
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
+    expect_memory(__wrap_spi_write, data, (void*)&adr, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
+    /* Read data */
+    uint8_t data[256] = {0xFF};
+    uint16_t data_len = generate_random(1, 256);
+
+    expect_value(__wrap_spi_read, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_read, cs, SPI_CS_NONE);
+    expect_value(__wrap_spi_read, len, data_len);
+
+    uint16_t i = 0;
+    for(i=0; i<data_len; i++)
+    {
+        data[i] = generate_random(0, 255);
+        will_return(__wrap_spi_read, data[i]);
+    }
+
+    will_return(__wrap_spi_read, 0);
+
+    /* Unselect device */
+    expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
+    expect_value(__wrap_spi_select_slave, active, false);
+
+    will_return(__wrap_spi_select_slave, 0);
+
+    uint8_t data_res[256] = {0xFF};
+
+    assert_return_code(cy15x102qn_special_sector_read(&conf, adr, data_res, data_len), 0);
+
+    for(i=0; i<data_len; i++)
+    {
+        assert_int_equal(data[i], data_res[i]);
+    }
 }
 
 static void cy15x102qn_read_device_id_test(void **state)
 {
+    /* Select device */
+    expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
+    expect_value(__wrap_spi_select_slave, active, true);
+
+    will_return(__wrap_spi_select_slave, 0);
+
+    /* Write opcode */
+    uint8_t cmd = CY15X102QN_OPCODE_RDID;
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
+    expect_memory(__wrap_spi_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
+    /* Read data */
+    uint8_t data[9] = {0xFF};
+
+    expect_value(__wrap_spi_read, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_read, cs, SPI_CS_NONE);
+    expect_value(__wrap_spi_read, len, 9);
+
+    uint16_t i = 0;
+    for(i=0; i<9; i++)
+    {
+        data[i] = generate_random(0, 255);
+        will_return(__wrap_spi_read, data[i]);
+    }
+
+    will_return(__wrap_spi_read, 0);
+
+    /* Unselect device */
+    expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
+    expect_value(__wrap_spi_select_slave, active, false);
+
+    will_return(__wrap_spi_select_slave, 0);
+
+    cy15x102qn_device_id_t dev_id = {0};
+
+    assert_return_code(cy15x102qn_read_device_id(&conf, &dev_id), 0);
+
+    uint64_t manufacturer_id = ((uint64_t)data[8] << 48) |
+                               ((uint64_t)data[7] << 40) |
+                               ((uint64_t)data[6] << 32) |
+                               ((uint64_t)data[5] << 24) |
+                               ((uint64_t)data[4] << 16) |
+                               ((uint64_t)data[3] << 8) |
+                                (uint64_t)data[2];
+
+    uint8_t family          = (data[1] & 0xE0) >> 5;
+    uint8_t density         = (data[1] & 0x1E) >> 1;
+    uint8_t inrush          = data[1] & 0x01;
+    uint8_t sub_type        = (data[0] & 0xE0) >> 5;
+    uint8_t revision        = (data[0] & 0x18) >> 3;
+    uint8_t voltage         = (data[0] & 0x04) >> 2;
+    uint8_t frequency       = data[0] & 0x03;
+
+    assert_int_equal(dev_id.manufacturer_id,    manufacturer_id);
+    assert_int_equal(dev_id.family,             family);
+    assert_int_equal(dev_id.density,            density);
+    assert_int_equal(dev_id.inrush,             inrush);
+    assert_int_equal(dev_id.sub_type,           sub_type);
+    assert_int_equal(dev_id.revision,           revision);
+    assert_int_equal(dev_id.voltage,            voltage);
+    assert_int_equal(dev_id.frequency,          frequency);
 }
 
 static void cy15x102qn_read_unique_id_test(void **state)
 {
+    /* Select device */
+    expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
+    expect_value(__wrap_spi_select_slave, active, true);
+
+    will_return(__wrap_spi_select_slave, 0);
+
+    /* Write opcode */
+    uint8_t cmd = CY15X102QN_OPCODE_RUID;
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
+    expect_memory(__wrap_spi_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
+    /* Read data */
+    uint8_t data[8] = {0xFF};
+
+    expect_value(__wrap_spi_read, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_read, cs, SPI_CS_NONE);
+    expect_value(__wrap_spi_read, len, 8);
+
+    uint16_t i = 0;
+    for(i=0; i<8; i++)
+    {
+        data[i] = generate_random(0, 255);
+        will_return(__wrap_spi_read, data[i]);
+    }
+
+    will_return(__wrap_spi_read, 0);
+
+    /* Unselect device */
+    expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
+    expect_value(__wrap_spi_select_slave, active, false);
+
+    will_return(__wrap_spi_select_slave, 0);
+
+    cy15x102qn_uid_t uid = 0;
+
+    assert_return_code(cy15x102qn_read_unique_id(&conf, &uid), 0);
+
+    uint64_t uid_res = ((uint64_t)data[7] << 56) |
+                       ((uint64_t)data[6] << 48) |
+                       ((uint64_t)data[5] << 40) |
+                       ((uint64_t)data[4] << 32) |
+                       ((uint64_t)data[3] << 24) |
+                       ((uint64_t)data[2] << 16) |
+                       ((uint64_t)data[1] << 8) |
+                        (uint64_t)data[0];
+
+    assert_int_equal(uid, uid_res);
 }
 
 static void cy15x102qn_write_serial_number_test(void **state)
