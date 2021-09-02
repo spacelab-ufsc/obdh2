@@ -4,3 +4,4 @@
 * TPS382x
 * TCA4311A
 * EDC
+* ISIS Antenna
