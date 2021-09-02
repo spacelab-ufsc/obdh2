@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.4
+ * \version 0.7.12
  * 
  * \date 2019/10/27
  * 
@@ -347,6 +347,15 @@ uint16_t edc_calc_checksum(uint8_t *data, uint16_t len);
  * \return The status/error code.
  */
 int edc_get_state(edc_state_t *state_data);
+
+/**
+ * \brief Gets the PTT data.
+ *
+ * \param[in,out] ptt_data is a pointer to store the ptt data.
+ *
+ * \return The status/error code.
+ */
+int edc_get_ptt(edc_ptt_t *ptt_data);
 
 /**
  * \brief Gets the housekeeping data.
