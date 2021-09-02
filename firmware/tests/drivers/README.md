@@ -3,3 +3,4 @@
 * CY15x102QN
 * TPS382x
 * TCA4311A
+* EDC
