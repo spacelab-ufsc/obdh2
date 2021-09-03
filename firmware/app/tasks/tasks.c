@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.39
+ * \version 0.7.7
  * 
  * \date 2019/11/02
  * 
@@ -53,6 +53,7 @@
 #include "read_eps.h"
 #include "read_ttc.h"
 #include "data_log.h"
+#include "process_tc.h"
 
 void create_tasks()
 {
@@ -184,6 +185,15 @@ void create_tasks()
         /* Error creating the data log task */
     }
 #endif /* CONFIG_TASK_DATA_LOG_ENABLED */
+
+#if CONFIG_TASK_PROCESS_TC_ENABLED == 1
+    xTaskCreate(vTaskProcessTC, TASK_PROCESS_TC_NAME, TASK_PROCESS_TC_STACK_SIZE, NULL, TASK_PROCESS_TC_PRIORITY, &xTaskProcessTCHandle);
+
+    if (xTaskProcessTCHandle == NULL)
+    {
+        /* Error creating the process TC task */
+    }
+#endif /* CONFIG_TASK_PROCESS_TC_ENABLED */
 
     create_event_groups();
 }

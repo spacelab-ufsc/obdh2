@@ -58,15 +58,15 @@ typedef struct
     uint8_t mode;
 } phj_config_gpio;
 
-int phj_init(phj_config_i2c config);
+int phj_init_i2c(phj_config_i2c config);
 
 int phj_init_gpio(phj_config_gpio config);
 
 int phj_read(uint8_t *data, uint16_t len);
 
-int phj_check_converter();
+int phj_check_converter(void);
 
-int phj_check_message();
+int phj_check_message(void);
 
 #endif /* PHJ_H_ */
 

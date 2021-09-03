@@ -1,7 +1,7 @@
 /*
  * flash.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.5
+ * \version 0.7.4
  * 
- * \date 17/03/2020
+ * \date 2020/03/17
  * 
  * \defgroup flash Flash
  * \ingroup drivers
@@ -70,7 +70,7 @@
  *
  * \return The status/error code.
  */
-int flash_init();
+int flash_init(void);
 
 /**
  * \brief Writes data into the flash memory.

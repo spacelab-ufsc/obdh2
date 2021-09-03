@@ -1,7 +1,7 @@
 /*
  * si446x_gpio.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.23
+ * \version 0.7.9
  * 
- * \date 14/05/2020
+ * \date 2020/05/14
  * 
  * \defgroup si446x_gpio GPIO
  * \ingroup si446x
@@ -38,7 +38,7 @@
 
 #include "si446x.h"
 
-int si446x_gpio_init()
+int si446x_gpio_init(void)
 {
     /* SDN pin */
     if (gpio_init(GPIO_PIN_4, (gpio_config_t){.mode=GPIO_MODE_OUTPUT}) != 0)
@@ -55,7 +55,7 @@ int si446x_gpio_write_sdn(bool state)
     return gpio_set_state(GPIO_PIN_4, state);
 }
 
-int si446x_gpio_read_nirq()
+int si446x_gpio_read_nirq(void)
 {
     return gpio_get_state(GPIO_PIN_3);
 }
