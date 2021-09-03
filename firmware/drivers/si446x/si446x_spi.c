@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.34
+ * \version 0.7.9
  * 
  * \date 2017/07/29
  * 
@@ -40,7 +40,7 @@
 #include <drivers/spi/spi.h>
 #include <drivers/gpio/gpio.h>
 
-int si446x_spi_init()
+int si446x_spi_init(void)
 {
     return spi_init(SPI_PORT_0, (spi_config_t){.speed_hz=CONFIG_SPI_PORT_0_SPEED_BPS, .mode=SPI_MODE_1});
 }

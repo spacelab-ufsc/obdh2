@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.0
+ * \version 0.7.5
  * 
  * \date 2019/12/04
  * 
@@ -43,12 +43,12 @@
 #include <devices/leds/leds.h>
 #include <devices/eps/eps.h>
 #include <devices/radio/radio.h>
-#include <devices/payload_edc/payload_edc.h>
 #include <devices/current_sensor/current_sensor.h>
 #include <devices/voltage_sensor/voltage_sensor.h>
 #include <devices/temp_sensor/temp_sensor.h>
 #include <devices/antenna/antenna.h>
 #include <devices/media/media.h>
+#include <devices/payload/payload.h>
 
 #include <ngham/ngham.h>
 
@@ -171,7 +171,7 @@ void vTaskStartup(void *pvParameters)
 
 #if CONFIG_DEV_PAYLOAD_EDC_ENABLED == 1
     /* Payload EDC device initialization */
-    if (payload_edc_init() != 0)
+    if (payload_init(PAYLOAD_EDC) != 0)
     {
         error_counter++;
     }

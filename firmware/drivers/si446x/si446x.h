@@ -1,7 +1,7 @@
 /*
  * si446x.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.23
+ * \version 0.7.9
  * 
- * \date 01/06/2017
+ * \date 2017/06/01
  * 
  * \defgroup si446x Si446x
  * \ingroup drivers
@@ -620,7 +620,7 @@ int si446x_get_cmd(uint8_t *cmd, uint16_t cmd_len, uint8_t *result, uint16_t res
  *
  * \return The status/error code.
  */
-int si446x_spi_init();
+int si446x_spi_init(void);
 
 /**
  * \brief SPI transfer routine (write and read at the same time).
@@ -671,7 +671,7 @@ int si446x_spi_read(uint8_t *data, uint16_t len);
  *
  * \return The status/error code.
  */
-int si446x_gpio_init();
+int si446x_gpio_init(void);
 
 /**
  * \brief Write the state of the SDN pin.
@@ -692,7 +692,7 @@ int si446x_gpio_write_sdn(bool state);
  *      .
  * \endparblock
  */
-int si446x_gpio_read_nirq();
+int si446x_gpio_read_nirq(void);
 
 /**
  * \brief Milliseconds delay.

@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.21
+ * \version 0.7.4
  * 
- * \date 27/10/2019
+ * \date 2019/10/27
  * 
  * \defgroup radio Radio
  * \ingroup devices
@@ -46,7 +46,7 @@
  *
  * \return The status/error code.
  */
-int radio_init();
+int radio_init(void);
 
 /**
  * \brief Writes data to the radio device.
@@ -79,14 +79,14 @@ int radio_recv(uint8_t *data, uint16_t len, uint32_t timeout_ms);
  *
  * \return The number of available bytes to receive (-1 on error).
  */
-int radio_available();
+int radio_available(void);
 
 /**
  * \brief Puts the radio in sleep mode.
  *
  * \return Tge status/error code.
  */
-int radio_sleep();
+int radio_sleep(void);
 
 #endif /* RADIO_H_ */
 

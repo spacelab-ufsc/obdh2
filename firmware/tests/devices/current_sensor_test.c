@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.3
+ * \version 0.7.8
  * 
  * \date 2021/02/11
  * 
@@ -42,8 +42,6 @@
 #include <cmocka.h>
 
 #include <devices/current_sensor/current_sensor.h>
-#include <tests/mockups/sys_log_wrap.h>
-#include <tests/mockups/adc_wrap.h>
 
 #define CURRENT_SENSOR_ADC_PORT         ADC_PORT_8
 #define CURRENT_SENSOR_ADC_MIN_VAL      0
@@ -56,11 +54,11 @@ static void current_sensor_init_test(void **state)
     expect_value(__wrap_adc_init, port, CURRENT_SENSOR_ADC_PORT);
     expect_value(__wrap_adc_read, port, CURRENT_SENSOR_ADC_PORT);
 
+    will_return(__wrap_adc_init, 0);
     will_return(__wrap_adc_read, 1024);
+    will_return(__wrap_adc_read, 0);
 
-    int result = current_sensor_init();
-
-    assert_return_code(result, 0);
+    assert_return_code(current_sensor_init(), 0);
 }
 
 static void current_sensor_read_raw_test(void **state)
@@ -72,6 +70,7 @@ static void current_sensor_read_raw_test(void **state)
         expect_value(__wrap_adc_read, port, CURRENT_SENSOR_ADC_PORT);
 
         will_return(__wrap_adc_read, i);
+        will_return(__wrap_adc_read, 0);
 
         uint16_t raw_current = UINT16_MAX;
 
@@ -103,6 +102,7 @@ static void current_sensor_read_ma_test(void **state)
         expect_value(__wrap_adc_read, port, CURRENT_SENSOR_ADC_PORT);
 
         will_return(__wrap_adc_read, i);
+        will_return(__wrap_adc_read, 0);
 
         uint16_t current_ma = UINT16_MAX;
 

@@ -122,7 +122,9 @@ void csp_rtable_print(void) {
     sys_log_print_event_from_module(SYS_LOG_INFO, LIBCSP_MODULE_NAME, "Node  Interface  Address");
     sys_log_new_line();
 	for (i = 0; i < CSP_DEFAULT_ROUTE; i++)
+    {
 		if (routes[i].interface != NULL)
+        {
             /* printf("%4u  %-9s  %u\r\n", i, */
             /*        routes[i].interface->name, */
             /*        routes[i].mac == CSP_NODE_MAC ? i : routes[i].mac); */
@@ -133,6 +135,8 @@ void csp_rtable_print(void) {
             sys_log_print_msg("  ");
             sys_log_print_uint(routes[i].mac == CSP_NODE_MAC ? i : routes[i].mac);
             sys_log_new_line();
+        }
+    }
     /* printf("   *  %-9s  %u\r\n", routes[CSP_DEFAULT_ROUTE].interface->name, routes[CSP_DEFAULT_ROUTE].mac); */
     sys_log_print_event_from_module(SYS_LOG_INFO, LIBCSP_MODULE_NAME, "   *  ");
     sys_log_print_str(routes[CSP_DEFAULT_ROUTE].interface->name);

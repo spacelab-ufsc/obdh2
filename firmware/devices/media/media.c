@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.36
+ * \version 0.7.8
  * 
  * \date 2020/07/21
  * 
@@ -33,19 +33,41 @@
  * \{
  */
 
+#include <config/config.h>
 #include <system/sys_log/sys_log.h>
 
 #include <drivers/flash/flash.h>
 #include <drivers/mt25q/mt25q.h>
+#include <drivers/cy15x102qn/cy15x102qn.h>
 
 #include "media.h"
 
-int media_init(media_e med)
+cy15x102qn_config_t fram_conf = {0};
+
+int media_init(media_t med)
 {
     switch(med)
     {
         case MEDIA_INT_FLASH:
             return flash_init();
+        case MEDIA_FRAM:
+            sys_log_print_event_from_module(SYS_LOG_INFO, MEDIA_MODULE_NAME, "Initializing FRAM memory...");
+            sys_log_new_line();
+
+            fram_conf.port      = SPI_PORT_0;
+            fram_conf.cs_pin    = SPI_CS_5;
+            fram_conf.clock_hz  = CONFIG_SPI_PORT_0_SPEED_BPS;
+            fram_conf.wp_pin    = GPIO_PIN_62;
+
+            if (cy15x102qn_init(&fram_conf) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error initializing the FRAM memory!");
+                sys_log_new_line();
+
+                return -1;
+            }
+
+            return 0;
         case MEDIA_NOR:
             sys_log_print_event_from_module(SYS_LOG_INFO, MEDIA_MODULE_NAME, "Initializing NOR memory...");
             sys_log_new_line();
@@ -104,7 +126,7 @@ int media_init(media_e med)
     }
 }
 
-int media_write(media_e med, uint32_t adr, uint8_t *data, uint16_t len)
+int media_write(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
 {
     switch(med)
     {
@@ -121,6 +143,16 @@ int media_write(media_e med, uint32_t adr, uint8_t *data, uint16_t len)
 
             return 0;
         }
+        case MEDIA_FRAM:
+            if (cy15x102qn_write(&fram_conf, adr, data, len) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error wriring data to the FRAM memory!");
+                sys_log_new_line();
+
+                return -1;
+            }
+
+            return 0;
         case MEDIA_NOR:
             if (mt25q_write(adr, data, len) != 0)
             {
@@ -141,7 +173,7 @@ int media_write(media_e med, uint32_t adr, uint8_t *data, uint16_t len)
     }
 }
 
-int media_read(media_e med, uint32_t adr, uint8_t *data, uint16_t len)
+int media_read(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
 {
     switch(med)
     {
@@ -158,6 +190,14 @@ int media_read(media_e med, uint32_t adr, uint8_t *data, uint16_t len)
 
             return 0;
         }
+        case MEDIA_FRAM:
+            if (cy15x102qn_read(&fram_conf, adr, data, len) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error reading data from the FRAM memory!");
+                sys_log_new_line();
+            }
+
+            return 0;
         case MEDIA_NOR:
             if (mt25q_read(adr, data, len) != 0)
             {
@@ -176,13 +216,16 @@ int media_read(media_e med, uint32_t adr, uint8_t *data, uint16_t len)
     }
 }
 
-int media_erase(media_e med, media_erase_e type, uint32_t sector)
+int media_erase(media_t med, media_erase_t type, uint32_t sector)
 {
     switch(med)
     {
         case MEDIA_INT_FLASH:
             flash_write_single(0xFF, (uint8_t*)sector);
 
+            return 0;
+        case MEDIA_FRAM:
+            /* The FRAM memory does not have an erase operation */
             return 0;
         case MEDIA_NOR:
             switch(type)
@@ -237,11 +280,12 @@ int media_erase(media_e med, media_erase_e type, uint32_t sector)
     }
 }
 
-media_info_t media_get_info(media_e med)
+media_info_t media_get_info(media_t med)
 {
     switch(med)
     {
         case MEDIA_INT_FLASH:   return (media_info_t){0};
+        case MEDIA_FRAM:        return (media_info_t){0};
         case MEDIA_NOR:         return mt25q_get_flash_description();
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Invalid storage media to get the information!");
