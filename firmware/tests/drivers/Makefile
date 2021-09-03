@@ -3,6 +3,7 @@ TARGET_TPS382X=tps382x_unit_test
 TARGET_TCA4311A=tca4311a_unit_test
 TARGET_EDC=edc_unit_test
 TARGET_ISIS_ANTENNA=isis_antenna_unit_test
+TARGET_SL_EPS2=sl_eps2_unit_test
 
 ifndef BUILD_DIR
 	BUILD_DIR=$(CURDIR)
@@ -22,8 +23,10 @@ EDC_TEST_FLAGS=$(FLAGS),--wrap=i2c_init,--wrap=i2c_write,--wrap=i2c_read
 
 ISIS_ANTENNA_TEST_FLAGS=$(FLAGS),--wrap=i2c_init,--wrap=i2c_write,--wrap=i2c_read
 
+SL_EPS2_TEST_FLAGS=$(FLAGS),--wrap=i2c_init,--wrap=i2c_write,--wrap=i2c_read,--wrap=gpio_init,--wrap=gpio_set_state,--wrap=gpio_get_state,--wrap=gpio_toggle
+
 .PHONY: all
-all: cy15x102qn_test tps382x_test tca4311a_test edc_test isis_antenna_test
+all: cy15x102qn_test tps382x_test tca4311a_test edc_test isis_antenna_test sl_eps2_test
 
 .PHONY: cy15x102qn_test
 cy15x102qn_test: $(BUILD_DIR)/cy15x102qn.o $(BUILD_DIR)/cy15x102qn_gpio.o $(BUILD_DIR)/cy15x102qn_spi.o $(BUILD_DIR)/cy15x102qn_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o
@@ -44,6 +47,10 @@ edc_test: $(BUILD_DIR)/edc.o $(BUILD_DIR)/edc_delay.o $(BUILD_DIR)/edc_test.o $(
 .PHONY: isis_antenna_test
 isis_antenna_test: $(BUILD_DIR)/isis_antenna.o $(BUILD_DIR)/isis_antenna_delay.o $(BUILD_DIR)/isis_antenna_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/i2c_wrap.o $(BUILD_DIR)/task.o
 	$(CC) $(ISIS_ANTENNA_TEST_FLAGS) $(BUILD_DIR)/isis_antenna.o $(BUILD_DIR)/isis_antenna_delay.o $(BUILD_DIR)/isis_antenna_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/i2c_wrap.o $(BUILD_DIR)/task.o -o $(BUILD_DIR)/$(TARGET_ISIS_ANTENNA) -lm -lcmocka
+
+.PHONY: sl_eps2_test
+sl_eps2_test: $(BUILD_DIR)/sl_eps2.o $(BUILD_DIR)/sl_eps2_delay.o $(BUILD_DIR)/sl_eps2_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/tca4311a.o $(BUILD_DIR)/i2c_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/task.o
+	$(CC) $(SL_EPS2_TEST_FLAGS) $(BUILD_DIR)/sl_eps2.o $(BUILD_DIR)/sl_eps2_delay.o $(BUILD_DIR)/sl_eps2_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/tca4311a.o $(BUILD_DIR)/i2c_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/task.o -o $(BUILD_DIR)/$(TARGET_SL_EPS2) -lm -lcmocka
 
 # Drivers
 $(BUILD_DIR)/cy15x102qn.o: ../../drivers/cy15x102qn/cy15x102qn.c
@@ -73,6 +80,12 @@ $(BUILD_DIR)/isis_antenna.o: ../../drivers/isis_antenna/isis_antenna.c
 $(BUILD_DIR)/isis_antenna_delay.o: ../../drivers/isis_antenna/isis_antenna_delay.c
 	$(CC) $(ISIS_ANTENNA_TEST_FLAGS) -c $< -o $@
 
+$(BUILD_DIR)/sl_eps2.o: ../../drivers/sl_eps2/sl_eps2.c
+	$(CC) $(SL_EPS2_TEST_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/sl_eps2_delay.o: ../../drivers/sl_eps2/sl_eps2_delay.c
+	$(CC) $(SL_EPS2_TEST_FLAGS) -c $< -o $@
+
 # Tests
 $(BUILD_DIR)/cy15x102qn_test.o: cy15x102qn_test.c
 	$(CC) $(CY15X102QN_TEST_FLAGS) -c $< -o $@
@@ -88,6 +101,9 @@ $(BUILD_DIR)/edc_test.o: edc_test.c
 
 $(BUILD_DIR)/isis_antenna_test.o: isis_antenna_test.c
 	$(CC) $(ISIS_ANTENNA_TEST_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/sl_eps2_test.o: sl_eps2_test.c
+	$(CC) $(SL_EPS2_TEST_FLAGS) -c $< -o $@
 
 # Mockups
 $(BUILD_DIR)/sys_log_wrap.o: ../mockups/system/sys_log_wrap.c
@@ -116,4 +132,4 @@ $(BUILD_DIR)/task.o: ../freertos_sim/task.c
 
 .PHONY: clean
 clean:
-	rm $(BUILD_DIR)/$(TARGET_CY15X102QN) $(BUILD_DIR)/$(TARGET_TPS382X) $(BUILD_DIR)/$(TARGET_TCA4311A) $(BUILD_DIR)/$(TARGET_EDC) $(BUILD_DIR)/$(TARGET_ISIS_ANTENNA) $(BUILD_DIR)/*.o
+	rm $(BUILD_DIR)/$(TARGET_CY15X102QN) $(BUILD_DIR)/$(TARGET_TPS382X) $(BUILD_DIR)/$(TARGET_TCA4311A) $(BUILD_DIR)/$(TARGET_EDC) $(BUILD_DIR)/$(TARGET_ISIS_ANTENNA) $(BUILD_DIR)/$(TARGET_SL_EPS2) $(BUILD_DIR)/*.o

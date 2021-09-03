@@ -5,3 +5,4 @@
 * TCA4311A
 * EDC
 * ISIS Antenna
+* SpaceLab EPS 2.0

@@ -5,3 +5,4 @@
 ./tca4311a_unit_test
 ./edc_unit_test
 ./isis_antenna_unit_test
+./sl_eps2_unit_test
