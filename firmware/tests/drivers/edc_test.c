@@ -42,6 +42,7 @@
 #include <cmocka.h>
 
 #include <stdlib.h>
+#include <math.h>
 
 #include <drivers/i2c/i2c.h>
 #include <drivers/edc/edc.h>
@@ -403,18 +404,166 @@ static void edc_start_adc_task_test(void **state)
 
 static void edc_get_state_pkg_test(void **state)
 {
+    /* Write command */
+    uint8_t cmd = 0x30;
+
+    expect_value(__wrap_i2c_write, port, EDC_I2C_PORT);
+    expect_value(__wrap_i2c_write, adr, EDC_I2C_ADR);
+    expect_memory(__wrap_i2c_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_i2c_write, len, 1);
+
+    will_return(__wrap_i2c_write, 0);
+
+    /* Read */
+    uint8_t data[256] = {0xFF};
+
+    expect_value(__wrap_i2c_read, port, EDC_I2C_PORT);
+    expect_value(__wrap_i2c_read, adr, EDC_I2C_ADR);
+    expect_value(__wrap_i2c_read, len, 9);
+
+    data[0] = 0x11;
+    will_return(__wrap_i2c_read, 0x11);
+
+    uint16_t i = 0;
+    for(i=1; i<9; i++)
+    {
+        data[i] = generate_random(0, 255);
+        will_return(__wrap_i2c_read, data[i]);
+    }
+
+    will_return(__wrap_i2c_read, 0);
+
+    uint8_t status[256] = {0xFF};
+
+    assert_int_equal(edc_get_state_pkg(status), 9);
+
+    for(i=0; i<9; i++)
+    {
+        assert_int_equal(status[i], data[i]);
+    }
 }
 
 static void edc_get_ptt_pkg_test(void **state)
 {
+    /* Write command */
+    uint8_t cmd[2] = {0x31, 0};
+
+    expect_value(__wrap_i2c_write, port, EDC_I2C_PORT);
+    expect_value(__wrap_i2c_write, adr, EDC_I2C_ADR);
+    expect_memory(__wrap_i2c_write, data, (void*)cmd, 2);
+    expect_value(__wrap_i2c_write, len, 2);
+
+    will_return(__wrap_i2c_write, 0);
+
+    /* Read */
+    uint8_t data[256] = {0xFF};
+
+    expect_value(__wrap_i2c_read, port, EDC_I2C_PORT);
+    expect_value(__wrap_i2c_read, adr, EDC_I2C_ADR);
+    expect_value(__wrap_i2c_read, len, 49);
+
+    data[0] = 0x22;
+    will_return(__wrap_i2c_read, 0x22);
+
+    uint16_t i = 0;
+    for(i=1; i<49; i++)
+    {
+        data[i] = generate_random(0, 255);
+        will_return(__wrap_i2c_read, data[i]);
+    }
+
+    will_return(__wrap_i2c_read, 0);
+
+    uint8_t ptt[256] = {0xFF};
+
+    assert_int_equal(edc_get_ptt_pkg(ptt), 49);
+
+    for(i=0; i<49; i++)
+    {
+        assert_int_equal(ptt[i], data[i]);
+    }
 }
 
 static void edc_get_hk_pkg_test(void **state)
 {
+    /* Write command */
+    uint8_t cmd = 0x32;
+
+    expect_value(__wrap_i2c_write, port, EDC_I2C_PORT);
+    expect_value(__wrap_i2c_write, adr, EDC_I2C_ADR);
+    expect_memory(__wrap_i2c_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_i2c_write, len, 1);
+
+    will_return(__wrap_i2c_write, 0);
+
+    /* Read */
+    uint8_t data[256] = {0xFF};
+
+    expect_value(__wrap_i2c_read, port, EDC_I2C_PORT);
+    expect_value(__wrap_i2c_read, adr, EDC_I2C_ADR);
+    expect_value(__wrap_i2c_read, len, 21);
+
+    data[0] = 0x44;
+    will_return(__wrap_i2c_read, 0x44);
+
+    uint16_t i = 0;
+    for(i=1; i<21; i++)
+    {
+        data[i] = generate_random(0, 255);
+        will_return(__wrap_i2c_read, data[i]);
+    }
+
+    will_return(__wrap_i2c_read, 0);
+
+    uint8_t hk[256] = {0xFF};
+
+    assert_int_equal(edc_get_hk_pkg(hk), 21);
+
+    for(i=0; i<21; i++)
+    {
+        assert_int_equal(hk[i], data[i]);
+    }
 }
 
 static void edc_get_adc_seq_test(void **state)
 {
+    /* Write command */
+    uint8_t cmd[3] = {0x34, 0, 0};
+
+    expect_value(__wrap_i2c_write, port, EDC_I2C_PORT);
+    expect_value(__wrap_i2c_write, adr, EDC_I2C_ADR);
+    expect_memory(__wrap_i2c_write, data, (void*)&cmd, 3);
+    expect_value(__wrap_i2c_write, len, 3);
+
+    will_return(__wrap_i2c_write, 0);
+
+    /* Read */
+    uint8_t data[8199] = {0xFF};
+
+    expect_value(__wrap_i2c_read, port, EDC_I2C_PORT);
+    expect_value(__wrap_i2c_read, adr, EDC_I2C_ADR);
+    expect_value(__wrap_i2c_read, len, 8199);
+
+    data[0] = 0x33;
+    will_return(__wrap_i2c_read, 0x33);
+
+    uint16_t i = 0;
+    for(i=1; i<8199; i++)
+    {
+        data[i] = generate_random(0, 255);
+        will_return(__wrap_i2c_read, data[i]);
+    }
+
+    will_return(__wrap_i2c_read, 0);
+
+    uint8_t seq[8199] = {0xFF};
+
+    assert_int_equal(edc_get_adc_seq(seq), 8199);
+
+    for(i=0; i<8199; i++)
+    {
+        assert_int_equal(seq[i], data[i]);
+    }
 }
 
 static void edc_echo_test(void **state)
@@ -458,10 +607,166 @@ static void edc_calc_checksum_test(void **state)
 
 static void edc_get_state_test(void **state)
 {
+    /* Write command */
+    uint8_t cmd = 0x30;
+
+    expect_value(__wrap_i2c_write, port, EDC_I2C_PORT);
+    expect_value(__wrap_i2c_write, adr, EDC_I2C_ADR);
+    expect_memory(__wrap_i2c_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_i2c_write, len, 1);
+
+    will_return(__wrap_i2c_write, 0);
+
+    /* Read */
+    uint8_t data[256] = {0xFF};
+
+    expect_value(__wrap_i2c_read, port, EDC_I2C_PORT);
+    expect_value(__wrap_i2c_read, adr, EDC_I2C_ADR);
+    expect_value(__wrap_i2c_read, len, 9);
+
+    uint16_t i = 0;
+    uint8_t checksum = 0;
+    for(i=0; i<8; i++)
+    {
+        if (i == 0)
+        {
+            data[0] = 0x11;
+            will_return(__wrap_i2c_read, 0x11);
+        }
+        else
+        {
+            data[i] = generate_random(0, 255);
+            will_return(__wrap_i2c_read, data[i]);
+        }
+
+        checksum ^= data[i];
+    }
+
+    data[i] = checksum;
+    will_return(__wrap_i2c_read, data[i]);
+
+    will_return(__wrap_i2c_read, 0);
+
+    edc_state_t st = {0};
+
+    assert_return_code(edc_get_state(&st), 0);
+}
+
+static void edc_get_ptt_test(void **state)
+{
+    /* Write command */
+    uint8_t cmd[2] = {0x31, 0};
+
+    expect_value(__wrap_i2c_write, port, EDC_I2C_PORT);
+    expect_value(__wrap_i2c_write, adr, EDC_I2C_ADR);
+    expect_memory(__wrap_i2c_write, data, (void*)cmd, 2);
+    expect_value(__wrap_i2c_write, len, 2);
+
+    will_return(__wrap_i2c_write, 0);
+
+    /* Read */
+    uint8_t data[256] = {0xFF};
+
+    expect_value(__wrap_i2c_read, port, EDC_I2C_PORT);
+    expect_value(__wrap_i2c_read, adr, EDC_I2C_ADR);
+    expect_value(__wrap_i2c_read, len, 49);
+
+    uint16_t i = 0;
+    uint8_t checksum = 0;
+    for(i=0; i<48; i++)
+    {
+        if (i == 0)
+        {
+            data[i] = 0x22;
+            will_return(__wrap_i2c_read, 0x22);
+        }
+        else
+        {
+            data[i] = generate_random(0, 255);
+            will_return(__wrap_i2c_read, data[i]);
+        }
+
+        checksum ^= data[i];
+    }
+
+    data[i] = checksum;
+    will_return(__wrap_i2c_read, data[i]);
+
+    will_return(__wrap_i2c_read, 0);
+
+    edc_ptt_t ptt = {0};
+
+    assert_return_code(edc_get_ptt(&ptt), 0);
+
+    assert_int_equal(ptt.time_tag, ((uint32_t)data[4] << 24) | ((uint32_t)data[3] << 16) | ((uint32_t)data[2] << 8) | ((uint32_t)data[1] << 0));
+    assert_int_equal(ptt.error_code, data[5]);
+    int32_t carrier_freq = ((uint32_t)data[9] << 24) | ((uint32_t)data[8] << 16) | ((uint32_t)data[7] << 8) | ((uint32_t)data[6] << 0);
+    assert_int_equal(ptt.carrier_freq, carrier_freq*128/pow(2, 11) + 401635);
+    assert_int_equal(ptt.carrier_abs, ((uint16_t)data[11] << 8) | ((uint16_t)data[10] << 0));
+    assert_int_equal(ptt.msg_byte_length, data[12]);
+
+    for(i=13; i<36; i++)
+    {
+        assert_int_equal(ptt.user_msg[i-13], data[i]);
+    }
 }
 
 static void edc_get_hk_test(void **state)
 {
+    /* Write command */
+    uint8_t cmd = 0x32;
+
+    expect_value(__wrap_i2c_write, port, EDC_I2C_PORT);
+    expect_value(__wrap_i2c_write, adr, EDC_I2C_ADR);
+    expect_memory(__wrap_i2c_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_i2c_write, len, 1);
+
+    will_return(__wrap_i2c_write, 0);
+
+    /* Read */
+    uint8_t data[256] = {0xFF};
+
+    expect_value(__wrap_i2c_read, port, EDC_I2C_PORT);
+    expect_value(__wrap_i2c_read, adr, EDC_I2C_ADR);
+    expect_value(__wrap_i2c_read, len, 21);
+
+    uint16_t i = 0;
+    uint8_t checksum = 0;
+    for(i=0; i<20; i++)
+    {
+        if (i == 0)
+        {
+            data[i] = 0x44;
+            will_return(__wrap_i2c_read, 0x44);
+        }
+        else
+        {
+            data[i] = generate_random(0, 255);
+            will_return(__wrap_i2c_read, data[i]);
+        }
+
+        checksum ^= data[i];
+    }
+
+    data[i] = checksum;
+    will_return(__wrap_i2c_read, data[i]);
+
+    will_return(__wrap_i2c_read, 0);
+
+    edc_hk_t hk_data = {0};
+
+    assert_return_code(edc_get_hk(&hk_data), 0);
+
+    assert_int_equal(hk_data.current_time, ((uint32_t)data[4] << 24) | ((uint32_t)data[3] << 16) | ((uint32_t)data[2] << 8) | ((uint32_t)data[1] << 0));
+    assert_int_equal(hk_data.elapsed_time, ((uint32_t)data[8] << 24) | ((uint32_t)data[7] << 16) | ((uint32_t)data[6] << 8) | ((uint32_t)data[5] << 0));
+    assert_int_equal(hk_data.current_supply, ((uint32_t)data[10] << 8) | ((uint32_t)data[9] << 0));
+    assert_int_equal(hk_data.voltage_supply, ((uint32_t)data[12] << 8) | ((uint32_t)data[11] << 0));
+    assert_int_equal(hk_data.temp, (int8_t)data[13] - 40);
+    assert_int_equal(hk_data.pll_sync_bit, data[14]);
+    assert_int_equal(hk_data.adc_rms, (int16_t)(((uint32_t)data[16] << 8) | ((uint32_t)data[15] << 0)));
+    assert_int_equal(hk_data.num_rx_ptt, data[17]);
+    assert_int_equal(hk_data.max_parl_decod, data[18]);
+    assert_int_equal(hk_data.mem_err_count, data[19]);
 }
 
 int main(void)
@@ -486,6 +791,7 @@ int main(void)
         cmocka_unit_test(edc_echo_test),
         cmocka_unit_test(edc_calc_checksum_test),
         cmocka_unit_test(edc_get_state_test),
+        cmocka_unit_test(edc_get_ptt_test),
         cmocka_unit_test(edc_get_hk_test),
     };
 
