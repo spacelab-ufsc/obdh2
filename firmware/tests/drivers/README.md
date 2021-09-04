@@ -6,3 +6,4 @@
 * EDC
 * ISIS Antenna
 * SpaceLab EPS 2.0
+* Si446x
