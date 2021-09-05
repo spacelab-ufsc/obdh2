@@ -7,3 +7,4 @@
 ./isis_antenna_unit_test
 ./sl_eps2_unit_test
 ./si446x_unit_test
+./mt25q_unit_test

@@ -5,6 +5,7 @@ TARGET_EDC=edc_unit_test
 TARGET_ISIS_ANTENNA=isis_antenna_unit_test
 TARGET_SL_EPS2=sl_eps2_unit_test
 TARGET_SI446X=si446x_unit_test
+TARGET_MT25Q=mt25q_unit_test
 
 ifndef BUILD_DIR
 	BUILD_DIR=$(CURDIR)
@@ -28,8 +29,10 @@ SL_EPS2_TEST_FLAGS=$(FLAGS),--wrap=i2c_init,--wrap=i2c_write,--wrap=i2c_read,--w
 
 SI446X_TEST_FLAGS=$(FLAGS),--wrap=spi_init,--wrap=spi_select_slave,--wrap=spi_write,--wrap=spi_read,--wrap=spi_transfer,--wrap=gpio_init,--wrap=gpio_set_state,--wrap=gpio_get_state,--wrap=gpio_toggle
 
+MT25Q_TEST_FLAGS=$(FLAGS),--wrap=spi_init,--wrap=spi_select_slave,--wrap=spi_write,--wrap=spi_read,--wrap=spi_transfer,--wrap=gpio_init,--wrap=gpio_set_state,--wrap=gpio_get_state,--wrap=gpio_toggle
+
 .PHONY: all
-all: cy15x102qn_test tps382x_test tca4311a_test edc_test isis_antenna_test sl_eps2_test si446x_test
+all: cy15x102qn_test tps382x_test tca4311a_test edc_test isis_antenna_test sl_eps2_test si446x_test mt25q_test
 
 .PHONY: cy15x102qn_test
 cy15x102qn_test: $(BUILD_DIR)/cy15x102qn.o $(BUILD_DIR)/cy15x102qn_gpio.o $(BUILD_DIR)/cy15x102qn_spi.o $(BUILD_DIR)/cy15x102qn_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o
@@ -58,6 +61,10 @@ sl_eps2_test: $(BUILD_DIR)/sl_eps2.o $(BUILD_DIR)/sl_eps2_delay.o $(BUILD_DIR)/s
 .PHONY: si446x_test
 si446x_test: $(BUILD_DIR)/si446x.o $(BUILD_DIR)/si446x_delay.o $(BUILD_DIR)/si446x_gpio.o $(BUILD_DIR)/si446x_spi.o $(BUILD_DIR)/si446x_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/task.o
 	$(CC) $(SI446X_TEST_FLAGS) $(BUILD_DIR)/si446x.o $(BUILD_DIR)/si446x_delay.o $(BUILD_DIR)/si446x_gpio.o $(BUILD_DIR)/si446x_spi.o $(BUILD_DIR)/si446x_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/task.o -o $(BUILD_DIR)/$(TARGET_SI446X) -lm -lcmocka
+
+.PHONY: mt25q_test
+mt25q_test: $(BUILD_DIR)/mt25q.o $(BUILD_DIR)/mt25q_delay.o $(BUILD_DIR)/mt25q_gpio.o $(BUILD_DIR)/mt25q_spi.o $(BUILD_DIR)/mt25q_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/task.o
+	$(CC) $(MT25Q_TEST_FLAGS) $(BUILD_DIR)/mt25q.o $(BUILD_DIR)/mt25q_delay.o $(BUILD_DIR)/mt25q_gpio.o $(BUILD_DIR)/mt25q_spi.o $(BUILD_DIR)/mt25q_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/task.o -o $(BUILD_DIR)/$(TARGET_MT25Q) -lm -lcmocka
 
 # Drivers
 $(BUILD_DIR)/cy15x102qn.o: ../../drivers/cy15x102qn/cy15x102qn.c
@@ -105,6 +112,18 @@ $(BUILD_DIR)/si446x_gpio.o: ../../drivers/si446x/si446x_gpio.c
 $(BUILD_DIR)/si446x_spi.o: ../../drivers/si446x/si446x_spi.c
 	$(CC) $(SI446X_TEST_FLAGS) -c $< -o $@
 
+$(BUILD_DIR)/mt25q.o: ../../drivers/mt25q/mt25q.c
+	$(CC) $(MT25Q_TEST_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/mt25q_delay.o: ../../drivers/mt25q/mt25q_delay.c
+	$(CC) $(MT25Q_TEST_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/mt25q_gpio.o: ../../drivers/mt25q/mt25q_gpio.c
+	$(CC) $(MT25Q_TEST_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/mt25q_spi.o: ../../drivers/mt25q/mt25q_spi.c
+	$(CC) $(MT25Q_TEST_FLAGS) -c $< -o $@
+
 # Tests
 $(BUILD_DIR)/cy15x102qn_test.o: cy15x102qn_test.c
 	$(CC) $(CY15X102QN_TEST_FLAGS) -c $< -o $@
@@ -126,6 +145,9 @@ $(BUILD_DIR)/sl_eps2_test.o: sl_eps2_test.c
 
 $(BUILD_DIR)/si446x_test.o: si446x_test.c
 	$(CC) $(SI446X_TEST_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/mt25q_test.o: mt25q_test.c
+	$(CC) $(MT25Q_TEST_FLAGS) -c $< -o $@
 
 # Mockups
 $(BUILD_DIR)/sys_log_wrap.o: ../mockups/system/sys_log_wrap.c
@@ -154,4 +176,4 @@ $(BUILD_DIR)/task.o: ../freertos_sim/task.c
 
 .PHONY: clean
 clean:
-	rm $(BUILD_DIR)/$(TARGET_CY15X102QN) $(BUILD_DIR)/$(TARGET_TPS382X) $(BUILD_DIR)/$(TARGET_TCA4311A) $(BUILD_DIR)/$(TARGET_EDC) $(BUILD_DIR)/$(TARGET_ISIS_ANTENNA) $(BUILD_DIR)/$(TARGET_SL_EPS2) $(BUILD_DIR)/$(TARGET_SI446X) $(BUILD_DIR)/*.o
+	rm $(BUILD_DIR)/$(TARGET_CY15X102QN) $(BUILD_DIR)/$(TARGET_TPS382X) $(BUILD_DIR)/$(TARGET_TCA4311A) $(BUILD_DIR)/$(TARGET_EDC) $(BUILD_DIR)/$(TARGET_ISIS_ANTENNA) $(BUILD_DIR)/$(TARGET_SL_EPS2) $(BUILD_DIR)/$(TARGET_SI446X) $(BUILD_DIR)/$(TARGET_MT25Q) $(BUILD_DIR)/*.o
