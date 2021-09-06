@@ -705,7 +705,7 @@ static void edc_get_ptt_test(void **state)
     assert_int_equal(ptt.carrier_abs, ((uint16_t)data[11] << 8) | ((uint16_t)data[10] << 0));
     assert_int_equal(ptt.msg_byte_length, data[12]);
 
-    for(i=13; i<36; i++)
+    for(i=13; i<49; i++)
     {
         assert_int_equal(ptt.user_msg[i-13], data[i]);
     }
