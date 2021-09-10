@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.4
+ * \version 0.7.14
  * 
  * \date 2019/10/27
  * 
@@ -64,7 +64,7 @@ int edc_init(edc_config_t config)
 
 int edc_write_cmd(edc_cmd_t cmd)
 {
-    uint8_t cmd_str[6];
+    uint8_t cmd_str[6] = {0xFF};
     uint16_t cmd_str_len = 1;
 
     cmd_str[0] = cmd.id;
@@ -113,7 +113,7 @@ int edc_read(uint8_t *data, uint16_t len)
 
 int edc_check_device(void)
 {
-    uint8_t status[EDC_FRAME_STATE_LEN];
+    uint8_t status[EDC_FRAME_STATE_LEN] = {0xFF};
 
     if (edc_get_state_pkg(status) != EDC_FRAME_STATE_LEN)
     {
@@ -324,7 +324,7 @@ uint16_t edc_calc_checksum(uint8_t *data, uint16_t len)
 
 int edc_get_state(edc_state_t *state_data)
 {
-    uint8_t state_raw[EDC_FRAME_STATE_LEN];
+    uint8_t state_raw[EDC_FRAME_STATE_LEN] = {0xFF};
 
     /* Get state bytes */
     if (edc_get_state_pkg(state_raw) != EDC_FRAME_STATE_LEN)
@@ -357,7 +357,7 @@ int edc_get_state(edc_state_t *state_data)
 
 int edc_get_ptt(edc_ptt_t *ptt_data)
 {
-    uint8_t ptt_raw[EDC_FRAME_ID_PTT];
+    uint8_t ptt_raw[EDC_FRAME_PTT_LEN] = {0xFF};
 
     /* Get PTT bytes */
     if (edc_get_ptt_pkg(ptt_raw) != EDC_FRAME_PTT_LEN)
@@ -397,7 +397,7 @@ int edc_get_ptt(edc_ptt_t *ptt_data)
 
 int edc_get_hk(edc_hk_t *hk_data)
 {
-    uint8_t hk_raw[EDC_FRAME_HK_LEN];
+    uint8_t hk_raw[EDC_FRAME_HK_LEN] = {0xFF};
 
     /* Get hk bytes */
     if (edc_get_hk_pkg(hk_raw) != EDC_FRAME_HK_LEN)
