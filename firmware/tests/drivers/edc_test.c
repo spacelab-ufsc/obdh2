@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.12
+ * \version 0.7.13
  * 
  * \date 2021/09/01
  * 
@@ -630,14 +630,14 @@ static void edc_get_state_test(void **state)
     {
         if (i == 0)
         {
-            data[0] = 0x11;
-            will_return(__wrap_i2c_read, 0x11);
+            data[i] = 0x11;
         }
         else
         {
             data[i] = generate_random(0, 255);
-            will_return(__wrap_i2c_read, data[i]);
         }
+
+        will_return(__wrap_i2c_read, data[i]);
 
         checksum ^= data[i];
     }
@@ -673,18 +673,18 @@ static void edc_get_ptt_test(void **state)
 
     uint16_t i = 0;
     uint8_t checksum = 0;
-    for(i=0; i<48; i++)
+    for(i=0; i<49-1; i++)
     {
         if (i == 0)
         {
             data[i] = 0x22;
-            will_return(__wrap_i2c_read, 0x22);
         }
         else
         {
             data[i] = generate_random(0, 255);
-            will_return(__wrap_i2c_read, data[i]);
         }
+
+        will_return(__wrap_i2c_read, data[i]);
 
         checksum ^= data[i];
     }
@@ -737,13 +737,13 @@ static void edc_get_hk_test(void **state)
         if (i == 0)
         {
             data[i] = 0x44;
-            will_return(__wrap_i2c_read, 0x44);
         }
         else
         {
             data[i] = generate_random(0, 255);
-            will_return(__wrap_i2c_read, data[i]);
         }
+
+        will_return(__wrap_i2c_read, data[i]);
 
         checksum ^= data[i];
     }
