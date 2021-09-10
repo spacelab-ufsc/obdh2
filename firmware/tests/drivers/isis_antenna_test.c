@@ -86,8 +86,8 @@ static void isis_antenna_arm_test(void **state)
     expect_value(__wrap_i2c_read, adr, ISIS_ANTENNA_IIC_ADR);
     expect_value(__wrap_i2c_read, len, 2);
 
-    will_return(__wrap_i2c_read, 0x01);
     will_return(__wrap_i2c_read, 0x00);
+    will_return(__wrap_i2c_read, 0x01);
 
     will_return(__wrap_i2c_read, 0);
 
@@ -197,46 +197,370 @@ static void isis_antenna_start_independent_deploy_test(void **state)
 
 static void isis_antenna_read_deployment_status_code_test(void **state)
 {
+    uint8_t cmd = 0xC3;
+
+    expect_value(__wrap_i2c_write, port, ISIS_ANTENNA_IIC_PORT);
+    expect_value(__wrap_i2c_write, adr, ISIS_ANTENNA_IIC_ADR);
+    expect_memory(__wrap_i2c_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_i2c_write, len, 1);
+
+    will_return(__wrap_i2c_write, 0);
+
+    expect_value(__wrap_i2c_read, port, ISIS_ANTENNA_IIC_PORT);
+    expect_value(__wrap_i2c_read, adr, ISIS_ANTENNA_IIC_ADR);
+    expect_value(__wrap_i2c_read, len, 2);
+
+    uint16_t raw_status = generate_random(0, UINT16_MAX);
+
+    will_return(__wrap_i2c_read, (uint8_t)(raw_status >> 8));
+    will_return(__wrap_i2c_read, (uint8_t)(raw_status & 0xFF));
+
+    will_return(__wrap_i2c_read, 0);
+
+    uint16_t status = UINT16_MAX;
+
+    assert_return_code(isis_antenna_read_deployment_status_code(&status), 0);
+
+    assert_int_equal(raw_status, status);
 }
 
 static void isis_antenna_read_deployment_status_test(void **state)
 {
+    uint8_t cmd = 0xC3;
+
+    expect_value(__wrap_i2c_write, port, ISIS_ANTENNA_IIC_PORT);
+    expect_value(__wrap_i2c_write, adr, ISIS_ANTENNA_IIC_ADR);
+    expect_memory(__wrap_i2c_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_i2c_write, len, 1);
+
+    will_return(__wrap_i2c_write, 0);
+
+    expect_value(__wrap_i2c_read, port, ISIS_ANTENNA_IIC_PORT);
+    expect_value(__wrap_i2c_read, adr, ISIS_ANTENNA_IIC_ADR);
+    expect_value(__wrap_i2c_read, len, 2);
+
+    uint16_t raw_status = generate_random(0, UINT16_MAX);
+
+    will_return(__wrap_i2c_read, (uint8_t)(raw_status >> 8));
+    will_return(__wrap_i2c_read, (uint8_t)(raw_status & 0xFF));
+
+    will_return(__wrap_i2c_read, 0);
+
+    isis_antenna_status_t status = {0};
+
+    assert_return_code(isis_antenna_read_deployment_status(&status), 0);
+
+    assert_int_equal(raw_status, status.code);
+    assert_int_equal((raw_status >> 15) & 1, status.antenna_1.status);
+    assert_int_equal((raw_status >> 14) & 1, status.antenna_1.timeout);
+    assert_int_equal((raw_status >> 13) & 1, status.antenna_1.burning);
+    assert_int_equal((raw_status >> 11) & 1, status.antenna_2.status);
+    assert_int_equal((raw_status >> 10) & 1, status.antenna_2.timeout);
+    assert_int_equal((raw_status >> 9) & 1, status.antenna_2.burning);
+    assert_int_equal((raw_status >> 8) & 1, status.ignoring_switches);
+    assert_int_equal((raw_status >> 7) & 1, status.antenna_3.status);
+    assert_int_equal((raw_status >> 6) & 1, status.antenna_3.timeout);
+    assert_int_equal((raw_status >> 5) & 1, status.antenna_3.burning);
+    assert_int_equal((raw_status >> 4) & 1, status.independent_burn);
+    assert_int_equal((raw_status >> 3) & 1, status.antenna_4.status);
+    assert_int_equal((raw_status >> 2) & 1, status.antenna_4.timeout);
+    assert_int_equal((raw_status >> 1) & 1, status.antenna_4.burning);
+    assert_int_equal((raw_status >> 0) & 1, status.armed);
 }
 
 static void isis_antenna_get_antenna_status_test(void **state)
 {
+    uint8_t cmd = 0xC3;
+
+    uint8_t ant = 0;
+    for(ant=0; ant<UINT8_MAX; ant++)
+    {
+        uint8_t ant_status = UINT8_MAX;
+
+        switch(ant)
+        {
+            case ISIS_ANTENNA_ANT_1:    break;
+            case ISIS_ANTENNA_ANT_2:    break;
+            case ISIS_ANTENNA_ANT_3:    break;
+            case ISIS_ANTENNA_ANT_4:    break;
+            default:
+                assert_int_equal(isis_antenna_get_antenna_status(ant, &ant_status), -1);
+                continue;
+        }
+
+        expect_value(__wrap_i2c_write, port, ISIS_ANTENNA_IIC_PORT);
+        expect_value(__wrap_i2c_write, adr, ISIS_ANTENNA_IIC_ADR);
+        expect_memory(__wrap_i2c_write, data, (void*)&cmd, 1);
+        expect_value(__wrap_i2c_write, len, 1);
+
+        will_return(__wrap_i2c_write, 0);
+
+        expect_value(__wrap_i2c_read, port, ISIS_ANTENNA_IIC_PORT);
+        expect_value(__wrap_i2c_read, adr, ISIS_ANTENNA_IIC_ADR);
+        expect_value(__wrap_i2c_read, len, 2);
+
+        uint16_t raw_status = generate_random(0, UINT16_MAX);
+
+        will_return(__wrap_i2c_read, (uint8_t)(raw_status >> 8));
+        will_return(__wrap_i2c_read, (uint8_t)(raw_status & 0xFF));
+
+        will_return(__wrap_i2c_read, 0);
+
+        switch(ant)
+        {
+            case ISIS_ANTENNA_ANT_1:
+                assert_return_code(isis_antenna_get_antenna_status(ant, &ant_status), 0);
+                assert_int_equal((raw_status >> 15) & 1, ant_status);
+                break;
+            case ISIS_ANTENNA_ANT_2:
+                assert_return_code(isis_antenna_get_antenna_status(ant, &ant_status), 0);
+                assert_int_equal((raw_status >> 11) & 1, ant_status);
+                break;
+            case ISIS_ANTENNA_ANT_3:
+                assert_return_code(isis_antenna_get_antenna_status(ant, &ant_status), 0);
+                assert_int_equal((raw_status >> 7) & 1, ant_status);
+                break;
+            case ISIS_ANTENNA_ANT_4:
+                assert_return_code(isis_antenna_get_antenna_status(ant, &ant_status), 0);
+                assert_int_equal((raw_status >> 3) & 1, ant_status);
+                break;
+        }
+    }
 }
 
 static void isis_antenna_get_antenna_timeout_test(void **state)
 {
+    uint8_t cmd = 0xC3;
+
+    uint8_t ant = 0;
+    for(ant=0; ant<UINT8_MAX; ant++)
+    {
+        uint8_t ant_timeout = UINT8_MAX;
+
+        switch(ant)
+        {
+            case ISIS_ANTENNA_ANT_1:    break;
+            case ISIS_ANTENNA_ANT_2:    break;
+            case ISIS_ANTENNA_ANT_3:    break;
+            case ISIS_ANTENNA_ANT_4:    break;
+            default:
+                assert_int_equal(isis_antenna_get_antenna_timeout(ant, &ant_timeout), -1);
+                continue;
+        }
+
+        expect_value(__wrap_i2c_write, port, ISIS_ANTENNA_IIC_PORT);
+        expect_value(__wrap_i2c_write, adr, ISIS_ANTENNA_IIC_ADR);
+        expect_memory(__wrap_i2c_write, data, (void*)&cmd, 1);
+        expect_value(__wrap_i2c_write, len, 1);
+
+        will_return(__wrap_i2c_write, 0);
+
+        expect_value(__wrap_i2c_read, port, ISIS_ANTENNA_IIC_PORT);
+        expect_value(__wrap_i2c_read, adr, ISIS_ANTENNA_IIC_ADR);
+        expect_value(__wrap_i2c_read, len, 2);
+
+        uint16_t raw_status = generate_random(0, UINT16_MAX);
+
+        will_return(__wrap_i2c_read, (uint8_t)(raw_status >> 8));
+        will_return(__wrap_i2c_read, (uint8_t)(raw_status & 0xFF));
+
+        will_return(__wrap_i2c_read, 0);
+
+        switch(ant)
+        {
+            case ISIS_ANTENNA_ANT_1:
+                assert_return_code(isis_antenna_get_antenna_timeout(ant, &ant_timeout), 0);
+                assert_int_equal((raw_status >> 14) & 1, ant_timeout);
+                break;
+            case ISIS_ANTENNA_ANT_2:
+                assert_return_code(isis_antenna_get_antenna_timeout(ant, &ant_timeout), 0);
+                assert_int_equal((raw_status >> 10) & 1, ant_timeout);
+                break;
+            case ISIS_ANTENNA_ANT_3:
+                assert_return_code(isis_antenna_get_antenna_timeout(ant, &ant_timeout), 0);
+                assert_int_equal((raw_status >> 6) & 1, ant_timeout);
+                break;
+            case ISIS_ANTENNA_ANT_4:
+                assert_return_code(isis_antenna_get_antenna_timeout(ant, &ant_timeout), 0);
+                assert_int_equal((raw_status >> 2) & 1, ant_timeout);
+                break;
+        }
+    }
 }
 
 static void isis_antenna_get_burning_test(void **state)
 {
+    uint8_t cmd = 0xC3;
+
+    uint8_t ant = 0;
+    for(ant=0; ant<UINT8_MAX; ant++)
+    {
+        uint8_t ant_burning = UINT8_MAX;
+
+        switch(ant)
+        {
+            case ISIS_ANTENNA_ANT_1:    break;
+            case ISIS_ANTENNA_ANT_2:    break;
+            case ISIS_ANTENNA_ANT_3:    break;
+            case ISIS_ANTENNA_ANT_4:    break;
+            default:
+                assert_int_equal(isis_antenna_get_burning(ant, &ant_burning), -1);
+                continue;
+        }
+
+        expect_value(__wrap_i2c_write, port, ISIS_ANTENNA_IIC_PORT);
+        expect_value(__wrap_i2c_write, adr, ISIS_ANTENNA_IIC_ADR);
+        expect_memory(__wrap_i2c_write, data, (void*)&cmd, 1);
+        expect_value(__wrap_i2c_write, len, 1);
+
+        will_return(__wrap_i2c_write, 0);
+
+        expect_value(__wrap_i2c_read, port, ISIS_ANTENNA_IIC_PORT);
+        expect_value(__wrap_i2c_read, adr, ISIS_ANTENNA_IIC_ADR);
+        expect_value(__wrap_i2c_read, len, 2);
+
+        uint16_t raw_status = generate_random(0, UINT16_MAX);
+
+        will_return(__wrap_i2c_read, (uint8_t)(raw_status >> 8));
+        will_return(__wrap_i2c_read, (uint8_t)(raw_status & 0xFF));
+
+        will_return(__wrap_i2c_read, 0);
+
+        switch(ant)
+        {
+            case ISIS_ANTENNA_ANT_1:
+                assert_return_code(isis_antenna_get_burning(ant, &ant_burning), 0);
+                assert_int_equal((raw_status >> 13) & 1, ant_burning);
+                break;
+            case ISIS_ANTENNA_ANT_2:
+                assert_return_code(isis_antenna_get_burning(ant, &ant_burning), 0);
+                assert_int_equal((raw_status >> 9) & 1, ant_burning);
+                break;
+            case ISIS_ANTENNA_ANT_3:
+                assert_return_code(isis_antenna_get_burning(ant, &ant_burning), 0);
+                assert_int_equal((raw_status >> 5) & 1, ant_burning);
+                break;
+            case ISIS_ANTENNA_ANT_4:
+                assert_return_code(isis_antenna_get_burning(ant, &ant_burning), 0);
+                assert_int_equal((raw_status >> 1) & 1, ant_burning);
+                break;
+        }
+    }
 }
 
 static void isis_antenna_get_arming_status_test(void **state)
 {
+    uint8_t cmd = 0xC3;
+
+    expect_value(__wrap_i2c_write, port, ISIS_ANTENNA_IIC_PORT);
+    expect_value(__wrap_i2c_write, adr, ISIS_ANTENNA_IIC_ADR);
+    expect_memory(__wrap_i2c_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_i2c_write, len, 1);
+
+    will_return(__wrap_i2c_write, 0);
+
+    expect_value(__wrap_i2c_read, port, ISIS_ANTENNA_IIC_PORT);
+    expect_value(__wrap_i2c_read, adr, ISIS_ANTENNA_IIC_ADR);
+    expect_value(__wrap_i2c_read, len, 2);
+
+    uint16_t raw_status = generate_random(0, UINT16_MAX);
+
+    will_return(__wrap_i2c_read, (uint8_t)(raw_status >> 8));
+    will_return(__wrap_i2c_read, (uint8_t)(raw_status & 0xFF));
+
+    will_return(__wrap_i2c_read, 0);
+
+    bool ant_armed = false;
+
+    assert_return_code(isis_antenna_get_arming_status(&ant_armed), 0);
+    assert_int_equal((raw_status >> 0) & 1, (int)ant_armed);
 }
 
 static void isis_antenna_get_raw_temperature_test(void **state)
 {
+    uint8_t cmd = 0xC0;
+
+    uint16_t raw = 0;
+    for(raw=0; raw<1023; raw+=50)
+    {
+        expect_value(__wrap_i2c_write, port, ISIS_ANTENNA_IIC_PORT);
+        expect_value(__wrap_i2c_write, adr, ISIS_ANTENNA_IIC_ADR);
+        expect_memory(__wrap_i2c_write, data, (void*)&cmd, 1);
+        expect_value(__wrap_i2c_write, len, 1);
+
+        will_return(__wrap_i2c_write, 0);
+
+        expect_value(__wrap_i2c_read, port, ISIS_ANTENNA_IIC_PORT);
+        expect_value(__wrap_i2c_read, adr, ISIS_ANTENNA_IIC_ADR);
+        expect_value(__wrap_i2c_read, len, 2);
+
+        will_return(__wrap_i2c_read, (uint8_t)(raw >> 8));
+        will_return(__wrap_i2c_read, (uint8_t)(raw & 0xFF));
+
+        will_return(__wrap_i2c_read, 0);
+
+        uint16_t temp = UINT16_MAX;
+
+        assert_return_code(isis_antenna_get_raw_temperature(&temp), 0);
+
+        assert_int_equal(temp, raw);
+    }
 }
 
 static void isis_antenna_raw_to_temp_c_test(void **state)
 {
+    uint16_t raw = 0;
+    for(raw=0; raw<UINT16_MAX; raw++)
+    {
+        int16_t temp_c = isis_antenna_raw_to_temp_c(raw);
+
+        if (raw > 130)
+        {
+            assert_in_range(temp_c+50, -50 + 50, 150 + 50);
+        }
+        else
+        {
+            assert_int_equal(temp_c, INT16_MAX);
+        }
+    }
 }
 
 static void isis_antenna_get_temperature_c_test(void **state)
 {
-}
+    uint8_t cmd = 0xC0;
 
-static void isis_antenna_delay_s_test(void **state)
-{
-}
+    uint16_t raw = 0;
+    for(raw=0; raw<1023; raw+=50)
+    {
+        expect_value(__wrap_i2c_write, port, ISIS_ANTENNA_IIC_PORT);
+        expect_value(__wrap_i2c_write, adr, ISIS_ANTENNA_IIC_ADR);
+        expect_memory(__wrap_i2c_write, data, (void*)&cmd, 1);
+        expect_value(__wrap_i2c_write, len, 1);
 
-static void isis_antenna_delay_ms_test(void **state)
-{
+        will_return(__wrap_i2c_write, 0);
+
+        expect_value(__wrap_i2c_read, port, ISIS_ANTENNA_IIC_PORT);
+        expect_value(__wrap_i2c_read, adr, ISIS_ANTENNA_IIC_ADR);
+        expect_value(__wrap_i2c_read, len, 2);
+
+        will_return(__wrap_i2c_read, (uint8_t)(raw >> 8));
+        will_return(__wrap_i2c_read, (uint8_t)(raw & 0xFF));
+
+        will_return(__wrap_i2c_read, 0);
+
+        int16_t temp = INT16_MAX;
+
+        assert_return_code(isis_antenna_get_temperature_c(&temp), 0);
+
+        if (raw > 130)
+        {
+            assert_in_range(temp+50, -50 + 50, 150 + 50);
+        }
+        else
+        {
+            assert_int_equal(temp, INT16_MAX);
+        }
+    }
 }
 
 int main(void)
@@ -256,8 +580,6 @@ int main(void)
         cmocka_unit_test(isis_antenna_get_raw_temperature_test),
         cmocka_unit_test(isis_antenna_raw_to_temp_c_test),
         cmocka_unit_test(isis_antenna_get_temperature_c_test),
-        cmocka_unit_test(isis_antenna_delay_s_test),
-        cmocka_unit_test(isis_antenna_delay_ms_test),
     };
 
     return cmocka_run_group_tests(isis_antenna_tests, NULL, NULL);
