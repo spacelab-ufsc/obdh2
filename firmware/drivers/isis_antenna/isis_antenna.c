@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.17
+ * \version 0.7.13
  * 
  * \date 2020/02/01
  * 
@@ -247,7 +247,7 @@ int isis_antenna_read_deployment_status_code(uint16_t *status)
 
     isis_antenna_delay_ms(100);
 
-    uint8_t status_bytes[2];
+    uint8_t status_bytes[2] = {0xFF};
 
     if (i2c_read(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, status_bytes, 2) != 0)
     {
@@ -258,7 +258,7 @@ int isis_antenna_read_deployment_status_code(uint16_t *status)
         return -1;
     }
 
-    status_code = (uint16_t)(status_bytes[1] << 8) | status_bytes[0];
+    status_code = ((uint16_t)status_bytes[0] << 8) | (uint16_t)status_bytes[1];
 
     *status = status_code;
 
@@ -279,27 +279,43 @@ int isis_antenna_read_deployment_status(isis_antenna_status_t *status)
     }
 
     status->code                = status_code;
-    status->antenna_1.status    = (status_code >> 15) & 0x01;
-    status->antenna_1.timeout   = (status_code >> 14) & 0x01;
-    status->antenna_1.burning   = (status_code >> 13) & 0x01;
-    status->antenna_2.status    = (status_code >> 11) & 0x01;
-    status->antenna_2.timeout   = (status_code >> 10) & 0x01;
-    status->antenna_2.burning   = (status_code >> 9) & 0x01;
-    status->ignoring_switches   = (status_code >> 8) & 0x01;
-    status->antenna_3.status    = (status_code >> 7) & 0x01;
-    status->antenna_3.timeout   = (status_code >> 6) & 0x01;
-    status->antenna_3.burning   = (status_code >> 5) & 0x01;
-    status->independent_burn    = (status_code >> 4) & 0x01;
-    status->antenna_4.status    = (status_code >> 3) & 0x01;
-    status->antenna_4.timeout   = (status_code >> 2) & 0x01;
-    status->antenna_4.burning   = (status_code >> 1) & 0x01;
-    status->armed               = (status_code >> 0) & 0x01;
+    status->antenna_1.status    = (status_code >> 15) & 1;
+    status->antenna_1.timeout   = (status_code >> 14) & 1;
+    status->antenna_1.burning   = (status_code >> 13) & 1;
+    status->antenna_2.status    = (status_code >> 11) & 1;
+    status->antenna_2.timeout   = (status_code >> 10) & 1;
+    status->antenna_2.burning   = (status_code >> 9) & 1;
+    status->ignoring_switches   = (status_code >> 8) & 1;
+    status->antenna_3.status    = (status_code >> 7) & 1;
+    status->antenna_3.timeout   = (status_code >> 6) & 1;
+    status->antenna_3.burning   = (status_code >> 5) & 1;
+    status->independent_burn    = (status_code >> 4) & 1;
+    status->antenna_4.status    = (status_code >> 3) & 1;
+    status->antenna_4.timeout   = (status_code >> 2) & 1;
+    status->antenna_4.burning   = (status_code >> 1) & 1;
+    status->armed               = (status_code >> 0) & 1;
 
     return 0;
 }
 
 int isis_antenna_get_antenna_status(uint8_t ant, uint8_t *ant_status)
 {
+    switch(ant)
+    {
+        case ISIS_ANTENNA_ANT_1:    break;
+        case ISIS_ANTENNA_ANT_2:    break;
+        case ISIS_ANTENNA_ANT_3:    break;
+        case ISIS_ANTENNA_ANT_4:    break;
+        default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the antenna status! ");
+            sys_log_print_uint(ant);
+            sys_log_print_msg(" is an invalid antenna!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            return -1;
+    }
+
     isis_antenna_status_t status = {0};
 
     if (isis_antenna_read_deployment_status(&status) != 0)
@@ -313,22 +329,10 @@ int isis_antenna_get_antenna_status(uint8_t ant, uint8_t *ant_status)
 
     switch(ant)
     {
-        case ISIS_ANTENNA_ANT_1:
-            *ant_status = status.antenna_1.status;
-        case ISIS_ANTENNA_ANT_2:
-            *ant_status = status.antenna_2.status;
-        case ISIS_ANTENNA_ANT_3:
-            *ant_status = status.antenna_3.status;
-        case ISIS_ANTENNA_ANT_4:
-            *ant_status = status.antenna_4.status;
-        default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
-            sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the antenna status! ");
-            sys_log_print_uint(ant);
-            sys_log_print_msg(" is an invalid antenna!");
-            sys_log_new_line();
-        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-            return -1;
+        case ISIS_ANTENNA_ANT_1:    *ant_status = status.antenna_1.status;  break;
+        case ISIS_ANTENNA_ANT_2:    *ant_status = status.antenna_2.status;  break;
+        case ISIS_ANTENNA_ANT_3:    *ant_status = status.antenna_3.status;  break;
+        case ISIS_ANTENNA_ANT_4:    *ant_status = status.antenna_4.status;  break;
     }
 
     return 0;
@@ -336,6 +340,22 @@ int isis_antenna_get_antenna_status(uint8_t ant, uint8_t *ant_status)
 
 int isis_antenna_get_antenna_timeout(uint8_t ant, uint8_t *ant_timeout)
 {
+    switch(ant)
+    {
+        case ISIS_ANTENNA_ANT_1:    break;
+        case ISIS_ANTENNA_ANT_2:    break;
+        case ISIS_ANTENNA_ANT_3:    break;
+        case ISIS_ANTENNA_ANT_4:    break;
+        default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the antenna timeout! ");
+            sys_log_print_uint(ant);
+            sys_log_print_msg(" is an invalid antenna!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            return -1;
+    }
+
     isis_antenna_status_t status = {0};
 
     if (isis_antenna_read_deployment_status(&status) != 0)
@@ -349,22 +369,10 @@ int isis_antenna_get_antenna_timeout(uint8_t ant, uint8_t *ant_timeout)
 
     switch(ant)
     {
-        case ISIS_ANTENNA_ANT_1:
-            *ant_timeout = status.antenna_1.timeout;
-        case ISIS_ANTENNA_ANT_2:
-            *ant_timeout = status.antenna_2.timeout;
-        case ISIS_ANTENNA_ANT_3:
-            *ant_timeout = status.antenna_3.timeout;
-        case ISIS_ANTENNA_ANT_4:
-            *ant_timeout = status.antenna_4.timeout;
-        default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
-            sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the antenna timeout! ");
-            sys_log_print_uint(ant);
-            sys_log_print_msg(" is an invalid antenna!");
-            sys_log_new_line();
-        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-            return -1;
+        case ISIS_ANTENNA_ANT_1:    *ant_timeout = status.antenna_1.timeout;    break;
+        case ISIS_ANTENNA_ANT_2:    *ant_timeout = status.antenna_2.timeout;    break;
+        case ISIS_ANTENNA_ANT_3:    *ant_timeout = status.antenna_3.timeout;    break;
+        case ISIS_ANTENNA_ANT_4:    *ant_timeout = status.antenna_4.timeout;    break;
     }
 
     return 0;
@@ -372,6 +380,22 @@ int isis_antenna_get_antenna_timeout(uint8_t ant, uint8_t *ant_timeout)
 
 int isis_antenna_get_burning(uint8_t ant, uint8_t *ant_burn)
 {
+    switch(ant)
+    {
+        case ISIS_ANTENNA_ANT_1:    break;
+        case ISIS_ANTENNA_ANT_2:    break;
+        case ISIS_ANTENNA_ANT_3:    break;
+        case ISIS_ANTENNA_ANT_4:    break;
+        default:
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the antenna burning! ");
+            sys_log_print_uint(ant);
+            sys_log_print_msg(" is an invalid antenna!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            return -1;
+    }
+
     isis_antenna_status_t status = {0};
 
     if (isis_antenna_read_deployment_status(&status) != 0)
@@ -385,22 +409,10 @@ int isis_antenna_get_burning(uint8_t ant, uint8_t *ant_burn)
 
     switch(ant)
     {
-        case ISIS_ANTENNA_ANT_1:
-            *ant_burn = status.antenna_1.burning;
-        case ISIS_ANTENNA_ANT_2:
-            *ant_burn = status.antenna_2.burning;
-        case ISIS_ANTENNA_ANT_3:
-            *ant_burn = status.antenna_3.burning;
-        case ISIS_ANTENNA_ANT_4:
-            *ant_burn = status.antenna_4.burning;
-        default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
-            sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the antenna burning! ");
-            sys_log_print_uint(ant);
-            sys_log_print_msg(" is an invalid antenna!");
-            sys_log_new_line();
-        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-            return -1;
+        case ISIS_ANTENNA_ANT_1:    *ant_burn = status.antenna_1.burning;   break;
+        case ISIS_ANTENNA_ANT_2:    *ant_burn = status.antenna_2.burning;   break;
+        case ISIS_ANTENNA_ANT_3:    *ant_burn = status.antenna_3.burning;   break;
+        case ISIS_ANTENNA_ANT_4:    *ant_burn = status.antenna_4.burning;   break;
     }
 
     return 0;
@@ -450,7 +462,7 @@ int isis_antenna_get_raw_temperature(uint16_t *temp)
         return -1;
     }
 
-    uint16_t raw_data = (uint16_t)(temp_bytes[1] << 8) | temp_bytes[0];
+    uint16_t raw_data = ((uint16_t)temp_bytes[0] << 8) | temp_bytes[1];
 
     *temp = raw_data;
 
@@ -459,7 +471,7 @@ int isis_antenna_get_raw_temperature(uint16_t *temp)
 
 int16_t isis_antenna_raw_to_temp_c(uint16_t raw)
 {
-    uint16_t vout = ISIS_ANTENNA_REF_VOLTAGE/1023.0 * raw;
+    uint32_t vout = (ISIS_ANTENNA_REF_VOLTAGE/1023.0) * raw;
 
     if (vout >= 2616)           return -50;
     else if (vout >= 2607)      return -49;
