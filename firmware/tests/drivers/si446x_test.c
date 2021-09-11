@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.14
+ * \version 0.7.15
  * 
  * \date 2021/09/04
  * 
@@ -79,9 +79,9 @@ static void si446x_reset_test(void **state)
 
 static void si446x_power_up_test(void **state)
 {
-    uint8_t boot_options = generate_random(0, UINT8_MAX);
-    uint8_t xtal_options = generate_random(0, UINT8_MAX);
-    uint32_t xo_freq = generate_random(0, UINT32_MAX-1);
+    uint8_t boot_options    = generate_random(0, UINT8_MAX);
+    uint8_t xtal_options    = generate_random(0, UINT8_MAX);
+    uint32_t xo_freq        = generate_random(0, UINT32_MAX-1);
 
     uint8_t cmd[7] = {0};
 
@@ -122,44 +122,235 @@ static void si446x_part_info_test(void **state)
 
     assert_return_code(si446x_part_info(&part_info), 0);
 
-    assert_int_equal(part_info.chiprev, res[1]);
-    assert_int_equal(part_info.part, ((uint16_t)res[2] << 8) | res[3]);
-    assert_int_equal(part_info.pbuild, res[4]);
-    assert_int_equal(part_info.id, ((uint16_t)res[5] << 8) | res[6]);
-    assert_int_equal(part_info.customer, res[7]);
-    assert_int_equal(part_info.romid, res[8]);
+    assert_int_equal(part_info.chiprev,     res[1]);
+    assert_int_equal(part_info.part,        ((uint16_t)res[2] << 8) | res[3]);
+    assert_int_equal(part_info.pbuild,      res[4]);
+    assert_int_equal(part_info.id,          ((uint16_t)res[5] << 8) | res[6]);
+    assert_int_equal(part_info.customer,    res[7]);
+    assert_int_equal(part_info.romid,       res[8]);
 }
 
 static void si446x_start_tx_test(void **state)
 {
+    uint8_t channel     = generate_random(0, UINT8_MAX);
+    uint8_t condition   = generate_random(0, UINT8_MAX);
+    uint16_t tx_len     = generate_random(1, UINT16_MAX);
+
+    uint8_t cmd[5] = {SI446X_CMD_NOP};
+
+    cmd[0] = SI446X_CMD_START_TX;
+    cmd[1] = channel;
+    cmd[2] = condition;
+    cmd[3] = (uint8_t)(tx_len >> 8);
+    cmd[4] = (uint8_t)(tx_len & 0xFF);
+
+    set_cmd(cmd, 5);
+
+    assert_return_code(si446x_start_tx(channel, condition, tx_len), 0);
 }
 
 static void si446x_start_rx_test(void **state)
 {
+    uint8_t channel     = generate_random(0, UINT8_MAX);
+    uint8_t condition   = generate_random(0, UINT8_MAX);
+    uint16_t rx_len     = generate_random(1, UINT16_MAX);
+    uint8_t next_state1 = generate_random(0, UINT8_MAX);
+    uint8_t next_state2 = generate_random(0, UINT8_MAX);
+    uint8_t next_state3 = generate_random(0, UINT8_MAX);
+
+    uint8_t cmd[8] = {SI446X_CMD_NOP};
+
+    cmd[0] = SI446X_CMD_START_RX;
+    cmd[1] = channel;
+    cmd[2] = condition;
+    cmd[3] = (uint8_t)(rx_len >> 8);
+    cmd[4] = (uint8_t)(rx_len & 0xFF);
+    cmd[5] = next_state1;
+    cmd[6] = next_state2;
+    cmd[7] = next_state3;
+
+    set_cmd(cmd, 8);
+
+    assert_return_code(si446x_start_rx(channel, condition, rx_len, next_state1, next_state2, next_state3), 0);
 }
 
 static void si446x_get_int_status_test(void **state)
 {
+    uint8_t ph_clr_pend     = generate_random(0, UINT8_MAX);
+    uint8_t modem_clr_pend  = generate_random(0, UINT8_MAX);
+    uint8_t chip_clr_pend   = generate_random(0, UINT8_MAX);
+
+    check_cts();
+
+    uint8_t cmd[10] = {SI446X_CMD_NOP};
+    uint8_t result[10] = {0};
+
+    cmd[0] = SI446X_CMD_GET_INT_STATUS;
+    cmd[1] = ph_clr_pend;
+    cmd[2] = modem_clr_pend;
+    cmd[3] = chip_clr_pend;
+
+    expect_value(__wrap_spi_write, port, SI446X_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SI446X_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)cmd, 2);
+    expect_value(__wrap_spi_write, len, 2);
+
+    will_return(__wrap_spi_write, 0);
+
+    check_cts();
+
+    cmd[0] = SI446X_CMD_READ_CMD_BUF;
+    cmd[1] = SI446X_CMD_NOP;
+    cmd[2] = SI446X_CMD_NOP;
+    cmd[3] = SI446X_CMD_NOP;
+
+    expect_value(__wrap_spi_transfer, port, SI446X_SPI_PORT);
+    expect_value(__wrap_spi_transfer, cs, SI446X_SPI_CS);
+    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 10);
+    expect_value(__wrap_spi_transfer, len, 10);
+
+    uint16_t i = 0;
+    for(i=0; i<10; i++)
+    {
+        result[i] = generate_random(0, UINT8_MAX);
+        will_return(__wrap_spi_transfer, result[i]);
+    }
+
+    will_return(__wrap_spi_transfer, 0);
+
+    si446x_int_status_t int_status = {0};
+
+    assert_return_code(si446x_get_int_status(ph_clr_pend, modem_clr_pend, chip_clr_pend, &int_status), 0);
+
+    assert_int_equal(int_status.int_pend,       result[2]);
+    assert_int_equal(int_status.int_status,     result[3]);
+    assert_int_equal(int_status.ph_pend,        result[4]);
+    assert_int_equal(int_status.ph_status,      result[5]);
+    assert_int_equal(int_status.modem_pend,     result[6]);
+    assert_int_equal(int_status.modem_status,   result[7]);
+    assert_int_equal(int_status.chip_pend,      result[8]);
+    assert_int_equal(int_status.chip_status,    result[9]);
 }
 
 static void si446x_gpio_pin_cfg_test(void **state)
 {
+    uint8_t gpio0       = generate_random(0, UINT8_MAX);
+    uint8_t gpio1       = generate_random(0, UINT8_MAX);
+    uint8_t gpio2       = generate_random(0, UINT8_MAX);
+    uint8_t gpio3       = generate_random(0, UINT8_MAX);
+    uint8_t nirq        = generate_random(0, UINT8_MAX);
+    uint8_t sdo         = generate_random(0, UINT8_MAX);
+    uint8_t gen_config  = generate_random(0, UINT8_MAX);
+
+    uint8_t cmd[8] = {SI446X_CMD_NOP};
+
+    cmd[0] = SI446X_CMD_GPIO_PIN_CFG;
+    cmd[1] = gpio0;
+    cmd[2] = gpio1;
+    cmd[3] = gpio2;
+    cmd[4] = gpio3;
+    cmd[5] = nirq;
+    cmd[6] = sdo;
+    cmd[7] = gen_config;
+
+    set_cmd(cmd, 8);
+
+    assert_return_code(si446x_gpio_pin_cfg(gpio0, gpio1, gpio2, gpio3, nirq, sdo, gen_config), 0);
 }
 
 static void si446x_set_property_test(void **state)
 {
+    uint8_t group       = generate_random(0, UINT8_MAX);
+    uint8_t num_props   = generate_random(1, UINT8_MAX);
+    uint8_t start_prop  = generate_random(0, UINT8_MAX);
+
+    uint8_t cmd[256] = {0};
+
+    cmd[0] = SI446X_CMD_SET_PROPERTY;
+    cmd[1] = group;
+    cmd[2] = num_props;
+    cmd[3] = start_prop;
+
+    uint8_t data[256] = {0};
+    uint16_t len = generate_random(1, 252);
+
+    uint16_t i = 0;
+    for(i=0; i<len; i++)
+    {
+        data[i] = generate_random(0, UINT8_MAX);
+        cmd[i+4] = data[i];
+    }
+
+    set_cmd(cmd, 4+len);
+
+    assert_return_code(si446x_set_property(group, num_props, start_prop, data, len), 0);
 }
 
 static void si446x_change_state_test(void **state)
 {
+    uint8_t next_state = 0;
+    for(next_state=0; next_state<UINT8_MAX; next_state++)
+    {
+        switch(next_state)
+        {
+            case SI446X_NO_CHANGE_STATE:        break;
+            case SI446X_SLEEP_STATE:            break;
+            case SI446X_SPI_ACTIVE_STATE:       break;
+            case SI446X_READY_STATE:            break;
+            case SI446X_ANOTHER_READY_STATE:    break;
+            case SI446X_TUNE_STATE_FOR_TX:      break;
+            case SI446X_TUNE_STATE_FOR_RX:      break;
+            case SI446X_TX_STATE:               break;
+            case SI446X_RX_STATE:               break;
+            default:
+                assert_int_equal(si446x_change_state(next_state), -1);
+                continue;
+        }
+
+        uint8_t cmd[2] = {SI446X_CMD_NOP};
+
+        cmd[0] = SI446X_CMD_CHANGE_STATE;
+        cmd[1] = next_state;
+
+        set_cmd(cmd, 2);
+
+        assert_return_code(si446x_change_state(next_state), 0);
+    }
 }
 
 static void si446x_nop_test(void **state)
 {
+    uint8_t cmd = SI446X_CMD_NOP;
+
+    expect_value(__wrap_spi_write, port, SI446X_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SI446X_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
+    assert_return_code(si446x_nop(), 0);
 }
 
 static void si446x_fifo_info_test(void **state)
 {
+    bool rst_rx = (bool)generate_random(0, 1);
+    bool rst_tx = (bool)generate_random(0, 1);
+
+    uint8_t cmd[4] = {SI446X_CMD_NOP};
+    uint8_t result[4] = {0};
+
+    cmd[0] = SI446X_CMD_FIFO_INFO;
+    cmd[1] = ((uint8_t)rst_rx << 1) | (uint8_t)rst_tx;
+
+    get_cmd(cmd, 2, result, 3);
+
+    si446x_fifo_info_t fifo_info = {0};
+
+    assert_return_code(si446x_fifo_info(rst_rx, rst_tx, &fifo_info), 0);
+
+    assert_int_equal(fifo_info.rx_fifo_count, result[2]);
+    assert_int_equal(fifo_info.tx_fifo_space, result[3]);
 }
 
 static void si446x_write_tx_fifo_test(void **state)
@@ -372,10 +563,6 @@ static void si446x_gpio_read_nirq_test(void **state)
 {
 }
 
-static void si446x_delay_ms_test(void **state)
-{
-}
-
 int main(void)
 {
     const struct CMUnitTest si446x_tests[] = {
@@ -421,7 +608,6 @@ int main(void)
         cmocka_unit_test(si446x_gpio_init_test),
         cmocka_unit_test(si446x_gpio_write_sdn_test),
         cmocka_unit_test(si446x_gpio_read_nirq_test),
-        cmocka_unit_test(si446x_delay_ms_test),
     };
 
     return cmocka_run_group_tests(si446x_tests, NULL, NULL);
