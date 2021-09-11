@@ -25,13 +25,15 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.15
+ * \version 0.7.15
  * 
- * \date 01/06/2017
+ * \date 2017/06/01
  * 
  * \addtogroup si446x
  * \{
  */
+
+#include <string.h>
 
 #include <drivers/gpio/gpio.h>
 
@@ -596,8 +598,8 @@ int si446x_power_on(void)
 
 bool si446x_check_cts(uint32_t timeout_ms)
 {
-    uint8_t cmd[] = {SI446X_CMD_READ_CMD_BUF, SI446X_CMD_NOP};
-    uint8_t result[] = {0, 0};
+    uint8_t cmd[2] = {SI446X_CMD_READ_CMD_BUF, SI446X_CMD_NOP};
+    uint8_t result[2] = {0, 0};
 
     while(timeout_ms--)
     {
@@ -640,7 +642,7 @@ int si446x_get_cmd(uint8_t *cmd, uint16_t cmd_len, uint8_t *result, uint16_t res
     /* Reads the result */
     cmd[0] = SI446X_CMD_READ_CMD_BUF;
 
-    memcpy(cmd+1, (char*)SI446X_CMD_NOP, cmd_len-1);
+    memset(cmd+1, SI446X_CMD_NOP, cmd_len-1);
 
     if (!si446x_check_cts(100))
     {
