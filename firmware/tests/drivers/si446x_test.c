@@ -433,7 +433,7 @@ static void si446x_get_property_test(void **state)
     uint8_t start_prop  = generate_random(0, UINT8_MAX);
 
     uint8_t cmd[256] = {SI446X_CMD_NOP};
-    uint8_t res[256] = {UINT8_MAX};
+    uint8_t res[256] = {0};
 
     cmd[0] = SI446X_CMD_GET_PROPERTY;
     cmd[1] = group;
