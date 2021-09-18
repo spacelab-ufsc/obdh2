@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.21
+ * \version 0.7.16
  * 
  * \date 2021/05/12
  * 
@@ -146,7 +146,7 @@ int sl_ttc2_write_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t val)
     buf[5] = (val >> 0)  & 0xFF;
 
     /* Checksum (CRC16) */
-    uint16_t crc = sl_ttc2_crc16(buf, 5);
+    uint16_t crc = sl_ttc2_crc16(buf, 6);
     buf[6] = (crc >> 8) & 0xFF;
     buf[7] = (crc >> 0) & 0xFF;
 
