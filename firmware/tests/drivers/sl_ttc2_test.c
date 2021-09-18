@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.12
+ * \version 0.7.15
  * 
  * \date 2021/09/08
  * 
@@ -41,23 +41,196 @@
 #include <float.h>
 #include <cmocka.h>
 
-#include <drivers/i2c/i2c.h>
+#include <stdlib.h>
+
+#include <drivers/spi/spi.h>
 #include <drivers/sl_ttc2/sl_ttc2.h>
+
+#define SL_TTC2_SPI_PORT            SPI_PORT_0
+#define SL_TTC2_SPI_CS              SPI_CS_0
+#define SL_TTC2_SPI_CLOCK_HZ        1000000UL
+#define SL_TTC2_SPI_MODE            SPI_MODE_0
+
+unsigned int generate_random(unsigned int l, unsigned int r);
+
+uint16_t crc16_ccitt(uint8_t *data, uint16_t len);
 
 static void sl_ttc2_init_test(void **state)
 {
+    /* SPI init */
+    expect_value(__wrap_spi_init, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_init, config.speed_hz, SL_TTC2_SPI_CLOCK_HZ);
+    expect_value(__wrap_spi_init, config.mode, SL_TTC2_SPI_MODE);
+
+    will_return(__wrap_spi_init, 0);
+
+    /* SPI transfer */
+    uint8_t cmd[8] = {0};
+    uint8_t ans[8] = {0};
+
+    cmd[0] = 1;     /* Read reg. command */
+    cmd[1] = 0;     /* Read device ID */
+
+    ans[0] = 1;     /* Command */
+    ans[1] = 0;     /* Address */
+    ans[2] = 0;     /* Dummy byte */
+    ans[3] = 0;     /* Dummy byte */
+    ans[4] = 0xCC;  /* Radio 0 ID */
+    ans[5] = 0x2A;  /* Radio 0 ID */
+    ans[6] = 0x93;  /* CRC16 */
+    ans[7] = 0xB1;  /* CRC16 */
+
+    expect_value(__wrap_spi_transfer, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_transfer, cs, SL_TTC2_SPI_CS);
+    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 8);
+    expect_value(__wrap_spi_transfer, len, 8);
+
+    uint16_t i = 0;
+    for(i=0; i<8; i++)
+    {
+        will_return(__wrap_spi_transfer, ans[i]);
+    }
+
+    will_return(__wrap_spi_transfer, 0);
+
+    sl_ttc2_config_t conf = {0};
+
+    conf.port                   = SL_TTC2_SPI_PORT;
+    conf.cs_pin                 = SL_TTC2_SPI_CS;
+    conf.port_config.speed_hz   = SL_TTC2_SPI_CLOCK_HZ;
+    conf.port_config.mode       = SL_TTC2_SPI_MODE;
+    conf.id                     = 0;
+
+    assert_return_code(sl_ttc2_init(conf), 0);
 }
 
 static void sl_ttc2_check_device_test(void **state)
 {
+    uint8_t cmd[8] = {0};
+    uint8_t ans[8] = {0};
+
+    cmd[0] = 1;     /* Read reg. command */
+    cmd[1] = 0;     /* Read device ID */
+
+    ans[0] = 1;     /* Command */
+    ans[1] = 0;     /* Address */
+    ans[2] = 0;     /* Dummy byte */
+    ans[3] = 0;     /* Dummy byte */
+    ans[4] = 0xCC;  /* Radio 0 ID */
+    ans[5] = 0x2A;  /* Radio 0 ID */
+    ans[6] = 0x93;  /* CRC16 */
+    ans[7] = 0xB1;  /* CRC16 */
+
+    expect_value(__wrap_spi_transfer, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_transfer, cs, SL_TTC2_SPI_CS);
+    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 8);
+    expect_value(__wrap_spi_transfer, len, 8);
+
+    uint16_t i = 0;
+    for(i=0; i<8; i++)
+    {
+        will_return(__wrap_spi_transfer, ans[i]);
+    }
+
+    will_return(__wrap_spi_transfer, 0);
+
+    sl_ttc2_config_t conf = {0};
+
+    conf.port                   = SL_TTC2_SPI_PORT;
+    conf.cs_pin                 = SL_TTC2_SPI_CS;
+    conf.port_config.speed_hz   = SL_TTC2_SPI_CLOCK_HZ;
+    conf.port_config.mode       = SL_TTC2_SPI_MODE;
+    conf.id                     = 0;
+
+    assert_return_code(sl_ttc2_check_device(conf), 0);
 }
 
 static void sl_ttc2_write_reg_test(void **state)
 {
+    uint8_t adr = generate_random(0, 255);
+    uint32_t val = generate_random(0, UINT32_MAX-1);
+
+    uint8_t cmd[8] = {0};
+
+    cmd[0] = 2;     /* Write reg. command */
+    cmd[1] = adr;   /* Address */
+    cmd[2] = (val >> 24) & 0xFF;
+    cmd[3] = (val >> 16) & 0xFF;
+    cmd[4] = (val >> 8) & 0xFF;
+    cmd[5] = val & 0xFF;
+
+    uint16_t checksum = crc16_ccitt(cmd, 6);
+
+    cmd[6] = (checksum >> 8) & 0xFF;
+    cmd[7] = checksum & 0xFF;
+
+    expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)cmd, 8);
+    expect_value(__wrap_spi_write, len, 8);
+
+    will_return(__wrap_spi_write, 0);
+
+    sl_ttc2_config_t conf = {0};
+
+    conf.port                   = SL_TTC2_SPI_PORT;
+    conf.cs_pin                 = SL_TTC2_SPI_CS;
+    conf.port_config.speed_hz   = SL_TTC2_SPI_CLOCK_HZ;
+    conf.port_config.mode       = SL_TTC2_SPI_MODE;
+    conf.id                     = 0;
+
+    assert_return_code(sl_ttc2_write_reg(conf, adr, val), 0);
 }
 
 static void sl_ttc2_read_reg_test(void **state)
 {
+    uint8_t adr = generate_random(0, 255);
+    uint32_t val = generate_random(0, UINT32_MAX-1);
+
+    uint8_t cmd[8] = {0};
+    uint8_t ans[8] = {0};
+
+    cmd[0] = 1;     /* Write reg. command */
+    cmd[1] = adr;   /* Address */
+
+    ans[0] = 1;
+    ans[1] = adr;
+    ans[2] = (val >> 24) & 0xFF;
+    ans[3] = (val >> 16) & 0xFF;
+    ans[4] = (val >> 8) & 0xFF;
+    ans[5] = val & 0xFF;
+
+    uint16_t checksum = crc16_ccitt(ans, 6);
+
+    ans[6] = (checksum >> 8) & 0xFF;
+    ans[7] = checksum & 0xFF;
+
+    expect_value(__wrap_spi_transfer, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_transfer, cs, SL_TTC2_SPI_CS);
+    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 8);
+    expect_value(__wrap_spi_transfer, len, 8);
+
+    uint16_t i = 0;
+    for(i=0; i<8; i++)
+    {
+        will_return(__wrap_spi_transfer, ans[i]);
+    }
+
+    will_return(__wrap_spi_transfer, 0);
+
+    sl_ttc2_config_t conf = {0};
+
+    conf.port                   = SL_TTC2_SPI_PORT;
+    conf.cs_pin                 = SL_TTC2_SPI_CS;
+    conf.port_config.speed_hz   = SL_TTC2_SPI_CLOCK_HZ;
+    conf.port_config.mode       = SL_TTC2_SPI_MODE;
+    conf.id                     = 0;
+
+    uint32_t res = UINT32_MAX;
+
+    assert_return_code(sl_ttc2_read_reg(conf, adr, &res), 0);
+
+    assert_int_equal(res, val);
 }
 
 static void sl_ttc2_read_hk_data_test(void **state)
@@ -185,6 +358,26 @@ int main(void)
     };
 
     return cmocka_run_group_tests(sl_ttc2_tests, NULL, NULL);
+}
+
+unsigned int generate_random(unsigned int l, unsigned int r)
+{
+    return (rand() % (r - l + 1)) + l;
+}
+
+uint16_t crc16_ccitt(uint8_t *data, uint16_t len)
+{
+    uint8_t x;
+    uint16_t crc = 0;   /* Initial value */
+
+    while(len--)
+    {
+        x = crc >> 8 ^ *data++;
+        x ^= x >> 4;
+        crc = (crc << 8) ^ ((uint16_t)(x << 12)) ^ ((uint16_t)(x << 5)) ^ ((uint16_t)x);
+    }
+
+    return crc;
 }
 
 /** \} End of sl_ttc2_test group */
