@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.16
+ * \version 0.7.17
  * 
  * \date 2021/05/12
  * 
@@ -357,8 +357,8 @@ int sl_ttc2_read_current(sl_ttc2_config_t config, uint8_t cur, sl_ttc2_current_t
 {
     switch(cur)
     {
-        case SL_TTC2_CURRENT_MCU:       return sl_ttc2_read_reg(config, SL_TTC2_CURRENT_MCU, (uint32_t*)val);
-        case SL_TTC2_CURRENT_RADIO:     return sl_ttc2_read_reg(config, SL_TTC2_CURRENT_RADIO, (uint32_t*)val);
+        case SL_TTC2_CURRENT_MCU:       return sl_ttc2_read_reg(config, SL_TTC2_REG_INPUT_CURRENT_MCU, (uint32_t*)val);
+        case SL_TTC2_CURRENT_RADIO:     return sl_ttc2_read_reg(config, SL_TTC2_REG_INPUT_CURRENT_RADIO, (uint32_t*)val);
         default:
         #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
             sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the current! Invalid current type!");
@@ -458,7 +458,7 @@ int sl_ttc2_check_pkt_avail(sl_ttc2_config_t config)
 {
     uint8_t pkts = 0;
 
-    if (sl_ttc2_read_fifo_pkts(config, SL_TTC2_REG_FIFO_RX_PACKET, &pkts) != 0)
+    if (sl_ttc2_read_fifo_pkts(config, SL_TTC2_RX_PKT, &pkts) != 0)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the available RX packets!");
@@ -467,7 +467,9 @@ int sl_ttc2_check_pkt_avail(sl_ttc2_config_t config)
         return -1;
     }
 
-    return pkts;
+    int dummy = pkts;
+
+    return dummy;
 }
 
 int sl_ttc2_transmit_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t len)
@@ -481,7 +483,7 @@ int sl_ttc2_transmit_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t len
     uint16_t crc = sl_ttc2_crc16(buf, 1+len);
 
     buf[1+len] = (crc >> 8) & 0xFF;
-    buf[1+len] = (crc >> 0) & 0xFF;
+    buf[1+len+1] = (crc >> 0) & 0xFF;
 
     return spi_write(config.port, config.cs_pin, buf, 1+len+2);
 }
