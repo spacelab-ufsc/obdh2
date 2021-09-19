@@ -131,12 +131,6 @@ static void si446x_part_info_test(void **state)
 
     uint8_t res[10] = {0};
 
-    uint16_t i = 0;
-    for(i=0; i<9; i++)
-    {
-        res[i] = generate_random(0, UINT8_MAX);
-    }
-
     get_cmd(cmd, 1, res, 9);
 
     si446x_part_info_t part_info = {0};
@@ -292,8 +286,8 @@ static void si446x_set_property_test(void **state)
     cmd[2] = num_props;
     cmd[3] = start_prop;
 
-    uint8_t data[256] = {0};
-    uint16_t len = generate_random(1, 252);
+    uint8_t data[256] = {UINT8_MAX};
+    uint16_t len = generate_random(1, 16-4);
 
     uint16_t i = 0;
     for(i=0; i<len; i++)
@@ -429,7 +423,7 @@ static void si446x_read_rx_fifo_test(void **state)
 static void si446x_get_property_test(void **state)
 {
     uint8_t group       = generate_random(0, UINT8_MAX);
-    uint8_t num_props   = 17;
+    uint8_t num_props   = generate_random(1, 16);
     uint8_t start_prop  = generate_random(0, UINT8_MAX);
 
     uint8_t cmd[256] = {SI446X_CMD_NOP};
@@ -440,31 +434,19 @@ static void si446x_get_property_test(void **state)
     cmd[2] = num_props;
     cmd[3] = start_prop;
 
-    uint8_t i = 0;
-    for(i=0; i<17; i++)
-    {
-        res[i] = generate_random(0, UINT8_MAX);
-    }
-
-    get_cmd(cmd, 4, res, 17);
+    get_cmd(cmd, 4, res, 1+16);
 
     uint8_t data[256] = {0};
 
     assert_return_code(si446x_get_property(group, num_props, start_prop, data), 0);
 
-    assert_memory_equal((void*)(res+2), (void*)data, 17);
+    assert_memory_equal((void*)(res+1), (void*)data, 16);
 }
 
 static void si446x_func_info_test(void **state)
 {
     uint8_t cmd = SI446X_CMD_FUNC_INFO;
     uint8_t res[256] = {UINT8_MAX};
-
-    uint8_t i = 0;
-    for(i=0; i<7; i++)
-    {
-        res[i] = generate_random(0, UINT8_MAX);
-    }
 
     get_cmd(&cmd, 1, res, 7);
 
@@ -680,12 +662,6 @@ static void si446x_get_modem_status_test(void **state)
     uint8_t res[10] = {UINT8_MAX};
 
     cmd[0] = SI446X_CMD_GET_MODEM_STATUS;
-
-    uint8_t i = 0;
-    for(i=0; i<10; i++)
-    {
-        res[i] = generate_random(0, UINT8_MAX);
-    }
 
     get_cmd(cmd, 1, res, 9);
 
