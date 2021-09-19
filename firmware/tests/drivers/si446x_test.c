@@ -440,7 +440,7 @@ static void si446x_get_property_test(void **state)
 
     assert_return_code(si446x_get_property(group, num_props, start_prop, data), 0);
 
-    assert_memory_equal((void*)(res+1), (void*)data, 16);
+    assert_memory_equal((void*)(res+2), (void*)data, num_props);
 }
 
 static void si446x_func_info_test(void **state)
