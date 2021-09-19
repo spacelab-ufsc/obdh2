@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.15
+ * \version 0.7.16
  * 
  * \date 2021/09/04
  * 
@@ -429,7 +429,7 @@ static void si446x_read_rx_fifo_test(void **state)
 static void si446x_get_property_test(void **state)
 {
     uint8_t group       = generate_random(0, UINT8_MAX);
-    uint8_t num_props   = generate_random(1, UINT8_MAX);
+    uint8_t num_props   = 17;
     uint8_t start_prop  = generate_random(0, UINT8_MAX);
 
     uint8_t cmd[256] = {SI446X_CMD_NOP};
@@ -448,7 +448,7 @@ static void si446x_get_property_test(void **state)
 
     get_cmd(cmd, 4, res, 17);
 
-    uint8_t data[256] = {UINT8_MAX};
+    uint8_t data[256] = {0};
 
     assert_return_code(si446x_get_property(group, num_props, start_prop, data), 0);
 
