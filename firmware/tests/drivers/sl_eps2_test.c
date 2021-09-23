@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.12
+ * \version 0.7.18
  * 
  * \date 2021/09/02
  * 
@@ -41,23 +41,232 @@
 #include <float.h>
 #include <cmocka.h>
 
+#include <stdlib.h>
+
 #include <drivers/i2c/i2c.h>
+#include <drivers/gpio/gpio.h>
 #include <drivers/sl_eps2/sl_eps2.h>
+
+#define SL_EPS2_I2C_PORT        I2C_PORT_1
+#define SL_EPS2_I2C_CLOCK_HZ    100000UL
+#define SL_EPS2_I2C_EN_PIN      GPIO_PIN_17
+#define SL_EPS2_I2C_RDY_PIN     GPIO_PIN_20
+#define SL_EPS2_I2C_ADR         0x36
+
+sl_eps2_config_t conf = {0};
+
+unsigned int generate_random(unsigned int l, unsigned int r);
+
+uint8_t crc8(uint8_t *data, uint8_t len);
 
 static void sl_eps2_init_test(void **state)
 {
+    /* I2C initialization */
+    expect_value(__wrap_i2c_init, port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_i2c_init, config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
+
+    will_return(__wrap_i2c_init, 0);
+
+    /* Enable pin initialization */
+    expect_value(__wrap_gpio_init, pin, SL_EPS2_I2C_EN_PIN);
+    expect_value(__wrap_gpio_init, config.mode, GPIO_MODE_OUTPUT);
+
+    will_return(__wrap_gpio_init, 0);
+
+    /* Ready pin initialization */
+    expect_value(__wrap_gpio_init, pin, SL_EPS2_I2C_RDY_PIN);
+    expect_value(__wrap_gpio_init, config.mode, GPIO_MODE_INPUT);
+
+    will_return(__wrap_gpio_init, 0);
+
+    /* Set state */
+    expect_value(__wrap_gpio_set_state, pin, SL_EPS2_I2C_EN_PIN);
+    expect_value(__wrap_gpio_set_state, level, true);
+
+    will_return(__wrap_gpio_set_state, 0);
+
+    /* Get state */
+    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
+
+    will_return(__wrap_gpio_get_state, 1);
+
+    uint8_t data[256] = {UINT8_MAX};
+
+    data[0] = 48;   /* Device ID register */
+    data[1] = crc8(data, 1);
+
+    /* I2C write */
+    expect_value(__wrap_i2c_write, port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_i2c_write, adr, SL_EPS2_I2C_ADR);
+    expect_memory(__wrap_i2c_write, data, (void*)data, 2);
+    expect_value(__wrap_i2c_write, len, 2);
+
+    will_return(__wrap_i2c_write, 0);
+
+    /* Get state */
+    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
+
+    will_return(__wrap_gpio_get_state, 1);
+
+    /* I2C read */
+    expect_value(__wrap_i2c_read, port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_i2c_read, adr, SL_EPS2_I2C_ADR);
+    expect_value(__wrap_i2c_read, len, 5);
+
+    data[0] = 0x00;
+    data[1] = 0x00;
+    data[2] = 0xEE;
+    data[3] = 0xE2;
+    data[4] = crc8(data, 4);
+
+    uint16_t i = 0;
+    for(i=0; i<5; i++)
+    {
+        will_return(__wrap_i2c_read, data[i]);
+    }
+
+    will_return(__wrap_i2c_read, 0);
+
+    /* Get state */
+    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
+
+    will_return(__wrap_gpio_get_state, 1);
+
+    assert_return_code(sl_eps2_init(conf), 0);
 }
 
 static void sl_eps2_check_device_test(void **state)
 {
+    uint8_t data[256] = {UINT8_MAX};
+
+    data[0] = 48;   /* Device ID register */
+    data[1] = crc8(data, 1);
+
+    /* I2C write */
+    expect_value(__wrap_i2c_write, port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_i2c_write, adr, SL_EPS2_I2C_ADR);
+    expect_memory(__wrap_i2c_write, data, (void*)data, 2);
+    expect_value(__wrap_i2c_write, len, 2);
+
+    will_return(__wrap_i2c_write, 0);
+
+    /* Get state */
+    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
+
+    will_return(__wrap_gpio_get_state, 1);
+
+    /* I2C read */
+    expect_value(__wrap_i2c_read, port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_i2c_read, adr, SL_EPS2_I2C_ADR);
+    expect_value(__wrap_i2c_read, len, 5);
+
+    data[0] = 0x00;
+    data[1] = 0x00;
+    data[2] = 0xEE;
+    data[3] = 0xE2;
+    data[4] = crc8(data, 4);
+
+    uint16_t i = 0;
+    for(i=0; i<5; i++)
+    {
+        will_return(__wrap_i2c_read, data[i]);
+    }
+
+    will_return(__wrap_i2c_read, 0);
+
+    /* Get state */
+    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
+
+    will_return(__wrap_gpio_get_state, 1);
+
+    assert_return_code(sl_eps2_check_device(conf), 0);
 }
 
 static void sl_eps2_write_reg_test(void **state)
 {
+    uint8_t data[256] = {UINT8_MAX};
+
+    data[0] = generate_random(0, UINT8_MAX);
+    data[1] = generate_random(0, UINT8_MAX);
+    data[2] = generate_random(0, UINT8_MAX);
+    data[3] = generate_random(0, UINT8_MAX);
+    data[4] = generate_random(0, UINT8_MAX);
+    data[5] = crc8(data, 5);
+
+    /* I2C write */
+    expect_value(__wrap_i2c_write, port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_i2c_write, adr, SL_EPS2_I2C_ADR);
+    expect_memory(__wrap_i2c_write, data, (void*)data, 6);
+    expect_value(__wrap_i2c_write, len, 6);
+
+    will_return(__wrap_i2c_write, 0);
+
+    /* Get state */
+    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
+
+    will_return(__wrap_gpio_get_state, 1);
+
+    uint32_t val = (uint32_t)(data[1] << 24) |
+                   (uint32_t)(data[2] << 16) |
+                   (uint32_t)(data[3] << 8) |
+                   (uint32_t)(data[4] << 0);
+
+    assert_return_code(sl_eps2_write_reg(conf, data[0], val), 0);
 }
 
 static void sl_eps2_read_reg_test(void **state)
 {
+    uint8_t data[256] = {UINT8_MAX};
+    uint8_t adr = generate_random(0, UINT8_MAX);
+
+    data[0] = adr;
+    data[1] = crc8(data, 1);
+
+    /* I2C write */
+    expect_value(__wrap_i2c_write, port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_i2c_write, adr, SL_EPS2_I2C_ADR);
+    expect_memory(__wrap_i2c_write, data, (void*)data, 2);
+    expect_value(__wrap_i2c_write, len, 2);
+
+    will_return(__wrap_i2c_write, 0);
+
+    /* Get state */
+    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
+
+    will_return(__wrap_gpio_get_state, 1);
+
+    /* I2C read */
+    expect_value(__wrap_i2c_read, port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_i2c_read, adr, SL_EPS2_I2C_ADR);
+    expect_value(__wrap_i2c_read, len, 5);
+
+    data[0] = generate_random(0, UINT8_MAX);
+    data[1] = generate_random(0, UINT8_MAX);
+    data[2] = generate_random(0, UINT8_MAX);
+    data[3] = generate_random(0, UINT8_MAX);
+    data[4] = crc8(data, 4);
+
+    uint16_t i = 0;
+    for(i=0; i<5; i++)
+    {
+        will_return(__wrap_i2c_read, data[i]);
+    }
+
+    will_return(__wrap_i2c_read, 0);
+
+    /* Get state */
+    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
+
+    will_return(__wrap_gpio_get_state, 1);
+
+    uint32_t val = UINT32_MAX;
+
+    assert_return_code(sl_eps2_read_reg(conf, adr, &val), 0);
+
+    assert_int_equal(data[0], (val >> 24) & 0xFF);
+    assert_int_equal(data[1], (val >> 16) & 0xFF);
+    assert_int_equal(data[2], (val >> 8) & 0xFF);
+    assert_int_equal(data[3], (val >> 0) & 0xFF);
 }
 
 static void sl_eps2_read_data_test(void **state)
@@ -176,12 +385,13 @@ static void sl_eps2_get_heater_mode_test(void **state)
 {
 }
 
-static void sl_eps2_delay_ms_test(void **state)
-{
-}
-
 int main(void)
 {
+    conf.i2c_port               = SL_EPS2_I2C_PORT;
+    conf.i2c_config.speed_hz    = SL_EPS2_I2C_CLOCK_HZ;
+    conf.en_pin                 = SL_EPS2_I2C_EN_PIN;
+    conf.ready_pin              = SL_EPS2_I2C_RDY_PIN;
+
     const struct CMUnitTest sl_eps2_tests[] = {
         cmocka_unit_test(sl_eps2_init_test),
         cmocka_unit_test(sl_eps2_check_device_test),
@@ -216,10 +426,34 @@ int main(void)
         cmocka_unit_test(sl_eps2_get_mppt_mode_test),
         cmocka_unit_test(sl_eps2_set_heater_mode_test),
         cmocka_unit_test(sl_eps2_get_heater_mode_test),
-        cmocka_unit_test(sl_eps2_delay_ms_test),
     };
 
     return cmocka_run_group_tests(sl_eps2_tests, NULL, NULL);
+}
+
+unsigned int generate_random(unsigned int l, unsigned int r)
+{
+    return (rand() % (r - l + 1)) + l;
+}
+
+uint8_t crc8(uint8_t *data, uint8_t len)
+{
+    uint8_t crc = 0;
+
+    while(len--)
+    {
+        crc ^= *data++;
+
+        uint8_t j = 0;
+        for (j=0; j<8; j++)
+        {
+            crc = (crc << 1) ^ ((crc & 0x80)? 0x07 : 0);
+        }
+
+        crc &= 0xFF;
+    }
+
+    return crc;
 }
 
 /** \} End of sl_eps2_test group */
