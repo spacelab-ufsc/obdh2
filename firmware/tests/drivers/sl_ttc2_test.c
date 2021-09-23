@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.16
+ * \version 0.7.18
  * 
  * \date 2021/09/08
  * 
@@ -212,10 +212,9 @@ static void sl_ttc2_read_hk_data_test(void **state)
 static void sl_ttc2_read_device_id_test(void **state)
 {
     uint8_t adr = 0;    /* Device ID register */
-    uint32_t val = generate_random(0, UINT16_MAX);
-    uint32_t dummy = val;
+    uint16_t val = generate_random(0, UINT16_MAX);
 
-    read_adr(adr, dummy);
+    read_adr(adr, (uint32_t)val);
 
     uint16_t res = UINT16_MAX;
 
@@ -228,9 +227,8 @@ static void sl_ttc2_read_hardware_version_test(void **state)
 {
     uint8_t adr = 1;    /* Hardware version register */
     uint8_t val = generate_random(0, UINT8_MAX);
-    uint32_t dummy = val;
 
-    read_adr(adr, dummy);
+    read_adr(adr, (uint32_t)val);
 
     uint8_t res = UINT8_MAX;
 
@@ -242,10 +240,9 @@ static void sl_ttc2_read_hardware_version_test(void **state)
 static void sl_ttc2_read_firmware_version_test(void **state)
 {
     uint8_t adr = 2;    /* Firmware version register */
-    uint8_t val = generate_random(0, UINT32_MAX-1);
-    uint32_t dummy = val;
+    uint32_t val = generate_random(0, UINT32_MAX-1);
 
-    read_adr(adr, dummy);
+    read_adr(adr, val);
 
     uint32_t res = UINT32_MAX;
 
@@ -272,9 +269,8 @@ static void sl_ttc2_read_reset_counter_test(void **state)
 {
     uint8_t adr = 4;    /* Reset counter register */
     uint16_t val = generate_random(0, UINT16_MAX);
-    uint32_t dummy = val;
 
-    read_adr(adr, dummy);
+    read_adr(adr, (uint16_t)val);
 
     uint16_t res = UINT16_MAX;
 
@@ -287,9 +283,8 @@ static void sl_ttc2_read_reset_cause_test(void **state)
 {
     uint8_t adr = 5;    /* Reset cause register */
     uint8_t val = generate_random(0, UINT8_MAX);
-    uint32_t dummy = val;
 
-    read_adr(adr, dummy);
+    read_adr(adr, (uint8_t)val);
 
     uint8_t res = UINT8_MAX;
 
@@ -321,9 +316,8 @@ static void sl_ttc2_read_voltage_test(void **state)
         }
 
         sl_ttc2_voltage_t val = generate_random(0, UINT16_MAX);
-        uint32_t dummy = val;
 
-        read_adr(adr, dummy);
+        read_adr(adr, (uint32_t)val);
 
         assert_return_code(sl_ttc2_read_voltage(conf, i, &res), 0);
 
@@ -354,9 +348,8 @@ static void sl_ttc2_read_current_test(void **state)
         }
 
         sl_ttc2_current_t val = generate_random(0, UINT16_MAX);
-        uint32_t dummy = val;
 
-        read_adr(adr, dummy);
+        read_adr(adr, (uint32_t)val);
 
         assert_return_code(sl_ttc2_read_current(conf, i, &res), 0);
 
@@ -390,9 +383,8 @@ static void sl_ttc2_read_temp_test(void **state)
         }
 
         sl_ttc2_temp_t val = generate_random(0, UINT16_MAX);
-        uint32_t dummy = val;
 
-        read_adr(adr, dummy);
+        read_adr(adr, (uint32_t)val);
 
         assert_return_code(sl_ttc2_read_temp(conf, i, &res), 0);
 
@@ -404,9 +396,8 @@ static void sl_ttc2_read_last_valid_tc_test(void **state)
 {
     uint8_t adr = 12;   /* Last valid TC register */
     uint8_t val = generate_random(0, UINT8_MAX);
-    uint32_t dummy = val;
 
-    read_adr(adr, dummy);
+    read_adr(adr, (uint32_t)val);
 
     uint8_t res = UINT8_MAX;
 
@@ -419,9 +410,8 @@ static void sl_ttc2_read_rssi_test(void **state)
 {
     uint8_t adr = 13;   /* RSSI register */
     sl_ttc2_rssi_t val = generate_random(0, UINT16_MAX);
-    uint32_t dummy = val;
 
-    read_adr(adr, dummy);
+    read_adr(adr, (uint32_t)val);
 
     sl_ttc2_rssi_t res = UINT16_MAX;
 
@@ -434,9 +424,8 @@ static void sl_ttc2_read_antenna_status_test(void **state)
 {
     uint8_t adr = 15;   /* Antenna status register */
     uint16_t val = generate_random(0, UINT16_MAX);
-    uint32_t dummy = val;
 
-    read_adr(adr, dummy);
+    read_adr(adr, (uint32_t)val);
 
     uint16_t res = UINT16_MAX;
 
@@ -449,9 +438,8 @@ static void sl_ttc2_read_antenna_deployment_status_test(void **state)
 {
     uint8_t adr = 16;   /* Antenna deploymenbt status register */
     uint8_t val = generate_random(0, UINT8_MAX);
-    uint32_t dummy = val;
 
-    read_adr(adr, dummy);
+    read_adr(adr, (uint32_t)val);
 
     uint8_t res = UINT8_MAX;
 
@@ -464,9 +452,8 @@ static void sl_ttc2_read_antenna_deployment_hibernation_status_test(void **state
 {
     uint8_t adr = 17;   /* Antenna deloyment hibernation status register */
     uint8_t val = generate_random(0, UINT8_MAX);
-    uint32_t dummy = val;
 
-    read_adr(adr, dummy);
+    read_adr(adr, (uint32_t)val);
 
     uint8_t res = UINT8_MAX;
 
@@ -479,9 +466,8 @@ static void sl_ttc2_read_tx_enable_test(void **state)
 {
     uint8_t adr = 18;   /* TX enable register */
     uint8_t val = generate_random(0, UINT8_MAX);
-    uint32_t dummy = val;
 
-    read_adr(adr, dummy);
+    read_adr(adr, (uint32_t)val);
 
     uint8_t res = UINT8_MAX;
 
@@ -542,9 +528,8 @@ static void sl_ttc2_read_pkt_counter_test(void **state)
         }
 
         uint32_t val = generate_random(0, UINT32_MAX-1);
-        uint32_t dummy = val;
 
-        read_adr(adr, dummy);
+        read_adr(adr, (uint32_t)val);
 
         assert_return_code(sl_ttc2_read_pkt_counter(conf, i, &res), 0);
 
@@ -575,9 +560,8 @@ static void sl_ttc2_read_fifo_pkts_test(void **state)
         }
 
         uint8_t val = generate_random(0, UINT8_MAX);
-        uint32_t dummy = val;
 
-        read_adr(adr, dummy);
+        read_adr(adr, (uint32_t)val);
 
         assert_return_code(sl_ttc2_read_fifo_pkts(conf, i, &res), 0);
 
@@ -589,9 +573,8 @@ static void sl_ttc2_read_len_rx_pkt_in_fifo_test(void **state)
 {
     uint8_t adr = 23;   /* Length of the first available RX packet register */
     uint16_t val = generate_random(0, UINT16_MAX);
-    uint32_t dummy = val;
 
-    read_adr(adr, dummy);
+    read_adr(adr, (uint32_t)val);
 
     uint16_t res = UINT16_MAX;
 
@@ -604,9 +587,8 @@ static void sl_ttc2_check_pkt_avail_test(void **state)
 {
     uint8_t adr = 22;   /* FIFO RX packets register */
     uint8_t val = generate_random(0, UINT8_MAX);
-    uint32_t dummy = val;
 
-    read_adr(adr, dummy);
+    read_adr(adr, (uint32_t)val);
 
     assert_int_equal((uint8_t)(sl_ttc2_check_pkt_avail(conf)), val);
 }
@@ -644,9 +626,8 @@ static void sl_ttc2_read_packet_test(void **state)
     uint8_t adr = 23;   /* Length of the first available RX packet register */
     uint8_t pkt[1+220+2] = {UINT8_MAX};
     uint16_t pkt_len = generate_random(1, 220);
-    uint32_t dummy = pkt_len;
 
-    read_adr(adr, dummy);
+    read_adr(adr, (uint32_t)pkt_len);
 
     pkt[0] = 4;
 

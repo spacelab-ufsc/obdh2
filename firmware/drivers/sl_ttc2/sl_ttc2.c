@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.17
+ * \version 0.7.19
  * 
  * \date 2021/05/12
  * 
@@ -310,12 +310,24 @@ int sl_ttc2_read_hk_data(sl_ttc2_config_t config, sl_ttc2_hk_data_t *data)
 
 int sl_ttc2_read_device_id(sl_ttc2_config_t config, uint16_t *val)
 {
-    return sl_ttc2_read_reg(config, SL_TTC2_REG_DEVICE_ID, (uint32_t*)val);
+    uint32_t buf = UINT32_MAX;
+
+    int res = sl_ttc2_read_reg(config, SL_TTC2_REG_DEVICE_ID, &buf);
+
+    *val = (uint16_t)buf;
+
+    return res;
 }
 
 int sl_ttc2_read_hardware_version(sl_ttc2_config_t config, uint8_t *val)
 {
-    return sl_ttc2_read_reg(config, SL_TTC2_REG_HARDWARE_VERSION, (uint32_t*)val);
+    uint32_t buf = UINT32_MAX;
+
+    int res = sl_ttc2_read_reg(config, SL_TTC2_REG_HARDWARE_VERSION, &buf);
+
+    *val = (uint8_t)buf;
+
+    return res;
 }
 
 int sl_ttc2_read_firmware_version(sl_ttc2_config_t config, uint32_t *val)
@@ -330,20 +342,45 @@ int sl_ttc2_read_time_counter(sl_ttc2_config_t config, uint32_t *val)
 
 int sl_ttc2_read_reset_counter(sl_ttc2_config_t config, uint16_t *val)
 {
-    return sl_ttc2_read_reg(config, SL_TTC2_REG_RESET_COUNTER, (uint32_t*)val);
+    uint32_t buf = UINT32_MAX;
+
+    int res = sl_ttc2_read_reg(config, SL_TTC2_REG_RESET_COUNTER, &buf);
+
+    *val = (uint16_t)buf;
+
+    return res;
 }
 
 int sl_ttc2_read_reset_cause(sl_ttc2_config_t config, uint8_t *val)
 {
-    return sl_ttc2_read_reg(config, SL_TTC2_REG_LAST_RESET_CAUSE, (uint32_t*)val);
+    uint32_t buf = UINT32_MAX;
+
+    int res = sl_ttc2_read_reg(config, SL_TTC2_REG_LAST_RESET_CAUSE, &buf);
+
+    *val = (uint8_t)buf;
+
+    return res;
 }
 
 int sl_ttc2_read_voltage(sl_ttc2_config_t config, uint8_t volt, sl_ttc2_voltage_t *val)
 {
+    uint32_t buf = UINT32_MAX;
+    int res = -1;
+
     switch(volt)
     {
-        case SL_TTC2_VOLTAGE_MCU:       return sl_ttc2_read_reg(config, SL_TTC2_REG_INPUT_VOLTAGE_MCU, (uint32_t*)val);
-        case SL_TTC2_VOLTAGE_RADIO:     return sl_ttc2_read_reg(config, SL_TTC2_REG_INPUT_VOLTAGE_RADIO, (uint32_t*)val);
+        case SL_TTC2_VOLTAGE_MCU:
+            res = sl_ttc2_read_reg(config, SL_TTC2_REG_INPUT_VOLTAGE_MCU, &buf);
+
+            *val = (sl_ttc2_voltage_t)buf;
+
+            return res;
+        case SL_TTC2_VOLTAGE_RADIO:
+            res = sl_ttc2_read_reg(config, SL_TTC2_REG_INPUT_VOLTAGE_RADIO, &buf);
+
+            *val = (sl_ttc2_voltage_t)buf;
+
+            return res;
         default:
         #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
             sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the voltage! Invalid voltage type!");
@@ -355,10 +392,23 @@ int sl_ttc2_read_voltage(sl_ttc2_config_t config, uint8_t volt, sl_ttc2_voltage_
 
 int sl_ttc2_read_current(sl_ttc2_config_t config, uint8_t cur, sl_ttc2_current_t *val)
 {
+    uint32_t buf = UINT32_MAX;
+    int res = -1;
+
     switch(cur)
     {
-        case SL_TTC2_CURRENT_MCU:       return sl_ttc2_read_reg(config, SL_TTC2_REG_INPUT_CURRENT_MCU, (uint32_t*)val);
-        case SL_TTC2_CURRENT_RADIO:     return sl_ttc2_read_reg(config, SL_TTC2_REG_INPUT_CURRENT_RADIO, (uint32_t*)val);
+        case SL_TTC2_CURRENT_MCU:
+            res = sl_ttc2_read_reg(config, SL_TTC2_REG_INPUT_CURRENT_MCU, &buf);
+
+            *val = (sl_ttc2_current_t)buf;
+
+            return res;
+        case SL_TTC2_CURRENT_RADIO:
+            res = sl_ttc2_read_reg(config, SL_TTC2_REG_INPUT_CURRENT_RADIO, &buf);
+
+            *val = (sl_ttc2_current_t)buf;
+
+            return res;
         default:
         #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
             sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the current! Invalid current type!");
@@ -370,11 +420,29 @@ int sl_ttc2_read_current(sl_ttc2_config_t config, uint8_t cur, sl_ttc2_current_t
 
 int sl_ttc2_read_temp(sl_ttc2_config_t config, uint8_t temp, sl_ttc2_temp_t *val)
 {
+    uint32_t buf = UINT32_MAX;
+    int res = -1;
+
     switch(temp)
     {
-        case SL_TTC2_TEMP_MCU:          return sl_ttc2_read_reg(config, SL_TTC2_REG_TEMPERATURE_MCU, (uint32_t*)val);
-        case SL_TTC2_TEMP_RADIO:        return sl_ttc2_read_reg(config, SL_TTC2_REG_TEMPERATURE_RADIO, (uint32_t*)val);
-        case SL_TTC2_TEMP_ANTENNA:      return sl_ttc2_read_reg(config, SL_TTC2_REG_TEMPERATURE_ANTENNA, (uint32_t*)val);
+        case SL_TTC2_TEMP_MCU:
+            res = sl_ttc2_read_reg(config, SL_TTC2_REG_TEMPERATURE_MCU, &buf);
+
+            *val = (sl_ttc2_temp_t)buf;
+
+            return res;
+        case SL_TTC2_TEMP_RADIO:
+            res = sl_ttc2_read_reg(config, SL_TTC2_REG_TEMPERATURE_RADIO, &buf);
+
+            *val = (sl_ttc2_temp_t)buf;
+
+            return res;
+        case SL_TTC2_TEMP_ANTENNA:
+            res = sl_ttc2_read_reg(config, SL_TTC2_REG_TEMPERATURE_ANTENNA, &buf);
+
+            *val = (sl_ttc2_temp_t)buf;
+
+            return res;
         default:
         #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
             sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the temperature! Invalid temperature type!");
@@ -386,32 +454,68 @@ int sl_ttc2_read_temp(sl_ttc2_config_t config, uint8_t temp, sl_ttc2_temp_t *val
 
 int sl_ttc2_read_last_valid_tc(sl_ttc2_config_t config, uint8_t *val)
 {
-    return sl_ttc2_read_reg(config, SL_TTC2_REG_LAST_VALID_TC, (uint32_t*)val);
+    uint32_t buf = UINT32_MAX;
+
+    int res = sl_ttc2_read_reg(config, SL_TTC2_REG_LAST_VALID_TC, &buf);
+
+    *val = (uint8_t)buf;
+
+    return res;
 }
 
 int sl_ttc2_read_rssi(sl_ttc2_config_t config, sl_ttc2_rssi_t *val)
 {
-    return sl_ttc2_read_reg(config, SL_TTC2_REG_RSSI_LAST_VALID_TC, (uint32_t*)val);
+    uint32_t buf = UINT32_MAX;
+
+    int res = sl_ttc2_read_reg(config, SL_TTC2_REG_RSSI_LAST_VALID_TC, &buf);
+
+    *val = (sl_ttc2_rssi_t)buf;
+
+    return res;
 }
 
 int sl_ttc2_read_antenna_status(sl_ttc2_config_t config, uint16_t *val)
 {
-    return sl_ttc2_read_reg(config, SL_TTC2_REG_ANTENNA_STATUS, (uint32_t*)val);
+    uint32_t buf = UINT32_MAX;
+
+    int res = sl_ttc2_read_reg(config, SL_TTC2_REG_ANTENNA_STATUS, &buf);
+
+    *val = (uint16_t)buf;
+
+    return res;
 }
 
 int sl_ttc2_read_antenna_deployment_status(sl_ttc2_config_t config, uint8_t *val)
 {
-    return sl_ttc2_read_reg(config, SL_TTC2_REG_ANTENNA_DEPLOYMENT_STATUS, (uint32_t*)val);
+    uint32_t buf = UINT32_MAX;
+
+    int res = sl_ttc2_read_reg(config, SL_TTC2_REG_ANTENNA_DEPLOYMENT_STATUS, &buf);
+
+    *val = (uint8_t)buf;
+
+    return res;
 }
 
 int sl_ttc2_read_antenna_deployment_hibernation_status(sl_ttc2_config_t config, uint8_t *val)
 {
-    return sl_ttc2_read_reg(config, SL_TTC2_REG_ANTENNA_DEP_HIB_STATUS, (uint32_t*)val);
+    uint32_t buf = UINT32_MAX;
+
+    int res = sl_ttc2_read_reg(config, SL_TTC2_REG_ANTENNA_DEP_HIB_STATUS, &buf);
+
+    *val = (uint8_t)buf;
+
+    return res;
 }
 
 int sl_ttc2_read_tx_enable(sl_ttc2_config_t config, uint8_t *val)
 {
-    return sl_ttc2_read_reg(config, SL_TTC2_REG_TX_ENABLE, (uint32_t*)val);
+    uint32_t buf = UINT32_MAX;
+
+    int res = sl_ttc2_read_reg(config, SL_TTC2_REG_TX_ENABLE, &buf);
+
+    *val = (uint8_t)buf;
+
+    return res;
 }
 
 int sl_ttc2_set_tx_enable(sl_ttc2_config_t config, bool en)
@@ -436,10 +540,23 @@ int sl_ttc2_read_pkt_counter(sl_ttc2_config_t config, uint8_t pkt, uint32_t *val
 
 int sl_ttc2_read_fifo_pkts(sl_ttc2_config_t config, uint8_t pkt, uint8_t *val)
 {
+    uint32_t buf = UINT32_MAX;
+    int res = -1;
+
     switch(pkt)
     {
-        case SL_TTC2_TX_PKT:    return sl_ttc2_read_reg(config, SL_TTC2_REG_FIFO_TX_PACKET, (uint32_t*)val);
-        case SL_TTC2_RX_PKT:    return sl_ttc2_read_reg(config, SL_TTC2_REG_FIFO_RX_PACKET, (uint32_t*)val);
+        case SL_TTC2_TX_PKT:
+            res = sl_ttc2_read_reg(config, SL_TTC2_REG_FIFO_TX_PACKET, &buf);
+
+            *val = (uint8_t)buf;
+
+            return res;
+        case SL_TTC2_RX_PKT:
+            res = sl_ttc2_read_reg(config, SL_TTC2_REG_FIFO_RX_PACKET, &buf);
+
+            *val = (uint8_t)buf;
+
+            return res;
         default:
         #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
             sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the FIFO buffer! Invalid packet type!");
@@ -451,7 +568,13 @@ int sl_ttc2_read_fifo_pkts(sl_ttc2_config_t config, uint8_t pkt, uint8_t *val)
 
 int sl_ttc2_read_len_rx_pkt_in_fifo(sl_ttc2_config_t config, uint16_t *val)
 {
-    return sl_ttc2_read_reg(config, SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO, (uint32_t*)val);
+    uint32_t buf = UINT32_MAX;
+
+    int res = sl_ttc2_read_reg(config, SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO, &buf);
+
+    *val = (uint16_t)buf;
+
+    return res;
 }
 
 int sl_ttc2_check_pkt_avail(sl_ttc2_config_t config)
