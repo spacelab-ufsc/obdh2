@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.18
+ * \version 0.7.19
  * 
  * \date 2021/09/08
  * 
@@ -207,6 +207,80 @@ static void sl_ttc2_read_reg_test(void **state)
 
 static void sl_ttc2_read_hk_data_test(void **state)
 {
+    sl_ttc2_hk_data_t hk_val = {0};
+
+    hk_val.time_counter = generate_random(0, UINT32_MAX-1);
+    read_adr(3, hk_val.time_counter);
+
+    hk_val.reset_counter = generate_random(0, UINT16_MAX);
+    read_adr(4, (uint32_t)hk_val.reset_counter);
+
+    hk_val.last_reset_cause = generate_random(0, UINT8_MAX);
+    read_adr(5, (uint32_t)hk_val.last_reset_cause);
+
+    hk_val.voltage_mcu = generate_random(0, UINT16_MAX);
+    read_adr(6, (uint32_t)hk_val.voltage_mcu);
+
+    hk_val.current_mcu = generate_random(0, UINT16_MAX);
+    read_adr(7, (uint32_t)hk_val.current_mcu);
+
+    hk_val.temperature_mcu = generate_random(0, UINT16_MAX);
+    read_adr(8, (uint32_t)hk_val.temperature_mcu);
+
+    hk_val.voltage_radio = generate_random(0, UINT16_MAX);
+    read_adr(9, (uint32_t)hk_val.voltage_radio);
+
+    hk_val.current_radio = generate_random(0, UINT16_MAX);
+    read_adr(10, (uint32_t)hk_val.current_radio);
+
+    hk_val.temperature_radio = generate_random(0, UINT16_MAX);
+    read_adr(11, (uint32_t)hk_val.temperature_radio);
+
+    hk_val.last_valid_tc = generate_random(0, UINT8_MAX);
+    read_adr(12, (uint32_t)hk_val.last_valid_tc);
+
+    hk_val.rssi_last_valid_tc = generate_random(0, UINT16_MAX);
+    read_adr(13, (uint32_t)hk_val.rssi_last_valid_tc);
+
+    hk_val.temperature_antenna = generate_random(0, UINT16_MAX);
+    read_adr(14, (uint32_t)hk_val.temperature_antenna);
+
+    hk_val.antenna_status = generate_random(0, UINT16_MAX);
+    read_adr(15, (uint32_t)hk_val.antenna_status);
+
+    hk_val.deployment_status = generate_random(0, UINT8_MAX);
+    read_adr(16, (uint32_t)hk_val.deployment_status);
+
+    hk_val.hibernation_status = generate_random(0, UINT8_MAX);
+    read_adr(17, (uint32_t)hk_val.hibernation_status);
+
+    hk_val.tx_packet_counter = generate_random(0, UINT32_MAX-1);
+    read_adr(19, (uint32_t)hk_val.tx_packet_counter);
+
+    hk_val.rx_packet_counter = generate_random(0, UINT32_MAX-1);
+    read_adr(20, (uint32_t)hk_val.rx_packet_counter);
+
+    sl_ttc2_hk_data_t hk_res = {0};
+
+    assert_return_code(sl_ttc2_read_hk_data(conf, &hk_res), 0);
+
+    assert_int_equal(hk_val.time_counter,           hk_res.time_counter);
+    assert_int_equal(hk_val.reset_counter,          hk_res.reset_counter);
+    assert_int_equal(hk_val.last_reset_cause,       hk_res.last_reset_cause);
+    assert_int_equal(hk_val.voltage_mcu,            hk_res.voltage_mcu);
+    assert_int_equal(hk_val.current_mcu,            hk_res.current_mcu);
+    assert_int_equal(hk_val.temperature_mcu,        hk_res.temperature_mcu);
+    assert_int_equal(hk_val.voltage_radio,          hk_res.voltage_radio);
+    assert_int_equal(hk_val.current_radio,          hk_res.current_radio);
+    assert_int_equal(hk_val.temperature_radio,      hk_res.temperature_radio);
+    assert_int_equal(hk_val.last_valid_tc,          hk_res.last_valid_tc);
+    assert_int_equal(hk_val.rssi_last_valid_tc,     hk_res.rssi_last_valid_tc);
+    assert_int_equal(hk_val.temperature_antenna,    hk_res.temperature_antenna);
+    assert_int_equal(hk_val.antenna_status,         hk_res.antenna_status);
+    assert_int_equal(hk_val.deployment_status,      hk_res.deployment_status);
+    assert_int_equal(hk_val.hibernation_status,     hk_res.hibernation_status);
+    assert_int_equal(hk_val.tx_packet_counter,      hk_res.tx_packet_counter);
+    assert_int_equal(hk_val.rx_packet_counter,      hk_res.rx_packet_counter);
 }
 
 static void sl_ttc2_read_device_id_test(void **state)
@@ -270,7 +344,7 @@ static void sl_ttc2_read_reset_counter_test(void **state)
     uint8_t adr = 4;    /* Reset counter register */
     uint16_t val = generate_random(0, UINT16_MAX);
 
-    read_adr(adr, (uint16_t)val);
+    read_adr(adr, (uint32_t)val);
 
     uint16_t res = UINT16_MAX;
 
@@ -284,7 +358,7 @@ static void sl_ttc2_read_reset_cause_test(void **state)
     uint8_t adr = 5;    /* Reset cause register */
     uint8_t val = generate_random(0, UINT8_MAX);
 
-    read_adr(adr, (uint8_t)val);
+    read_adr(adr, (uint32_t)val);
 
     uint8_t res = UINT8_MAX;
 
