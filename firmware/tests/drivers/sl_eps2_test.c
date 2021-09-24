@@ -273,6 +273,196 @@ static void sl_eps2_read_reg_test(void **state)
 
 static void sl_eps2_read_data_test(void **state)
 {
+    sl_eps2_data_t data_val = {0};
+
+    data_val.time_counter = generate_random(0, UINT32_MAX-1);
+    read_reg(0, data_val.time_counter);
+
+    data_val.temperature_uc = generate_random(0, UINT16_MAX);
+    read_reg(1, (uint32_t)data_val.temperature_uc);
+
+    data_val.current = generate_random(0, UINT16_MAX);
+    read_reg(2, (uint32_t)data_val.current);
+
+    data_val.last_reset_cause = generate_random(0, UINT8_MAX);
+    read_reg(3, (uint32_t)data_val.last_reset_cause);
+
+    data_val.reset_counter = generate_random(0, UINT16_MAX);
+    read_reg(4, (uint32_t)data_val.reset_counter);
+
+    data_val.solar_panel_voltage_my_px = generate_random(0, UINT16_MAX);
+    read_reg(5, (uint32_t)data_val.solar_panel_voltage_my_px);
+
+    data_val.solar_panel_voltage_mx_pz = generate_random(0, UINT16_MAX);
+    read_reg(6, (uint32_t)data_val.solar_panel_voltage_mx_pz);
+
+    data_val.solar_panel_voltage_mz_py = generate_random(0, UINT16_MAX);
+    read_reg(7, (uint32_t)data_val.solar_panel_voltage_mz_py);
+
+    data_val.solar_panel_output_voltage = generate_random(0, UINT16_MAX);
+    read_reg(17, (uint32_t)data_val.solar_panel_output_voltage);
+
+    data_val.solar_panel_current_my = generate_random(0, UINT16_MAX);
+    read_reg(8, (uint32_t)data_val.solar_panel_current_my);
+
+    data_val.solar_panel_current_py = generate_random(0, UINT16_MAX);
+    read_reg(9, (uint32_t)data_val.solar_panel_current_py);
+
+    data_val.solar_panel_current_mx = generate_random(0, UINT16_MAX);
+    read_reg(10, (uint32_t)data_val.solar_panel_current_mx);
+
+    data_val.solar_panel_current_px = generate_random(0, UINT16_MAX);
+    read_reg(11, (uint32_t)data_val.solar_panel_current_px);
+
+    data_val.solar_panel_current_mz = generate_random(0, UINT16_MAX);
+    read_reg(12, (uint32_t)data_val.solar_panel_current_mz);
+
+    data_val.solar_panel_current_pz = generate_random(0, UINT16_MAX);
+    read_reg(13, (uint32_t)data_val.solar_panel_current_pz);
+
+    data_val.mppt_1_duty_cycle = generate_random(0, UINT8_MAX);
+    read_reg(14, (uint32_t)data_val.mppt_1_duty_cycle);
+
+    data_val.mppt_2_duty_cycle = generate_random(0, UINT8_MAX);
+    read_reg(15, (uint32_t)data_val.mppt_2_duty_cycle);
+
+    data_val.mppt_3_duty_cycle = generate_random(0, UINT8_MAX);
+    read_reg(16, (uint32_t)data_val.mppt_3_duty_cycle);
+
+    data_val.main_power_bus_voltage = generate_random(0, UINT16_MAX);
+    read_reg(18, (uint32_t)data_val.main_power_bus_voltage);
+
+    data_val.rtd_0_temperature = generate_random(0, UINT16_MAX);
+    read_reg(19, (uint32_t)data_val.rtd_0_temperature);
+
+    data_val.rtd_1_temperature = generate_random(0, UINT16_MAX);
+    read_reg(20, (uint32_t)data_val.rtd_1_temperature);
+
+    data_val.rtd_2_temperature = generate_random(0, UINT16_MAX);
+    read_reg(21, (uint32_t)data_val.rtd_2_temperature);
+
+    data_val.rtd_3_temperature = generate_random(0, UINT16_MAX);
+    read_reg(22, (uint32_t)data_val.rtd_3_temperature);
+
+    data_val.rtd_4_temperature = generate_random(0, UINT16_MAX);
+    read_reg(23, (uint32_t)data_val.rtd_4_temperature);
+
+    data_val.rtd_5_temperature = generate_random(0, UINT16_MAX);
+    read_reg(24, (uint32_t)data_val.rtd_5_temperature);
+
+    data_val.rtd_6_temperature = generate_random(0, UINT16_MAX);
+    read_reg(25, (uint32_t)data_val.rtd_6_temperature);
+
+    data_val.battery_voltage = generate_random(0, UINT16_MAX);
+    read_reg(26, (uint32_t)data_val.battery_voltage);
+
+    data_val.battery_current = generate_random(0, UINT16_MAX);
+    read_reg(27, (uint32_t)data_val.battery_current);
+
+    data_val.battery_average_current = generate_random(0, UINT16_MAX);
+    read_reg(28, (uint32_t)data_val.battery_average_current);
+
+    data_val.battery_acc_current = generate_random(0, UINT16_MAX);
+    read_reg(29, (uint32_t)data_val.battery_acc_current);
+
+    data_val.battery_charge = generate_random(0, UINT16_MAX);
+    read_reg(30, (uint32_t)data_val.battery_charge);
+
+    data_val.battery_monitor_temperature = generate_random(0, UINT16_MAX);
+    read_reg(31, (uint32_t)data_val.battery_monitor_temperature);
+
+    data_val.battery_monitor_status = generate_random(0, UINT8_MAX);
+    read_reg(32, (uint32_t)data_val.battery_monitor_status);
+
+    data_val.battery_monitor_protection = generate_random(0, UINT8_MAX);
+    read_reg(33, (uint32_t)data_val.battery_monitor_protection);
+
+    data_val.battery_monitor_cycle_counter = generate_random(0, UINT8_MAX);
+    read_reg(34, (uint32_t)data_val.battery_monitor_cycle_counter);
+
+    data_val.raac = generate_random(0, UINT16_MAX);
+    read_reg(35, (uint32_t)data_val.raac);
+
+    data_val.rsac = generate_random(0, UINT16_MAX);
+    read_reg(36, (uint32_t)data_val.rsac);
+
+    data_val.rarc = generate_random(0, UINT8_MAX);
+    read_reg(37, (uint32_t)data_val.rarc);
+
+    data_val.rsrc = generate_random(0, UINT8_MAX);
+    read_reg(38, (uint32_t)data_val.rsrc);
+
+    data_val.battery_heater_1_duty_cycle = generate_random(0, UINT8_MAX);
+    read_reg(39, (uint32_t)data_val.battery_heater_1_duty_cycle);
+
+    data_val.battery_heater_2_duty_cycle = generate_random(0, UINT8_MAX);
+    read_reg(40, (uint32_t)data_val.battery_heater_2_duty_cycle);
+
+    data_val.mppt_1_mode = generate_random(0, UINT8_MAX);
+    read_reg(43, (uint32_t)data_val.mppt_1_mode);
+
+    data_val.mppt_2_mode = generate_random(0, UINT8_MAX);
+    read_reg(44, (uint32_t)data_val.mppt_2_mode);
+
+    data_val.mppt_3_mode = generate_random(0, UINT8_MAX);
+    read_reg(45, (uint32_t)data_val.mppt_3_mode);
+
+    data_val.battery_heater_1_mode = generate_random(0, UINT8_MAX);
+    read_reg(46, (uint32_t)data_val.battery_heater_1_mode);
+
+    data_val.battery_heater_2_mode = generate_random(0, UINT8_MAX);
+    read_reg(47, (uint32_t)data_val.battery_heater_2_mode);
+
+    sl_eps2_data_t data_res = {0};
+
+    assert_return_code(sl_eps2_read_data(conf, &data_res), 0);
+
+    assert_int_equal(data_val.time_counter,                     data_res.time_counter);
+    assert_int_equal(data_val.temperature_uc,                   data_res.temperature_uc);
+    assert_int_equal(data_val.current,                          data_res.current);
+    assert_int_equal(data_val.last_reset_cause,                 data_res.last_reset_cause);
+    assert_int_equal(data_val.reset_counter,                    data_res.reset_counter);
+    assert_int_equal(data_val.solar_panel_voltage_my_px,        data_res.solar_panel_voltage_my_px);
+    assert_int_equal(data_val.solar_panel_voltage_mx_pz,        data_res.solar_panel_voltage_mx_pz);
+    assert_int_equal(data_val.solar_panel_voltage_mz_py,        data_res.solar_panel_voltage_mz_py);
+    assert_int_equal(data_val.solar_panel_current_my,           data_res.solar_panel_current_my);
+    assert_int_equal(data_val.solar_panel_current_py,           data_res.solar_panel_current_py);
+    assert_int_equal(data_val.solar_panel_current_mx,           data_res.solar_panel_current_mx);
+    assert_int_equal(data_val.solar_panel_current_px,           data_res.solar_panel_current_px);
+    assert_int_equal(data_val.solar_panel_current_mz,           data_res.solar_panel_current_mz);
+    assert_int_equal(data_val.solar_panel_current_pz,           data_res.solar_panel_current_pz);
+    assert_int_equal(data_val.mppt_1_duty_cycle,                data_res.mppt_1_duty_cycle);
+    assert_int_equal(data_val.mppt_2_duty_cycle,                data_res.mppt_2_duty_cycle);
+    assert_int_equal(data_val.mppt_3_duty_cycle,                data_res.mppt_3_duty_cycle);
+    assert_int_equal(data_val.solar_panel_output_voltage,       data_res.solar_panel_output_voltage);
+    assert_int_equal(data_val.main_power_bus_voltage,           data_res.main_power_bus_voltage);
+    assert_int_equal(data_val.rtd_0_temperature,                data_res.rtd_0_temperature);
+    assert_int_equal(data_val.rtd_1_temperature,                data_res.rtd_1_temperature);
+    assert_int_equal(data_val.rtd_2_temperature,                data_res.rtd_2_temperature);
+    assert_int_equal(data_val.rtd_3_temperature,                data_res.rtd_3_temperature);
+    assert_int_equal(data_val.rtd_4_temperature,                data_res.rtd_4_temperature);
+    assert_int_equal(data_val.rtd_5_temperature,                data_res.rtd_5_temperature);
+    assert_int_equal(data_val.rtd_6_temperature,                data_res.rtd_6_temperature);
+    assert_int_equal(data_val.battery_voltage,                  data_res.battery_voltage);
+    assert_int_equal(data_val.battery_current,                  data_res.battery_current);
+    assert_int_equal(data_val.battery_average_current,          data_res.battery_average_current);
+    assert_int_equal(data_val.battery_acc_current,              data_res.battery_acc_current);
+    assert_int_equal(data_val.battery_charge,                   data_res.battery_charge);
+    assert_int_equal(data_val.battery_monitor_temperature,      data_res.battery_monitor_temperature);
+    assert_int_equal(data_val.battery_monitor_status,           data_res.battery_monitor_status);
+    assert_int_equal(data_val.battery_monitor_protection,       data_res.battery_monitor_protection);
+    assert_int_equal(data_val.battery_monitor_cycle_counter,    data_res.battery_monitor_cycle_counter);
+    assert_int_equal(data_val.raac,                             data_res.raac);
+    assert_int_equal(data_val.rsac,                             data_res.rsac);
+    assert_int_equal(data_val.rarc,                             data_res.rarc);
+    assert_int_equal(data_val.rsrc,                             data_res.rsrc);
+    assert_int_equal(data_val.battery_heater_1_duty_cycle,      data_res.battery_heater_1_duty_cycle);
+    assert_int_equal(data_val.battery_heater_2_duty_cycle,      data_res.battery_heater_2_duty_cycle);
+    assert_int_equal(data_val.mppt_1_mode,                      data_res.mppt_1_mode);
+    assert_int_equal(data_val.mppt_2_mode,                      data_res.mppt_2_mode);
+    assert_int_equal(data_val.mppt_3_mode,                      data_res.mppt_3_mode);
+    assert_int_equal(data_val.battery_heater_1_mode,            data_res.battery_heater_1_mode);
+    assert_int_equal(data_val.battery_heater_2_mode,            data_res.battery_heater_2_mode);
 }
 
 static void sl_eps2_read_time_counter_test(void **state)
@@ -368,10 +558,55 @@ static void sl_eps2_read_solar_panel_voltage_test(void **state)
 
 static void sl_eps2_read_solar_panel_current_test(void **state)
 {
+    uint8_t sp = 0;
+    for(sp=0; sp<UINT8_MAX; sp++)
+    {
+        sl_eps2_current_t val = generate_random(0, UINT16_MAX);
+        sl_eps2_current_t res = UINT16_MAX;
+
+        switch(sp)
+        {
+            case SL_EPS2_SOLAR_PANEL_0:     read_reg(8, (uint32_t)val);     break;
+            case SL_EPS2_SOLAR_PANEL_1:     read_reg(9, (uint32_t)val);     break;
+            case SL_EPS2_SOLAR_PANEL_2:     read_reg(10, (uint32_t)val);    break;
+            case SL_EPS2_SOLAR_PANEL_3:     read_reg(11, (uint32_t)val);    break;
+            case SL_EPS2_SOLAR_PANEL_4:     read_reg(12, (uint32_t)val);    break;
+            case SL_EPS2_SOLAR_PANEL_5:     read_reg(13, (uint32_t)val);    break;
+            default:
+                assert_int_equal(sl_eps2_read_solar_panel_current(conf, sp, &res), -1);
+
+                continue;
+        }
+
+        assert_return_code(sl_eps2_read_solar_panel_current(conf, sp, &res), 0);
+
+        assert_int_equal(val, res);
+    }
 }
 
 static void sl_eps2_read_mppt_duty_cycle_test(void **state)
 {
+    uint8_t mppt = 0;
+    for(mppt=0; mppt<UINT8_MAX; mppt++)
+    {
+        sl_eps2_duty_cycle_t val = generate_random(0, UINT8_MAX);
+        sl_eps2_duty_cycle_t res = UINT8_MAX;
+
+        switch(mppt)
+        {
+            case SL_EPS2_MPPT_1:    read_reg(14, (uint32_t)val);    break;
+            case SL_EPS2_MPPT_2:    read_reg(15, (uint32_t)val);    break;
+            case SL_EPS2_MPPT_3:    read_reg(16, (uint32_t)val);    break;
+            default:
+                assert_int_equal(sl_eps2_read_mppt_duty_cycle(conf, mppt, &res), -1);
+
+                continue;
+        }
+
+        assert_return_code(sl_eps2_read_mppt_duty_cycle(conf, mppt, &res), 0);
+
+        assert_int_equal(val, res);
+    }
 }
 
 static void sl_eps2_read_main_bus_voltage_test(void **state)
@@ -389,14 +624,69 @@ static void sl_eps2_read_main_bus_voltage_test(void **state)
 
 static void sl_eps2_read_rtd_temperature_test(void **state)
 {
+    uint8_t rtd = 0;
+    for(rtd=0; rtd<UINT8_MAX; rtd++)
+    {
+        sl_eps2_temp_t val = generate_random(0, UINT16_MAX);
+        sl_eps2_temp_t res = UINT16_MAX;
+
+        switch(rtd)
+        {
+            case SL_EPS2_RTD_0:     read_reg(19, (uint32_t)val);    break;
+            case SL_EPS2_RTD_1:     read_reg(20, (uint32_t)val);    break;
+            case SL_EPS2_RTD_2:     read_reg(21, (uint32_t)val);    break;
+            case SL_EPS2_RTD_3:     read_reg(22, (uint32_t)val);    break;
+            case SL_EPS2_RTD_4:     read_reg(23, (uint32_t)val);    break;
+            case SL_EPS2_RTD_5:     read_reg(24, (uint32_t)val);    break;
+            case SL_EPS2_RTD_6:     read_reg(25, (uint32_t)val);    break;
+            default:
+                assert_int_equal(sl_eps2_read_rtd_temperature(conf, rtd, &res), -1);
+
+                continue;
+        }
+
+        assert_return_code(sl_eps2_read_rtd_temperature(conf, rtd, &res), 0);
+
+        assert_int_equal(val, res);
+    }
 }
 
 static void sl_eps2_read_battery_voltage_test(void **state)
 {
+    sl_eps2_voltage_t val = generate_random(0, UINT16_MAX);
+
+    read_reg(26, (uint32_t)val);
+
+    sl_eps2_voltage_t res = UINT16_MAX;
+
+    assert_return_code(sl_eps2_read_battery_voltage(conf, &res), 0);
+
+    assert_int_equal(val, res);
 }
 
 static void sl_eps2_read_battery_current_test(void **state)
 {
+    uint8_t cur = 0;
+    for(cur=0; cur<UINT8_MAX; cur++)
+    {
+        sl_eps2_current_t val = generate_random(0, UINT16_MAX);
+        sl_eps2_current_t res = UINT16_MAX;
+
+        switch(cur)
+        {
+            case SL_EPS2_BATTERY_CURRENT:           read_reg(27, (uint32_t)val);    break;
+            case SL_EPS2_BATTERY_AVERAGE_CURRENT:   read_reg(28, (uint32_t)val);    break;
+            case SL_EPS2_BATTERY_ACC_CURRENT:       read_reg(29, (uint32_t)val);    break;
+            default:
+                assert_int_equal(sl_eps2_read_battery_current(conf, cur, &res), -1);
+
+                continue;
+        }
+
+        assert_return_code(sl_eps2_read_battery_current(conf, cur, &res), 0);
+
+        assert_int_equal(val, res);
+    }
 }
 
 static void sl_eps2_read_battery_charge_test(void **state)
@@ -518,6 +808,26 @@ static void sl_eps2_read_battery_monitor_rsrc_test(void **state)
 
 static void sl_eps2_read_heater_duty_cycle_test(void **state)
 {
+    uint8_t heater = 0;
+    for(heater=0; heater<UINT8_MAX; heater++)
+    {
+        sl_eps2_duty_cycle_t val = generate_random(0, UINT8_MAX);
+        sl_eps2_duty_cycle_t res = UINT8_MAX;
+
+        switch(heater)
+        {
+            case SL_EPS2_HEATER_1:  read_reg(39, (uint32_t)val); break;
+            case SL_EPS2_HEATER_2:  read_reg(40, (uint32_t)val); break;
+            default:
+                assert_int_equal(sl_eps2_read_heater_duty_cycle(conf, heater, &res), -1);
+
+                continue;
+        }
+
+        assert_return_code(sl_eps2_read_heater_duty_cycle(conf, heater, &res), 0);
+
+        assert_int_equal(val, res);
+    }
 }
 
 static void sl_eps2_read_hardware_version_test(void **state)
@@ -548,18 +858,149 @@ static void sl_eps2_read_firmware_version_test(void **state)
 
 static void sl_eps2_set_mppt_mode_test(void **state)
 {
+    uint8_t mppt = 0;
+    for(mppt=0; mppt<UINT8_MAX; mppt++)
+    {
+        uint8_t mode = generate_random(SL_EPS2_MPPT_MODE_AUTOMATIC, SL_EPS2_MPPT_MODE_MANUAL);
+        uint8_t data[8] = {UINT8_MAX};
+
+        data[1] = 0;
+        data[2] = 0;
+        data[3] = 0;
+        data[4] = mode;
+
+        switch(mppt)
+        {
+            case SL_EPS2_MPPT_1:
+                data[0] = 43;
+
+                break;
+            case SL_EPS2_MPPT_2:
+                data[0] = 44;
+
+                break;
+            case SL_EPS2_MPPT_3:
+                data[0] = 45;
+
+                break;
+            default:
+                assert_int_equal(sl_eps2_set_mppt_mode(conf, mppt, mode), -1);
+
+                continue;
+        }
+
+        data[5] = crc8(data, 5);
+
+        expect_value(__wrap_i2c_write, port, SL_EPS2_I2C_PORT);
+        expect_value(__wrap_i2c_write, adr, SL_EPS2_I2C_ADR);
+        expect_memory(__wrap_i2c_write, data, (void*)data, 6);
+        expect_value(__wrap_i2c_write, len, 6);
+
+        will_return(__wrap_i2c_write, 0);
+
+        /* Get state */
+        expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
+
+        will_return(__wrap_gpio_get_state, 1);
+
+        assert_return_code(sl_eps2_set_mppt_mode(conf, mppt, mode), 0);
+    }
 }
 
 static void sl_eps2_get_mppt_mode_test(void **state)
 {
+    uint8_t mppt = 0;
+    for(mppt=0; mppt<UINT8_MAX; mppt++)
+    {
+        uint8_t val = generate_random(0, UINT8_MAX);
+        uint8_t res = UINT8_MAX;
+
+        switch(mppt)
+        {
+            case SL_EPS2_MPPT_1:    read_reg(43, (uint32_t)val);    break;
+            case SL_EPS2_MPPT_2:    read_reg(44, (uint32_t)val);    break;
+            case SL_EPS2_MPPT_3:    read_reg(45, (uint32_t)val);    break;
+            default:
+                assert_int_equal(sl_eps2_get_mppt_mode(conf, mppt, &res), -1);
+
+                continue;
+        }
+
+        assert_return_code(sl_eps2_get_mppt_mode(conf, mppt, &res), 0);
+
+        assert_int_equal(val, res);
+    }
 }
 
 static void sl_eps2_set_heater_mode_test(void **state)
 {
+    uint8_t heater = 0;
+    for(heater=0; heater<UINT8_MAX; heater++)
+    {
+        uint8_t mode = generate_random(SL_EPS2_HEATER_MODE_AUTOMATIC, SL_EPS2_HEATER_MODE_MANUAL);
+        uint8_t data[8] = {UINT8_MAX};
+
+        data[1] = 0;
+        data[2] = 0;
+        data[3] = 0;
+        data[4] = mode;
+
+        switch(heater)
+        {
+            case SL_EPS2_HEATER_1:
+                data[0] = 46;
+
+                break;
+            case SL_EPS2_HEATER_2:
+                data[0] = 47;
+
+                break;
+            default:
+                assert_int_equal(sl_eps2_set_heater_mode(conf, heater, mode), -1);
+
+                continue;
+        }
+
+        data[5] = crc8(data, 5);
+
+        expect_value(__wrap_i2c_write, port, SL_EPS2_I2C_PORT);
+        expect_value(__wrap_i2c_write, adr, SL_EPS2_I2C_ADR);
+        expect_memory(__wrap_i2c_write, data, (void*)data, 6);
+        expect_value(__wrap_i2c_write, len, 6);
+
+        will_return(__wrap_i2c_write, 0);
+
+        /* Get state */
+        expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
+
+        will_return(__wrap_gpio_get_state, 1);
+
+        assert_return_code(sl_eps2_set_heater_mode(conf, heater, mode), 0);
+    }
 }
 
 static void sl_eps2_get_heater_mode_test(void **state)
 {
+    uint8_t heater = 0;
+    for(heater=0; heater<UINT8_MAX; heater++)
+    {
+        uint8_t val = generate_random(0, UINT8_MAX);
+        uint8_t res = UINT8_MAX;
+
+        switch(heater)
+        {
+            case SL_EPS2_HEATER_1:  read_reg(46, (uint32_t)val);    break;
+            case SL_EPS2_HEATER_2:  read_reg(47, (uint32_t)val);    break;
+            default:
+                assert_int_equal(sl_eps2_get_heater_mode(conf, heater, &res), -1);
+
+                continue;
+        }
+
+        assert_return_code(sl_eps2_get_heater_mode(conf, heater, &res), 0);
+
+        assert_int_equal(val, res);
+    }
 }
 
 int main(void)
