@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.18
+ * \version 0.7.19
  * 
  * \date 2021/09/02
  * 
@@ -58,6 +58,8 @@ sl_eps2_config_t conf = {0};
 unsigned int generate_random(unsigned int l, unsigned int r);
 
 uint8_t crc8(uint8_t *data, uint8_t len);
+
+void read_reg(uint8_t adr, uint32_t val);
 
 static void sl_eps2_init_test(void **state)
 {
@@ -275,26 +277,93 @@ static void sl_eps2_read_data_test(void **state)
 
 static void sl_eps2_read_time_counter_test(void **state)
 {
+    uint32_t val = generate_random(0, UINT32_MAX-1);
+
+    read_reg(0, val);
+
+    uint32_t res = UINT32_MAX;
+
+    assert_return_code(sl_eps2_read_time_counter(conf, &res), 0);
+
+    assert_int_equal(val, res);
 }
 
 static void sl_eps2_read_temp_test(void **state)
 {
+    uint16_t val = generate_random(0, UINT16_MAX);
+
+    read_reg(1, (uint32_t)val);
+
+    sl_eps2_temp_t res = UINT16_MAX;
+
+    assert_return_code(sl_eps2_read_temp(conf, &res), 0);
+
+    assert_int_equal(val, res);
 }
 
 static void sl_eps2_read_current_test(void **state)
 {
+    uint16_t val = generate_random(0, UINT16_MAX);
+
+    read_reg(2, (uint32_t)val);
+
+    sl_eps2_current_t res = UINT16_MAX;
+
+    assert_return_code(sl_eps2_read_current(conf, &res), 0);
+
+    assert_int_equal(val, res);
 }
 
 static void sl_eps2_read_reset_cause_test(void **state)
 {
+    uint8_t val = generate_random(0, UINT8_MAX);
+
+    read_reg(3, (uint32_t)val);
+
+    uint8_t res = UINT8_MAX;
+
+    assert_return_code(sl_eps2_read_reset_cause(conf, &res), 0);
+
+    assert_int_equal(val, res);
 }
 
 static void sl_eps2_read_reset_counter_test(void **state)
 {
+    uint16_t val = generate_random(0, UINT16_MAX);
+
+    read_reg(4, (uint32_t)val);
+
+    uint16_t res = UINT16_MAX;
+
+    assert_return_code(sl_eps2_read_reset_counter(conf, &res), 0);
+
+    assert_int_equal(val, res);
 }
 
 static void sl_eps2_read_solar_panel_voltage_test(void **state)
 {
+    uint8_t sp = 0;
+    for(sp=0; sp<UINT8_MAX; sp++)
+    {
+        uint16_t val = generate_random(0, UINT16_MAX);
+        uint16_t res = UINT16_MAX;
+
+        switch(sp)
+        {
+            case SL_EPS2_SOLAR_PANEL_3_0:   read_reg(5, (uint32_t)val);     break;
+            case SL_EPS2_SOLAR_PANEL_1_4:   read_reg(6, (uint32_t)val);     break;
+            case SL_EPS2_SOLAR_PANEL_5_2:   read_reg(7, (uint32_t)val);     break;
+            case SL_EPS2_SOLAR_PANEL_ALL:   read_reg(17, (uint32_t)val);    break;
+            default:
+                assert_int_equal(sl_eps2_read_solar_panel_voltage(conf, sp, &res), -1);
+
+                continue;
+        }
+
+        assert_return_code(sl_eps2_read_solar_panel_voltage(conf, sp, &res), 0);
+
+        assert_int_equal(val, res);
+    }
 }
 
 static void sl_eps2_read_solar_panel_current_test(void **state)
@@ -307,6 +376,15 @@ static void sl_eps2_read_mppt_duty_cycle_test(void **state)
 
 static void sl_eps2_read_main_bus_voltage_test(void **state)
 {
+    sl_eps2_voltage_t val = generate_random(0, UINT16_MAX);
+
+    read_reg(18, (uint32_t)val);
+
+    sl_eps2_voltage_t res = UINT16_MAX;
+
+    assert_return_code(sl_eps2_read_main_bus_voltage(conf, &res), 0);
+
+    assert_int_equal(val, res);
 }
 
 static void sl_eps2_read_rtd_temperature_test(void **state)
@@ -323,38 +401,119 @@ static void sl_eps2_read_battery_current_test(void **state)
 
 static void sl_eps2_read_battery_charge_test(void **state)
 {
+    sl_eps2_charge_t val = generate_random(0, UINT16_MAX);
+
+    read_reg(30, (uint32_t)val);
+
+    sl_eps2_charge_t res = UINT16_MAX;
+
+    assert_return_code(sl_eps2_read_battery_charge(conf, &res), 0);
+
+    assert_int_equal(val, res);
 }
 
 static void sl_eps2_read_battery_monitor_temp_test(void **state)
 {
+    sl_eps2_temp_t val = generate_random(0, UINT16_MAX);
+
+    read_reg(31, (uint32_t)val);
+
+    sl_eps2_temp_t res = UINT16_MAX;
+
+    assert_return_code(sl_eps2_read_battery_monitor_temp(conf, &res), 0);
+
+    assert_int_equal(val, res);
 }
 
 static void sl_eps2_read_battery_monitor_status_test(void **state)
 {
+    uint8_t val = generate_random(0, UINT8_MAX);
+
+    read_reg(32, (uint32_t)val);
+
+    uint8_t res = UINT8_MAX;
+
+    assert_return_code(sl_eps2_read_battery_monitor_status(conf, &res), 0);
+
+    assert_int_equal(val, res);
 }
 
 static void sl_eps2_read_battery_monitor_protection_test(void **state)
 {
+    uint8_t val = generate_random(0, UINT8_MAX);
+
+    read_reg(33, (uint32_t)val);
+
+    uint8_t res = UINT8_MAX;
+
+    assert_return_code(sl_eps2_read_battery_monitor_protection(conf, &res), 0);
+
+    assert_int_equal(val, res);
 }
 
 static void sl_eps2_read_battery_monitor_cycle_counter_test(void **state)
 {
+    uint8_t val = generate_random(0, UINT8_MAX);
+
+    read_reg(34, (uint32_t)val);
+
+    uint8_t res = UINT8_MAX;
+
+    assert_return_code(sl_eps2_read_battery_monitor_cycle_counter(conf, &res), 0);
+
+    assert_int_equal(val, res);
 }
 
 static void sl_eps2_read_battery_monitor_raac_test(void **state)
 {
+    sl_eps2_charge_t val = generate_random(0, UINT16_MAX);
+
+    read_reg(35, (uint32_t)val);
+
+    sl_eps2_charge_t res = UINT16_MAX;
+
+    assert_return_code(sl_eps2_read_battery_monitor_raac(conf, &res), 0);
+
+    assert_int_equal(val, res);
 }
 
 static void sl_eps2_read_battery_monitor_rsac_test(void **state)
 {
+    sl_eps2_charge_t val = generate_random(0, UINT16_MAX);
+
+    read_reg(36, (uint32_t)val);
+
+    sl_eps2_charge_t res = UINT16_MAX;
+
+    assert_return_code(sl_eps2_read_battery_monitor_rsac(conf, &res), 0);
+
+    assert_int_equal(val, res);
 }
 
 static void sl_eps2_read_battery_monitor_rarc_test(void **state)
 {
+    uint8_t val = generate_random(0, UINT8_MAX);
+
+    read_reg(37, (uint32_t)val);
+
+    uint8_t res = UINT8_MAX;
+
+    assert_return_code(sl_eps2_read_battery_monitor_rarc(conf, &res), 0);
+
+    assert_int_equal(val, res);
 }
 
 static void sl_eps2_read_battery_monitor_rsrc_test(void **state)
 {
+    uint8_t val = generate_random(0, UINT8_MAX);
+
+    read_reg(38, (uint32_t)val);
+
+    uint8_t res = UINT8_MAX;
+
+    assert_return_code(sl_eps2_read_battery_monitor_rsrc(conf, &res), 0);
+
+    assert_int_equal(val, res);
 }
 
 static void sl_eps2_read_heater_duty_cycle_test(void **state)
@@ -363,10 +522,28 @@ static void sl_eps2_read_heater_duty_cycle_test(void **state)
 
 static void sl_eps2_read_hardware_version_test(void **state)
 {
+    uint8_t val = generate_random(0, UINT8_MAX);
+
+    read_reg(41, (uint32_t)val);
+
+    uint8_t res = UINT8_MAX;
+
+    assert_return_code(sl_eps2_read_hardware_version(conf, &res), 0);
+
+    assert_int_equal(val, res);
 }
 
 static void sl_eps2_read_firmware_version_test(void **state)
 {
+    uint32_t val = generate_random(0, UINT32_MAX-1);
+
+    read_reg(42, (uint32_t)val);
+
+    uint32_t res = UINT32_MAX;
+
+    assert_return_code(sl_eps2_read_firmware_version(conf, &res), 0);
+
+    assert_int_equal(val, res);
 }
 
 static void sl_eps2_set_mppt_mode_test(void **state)
@@ -454,6 +631,51 @@ uint8_t crc8(uint8_t *data, uint8_t len)
     }
 
     return crc;
+}
+
+void read_reg(uint8_t adr, uint32_t val)
+{
+    uint8_t data[256] = {UINT8_MAX};
+
+    data[0] = adr;
+    data[1] = crc8(data, 1);
+
+    /* I2C write */
+    expect_value(__wrap_i2c_write, port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_i2c_write, adr, SL_EPS2_I2C_ADR);
+    expect_memory(__wrap_i2c_write, data, (void*)data, 2);
+    expect_value(__wrap_i2c_write, len, 2);
+
+    will_return(__wrap_i2c_write, 0);
+
+    /* Get state */
+    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
+
+    will_return(__wrap_gpio_get_state, 1);
+
+    /* I2C read */
+    expect_value(__wrap_i2c_read, port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_i2c_read, adr, SL_EPS2_I2C_ADR);
+    expect_value(__wrap_i2c_read, len, 5);
+
+    data[0] = (val >> 24) & 0xFF;
+    data[1] = (val >> 16) & 0xFF;
+    data[2] = (val >> 8) & 0xFF;
+    data[3] = (val >> 0) & 0xFF;
+    data[4] = crc8(data, 4);
+
+    uint16_t i = 0;
+    for(i=0; i<5; i++)
+    {
+        will_return(__wrap_i2c_read, data[i]);
+    }
+
+    will_return(__wrap_i2c_read, 0);
+
+    /* Get state */
+    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
+
+    will_return(__wrap_gpio_get_state, 1);
 }
 
 /** \} End of sl_eps2_test group */
