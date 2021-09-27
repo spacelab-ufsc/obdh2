@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.7
+ * \version 0.7.21
  * 
  * \date 2021/08/07
  * 
@@ -244,80 +244,63 @@ static void media_erase_test(void **state)
 
 static void media_get_info_test(void **state)
 {
+    media_info_t test_data = {0};
+
     /* FRAM memory */
     media_info_t info = media_get_info(MEDIA_FRAM);
 
-    assert_true(info.id                     == 0);
-    assert_true(info.type                   == 0);
-    assert_true(info.starting_address       == 0);
-    assert_true(info.address_mask           == 0);
-    assert_true(info.size                   == 0);
-    assert_true(info.otp_size               == 0);
-    assert_true(info.die_count              == 0);
-    assert_true(info.die_size               == 0);
-    assert_true(info.die_size_bit           == 0);
-    assert_true(info.sector_size            == 0);
-    assert_true(info.sector_size_bit        == 0);
-    assert_true(info.sector_count           == 0);
-    assert_true(info.sector_erase_cmd       == 0);
-    assert_true(info.sub_sector_size        == 0);
-    assert_true(info.sub_sector_size_bit    == 0);
-    assert_true(info.sub_sector_count       == 0);
-    assert_true(info.sub_sector_erase_cmd   == 0);
-    assert_true(info.page_size              == 0);
-    assert_true(info.page_count             == 0);
-    assert_true(info.buffer_size            == 0);
-    assert_true(info.data_width             == 0);
-    assert_true(info.num_adr_byte           == 0);
+    assert_memory_equal((void*)&test_data, (void*)&info, sizeof(media_info_t));
 
     /* NOR memory */
-    will_return(__wrap_mt25q_get_flash_description, 0);
-    will_return(__wrap_mt25q_get_flash_description, 1);
-    will_return(__wrap_mt25q_get_flash_description, 2);
-    will_return(__wrap_mt25q_get_flash_description, 3);
-    will_return(__wrap_mt25q_get_flash_description, 4);
-    will_return(__wrap_mt25q_get_flash_description, 5);
-    will_return(__wrap_mt25q_get_flash_description, 6);
-    will_return(__wrap_mt25q_get_flash_description, 7);
-    will_return(__wrap_mt25q_get_flash_description, 8);
-    will_return(__wrap_mt25q_get_flash_description, 9);
-    will_return(__wrap_mt25q_get_flash_description, 10);
-    will_return(__wrap_mt25q_get_flash_description, 11);
-    will_return(__wrap_mt25q_get_flash_description, 12);
-    will_return(__wrap_mt25q_get_flash_description, 13);
-    will_return(__wrap_mt25q_get_flash_description, 14);
-    will_return(__wrap_mt25q_get_flash_description, 15);
-    will_return(__wrap_mt25q_get_flash_description, 16);
-    will_return(__wrap_mt25q_get_flash_description, 17);
-    will_return(__wrap_mt25q_get_flash_description, 18);
-    will_return(__wrap_mt25q_get_flash_description, 19);
-    will_return(__wrap_mt25q_get_flash_description, 20);
-    will_return(__wrap_mt25q_get_flash_description, 21);
+    test_data.id                    = generate_random(0, UINT32_MAX-1);
+    test_data.type                  = generate_random(0, UINT32_MAX-1);
+    test_data.starting_address      = generate_random(0, UINT32_MAX-1);
+    test_data.address_mask          = generate_random(0, UINT32_MAX-1);
+    test_data.size                  = generate_random(0, UINT32_MAX-1);
+    test_data.otp_size              = generate_random(0, UINT32_MAX-1);
+    test_data.die_count             = generate_random(0, UINT32_MAX-1);
+    test_data.die_size              = generate_random(0, UINT32_MAX-1);
+    test_data.die_size_bit          = generate_random(0, UINT32_MAX-1);
+    test_data.sector_size           = generate_random(0, UINT32_MAX-1);
+    test_data.sector_size_bit       = generate_random(0, UINT32_MAX-1);
+    test_data.sector_count          = generate_random(0, UINT32_MAX-1);
+    test_data.sector_erase_cmd      = generate_random(0, UINT32_MAX-1);
+    test_data.sub_sector_size       = generate_random(0, UINT32_MAX-1);
+    test_data.sub_sector_size_bit   = generate_random(0, UINT32_MAX-1);
+    test_data.sub_sector_count      = generate_random(0, UINT32_MAX-1);
+    test_data.sub_sector_erase_cmd  = generate_random(0, UINT32_MAX-1);
+    test_data.page_size             = generate_random(0, UINT32_MAX-1);
+    test_data.page_count            = generate_random(0, UINT32_MAX-1);
+    test_data.buffer_size           = generate_random(0, UINT32_MAX-1);
+    test_data.data_width            = generate_random(0, UINT32_MAX-1);
+    test_data.num_adr_byte          = generate_random(0, UINT8_MAX);
+
+    will_return(__wrap_mt25q_get_flash_description, test_data.id);
+    will_return(__wrap_mt25q_get_flash_description, test_data.type);
+    will_return(__wrap_mt25q_get_flash_description, test_data.starting_address);
+    will_return(__wrap_mt25q_get_flash_description, test_data.address_mask);
+    will_return(__wrap_mt25q_get_flash_description, test_data.size);
+    will_return(__wrap_mt25q_get_flash_description, test_data.otp_size);
+    will_return(__wrap_mt25q_get_flash_description, test_data.die_count);
+    will_return(__wrap_mt25q_get_flash_description, test_data.die_size);
+    will_return(__wrap_mt25q_get_flash_description, test_data.die_size_bit);
+    will_return(__wrap_mt25q_get_flash_description, test_data.sector_size);
+    will_return(__wrap_mt25q_get_flash_description, test_data.sector_size_bit);
+    will_return(__wrap_mt25q_get_flash_description, test_data.sector_count);
+    will_return(__wrap_mt25q_get_flash_description, test_data.sector_erase_cmd);
+    will_return(__wrap_mt25q_get_flash_description, test_data.sub_sector_size);
+    will_return(__wrap_mt25q_get_flash_description, test_data.sub_sector_size_bit);
+    will_return(__wrap_mt25q_get_flash_description, test_data.sub_sector_count);
+    will_return(__wrap_mt25q_get_flash_description, test_data.sub_sector_erase_cmd);
+    will_return(__wrap_mt25q_get_flash_description, test_data.page_size);
+    will_return(__wrap_mt25q_get_flash_description, test_data.page_count);
+    will_return(__wrap_mt25q_get_flash_description, test_data.buffer_size);
+    will_return(__wrap_mt25q_get_flash_description, test_data.data_width);
+    will_return(__wrap_mt25q_get_flash_description, test_data.num_adr_byte);
 
     info = media_get_info(MEDIA_NOR);
 
-    assert_true(info.id                     == 0);
-    assert_true(info.type                   == 1);
-    assert_true(info.starting_address       == 2);
-    assert_true(info.address_mask           == 3);
-    assert_true(info.size                   == 4);
-    assert_true(info.otp_size               == 5);
-    assert_true(info.die_count              == 6);
-    assert_true(info.die_size               == 7);
-    assert_true(info.die_size_bit           == 8);
-    assert_true(info.sector_size            == 9);
-    assert_true(info.sector_size_bit        == 10);
-    assert_true(info.sector_count           == 11);
-    assert_true(info.sector_erase_cmd       == 12);
-    assert_true(info.sub_sector_size        == 13);
-    assert_true(info.sub_sector_size_bit    == 14);
-    assert_true(info.sub_sector_count       == 15);
-    assert_true(info.sub_sector_erase_cmd   == 16);
-    assert_true(info.page_size              == 17);
-    assert_true(info.page_count             == 18);
-    assert_true(info.buffer_size            == 19);
-    assert_true(info.data_width             == 20);
-    assert_true(info.num_adr_byte           == 21);
+    assert_memory_equal((void*)&test_data, (void*)&info, sizeof(media_info_t));
 }
 
 int main(void)
