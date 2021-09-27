@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.25
+ * \version 0.7.22
  * 
  * \date 2020/02/01
  * 
@@ -76,13 +76,21 @@ int eps_init(void)
     return 0;
 }
 
-int eps_get_bat_voltage(eps_bat_voltage_t *bat_volt)
+int eps_get_bat_voltage(eps_voltage_t *bat_volt)
 {
-/*    int err = sl_eps2_read_battery_voltage(eps_config, SL_EPS2_BATTERY_CELL_0, &bat_volt->cell_0);
+    if (!eps_is_open)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery voltage! No initialized driver!");
+        sys_log_new_line();
+
+        return -1;
+    }
+
+    int err = sl_eps2_read_battery_voltage(eps_config, bat_volt);
 
     if (err != 0)
     {
-        sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery voltage from cell 0! (error ");
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery voltage! (error ");
         sys_log_print_int(err);
         sys_log_print_msg(")");
         sys_log_new_line();
@@ -90,18 +98,45 @@ int eps_get_bat_voltage(eps_bat_voltage_t *bat_volt)
         return -1;
     }
 
-    return 0;*/
-    return -1;
+    return 0;
 }
 
-int eps_get_bat_current(uint32_t *bat_cur)
+int eps_get_bat_current(eps_current_t *bat_cur)
 {
-    return -1;
+    if (!eps_is_open)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery current! No initialized driver!");
+        sys_log_new_line();
+
+        return -1;
+    }
+
+    int err = sl_eps2_read_battery_current(eps_config, SL_EPS2_BATTERY_CURRENT, bat_cur);
+
+    if (err != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery current! (error ");
+        sys_log_print_int(err);
+        sys_log_print_msg(")");
+        sys_log_new_line();
+
+        return -1;
+    }
+
+    return 0;
 }
 
-int eps_get_bat_charge(uint32_t *charge)
+int eps_get_bat_charge(eps_charge_t *charge)
 {
-/*    int err = sl_eps2_read_battery_charge(eps_config, charge);
+    if (!eps_is_open)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the batery charge! No initialized driver!");
+        sys_log_new_line();
+
+        return -1;
+    }
+
+    int err = sl_eps2_read_battery_charge(eps_config, charge);
 
     if (err != 0)
     {
@@ -113,26 +148,32 @@ int eps_get_bat_charge(uint32_t *charge)
         return -1;
     }
 
-    return 0;*/
-    return -1;
+    return 0;
 }
 
 int eps_get_data(eps_data_t *data)
 {
-/*    int err = 0;
-
-    if (eps_get_bat_voltage(&data->bat_voltage) != 0)
+    if (!eps_is_open)
     {
-        err = -1;
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the data! No initialized driver!");
+        sys_log_new_line();
+
+        return -1;
     }
 
-    if (eps_get_bat_charge(&data->bat_charge))
+    int err = sl_eps2_read_data(eps_config, data);
+
+    if (err != 0)
     {
-        err = -1;
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the data! (error ");
+        sys_log_print_int(err);
+        sys_log_print_msg(")");
+        sys_log_new_line();
+
+        return -1;
     }
 
-    return err;*/
-    return -1;
+    return 0;
 }
 
 /** \} End of eps group */
