@@ -153,6 +153,11 @@ int __wrap_sl_ttc2_read_hardware_version(sl_ttc2_config_t config, uint8_t *val)
     check_expected(config.port_config.mode);
     check_expected(config.id);
 
+    if (val != NULL)
+    {
+        *val = mock_type(uint8_t);
+    }
+
     return mock_type(int);
 }
 
