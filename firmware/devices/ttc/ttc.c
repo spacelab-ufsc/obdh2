@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.34
+ * \version 0.7.23
  * 
  * \date 2020/02/01
  * 
@@ -136,8 +136,8 @@ int ttc_init(ttc_e dev)
 
     switch(dev)
     {
-        case TTC_0:     ttc_0_is_open = true;
-        case TTC_1:     ttc_1_is_open = true;
+        case TTC_0:     ttc_0_is_open = true;   break;
+        case TTC_1:     ttc_1_is_open = true;   break;
     }
 
     return 0;
