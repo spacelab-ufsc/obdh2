@@ -1,7 +1,7 @@
 /*
  * clocks.h
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.7.24
  * 
- * \date 25/01/2020
+ * \date 2020/01/25
  * 
  * \defgroup clocks Clocks
  * \ingroup system
@@ -63,7 +63,7 @@ int clocks_setup(clocks_config_t clks);
  *
  * \return A clocks_config_t struct with the system clocks.
  */
-clocks_config_t clocks_read();
+clocks_config_t clocks_read(void);
 
 #endif /* CLOCKS_H_ */
 
