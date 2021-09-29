@@ -52,7 +52,7 @@ jobs:
         run: cppcheck --error-exitcode=-1 firmware/devices/
 
       - name: Execute CppCheck on system files
-        run: cppcheck --error-exitcode=-1 firmware/system/
+        run: cppcheck --error-exitcode=-1 --addon=misra.py firmware/system/
 
       - name: Execute CppCheck on main files
         run: cppcheck --error-exitcode=-1 --addon=misra.py firmware/main.c firmware/version.h
