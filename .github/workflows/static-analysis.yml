@@ -55,4 +55,4 @@ jobs:
         run: cppcheck --error-exitcode=-1 firmware/system/
 
       - name: Execute CppCheck on main files
-        run: cppcheck --error-exitcode=-1 --addon=firmware/tests/misra.json firmware/main.c firmware/version.h
+        run: cppcheck --error-exitcode=-1 --addon=misra.py firmware/main.c firmware/version.h
