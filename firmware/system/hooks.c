@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.7.25
  * 
- * \date 22/01/2020
+ * \date 2020/01/22
  * 
  * \defgroup hooks FreeRTOS Hooks
  * \ingroup system
@@ -50,7 +50,9 @@ void vApplicationMallocFailedHook(void)
     /* or semaphores */
     taskDISABLE_INTERRUPTS();
 
-    while(1);
+    while(1)
+    {
+    }
 }
 
 void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
@@ -62,7 +64,9 @@ void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
     /* 2. This hook function is called if a stack overflow is detected */
     taskDISABLE_INTERRUPTS();
 
-    while(1);
+    while(1)
+    {
+    }
 }
 
 /** \} End of hooks group */

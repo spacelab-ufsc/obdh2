@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.24
+ * \version 0.7.25
  * 
  * \date 2020/01/25
  * 
@@ -100,7 +100,7 @@ __interrupt
 #elif defined(__GNUC__)
 __attribute__((interrupt(UNMI_VECTOR)))
 #endif
-void NMI_ISR()
+void NMI_ISR(void)
 {
     static uint16_t status = 0;
 
@@ -109,7 +109,7 @@ void NMI_ISR()
         /* If it still can't clear the oscillator fault flags after the timeout, trap and wait here */
         status = UCS_clearAllOscFlagsWithTimeout(1000);
     }
-    while(status != 0);
+    while(status != 0U);
 }
 
 /** \} End of clocks group */
