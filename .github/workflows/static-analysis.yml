@@ -49,7 +49,7 @@ jobs:
         run: sudo apt install -y cppcheck
 
       - name: Execute CppCheck on devices files
-        run: cppcheck --error-exitcode=-1 firmware/devices/
+        run: cppcheck --error-exitcode=-1 --addon=misra.py firmware/devices/
 
       - name: Execute CppCheck on system files
         run: cppcheck --error-exitcode=-1 --addon=misra.py firmware/system/
