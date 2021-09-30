@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.3
+ * \version 0.7.26
  * 
  * \date 2019/11/01
  * 
@@ -45,41 +45,45 @@ int antenna_init(void)
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Initializing...");
     sys_log_new_line();
 
-    if (isis_antenna_init() != 0)
+    int err = -1;
+
+    if (isis_antenna_init() == 0)
+    {
+        isis_antenna_status_t status = {0};
+
+        if (isis_antenna_read_deployment_status(&status) == 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 1 status=");
+            sys_log_print_msg((status.antenna_1.status == ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
+            sys_log_new_line();
+
+            sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 2 status=");
+            sys_log_print_msg((status.antenna_2.status == ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
+            sys_log_new_line();
+
+            sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 3 status=");
+            sys_log_print_msg((status.antenna_3.status == ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
+            sys_log_new_line();
+
+            sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 4 status=");
+            sys_log_print_msg((status.antenna_4.status == ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
+            sys_log_new_line();
+
+            err = 0;
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "Error reading the antenna status!");
+            sys_log_new_line();
+        }
+    }
+    else
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "Error during the initialization!");
         sys_log_new_line();
-
-        return -1;
     }
 
-    isis_antenna_status_t status = {0};
-
-    if (isis_antenna_read_deployment_status(&status) != 0)
-    {
-        sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "Error reading the antenna status!");
-        sys_log_new_line();
-
-        return -1;
-    }
-
-    sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 1 status=");
-    sys_log_print_msg(status.antenna_1.status == ISIS_ANTENNA_STATUS_DEPLOYED ? "DEPLOYED" : "NOT DEPLOYED");
-    sys_log_new_line();
-
-    sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 2 status=");
-    sys_log_print_msg(status.antenna_2.status == ISIS_ANTENNA_STATUS_DEPLOYED ? "DEPLOYED" : "NOT DEPLOYED");
-    sys_log_new_line();
-
-    sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 3 status=");
-    sys_log_print_msg(status.antenna_3.status == ISIS_ANTENNA_STATUS_DEPLOYED ? "DEPLOYED" : "NOT DEPLOYED");
-    sys_log_new_line();
-
-    sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 4 status=");
-    sys_log_print_msg(status.antenna_4.status == ISIS_ANTENNA_STATUS_DEPLOYED ? "DEPLOYED" : "NOT DEPLOYED");
-    sys_log_new_line();
-
-    return 0;
+    return err;
 #else
     sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "No driver to initialize!");
     sys_log_new_line();

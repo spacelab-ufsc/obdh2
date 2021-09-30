@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.9
+ * \version 0.7.26
  * 
  * \date 2021/02/21
  * 
@@ -256,7 +256,7 @@ static void radio_recv_test(void **state)
 
     uint8_t data[50] = {0};
 
-    assert_return_code(radio_recv(data, 10, 1000), 0);
+    assert_return_code(radio_recv(data, 1000), 0);
 }
 
 static void radio_available_test(void **state)

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -47,133 +47,160 @@ bool eps_is_open = false;
 
 int eps_init(void)
 {
+    int err = -1;
+
     if (eps_is_open)
     {
-        return 0;   /* EPS device already initialized */
+        err = 0;    /* EPS device already initialized */
     }
-
-    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "Initializing EPS device...");
-    sys_log_new_line();
-
-    eps_config.i2c_port     = I2C_PORT_1;
-    eps_config.i2c_config   = (i2c_config_t){.speed_hz=100000};
-    eps_config.en_pin       = GPIO_PIN_17;
-    eps_config.ready_pin    = GPIO_PIN_20;
-
-    int err = sl_eps2_init(eps_config);
-    if (err != 0)
+    else
     {
-        sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error during the initialization! (error ");
-        sys_log_print_int(err);
-        sys_log_print_msg(")");
+        sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "Initializing EPS device...");
         sys_log_new_line();
 
-        return -1;
+        i2c_config_t i2c_conf = {0};
+
+        i2c_conf.speed_hz = 100000UL;
+
+        eps_config.i2c_port     = I2C_PORT_1;
+        eps_config.i2c_config   = i2c_conf;
+        eps_config.en_pin       = GPIO_PIN_17;
+        eps_config.ready_pin    = GPIO_PIN_20;
+
+        int err_drv = sl_eps2_init(eps_config);
+
+        if (err_drv == 0)
+        {
+            eps_is_open = true;
+
+            err = 0;
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error during the initialization! (error ");
+            sys_log_print_int(err_drv);
+            sys_log_print_msg(")");
+            sys_log_new_line();
+        }
     }
 
-    eps_is_open = true;
-
-    return 0;
+    return err;
 }
 
 int eps_get_bat_voltage(eps_voltage_t *bat_volt)
 {
-    if (!eps_is_open)
+    int err = -1;
+
+    if (eps_is_open)
+    {
+        int err_drv = sl_eps2_read_battery_voltage(eps_config, bat_volt);
+
+        if (err_drv == 0)
+        {
+            err = 0;
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery voltage! (error ");
+            sys_log_print_int(err_drv);
+            sys_log_print_msg(")");
+            sys_log_new_line();
+        }
+    }
+    else
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery voltage! No initialized driver!");
         sys_log_new_line();
-
-        return -1;
     }
 
-    int err = sl_eps2_read_battery_voltage(eps_config, bat_volt);
-
-    if (err != 0)
-    {
-        sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery voltage! (error ");
-        sys_log_print_int(err);
-        sys_log_print_msg(")");
-        sys_log_new_line();
-
-        return -1;
-    }
-
-    return 0;
+    return err;
 }
 
 int eps_get_bat_current(eps_current_t *bat_cur)
 {
-    if (!eps_is_open)
+    int err = -1;
+
+    if (eps_is_open)
+    {
+        int err_drv = sl_eps2_read_battery_current(eps_config, SL_EPS2_BATTERY_CURRENT, bat_cur);
+
+        if (err_drv == 0)
+        {
+            err = 0;
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery current! (error ");
+            sys_log_print_int(err_drv);
+            sys_log_print_msg(")");
+            sys_log_new_line();
+        }
+    }
+    else
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery current! No initialized driver!");
         sys_log_new_line();
-
-        return -1;
     }
 
-    int err = sl_eps2_read_battery_current(eps_config, SL_EPS2_BATTERY_CURRENT, bat_cur);
-
-    if (err != 0)
-    {
-        sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery current! (error ");
-        sys_log_print_int(err);
-        sys_log_print_msg(")");
-        sys_log_new_line();
-
-        return -1;
-    }
-
-    return 0;
+    return err;
 }
 
 int eps_get_bat_charge(eps_charge_t *charge)
 {
-    if (!eps_is_open)
+    int err = -1;
+
+    if (eps_is_open)
+    {
+        int err_drv = sl_eps2_read_battery_charge(eps_config, charge);
+
+        if (err_drv == 0)
+        {
+            err = 0;
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery charge! (error ");
+            sys_log_print_int(err_drv);
+            sys_log_print_msg(")");
+            sys_log_new_line();
+        }
+    }
+    else
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the batery charge! No initialized driver!");
         sys_log_new_line();
-
-        return -1;
     }
 
-    int err = sl_eps2_read_battery_charge(eps_config, charge);
-
-    if (err != 0)
-    {
-        sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the battery charge! (error ");
-        sys_log_print_int(err);
-        sys_log_print_msg(")");
-        sys_log_new_line();
-
-        return -1;
-    }
-
-    return 0;
+    return err;
 }
 
 int eps_get_data(eps_data_t *data)
 {
-    if (!eps_is_open)
+    int err = -1;
+
+    if (eps_is_open)
+    {
+        int err_drv = sl_eps2_read_data(eps_config, data);
+
+        if (err_drv == 0)
+        {
+            err = 0;
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the data! (error ");
+            sys_log_print_int(err_drv);
+            sys_log_print_msg(")");
+            sys_log_new_line();
+        }
+    }
+    else
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the data! No initialized driver!");
         sys_log_new_line();
-
-        return -1;
     }
 
-    int err = sl_eps2_read_data(eps_config, data);
-
-    if (err != 0)
-    {
-        sys_log_print_event_from_module(SYS_LOG_ERROR, EPS_MODULE_NAME, "Error reading the data! (error ");
-        sys_log_print_int(err);
-        sys_log_print_msg(")");
-        sys_log_new_line();
-
-        return -1;
-    }
-
-    return 0;
+    return err;
 }
 
 /** \} End of eps group */

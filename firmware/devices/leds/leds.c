@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.22
+ * \version 0.7.26
  * 
  * \date 2020/01/20
  * 
@@ -47,49 +47,68 @@ int leds_init(void)
     sys_log_print_event_from_module(SYS_LOG_INFO, LEDS_MODULE_NAME, "Initializing system LEDs...");
     sys_log_new_line();
 
-    gpio_config_t config_sys = {.mode = GPIO_MODE_OUTPUT};
-    gpio_config_t config_fault = {.mode = GPIO_MODE_OUTPUT};
+    int err = -1;
 
-    if ((gpio_init(LED_SYSTEM_PIN, config_sys) != 0) ||
-        (gpio_init(LED_FAULT_PIN, config_fault) != 0))
+    gpio_config_t config_sys = {0};
+    config_sys.mode = GPIO_MODE_OUTPUT;
+
+    gpio_config_t config_fault = {0};
+    config_fault.mode = GPIO_MODE_OUTPUT;
+
+    if ((gpio_init(LED_SYSTEM_PIN, config_sys) == 0) &&
+        (gpio_init(LED_FAULT_PIN, config_fault) == 0))
+    {
+        err = 0;
+    }
+    else
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, LEDS_MODULE_NAME, "Error initializing the system LEDs!");
         sys_log_new_line();
-
-        return -1;
     }
 
-    return 0;
+    return err;
 }
 
 int led_set(led_t l)
 {
+    int err = -1;
+
     switch(l)
     {
-        case LED_SYSTEM:    return gpio_set_state(LED_SYSTEM_PIN, true);
-        case LED_FAULT:     return gpio_set_state(LED_FAULT_PIN, true);
-        default:            return -1;      /* Invalid LED */
+        case LED_SYSTEM:    err = gpio_set_state(LED_SYSTEM_PIN, true);     break;
+        case LED_FAULT:     err = gpio_set_state(LED_FAULT_PIN, true);      break;
+        default:            break;  /* Invalid LED */
     }
+
+    return err;
 }
 
 int led_clear(led_t l)
 {
+    int err = -1;
+
     switch(l)
     {
-        case LED_SYSTEM:    return gpio_set_state(LED_SYSTEM_PIN, false);
-        case LED_FAULT:     return gpio_set_state(LED_FAULT_PIN, false);
-        default:            return -1;      /* Invalid LED */
+        case LED_SYSTEM:    err = gpio_set_state(LED_SYSTEM_PIN, false);    break;
+        case LED_FAULT:     err = gpio_set_state(LED_FAULT_PIN, false);     break;
+        default:            break;  /* Invalid LED */
     }
+
+    return err;
 }
 
 int led_toggle(led_t l)
 {
+    int err = -1;
+
     switch(l)
     {
-        case LED_SYSTEM:    return gpio_toggle(LED_SYSTEM_PIN);
-        case LED_FAULT:     return gpio_toggle(LED_FAULT_PIN);
-        default:            return -1;      /* Invalid LED */
+        case LED_SYSTEM:    err = gpio_toggle(LED_SYSTEM_PIN);              break;
+        case LED_FAULT:     err = gpio_toggle(LED_FAULT_PIN);               break;
+        default:            break;  /* Invalid LED */
     }
+
+    return err;
 }
 
 /** \} End of leds group */
