@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.26
+ * \version 0.7.27
  * 
  * \date 2020/07/21
  * 
@@ -261,6 +261,7 @@ int media_erase(media_t med, media_erase_t type, uint32_t sector)
     switch(med)
     {
         case MEDIA_INT_FLASH:
+        {
             uint8_t sector_conv = sector;
 
             flash_write_single(0xFF, &sector_conv);
@@ -268,6 +269,7 @@ int media_erase(media_t med, media_erase_t type, uint32_t sector)
             err = 0;
 
             break;
+        }
         case MEDIA_FRAM:
             /* The FRAM memory does not have an erase operation */
             err = 0;
