@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.1
+ * \version 0.7.28
  * 
  * \date 2021/06/04
  * 
@@ -45,21 +45,21 @@
 #define CY15X102QN_MODULE_NAME              "CY15X102QN"
 
 /* Commands */
-#define CY15X102QN_OPCODE_WREN              0x06    /**< Set write enable latch. */
-#define CY15X102QN_OPCODE_WRDI              0x04    /**< Reset write enable latch. */
-#define CY15X102QN_OPCODE_RDSR              0x05    /**< Read Status Register. */
-#define CY15X102QN_OPCODE_WRSR              0x01    /**< Write Status Register. */
-#define CY15X102QN_OPCODE_WRITE             0x02    /**< Write memory data. */
-#define CY15X102QN_OPCODE_READ              0x03    /**< Read memory data. */
-#define CY15X102QN_OPCODE_FSTRD             0x0B    /**< Fast read memory data. */
-#define CY15X102QN_OPCODE_SSWR              0x42    /**< Special Sector Write. */
-#define CY15X102QN_OPCODE_SSRD              0x4B    /**< Special Sector Read. */
-#define CY15X102QN_OPCODE_RDID              0x9F    /**< Read device ID. */
-#define CY15X102QN_OPCODE_RUID              0x4C    /**< Read Unique ID. */
-#define CY15X102QN_OPCODE_WRSN              0xC2    /**< Write Serial Number. */
-#define CY15X102QN_OPCODE_SNR               0xC3    /**< Read Serial Number. */
-#define CY15X102QN_OPCODE_DPD               0xBA    /**< Enter Deep Power-Down. */
-#define CY15X102QN_OPCODE_HBN               0xB9    /**< Enter Hibernate Mode. */
+#define CY15X102QN_OPCODE_WREN              0x06U   /**< Set write enable latch. */
+#define CY15X102QN_OPCODE_WRDI              0x04U   /**< Reset write enable latch. */
+#define CY15X102QN_OPCODE_RDSR              0x05U   /**< Read Status Register. */
+#define CY15X102QN_OPCODE_WRSR              0x01U   /**< Write Status Register. */
+#define CY15X102QN_OPCODE_WRITE             0x02U   /**< Write memory data. */
+#define CY15X102QN_OPCODE_READ              0x03U   /**< Read memory data. */
+#define CY15X102QN_OPCODE_FSTRD             0x0BU   /**< Fast read memory data. */
+#define CY15X102QN_OPCODE_SSWR              0x42U   /**< Special Sector Write. */
+#define CY15X102QN_OPCODE_SSRD              0x4BU   /**< Special Sector Read. */
+#define CY15X102QN_OPCODE_RDID              0x9FU   /**< Read device ID. */
+#define CY15X102QN_OPCODE_RUID              0x4CU   /**< Read Unique ID. */
+#define CY15X102QN_OPCODE_WRSN              0xC2U   /**< Write Serial Number. */
+#define CY15X102QN_OPCODE_SNR               0xC3U   /**< Read Serial Number. */
+#define CY15X102QN_OPCODE_DPD               0xBAU   /**< Enter Deep Power-Down. */
+#define CY15X102QN_OPCODE_HBN               0xB9U   /**< Enter Hibernate Mode. */
 
 
 /**
@@ -77,14 +77,14 @@ typedef uint64_t cy15x102qn_uid_t;
  */
 typedef struct
 {
-    uint64_t manufacturer_id:56;                    /**< Manufacturer ID. */
-    uint8_t family:3;                               /**< Family. */
-    uint8_t density:4;                              /**< Density. */
-    uint8_t inrush:1;                               /**< Inrush. */
-    uint8_t sub_type:3;                             /**< Sub Type. */
-    uint8_t revision:2;                             /**< Revision. */
-    uint8_t voltage:1;                              /**< Voltage. */
-    uint8_t frequency:2;                            /**< Frequency. */
+    uint64_t manufacturer_id;                       /**< Manufacturer ID. */
+    uint8_t family;                                 /**< Family. */
+    uint8_t density;                                /**< Density. */
+    uint8_t inrush;                                 /**< Inrush. */
+    uint8_t sub_type;                               /**< Sub Type. */
+    uint8_t revision;                               /**< Revision. */
+    uint8_t voltage;                                /**< Voltage. */
+    uint8_t frequency;                              /**< Frequency. */
 } cy15x102qn_device_id_t;
 
 /**
@@ -93,7 +93,7 @@ typedef struct
 typedef struct
 {
     uint16_t customer_id;                           /**< 16-bit Customer Identifier. */
-    uint64_t unique_number:40;                      /**< 40-bit Unique Number. */
+    uint64_t unique_number;                         /**< 40-bit Unique Number. */
     uint8_t crc;                                    /**< 8-bit CRC. */
 } cy15x102qn_serial_number_t;
 
