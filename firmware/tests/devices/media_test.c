@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.21
+ * \version 0.7.26
  * 
  * \date 2021/08/07
  * 
@@ -237,7 +237,7 @@ static void media_erase_test(void **state)
 
                 break;
             default:
-                assert_return_code(media_erase(MEDIA_NOR, erase_type, 0), -1);
+                assert_int_equal(media_erase(MEDIA_NOR, erase_type, 0), -1);
         }
     }
 }
