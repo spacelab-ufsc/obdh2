@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.26
+ * \version 0.7.27
  * 
  * \date 2019/10/27
  * 
@@ -254,7 +254,7 @@ int radio_recv(uint8_t *data, uint32_t timeout_ms)
 
                         TickType_t start_time_tick = xTaskGetTickCount();
 
-                        while((start_time_tick + timeout_tick) <= xTaskGetTickCount())
+                        while((start_time_tick + timeout_tick) >= xTaskGetTickCount())
                         {
                             int avail = radio_available();
 
