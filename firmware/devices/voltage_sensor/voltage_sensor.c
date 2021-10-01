@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.26
+ * \version 0.7.28
  * 
  * \date 2020/07/11
  * 
@@ -44,9 +44,7 @@ int voltage_sensor_init(void)
 
     int err = -1;
 
-    adc_config_t volt_sense_adc_config = {0};
-
-    if (adc_init(VOLTAGE_SENSOR_ADC_PORT, volt_sense_adc_config) == 0)
+    if (adc_init() == 0)
     {
         uint16_t volt = 0;
 

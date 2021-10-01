@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.26
+ * \version 0.7.28
  * 
  * \date 2020/03/17
  * 
@@ -46,9 +46,7 @@ int temp_sensor_init(void)
 
     int err = -1;
 
-    adc_config_t temp_sense_adc_config = {0};
-
-    if (adc_init(TEMP_SENSOR_ADC_PORT, temp_sense_adc_config) == 0)
+    if (adc_init() == 0)
     {
         int16_t temp = 0;
 
