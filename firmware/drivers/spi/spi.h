@@ -1,7 +1,7 @@
 /*
  * spi.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.28
+ * \version 0.7.33
  * 
  * \date 2019/12/07
  * 
@@ -53,7 +53,7 @@ typedef enum
     SPI_PORT_3,         /**< SPI port 3. */
     SPI_PORT_4,         /**< SPI port 4. */
     SPI_PORT_5          /**< SPI port 5. */
-} spi_ports_e;
+} spi_port_t;
 
 /**
  * \brief SPI chips select.
@@ -71,7 +71,7 @@ typedef enum
     SPI_CS_8,           /**< SPI chip select 8. */
     SPI_CS_9,           /**< SPI chip select 9. */
     SPI_CS_NONE         /**< No SPI chip select. */
-} spi_cs_e;
+} spi_cs_t;
 
 /**
  * \brief SPI modes.
@@ -82,12 +82,7 @@ typedef enum
     SPI_MODE_1,         /**< SPI mode 1 (Clock Polarity = 0, Clock Phase = 1). */
     SPI_MODE_2,         /**< SPI mode 2 (Clock Polarity = 1, Clock Phase = 0). */
     SPI_MODE_3          /**< SPI mode 3 (Clock Polarity = 1, Clock Phase = 1). */
-} spi_modes_e;
-
-/**
- * \brief SPI mode type.
- */
-typedef uint8_t spi_mode_t;
+} spi_mode_t;
 
 /**
  * \brief SPI bus configuration parameters.
@@ -97,16 +92,6 @@ typedef struct
     uint32_t speed_hz;  /**< Transfer rate in Hertz. */
     spi_mode_t mode;    /**< SPI mode (0, 1, 2 or 3). */
 } spi_config_t;
-
-/**
- * \brief SPI port type.
- */
-typedef uint8_t spi_port_t;
-
-/**
- * \brief SPI chip select type.
- */
-typedef uint8_t spi_cs_t;
 
 /**
  * \brief SPI port initialization.
