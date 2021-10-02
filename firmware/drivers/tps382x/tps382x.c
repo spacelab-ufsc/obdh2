@@ -1,7 +1,7 @@
 /*
  * tps382x.c
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.7.32
  * 
- * \date 15/01/2020
+ * \date 2020/01/15
  * 
  * \addtogroup tps382x
  * \{
@@ -37,7 +37,11 @@
 
 int tps382x_init(tps382x_config_t config)
 {
-    return gpio_init(config.wdi_pin, (gpio_config_t){.mode=GPIO_MODE_OUTPUT});
+    gpio_config_t gpio_conf = {0};
+
+    gpio_conf.mode = GPIO_MODE_OUTPUT;
+
+    return gpio_init(config.wdi_pin, gpio_conf);
 }
 
 void tps382x_trigger(tps382x_config_t config)
