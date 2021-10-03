@@ -1,7 +1,7 @@
 /*
  * si446x_cmd.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.22
+ * \version 0.7.36
  * 
- * \date 10/05/2020
+ * \date 2020/05/10
  * 
  * \defgroup si446x_cmd Commands
  * \ingroup si446x
@@ -37,7 +37,7 @@
 #ifndef SI446X_CMD_H_
 #define SI446X_CMD_H_
 
-#define SI446X_CMD_COMPLETE                                 0xFF    /**< CTS value. */
+#define SI446X_CMD_COMPLETE                                 0xFFU   /**< CTS value. */
 
 /* Boot commands */
 #define SI446X_CMD_POWER_UP                                 0x02    /**< Command to power-up the device and select the operational mode and functionality. */
