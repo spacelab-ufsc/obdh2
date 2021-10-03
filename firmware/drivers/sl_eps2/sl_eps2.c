@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.20
+ * \version 0.7.35
  * 
  * \date 2020/02/05
  * 
@@ -41,8 +41,8 @@
 
 #include "sl_eps2.h"
 
-#define SL_EPS2_CRC8_INITIAL_VALUE          0       /**< CRC8-CCITT initial value. */
-#define SL_EPS2_CRC8_POLYNOMIAL             0x07    /**< CRC8-CCITT polynomial. */
+#define SL_EPS2_CRC8_INITIAL_VALUE          0U      /**< CRC8-CCITT initial value. */
+#define SL_EPS2_CRC8_POLYNOMIAL             0x07U   /**< CRC8-CCITT polynomial. */
 
 /**
  * \brief Computes the CRC-8 of a sequence of bytes.
@@ -70,77 +70,83 @@ bool sl_eps2_check_crc(uint8_t *data, uint8_t len, uint8_t crc);
 
 int sl_eps2_init(sl_eps2_config_t config)
 {
+    int err = 0;
+
     if (tca4311a_init(config, true) != TCA4311A_READY)
     {
-        return -1;      /* Error initializing the I2C port */
+        err = -1;      /* Error initializing the I2C port */
     }
 
     if (sl_eps2_check_device(config) != 0)
     {
-        return -1;      /* Error checking the connection */
+        err = -1;
     }
 
-    return 0;
+    return err;
 }
 
 int sl_eps2_check_device(sl_eps2_config_t config)
 {
+    int err = -1;
+
     uint32_t buf = 0;
 
-    if (sl_eps2_read_reg(config, SL_EPS2_REG_DEVICE_ID, &buf) != 0)
+    if (sl_eps2_read_reg(config, SL_EPS2_REG_DEVICE_ID, &buf) == 0)
     {
-        return -1;
+        if (buf == SL_EPS2_DEVICE_ID)
+        {
+            err = 0;
+        }
     }
 
-    if (buf != SL_EPS2_DEVICE_ID)
-    {
-        return -1;      /* Wrong device ID (connection error?) */
-    }
-
-    return 0;
+    return err;
 }
 
 int sl_eps2_write_reg(sl_eps2_config_t config, uint8_t adr, uint32_t val)
 {
-    uint8_t buf[1+4+1] = {0};
+    int err = 0;
+
+    uint8_t buf[1 + 4 + 1] = {0};
 
     buf[0] = adr;
-    buf[1] = (val >> 24) & 0xFF;
-    buf[2] = (val >> 16) & 0xFF;
-    buf[3] = (val >> 8)  & 0xFF;
-    buf[4] = (val >> 0)  & 0xFF;
+    buf[1] = (val >> 24) & 0xFFU;
+    buf[2] = (val >> 16) & 0xFFU;
+    buf[3] = (val >> 8)  & 0xFFU;
+    buf[4] = (val >> 0)  & 0xFFU;
     buf[5] = sl_eps2_crc8(buf, 5);
 
     if (tca4311a_write(config, SL_EPS2_SLAVE_ADR, buf, 6) != TCA4311A_READY)
     {
-        return -1;
+        err = -1;
     }
 
-    return 0;
+    return err;
 }
 
 int sl_eps2_read_reg(sl_eps2_config_t config, uint8_t adr, uint32_t *val)
 {
-    uint8_t buf[1+4+1] = {0};
+    int err = 0;
+
+    uint8_t buf[1 + 4 + 1] = {0};
 
     buf[0] = adr;
     buf[1] = sl_eps2_crc8(buf, 1);
 
     if (tca4311a_write(config, SL_EPS2_SLAVE_ADR, buf, 2) != TCA4311A_READY)
     {
-        return -1;
+        err = -1;
     }
 
     sl_eps2_delay_ms(5);
 
     if (tca4311a_read(config, SL_EPS2_SLAVE_ADR, buf, 5) != TCA4311A_READY)
     {
-        return -1;
+        err = -1;
     }
 
     if (!sl_eps2_check_crc(buf, 4, buf[4]))
     {
-        return -1;
+        err = -1;
     }
 
     *val = ((uint32_t)buf[0] << 24) |
@@ -148,27 +154,29 @@ int sl_eps2_read_reg(sl_eps2_config_t config, uint8_t adr, uint32_t *val)
            ((uint32_t)buf[2] << 8)  |
            ((uint32_t)buf[3] << 0);
 
-    return 0;
+    return err;
 }
 
 int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
 {
+    int err_counter = 0;
+
     /* Time counter */
     if (sl_eps2_read_time_counter(config, &(data->time_counter)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     /* Temperature */
     if (sl_eps2_read_temp(config, &(data->temperature_uc)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     /* Current */
     if (sl_eps2_read_current(config, &(data->current)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     sl_eps2_delay_ms(5);
@@ -176,36 +184,36 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
     /* Last reset cause */
     if (sl_eps2_read_reset_cause(config, &(data->last_reset_cause)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     /* Reset counter */
     if (sl_eps2_read_reset_counter(config, &(data->reset_counter)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     /* Solar panel voltage */
     if (sl_eps2_read_solar_panel_voltage(config, SL_EPS2_SOLAR_PANEL_3_0, &(data->solar_panel_voltage_my_px)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     sl_eps2_delay_ms(5);
 
     if (sl_eps2_read_solar_panel_voltage(config, SL_EPS2_SOLAR_PANEL_1_4, &(data->solar_panel_voltage_mx_pz)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_solar_panel_voltage(config, SL_EPS2_SOLAR_PANEL_5_2, &(data->solar_panel_voltage_mz_py)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_solar_panel_voltage(config, SL_EPS2_SOLAR_PANEL_ALL, &(data->solar_panel_output_voltage)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     sl_eps2_delay_ms(5);
@@ -213,34 +221,34 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
     /* Solar panel current */
     if (sl_eps2_read_solar_panel_current(config, SL_EPS2_SOLAR_PANEL_0, &(data->solar_panel_current_my)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_solar_panel_current(config, SL_EPS2_SOLAR_PANEL_1, &(data->solar_panel_current_py)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_solar_panel_current(config, SL_EPS2_SOLAR_PANEL_2, &(data->solar_panel_current_mx)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     sl_eps2_delay_ms(5);
 
     if (sl_eps2_read_solar_panel_current(config, SL_EPS2_SOLAR_PANEL_3, &(data->solar_panel_current_px)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_solar_panel_current(config, SL_EPS2_SOLAR_PANEL_4, &(data->solar_panel_current_mz)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_solar_panel_current(config, SL_EPS2_SOLAR_PANEL_5, &(data->solar_panel_current_pz)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     sl_eps2_delay_ms(5);
@@ -248,17 +256,17 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
     /* MPPT duty cycle */
     if (sl_eps2_read_mppt_duty_cycle(config, SL_EPS2_MPPT_1, &(data->mppt_1_duty_cycle)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_mppt_duty_cycle(config, SL_EPS2_MPPT_2, &(data->mppt_2_duty_cycle)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_mppt_duty_cycle(config, SL_EPS2_MPPT_3, &(data->mppt_3_duty_cycle)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     sl_eps2_delay_ms(5);
@@ -266,53 +274,53 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
     /* Main power bus voltage */
     if (sl_eps2_read_main_bus_voltage(config, &(data->main_power_bus_voltage)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     /* RTDs temperature */
     if (sl_eps2_read_rtd_temperature(config, SL_EPS2_RTD_0, &(data->rtd_0_temperature)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_rtd_temperature(config, SL_EPS2_RTD_1, &(data->rtd_1_temperature)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     sl_eps2_delay_ms(5);
 
     if (sl_eps2_read_rtd_temperature(config, SL_EPS2_RTD_2, &(data->rtd_2_temperature)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_rtd_temperature(config, SL_EPS2_RTD_3, &(data->rtd_3_temperature)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_rtd_temperature(config, SL_EPS2_RTD_4, &(data->rtd_4_temperature)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     sl_eps2_delay_ms(5);
 
     if (sl_eps2_read_rtd_temperature(config, SL_EPS2_RTD_5, &(data->rtd_5_temperature)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_rtd_temperature(config, SL_EPS2_RTD_6, &(data->rtd_6_temperature)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     /* Battery voltage */
     if (sl_eps2_read_battery_voltage(config, &(data->battery_voltage)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     sl_eps2_delay_ms(5);
@@ -320,17 +328,17 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
     /* Battery current */
     if (sl_eps2_read_battery_current(config, SL_EPS2_BATTERY_CURRENT, &(data->battery_current)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_battery_current(config, SL_EPS2_BATTERY_AVERAGE_CURRENT, &(data->battery_average_current)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_battery_current(config, SL_EPS2_BATTERY_ACC_CURRENT, &(data->battery_acc_current)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     sl_eps2_delay_ms(5);
@@ -338,52 +346,52 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
     /* Battery charge */
     if (sl_eps2_read_battery_charge(config, &(data->battery_charge)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     /* Battery monitor */
     if (sl_eps2_read_battery_monitor_temp(config, &(data->battery_monitor_temperature)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_battery_monitor_status(config, &(data->battery_monitor_status)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     sl_eps2_delay_ms(5);
 
     if (sl_eps2_read_battery_monitor_protection(config, &(data->battery_monitor_protection)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_battery_monitor_cycle_counter(config, &(data->battery_monitor_cycle_counter)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_battery_monitor_raac(config, &(data->raac)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     sl_eps2_delay_ms(5);
 
     if (sl_eps2_read_battery_monitor_rsac(config, &(data->rsac)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_battery_monitor_rarc(config, &(data->rarc)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_battery_monitor_rsrc(config, &(data->rsrc)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     sl_eps2_delay_ms(5);
@@ -391,44 +399,44 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
     /* Heater duty cycle */
     if (sl_eps2_read_heater_duty_cycle(config, SL_EPS2_HEATER_1, (&data->battery_heater_1_duty_cycle)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_read_heater_duty_cycle(config, SL_EPS2_HEATER_2, (&data->battery_heater_2_duty_cycle)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     /* MPPT mode */
     if (sl_eps2_get_mppt_mode(config, SL_EPS2_MPPT_1, &(data->mppt_1_mode)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_get_mppt_mode(config, SL_EPS2_MPPT_2, &(data->mppt_2_mode)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     sl_eps2_delay_ms(5);
 
     if (sl_eps2_get_mppt_mode(config, SL_EPS2_MPPT_3, &(data->mppt_3_mode)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     /* Heater mode */
     if (sl_eps2_get_heater_mode(config, SL_EPS2_HEATER_1, &(data->battery_heater_1_mode)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
     if (sl_eps2_get_heater_mode(config, SL_EPS2_HEATER_2, &(data->battery_heater_2_mode)) != 0)
     {
-        return -1;
+        err_counter++;
     }
 
-    return 0;
+    return err_counter;
 }
 
 int sl_eps2_read_time_counter(sl_eps2_config_t config, uint32_t *val)
@@ -482,8 +490,9 @@ int sl_eps2_read_reset_counter(sl_eps2_config_t config, uint16_t *val)
 
 int sl_eps2_read_solar_panel_voltage(sl_eps2_config_t config, uint8_t sp, uint16_t *val)
 {
-    uint32_t buf = UINT32_MAX;
     int res = -1;
+
+    uint32_t buf = UINT32_MAX;
 
     switch(sp)
     {
@@ -492,34 +501,37 @@ int sl_eps2_read_solar_panel_voltage(sl_eps2_config_t config, uint8_t sp, uint16
 
             *val = (uint16_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_SOLAR_PANEL_1_4:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_MX_PZ_VOLT_MV, &buf);
 
             *val = (uint16_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_SOLAR_PANEL_5_2:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_MZ_PY_VOLT_MV, &buf);
 
             *val = (uint16_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_SOLAR_PANEL_ALL:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_TOTAL_VOLT_MV, &buf);
 
             *val = (uint16_t)buf;
 
-            return res;
+            break;
         default:
-            return -1;  /* Invalid solar panel set */
+            break;
     }
+
+    return res;
 }
 
 int sl_eps2_read_solar_panel_current(sl_eps2_config_t config, uint8_t sp, sl_eps2_current_t *val)
 {
-    uint32_t buf = UINT32_MAX;
     int res = -1;
+
+    uint32_t buf = UINT32_MAX;
 
     switch(sp)
     {
@@ -528,46 +540,49 @@ int sl_eps2_read_solar_panel_current(sl_eps2_config_t config, uint8_t sp, sl_eps
 
             *val = (sl_eps2_current_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_SOLAR_PANEL_1:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_PY_CUR_MA, &buf);
 
             *val = (sl_eps2_current_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_SOLAR_PANEL_2:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_MX_CUR_MA, &buf);
 
             *val = (sl_eps2_current_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_SOLAR_PANEL_3:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_PX_CUR_MA, &buf);
 
             *val = (sl_eps2_current_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_SOLAR_PANEL_4:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_MZ_CUR_MA, &buf);
 
             *val = (sl_eps2_current_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_SOLAR_PANEL_5:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_SOLAR_PANEL_PZ_CUR_MA, &buf);
 
             *val = (sl_eps2_current_t)buf;
 
-            return res;
+            break;
         default:
-            return -1;  /* Invalid solar panel */
+            break;
     }
+
+    return res;
 }
 
 int sl_eps2_read_mppt_duty_cycle(sl_eps2_config_t config, uint8_t mppt, sl_eps2_duty_cycle_t *val)
 {
-    uint32_t buf = UINT32_MAX;
     int res = -1;
+
+    uint32_t buf = UINT32_MAX;
 
     switch(mppt)
     {
@@ -576,22 +591,24 @@ int sl_eps2_read_mppt_duty_cycle(sl_eps2_config_t config, uint8_t mppt, sl_eps2_
 
             *val = (sl_eps2_duty_cycle_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_MPPT_2:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_MPPT_2_DUTY_CYCLE, &buf);
 
             *val = (sl_eps2_duty_cycle_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_MPPT_3:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_MPPT_3_DUTY_CYCLE, &buf);
 
             *val = (sl_eps2_duty_cycle_t)buf;
 
-            return res;
+            break;
         default:
-            return -1;  /* Invalid MPPT */
+            break;
     }
+
+    return res;
 }
 
 int sl_eps2_read_main_bus_voltage(sl_eps2_config_t config, sl_eps2_voltage_t *val)
@@ -607,8 +624,9 @@ int sl_eps2_read_main_bus_voltage(sl_eps2_config_t config, sl_eps2_voltage_t *va
 
 int sl_eps2_read_rtd_temperature(sl_eps2_config_t config, uint8_t rtd, sl_eps2_temp_t *val)
 {
-    uint32_t buf = UINT32_MAX;
     int res = -1;
+
+    uint32_t buf = UINT32_MAX;
 
     switch(rtd)
     {
@@ -617,46 +635,48 @@ int sl_eps2_read_rtd_temperature(sl_eps2_config_t config, uint8_t rtd, sl_eps2_t
 
             *val = (sl_eps2_temp_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_RTD_1:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_RTD1_TEMP_K, &buf);
 
             *val = (sl_eps2_temp_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_RTD_2:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_RTD2_TEMP_K, &buf);
 
             *val = (sl_eps2_temp_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_RTD_3:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_RTD3_TEMP_K, &buf);
 
             *val = (sl_eps2_temp_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_RTD_4:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_RTD4_TEMP_K, &buf);
 
             *val = (sl_eps2_temp_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_RTD_5:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_RTD5_TEMP_K, &buf);
 
             *val = (sl_eps2_temp_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_RTD_6:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_RTD6_TEMP_K, &buf);
 
             *val = (sl_eps2_temp_t)buf;
 
-            return res;
+            break;
         default:
-            return -1;  /* Invalid RTD */
+            break;
     }
+
+    return res;
 }
 
 int sl_eps2_read_battery_voltage(sl_eps2_config_t config, sl_eps2_voltage_t *val)
@@ -672,8 +692,9 @@ int sl_eps2_read_battery_voltage(sl_eps2_config_t config, sl_eps2_voltage_t *val
 
 int sl_eps2_read_battery_current(sl_eps2_config_t config, uint8_t cur, sl_eps2_current_t *val)
 {
-    uint32_t buf = UINT32_MAX;
     int res = -1;
+
+    uint32_t buf = UINT32_MAX;
 
     switch(cur)
     {
@@ -682,22 +703,24 @@ int sl_eps2_read_battery_current(sl_eps2_config_t config, uint8_t cur, sl_eps2_c
 
             *val = (sl_eps2_current_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_BATTERY_AVERAGE_CURRENT:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_BATTERY_AVEG_CUR_MA, &buf);
 
             *val = (sl_eps2_current_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_BATTERY_ACC_CURRENT:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_BATTERY_ACC_CUR_MA, &buf);
 
             *val = (sl_eps2_current_t)buf;
 
-            return res;
+            break;
         default:
-            return -1;  /* Invalid current option */
+            break;
     }
+
+    return res;
 }
 
 int sl_eps2_read_battery_charge(sl_eps2_config_t config, sl_eps2_charge_t *val)
@@ -801,8 +824,9 @@ int sl_eps2_read_battery_monitor_rsrc(sl_eps2_config_t config, uint8_t *val)
 
 int sl_eps2_read_heater_duty_cycle(sl_eps2_config_t config, uint8_t heater, sl_eps2_duty_cycle_t *val)
 {
-    uint32_t buf = UINT32_MAX;
     int res = -1;
+
+    uint32_t buf = UINT32_MAX;
 
     switch(heater)
     {
@@ -811,16 +835,18 @@ int sl_eps2_read_heater_duty_cycle(sl_eps2_config_t config, uint8_t heater, sl_e
 
             *val = (sl_eps2_duty_cycle_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_HEATER_2:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_BAT_HEATER_2_DUTY_CYCLE, &buf);
 
             *val = (sl_eps2_duty_cycle_t)buf;
 
-            return res;
+            break;
         default:
-            return -1;  /* Invalid heater */
+            break;
     }
+
+    return res;
 }
 
 int sl_eps2_read_hardware_version(sl_eps2_config_t config, uint8_t *val)
@@ -847,26 +873,49 @@ int sl_eps2_read_firmware_version(sl_eps2_config_t config, uint32_t *val)
 
 int sl_eps2_set_mppt_mode(sl_eps2_config_t config, uint8_t mppt, uint8_t mode)
 {
+    int err = 0;
+
     switch(mode)
     {
         case SL_EPS2_MPPT_MODE_AUTOMATIC:   break;
         case SL_EPS2_MPPT_MODE_MANUAL:      break;
-        default:                            return -1;  /* Invalid mode */
+        default:
+            err = -1;   /* Invalid mode */
+
+            break;
     }
 
-    switch(mppt)
+    if (err == 0)
     {
-        case SL_EPS2_MPPT_1:    return sl_eps2_write_reg(config, SL_EPS2_REG_MPPT_1_MODE, (uint32_t)mode);
-        case SL_EPS2_MPPT_2:    return sl_eps2_write_reg(config, SL_EPS2_REG_MPPT_2_MODE, (uint32_t)mode);
-        case SL_EPS2_MPPT_3:    return sl_eps2_write_reg(config, SL_EPS2_REG_MPPT_3_MODE, (uint32_t)mode);
-        default:                return -1;  /* Invalid MPPT */
+        switch(mppt)
+        {
+            case SL_EPS2_MPPT_1:
+                err = sl_eps2_write_reg(config, SL_EPS2_REG_MPPT_1_MODE, (uint32_t)mode);
+
+                break;
+            case SL_EPS2_MPPT_2:
+                err = sl_eps2_write_reg(config, SL_EPS2_REG_MPPT_2_MODE, (uint32_t)mode);
+
+                break;
+            case SL_EPS2_MPPT_3:
+                err = sl_eps2_write_reg(config, SL_EPS2_REG_MPPT_3_MODE, (uint32_t)mode);
+
+                break;
+            default:
+                err = -1;   /* Invalid MPPT */
+
+                break;
+        }
     }
+
+    return err;
 }
 
 int sl_eps2_get_mppt_mode(sl_eps2_config_t config, uint8_t mppt, uint8_t *val)
 {
-    uint32_t buf = UINT32_MAX;
     int res = -1;
+
+    uint32_t buf = UINT32_MAX;
 
     switch(mppt)
     {
@@ -875,45 +924,69 @@ int sl_eps2_get_mppt_mode(sl_eps2_config_t config, uint8_t mppt, uint8_t *val)
 
             *val = (uint8_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_MPPT_2:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_MPPT_2_MODE, &buf);
 
             *val = (uint8_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_MPPT_3:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_MPPT_3_MODE, &buf);
 
             *val = (uint8_t)buf;
 
-            return res;
+            break;
         default:
-            return -1;  /* Invalid MPPT */
+            res = -1;   /* Invalid MPPT */
+
+            break;
     }
+
+    return res;
 }
 
 int sl_eps2_set_heater_mode(sl_eps2_config_t config, uint8_t heater, uint8_t mode)
 {
+    int err = 0;
+
     switch(mode)
     {
         case SL_EPS2_HEATER_MODE_AUTOMATIC:     break;
         case SL_EPS2_HEATER_MODE_MANUAL:        break;
-        default:                                return -1;  /* Invalid mode */
+        default:
+            err = -1;   /* Invalid mode */
+
+            break;
     }
 
-    switch(heater)
+    if (err == 0)
     {
-        case SL_EPS2_HEATER_1:  return sl_eps2_write_reg(config, SL_EPS2_REG_BAT_HEATER_1_MODE, (uint32_t)mode);
-        case SL_EPS2_HEATER_2:  return sl_eps2_write_reg(config, SL_EPS2_REG_BAT_HEATER_2_MODE, (uint32_t)mode);
-        default:                return -1;  /* Invalid heater */
+        switch(heater)
+        {
+            case SL_EPS2_HEATER_1:
+                err = sl_eps2_write_reg(config, SL_EPS2_REG_BAT_HEATER_1_MODE, (uint32_t)mode);
+
+                break;
+            case SL_EPS2_HEATER_2:
+                err = sl_eps2_write_reg(config, SL_EPS2_REG_BAT_HEATER_2_MODE, (uint32_t)mode);
+
+                break;
+            default:
+                err = -1;   /* Invalid heater */
+
+                break;
+        }
     }
+
+    return err;
 }
 
 int sl_eps2_get_heater_mode(sl_eps2_config_t config, uint8_t heater, uint8_t *val)
 {
-    uint32_t buf = UINT32_MAX;
     int res = -1;
+
+    uint32_t buf = UINT32_MAX;
 
     switch(heater)
     {
@@ -922,33 +995,36 @@ int sl_eps2_get_heater_mode(sl_eps2_config_t config, uint8_t heater, uint8_t *va
 
             *val = (uint8_t)buf;
 
-            return res;
+            break;
         case SL_EPS2_HEATER_2:
             res = sl_eps2_read_reg(config, SL_EPS2_REG_BAT_HEATER_2_MODE, &buf);
 
             *val = (uint8_t)buf;
 
-            return res;
+            break;
         default:
-            return -1;  /* Invalid heater */
+            break;
     }
+
+    return res;
 }
 
 uint8_t sl_eps2_crc8(uint8_t *data, uint8_t len)
 {
     uint8_t crc = SL_EPS2_CRC8_INITIAL_VALUE;
 
-    while(len--)
+    uint8_t i = 0U;
+    for(i = 0; i < len; i++)
     {
-        crc ^= *data++;
+        crc ^= data[i];
 
-        uint8_t j = 0;
-        for (j=0; j<8; j++)
+        uint8_t j = 0U;
+        for (j = 0U; j < 8U; j++)
         {
-            crc = (crc << 1) ^ ((crc & 0x80)? SL_EPS2_CRC8_POLYNOMIAL : 0);
+            crc = (crc << 1) ^ ((crc & 0x80U) ? SL_EPS2_CRC8_POLYNOMIAL : 0U);
         }
 
-        crc &= 0xFF;
+        crc &= 0xFFU;
     }
 
     return crc;
@@ -956,12 +1032,7 @@ uint8_t sl_eps2_crc8(uint8_t *data, uint8_t len)
 
 bool sl_eps2_check_crc(uint8_t *data, uint8_t len, uint8_t crc)
 {
-    if (crc != sl_eps2_crc8(data, len))
-    {
-        return false;
-    }
-
-    return true;
+    return (crc == sl_eps2_crc8(data, len));
 }
 
 /** \} End of sl_eps2 group */
