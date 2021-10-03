@@ -463,28 +463,30 @@ static void si446x_func_info_test(void **state)
 
 static void si446x_frr_a_read_test(void **state)
 {
-    uint8_t resp_byte_count = generate_random(1, UINT8_MAX);
+    uint8_t resp_byte_count = generate_random(1, 4);
 
     check_cts();
 
-    uint8_t cmd[2] = {SI446X_CMD_NOP};
-    uint8_t res[2] = {UINT8_MAX};
+    uint8_t cmd[5] = {SI446X_CMD_NOP};
+    uint8_t res[5] = {UINT8_MAX};
+
     cmd[0] = SI446X_CMD_FRR_A_READ;
 
     expect_value(__wrap_spi_transfer, port, SI446X_SPI_PORT);
     expect_value(__wrap_spi_transfer, cs, SI446X_SPI_CS);
-    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 2);
-    expect_value(__wrap_spi_transfer, len, 2);
+    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 1 + resp_byte_count);
+    expect_value(__wrap_spi_transfer, len, 1 + resp_byte_count);
 
-    res[0] = generate_random(0, UINT8_MAX);
-    res[1] = generate_random(0, UINT8_MAX);
-
-    will_return(__wrap_spi_transfer, res[0]);
-    will_return(__wrap_spi_transfer, res[1]);
+    uint8_t i = 0;
+    for(i=0; i<(1+resp_byte_count); i++)
+    {
+        res[i] = generate_random(0, UINT8_MAX);
+        will_return(__wrap_spi_transfer, res[i]);
+    }
 
     will_return(__wrap_spi_transfer, 0);
 
-    uint8_t frr_a_val[2] = {UINT8_MAX};
+    uint8_t frr_a_val[5] = {UINT8_MAX};
 
     assert_return_code(si446x_frr_a_read(resp_byte_count, frr_a_val), 0);
 
@@ -493,28 +495,30 @@ static void si446x_frr_a_read_test(void **state)
 
 static void si446x_frr_b_read_test(void **state)
 {
-    uint8_t resp_byte_count = generate_random(1, UINT8_MAX);
+    uint8_t resp_byte_count = generate_random(1, 4);
 
     check_cts();
 
-    uint8_t cmd[2] = {SI446X_CMD_NOP};
-    uint8_t res[2] = {UINT8_MAX};
+    uint8_t cmd[5] = {SI446X_CMD_NOP};
+    uint8_t res[5] = {UINT8_MAX};
+
     cmd[0] = SI446X_CMD_FRR_B_READ;
 
     expect_value(__wrap_spi_transfer, port, SI446X_SPI_PORT);
     expect_value(__wrap_spi_transfer, cs, SI446X_SPI_CS);
-    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 2);
-    expect_value(__wrap_spi_transfer, len, 2);
+    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 1 + resp_byte_count);
+    expect_value(__wrap_spi_transfer, len, 1 + resp_byte_count);
 
-    res[0] = generate_random(0, UINT8_MAX);
-    res[1] = generate_random(0, UINT8_MAX);
-
-    will_return(__wrap_spi_transfer, res[0]);
-    will_return(__wrap_spi_transfer, res[1]);
+    uint8_t i = 0;
+    for(i=0; i<(1+resp_byte_count); i++)
+    {
+        res[i] = generate_random(0, UINT8_MAX);
+        will_return(__wrap_spi_transfer, res[i]);
+    }
 
     will_return(__wrap_spi_transfer, 0);
 
-    uint8_t frr_b_val[2] = {UINT8_MAX};
+    uint8_t frr_b_val[5] = {UINT8_MAX};
 
     assert_return_code(si446x_frr_b_read(resp_byte_count, frr_b_val), 0);
 
@@ -523,28 +527,30 @@ static void si446x_frr_b_read_test(void **state)
 
 static void si446x_frr_c_read_test(void **state)
 {
-    uint8_t resp_byte_count = generate_random(1, UINT8_MAX);
+    uint8_t resp_byte_count = generate_random(1, 4);
 
     check_cts();
 
-    uint8_t cmd[2] = {SI446X_CMD_NOP};
-    uint8_t res[2] = {UINT8_MAX};
+    uint8_t cmd[5] = {SI446X_CMD_NOP};
+    uint8_t res[5] = {UINT8_MAX};
+
     cmd[0] = SI446X_CMD_FRR_C_READ;
 
     expect_value(__wrap_spi_transfer, port, SI446X_SPI_PORT);
     expect_value(__wrap_spi_transfer, cs, SI446X_SPI_CS);
-    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 2);
-    expect_value(__wrap_spi_transfer, len, 2);
+    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 1 + resp_byte_count);
+    expect_value(__wrap_spi_transfer, len, 1 + resp_byte_count);
 
-    res[0] = generate_random(0, UINT8_MAX);
-    res[1] = generate_random(0, UINT8_MAX);
-
-    will_return(__wrap_spi_transfer, res[0]);
-    will_return(__wrap_spi_transfer, res[1]);
+    uint8_t i = 0;
+    for(i=0; i<(1+resp_byte_count); i++)
+    {
+        res[i] = generate_random(0, UINT8_MAX);
+        will_return(__wrap_spi_transfer, res[i]);
+    }
 
     will_return(__wrap_spi_transfer, 0);
 
-    uint8_t frr_c_val[2] = {UINT8_MAX};
+    uint8_t frr_c_val[5] = {UINT8_MAX};
 
     assert_return_code(si446x_frr_c_read(resp_byte_count, frr_c_val), 0);
 
@@ -553,28 +559,30 @@ static void si446x_frr_c_read_test(void **state)
 
 static void si446x_frr_d_read_test(void **state)
 {
-    uint8_t resp_byte_count = generate_random(1, UINT8_MAX);
+    uint8_t resp_byte_count = generate_random(1, 4);
 
     check_cts();
 
-    uint8_t cmd[2] = {SI446X_CMD_NOP};
-    uint8_t res[2] = {UINT8_MAX};
+    uint8_t cmd[5] = {SI446X_CMD_NOP};
+    uint8_t res[5] = {UINT8_MAX};
+
     cmd[0] = SI446X_CMD_FRR_D_READ;
 
     expect_value(__wrap_spi_transfer, port, SI446X_SPI_PORT);
     expect_value(__wrap_spi_transfer, cs, SI446X_SPI_CS);
-    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 2);
-    expect_value(__wrap_spi_transfer, len, 2);
+    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 1 + resp_byte_count);
+    expect_value(__wrap_spi_transfer, len, 1 + resp_byte_count);
 
-    res[0] = generate_random(0, UINT8_MAX);
-    res[1] = generate_random(0, UINT8_MAX);
-
-    will_return(__wrap_spi_transfer, res[0]);
-    will_return(__wrap_spi_transfer, res[1]);
+    uint8_t i = 0;
+    for(i=0; i<(1+resp_byte_count); i++)
+    {
+        res[i] = generate_random(0, UINT8_MAX);
+        will_return(__wrap_spi_transfer, res[i]);
+    }
 
     will_return(__wrap_spi_transfer, 0);
 
-    uint8_t frr_d_val[2] = {UINT8_MAX};
+    uint8_t frr_d_val[5] = {UINT8_MAX};
 
     assert_return_code(si446x_frr_d_read(resp_byte_count, frr_d_val), 0);
 
