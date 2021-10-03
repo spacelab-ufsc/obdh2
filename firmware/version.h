@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.36
+ * \version 0.7.37
  * 
  * \date 2019/10/25
  * 
@@ -36,7 +36,7 @@
 #ifndef VERSION_H_
 #define VERSION_H_
 
-#define FIRMWARE_VERSION            "0.7.36"
+#define FIRMWARE_VERSION            "0.7.37"
 
 #define FIRMWARE_STATUS             "Development"
 
