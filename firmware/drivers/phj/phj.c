@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -24,44 +24,43 @@
  * \brief PHJ driver implementation.
  * 
  * \author João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
+ * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
+ * \version 0.7.44
+ *
  * \date 2020/03/30
  *
  * \addtogroup phj
  * \{
  */
 
-#include <drivers/phj/phj.h>
-#include <math.h>
-#include <string.h>
+#include "phj.h"
 
 i2c_port_t phj_i2c_port;
 gpio_pin_t phj_gpio_pin;
 
 /* I2C configuration */
-int phj_init_i2c(phj_config_i2c config)
+int phj_init_i2c(phj_config_i2c_t config)
 {
     phj_i2c_port = config.port;
 
-    if (i2c_init(config.port, (i2c_config_t){.speed_hz=config.bitrate}) != 0)
-    {
-        return -1;  /* Error initializing the I2C configuration */
-    }
+    i2c_config_t i2c_conf = {0};
 
-    return 0;
+    i2c_conf.speed_hz = config.bitrate;
+
+    return i2c_init(config.port, i2c_conf);
 }
 
 /* GPIO configuration */
-int phj_init_gpio(phj_config_gpio config)
+int phj_init_gpio(phj_config_gpio_t config)
 {
     phj_gpio_pin = config.pin;
 
-    if (gpio_init(config.pin, (gpio_config_t){.mode=config.mode}) != 0)
-    {
-        return -1;  /* Error initializing the GPIO configuration */
-    }
+    gpio_config_t gpio_conf = {0};
 
-    return 0;
+    gpio_conf.mode = config.mode;
+
+    return gpio_init(config.pin, gpio_conf);
 }
 
 /* Read data from Payload PHJ */
@@ -79,19 +78,21 @@ int phj_check_converter(void)
 /* Check for comunication errors */
 int phj_check_message(void)
 {
-    uint8_t status[PHJ_FRAME_STATE_LEN];
+    int err = 0;
+
+    uint8_t status[PHJ_FRAME_STATE_LEN] = {0};
 
     if (phj_read(status, PHJ_FRAME_STATE_LEN) != 0)
     {
-        return -1;
+        err = -1;
     }
 
     if (status[0] != PHJ_FRAME_ID_STATE)
     {
-        return -2;
+        err = -2;
     }
 
-    return 0;
+    return err;
 }
 
 /** \} End of phj group */

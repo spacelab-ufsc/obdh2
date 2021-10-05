@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
  * 
- * \version 0.7.26
+ * \version 0.7.44
  * 
  * \date 2021/08/15
  * 
@@ -96,8 +96,8 @@ int payload_init(payload_t pl)
             break;
         case PAYLOAD_PHJ:
         {
-            phj_config_i2c config_i2c;
-            phj_config_gpio config_gpio;
+            phj_config_i2c_t config_i2c;
+            phj_config_gpio_t config_gpio;
 
             config_i2c.port = I2C_PORT_0;
             config_i2c.bitrate = 400000UL;
