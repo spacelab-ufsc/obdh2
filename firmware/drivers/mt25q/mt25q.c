@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.42
+ * \version 0.7.43
  * 
  * \date 2019/11/15
  * 
@@ -143,7 +143,11 @@ int mt25q_read_flash_description(flash_description_t *fdo)
                                                  ((uint32_t)ans[MT25Q_DISCOVERY_TABLE_1 + 2U] << 16);
 
                         /* Get the official device size in bytes */
-                        fdo->size = (ans[table_address + MT25Q_DTABLE_1_FLASH_SIZE] + 1U) / 8U;
+                        uint32_t size_buf = (uint32_t)ans[table_address + MT25Q_DTABLE_1_FLASH_SIZE] |
+                                            ((uint32_t)ans[table_address + MT25Q_DTABLE_1_FLASH_SIZE + 1U] << 8) |
+                                            ((uint32_t)ans[table_address + MT25Q_DTABLE_1_FLASH_SIZE + 2U] << 16) |
+                                            ((uint32_t)ans[table_address + MT25Q_DTABLE_1_FLASH_SIZE + 3U] << 24);
+                        fdo->size = (size_buf + 1U) / 8U;
 
                         /* Get the largest sector size and the sector count, and take one sub-sector size and sub-sector count. */
                         /* The first two sector definitions have the definitions that we use - usually 4K and 64K. */
