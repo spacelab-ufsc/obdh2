@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.16
+ * \version 0.7.45
  * 
  * \date 2020/02/01
  * 
@@ -52,7 +52,7 @@
 #define ISIS_ANTENNA_I2C_SLAVE_ADDRESS          ISIS_ANTENNA_I2C_SLAVE_ADDRESS_UC_A
 
 /* Status mask */
-#define ISIS_ANTENNA_STATUS_MASK                0x8888      /**< Status mask (all antenna not deployed and disarmed). */
+#define ISIS_ANTENNA_STATUS_MASK                0x8888U     /**< Status mask (all antenna not deployed and disarmed). */
 
 #define ISIS_ANTENNA_REF_VOLTAGE                3300        /**< Reference voltage in millivolts. */
 
@@ -71,7 +71,7 @@ typedef enum
     ISIS_ANTENNA_ANT_2,                                     /**< Antenna number 2. */
     ISIS_ANTENNA_ANT_3,                                     /**< Antenna number 3. */
     ISIS_ANTENNA_ANT_4                                      /**< Antenna number 4. */
-} isis_antenna_ant_e;
+} isis_antenna_ant_t;
 
 /**
  * \brief ISIS antenna independent deployment override options.
@@ -80,7 +80,7 @@ typedef enum
 {
     ISIS_ANTENNA_INDEPENDENT_DEPLOY_WITHOUT_OVERRIDE = 0,   /**< Independent deployment without override. */
     ISIS_ANTENNA_INDEPENDENT_DEPLOY_WITH_OVERRIDE           /**< Independent deployment with override. */
-} isis_antenna_override_e;
+} isis_antenna_override_t;
 
 /**
  * \brief Deployment status.
@@ -114,9 +114,9 @@ typedef enum
  */
 typedef struct
 {
-    uint8_t status  : 1;                                    /**< Antenna status. */
-    uint8_t timeout : 1;                                    /**< Antenna timeout flag. */
-    uint8_t burning : 1;                                    /**< Antenna burning flag. */
+    uint8_t status;                                         /**< Antenna status. */
+    uint8_t timeout;                                        /**< Antenna timeout flag. */
+    uint8_t burning;                                        /**< Antenna burning flag. */
 } isis_antenna_single_antenna_data_t;
 
 /**
@@ -129,9 +129,9 @@ typedef struct
     isis_antenna_single_antenna_data_t antenna_2;           /**< Antenna 2 status. */
     isis_antenna_single_antenna_data_t antenna_3;           /**< Antenna 3 status. */
     isis_antenna_single_antenna_data_t antenna_4;           /**< Antenna 4 status. */
-    uint8_t ignoring_switches : 1;                          /**< Ignoring switches. */
-    uint8_t independent_burn  : 1;                          /**< Independent burn. */
-    uint8_t armed             : 1;                          /**< Armed. */
+    uint8_t ignoring_switches;                              /**< Ignoring switches. */
+    uint8_t independent_burn;                               /**< Independent burn. */
+    uint8_t armed;                                          /**< Armed. */
 } isis_antenna_status_t;
 
 /**
@@ -187,7 +187,7 @@ int isis_antenna_start_sequential_deploy(uint8_t sec);
  *
  * \return None.
  */
-int isis_antenna_start_independent_deploy(uint8_t ant, uint8_t sec, uint8_t ovr);
+int isis_antenna_start_independent_deploy(isis_antenna_ant_t ant, uint8_t sec, isis_antenna_override_t ovr);
 
 /**
  * \brief Reads the deployment status code.
@@ -233,7 +233,7 @@ int isis_antenna_read_deployment_status(isis_antenna_status_t *status);
  *
  * \return The status/error code.
  */
-int isis_antenna_get_antenna_status(uint8_t ant, uint8_t *ant_status);
+int isis_antenna_get_antenna_status(isis_antenna_ant_t ant, uint8_t *ant_status);
 
 /**
  * \brief Gets the timeout status of an antenna.
@@ -256,7 +256,7 @@ int isis_antenna_get_antenna_status(uint8_t ant, uint8_t *ant_status);
  *
  * \return The status/error code.
  */
-int isis_antenna_get_antenna_timeout(uint8_t ant, uint8_t *ant_timeout);
+int isis_antenna_get_antenna_timeout(isis_antenna_ant_t ant, uint8_t *ant_timeout);
 
 /**
  * \brief Gets the burn system status.
@@ -279,7 +279,7 @@ int isis_antenna_get_antenna_timeout(uint8_t ant, uint8_t *ant_timeout);
  *
  * \return The status/error code.
  */
-int isis_antenna_get_burning(uint8_t ant, uint8_t *ant_burn);
+int isis_antenna_get_burning(isis_antenna_ant_t ant, uint8_t *ant_burn);
 
 /**
  * \brief Gets the arming status of the antennas.

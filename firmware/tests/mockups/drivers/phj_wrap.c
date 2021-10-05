@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.6
+ * \version 0.7.45
  * 
  * \date 2021/08/18
  * 
@@ -43,7 +43,7 @@
 
 #include "phj_wrap.h"
 
-int __wrap_phj_init_i2c(phj_config_i2c config)
+int __wrap_phj_init_i2c(phj_config_i2c_t config)
 {
     check_expected(config.port);
     check_expected(config.bitrate);
@@ -51,7 +51,7 @@ int __wrap_phj_init_i2c(phj_config_i2c config)
     return mock_type(int);
 }
 
-int __wrap_phj_init_gpio(phj_config_gpio config)
+int __wrap_phj_init_gpio(phj_config_gpio_t config)
 {
     check_expected(config.pin);
     check_expected(config.mode);

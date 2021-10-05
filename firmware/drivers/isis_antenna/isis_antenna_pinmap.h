@@ -1,22 +1,22 @@
 /*
  * isis_antenna_pinmap.h
  * 
- * Copyright (C) 2017-2019, Universidade Federal de Santa Catarina.
+ * Copyright (C) 2021, SpaceLab.
  * 
- * This file is part of FloripaSat-TTC.
+ * This file is part of OBDH 2.0.
  * 
- * FloripaSat-TTC is free software: you can redistribute it and/or modify
+ * OBDH 2.0 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  * 
- * FloripaSat-TTC is distributed in the hope that it will be useful,
+ * OBDH 2.0 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with FloripaSat-TTC. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
  * 
  */
 
@@ -27,7 +27,7 @@
  * 
  * \version 0.2.1
  * 
- * \date 21/09/2017
+ * \date 2017/09/21
  * 
  * \defgroup isis_antenna_pinmap
  * \{

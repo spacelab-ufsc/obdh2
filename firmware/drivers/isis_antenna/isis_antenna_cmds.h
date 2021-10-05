@@ -1,7 +1,7 @@
 /*
  * isis_antenna_cmds.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.9
+ * \version 0.7.45
  * 
- * \date 20/09/2017
+ * \date 2017/09/20
  * 
  * \defgroup isis_antenna_cmds
  * \{
@@ -39,7 +39,7 @@
 /**
  * \brief Performs a reset of the microcontroller.
  */
-#define ISIS_ANTENNA_CMD_RESET                          0xAA
+#define ISIS_ANTENNA_CMD_RESET                          0xAAU
 
 /**
  * \brief Arm antenna system.
@@ -47,7 +47,7 @@
  * Arm the antenna system. The system needs to be armed to be
  * able to deploy antennas.
  */
-#define ISIS_ANTENNA_CMD_ARM                            0xAD
+#define ISIS_ANTENNA_CMD_ARM                            0xADU
 
 /**
  * \brief Disarm antenna system.
@@ -57,7 +57,7 @@
  * deployment before disarming the system. The antenna system will only be able
  * to deploy antennas once it has been armed again.
  */
-#define ISIS_ANTENNA_CMD_DISARM                         0xAC
+#define ISIS_ANTENNA_CMD_DISARM                         0xACU
 
 /**
  * \brief Deploy antenna 1.
@@ -85,7 +85,7 @@
  * 
  * Response: None
  */
-#define ISIS_ANTENNA_CMD_DEPLOY_ANT_1                   0xA1
+#define ISIS_ANTENNA_CMD_DEPLOY_ANT_1                   0xA1U
 
 /**
  * \brief Deploy antenna 2.
@@ -113,7 +113,7 @@
  * 
  * Response: None
  */
-#define ISIS_ANTENNA_CMD_DEPLOY_ANT_2                   0xA2
+#define ISIS_ANTENNA_CMD_DEPLOY_ANT_2                   0xA2U
 
 /**
  * \brief Deploy antenna 3.
@@ -141,7 +141,7 @@
  * 
  * Response: None
  */
-#define ISIS_ANTENNA_CMD_DEPLOY_ANT_3                   0xA3
+#define ISIS_ANTENNA_CMD_DEPLOY_ANT_3                   0xA3U
 
 /**
  * \brief Deploy antenna 4.
@@ -169,7 +169,7 @@
  * 
  * Response: None
  */
-#define ISIS_ANTENNA_CMD_DEPLOY_ANT_4                   0xA4
+#define ISIS_ANTENNA_CMD_DEPLOY_ANT_4                   0xA4U
 
 /**
  * \brief Start automated sequential antenna deployment.
@@ -203,7 +203,7 @@
  * 
  * Response: None
  */
-#define ISIS_ANTENNA_CMD_DEPLOY_SEQUENTIAL              0xA5
+#define ISIS_ANTENNA_CMD_DEPLOY_SEQUENTIAL              0xA5U
 
 /**
  * \brief Deploy antenna 1 with override.
@@ -229,7 +229,7 @@
  * 
  * Response: None
  */
-#define ISIS_ANTENNA_CMD_DEPLOY_ANT_1_WITH_OVERRIDE     0xBA
+#define ISIS_ANTENNA_CMD_DEPLOY_ANT_1_WITH_OVERRIDE     0xBAU
 
 /**
  * \brief Deploy antenna 2 with override.
@@ -255,7 +255,7 @@
  * 
  * Response: None
  */
-#define ISIS_ANTENNA_CMD_DEPLOY_ANT_2_WITH_OVERRIDE     0xBB
+#define ISIS_ANTENNA_CMD_DEPLOY_ANT_2_WITH_OVERRIDE     0xBBU
 
 /**
  * \brief Deploy antenna 3 with override.
@@ -281,7 +281,7 @@
  * 
  * Response: None
  */
-#define ISIS_ANTENNA_CMD_DEPLOY_ANT_3_WITH_OVERRIDE     0xBC
+#define ISIS_ANTENNA_CMD_DEPLOY_ANT_3_WITH_OVERRIDE     0xBCU
 
 /**
  * \brief Deploy antenna 4 with override.
@@ -306,7 +306,7 @@
  * 
  * Response: None
  */
-#define ISIS_ANTENNA_CMD_DEPLOY_ANT_4_WITH_OVERRIDE     0xBD
+#define ISIS_ANTENNA_CMD_DEPLOY_ANT_4_WITH_OVERRIDE     0xBDU
 
 /**
  * \brief Cancel deployment activation.
@@ -321,7 +321,7 @@
  * 
  * Response: None
  */
-#define ISIS_ANTENNA_CMD_DEPLOY_CANCEL                  0xA9
+#define ISIS_ANTENNA_CMD_DEPLOY_CANCEL                  0xA9U
 
 /**
  * \brief Measure antenna system temperature.
@@ -335,7 +335,7 @@
  * Response: [000 - 001] 000000xx xxxxxxxx. Raw 10 bits measurement of the
  * temperature. Please refer to Annex A. for the conversion table.
  */
-#define ISIS_ANTENNA_CMD_MEASURE_TEMPERATURE            0xC0
+#define ISIS_ANTENNA_CMD_MEASURE_TEMPERATURE            0xC0U
 
 /**
  * \brief Report deployment status.
@@ -385,7 +385,7 @@
  *      - 0: The antenna system is currently NOT armed.
  *      .
  */
-#define ISIS_ANTENNA_CMD_REPORT_DEPLOY_STATUS           0xC3
+#define ISIS_ANTENNA_CMD_REPORT_DEPLOY_STATUS           0xC3U
 
 /**
  * \brief Report antenna 1 deployment system activation count.
@@ -398,7 +398,7 @@
  * Response: [000 - 000] xxxxxxxx. The number of deployment system activations.
  * This number has a minimum value of 0 and a maximum value of 255.
  */
-#define ISIS_ANTENNA_CMD_REPORT_DEPLOY_COUNTER_ANT_1    0xB0
+#define ISIS_ANTENNA_CMD_REPORT_DEPLOY_COUNTER_ANT_1    0xB0U
 
 /**
  * \brief Report antenna 2 deployment system activation count.
@@ -411,7 +411,7 @@
  * Response: [000 - 000] xxxxxxxx. The number of deployment system activations.
  * This number has a minimum value of 0 and a maximum value of 255.
  */
-#define ISIS_ANTENNA_CMD_REPORT_DEPLOY_COUNTER_ANT_2    0xB1
+#define ISIS_ANTENNA_CMD_REPORT_DEPLOY_COUNTER_ANT_2    0xB1U
 
 /**
  * \brief Report antenna 3 deployment system activation count.
@@ -424,7 +424,7 @@
  * Response: [000 - 000] xxxxxxxx. The number of deployment system activations.
  * This number has a minimum value of 0 and a maximum value of 255.
  */
-#define ISIS_ANTENNA_CMD_REPORT_DEPLOY_COUNTER_3        0xB2
+#define ISIS_ANTENNA_CMD_REPORT_DEPLOY_COUNTER_3        0xB2U
 
 /**
  * \brief Report antenna 4 deployment system activation count.
@@ -437,7 +437,7 @@
  * Response: [000 - 000] xxxxxxxx. The number of deployment system activations.
  * This number has a minimum value of 0 and a maximum value of 255.
  */
-#define ISIS_ANTENNA_CMD_REPORT_DEPLOY_COUNTER_4        0xB3
+#define ISIS_ANTENNA_CMD_REPORT_DEPLOY_COUNTER_4        0xB3U
 
 /**
  * \brief Report antenna 1 deployment system activation time.
@@ -454,7 +454,7 @@
  * minimum value for this time is 0 and the maximum value is 65535. To obtain
  * the activation time in seconds, divide this number by 20.
  */
-#define ISIS_ANTENNA_CMD_REPORT_DEPLOY_TIMER_1          0xB4
+#define ISIS_ANTENNA_CMD_REPORT_DEPLOY_TIMER_1          0xB4U
 
 /**
  * \brief Report antenna 2 deployment system activation time.
@@ -471,7 +471,7 @@
  * minimum value for this time is 0 and the maximum value is 65535. To obtain
  * the activation time in seconds, divide this number by 20.
  */
-#define ISIS_ANTENNA_CMD_REPORT_DEPLOY_TIMER_2          0xB5
+#define ISIS_ANTENNA_CMD_REPORT_DEPLOY_TIMER_2          0xB5U
 
 /**
  * \brief Report antenna 3 deployment system activation time.
@@ -488,7 +488,7 @@
  * minimum value for this time is 0 and the maximum value is 65535. To obtain
  * the activation time in seconds, divide this number by 20. 
  */
-#define ISIS_ANTENNA_CMD_REPORT_DEPLOY_TIMER_3          0xB6
+#define ISIS_ANTENNA_CMD_REPORT_DEPLOY_TIMER_3          0xB6U
 
 /**
  * \brief Report antenna 4 deployment system activation time.
@@ -505,7 +505,7 @@
  * minimum value for this time is 0 and the maximum value is 65535. To obtain
  * the activation time in seconds, divide this number by 20.
  */
-#define ISIS_ANTENNA_CMD_REPORT_DEPLOY_TIMER_4          0xB7
+#define ISIS_ANTENNA_CMD_REPORT_DEPLOY_TIMER_4          0xB7U
 
 #endif /* ISIS_ANTENNA_CMDS_H_ */
 

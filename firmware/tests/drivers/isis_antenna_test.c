@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.12
+ * \version 0.7.45
  * 
  * \date 2021/09/01
  * 
@@ -514,9 +514,10 @@ static void isis_antenna_raw_to_temp_c_test(void **state)
     {
         int16_t temp_c = isis_antenna_raw_to_temp_c(raw);
 
-        if (raw > 130)
+//        if (raw > 130)
+        if (raw > 413)
         {
-            assert_in_range(temp_c+50, -50 + 50, 150 + 50);
+            assert_in_range(temp_c + 50, -50 + 50, 150 + 50);
         }
         else
         {
@@ -552,9 +553,10 @@ static void isis_antenna_get_temperature_c_test(void **state)
 
         assert_return_code(isis_antenna_get_temperature_c(&temp), 0);
 
-        if (raw > 130)
+//        if (raw > 130)
+        if (raw > 413)
         {
-            assert_in_range(temp+50, -50 + 50, 150 + 50);
+            assert_in_range(temp + 50, -50 + 50, 150 + 50);
         }
         else
         {
