@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.35
+ * \version 0.7.42
  * 
  * \date 2019/11/15
  * 
@@ -42,39 +42,43 @@
 
 #define MT25Q_MODULE_NAME                   "MT25Q"
 
-#define MT25Q_MANUFACTURER_ID               0x20        /**< Manufacturer ID. */
+#define MT25Q_MANUFACTURER_ID               0x20U       /**< Manufacturer ID. */
 
 /* Memory type */
 #define MT25Q_MEMORY_TYPE_3V                0xBA        /**< 3 V. */
 #define MT25Q_MEMORY_TYPE_1V8               0xBB        /**< 1.8 V. */
 
 /* MT25Q memory capacity */
-#define MT25Q_MEMORY_CAPACITY_2GB           0x22        /**< 2 Gb. */
-#define MT25Q_MEMORY_CAPACITY_1GB           0x21        /**< 1 Gb. */
-#define MT25Q_MEMORY_CAPACITY_512MB         0x20        /**< 512 Mb. */
-#define MT25Q_MEMORY_CAPACITY_256MB         0x19        /**< 256 Mb. */
-#define MT25Q_MEMORY_CAPACITY_128MB         0x18        /**< 128 Mb. */
-#define MT25Q_MEMORY_CAPACITY_64MB          0x17        /**< 64 Mb. */
+#define MT25Q_MEMORY_CAPACITY_2GB           0x22U       /**< 2 Gb. */
+#define MT25Q_MEMORY_CAPACITY_1GB           0x21U       /**< 1 Gb. */
+#define MT25Q_MEMORY_CAPACITY_512MB         0x20U       /**< 512 Mb. */
+#define MT25Q_MEMORY_CAPACITY_256MB         0x19U       /**< 256 Mb. */
+#define MT25Q_MEMORY_CAPACITY_128MB         0x18U       /**< 128 Mb. */
+#define MT25Q_MEMORY_CAPACITY_64MB          0x17U       /**< 64 Mb. */
 
 /* Write in progress status */
-#define MT25Q_READY                         0           /**< The memory is ready to write data. */
-#define MT25Q_BUSY                          1           /**< The memoty is busy writing data. */
+#define MT25Q_READY                         0U          /**< The memory is ready to write data. */
+#define MT25Q_BUSY                          1U          /**< The memoty is busy writing data. */
 
 /* Write protection */
-#define MT25Q_WRITE_DISABLED                0           /**< Write operations disabled. */
-#define MT25Q_WRITE_ENABLED                 1           /**< Write operations enabled. */
+#define MT25Q_WRITE_DISABLED                0U          /**< Write operations disabled. */
+#define MT25Q_WRITE_ENABLED                 1U          /**< Write operations enabled. */
 
-#define MT25Q_DISCOVERY_TABLE_1             0x0C        /**< Discovery table 1. */
-#define MT25Q_DTABLE_1_SECTOR_DESCRIPTOR    0x1C        /**< Discovery table 1 sector descriptor. */
-#define MT25Q_DTABLE_1_FLASH_SIZE           0x04        /**< Discovery table 1 flash size. */
+#define MT25Q_DISCOVERY_TABLE_1             0x0CU       /**< Discovery table 1. */
+#define MT25Q_DTABLE_1_SECTOR_DESCRIPTOR    0x1CU       /**< Discovery table 1 sector descriptor. */
+#define MT25Q_DTABLE_1_FLASH_SIZE           0x04U       /**< Discovery table 1 flash size. */
 
-#define MT25Q_SIZE_16MB                     0x01000000  /**< 16 MB in bytes. */
-#define MT25Q_SIZE_64MB                     0x04000000  /**< 64 MB in bytes. */
-#define MT25Q_SIZE_128MB                    0x08000000  /**< 128 MB in bytes. */
-#define MT25Q_SIZE_256MB                    0x10000000  /**< 256 MB in bytes. */
+#define MT25Q_SIZE_16MB                     0x01000000U /**< 16 MB in bytes. */
+#define MT25Q_SIZE_64MB                     0x04000000U /**< 64 MB in bytes. */
+#define MT25Q_SIZE_128MB                    0x08000000U /**< 128 MB in bytes. */
+#define MT25Q_SIZE_256MB                    0x10000000U /**< 256 MB in bytes. */
 
-#define MT25Q_SECTOR_ERASE_TIMEOUT_MS       3000        /**< Sector erase timeout in milliseconds. */
-#define MT25Q_PROGRAM_TIMEOUT_MS            1000        /**< Program timeout in milliseconds. */
+#define MT25Q_SECTOR_ERASE_TIMEOUT_MS       3000U       /**< Sector erase timeout in milliseconds. */
+#define MT25Q_PROGRAM_TIMEOUT_MS            1000U       /**< Program timeout in milliseconds. */
+
+/* Address modes */
+#define MT25Q_ADDRESS_MODE_3_BYTE           3U          /**< 3 byte address mode. */
+#define MT25Q_ADDRESS_MODE_4_BYTE           4U          /**< 4 byte address mode. */
 
 /**
  * \brief Sector type.
@@ -136,15 +140,6 @@ typedef struct
     uint8_t write_enable_latch;                 /**< The device always powers up with this bit cleared to prevent inadvertent WRITE, PROGRAM, or ERASE operation. */
     uint8_t write_in_progress;                  /**< Indicates a command cycle is in progress. */
 } mt25q_status_t;
-
-/**
- * \brief Address modes.
- */
-typedef enum
-{
-    MT25Q_ADDRESS_MODE_3_BYTE=3,                /**< 3 byte address mode. */
-    MT25Q_ADDRESS_MODE_4_BYTE                   /**< 4 byte address mode. */
-} mt25q_address_mode_e;
 
 /**
  * \brief Driver initialization.
