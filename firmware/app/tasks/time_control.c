@@ -1,7 +1,7 @@
 /*
  * time_control.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.14
+ * \version 0.7.47
  * 
  * \date 2020/08/09
  * 
@@ -43,7 +43,7 @@
 
 xTaskHandle xTaskTimeControlHandle;
 
-void vTaskTimeControl(void *pvParameters)
+void vTaskTimeControl(void)
 {
     /* Wait startup task to finish */
     xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_TIME_CONTROL_INIT_TIMEOUT_MS));
@@ -77,10 +77,10 @@ void vTaskTimeControl(void *pvParameters)
         /* Read the current system time */
         sys_time_t sys_tm = system_get_time();
 
-        if (sys_tm % 60 == 0)
+        if ((sys_tm % 60) == 0)
         {
             /* Save the current system time */
-            if (media_write(MEDIA_INT_FLASH, CONFIG_MEM_ADR_SYS_TIME, &sys_tm, 1))
+            if (media_write(MEDIA_INT_FLASH, CONFIG_MEM_ADR_SYS_TIME, &sys_tm, 1) != 0)
             {
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_TIME_CONTROL_NAME, "Error writing the system time to the internal flash memory!");
                 sys_log_new_line();

@@ -1,7 +1,7 @@
 /*
  * read_edc.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.15
+ * \version 0.7.47
  * 
  * \date 2020/08/16
  * 
@@ -54,11 +54,9 @@ extern xTaskHandle xTaskReadEDCHandle;
 /**
  * \brief Read EDC task.
  *
- * \param[in] pvParameters is a value that will passed as the task's parameter.
- *
  * \return None.
  */
-void vTaskReadEDC(void *pvParameters);
+void vTaskReadEDC(void);
 
 #endif /* READ_EDC_H_ */
 

@@ -1,7 +1,7 @@
 /*
  * beacon.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.10
+ * \version 0.7.47
  * 
- * \date 27/10/2019
+ * \date 2019/10/27
  * 
  * \addtogroup beacon
  * \{
@@ -42,7 +42,7 @@
 
 xTaskHandle xTaskBeaconHandle;
 
-void vTaskBeacon(void *pvParameters)
+void vTaskBeacon(void)
 {
     /* Wait startup task to finish */
     xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_BEACON_INIT_TIMEOUT_MS));

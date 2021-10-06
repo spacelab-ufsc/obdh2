@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.5
+ * \version 0.7.47
  * 
  * \date 2019/12/04
  * 
@@ -62,7 +62,7 @@ xTaskHandle xTaskStartupHandle;
 
 EventGroupHandle_t task_startup_status;
 
-void vTaskStartup(void *pvParameters)
+void vTaskStartup(void)
 {
     unsigned int error_counter = 0;
 
@@ -185,7 +185,7 @@ void vTaskStartup(void *pvParameters)
     }
 #endif /* CONFIG_DEV_ANTENNA_ENABLED */
 
-    if (error_counter > 0)
+    if (error_counter > 0U)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_STARTUP_NAME, "Boot completed with ");
         sys_log_print_uint(error_counter);
@@ -208,38 +208,37 @@ void vTaskStartup(void *pvParameters)
     vTaskSuspend(xTaskStartupHandle);
 }
 
-int startup_init_csp()
+int startup_init_csp(void)
 {
 #if CONFIG_CSP_ENABLED == 1
+    int err = CSP_ERR_NONE;
+
     /* CSP initialization */
-    if (csp_init(CONFIG_CSP_MY_ADDRESS) != CSP_ERR_NONE)
+    err = csp_init(CONFIG_CSP_MY_ADDRESS);
+
+    if (err == CSP_ERR_NONE)
     {
-        return -1;  /* Error during CSP initialization */
+        /* Buffer initialization */
+        err = csp_buffer_init(CONFIG_CSP_BUFFER_MAX_PKTS, CONFIG_CSP_BUFFER_MAX_SIZE);
+
+        if (err == CSP_ERR_NONE)
+        {
+            err = csp_route_set(CONFIG_CSP_TTC_ADDRESS, &csp_if_spi, CSP_NODE_MAC);
+
+            if (err == CSP_ERR_NONE)
+            {
+                err = csp_route_set(CONFIG_CSP_EPS_ADDRESS, &csp_if_i2c, CSP_NODE_MAC);
+
+                if (err == CSP_ERR_NONE)
+                {
+                    /* CSP router task initialization */
+                    err = csp_route_start_task(CONFIG_CSP_ROUTER_WORD_STACK, CONFIG_CSP_ROUTER_TASK_PRIORITY);
+                }
+            }
+        }
     }
 
-    /* Buffer initialization */
-    if (csp_buffer_init(CONFIG_CSP_BUFFER_MAX_PKTS, CONFIG_CSP_BUFFER_MAX_SIZE) != CSP_ERR_NONE)
-    {
-        return -1;  /* Error during the CSP buffer initialization */
-    }
-
-    if (csp_route_set(CONFIG_CSP_TTC_ADDRESS, &csp_if_spi, CSP_NODE_MAC) != CSP_ERR_NONE)
-    {
-        return -1;
-    }
-
-    if (csp_route_set(CONFIG_CSP_EPS_ADDRESS, &csp_if_i2c, CSP_NODE_MAC) != CSP_ERR_NONE)
-    {
-        return -1;
-    }
-
-    /* CSP router task initialization */
-	if (csp_route_start_task(CONFIG_CSP_ROUTER_WORD_STACK, CONFIG_CSP_ROUTER_TASK_PRIORITY) != CSP_ERR_NONE)
-    {
-        return -1;  /* Error during CSP router task initialization! */
-    }
-
-    return CSP_ERR_NONE;
+    return err;
 #else
     sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "libcsp disabled!");
     sys_log_new_line();

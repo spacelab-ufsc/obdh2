@@ -1,7 +1,7 @@
 /*
  * time_control.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.14
+ * \version 0.7.47
  * 
  * \date 2020/08/09
  * 
@@ -54,11 +54,9 @@ extern xTaskHandle xTaskTimeControlHandle;
 /**
  * \brief Time control task.
  *
- * \param[in] pvParameters is a value that will passed as the task's parameter.
- *
  * \return None.
  */
-void vTaskTimeControl(void *pvParameters);
+void vTaskTimeControl(void);
 
 #endif /* TIME_CONTROL_H_ */
 
