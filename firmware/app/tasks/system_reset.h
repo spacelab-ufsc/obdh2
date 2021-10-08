@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.47
+ * \version 0.7.48
  * 
  * \date 2020/01/12
  * 
@@ -40,10 +40,10 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
-#define TASK_SYSTEM_RESET_NAME                      "SystemReset"       /**< Task name. */
-#define TASK_SYSTEM_RESET_STACK_SIZE                128                 /**< Stack size in bytes. */
-#define TASK_SYSTEM_RESET_PRIORITY                  2                   /**< Task priority. */
-#define TASK_SYSTEM_RESET_PERIOD_MS                 (1000U*60U*60U*10U) /**< Task period in milliseconds. */
+#define TASK_SYSTEM_RESET_NAME                      "SystemReset"           /**< Task name. */
+#define TASK_SYSTEM_RESET_STACK_SIZE                128                     /**< Stack size in bytes. */
+#define TASK_SYSTEM_RESET_PRIORITY                  2                       /**< Task priority. */
+#define TASK_SYSTEM_RESET_PERIOD_MS                 (1000UL*60U*60U*10U)    /**< Task period in milliseconds. */
 
 /**
  * \brief Periodic system reset handle.

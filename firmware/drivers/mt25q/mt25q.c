@@ -132,7 +132,7 @@ int mt25q_read_flash_description(flash_description_t *fdo)
             if (mt25q_spi_transfer(cmd, ans, 350) == 0)
             {
                 /* Remove the SPI command, address and dummy clocks */
-                if (memcpy(ans, &ans[5], 350) == ans)   /* 5 = SPI command + address + dummy clocksy */
+                if (memcpy(ans, &ans[5], 350) == ans)   /* 5 = SPI command + address + dummy clocks */
                 {
                     /* Check if the read data is valid */
                     if (memcmp(ans, "SFDP", 4) == 0)
@@ -159,7 +159,7 @@ int mt25q_read_flash_description(flash_description_t *fdo)
                             /* fdo->sector_size            = (1 << (ans[t_offset])); */
                             fdo->sector_size            = 1;
                             uint8_t i = 0;
-                            for(i=0; i<ans[t_offset]; i++)
+                            for(i = 0; i < ans[t_offset]; i++)
                             {
                                 fdo->sector_size        = (fdo->sector_size << 1);
                             }
@@ -178,11 +178,11 @@ int mt25q_read_flash_description(flash_description_t *fdo)
                         }
 
                         /* Hard-coded flash parameters */
-                        fdo->page_size      = 0x100;
+                        fdo->page_size      = 0x100U;
                         fdo->page_count     = fdo->size / fdo->page_size;
-                        fdo->address_mask   = 0xFF;
+                        fdo->address_mask   = 0xFFU;
 
-                        fdo->otp_size = 0x40;
+                        fdo->otp_size = 0x40U;
 
                         /* Initial Die information */
                         if (fdo->size > MT25Q_SIZE_64MB)
@@ -290,7 +290,7 @@ int mt25q_write_enable(void)
     if (mt25q_spi_write(&cmd, 1) == 0)
     {
         uint8_t i = 0;
-        for(i=0; i<UINT8_MAX; i++)
+        for(i = 0; i < UINT8_MAX; i++)
         {
             mt25q_status_t status = {0};
 
@@ -316,7 +316,7 @@ int mt25q_write_disable(void)
     if (mt25q_spi_write(&cmd, 1) == 0)
     {
         uint8_t i = 0;
-        for(i=0; i<UINT8_MAX; i++)
+        for(i = 0; i < UINT8_MAX; i++)
         {
             mt25q_status_t status = {0};
 
@@ -767,10 +767,10 @@ int mt25q_gen_program(uint32_t adr, uint8_t *data, uint32_t len, uint8_t instr)
 {
     int err = -1;
 
-	/* Validate address input */
+    /* Validate address input */
     if (adr <= mt25q_get_max_address())
     {
-	    /* Check whether any previous Write, Program or Erase cycle is on-going */
+        /* Check whether any previous Write, Program or Erase cycle is on-going */
         if (!mt25q_is_busy())
         {
             uint8_t cmd = instr;
