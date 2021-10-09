@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.4
+ * \version 0.7.48
  * 
  * \date 2021/04/27
  * 
@@ -34,9 +34,11 @@
  */
 
 #define _POSIX_C_SOURCE 200809L
+#define _DEFAULT_SOURCE
 
 #include <math.h>
 #include <time.h>
+#include <unistd.h>
 
 #include "task.h"
 
@@ -66,6 +68,16 @@ TickType_t xTaskGetTickCount(void)
     }
 
     return timestamp_ms - initial_time_ms;
+}
+
+void vTaskSuspend(TaskHandle_t xTaskToSuspend)
+{
+    return;
+}
+
+void vTaskDelay(const TickType_t xTicksToDelay)
+{
+    usleep(1000*xTicksToDelay);
 }
 
 /** \} End of task_sim group */
