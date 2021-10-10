@@ -28,7 +28,7 @@
         <img src="https://img.shields.io/badge/LICENSE-CC%20BY--SA%204.0-yellow?style=for-the-badge">
     </a>
     <a href="https://github.com/spacelab-ufsc/obdh2/actions">
-        <img src="https://img.shields.io/github/workflow/status/spacelab-ufsc/obdh2/doc-build/documentation?style=for-the-badge">
+        <img src="https://img.shields.io/github/workflow/status/spacelab-ufsc/obdh2/Build%20LaTeX%20documentation?style=for-the-badge">
     </a>
 </p>
 
