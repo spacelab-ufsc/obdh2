@@ -1,7 +1,7 @@
 /*
  * gpio.h
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.9
+ * \version 0.7.40
  * 
- * \date 13/01/2020
+ * \date 2020/01/13
  * 
  * \defgroup gpio GPIO
  * \ingroup drivers
@@ -42,8 +42,9 @@
 
 #define GPIO_MODULE_NAME    "GPIO"
 
-#define GPIO_STATE_HIGH     (true)
-#define GPIO_STATE_LOW      (false)
+/* Pin states */
+#define GPIO_STATE_LOW      0
+#define GPIO_STATE_HIGH     1
 
 /**
  * \brief GPIO pins.
@@ -120,7 +121,7 @@ typedef enum
     GPIO_PIN_67,            /**< GPIO pin 67. */
     GPIO_PIN_68,            /**< GPIO pin 68. */
     GPIO_PIN_69             /**< GPIO pin 69. */
-} gpio_pins_e;
+} gpio_pin_t;
 
 /**
  * \brief GPIO modes.
@@ -129,20 +130,15 @@ typedef enum
 {
     GPIO_MODE_OUTPUT=0,     /**< GPIO as output. */
     GPIO_MODE_INPUT         /**< GPIO as input. */
-} gpio_modes_e;
+} gpio_mode_t;
 
 /**
  * \brief GPIO pin configuration.
  */
 typedef struct
 {
-    uint8_t mode;
+    gpio_mode_t mode;
 } gpio_config_t;
-
-/**
- * \brief GPIO pin.
- */
-typedef uint8_t gpio_pin_t;
 
 /**
  * \brief Initialization routine of a GPIO pin.

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,9 +25,9 @@
  *
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  *
- * \version 0.5.5
+ * \version 0.7.25
  *
- * \date 03/11/2019
+ * \date 2019/11/03
  *
  * \defgroup sys_log_mutex Mutex
  * \ingroup sys_log
@@ -42,55 +42,53 @@
 
 SemaphoreHandle_t xSysLogSemaphore = NULL;
 
-bool sys_log_mutex_create()
+int sys_log_mutex_create(void)
 {
     /* Create a mutex type semaphore */
     xSysLogSemaphore = xSemaphoreCreateMutex();
+
+    int err = 0;
 
     if (xSysLogSemaphore == NULL)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, SYS_LOG_DEVICE_NAME, "Error creating a mutex!");
         sys_log_new_line();
 
-        return false;
+        err = -1;
     }
 
-    return true;
+    return err;
 }
 
-bool sys_log_mutex_take()
+int sys_log_mutex_take(void)
 {
+    int err = -1;
+
     if (xSysLogSemaphore != NULL)
     {
         /* See if we can obtain the semaphore. If the semaphore is not */
         /* available wait SYS_LOG_MUTEX_WAIT_TIME_MS ms to see if it becomes free */
         if (xSemaphoreTake(xSysLogSemaphore, pdMS_TO_TICKS(SYS_LOG_MUTEX_WAIT_TIME_MS)) == pdTRUE)
         {
-            return true;
-        }
-        else
-        {
-            return false;
+            err = 0;
         }
     }
-    else
-    {
-        return false;
-    }
+
+    return err;
 }
 
-bool sys_log_mutex_give()
+int sys_log_mutex_give(void)
 {
+    int err = -1;
+
     if (xSysLogSemaphore != NULL)
     {
         xSemaphoreGive(xSysLogSemaphore);
 
-        return true;
+        err = 0;
     }
-    else
-    {
-        return false;
-    }
+
+    return err;
 }
 
 /** \} End of sys_log_mutex group */

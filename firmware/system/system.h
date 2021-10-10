@@ -1,7 +1,7 @@
 /*
  * system.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.1
+ * \version 0.7.25
  * 
  * \date 2020/01/25
  * 
@@ -139,7 +139,7 @@ sys_time_t system_get_time(void);
  *      .
  * \endparblock
  */
-sys_hw_version_t system_get_hw_version();
+sys_hw_version_t system_get_hw_version(void);
 
 #endif /* SYSTEM_H_ */
 

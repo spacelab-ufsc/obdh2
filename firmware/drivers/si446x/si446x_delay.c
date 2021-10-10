@@ -1,7 +1,7 @@
 /*
  * si446x_delay.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.2.3
+ * \version 0.7.36
  * 
- * \date 29/07/2017
+ * \date 2017/07/29
  * 
  * \defgroup si446x_delay Delay
  * \ingroup si446x

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.7
+ * \version 0.7.48
  * 
  * \date 2019/10/26
  * 
@@ -41,7 +41,7 @@
 #define CONFIG_TASK_WATCHDOG_RESET_ENABLED              1
 #define CONFIG_TASK_HEARTBEAT_ENABLED                   1
 #define CONFIG_TASK_SYSTEM_RESET_ENABLED                1
-#define CONFIG_TASK_RADIO_RESET_ENABLED                 1
+#define CONFIG_TASK_RADIO_RESET_ENABLED                 0
 #define CONFIG_TASK_READ_SENSORS_ENABLED                1
 #define CONFIG_TASK_BEACON_ENABLED                      0
 #define CONFIG_TASK_UPLINK_ENABLED                      0
@@ -97,7 +97,8 @@
 #define CONFIG_CSP_MAX_CONN                             10
 #define CONFIG_CSP_WAIT_CONN_TIMEOUT_MS                 (10*1000)
 #define CONFIG_CSP_READ_PKT_TIMEOUT_MS                  1000
-#define CONFIG_CSP_PORT                                 10
+#define CONFIG_CSP_PRIMARY_PORT                         10
+#define CONFIG_CSP_SECONDARY_PORT                       11
 
 /* Ports */
 #define CONFIG_SPI_PORT_0_SPEED_BPS                     1000000UL

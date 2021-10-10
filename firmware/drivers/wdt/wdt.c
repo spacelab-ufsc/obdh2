@@ -1,7 +1,7 @@
 /*
  * wdt.c
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.13
+ * \version 0.7.30
  * 
- * \date 17/01/2020
+ * \date 2020/01/17
  * 
  * \addtogroup wdt
  * \{
@@ -42,6 +42,8 @@
 
 int wdt_init(wdt_config_t config)
 {
+    int err = 0;
+
     uint8_t clk_src = UINT8_MAX;
 
     /* Checking clock source value */
@@ -56,7 +58,9 @@ int wdt_init(wdt_config_t config)
             sys_log_print_event_from_module(SYS_LOG_ERROR, WDT_MODULE_NAME, "Error during initialization: Invalid clock source!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-            return -1;      /* Invalid clock source */
+            err = -1;       /* Invalid clock source */
+
+            break;
     }
 
     uint8_t clk_div = UINT8_MAX;
@@ -77,7 +81,9 @@ int wdt_init(wdt_config_t config)
             sys_log_print_event_from_module(SYS_LOG_ERROR, WDT_MODULE_NAME, "Error during initialization: Invalid clock divider!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-            return -1;      /* Invalid clock divider value */
+            err = -1;       /* Invalid clock divider value */
+
+            break;
     }
 
     /* Watchdog initialization */
@@ -86,7 +92,7 @@ int wdt_init(wdt_config_t config)
     /* Start counter */
     WDT_A_start(WDT_A_BASE);
 
-    return 0;
+    return err;
 }
 
 void wdt_reset(void)

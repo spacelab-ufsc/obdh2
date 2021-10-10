@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.40
+ * \version 0.7.47
  * 
  * \date 2019/12/04
  * 
@@ -46,7 +46,7 @@
 #define TASK_STARTUP_PRIORITY               5
 
 /* Status done bit position */
-#define TASK_STARTUP_DONE                   (1 << 0)
+#define TASK_STARTUP_DONE                   (1U << 0)
 
 /**
  * \brief Startup task handle.
@@ -63,18 +63,16 @@ extern EventGroupHandle_t task_startup_status;
  *
  * This task runs in a single shot (non-periodic). After it's conclusion, it is deleted.
  *
- * \param[in] pvParameters is a value that will passed as the task's parameter.
- *
  * \return None.
  */
-void vTaskStartup(void *pvParameters);
+void vTaskStartup(void);
 
 /**
  * \brief CSP initialization.
  *
  * \return The status/error code.
  */
-int startup_init_csp();
+int startup_init_csp(void);
 
 #endif /* STARTUP_H_ */
 

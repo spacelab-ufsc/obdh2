@@ -1,7 +1,7 @@
 /*
  * uplink.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.15
+ * \version 0.7.47
  * 
- * \date 18/04/2020
+ * \date 2020/04/18
  * 
  * \addtogroup uplink
  * \{
@@ -41,7 +41,7 @@
 
 xTaskHandle xTaskUplinkHandle;
 
-void vTaskUplink(void *pvParameters)
+void vTaskUplink(void)
 {
     /* Wait startup task to finish */
     xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_UPLINK_INIT_TIMEOUT_MS));
@@ -51,10 +51,9 @@ void vTaskUplink(void *pvParameters)
 
     while(1)
     {
-        uint8_t data[129];
-        uint8_t len = 50;
+        uint8_t data[129] = {0};
 
-        if (radio_recv(data, len, TASK_UPLINK_PERIOD_MS) > 0)
+        if (radio_recv(data, TASK_UPLINK_PERIOD_MS) > 0)
         {
             /* Process packets here */
         }

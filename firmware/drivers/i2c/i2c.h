@@ -1,7 +1,7 @@
 /*
  * i2c.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.9
+ * \version 0.7.41
  * 
- * \date 07/12/2019
+ * \date 2019/12/07
  * 
  * \defgroup i2c I2C
  * \ingroup drivers
@@ -41,7 +41,7 @@
 
 #define I2C_MODULE_NAME         "I2C"
 
-#define I2C_SLAVE_TIMEOUT       10000
+#define I2C_SLAVE_TIMEOUT       10000U
 
 /**
  * \brief I2C ports.
@@ -51,7 +51,7 @@ typedef enum
     I2C_PORT_0=0,       /**< I2C port 0. */
     I2C_PORT_1,         /**< I2C port 1. */
     I2C_PORT_2          /**< I2C port 2. */
-} i2c_port_e;
+} i2c_port_t;
 
 /**
  * \brief I2C bus configuration parameters.
@@ -60,11 +60,6 @@ typedef struct
 {
     uint32_t speed_hz;  /**< Transfer rate in bps (available values: 100 or 400 kbps). */
 } i2c_config_t;
-
-/**
- * \brief I2C port.
- */
-typedef uint8_t i2c_port_t;
 
 /**
  * \brief I2C slave 7-bit address.

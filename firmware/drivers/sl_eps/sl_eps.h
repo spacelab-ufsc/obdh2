@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.7
+ * \version 0.7.46
  * 
  * \date 2020/07/18
  * 
@@ -39,23 +39,33 @@
 
 #include <stdint.h>
 
-#include <drivers/tca4311a/tca4311a.h>
+#include <drivers/i2c/i2c.h>
 
 #define SL_EPS_MODULE_NAME      "SL-EPS"    /**< Module name. */
 
 #define SL_EPS_SLAVE_ADR        0x36        /**< 7-bit slave address. */
 
 /**
+ * \brief I2C port configuration.
+ */
+typedef struct
+{
+    i2c_port_t port;
+    uint32_t bitrate;
+} sl_eps_i2c_config_t;
+
+/**
  * \brief EPS data structure.
  */
 typedef struct
 {
+    uint16_t voltage;
 } sl_eps_data_t;
 
 /**
  * \brief Configuration parameters structure of the driver.
  */
-typedef tca4311a_config_t sl_eps_config_t;
+typedef i2c_config_t sl_eps_config_t;
 
 /**
  * \brief Initialization of the EPS module driver.
@@ -64,7 +74,7 @@ typedef tca4311a_config_t sl_eps_config_t;
  *
  * \return The status/error code.
  */
-int sl_eps_init(sl_eps_config_t config);
+int sl_eps_init(i2c_port_t port, uint32_t bitrate);
 
 /**
  * \brief Reads the EPS data.

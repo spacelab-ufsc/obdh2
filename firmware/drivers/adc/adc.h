@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.3
+ * \version 0.7.28
  * 
  * \date 2020/03/03
  * 
@@ -45,7 +45,7 @@
 #define ADC_VREF_MV         (3000UL)    /**< ADC reference voltage in millivolts. */
 #define ADC_RANGE           (4095UL)    /**< ADC resolution (12-bits) */
 
-#define ADC_TIMOUT_MS       100         /**< Timeout in milliseconds. */
+#define ADC_TIMEOUT_MS      100U        /**< Timeout in milliseconds. */
 
 /**
  * \brief ADC ports.
@@ -88,17 +88,9 @@ typedef uint8_t adc_port_t;
 /**
  * \brief ADC interface initialization.
  *
- * \param[in] port is the ADC port to initialize. It can be:
- * \parblock
- *      -\b ADC_PORT_0
- *      -\b ADC_PORT_1
- * \endparblock
- *
- * \param[in] config is the configuration of the ADC port.
- *
  * \return The status/error code.
  */
-int adc_init(adc_port_t port, adc_config_t config);
+int adc_init(void);
 
 /**
  * \brief Reads data from a given ADC port.

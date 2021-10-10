@@ -1,7 +1,7 @@
 /*
  * sys_log_uart.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.11
+ * \version 0.7.25
  * 
- * \date 03/11/2019
+ * \date 2019/11/03
  * 
  * \defgroup sys_log_uart UART
  * \ingroup sys_log
@@ -38,7 +38,7 @@
 
 #include "sys_log.h"
 
-bool sys_log_uart_init()
+int sys_log_uart_init(void)
 {
     uart_config_t config;
 
@@ -47,7 +47,7 @@ bool sys_log_uart_init()
     config.parity       = UART_NO_PARITY;
     config.stop_bits    = UART_ONE_STOP_BIT;
 
-    return uart_init(UART_PORT_2, config) == 0 ? true : false;
+    return (uart_init(UART_PORT_2, config) == 0) ? 0 : -1;
 }
 
 void sys_log_uart_write_byte(uint8_t byte)

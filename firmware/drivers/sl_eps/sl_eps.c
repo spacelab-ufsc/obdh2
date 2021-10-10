@@ -1,7 +1,7 @@
 /*
  * sl_eps.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.7
+ * \version 0.7.46
  * 
  * \date 2020/07/18
  * 
@@ -38,8 +38,12 @@
 
 #include "sl_eps.h"
 
-int sl_eps_init(sl_eps_config_t config)
+sl_eps_i2c_config_t i2c_conf = {0};
+
+int sl_eps_init(i2c_port_t port, uint32_t bitrate)
 {
+    i2c_conf.port = port;
+    i2c_conf.bitrate = bitrate;
 #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
     sys_log_print_event_from_module(SYS_LOG_ERROR, SL_EPS_MODULE_NAME, "\"sl_eps_init\" not implemented!");
     sys_log_new_line();
@@ -49,6 +53,7 @@ int sl_eps_init(sl_eps_config_t config)
 
 int sl_eps_read(sl_eps_data_t *data)
 {
+    data->voltage = 0;
 #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
     sys_log_print_event_from_module(SYS_LOG_ERROR, SL_EPS_MODULE_NAME, "\"sl_eps_read\" not implemented!");
     sys_log_new_line();

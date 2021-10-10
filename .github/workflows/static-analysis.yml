@@ -48,11 +48,17 @@ jobs:
       - name: Install CppCheck
         run: sudo apt install -y cppcheck
 
+      - name: Execute CppCheck on tasks files
+        run: cppcheck --std=c99 --force --error-exitcode=-1 --addon=misra.py firmware/app/tasks/
+
       - name: Execute CppCheck on devices files
-        run: cppcheck --error-exitcode=-1 firmware/devices/
+        run: cppcheck --std=c99 --error-exitcode=-1 --addon=misra.py firmware/devices/
+
+      - name: Execute CppCheck on drivers files
+        run: cppcheck --std=c99 --error-exitcode=-1 --addon=misra.py firmware/drivers/
 
       - name: Execute CppCheck on system files
-        run: cppcheck --error-exitcode=-1 firmware/system/
+        run: cppcheck --std=c99 --error-exitcode=-1 --addon=misra.py firmware/system/
 
       - name: Execute CppCheck on main files
-        run: cppcheck --error-exitcode=-1 firmware/main.c firmware/version.h
+        run: cppcheck --std=c99 --error-exitcode=-1 --addon=misra.py firmware/main.c firmware/version.h

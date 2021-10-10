@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.7
+ * \version 0.7.47
  * 
  * \date 2019/11/02
  * 
@@ -55,7 +55,7 @@
 #include "data_log.h"
 #include "process_tc.h"
 
-void create_tasks()
+void create_tasks(void)
 {
     /* Startup task */
 #if CONFIG_TASK_STARTUP_ENABLED == 1
@@ -198,7 +198,7 @@ void create_tasks()
     create_event_groups();
 }
 
-void create_event_groups()
+void create_event_groups(void)
 {
     task_startup_status = xEventGroupCreate();
 

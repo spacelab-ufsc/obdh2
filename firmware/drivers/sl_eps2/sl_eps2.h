@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.12
+ * \version 0.7.35
  * 
  * \date 2020/02/01
  * 
@@ -43,7 +43,7 @@
 
 #define SL_EPS2_SLAVE_ADR                       0x36    /**< 7-bit slave address. */
 
-#define SL_EPS2_DEVICE_ID                       0xEEE2  /**< EPS 2.0 device ID. */
+#define SL_EPS2_DEVICE_ID                       0xEEE2U /**< EPS 2.0 device ID. */
 
 /* EPS 2.0 registers */
 #define SL_EPS2_REG_TIME_COUNTER_MS             0       /**< Time counter in millseconds. */

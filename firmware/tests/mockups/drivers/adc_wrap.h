@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.4
+ * \version 0.7.28
  * 
  * \date 2021/02/13
  * 
@@ -44,17 +44,9 @@
 /**
  * \brief Mockup of the ADC initialization function implemented as an wrap function.
  *
- * \param[in] port is the ADC port to initialize. It can be:
- * \parblock
- *      -\b ADC_PORT_0
- *      -\b ADC_PORT_1
- * \endparblock
- *
- * \param[in] config is the configuration of the ADC port.
- *
  * \return The status/error code.
  */
-int __wrap_adc_init(adc_port_t port, adc_config_t config);
+int __wrap_adc_init(void);
 
 /**
  * \brief Mockup of the ADC read function implemented as an wrap function.

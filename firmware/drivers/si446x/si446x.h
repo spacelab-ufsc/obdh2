@@ -52,15 +52,11 @@
 #define SI4467_PART_INFO        0x4467      /**< Si4467 part info value. */
 #define SI4468_PART_INFO        0x4468      /**< Si4468 part info value. */
 
-/**
- * \brief Error codes.
- */
-typedef enum
-{
-    SI446X_SPI_ERROR=-2,                    /**< Command error. */
-    SI446X_CTS_TIMEOUT,                     /**< CTS timeout. */
-    SI446X_SUCCESS                          /**< No errors. */
-} si446x_errors_e;
+/* Error codes */
+#define SI446X_INVAL_PAR_ERROR  (-3)        /**< Invalid parameter error. */
+#define SI446X_SPI_ERROR        (-2)        /**< Command error. */
+#define SI446X_CTS_TIMEOUT      (-1)        /**< CTS timeout. */
+#define SI446X_SUCCESS          0           /**< No errors. */
 
 /**
  * \brief Si446x states.

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.9
+ * \version 0.7.36
  * 
  * \date 2017/07/29
  * 
@@ -40,9 +40,16 @@
 #include <drivers/spi/spi.h>
 #include <drivers/gpio/gpio.h>
 
+#include "si446x.h"
+
 int si446x_spi_init(void)
 {
-    return spi_init(SPI_PORT_0, (spi_config_t){.speed_hz=CONFIG_SPI_PORT_0_SPEED_BPS, .mode=SPI_MODE_1});
+    spi_config_t conf = {0};
+
+    conf.speed_hz   = CONFIG_SPI_PORT_0_SPEED_BPS;
+    conf.mode       = SPI_MODE_1;
+
+    return spi_init(SPI_PORT_0, conf);
 }
 
 int si446x_spi_transfer(uint8_t *wd, uint8_t *rd, uint16_t len)

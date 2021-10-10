@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.18
+ * \version 0.7.34
  * 
  * \date 2021/05/12
  * 
@@ -45,8 +45,8 @@
 #define SL_TTC2_MODULE_NAME                     "SpaceLab TTC 2.0"
 
 /* TTC 2.0 IDs */
-#define SL_TTC2_DEVICE_ID_RADIO_0               0xCC2A  /**< TTC 2.0 device ID (radio 1). */
-#define SL_TTC2_DEVICE_ID_RADIO_1               0xCC2B  /**< TTC 2.0 device ID (radio 2). */
+#define SL_TTC2_DEVICE_ID_RADIO_0               0xCC2AU /**< TTC 2.0 device ID (radio 1). */
+#define SL_TTC2_DEVICE_ID_RADIO_1               0xCC2BU /**< TTC 2.0 device ID (radio 2). */
 
 /* TTC 2.0 Commands */
 #define SL_TTC2_CMD_NOP                         0       /**< No operation. */
@@ -108,7 +108,7 @@ typedef enum
 {
     SL_TTC2_RADIO_0=0,                                  /**< TTC radio 0. */
     SL_TTC2_RADIO_1                                     /**< TTC radio 1. */
-} sl_ttc2_radio_e;
+} sl_ttc2_radio_t;
 
 /**
  * \brief Voltage types.
@@ -179,7 +179,7 @@ typedef struct
     spi_port_t port;                /**< SPI port. */
     spi_cs_t cs_pin;                /**< SPI CS pin. */
     spi_config_t port_config;       /**< SPI configuration. */
-    uint16_t id;                    /**< Device ID (radio 1 or 2). */
+    sl_ttc2_radio_t id;             /**< Device ID (radio 1 or 2). */
 } sl_ttc2_config_t;
 
 /**

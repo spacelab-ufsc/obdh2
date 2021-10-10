@@ -24,7 +24,10 @@
  * \brief PHJ driver definition.
  * 
  * \author João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
+ * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
+ * \version 0.7.44
+ *
  * \date 2020/03/30
  * 
  * \defgroup phj Payload Joinville
@@ -36,7 +39,7 @@
 #define PHJ_H_
 
 #include <stdint.h>
-#include <stdbool.h>
+
 #include <drivers/i2c/i2c.h>
 #include <drivers/gpio/gpio.h>
 
@@ -44,23 +47,23 @@
 
 #define PHJ_FRAME_STATE_LEN         13
 
-#define PHJ_FRAME_ID_STATE          0x20
+#define PHJ_FRAME_ID_STATE          0x20U
 
 typedef struct
 {
     i2c_port_t port;
     uint32_t bitrate;
-} phj_config_i2c;
+} phj_config_i2c_t;
 
 typedef struct
 {
     gpio_pin_t pin;
     uint8_t mode;
-} phj_config_gpio;
+} phj_config_gpio_t;
 
-int phj_init_i2c(phj_config_i2c config);
+int phj_init_i2c(phj_config_i2c_t config);
 
-int phj_init_gpio(phj_config_gpio config);
+int phj_init_gpio(phj_config_gpio_t config);
 
 int phj_read(uint8_t *data, uint16_t len);
 

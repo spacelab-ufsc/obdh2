@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.19
+ * \version 0.7.37
  * 
  * \date 2021/04/07
  * 
@@ -62,13 +62,15 @@ rtc_calendar_t rtc_read_calendar(void)
 
 int rtc_set_calendar(rtc_calendar_t calendar)
 {
+    int err_counter = 0;
+
     if (calendar.Seconds > 59)
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, RTC_MODULE_NAME, "Invalid calendar data! The seconds are out of range!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;
+        err_counter++;
     }
 
     if (calendar.Minutes > 59)
@@ -77,7 +79,7 @@ int rtc_set_calendar(rtc_calendar_t calendar)
         sys_log_print_event_from_module(SYS_LOG_ERROR, RTC_MODULE_NAME, "Invalid calendar data! The minutes are out of range!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;
+        err_counter++;
     }
 
     if (calendar.Hours > 23)
@@ -86,7 +88,7 @@ int rtc_set_calendar(rtc_calendar_t calendar)
         sys_log_print_event_from_module(SYS_LOG_ERROR, RTC_MODULE_NAME, "Invalid calendar data! The hours are out of range!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;
+        err_counter++;
     }
 
     if (calendar.DayOfWeek > 6)
@@ -95,7 +97,7 @@ int rtc_set_calendar(rtc_calendar_t calendar)
         sys_log_print_event_from_module(SYS_LOG_ERROR, RTC_MODULE_NAME, "Invalid calendar data! The day of the week is out of range!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;
+        err_counter++;
     }
 
     if (calendar.DayOfMonth > 31)
@@ -104,7 +106,7 @@ int rtc_set_calendar(rtc_calendar_t calendar)
         sys_log_print_event_from_module(SYS_LOG_ERROR, RTC_MODULE_NAME, "Invalid calendar data! The day of the month is out of range!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;
+        err_counter++;
     }
 
     if (calendar.Month > 12)
@@ -113,7 +115,7 @@ int rtc_set_calendar(rtc_calendar_t calendar)
         sys_log_print_event_from_module(SYS_LOG_ERROR, RTC_MODULE_NAME, "Invalid calendar data! The month is out of range!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;
+        err_counter++;
     }
 
     if (calendar.Year > 4095)
@@ -122,7 +124,7 @@ int rtc_set_calendar(rtc_calendar_t calendar)
         sys_log_print_event_from_module(SYS_LOG_ERROR, RTC_MODULE_NAME, "Invalid calendar data! The year is out of range!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;
+        err_counter++;
     }
 
     RTC_B_initCalendar(RTC_B_BASE, &calendar, RTC_B_FORMAT_BINARY);
@@ -130,7 +132,7 @@ int rtc_set_calendar(rtc_calendar_t calendar)
     /* Start RTC_C clock */
     RTC_B_startClock(RTC_B_BASE);
 
-    return 0;
+    return err_counter;
 }
 
 #if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)

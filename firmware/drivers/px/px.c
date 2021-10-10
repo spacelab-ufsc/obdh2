@@ -1,7 +1,7 @@
 /*
  * px.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.5
+ * \version 0.7.44
  * 
- * \date 31/03/2020
+ * \date 2020/03/31
  * 
  * \addtogroup px
  * \{
@@ -38,21 +38,28 @@
 /**
  * \brief Payload X I2C port.
  */
-i2c_port_t px_i2c_port;
+px_config_t px_i2c_conf = {0};
 
-int px_init(px_config_t config)
+int px_init(i2c_port_t port, uint32_t bitrate)
 {
-    return -1;
+    px_i2c_conf.port    = port;
+    px_i2c_conf.bitrate = bitrate;
+
+    i2c_config_t i2c_conf = {0};
+
+    i2c_conf.speed_hz = bitrate;
+
+    return i2c_init(port, i2c_conf);
 }
 
 int px_write(uint8_t *data, uint16_t len)
 {
-    return -1;
+    return i2c_read(px_i2c_conf.port, PX_SLAVE_ADDRESS, data, len);
 }
 
 int px_read(uint8_t *data, uint16_t len)
 {
-    return -1;
+    return i2c_read(px_i2c_conf.port, PX_SLAVE_ADDRESS, data, len);
 }
 
 /** \} End of px group */

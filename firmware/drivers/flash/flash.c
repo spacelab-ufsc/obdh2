@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.4
+ * \version 0.7.39
  * 
  * \date 2020/03/17
  * 
@@ -50,7 +50,7 @@ void flash_write(uint8_t *data, uint16_t len)
 {
     uint16_t i;
 
-    if (FCTL3 & LOCKA)
+    if ((FCTL3 & LOCKA) > 0)
     {
         FCTL3 = FWKEY | LOCKA;              /* Clear Lock bit and LockA */
     }
@@ -62,9 +62,12 @@ void flash_write(uint8_t *data, uint16_t len)
     FCTL1 = FWKEY | WRT;                    /* Set WRT bit for write operation */
     for(i=0; i<len; i++)
     {
-        *flash_ptr++ = data[i];             /* Write value to flash */
+        flash_ptr[i] = data[i];             /* Write value to flash */
 
-        while((FCTL3 & BUSY) == 1);         /* Check if Flash being used */
+        while((FCTL3 & BUSY) == 1)          /* Check if Flash being used */
+        {
+            ;
+        }
     }
 
     FCTL1 = FWKEY;                          /* Clear WRT bit */
@@ -73,7 +76,7 @@ void flash_write(uint8_t *data, uint16_t len)
 
 void flash_write_single(uint8_t data, uint8_t *addr)
 {
-    if (FCTL3 & LOCKA)
+    if ((FCTL3 & LOCKA) > 0)
     {
         FCTL3 = FWKEY | LOCKA;              /* Clear Lock bit and LockA */
     }
@@ -85,7 +88,10 @@ void flash_write_single(uint8_t data, uint8_t *addr)
     FCTL1 = FWKEY | WRT;                    /* Set WRT bit for write operation */
     *addr = data;                           /* Write value to flash */
 
-    while((FCTL3 & BUSY) == 1);             /* Check if Flash being used */
+    while((FCTL3 & BUSY) == 1)              /* Check if Flash being used */
+    {
+        ;
+    }
 
     FCTL1 = FWKEY;                          /* Clear WRT bit */
     FCTL3 = FWKEY | LOCK | LOCKA;           /* Set LOCK bit */
@@ -98,7 +104,7 @@ uint8_t flash_read_single(uint8_t *addr)
 
 void flash_write_long(uint32_t data, uint32_t *addr)
 {
-    if (FCTL3 & LOCKA)
+    if ((FCTL3 & LOCKA) > 0)
     {
         FCTL3 = FWKEY | LOCKA;              /* Clear Lock bit and LockA */
     }
@@ -110,7 +116,10 @@ void flash_write_long(uint32_t data, uint32_t *addr)
     FCTL1 = FWKEY | BLKWRT;                 /* Set WRT bit for write operation */
     *addr = data;                           /* Write value to flash */
 
-    while((FCTL3 & BUSY) == 1);             /* Check if Flash being used */
+    while((FCTL3 & BUSY) == 1)              /* Check if Flash being used */
+    {
+        ;
+    }
 
     FCTL1 = FWKEY;                          /* Clear WRT bit */
     FCTL3 = FWKEY | LOCK | LOCKA;           /* Set LOCK bit */
@@ -125,7 +134,7 @@ void flash_erase(uint32_t *region)
 {
     uint32_t *erase_ptr = region;
 
-    if (FCTL3 & LOCKA)
+    if ((FCTL3 & LOCKA) > 0)
     {
         FCTL3 = FWKEY | LOCKA;              /* Clear Lock bit and LockA */
     }
@@ -134,7 +143,7 @@ void flash_erase(uint32_t *region)
         FCTL3 = FWKEY;                      /* Clear Lock bit */
     }
 
-    switch((uint32_t)region)
+    switch(*region)
     {
         case FLASH_BANK_0_ADR:  FCTL1 = FWKEY | MERAS;          break;
         case FLASH_BANK_1_ADR:  FCTL1 = FWKEY | MERAS;          break;
@@ -145,11 +154,15 @@ void flash_erase(uint32_t *region)
         case FLASH_SEG_C_ADR:   FCTL1 = FWKEY | ERASE;          break;
         case FLASH_SEG_D_ADR:   FCTL1 = FWKEY | ERASE;          break;
         case FLASH_MASS_ERASE:  FCTL1 = FWKEY | MERAS | ERASE;  break;
+        default:                                                break;
     }
 
     *erase_ptr = 0;
 
-    while((FCTL3 & BUSY) == 1);
+    while((FCTL3 & BUSY) == 1)
+    {
+        ;
+    }
 
     FCTL1 = FWKEY;                          /* Clear WRT bit */
     FCTL3 = FWKEY | LOCK | LOCKA;           /* Set LOCK bit */

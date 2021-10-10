@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.23
+ * \version 0.7.47
  * 
  * \date 2021/05/14
  * 
@@ -43,7 +43,7 @@
 
 xTaskHandle xTaskReadTTCHandle;
 
-void vTaskReadTTC(void *pvParameters)
+void vTaskReadTTC(void)
 {
     /* Wait startup task to finish */
     xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_TTC_INIT_TIMEOUT_MS));

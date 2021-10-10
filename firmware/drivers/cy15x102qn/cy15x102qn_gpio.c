@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.1
+ * \version 0.7.29
  * 
  * \date 2021/04/18
  * 
@@ -43,13 +43,15 @@ int cy15x102qn_gpio_init(cy15x102qn_config_t *conf)
 
     gpio_conf.mode = GPIO_MODE_OUTPUT;
 
+    int err = -1;
+
     /* WP pin */
-    if (gpio_init(conf->wp_pin, gpio_conf) != 0)
+    if (gpio_init(conf->wp_pin, gpio_conf) == 0)
     {
-        return -1;
+        err = cy15x102qn_gpio_set_write_protect(conf);
     }
 
-    return cy15x102qn_gpio_set_write_protect(conf);
+    return err;
 }
 
 int cy15x102qn_gpio_set_write_protect(cy15x102qn_config_t *conf)

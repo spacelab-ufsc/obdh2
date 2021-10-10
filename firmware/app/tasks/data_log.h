@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.40
+ * \version 0.7.47
  * 
  * \date 2021/05/24
  * 
@@ -62,11 +62,9 @@ extern xTaskHandle xTaskDataLogHandle;
 /**
  * \brief Data log task.
  *
- * \param[in] pvParameters is a value that will passed as the task's parameter.
- *
  * \return None.
  */
-void vTaskDataLog(void *pvParameters);
+void vTaskDataLog(void);
 
 #endif /* DATA_LOG_H_ */
 
