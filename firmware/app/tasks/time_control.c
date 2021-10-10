@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.48
+ * \version 0.8.0
  * 
  * \date 2020/08/09
  * 
@@ -115,11 +115,11 @@ void vTaskTimeControl(void)
         if ((sys_tm % TIME_CONTROL_SAVE_PERIOD_SEC) == 0)
         {
             /* Save the current system time */
-            if (time_control_save_sys_time(sys_tm) != 0)
-            {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_TIME_CONTROL_NAME, "Error saving the system time!");
-                sys_log_new_line();
-            }
+//            if (time_control_save_sys_time(sys_tm) != 0)
+//            {
+//                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_TIME_CONTROL_NAME, "Error saving the system time!");
+//                sys_log_new_line();
+//            }
         }
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_TIME_CONTROL_PERIOD_MS));

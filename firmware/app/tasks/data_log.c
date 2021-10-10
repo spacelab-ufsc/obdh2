@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.47
+ * \version 0.8.0
  * 
  * \date 2021/05/24
  * 
@@ -71,7 +71,6 @@ void vTaskDataLog(void)
         TickType_t last_cycle = xTaskGetTickCount();
 
         uint8_t page_buf[256] = {0};
-        uint16_t i = 0;
 
         page_buf[0] = DATA_LOG_HK_DATA_ID;
 
@@ -255,16 +254,16 @@ void vTaskDataLog(void)
         page_buf[169] = sat_data_buf.ttc_1.rx_packet_counter & 0xFF;
 
         /* CRC */
-        uint16_t crc = crc16_ccitt(0, page_buf, i);
+        uint16_t crc = crc16_ccitt(0, page_buf, 170);
 
         page_buf[170] = crc >> 8;
         page_buf[171] = crc & 0xFFU;
 
-        if (media_write(MEDIA_NOR, mem_adr, page_buf, nor_info.page_size) != 0)
-        {
-            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_DATA_LOG_NAME, "Error writing data to the NOR memory!");
-            sys_log_new_line();
-        }
+//        if (media_write(MEDIA_NOR, mem_adr, page_buf, nor_info.page_size) != 0)
+//        {
+//            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_DATA_LOG_NAME, "Error writing data to the NOR memory!");
+//            sys_log_new_line();
+//        }
 
         mem_adr += nor_info.page_size;
 
