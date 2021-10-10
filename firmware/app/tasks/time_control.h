@@ -1,7 +1,7 @@
 /*
  * time_control.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.14
+ * \version 0.7.48
  * 
  * \date 2020/08/09
  * 
@@ -44,7 +44,7 @@
 #define TASK_TIME_CONTROL_STACK_SIZE            128                 /**< Stack size in bytes. */
 #define TASK_TIME_CONTROL_PRIORITY              3                   /**< Task priority. */
 #define TASK_TIME_CONTROL_PERIOD_MS             1000                /**< Task period in milliseconds. */
-#define TASK_TIME_CONTROL_INIT_TIMEOUT_MS       0                   /**< Wait time to initialize the task in milliseconds. */
+#define TASK_TIME_CONTROL_INIT_TIMEOUT_MS       1000                /**< Wait time to initialize the task in milliseconds. */
 
 /**
  * \brief Time control task handle.
@@ -54,11 +54,9 @@ extern xTaskHandle xTaskTimeControlHandle;
 /**
  * \brief Time control task.
  *
- * \param[in] pvParameters is a value that will passed as the task's parameter.
- *
  * \return None.
  */
-void vTaskTimeControl(void *pvParameters);
+void vTaskTimeControl(void);
 
 #endif /* TIME_CONTROL_H_ */
 

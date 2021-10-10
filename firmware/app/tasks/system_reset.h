@@ -1,7 +1,7 @@
 /*
  * system_reset.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.2
+ * \version 0.7.48
  * 
- * \date 12/01/2020
+ * \date 2020/01/12
  * 
  * \defgroup system_reset System Reset
  * \ingroup tasks
@@ -40,10 +40,10 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
-#define TASK_SYSTEM_RESET_NAME                      "SystemReset"       /**< Task name. */
-#define TASK_SYSTEM_RESET_STACK_SIZE                128                 /**< Stack size in bytes. */
-#define TASK_SYSTEM_RESET_PRIORITY                  2                   /**< Task priority. */
-#define TASK_SYSTEM_RESET_PERIOD_MS                 (1000UL*60*60*10)   /**< Task period in milliseconds. */
+#define TASK_SYSTEM_RESET_NAME                      "SystemReset"           /**< Task name. */
+#define TASK_SYSTEM_RESET_STACK_SIZE                128                     /**< Stack size in bytes. */
+#define TASK_SYSTEM_RESET_PRIORITY                  2                       /**< Task priority. */
+#define TASK_SYSTEM_RESET_PERIOD_MS                 (1000UL*60U*60U*10U)    /**< Task period in milliseconds. */
 
 /**
  * \brief Periodic system reset handle.
@@ -55,11 +55,9 @@ extern xTaskHandle xTaskSystemResetHandle;
  *
  * This task resets the microcontroller.
  *
- * \param[in] pvParameters is a value that will passed as the task's parameter.
- *
  * \return None.
  */
-void vTaskSystemReset(void *pvParameters);
+void vTaskSystemReset(void);
 
 #endif /* SYSTEM_RESET_H_ */
 

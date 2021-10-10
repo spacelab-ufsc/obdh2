@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.5
+ * \version 0.7.25
  * 
- * \date 03/11/2019
+ * \date 2019/11/03
  * 
  * \defgroup sys_log System Log
  * \ingroup system
@@ -38,7 +38,6 @@
 #define SYS_LOG_H_
 
 #include <stdint.h>
-#include <stdbool.h>
 
 /**
  * \brief Event types.
@@ -274,9 +273,9 @@ void sys_log_print_firmware_version(void);
  *      -\b Stop bits     = 1
  *      .
  * 
- * \return TRUE/FALSE if successful or not.
+ * \return The status/error code.
  */
-bool sys_log_uart_init(void);
+int sys_log_uart_init(void);
 
 /**
  * \brief Writes a byte over the UART port.
@@ -290,23 +289,23 @@ void sys_log_uart_write_byte(uint8_t byte);
 /**
  * \brief Creates a mutex to use the system log module.
  *
- * \return TRUE/FALSE if successful or not.
+ * \return The status/error code.
  */
-bool sys_log_mutex_create(void);
+int sys_log_mutex_create(void);
 
 /**
  * \brief Holds the resource (system log module).
  *
- * \return TRUE/FALSE if successful or not.
+ * \return The status/error code.
  */
-bool sys_log_mutex_take(void);
+int sys_log_mutex_take(void);
 
 /**
  * \brief Frees the resource (system log).
  *
- * \return TRUE/FALSE if successful or not.
+ * \return The status/error code.
  */
-bool sys_log_mutex_give(void);
+int sys_log_mutex_give(void);
 
 #endif /* SYS_LOG_H_ */
 

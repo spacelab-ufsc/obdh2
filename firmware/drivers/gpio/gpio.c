@@ -1,7 +1,7 @@
 /*
  * gpio.c
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.9
+ * \version 0.7.40
  * 
- * \date 13/01/2020
+ * \date 2020/01/13
  * 
  * \addtogroup gpio
  * \{
@@ -42,8 +42,10 @@
 
 int gpio_init(gpio_pin_t pin, gpio_config_t config)
 {
-    uint8_t msp_port;
-    uint16_t msp_pin;
+    int err = 0;
+
+    uint8_t msp_port = UINT8_MAX;
+    uint16_t msp_pin = UINT16_MAX;
 
     switch(pin)
     {
@@ -122,33 +124,40 @@ int gpio_init(gpio_pin_t pin, gpio_config_t config)
             sys_log_print_event_from_module(SYS_LOG_ERROR, GPIO_MODULE_NAME, "Invalid pin to initialize!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-            return -1;  /* Invalid GPIO pin */
+            err = -1;   /* Invalid GPIO pin */
+
+            break;
     }
 
-    if (config.mode == GPIO_MODE_OUTPUT)
+    if (err == 0)
     {
-        GPIO_setAsOutputPin(msp_port, msp_pin);
-    }
-    else if (config.mode == GPIO_MODE_INPUT)
-    {
-        GPIO_setAsInputPin(msp_port, msp_pin);
-    }
-    else
-    {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
-        sys_log_print_event_from_module(SYS_LOG_ERROR, GPIO_MODULE_NAME, "Invalid mode during the initialization!");
-        sys_log_new_line();
-    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;  /* Invalid mode */
+        if (config.mode == GPIO_MODE_OUTPUT)
+        {
+            GPIO_setAsOutputPin(msp_port, msp_pin);
+        }
+        else if (config.mode == GPIO_MODE_INPUT)
+        {
+            GPIO_setAsInputPin(msp_port, msp_pin);
+        }
+        else
+        {
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, GPIO_MODULE_NAME, "Invalid mode during the initialization!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            err = -1;   /* Invalid mode */
+        }
     }
 
-    return 0;
+    return err;
 }
 
 int gpio_set_state(gpio_pin_t pin, bool level)
 {
-    uint8_t msp_port;
-    uint16_t msp_pin;
+    int err = 0;
+
+    uint8_t msp_port = UINT8_MAX;
+    uint16_t msp_pin = UINT16_MAX;
 
     switch(pin)
     {
@@ -227,7 +236,9 @@ int gpio_set_state(gpio_pin_t pin, bool level)
             sys_log_print_event_from_module(SYS_LOG_ERROR, GPIO_MODULE_NAME, "Invalid pin to set!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-            return -1;  /* Invalid GPIO pin */
+            err = -1;   /* Invalid GPIO pin */
+
+            break;
     }
 
     if (level)
@@ -239,13 +250,15 @@ int gpio_set_state(gpio_pin_t pin, bool level)
         GPIO_setOutputLowOnPin(msp_port, msp_pin);
     }
 
-    return 0;
+    return err;
 }
 
 int gpio_get_state(gpio_pin_t pin)
 {
-    uint8_t msp_port;
-    uint16_t msp_pin;
+    int res = 0;
+
+    uint8_t msp_port = UINT8_MAX;
+    uint16_t msp_pin = UINT16_MAX;
 
     switch(pin)
     {
@@ -324,23 +337,29 @@ int gpio_get_state(gpio_pin_t pin)
             sys_log_print_event_from_module(SYS_LOG_ERROR, GPIO_MODULE_NAME, "Invalid pin to read!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-            return -1;  /* Invalid GPIO pin */
+            res = -1;   /* Invalid GPIO pin */
+
+            break;
     }
 
     if (GPIO_getInputPinValue(msp_port, msp_pin) == GPIO_INPUT_PIN_HIGH)
     {
-        return 1;
+        res = 1;
     }
     else
     {
-        return 0;
+        res = 0;
     }
+
+    return res;
 }
 
 int gpio_toggle(gpio_pin_t pin)
 {
-    uint8_t msp_port;
-    uint16_t msp_pin;
+    int err = 0;
+
+    uint8_t msp_port = UINT8_MAX;
+    uint16_t msp_pin = UINT16_MAX;
 
     switch(pin)
     {
@@ -419,12 +438,14 @@ int gpio_toggle(gpio_pin_t pin)
             sys_log_print_event_from_module(SYS_LOG_ERROR, GPIO_MODULE_NAME, "Invalid pin to toggle!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-            return -1;  /* Invalid GPIO pin */
+            err = -1;   /* Invalid GPIO pin */
+
+            break;
     }
 
     GPIO_toggleOutputOnPin(msp_port, msp_pin);
 
-    return 0;
+    return err;
 }
 
 /** \} End of gpio group */

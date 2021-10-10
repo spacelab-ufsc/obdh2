@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.7
+ * \version 0.7.47
  * 
  * \date 2021/07/06
  * 
@@ -55,11 +55,9 @@ extern xTaskHandle xTaskProcessTCHandle;
 /**
  * \brief Process TC task.
  *
- * \param[in] pvParameters is a value that will passed as the task's parameter.
- *
  * \return None.
  */
-void vTaskProcessTC(void *pvParameters);
+void vTaskProcessTC(void);
 
 #endif /* PROCESS_TC_H_ */
 

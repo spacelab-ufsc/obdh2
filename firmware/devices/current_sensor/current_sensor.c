@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.2
+ * \version 0.7.28
  * 
  * \date 2020/07/11
  * 
@@ -44,31 +44,34 @@ int current_sensor_init(void)
     sys_log_print_event_from_module(SYS_LOG_INFO, CURRENT_SENSOR_MODULE_NAME, "Initializing the current sensor...");
     sys_log_new_line();
 
-    adc_config_t cur_sense_adc_config = {0};
+    int err = -1;
 
-    if (adc_init(CURRENT_SENSOR_ADC_PORT, cur_sense_adc_config) != 0)
+    if (adc_init() == 0)
+    {
+        uint16_t cur = 0;
+
+        if (current_sensor_read_ma(&cur) == 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_INFO, CURRENT_SENSOR_MODULE_NAME, "Current input current: ");
+            sys_log_print_uint(cur);
+            sys_log_print_msg(" mA");
+            sys_log_new_line();
+
+            err = 0;
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, CURRENT_SENSOR_MODULE_NAME, "Error reading the current value!");
+            sys_log_new_line();
+        }
+    }
+    else
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, CURRENT_SENSOR_MODULE_NAME, "Error initializing the current sensor!");
         sys_log_new_line();
-
-        return -1;
     }
 
-    uint16_t cur = 0;
-    if (current_sensor_read_ma(&cur) != 0)
-    {
-        sys_log_print_event_from_module(SYS_LOG_ERROR, CURRENT_SENSOR_MODULE_NAME, "Error reading the current value!");
-        sys_log_new_line();
-
-        return -1;
-    }
-
-    sys_log_print_event_from_module(SYS_LOG_INFO, CURRENT_SENSOR_MODULE_NAME, "Current input current: ");
-    sys_log_print_uint(cur);
-    sys_log_print_msg(" mA");
-    sys_log_new_line();
-
-    return 0;
+    return err;
 }
 
 int current_sensor_read_raw(uint16_t *val)
@@ -83,19 +86,23 @@ uint16_t current_sensor_raw_to_ma(uint16_t raw)
 
 int current_sensor_read_ma(uint16_t *cur)
 {
+    int err = -1;
+
     uint16_t raw_cur = 0;
 
-    if (current_sensor_read_raw(&raw_cur) != 0)
+    if (current_sensor_read_raw(&raw_cur) == 0)
+    {
+        *cur = current_sensor_raw_to_ma(raw_cur);
+
+        err = 0;
+    }
+    else
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, CURRENT_SENSOR_MODULE_NAME, "Error reading the raw current value!");
         sys_log_new_line();
-
-        return -1;
     }
 
-    *cur = current_sensor_raw_to_ma(raw_cur);
-
-    return 0;
+    return err;
 }
 
 /** \} End of current_sensor group */

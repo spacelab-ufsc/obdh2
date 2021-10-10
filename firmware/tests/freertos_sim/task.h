@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.4
+ * \version 0.7.48
  * 
  * \date 2021/04/27
  * 
@@ -38,11 +38,11 @@
 #define TASK_SIM_H_
 
 #include <stdint.h>
-#include <unistd.h>
 
 #include "FreeRTOS.h"
 
-#define vTaskDelay(x)       usleep(1000*x)
+struct tskTaskControlBlock;
+typedef struct tskTaskControlBlock* TaskHandle_t;
 
 /**
  * \brief Gets the system tick count since the begining.
@@ -50,6 +50,22 @@
  * \return The tick count in milliseconds.
  */
 TickType_t xTaskGetTickCount(void);
+
+/**
+ * \brief Suspends the execution of a given task.
+ *
+ * \return None.
+ */
+void vTaskSuspend(TaskHandle_t xTaskToSuspend);
+
+/**
+ * \brief Ticks delay.
+ *
+ * \param[in] xTicksToDelay is the number of ticks to delay.
+ *
+ * \return None.
+ */
+void vTaskDelay(TickType_t xTicksToDelay);
 
 #endif /* TASK_SIM_H_ */
 

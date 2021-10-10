@@ -1,7 +1,7 @@
 /*
  * beacon.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.10
+ * \version 0.7.47
  * 
- * \date 27/10/2019
+ * \date 2019/10/27
  * 
  * \defgroup beacon Beacon
  * \ingroup tasks
@@ -55,11 +55,9 @@ extern xTaskHandle xTaskBeaconHandle;
 /**
  * \brief Beacon task.
  *
- * \param[in] pvParameters is a value that will passed as the task's parameter.
- *
  * \return None.
  */
-void vTaskBeacon(void *pvParameters);
+void vTaskBeacon(void);
 
 #endif /* BEACON_H_ */
 

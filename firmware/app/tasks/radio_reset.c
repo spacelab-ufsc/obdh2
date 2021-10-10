@@ -1,7 +1,7 @@
 /*
  * radio_reset.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.2
+ * \version 0.7.47
  * 
- * \date 29/01/2020
+ * \date 2020/01/29
  * 
  * \addtogroup radio_reset
  * \{
@@ -37,7 +37,7 @@
 
 xTaskHandle xTaskRadioResetHandle;
 
-void vTaskRadioReset(void *pvParameters)
+void vTaskRadioReset(void)
 {
     /* Delay before the first cycle */
     vTaskDelay(pdMS_TO_TICKS(TASK_RADIO_RESET_INITIAL_DELAY_MS));

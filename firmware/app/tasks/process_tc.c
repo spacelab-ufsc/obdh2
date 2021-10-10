@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.7
+ * \version 0.7.47
  * 
  * \date 2021/07/06
  * 
@@ -43,7 +43,7 @@
 
 xTaskHandle xTaskProcessTCHandle;
 
-void vTaskProcessTC(void *pvParameters)
+void vTaskProcessTC(void)
 {
     /* Wait startup task to finish */
     xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_PROCESS_TC_INIT_TIMEOUT_MS));
@@ -64,7 +64,7 @@ void vTaskProcessTC(void *pvParameters)
             sys_log_print_msg(" packet(s) available!");
             sys_log_new_line();
 
-            uint8_t pkt[300] = {0xFF};
+            uint8_t pkt[300] = {0};
             uint16_t pkt_len = 0;
             if (ttc_recv(TTC_1, pkt, &pkt_len) != 0)
             {
@@ -97,6 +97,7 @@ void vTaskProcessTC(void *pvParameters)
                     default:
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Unknow packet received!");
                         sys_log_new_line();
+                        break;
                 }
             }
         }

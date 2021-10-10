@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.10
+ * \version 0.7.22
  * 
  * \date 2020/07/16
  * 
@@ -49,7 +49,17 @@ typedef sl_eps2_data_t eps_data_t;
 /**
  * \brief EPS battery voltage type.
  */
-typedef sl_eps2_voltage_t eps_bat_voltage_t;
+typedef sl_eps2_voltage_t eps_voltage_t;
+
+/**
+ * \brief EPS current type.
+ */
+typedef sl_eps2_current_t eps_current_t;
+
+/**
+ * \brief EPS charge type.
+ */
+typedef sl_eps2_charge_t eps_charge_t;
 
 #endif /* EPS_DATA_H_ */
 

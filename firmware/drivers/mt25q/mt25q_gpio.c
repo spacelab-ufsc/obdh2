@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.31
+ * \version 0.7.42
  * 
  * \date 2021/04/18
  * 
@@ -42,27 +42,29 @@
 
 int mt25q_gpio_init(void)
 {
+    int err = -1;
+
     gpio_config_t conf = {0};
 
     conf.mode = GPIO_MODE_OUTPUT;
 
     /* HOLD pin */
-    if (gpio_init(MT25Q_GPIO_HOLD_PIN, conf) != 0)
+    if (gpio_init(MT25Q_GPIO_HOLD_PIN, conf) == 0)
     {
-        return -1;
+        if (mt25q_gpio_set_hold(true) == 0)
+        {
+            /* RESET pin */
+            if (gpio_init(MT25Q_GPIO_RESET_PIN, conf) == 0)
+            {
+                if (mt25q_gpio_set_reset(true) == 0)
+                {
+                    err = 0;
+                }
+            }
+        }
     }
 
-    mt25q_gpio_set_hold(true);
-
-    /* RESET pin */
-    if (gpio_init(MT25Q_GPIO_RESET_PIN, conf) != 0)
-    {
-        return -1;
-    }
-
-    mt25q_gpio_set_reset(true);
-
-    return 0;
+    return err;
 }
 
 int mt25q_gpio_set_hold(bool state)

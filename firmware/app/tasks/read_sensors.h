@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.38
+ * \version 0.7.47
  * 
  * \date 2020/07/12
  * 
@@ -54,11 +54,9 @@ extern xTaskHandle xTaskReadSensorsHandle;
 /**
  * \brief Read onboard sensors task.
  *
- * \param[in] pvParameters is a value that will passed as the task's parameter.
- *
  * \return None.
  */
-void vTaskReadSensors(void *pvParameters);
+void vTaskReadSensors(void);
 
 #endif /* READ_SENSORS_H_ */
 

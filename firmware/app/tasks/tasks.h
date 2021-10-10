@@ -1,7 +1,7 @@
 /*
  * tasks.h
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.0
+ * \version 0.7.24
  * 
- * \date 02/11/2019
+ * \date 2019/11/02
  * 
  * \defgroup tasks Tasks
  * \{
@@ -41,14 +41,14 @@
  *
  * \return None.
  */
-void create_tasks();
+void create_tasks(void);
 
 /**
  * \brief Creates the system event groups.
  *
  * \return None.
  */
-void create_event_groups();
+void create_event_groups(void);
 
 #endif /* TASKS_H_ */
 

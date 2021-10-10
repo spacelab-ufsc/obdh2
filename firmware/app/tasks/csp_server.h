@@ -1,7 +1,7 @@
 /*
  * csp_server.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.5
+ * \version 0.7.47
  * 
- * \date 04/04/2020
+ * \date 2020/04/04
  * 
  * \defgroup csp_server CSP Server
  * \ingroup tasks
@@ -54,11 +54,9 @@ extern xTaskHandle xTaskCSPServerHandle;
 /**
  * \brief CSP server task.
  *
- * \param[in] pvParameters is a value that will passed as the task's parameter.
- *
  * \return None.
  */
-void vTaskCSPServer(void *pvParameters);
+void vTaskCSPServer(void);
 
 #endif /* CSP_SERVER_H_ */
 

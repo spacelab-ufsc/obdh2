@@ -1,7 +1,7 @@
 /*
  * radio.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.4
+ * \version 0.7.26
  * 
  * \date 2019/10/27
  * 
@@ -66,13 +66,11 @@ int radio_send(uint8_t *data, uint16_t len, uint32_t timeout_ms);
  *
  * \param[in] data is a pointer to store the read data.
  *
- * \param[in] len is the number of bytes to read.
- *
  * \param[in] timeout_ms is the timeout to received a packet in milliseconds.
  *
  * \return The number of read bytes (-1 on error).
  */
-int radio_recv(uint8_t *data, uint16_t len, uint32_t timeout_ms);
+int radio_recv(uint8_t *data, uint32_t timeout_ms);
 
 /**
  * \brief Verifies the number of availables bytes to receive.

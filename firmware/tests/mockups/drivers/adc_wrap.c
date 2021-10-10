@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.8
+ * \version 0.7.28
  * 
  * \date 2021/02/13
  * 
@@ -42,10 +42,8 @@
 
 #include "adc_wrap.h"
 
-int __wrap_adc_init(adc_port_t port, adc_config_t config)
+int __wrap_adc_init(void)
 {
-    check_expected(port);
-
     return mock_type(int);
 }
 

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.7
+ * \version 0.7.22
  * 
  * \date 2021/08/06
  * 
@@ -100,7 +100,55 @@ int __wrap_sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
     check_expected(config.en_pin);
     check_expected(config.ready_pin);
 
-    check_expected_ptr(data);
+    if (data != NULL)
+    {
+        data->time_counter                  = mock_type(uint32_t);
+        data->temperature_uc                = mock_type(sl_eps2_temp_t);
+        data->current                       = mock_type(sl_eps2_current_t);
+        data->last_reset_cause              = mock_type(uint8_t);
+        data->reset_counter                 = mock_type(uint16_t);
+        data->solar_panel_voltage_my_px     = mock_type(sl_eps2_voltage_t);
+        data->solar_panel_voltage_mx_pz     = mock_type(sl_eps2_voltage_t);
+        data->solar_panel_voltage_mz_py     = mock_type(sl_eps2_voltage_t);
+        data->solar_panel_current_my        = mock_type(sl_eps2_current_t);
+        data->solar_panel_current_py        = mock_type(sl_eps2_current_t);
+        data->solar_panel_current_mx        = mock_type(sl_eps2_current_t);
+        data->solar_panel_current_px        = mock_type(sl_eps2_current_t);
+        data->solar_panel_current_mz        = mock_type(sl_eps2_current_t);
+        data->solar_panel_current_pz        = mock_type(sl_eps2_current_t);
+        data->mppt_1_duty_cycle             = mock_type(sl_eps2_duty_cycle_t);
+        data->mppt_2_duty_cycle             = mock_type(sl_eps2_duty_cycle_t);
+        data->mppt_3_duty_cycle             = mock_type(sl_eps2_duty_cycle_t);
+        data->solar_panel_output_voltage    = mock_type(sl_eps2_voltage_t);
+        data->main_power_bus_voltage        = mock_type(sl_eps2_voltage_t);
+        data->rtd_0_temperature             = mock_type(sl_eps2_temp_t);
+        data->rtd_1_temperature             = mock_type(sl_eps2_temp_t);
+        data->rtd_2_temperature             = mock_type(sl_eps2_temp_t);
+        data->rtd_3_temperature             = mock_type(sl_eps2_temp_t);
+        data->rtd_4_temperature             = mock_type(sl_eps2_temp_t);
+        data->rtd_5_temperature             = mock_type(sl_eps2_temp_t);
+        data->rtd_6_temperature             = mock_type(sl_eps2_temp_t);
+        data->battery_voltage               = mock_type(sl_eps2_voltage_t);
+        data->battery_current               = mock_type(sl_eps2_current_t);
+        data->battery_average_current       = mock_type(sl_eps2_current_t);
+        data->battery_acc_current           = mock_type(sl_eps2_current_t);
+        data->battery_charge                = mock_type(sl_eps2_charge_t);
+        data->battery_monitor_temperature   = mock_type(sl_eps2_temp_t);
+        data->battery_monitor_status        = mock_type(uint8_t);
+        data->battery_monitor_protection    = mock_type(uint8_t);
+        data->battery_monitor_cycle_counter = mock_type(uint8_t);
+        data->raac                          = mock_type(sl_eps2_charge_t);
+        data->rsac                          = mock_type(sl_eps2_charge_t);
+        data->rarc                          = mock_type(uint8_t);
+        data->rsrc                          = mock_type(uint8_t);
+        data->battery_heater_1_duty_cycle   = mock_type(sl_eps2_duty_cycle_t);
+        data->battery_heater_2_duty_cycle   = mock_type(sl_eps2_duty_cycle_t);
+        data->mppt_1_mode                   = mock_type(uint8_t);
+        data->mppt_2_mode                   = mock_type(uint8_t);
+        data->mppt_3_mode                   = mock_type(uint8_t);
+        data->battery_heater_1_mode         = mock_type(uint8_t);
+        data->battery_heater_2_mode         = mock_type(uint8_t);
+    }
 
     return mock_type(int);
 }

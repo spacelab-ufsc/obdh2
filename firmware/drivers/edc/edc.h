@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.12
+ * \version 0.7.38
  * 
  * \date 2019/10/27
  * 
@@ -47,22 +47,22 @@
 #define EDC_SLAVE_ADDRESS           0x13    /**< 7-bit slave address. */
 
 /* Commands IDs */
-#define EDC_CMD_RTC_SET             0x01    /**< Sets the RTC time. The parameters is the number of seconds elapsed since J2000 epoch. */
-#define EDC_CMD_PTT_POP             0x06    /**< Removes current PTT package from the PTT Package FIFO Buffer, allowing the reading of the next PTT package, if existent. */
-#define EDC_CMD_PTT_PAUSE           0x08    /**< Pauses the PTT Decoding Task. At initialization the PTT Task is paused. */
-#define EDC_CMD_PTT_RESUME          0x09    /**< Resumes the PTT Decoding Task. */
-#define EDC_CMD_SAMPLER_START       0x0A    /**< Start ADC Sample task. This trigger the sampling of a sequence of 2048 I&Q samples from the RF Front End. */
-#define EDC_CMD_GET_STATE           0x30    /**< Causes the transmission of System State Frame through RS-485 interface. */
-#define EDC_CMD_GET_PTT_PKG         0x31    /**< Causes the transmission of current PTT Decoder Frame through RS-485 interface. */
-#define EDC_CMD_GET_HK_PKG          0x32    /**< Updates HK Frame information, and transmit it through the RS-485 interface. */
-#define EDC_CMD_GET_ADC_SEQ         0x34    /**< Causes the transmission of current ADC Sampler Frame through RS-485 interface. */
-#define EDC_CMD_ECHO                0xF0    /**< Cause the transmission of the string "ECHO" in the debug interface. */
+#define EDC_CMD_RTC_SET             0x01U   /**< Sets the RTC time. The parameters is the number of seconds elapsed since J2000 epoch. */
+#define EDC_CMD_PTT_POP             0x06U   /**< Removes current PTT package from the PTT Package FIFO Buffer, allowing the reading of the next PTT package, if existent. */
+#define EDC_CMD_PTT_PAUSE           0x08U   /**< Pauses the PTT Decoding Task. At initialization the PTT Task is paused. */
+#define EDC_CMD_PTT_RESUME          0x09U   /**< Resumes the PTT Decoding Task. */
+#define EDC_CMD_SAMPLER_START       0x0AU   /**< Start ADC Sample task. This trigger the sampling of a sequence of 2048 I&Q samples from the RF Front End. */
+#define EDC_CMD_GET_STATE           0x30U   /**< Causes the transmission of System State Frame through RS-485 interface. */
+#define EDC_CMD_GET_PTT_PKG         0x31U   /**< Causes the transmission of current PTT Decoder Frame through RS-485 interface. */
+#define EDC_CMD_GET_HK_PKG          0x32U   /**< Updates HK Frame information, and transmit it through the RS-485 interface. */
+#define EDC_CMD_GET_ADC_SEQ         0x34U   /**< Causes the transmission of current ADC Sampler Frame through RS-485 interface. */
+#define EDC_CMD_ECHO                0xF0U   /**< Cause the transmission of the string "ECHO" in the debug interface. */
 
 /* Frames IDs */
-#define EDC_FRAME_ID_STATE          0x11    /**< State frame. */
-#define EDC_FRAME_ID_PTT            0x22    /**< PTT frame. */
-#define EDC_FRAME_ID_ADC_SEQ        0x33    /**< ADC sequence frame. */
-#define EDC_FRAME_ID_HK             0x44    /**< Housekeeping frame. */
+#define EDC_FRAME_ID_STATE          0x11U   /**< State frame. */
+#define EDC_FRAME_ID_PTT            0x22U   /**< PTT frame. */
+#define EDC_FRAME_ID_ADC_SEQ        0x33U   /**< ADC sequence frame. */
+#define EDC_FRAME_ID_HK             0x44U   /**< Housekeeping frame. */
 
 /* Frames length */
 #define EDC_FRAME_STATE_LEN         9       /**< State frame length. */

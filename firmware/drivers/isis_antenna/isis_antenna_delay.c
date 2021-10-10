@@ -1,7 +1,7 @@
 /*
  * isis_antenna_delay.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  *
  */
 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.9
+ * \version 0.7.45
  * 
- * \date 23/09/2016
+ * \date 2016/09/23
  * 
  * \defgroup isis_antenna_delay Delay
  * \ingroup isis_antenna
@@ -43,7 +43,7 @@
 
 void isis_antenna_delay_s(uint8_t s)
 {
-    vTaskDelay(pdMS_TO_TICKS(1000*s));
+    vTaskDelay(pdMS_TO_TICKS(1000U*s));
 }
 
 void isis_antenna_delay_ms(uint16_t ms)

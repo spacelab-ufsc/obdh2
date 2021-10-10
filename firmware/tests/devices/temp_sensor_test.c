@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.8
+ * \version 0.7.28
  * 
  * \date 2021/02/13
  * 
@@ -56,7 +56,6 @@
 
 static void temp_sensor_init_test(void **state)
 {
-    expect_value(__wrap_adc_init, port, TEMP_SENSOR_ADC_PORT);
     expect_value(__wrap_adc_read, port, TEMP_SENSOR_ADC_PORT);
 
     will_return(__wrap_adc_init, 0);

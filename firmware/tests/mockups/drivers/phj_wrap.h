@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.6
+ * \version 0.7.45
  * 
  * \date 2021/08/18
  * 
@@ -41,9 +41,9 @@
 
 #include <drivers/phj/phj.h>
 
-int __wrap_phj_init_i2c(phj_config_i2c config);
+int __wrap_phj_init_i2c(phj_config_i2c_t config);
 
-int __wrap_phj_init_gpio(phj_config_gpio config);
+int __wrap_phj_init_gpio(phj_config_gpio_t config);
 
 int __wrap_phj_read(uint8_t *data, uint16_t len);
 

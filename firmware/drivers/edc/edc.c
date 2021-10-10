@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.4
+ * \version 0.7.38
  * 
  * \date 2019/10/27
  * 
@@ -48,23 +48,34 @@ i2c_port_t edc_i2c_port;
 
 int edc_init(edc_config_t config)
 {
+    int err = -1;
+
     edc_i2c_port = config.port;
 
-    if (i2c_init(config.port, (i2c_config_t){.speed_hz=config.bitrate}) != 0)
+    i2c_config_t i2c_conf = {0};
+
+    i2c_conf.speed_hz = config.bitrate;
+
+    if (i2c_init(config.port, i2c_conf) == 0)
+    {
+        err = edc_check_device();
+    }
+    else
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error initializing the I2C port!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;  /* Error initializing the I2C port */
     }
 
-    return edc_check_device();
+    return err;
 }
 
 int edc_write_cmd(edc_cmd_t cmd)
 {
-    uint8_t cmd_str[6];
+    int err = 0;
+
+    uint8_t cmd_str[6] = {0};
     uint16_t cmd_str_len = 1;
 
     cmd_str[0] = cmd.id;
@@ -99,11 +110,18 @@ int edc_write_cmd(edc_cmd_t cmd)
             sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Invalid command!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-            return -1;  /* Invalid command */
+            err = -1;   /* Invalid command */
+
+            break;
     }
 
-    /* Transmit the command over an I2C port */
-    return i2c_write(edc_i2c_port, EDC_SLAVE_ADDRESS, cmd_str, cmd_str_len);
+    if (err == 0)
+    {
+        /* Transmit the command over an I2C port */
+        err = i2c_write(edc_i2c_port, EDC_SLAVE_ADDRESS, cmd_str, cmd_str_len);
+    }
+
+    return err;
 }
 
 int edc_read(uint8_t *data, uint16_t len)
@@ -113,7 +131,9 @@ int edc_read(uint8_t *data, uint16_t len)
 
 int edc_check_device(void)
 {
-    uint8_t status[EDC_FRAME_STATE_LEN];
+    int err = 0;
+
+    uint8_t status[EDC_FRAME_STATE_LEN] = {0};
 
     if (edc_get_state_pkg(status) != EDC_FRAME_STATE_LEN)
     {
@@ -121,10 +141,10 @@ int edc_check_device(void)
         sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error checking the device!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;
+        err = -1;
     }
 
-    return 0;
+    return err;
 }
 
 int edc_set_rtc_time(uint32_t time)
@@ -139,175 +159,239 @@ int edc_set_rtc_time(uint32_t time)
 
 int edc_pop_ptt_pkg(void)
 {
-    return edc_write_cmd((edc_cmd_t){.id=EDC_CMD_PTT_POP});
+    edc_cmd_t cmd = {0};
+
+    cmd.id = EDC_CMD_PTT_POP;
+
+    return edc_write_cmd(cmd);
 }
 
 int edc_pause_ptt_task(void)
 {
-    return edc_write_cmd((edc_cmd_t){.id=EDC_CMD_PTT_PAUSE});
+    edc_cmd_t cmd = {0};
+
+    cmd.id = EDC_CMD_PTT_PAUSE;
+
+    return edc_write_cmd(cmd);
 }
 
 int edc_resume_ptt_task(void)
 {
-    return edc_write_cmd((edc_cmd_t){.id=EDC_CMD_PTT_RESUME});
+    edc_cmd_t cmd = {0};
+
+    cmd.id = EDC_CMD_PTT_RESUME;
+
+    return edc_write_cmd(cmd);
 }
 
 int edc_start_adc_task(void)
 {
-    return edc_write_cmd((edc_cmd_t){.id=EDC_CMD_SAMPLER_START});
+    edc_cmd_t cmd = {0};
+
+    cmd.id = EDC_CMD_SAMPLER_START;
+
+    return edc_write_cmd(cmd);
 }
 
 int16_t edc_get_state_pkg(uint8_t *status)
 {
-    if (edc_write_cmd((edc_cmd_t){.id=EDC_CMD_GET_STATE}) != 0)
+    int16_t res = -1;
+
+    edc_cmd_t cmd = {0};
+
+    cmd.id = EDC_CMD_GET_STATE;
+
+    if (edc_write_cmd(cmd) == 0)
+    {
+        /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
+        edc_delay_ms(10);
+
+        if (edc_read(status, EDC_FRAME_STATE_LEN) == 0)
+        {
+            if (status[0] == EDC_FRAME_ID_STATE)
+            {
+                res = EDC_FRAME_STATE_LEN;
+            }
+            else
+            {
+            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading an state packet! Invalid frame ID (");
+                sys_log_print_hex(status[0]);
+                sys_log_print_msg(")!");
+                sys_log_new_line();
+            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            }
+        }
+        else
+        {
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading an state packet!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        }
+    }
+    else
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error writing the \"get state\" command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;
     }
 
-    /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
-    edc_delay_ms(10);
-
-    if (edc_read(status, EDC_FRAME_STATE_LEN) != 0)
-    {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
-        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading an state packet!");
-        sys_log_new_line();
-    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;
-    }
-
-    if (status[0] != EDC_FRAME_ID_STATE)
-    {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
-        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading an state packet! Invalid frame ID (");
-        sys_log_print_hex(status[0]);
-        sys_log_print_msg(")!");
-        sys_log_new_line();
-    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;  /* Invalid data! */
-    }
-
-    return EDC_FRAME_STATE_LEN;
+    return res;
 }
 
 int16_t edc_get_ptt_pkg(uint8_t *pkg)
 {
-    if (edc_write_cmd((edc_cmd_t){.id=EDC_CMD_GET_PTT_PKG}) != 0)
+    int res = -1;
+
+    edc_cmd_t cmd = {0};
+
+    cmd.id = EDC_CMD_GET_PTT_PKG;
+
+    if (edc_write_cmd(cmd) == 0)
+    {
+        /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
+        edc_delay_ms(10);
+
+        if (edc_read(pkg, EDC_FRAME_PTT_LEN) == 0)
+        {
+            if (pkg[0] == EDC_FRAME_ID_PTT)
+            {
+                res = EDC_FRAME_PTT_LEN;
+            }
+            else
+            {
+            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading a PTT packet! Invalid frame ID (");
+                sys_log_print_hex(pkg[0]);
+                sys_log_print_msg(")!");
+                sys_log_new_line();
+            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            }
+        }
+        else
+        {
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading a PTT packet!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        }
+    }
+    else
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error writing the \"get PTT\" command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;
     }
 
-    /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
-    edc_delay_ms(10);
-
-    if (edc_read(pkg, EDC_FRAME_PTT_LEN) != 0)
-    {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
-        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading a PTT packet!");
-        sys_log_new_line();
-    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;
-    }
-
-    if (pkg[0] != EDC_FRAME_ID_PTT)
-    {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
-        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading a PTT packet! Invalid frame ID (");
-        sys_log_print_hex(pkg[0]);
-        sys_log_print_msg(")!");
-        sys_log_new_line();
-    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;  /* Invalid data! */
-    }
-
-    return EDC_FRAME_PTT_LEN;
+    return res;
 }
 
 int16_t edc_get_hk_pkg(uint8_t *hk)
 {
-    if (edc_write_cmd((edc_cmd_t){.id=EDC_CMD_GET_HK_PKG}) != 0)
+    int16_t res = -1;
+
+    edc_cmd_t cmd = {0};
+
+    cmd.id = EDC_CMD_GET_HK_PKG;
+
+    if (edc_write_cmd(cmd) == 0)
+    {
+        /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
+        edc_delay_ms(10);
+
+        if (edc_read(hk, EDC_FRAME_HK_LEN) == 0)
+        {
+            if (hk[0] == EDC_FRAME_ID_HK)
+            {
+                res = EDC_FRAME_HK_LEN;
+            }
+            else
+            {
+            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading a HK packet! Invalid frame ID (");
+                sys_log_print_hex(hk[0]);
+                sys_log_print_msg(")!");
+                sys_log_new_line();
+            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            }
+        }
+        else
+        {
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading a HK packet!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        }
+    }
+    else
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error writing the \"get HK\" command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;
     }
 
-    /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
-    edc_delay_ms(10);
-
-    if (edc_read(hk, EDC_FRAME_HK_LEN) != 0)
-    {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
-        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading a HK packet!");
-        sys_log_new_line();
-    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;
-    }
-
-    if (hk[0] != EDC_FRAME_ID_HK)
-    {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
-        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading a HK packet! Invalid frame ID (");
-        sys_log_print_hex(hk[0]);
-        sys_log_print_msg(")!");
-        sys_log_new_line();
-    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;  /* Invalid data! */
-    }
-
-    return EDC_FRAME_HK_LEN;
+    return res;
 }
 
 int16_t edc_get_adc_seq(uint8_t *seq)
 {
-    if (edc_write_cmd((edc_cmd_t){.id=EDC_CMD_GET_ADC_SEQ}) != 0)
+    int16_t res = -1;
+
+    edc_cmd_t cmd = {0};
+
+    cmd.id = EDC_CMD_GET_ADC_SEQ;
+
+    if (edc_write_cmd(cmd) == 0)
+    {
+        /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
+        edc_delay_ms(10);
+
+        if (edc_read(seq, EDC_FRAME_ADC_SEQ_LEN) == 0)
+        {
+            if (seq[0] == EDC_FRAME_ID_ADC_SEQ)
+            {
+                res = EDC_FRAME_ADC_SEQ_LEN;
+            }
+            else
+            {
+            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading an ADC sequence! Invalid frame ID (");
+                sys_log_print_hex(seq[0]);
+                sys_log_print_msg(")!");
+                sys_log_new_line();
+            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            }
+        }
+        else
+        {
+        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading an ADC sequence!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        }
+    }
+    else
     {
     #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
         sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error writing the \"get ADC\" command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;
     }
 
-    /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
-    edc_delay_ms(10);
-
-    if (edc_read(seq, EDC_FRAME_ADC_SEQ_LEN) != 0)
-    {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
-        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading an ADC sequence!");
-        sys_log_new_line();
-    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;
-    }
-
-    if (seq[0] != EDC_FRAME_ID_ADC_SEQ)
-    {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
-        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading an ADC sequence! Invalid frame ID (");
-        sys_log_print_hex(seq[0]);
-        sys_log_print_msg(")!");
-        sys_log_new_line();
-    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        return -1;  /* Invalid data! */
-    }
-
-    return EDC_FRAME_ADC_SEQ_LEN;
+    return res;
 }
 
 int edc_echo(void)
 {
-    return edc_write_cmd((edc_cmd_t){.id=EDC_CMD_ECHO});
+    edc_cmd_t cmd = {0};
+
+    cmd.id = EDC_CMD_ECHO;
+
+    return edc_write_cmd(cmd);
 }
 
 uint16_t edc_calc_checksum(uint8_t *data, uint16_t len)
@@ -324,117 +408,112 @@ uint16_t edc_calc_checksum(uint8_t *data, uint16_t len)
 
 int edc_get_state(edc_state_t *state_data)
 {
-    uint8_t state_raw[EDC_FRAME_STATE_LEN];
+    int err = -1;
+
+    uint8_t state_raw[EDC_FRAME_STATE_LEN] = {0};
 
     /* Get state bytes */
-    if (edc_get_state_pkg(state_raw) != EDC_FRAME_STATE_LEN)
+    if (edc_get_state_pkg(state_raw) == EDC_FRAME_STATE_LEN)
     {
-        return -1;  /* Error reading state bytes. */
+        /* Check packet ID */
+        if (state_raw[0] == EDC_FRAME_ID_STATE)
+        {
+            /* Verify checksum */
+            if (state_raw[EDC_FRAME_STATE_LEN-1] == edc_calc_checksum(state_raw, EDC_FRAME_STATE_LEN-1))
+            {
+                state_data->current_time    = ((uint32_t)state_raw[4] << 24) |
+                                              ((uint32_t)state_raw[3] << 16) |
+                                              ((uint32_t)state_raw[2] << 8)  |
+                                              ((uint32_t)state_raw[1] << 0);
+                state_data->ptt_available   = state_raw[5];
+                state_data->ptt_is_paused   = (bool)state_raw[6];
+                state_data->sampler_state   = state_raw[7];
+
+                err = 0;
+            }
+        }
     }
 
-    /* Check packet ID */
-    if (state_raw[0] != EDC_FRAME_ID_STATE)
-    {
-        return -1;  /* The given packet is not a state packet */
-    }
-
-    /* Verify checksum */
-    if (state_raw[EDC_FRAME_STATE_LEN-1] != edc_calc_checksum(state_raw, EDC_FRAME_STATE_LEN-1))
-    {
-        return -1;  /* Invalid data! */
-    }
-
-    state_data->current_time    = ((uint32_t)state_raw[4] << 24) |
-                                  ((uint32_t)state_raw[3] << 16) |
-                                  ((uint32_t)state_raw[2] << 8)  |
-                                  ((uint32_t)state_raw[1] << 0);
-    state_data->ptt_available   = state_raw[5];
-    state_data->ptt_is_paused   = (bool)state_raw[6];
-    state_data->sampler_state   = state_raw[7];
-
-    return 0;
+    return err;
 }
 
 int edc_get_ptt(edc_ptt_t *ptt_data)
 {
-    uint8_t ptt_raw[EDC_FRAME_ID_PTT];
+    int err = -1;
+
+    uint8_t ptt_raw[EDC_FRAME_PTT_LEN] = {0};
 
     /* Get PTT bytes */
-    if (edc_get_ptt_pkg(ptt_raw) != EDC_FRAME_PTT_LEN)
+    if (edc_get_ptt_pkg(ptt_raw) == EDC_FRAME_PTT_LEN)
     {
-        return -1;  /* Error reading PTT bytes. */
+        /* Check packet ID */
+        if (ptt_raw[0] == EDC_FRAME_ID_PTT)
+        {
+            /* Verify checksum */
+            if (ptt_raw[EDC_FRAME_PTT_LEN-1] == edc_calc_checksum(ptt_raw, EDC_FRAME_PTT_LEN-1))
+            {
+                ptt_data->time_tag          = ((uint32_t)ptt_raw[4] << 24) |
+                                              ((uint32_t)ptt_raw[3] << 16) |
+                                              ((uint32_t)ptt_raw[2] << 8)  |
+                                              ((uint32_t)ptt_raw[1] << 0);
+                ptt_data->error_code        = ptt_raw[5];
+                ptt_data->carrier_freq      = ((uint32_t)ptt_raw[9] << 24) |
+                                              ((uint32_t)ptt_raw[8] << 16) |
+                                              ((uint32_t)ptt_raw[7] << 8)  |
+                                              ((uint32_t)ptt_raw[6] << 0);
+                ptt_data->carrier_freq      = ptt_data->carrier_freq*128/pow(2, 11) + 401635;
+                ptt_data->carrier_abs       = ((uint16_t)ptt_raw[11] << 8) | ((uint16_t)ptt_raw[10] << 0);
+                ptt_data->msg_byte_length   = ptt_raw[12];
+
+                if (memcpy(ptt_data->user_msg, &ptt_raw[13], 36) == ptt_data->user_msg)
+                {
+                    err = 0;
+                }
+            }
+        }
     }
 
-    /* Check packet ID */
-    if (ptt_raw[0] != EDC_FRAME_ID_PTT)
-    {
-        return -1;  /* The given packet is not a PTT packet */
-    }
-
-    /* Verify checksum */
-    if (ptt_raw[EDC_FRAME_PTT_LEN-1] != edc_calc_checksum(ptt_raw, EDC_FRAME_PTT_LEN-1))
-    {
-        return -1;  /* Invalid data! */
-    }
-
-    ptt_data->time_tag          = ((uint32_t)ptt_raw[4] << 24) |
-                                  ((uint32_t)ptt_raw[3] << 16) |
-                                  ((uint32_t)ptt_raw[2] << 8)  |
-                                  ((uint32_t)ptt_raw[1] << 0);
-    ptt_data->error_code        = ptt_raw[5];
-    ptt_data->carrier_freq      = ((uint32_t)ptt_raw[9] << 24) |
-                                  ((uint32_t)ptt_raw[8] << 16) |
-                                  ((uint32_t)ptt_raw[7] << 8)  |
-                                  ((uint32_t)ptt_raw[6] << 0);
-    ptt_data->carrier_freq      = ptt_data->carrier_freq*128/pow(2, 11) + 401635;
-    ptt_data->carrier_abs       = ((uint16_t)ptt_raw[11] << 8) | ((uint16_t)ptt_raw[10] << 0);
-    ptt_data->msg_byte_length   = ptt_raw[12];
-
-    memcpy(ptt_data->user_msg, ptt_raw+13, 36);
-
-    return 0;
+    return err;
 }
 
 int edc_get_hk(edc_hk_t *hk_data)
 {
-    uint8_t hk_raw[EDC_FRAME_HK_LEN];
+    int err = -1;
+
+    uint8_t hk_raw[EDC_FRAME_HK_LEN] = {0};
 
     /* Get hk bytes */
-    if (edc_get_hk_pkg(hk_raw) != EDC_FRAME_HK_LEN)
+    if (edc_get_hk_pkg(hk_raw) == EDC_FRAME_HK_LEN)
     {
-        return -1;  /* Error reading hk bytes. */
+        /* Check packet ID */
+        if (hk_raw[0] == EDC_FRAME_ID_HK)
+        {
+            /* Verify checksum */
+            if (hk_raw[EDC_FRAME_HK_LEN-1] == edc_calc_checksum(hk_raw, EDC_FRAME_HK_LEN-1))
+            {
+                hk_data->current_time       = ((uint32_t)hk_raw[4] << 24) |
+                                              ((uint32_t)hk_raw[3] << 16) |
+                                              ((uint32_t)hk_raw[2] << 8)  |
+                                              ((uint32_t)hk_raw[1] << 0);
+                hk_data->elapsed_time       = ((uint32_t)hk_raw[8] << 24) |
+                                              ((uint32_t)hk_raw[7] << 16) |
+                                              ((uint32_t)hk_raw[6] << 8)  |
+                                              ((uint32_t)hk_raw[5] << 0);
+                hk_data->current_supply     = ((uint32_t)hk_raw[10] << 8) | ((uint32_t)hk_raw[9] << 0);
+                hk_data->voltage_supply     = ((uint32_t)hk_raw[12] << 8) | ((uint32_t)hk_raw[11] << 0);
+                hk_data->temp               = (int8_t)hk_raw[13] - 40;
+                hk_data->pll_sync_bit       = hk_raw[14];
+                hk_data->adc_rms            = ((uint16_t)hk_raw[16] << 8) | ((uint16_t)hk_raw[15] << 0);
+                hk_data->num_rx_ptt         = hk_raw[17];
+                hk_data->max_parl_decod     = hk_raw[18];
+                hk_data->mem_err_count      = hk_raw[19];
+
+                err = 0;
+            }
+        }
     }
 
-    /* Check packet ID */
-    if (hk_raw[0] != EDC_FRAME_ID_HK)
-    {
-        return -1;  /* The given packet is not a housekeeping packet */
-    }
-
-    /* Verify checksum */
-    if (hk_raw[EDC_FRAME_HK_LEN-1] != edc_calc_checksum(hk_raw, EDC_FRAME_HK_LEN-1))
-    {
-        return -1;  /* Invalid data! */
-    }
-
-    hk_data->current_time       = ((uint32_t)hk_raw[4] << 24) |
-                                  ((uint32_t)hk_raw[3] << 16) |
-                                  ((uint32_t)hk_raw[2] << 8)  |
-                                  ((uint32_t)hk_raw[1] << 0);
-    hk_data->elapsed_time       = ((uint32_t)hk_raw[8] << 24) |
-                                  ((uint32_t)hk_raw[7] << 16) |
-                                  ((uint32_t)hk_raw[6] << 8)  |
-                                  ((uint32_t)hk_raw[5] << 0);
-    hk_data->current_supply     = ((uint32_t)hk_raw[10] << 8) | ((uint32_t)hk_raw[9] << 0);
-    hk_data->voltage_supply     = ((uint32_t)hk_raw[12] << 8) | ((uint32_t)hk_raw[11] << 0);
-    hk_data->temp               = (int8_t)hk_raw[13] - 40;
-    hk_data->pll_sync_bit       = hk_raw[14];
-    hk_data->adc_rms            = (int16_t)(((uint32_t)hk_raw[16] << 8) | ((uint32_t)hk_raw[15] << 0));
-    hk_data->num_rx_ptt         = hk_raw[17];
-    hk_data->max_parl_decod     = hk_raw[18];
-    hk_data->mem_err_count      = hk_raw[19];
-
-    return 0;
+    return err;
 }
 
 /** \} End of edc group */

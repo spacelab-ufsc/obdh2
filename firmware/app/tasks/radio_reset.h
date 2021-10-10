@@ -1,7 +1,7 @@
 /*
  * radio_reset.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.1.2
+ * \version 0.7.47
  * 
- * \date 29/01/2020
+ * \date 2020/01/29
  * 
  * \defgroup radio_reset Radio Reset
  * \ingroup tasks
@@ -54,11 +54,9 @@ extern xTaskHandle xTaskRadioResetHandle;
 /**
  * \brief Periodic radio reset task.
  *
- * \param[in] pvParameters is a value that will passed as the task's parameter.
- *
  * \return None.
  */
-void vTaskRadioReset(void *pvParameters);
+void vTaskRadioReset(void);
 
 #endif /* RADIO_RESET_H_ */
 

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.9
+ * \version 0.7.26
  * 
  * \date 2021/02/21
  * 
@@ -41,12 +41,16 @@
 #include <float.h>
 #include <cmocka.h>
 
+#include <stdlib.h>
+
 #include <config/config.h>
 #include <config/radio_config_Si4463.h>
 #include <devices/radio/radio.h>
 #include <drivers/si446x/si446x.h>
 
 #define RADIO_ID    0x4463
+
+unsigned int generate_random(unsigned int l, unsigned int r);
 
 static void radio_init_test(void **state)
 {
@@ -216,7 +220,7 @@ static void radio_recv_test(void **state)
 
     expect_value(__wrap_si446x_set_property, group, SI446X_PROP_INT_CTL_ENABLE >> 8);
     expect_value(__wrap_si446x_set_property, num_props, 1);
-    expect_value(__wrap_si446x_set_property, start_prop, SI446X_PROP_INT_CTL_ENABLE & 0xFF);
+    expect_value(__wrap_si446x_set_property, start_prop, SI446X_PROP_INT_CTL_ENABLE & 0xFFU);
     expect_memory(__wrap_si446x_set_property, data, (void*)&prop_param , 1);
     expect_value(__wrap_si446x_set_property, len, 1);
 
@@ -227,7 +231,7 @@ static void radio_recv_test(void **state)
 
     expect_value(__wrap_si446x_set_property, group, SI446X_PROP_INT_CTL_PH_ENABLE >> 8);
     expect_value(__wrap_si446x_set_property, num_props, 1);
-    expect_value(__wrap_si446x_set_property, start_prop, SI446X_PROP_INT_CTL_PH_ENABLE & 0xFF);
+    expect_value(__wrap_si446x_set_property, start_prop, SI446X_PROP_INT_CTL_PH_ENABLE & 0xFFU);
     expect_memory(__wrap_si446x_set_property, data, (void*)&prop_param , 1);
     expect_value(__wrap_si446x_set_property, len, 1);
 
@@ -238,7 +242,7 @@ static void radio_recv_test(void **state)
 
     expect_value(__wrap_si446x_set_property, group, SI446X_PROP_INT_CTL_MODEM_ENABLE >> 8);
     expect_value(__wrap_si446x_set_property, num_props, 1);
-    expect_value(__wrap_si446x_set_property, start_prop, SI446X_PROP_INT_CTL_MODEM_ENABLE & 0xFF);
+    expect_value(__wrap_si446x_set_property, start_prop, SI446X_PROP_INT_CTL_MODEM_ENABLE & 0xFFU);
     expect_memory(__wrap_si446x_set_property, data, (void*)&prop_param , 1);
     expect_value(__wrap_si446x_set_property, len, 1);
 
@@ -254,9 +258,71 @@ static void radio_recv_test(void **state)
 
     will_return(__wrap_si446x_start_rx, SI446X_SUCCESS);
 
-    uint8_t data[50] = {0};
+    /* Get INT status */
+    expect_value(__wrap_si446x_get_int_status, ph_clr_pend, 0);
+    expect_value(__wrap_si446x_get_int_status, modem_clr_pend, 0);
+    expect_value(__wrap_si446x_get_int_status, chip_clr_pend, 0);
 
-    assert_return_code(radio_recv(data, 10, 1000), 0);
+    will_return(__wrap_si446x_get_int_status, 0);
+    will_return(__wrap_si446x_get_int_status, 0);
+    will_return(__wrap_si446x_get_int_status, 0);
+    will_return(__wrap_si446x_get_int_status, 0x10);    /* RX packet interruption */
+    will_return(__wrap_si446x_get_int_status, 0);
+    will_return(__wrap_si446x_get_int_status, 0);
+    will_return(__wrap_si446x_get_int_status, 0);
+    will_return(__wrap_si446x_get_int_status, 0);
+
+    will_return(__wrap_si446x_get_int_status, SI446X_SUCCESS);
+
+    /* FIFO info */
+    expect_value(__wrap_si446x_fifo_info, rst_rx, false);
+    expect_value(__wrap_si446x_fifo_info, rst_tx, false);
+
+    uint8_t pkt_len = generate_random(0, 129);
+
+    will_return(__wrap_si446x_fifo_info, pkt_len);
+    will_return(__wrap_si446x_fifo_info, 129 - pkt_len);
+
+    will_return(__wrap_si446x_fifo_info, SI446X_SUCCESS);
+
+    uint8_t test_data[256] = {UINT8_MAX};
+
+    if (pkt_len > 0)
+    {
+        /* Read RX FIFO */
+        expect_value(__wrap_si446x_read_rx_fifo, num_bytes, pkt_len);
+
+        uint8_t i = 0;
+        for(i=0; i<pkt_len; i++)
+        {
+            test_data[i] = generate_random(0, UINT8_MAX);
+            will_return(__wrap_si446x_read_rx_fifo, test_data[i]);
+        }
+
+        will_return(__wrap_si446x_read_rx_fifo, SI446X_SUCCESS);
+
+        /* Get INT status */
+        expect_value(__wrap_si446x_get_int_status, ph_clr_pend, 0);
+        expect_value(__wrap_si446x_get_int_status, modem_clr_pend, 0);
+        expect_value(__wrap_si446x_get_int_status, chip_clr_pend, 0);
+
+        will_return(__wrap_si446x_get_int_status, 0);
+        will_return(__wrap_si446x_get_int_status, 0);
+        will_return(__wrap_si446x_get_int_status, 0);
+        will_return(__wrap_si446x_get_int_status, 0);
+        will_return(__wrap_si446x_get_int_status, 0);
+        will_return(__wrap_si446x_get_int_status, 0);
+        will_return(__wrap_si446x_get_int_status, 0);
+        will_return(__wrap_si446x_get_int_status, 0);
+
+        will_return(__wrap_si446x_get_int_status, SI446X_SUCCESS);
+    }
+
+    uint8_t read_data[256] = {UINT8_MAX};
+
+    assert_int_equal(radio_recv(read_data, 1000), pkt_len);
+
+    assert_memory_equal((void*)&test_data, (void*)&read_data, pkt_len);
 }
 
 static void radio_available_test(void **state)
@@ -309,6 +375,11 @@ int main(void)
     };
 
     return cmocka_run_group_tests(radio_tests, NULL, NULL);
+}
+
+unsigned int generate_random(unsigned int l, unsigned int r)
+{
+    return (rand() % (r - l + 1)) + l;
 }
 
 /** \} End of radio_unit_test group */

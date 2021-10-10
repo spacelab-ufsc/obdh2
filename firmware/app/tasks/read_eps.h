@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.25
+ * \version 0.7.47
  * 
  * \date 2021/05/08
  * 
@@ -54,11 +54,9 @@ extern xTaskHandle xTaskReadEPSHandle;
 /**
  * \brief Read EPS data task.
  *
- * \param[in] pvParameters is a value that will passed as the task's parameter.
- *
  * \return None.
  */
-void vTaskReadEPS(void *pvParameters);
+void vTaskReadEPS(void);
 
 #endif /* READ_EPS_H_ */
 

@@ -1,7 +1,7 @@
 /*
  * px.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.5
+ * \version 0.7.44
  * 
- * \date 31/10/2020
+ * \date 2020/10/31
  * 
  * \defgroup px Payload X
  * \ingroup drivers
@@ -55,11 +55,13 @@ typedef struct
 /**
  * \brief Device initialization.
  *
- * \param[in] config is the configuration parameters of the Payload X driver.
+ * \param[in] port is the I2C port which the Payload-X is connected.
+ *
+ * \param[in] bitrate is the bitrate in bps.
  *
  * \return The status/error code.
  */
-int px_init(px_config_t config);
+int px_init(i2c_port_t port, uint32_t bitrate);
 
 /**
  * \brief Writes data to the Payload X.

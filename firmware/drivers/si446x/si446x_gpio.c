@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.9
+ * \version 0.7.36
  * 
  * \date 2020/05/14
  * 
@@ -40,14 +40,22 @@
 
 int si446x_gpio_init(void)
 {
+    int err = -1;
+
+    gpio_config_t conf = {0};
+
+    conf.mode = GPIO_MODE_OUTPUT;
+
     /* SDN pin */
-    if (gpio_init(GPIO_PIN_4, (gpio_config_t){.mode=GPIO_MODE_OUTPUT}) != 0)
+    if (gpio_init(GPIO_PIN_4, conf) == 0)
     {
-        return -1;
+        conf.mode = GPIO_MODE_INPUT;
+
+        /* nIRQ pin */
+        err = gpio_init(GPIO_PIN_3, conf);
     }
 
-    /* nIRQ pin */
-    return gpio_init(GPIO_PIN_3, (gpio_config_t){.mode=GPIO_MODE_INPUT});
+    return err;
 }
 
 int si446x_gpio_write_sdn(bool state)

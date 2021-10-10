@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.10
+ * \version 0.7.22
  * 
  * \date 2020/02/01
  * 
@@ -57,7 +57,7 @@ int eps_init(void);
  *
  * \return The status/error code.
  */
-int eps_get_bat_voltage(eps_bat_voltage_t *bat_volt);
+int eps_get_bat_voltage(eps_voltage_t *bat_volt);
 
 /**
  * \brief Gets the battery current from the EPS module.
@@ -66,7 +66,7 @@ int eps_get_bat_voltage(eps_bat_voltage_t *bat_volt);
  *
  * \return The status/error code.
  */
-int eps_get_bat_current(uint32_t *bat_cur);
+int eps_get_bat_current(eps_current_t *bat_cur);
 
 /**
  * \brief Gets the battery charge from the EPS module.
@@ -75,7 +75,7 @@ int eps_get_bat_current(uint32_t *bat_cur);
  *
  * \return The status/error code.
  */
-int eps_get_bat_charge(uint32_t *charge);
+int eps_get_bat_charge(eps_charge_t *charge);
 
 /**
  * \brief Gets all the EPS available data.
