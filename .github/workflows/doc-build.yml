@@ -1,5 +1,5 @@
 #
-# build.yml
+# doc-build.yml
 #
 # Copyright (C) 2021, SpaceLab.
 #
@@ -39,4 +39,5 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v2
         with:
-          root_file: doc/main.tex
+          working_directory: doc
+          root_file: main.tex
