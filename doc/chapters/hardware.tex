@@ -18,7 +18,7 @@
 %
 % \institution Universidade Federal de Santa Catarina (UFSC)
 %
-% \version 0.7.0
+% \version 0.8.0
 %
 % \date 2019/10/20
 %
@@ -72,15 +72,15 @@ The \autoref{fig:diagram-interfaces} presents the board interfaces, which consis
         \toprule[1.5pt]
         \textbf{Peripheral}     & \textbf{USCI} & \textbf{Protocol} & \textbf{Comm. Protocol} \\
         \midrule
-        TTC                     & A0            & SPI               & FSP \\
+        TTC                     & A0            & SPI               & Register read/write \\
         Radio (downlink/link)   & A0            & SPI               & Radio config./NGHam \\
-        Non-Volatile Memory     & A0            & SPI               & - \\
+        NOR Memory              & A0            & SPI               & - \\
+        FRAM Memory             & A0            & SPI               & - \\
         Payload port            & A1            & UART              & -\footnotemark \\
         PC (log messages)       & A2            & UART              & ANSI messages \\
         Payload port            & B0            & I$^{2}$C          & -\footnotemark \\
-        EPS                     & B1            & I$^{2}$C          & CSP\nomenclature{\textbf{CSP}}{\textit{CubeSat Space Protocol.}}
- \\
-        Antenna Module          & B2            & I$^{2}$C          & \\
+        EPS                     & B1            & I$^{2}$C          & Register read/write \\
+        Antenna Module          & B2            & I$^{2}$C          & - \\
         \bottomrule[1.5pt]
     \end{tabular}
     \caption{Boards interfaces.}
@@ -364,7 +364,7 @@ An illustration of the microcontroller pinout positions can be seen in the \auto
     \end{center}
 \end{figure}
 
-\begin{longtable}{lcl}
+\begin{longtable}{lcL{10cm}}
     \toprule[1.5pt]
     \textbf{Pin Code} & \textbf{Pin Number} & \textbf{Signal}       \\
     \midrule
@@ -441,7 +441,7 @@ An illustration of the microcontroller pinout positions can be seen in the \auto
     P8.7              & 67                  & ANTENNA\_GPIO         \\
     \midrule
     P9.0              & 68                  & -                     \\
-    P9.1              & 69                  & -                     \\
+    P9.1              & 69                  & FRAM\_SPI\_CS         \\
     P9.2              & 70                  & UART0\_TX             \\
     P9.3              & 71                  & UART0\_RX             \\
     P9.4              & 72                  & WDI\_EXT              \\
@@ -479,9 +479,13 @@ The watchdog timer task clears the TPS3823 timer by toggling the WDI pin at ever
     \end{center}
 \end{figure}
 
-\section{Non-Volatile Memory}
+\section{Non-Volatile Memories}
 
-The non-volatile memory model is the Micron MT25QL01GBBB, which is composed by a NOR flash architecture with 1 Gb of capacity (or 128 MB) and features extended SPI configurations. As can be seen in \autoref{fig:diagram-interfaces}, a SPI bus is used to communicate with this peripheral, using the \autoref{tab:usci-config} configurations. Also, there are some control pins that are connected to microcontroller GPIOs: HOLD\#, RESET\#, and W\#. 
+There are two non-volatile memories available on the module: one flash NOR memory and one FRAM\nomenclature{\textbf{FRAM}}{\textit{Ferroelectric Random-Access Memory.}} memory.
+
+\subsection{Flash NOR}
+
+The flash NOR non-volatile memory model is the Micron MT25QL01GBBB, which is composed by a NOR flash architecture with 1 Gb of capacity (or 128 MB) and features extended SPI configurations. As can be seen in \autoref{fig:diagram-interfaces}, a SPI bus is used to communicate with this peripheral, using the \autoref{tab:usci-config} configurations. Also, there are some control pins that are connected to microcontroller GPIOs: HOLD\#, RESET\#, and W\#.
 
 When RESET\# is driven LOW, the device is reset and the outputs are tri-stated. The HOLD\# signal pauses serial communications without deselecting or resetting the device, consequently outputs are tri-stated and inputs are ignored. The W\# signal handles as a write protection, which freezes the status register, turning its non-volatile bits read-only and preventing the write operation to be executed.
 
@@ -491,6 +495,16 @@ When RESET\# is driven LOW, the device is reset and the outputs are tri-stated. 
         \includegraphics[width=0.65\textwidth]{figures/ext-memory-circuit.png}
         \caption{External memory circuit.}
         \label{fig:ext-mem-circuit}
+    \end{center}
+\end{figure}
+
+\subsection{FRAM}
+
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=0.65\textwidth]{figures/fram-memory-circuit.png}
+        \caption{FRAM memory circuit.}
+        \label{fig:fram-mem-circuit}
     \end{center}
 \end{figure}
 
