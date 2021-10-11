@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.45
+ * \version 0.8.1
  * 
  * \date 2020/02/01
  * 
@@ -44,12 +44,9 @@
 
 #define ISIS_ANTENNA_MODULE_NAME                "ISIS Antenna"
 
-/* I2C configuration */
-#define ISIS_ANTENNA_I2C_PORT                   I2C_PORT_2
-#define ISIS_ANTENNA_I2C_CLOCK_HZ               100000
+/* I2C addresses */
 #define ISIS_ANTENNA_I2C_SLAVE_ADDRESS_UC_A     0x31
 #define ISIS_ANTENNA_I2C_SLAVE_ADDRESS_UC_B     0x32
-#define ISIS_ANTENNA_I2C_SLAVE_ADDRESS          ISIS_ANTENNA_I2C_SLAVE_ADDRESS_UC_A
 
 /* Status mask */
 #define ISIS_ANTENNA_STATUS_MASK                0x8888U     /**< Status mask (all antenna not deployed and disarmed). */
@@ -316,6 +313,35 @@ int16_t isis_antenna_raw_to_temp_c(uint16_t raw);
  * \return The status/error code.
  */
 int isis_antenna_get_temperature_c(int16_t *temp);
+
+/**
+ * \brief Initializes the I2C port.
+ *
+ * \return The status/error code.
+ */
+int isis_antenna_i2c_init(void);
+
+/**
+ * \brief Writes a given sequence of bytes to the I2C bus.
+ *
+ * \param[in] data is array of bytes to write.
+ *
+ * \param[in] len is the number of bytes to write .
+ *
+ * \return The status/error code.
+ */
+int isis_antenna_i2c_write(uint8_t *data, uint16_t len);
+
+/**
+ * \brief Reads data from the I2C bus.
+ *
+ * \param[in] data is a pointer to store the read bytes.
+ *
+ * \param[in] len is the number of bytes to read.
+ *
+ * \return The status/error code.
+ */
+int isis_antenna_i2c_read(uint8_t *data, uint16_t len);
 
 /**
  * \brief Seconds delay.
