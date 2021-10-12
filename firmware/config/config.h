@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.48
+ * \version 0.8.2
  * 
  * \date 2019/10/26
  * 
@@ -64,6 +64,9 @@
 #define CONFIG_DEV_RADIO_ENABLED                        0
 #define CONFIG_DEV_PAYLOAD_EDC_ENABLED                  1
 #define CONFIG_DEV_ANTENNA_ENABLED                      1
+
+/* Drivers */
+#define CONFIG_DRV_ISIS_ANTENNA_ENABLED                 1
 
 /* Debug and log messages */
 #define CONFIG_DRIVERS_DEBUG_ENABLED                    0
@@ -106,8 +109,9 @@
 /* Radio */
 #define SI446X_XO_TUNE_REG_VALUE                        97
 
-/* Drivers */
-#define ISIS_ANTENNA_ENABLED                            1
+/* Antenna */
+#define CONFIG_ANTENNA_INDEP_DEPLOY_BURN_TIME_SEC       10U
+#define CONFIG_ANTENNA_SEQ_DEPLOY_BURN_TIME_SEC         20U
 
 /* Memory addresses */
 #define CONFIG_MEM_ADR_SYS_TIME                         0

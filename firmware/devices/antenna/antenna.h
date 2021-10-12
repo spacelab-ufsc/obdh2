@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.3
+ * \version 0.8.2
  * 
  * \date 2019/11/01
  * 
@@ -37,7 +37,20 @@
 #ifndef ANTENNA_H_
 #define ANTENNA_H_
 
+#include <stdint.h>
+
+#include <drivers/isis_antenna/isis_antenna.h>
+
 #define ANTENNA_MODULE_NAME         "Antenna"
+
+/**
+ * \brief Antenna data.
+ */
+typedef struct
+{
+    isis_antenna_status_t status;   /**< Status data. */
+    int16_t temperature;            /**< Temperature in Celsius. */
+} antenna_data_t;
 
 /**
  * \brief Antenna initialization.
@@ -47,18 +60,22 @@
 int antenna_init(void);
 
 /**
- * \brief Gets the antenna status.
+ * \brief Gets the antenna data (status and telemetry).
  *
- * \return The status/error code of the antenna module.
+ * \param[in,out] data is a pointer to store the read data.
+ *
+ * \return The status/error code.
  */
-int antenna_get_status(void);
+int antenna_get_data(antenna_data_t *data);
 
 /**
  * \brief Execute the antenna deployment.
  *
+ * \param[in] timeout_ms .
+ *
  * \return The status/error code.
  */
-int antenna_deploy(void);
+int antenna_deploy(uint32_t timeout_ms);
 
 #endif /* ANTENNA_H_ */
 
