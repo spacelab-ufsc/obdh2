@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.1
+ * \version 0.8.3
  * 
  * \date 2020/02/01
  * 
@@ -326,6 +326,21 @@ int isis_antenna_read_deployment_status(isis_antenna_status_t *status)
         sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the deployment status code!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+    }
+
+    return err;
+}
+
+int isis_antenna_get_data(isis_antenna_data_t *data)
+{
+    int err = -1;
+
+    if (isis_antenna_read_deployment_status(&data->status) == 0)
+    {
+        if (isis_antenna_get_temperature_k(&data->temperature) == 0)
+        {
+            err = 0;
+        }
     }
 
     return err;
@@ -770,6 +785,29 @@ int isis_antenna_get_temperature_c(int16_t *temp)
         sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the temperature!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+    }
+
+    return err;
+}
+
+int isis_antenna_get_temperature_k(isis_antenna_temp_t *temp)
+{
+    int err = -1;
+
+    int16_t temp_c = INT16_MAX;
+
+    if (isis_antenna_get_temperature_c(&temp_c) == 0)
+    {
+        if (temp_c != INT16_MAX)
+        {
+            *temp = temp_c + 273;
+        }
+        else
+        {
+            *temp = UINT16_MAX;
+        }
+
+        err = 0;
     }
 
     return err;
