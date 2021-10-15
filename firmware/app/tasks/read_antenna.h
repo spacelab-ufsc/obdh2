@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.6
+ * \version 0.8.9
  * 
  * \date 2021/10/13
  * 
@@ -42,7 +42,7 @@
 
 #define TASK_READ_ANTENNA_NAME                  "Read Antenna"      /**< Task name. */
 #define TASK_READ_ANTENNA_STACK_SIZE            150                 /**< Stack size in bytes. */
-#define TASK_READ_ANTENNA_PRIORITY              3                   /**< Task priority. */
+#define TASK_READ_ANTENNA_PRIORITY              2                   /**< Task priority. */
 #define TASK_READ_ANTENNA_PERIOD_MS             (60000)             /**< Task period in milliseconds. */
 #define TASK_READ_ANTENNA_INIT_TIMEOUT_MS       2000                /**< Wait time to initialize the task in milliseconds. */
 
