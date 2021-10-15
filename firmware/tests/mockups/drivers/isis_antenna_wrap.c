@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.1
+ * \version 0.8.3
  * 
  * \date 2021/08/07
  * 
@@ -115,6 +115,32 @@ int __wrap_isis_antenna_read_deployment_status(isis_antenna_status_t *status)
     return mock_type(int);
 }
 
+int __wrap_isis_antenna_get_data(isis_antenna_data_t *data)
+{
+    if (data != NULL)
+    {
+        data->status.code               = mock_type(uint16_t);
+        data->status.antenna_1.status   = mock_type(uint8_t);
+        data->status.antenna_1.timeout  = mock_type(uint8_t);
+        data->status.antenna_1.burning  = mock_type(uint8_t);
+        data->status.antenna_2.status   = mock_type(uint8_t);
+        data->status.antenna_2.timeout  = mock_type(uint8_t);
+        data->status.antenna_2.burning  = mock_type(uint8_t);
+        data->status.antenna_3.status   = mock_type(uint8_t);
+        data->status.antenna_3.timeout  = mock_type(uint8_t);
+        data->status.antenna_3.burning  = mock_type(uint8_t);
+        data->status.antenna_4.status   = mock_type(uint8_t);
+        data->status.antenna_4.timeout  = mock_type(uint8_t);
+        data->status.antenna_4.burning  = mock_type(uint8_t);
+        data->status.ignoring_switches  = mock_type(uint8_t);
+        data->status.independent_burn   = mock_type(uint8_t);
+        data->status.armed              = mock_type(uint8_t);
+        data->temperature               = mock_type(isis_antenna_temp_t);
+    }
+
+    return mock_type(int);
+}
+
 int __wrap_isis_antenna_get_antenna_status(isis_antenna_ant_t ant, uint8_t *ant_status)
 {
     check_expected(ant);
@@ -181,6 +207,16 @@ int __wrap_isis_antenna_get_temperature_c(int16_t *temp)
     if (temp != NULL)
     {
         *temp = mock_type(int16_t);
+    }
+
+    return mock_type(int);
+}
+
+int __wrap_isis_antenna_get_temperature_k(isis_antenna_temp_t *temp)
+{
+    if (temp != NULL)
+    {
+        *temp = mock_type(isis_antenna_temp_t);
     }
 
     return mock_type(int);

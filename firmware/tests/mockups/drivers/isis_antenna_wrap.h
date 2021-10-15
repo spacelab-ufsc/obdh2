@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.1
+ * \version 0.8.3
  * 
  * \date 2021/08/07
  * 
@@ -55,6 +55,8 @@ int __wrap_isis_antenna_read_deployment_status_code(uint16_t *status);
 
 int __wrap_isis_antenna_read_deployment_status(isis_antenna_status_t *status);
 
+int __wrap_isis_antenna_get_data(isis_antenna_data_t *data);
+
 int __wrap_isis_antenna_get_antenna_status(isis_antenna_ant_t ant, uint8_t *ant_status);
 
 int __wrap_isis_antenna_get_antenna_timeout(isis_antenna_ant_t ant, uint8_t *ant_timeout);
@@ -68,6 +70,8 @@ int __wrap_isis_antenna_get_raw_temperature(uint16_t *temp);
 int16_t __wrap_isis_antenna_raw_to_temp_c(uint16_t raw);
 
 int __wrap_isis_antenna_get_temperature_c(int16_t *temp);
+
+int __wrap_isis_antenna_get_temperature_k(isis_antenna_temp_t *temp);
 
 void __wrap_isis_antenna_delay_s(uint8_t s);
 

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.1
+ * \version 0.8.3
  * 
  * \date 2021/08/06
  * 
@@ -74,71 +74,35 @@ static void antenna_init_test(void **state)
 
     int16_t temp_test = generate_random(0, 70);
 
-    int i = 0;
-    for(i=-256; i<256; i++)     /* Reduce the test range to avoid a long execution time */
-    {
-        if (i == 0)
-        {
-            int j = 0;
-            for(j=-256; j<256; j++)
-            {
-                expect_function_call(__wrap_isis_antenna_init);
-                will_return(__wrap_isis_antenna_init, i);
+    expect_function_call(__wrap_isis_antenna_init);
+    will_return(__wrap_isis_antenna_init, 0);
 
-                /* Temperature */
-                will_return(__wrap_isis_antenna_get_temperature_c, temp_test);
+    /* Temperature */
+    will_return(__wrap_isis_antenna_get_temperature_c, temp_test);
 
-                will_return(__wrap_isis_antenna_get_temperature_c, 0);
+    will_return(__wrap_isis_antenna_get_temperature_c, 0);
 
-                /* Status */
-                will_return(__wrap_isis_antenna_read_deployment_status, status_test.code);
-                will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_1.status);
-                will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_1.timeout);
-                will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_1.burning);
-                will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_2.status);
-                will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_2.timeout);
-                will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_2.burning);
-                will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_3.status);
-                will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_3.timeout);
-                will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_3.burning);
-                will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_4.status);
-                will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_4.timeout);
-                will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_4.burning);
-                will_return(__wrap_isis_antenna_read_deployment_status, status_test.ignoring_switches);
-                will_return(__wrap_isis_antenna_read_deployment_status, status_test.independent_burn);
-                will_return(__wrap_isis_antenna_read_deployment_status, status_test.armed);
+    /* Status */
+    will_return(__wrap_isis_antenna_read_deployment_status, status_test.code);
+    will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_1.status);
+    will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_1.timeout);
+    will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_1.burning);
+    will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_2.status);
+    will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_2.timeout);
+    will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_2.burning);
+    will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_3.status);
+    will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_3.timeout);
+    will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_3.burning);
+    will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_4.status);
+    will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_4.timeout);
+    will_return(__wrap_isis_antenna_read_deployment_status, status_test.antenna_4.burning);
+    will_return(__wrap_isis_antenna_read_deployment_status, status_test.ignoring_switches);
+    will_return(__wrap_isis_antenna_read_deployment_status, status_test.independent_burn);
+    will_return(__wrap_isis_antenna_read_deployment_status, status_test.armed);
 
-                will_return(__wrap_isis_antenna_read_deployment_status, j);
+    will_return(__wrap_isis_antenna_read_deployment_status, 0);
 
-                int result = antenna_init();
-
-                if (j == 0)
-                {
-                    assert_return_code(result, 0);
-                }
-                else
-                {
-                    assert_int_equal(result, -1);
-                }
-            }
-        }
-        else
-        {
-            expect_function_call(__wrap_isis_antenna_init);
-            will_return(__wrap_isis_antenna_init, i);
-
-            int result = antenna_init();
-
-            if (i == 0)
-            {
-                assert_return_code(result, 0);
-            }
-            else
-            {
-                assert_int_equal(result, -1);
-            }
-        }
-    }
+    assert_return_code(antenna_init(), 0);
 }
 
 static void antenna_get_data_test(void **state)
@@ -161,32 +125,27 @@ static void antenna_get_data_test(void **state)
     data_test.status.ignoring_switches  = generate_random(0, UINT8_MAX);
     data_test.status.independent_burn   = generate_random(0, UINT8_MAX);
     data_test.status.armed              = generate_random(0, UINT8_MAX);
-    data_test.temperature               = generate_random(0, 70);
+    data_test.temperature               = generate_random(0 + 273, 70 + 273);
 
-    /* Temperature */
-    will_return(__wrap_isis_antenna_get_temperature_c, data_test.temperature);
+    will_return(__wrap_isis_antenna_get_data, data_test.status.code);
+    will_return(__wrap_isis_antenna_get_data, data_test.status.antenna_1.status);
+    will_return(__wrap_isis_antenna_get_data, data_test.status.antenna_1.timeout);
+    will_return(__wrap_isis_antenna_get_data, data_test.status.antenna_1.burning);
+    will_return(__wrap_isis_antenna_get_data, data_test.status.antenna_2.status);
+    will_return(__wrap_isis_antenna_get_data, data_test.status.antenna_2.timeout);
+    will_return(__wrap_isis_antenna_get_data, data_test.status.antenna_2.burning);
+    will_return(__wrap_isis_antenna_get_data, data_test.status.antenna_3.status);
+    will_return(__wrap_isis_antenna_get_data, data_test.status.antenna_3.timeout);
+    will_return(__wrap_isis_antenna_get_data, data_test.status.antenna_3.burning);
+    will_return(__wrap_isis_antenna_get_data, data_test.status.antenna_4.status);
+    will_return(__wrap_isis_antenna_get_data, data_test.status.antenna_4.timeout);
+    will_return(__wrap_isis_antenna_get_data, data_test.status.antenna_4.burning);
+    will_return(__wrap_isis_antenna_get_data, data_test.status.ignoring_switches);
+    will_return(__wrap_isis_antenna_get_data, data_test.status.independent_burn);
+    will_return(__wrap_isis_antenna_get_data, data_test.status.armed);
+    will_return(__wrap_isis_antenna_get_data, data_test.temperature);
 
-    will_return(__wrap_isis_antenna_get_temperature_c, 0);
-
-    /* Status */
-    will_return(__wrap_isis_antenna_read_deployment_status, data_test.status.code);
-    will_return(__wrap_isis_antenna_read_deployment_status, data_test.status.antenna_1.status);
-    will_return(__wrap_isis_antenna_read_deployment_status, data_test.status.antenna_1.timeout);
-    will_return(__wrap_isis_antenna_read_deployment_status, data_test.status.antenna_1.burning);
-    will_return(__wrap_isis_antenna_read_deployment_status, data_test.status.antenna_2.status);
-    will_return(__wrap_isis_antenna_read_deployment_status, data_test.status.antenna_2.timeout);
-    will_return(__wrap_isis_antenna_read_deployment_status, data_test.status.antenna_2.burning);
-    will_return(__wrap_isis_antenna_read_deployment_status, data_test.status.antenna_3.status);
-    will_return(__wrap_isis_antenna_read_deployment_status, data_test.status.antenna_3.timeout);
-    will_return(__wrap_isis_antenna_read_deployment_status, data_test.status.antenna_3.burning);
-    will_return(__wrap_isis_antenna_read_deployment_status, data_test.status.antenna_4.status);
-    will_return(__wrap_isis_antenna_read_deployment_status, data_test.status.antenna_4.timeout);
-    will_return(__wrap_isis_antenna_read_deployment_status, data_test.status.antenna_4.burning);
-    will_return(__wrap_isis_antenna_read_deployment_status, data_test.status.ignoring_switches);
-    will_return(__wrap_isis_antenna_read_deployment_status, data_test.status.independent_burn);
-    will_return(__wrap_isis_antenna_read_deployment_status, data_test.status.armed);
-
-    will_return(__wrap_isis_antenna_read_deployment_status, 0);
+    will_return(__wrap_isis_antenna_get_data, 0);
 
     antenna_data_t data_val = {0};
 
