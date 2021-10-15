@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.2
+ * \version 0.8.4
  * 
  * \date 2019/11/01
  * 
@@ -33,8 +33,11 @@
  * \{
  */
 
+#include <stdbool.h>
+
 #include <config/config.h>
 #include <system/sys_log/sys_log.h>
+
 #include <drivers/isis_antenna/isis_antenna.h>
 
 #include "antenna.h"
@@ -45,89 +48,94 @@
 /**
  * \brief Prints the antenna status as a system log message.
  *
- * \param[in] data is antenna data structure with the statis info.
+ * \param[in] status is the antenna data structure with the status info.
  *
  * \return None.
  */
-void antenna_print_status(antenna_data_t data);
+void antenna_print_status(isis_antenna_status_t status);
+
+bool antenna_is_open = false;
 
 int antenna_init(void)
 {
     int err = -1;
 
-#if CONFIG_DRV_ISIS_ANTENNA_ENABLED == 1
-    sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Initializing...");
-    sys_log_new_line();
-
-    if (isis_antenna_init() == 0)
+    if (antenna_is_open)
     {
-        antenna_data_t ant_data = {0};
+        err = 0;    /* Antenna device already initialized */
+    }
+    else
+    {
+    #if CONFIG_DRV_ISIS_ANTENNA_ENABLED == 1
+        sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Initializing...");
+        sys_log_new_line();
 
-        if (isis_antenna_get_temperature_c(&(ant_data.temperature)) == 0)
+        if (isis_antenna_init() == 0)
         {
-            sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Module temperature: ");
-            sys_log_print_int(ant_data.temperature);
-            sys_log_print_msg(" oC");
-            sys_log_new_line();
+            int16_t temp_k = 0;
 
-            if (isis_antenna_read_deployment_status(&(ant_data.status)) == 0)
+            if (isis_antenna_get_temperature_c(&temp_k) == 0)
             {
-                antenna_print_status(ant_data);
+                sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Module temperature: ");
+                sys_log_print_int(temp_k);
+                sys_log_print_msg(" oC");
+                sys_log_new_line();
 
-                err = 0;
+                isis_antenna_status_t status = {0};
+
+                if (isis_antenna_read_deployment_status(&status) == 0)
+                {
+                    antenna_print_status(status);
+
+                    antenna_is_open = true;
+
+                    err = 0;
+                }
+                else
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "Error reading the antenna status!");
+                    sys_log_new_line();
+                }
             }
             else
             {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "Error reading the antenna status!");
+                sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "Error reading the antenna temperature!");
                 sys_log_new_line();
             }
         }
         else
         {
-            sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "Error reading the antenna temperature!");
+            sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "Error during the initialization!");
             sys_log_new_line();
         }
-    }
-    else
-    {
-        sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "Error during the initialization!");
+    #else
+        antenna_is_open = true;
+
+        sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "No driver to initialize!");
         sys_log_new_line();
+    #endif /* CONFIG_DRV_ANTENNA_DRIVER */
     }
-#else
-    sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "No driver to initialize!");
-    sys_log_new_line();
-#endif /* CONFIG_DRV_ANTENNA_DRIVER */
 
     return err;
 }
 
 int antenna_get_data(antenna_data_t *data)
 {
-    int err = 0;
-
-    data->temperature = INT16_MAX;
+    int err = -1;
 
 #if CONFIG_DRV_ISIS_ANTENNA_ENABLED == 1
-    if (isis_antenna_get_temperature_c(&(data->temperature)) != 0)
+    if (isis_antenna_get_data(data) == 0)
     {
-        sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "Error reading the temperature!");
-        sys_log_new_line();
-
-        err++;
+        err = 0;
     }
-
-    if (isis_antenna_read_deployment_status(&(data->status)) != 0)
+    else
     {
-        sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "Error reading the antenna status!");
+        sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "Error reading the antenna data!");
         sys_log_new_line();
-
-        err++;
     }
 #else
     sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "No driver to read the data!");
     sys_log_new_line();
-
-    err = -1;
 #endif /* CONFIG_DRV_ANTENNA_DRIVER */
 
     return err;
@@ -207,7 +215,7 @@ int antenna_deploy(uint32_t timeout_ms)
     antenna_data_t ant_data = {0};
     if (isis_antenna_read_deployment_status(&(ant_data.status)) == 0)
     {
-        antenna_print_status(ant_data);
+        antenna_print_status(ant_data.status);
     }
     else
     {
@@ -240,22 +248,22 @@ int antenna_deploy(uint32_t timeout_ms)
     return err;
 }
 
-void antenna_print_status(antenna_data_t data)
+void antenna_print_status(isis_antenna_status_t status)
 {
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 1 status=");
-    sys_log_print_msg((data.status.antenna_1.status == ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
+    sys_log_print_msg((status.antenna_1.status == ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
     sys_log_new_line();
 
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 2 status=");
-    sys_log_print_msg((data.status.antenna_2.status == ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
+    sys_log_print_msg((status.antenna_2.status == ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
     sys_log_new_line();
 
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 3 status=");
-    sys_log_print_msg((data.status.antenna_3.status == ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
+    sys_log_print_msg((status.antenna_3.status == ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
     sys_log_new_line();
 
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 4 status=");
-    sys_log_print_msg((data.status.antenna_4.status == ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
+    sys_log_print_msg((status.antenna_4.status == ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
     sys_log_new_line();
 }
 

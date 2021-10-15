@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.2
+ * \version 0.8.4
  * 
  * \date 2019/11/01
  * 
@@ -41,16 +41,9 @@
 
 #include <drivers/isis_antenna/isis_antenna.h>
 
-#define ANTENNA_MODULE_NAME         "Antenna"
+#include "antenna_data.h"
 
-/**
- * \brief Antenna data.
- */
-typedef struct
-{
-    isis_antenna_status_t status;   /**< Status data. */
-    int16_t temperature;            /**< Temperature in Celsius. */
-} antenna_data_t;
+#define ANTENNA_MODULE_NAME         "Antenna"
 
 /**
  * \brief Antenna initialization.
@@ -71,7 +64,7 @@ int antenna_get_data(antenna_data_t *data);
 /**
  * \brief Execute the antenna deployment.
  *
- * \param[in] timeout_ms .
+ * \param[in] timeout_ms is the deployment sequence timeout in milliseconds.
  *
  * \return The status/error code.
  */
