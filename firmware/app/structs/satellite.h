@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.23
+ * \version 0.8.5
  * 
  * \date 2020/07/16
  * 
@@ -39,20 +39,60 @@
 
 #include <stdint.h>
 
+#include <system/system.h>
+
 #include <devices/eps/eps_data.h>
 #include <devices/ttc/ttc_data.h>
+#include <devices/antenna/antenna_data.h>
 
 #include "obdh_data.h"
+
+/**
+ * \brief OBDH telemetry type.
+ */
+typedef struct
+{
+    sys_time_t timestamp;           /**< Timestamp of the OBDH data. */
+    obdh_data_t data;               /**< OBDH data. */
+} obdh_telemetry_t;
+
+/**
+ * \brief EPS telemetry type.
+ */
+typedef struct
+{
+    sys_time_t timestamp;           /**< Timestamp of the EPS data. */
+    eps_data_t data;                /**< EPS data. */
+} eps_telemetry_t;
+
+/**
+ * \brief TTC telemetry type.
+ */
+typedef struct
+{
+    sys_time_t timestamp;           /**< Timestamp of the TTC data. */
+    ttc_data_t data;                /**< TTC data. */
+} ttc_telemetry_t;
+
+/**
+ * \brief Antenna telemetry type.
+ */
+typedef struct
+{
+    sys_time_t timestamp;           /**< Timestamp of the Antenna data. */
+    antenna_data_t data;            /**< Antenna data. */
+} antenna_telemetry_t;
 
 /**
  * \brief Satellite data.
  */
 typedef struct
 {
-    obdh_data_t obdh;               /**< OBDH data. */
-    eps_data_t eps;                 /**< EPS data. */
-    ttc_data_t ttc_0;               /**< TTC 0 data. */
-    ttc_data_t ttc_1;               /**< TTC 1 data. */
+    obdh_telemetry_t obdh;          /**< OBDH telemetry. */
+    eps_telemetry_t eps;            /**< EPS telemetry. */
+    ttc_telemetry_t ttc_0;          /**< TTC 0 telemetry. */
+    ttc_telemetry_t ttc_1;          /**< TTC 1 telemetry. */
+    antenna_telemetry_t antenna;    /**< Antenna telemetry. */
 } sat_data_t;
 
 /**

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.1
+ * \version 0.8.5
  * 
  * \date 2020/07/16
  * 
@@ -49,20 +49,10 @@ typedef struct
 } radio_data_t;
 
 /**
- * \brief Antenna data.
- */
-typedef struct
-{
-    uint16_t temperature;           /**< Temperature in Kelvin. */
-    uint16_t status;                /**< Status bits. */
-} antenna_data_t;
-
-/**
  * \brief OBDH data.
  */
 typedef struct
 {
-    uint32_t timestamp;             /**< Timestamp in milliseconds. */
     uint16_t temperature;           /**< Temperature of the uC in Kelvin. */
     uint16_t current;               /**< Input current in mA. */
     uint16_t voltage;               /**< Input voltage in mV. */
@@ -70,7 +60,6 @@ typedef struct
     uint16_t reset_counter;         /**< Reset counter. */
     uint8_t last_valid_tc;          /**< Last valid telecommand ID. */
     radio_data_t radio;             /**< Radio data. */
-    antenna_data_t antenna;         /**< Antenna data. */
     uint8_t hw_version;             /**< Hardware version. */
     uint32_t fw_version;            /**< Firmware version (ex.: "v1.2.3" = 0x00010203). */
 } obdh_data_t;
