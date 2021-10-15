@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.2
+ * \version 0.8.6
  * 
  * \date 2019/10/26
  * 
@@ -50,6 +50,7 @@
 #define CONFIG_TASK_READ_EDC_ENABLED                    1
 #define CONFIG_TASK_READ_EPS_ENABLED                    1
 #define CONFIG_TASK_READ_TTC_ENABLED                    1
+#define CONFIG_TASK_READ_ANTENNA_ENABLED                1
 #define CONFIG_TASK_DATA_LOG_ENABLED                    1
 #define CONFIG_TASK_PROCESS_TC_ENABLED                  1
 

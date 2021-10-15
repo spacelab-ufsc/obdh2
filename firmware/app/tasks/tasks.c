@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.47
+ * \version 0.8.6
  * 
  * \date 2019/11/02
  * 
@@ -52,6 +52,7 @@
 #include "read_edc.h"
 #include "read_eps.h"
 #include "read_ttc.h"
+#include "read_antenna.h"
 #include "data_log.h"
 #include "process_tc.h"
 
@@ -176,6 +177,15 @@ void create_tasks(void)
         /* Error creating the read TTC task */
     }
 #endif /* CONFIG_TASK_READ_TTC_ENABLED */
+
+#if CONFIG_TASK_READ_ANTENNA_ENABLED == 1
+    xTaskCreate(vTaskReadAntenna, TASK_READ_ANTENNA_NAME, TASK_READ_ANTENNA_STACK_SIZE, NULL, TASK_READ_ANTENNA_PRIORITY, &xTaskReadAntennaHandle);
+
+    if (xTaskReadAntennaHandle == NULL)
+    {
+        /* Error creating the read Antenna task */
+    }
+#endif /* CONFIG_TASK_READ_ANTENNA_ENABLED */
 
 #if CONFIG_TASK_DATA_LOG_ENABLED == 1
     xTaskCreate(vTaskDataLog, TASK_DATA_LOG_NAME, TASK_DATA_LOG_STACK_SIZE, NULL, TASK_DATA_LOG_PRIORITY, &xTaskDataLogHandle);
