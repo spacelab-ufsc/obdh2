@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.25
+ * \version 0.8.7
  * 
  * \date 2020/01/25
  * 
@@ -100,7 +100,7 @@ __interrupt
 #elif defined(__GNUC__)
 __attribute__((interrupt(UNMI_VECTOR)))
 #endif
-void NMI_ISR(void)
+void NMI_ISR(void)  // cppcheck-suppress misra-c2012-8.4
 {
     static uint16_t status = 0;
 

@@ -1,7 +1,7 @@
 /*
  * hooks.c
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.25
+ * \version 0.8.7
  * 
  * \date 2020/01/22
  * 
@@ -37,13 +37,13 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
-void vApplicationIdleHook(void)
+void vApplicationIdleHook(void) // cppcheck-suppress misra-c2012-8.4
 {
     /* Called on each iteration of the idle task. In this case the idle task just enters a low(ish) power mode */
     __bis_SR_register(LPM1_bits + GIE);
 }
 
-void vApplicationMallocFailedHook(void)
+void vApplicationMallocFailedHook(void) // cppcheck-suppress misra-c2012-8.4
 {
     /* Called if a call to pvPortMalloc() fails because there is insufficient free memory available in the */
     /* FreeRTOS heap. pvPortMalloc() is called internally by FreeRTOS API functions that create tasks, queues */
@@ -55,7 +55,7 @@ void vApplicationMallocFailedHook(void)
     }
 }
 
-void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)
+void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName)   // cppcheck-suppress misra-c2012-8.4
 {
     (void)pxTask;
     (void)pcTaskName;

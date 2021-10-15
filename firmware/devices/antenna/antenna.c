@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.4
+ * \version 0.8.7
  * 
  * \date 2019/11/01
  * 
@@ -122,6 +122,9 @@ int antenna_init(void)
 int antenna_get_data(antenna_data_t *data)
 {
     int err = -1;
+
+    data->status.code = UINT16_MAX;
+    data->temperature = UINT16_MAX;
 
 #if CONFIG_DRV_ISIS_ANTENNA_ENABLED == 1
     if (isis_antenna_get_data(data) == 0)

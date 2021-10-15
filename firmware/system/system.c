@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.25
+ * \version 0.8.7
  * 
  * \date 2020/01/29
  * 
@@ -38,7 +38,7 @@
 
 #include "system.h"
 
-sys_time_t sys_time = 0;
+static sys_time_t sys_time = 0;
 
 void system_reset(void)
 {
