@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.34
+ * \version 0.8.8
  * 
  * \date 2021/05/12
  * 
@@ -49,7 +49,7 @@
  *
  * \return The computed CRC-16 value of the given data.
  */
-uint16_t sl_ttc2_crc16(uint8_t *data, uint16_t len);
+static uint16_t sl_ttc2_crc16(uint8_t *data, uint16_t len);
 
 /**
  * \brief Checks the CRC value of a given sequence of bytes.
@@ -62,7 +62,7 @@ uint16_t sl_ttc2_crc16(uint8_t *data, uint16_t len);
  *
  * \return TRUE/FALSE if the given CRC value is correct or not.
  */
-bool sl_ttc2_check_crc(uint8_t *data, uint16_t len, uint16_t crc);
+static bool sl_ttc2_check_crc(uint8_t *data, uint16_t len, uint16_t crc);
 
 int sl_ttc2_init(sl_ttc2_config_t config)
 {
@@ -108,7 +108,7 @@ int sl_ttc2_check_device(sl_ttc2_config_t config)
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error checking the device! Invalid radio index!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -119,7 +119,7 @@ int sl_ttc2_check_device(sl_ttc2_config_t config)
         {
             if (id != ref_id)
             {
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error checking the device! (read=");
                 sys_log_print_hex(id);
                 sys_log_print_msg(", expected=");
@@ -188,7 +188,7 @@ int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the register ");
             sys_log_print_hex(adr);
             sys_log_print_msg("! Invalid data!");
@@ -198,7 +198,7 @@ int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
     }
     else
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the register ");
         sys_log_print_hex(adr);
         sys_log_print_msg("! Error during SPI transfer!");
@@ -397,7 +397,7 @@ int sl_ttc2_read_voltage(sl_ttc2_config_t config, uint8_t volt, sl_ttc2_voltage_
 
             break;
         default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the voltage! Invalid voltage type!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -428,7 +428,7 @@ int sl_ttc2_read_current(sl_ttc2_config_t config, uint8_t cur, sl_ttc2_current_t
 
             break;
         default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the current! Invalid current type!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -679,7 +679,7 @@ int sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len)
     return err;
 }
 
-uint16_t sl_ttc2_crc16(uint8_t *data, uint16_t len)
+static uint16_t sl_ttc2_crc16(uint8_t *data, uint16_t len)
 {
     uint8_t x;
     uint16_t crc = 0;   /* Initial value */
@@ -695,7 +695,7 @@ uint16_t sl_ttc2_crc16(uint8_t *data, uint16_t len)
     return crc;
 }
 
-bool sl_ttc2_check_crc(uint8_t *data, uint16_t len, uint16_t crc)
+static bool sl_ttc2_check_crc(uint8_t *data, uint16_t len, uint16_t crc)
 {
     return (crc == sl_ttc2_crc16(data, len));
 }

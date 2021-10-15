@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.29
+ * \version 0.8.8
  * 
  * \date 2021/06/04
  * 
@@ -53,7 +53,7 @@ int cy15x102qn_init(cy15x102qn_config_t *conf)
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error initializing the GPIO pins!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -61,7 +61,7 @@ int cy15x102qn_init(cy15x102qn_config_t *conf)
     }
     else
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error initializing the SPI interface!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -78,7 +78,7 @@ int cy15x102qn_set_write_enable(cy15x102qn_config_t *conf)
 
     if (cy15x102qn_spi_write(conf, &cmd, 1) != 0)
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the WREN command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -96,7 +96,7 @@ int cy15x102qn_reset_write_enable(cy15x102qn_config_t *conf)
 
     if (cy15x102qn_spi_write(conf, &cmd, 1) != 0)
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the WRDI command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -119,8 +119,9 @@ int cy15x102qn_read_status_reg(cy15x102qn_config_t *conf, cy15x102qn_status_t *s
 
         err = 0;
     }
+    else
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the RDSR command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -139,7 +140,7 @@ int cy15x102qn_write_status_reg(cy15x102qn_config_t *conf, cy15x102qn_status_t s
 
     if (cy15x102qn_spi_write(conf, cmd, 2) != 0)
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the WRSR command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -178,7 +179,7 @@ int cy15x102qn_write(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uin
                 }
                 else
                 {
-                #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                     sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the data during WRITE command!");
                     sys_log_new_line();
                 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -190,7 +191,7 @@ int cy15x102qn_write(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uin
             }
             else
             {
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the address during WRITE command!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -202,7 +203,7 @@ int cy15x102qn_write(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uin
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during WRITE command!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -245,7 +246,7 @@ int cy15x102qn_read(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uint
                 }
                 else
                 {
-                #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                     sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error reading the data during READ command!");
                     sys_log_new_line();
                 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -257,7 +258,7 @@ int cy15x102qn_read(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uint
             }
             else
             {
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the address during READ command!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -269,7 +270,7 @@ int cy15x102qn_read(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uint
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during READ command!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -316,7 +317,7 @@ int cy15x102qn_fast_read(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data,
                     }
                     else
                     {
-                    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error reading the data during READ command!");
                         sys_log_new_line();
                     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -328,7 +329,7 @@ int cy15x102qn_fast_read(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data,
                 }
                 else
                 {
-                #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                     sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the dummy byte during FSTRD command!");
                     sys_log_new_line();
                 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -340,7 +341,7 @@ int cy15x102qn_fast_read(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data,
             }
             else
             {
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the address during FSTRD command!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -352,7 +353,7 @@ int cy15x102qn_fast_read(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data,
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during FSTRD command!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -390,7 +391,7 @@ int cy15x102qn_special_sector_write(cy15x102qn_config_t *conf, uint8_t adr, uint
                 }
                 else
                 {
-                #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                     sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the data during SSWR command!");
                     sys_log_new_line();
                 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -402,7 +403,7 @@ int cy15x102qn_special_sector_write(cy15x102qn_config_t *conf, uint8_t adr, uint
             }
             else
             {
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the address during SSWR command!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -414,7 +415,7 @@ int cy15x102qn_special_sector_write(cy15x102qn_config_t *conf, uint8_t adr, uint
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during SSWR command!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -452,7 +453,7 @@ int cy15x102qn_special_sector_read(cy15x102qn_config_t *conf, uint8_t adr, uint8
                 }
                 else
                 {
-                #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                     sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error reading the data during SSRD command!");
                     sys_log_new_line();
                 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -464,7 +465,7 @@ int cy15x102qn_special_sector_read(cy15x102qn_config_t *conf, uint8_t adr, uint8
             }
             else
             {
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the address during SSRD command!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -476,7 +477,7 @@ int cy15x102qn_special_sector_read(cy15x102qn_config_t *conf, uint8_t adr, uint8
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during SSRD command!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -527,7 +528,7 @@ int cy15x102qn_read_device_id(cy15x102qn_config_t *conf, cy15x102qn_device_id_t 
             }
             else
             {
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error reading the data during RDID command!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -539,7 +540,7 @@ int cy15x102qn_read_device_id(cy15x102qn_config_t *conf, cy15x102qn_device_id_t 
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during RDID command!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -584,7 +585,7 @@ int cy15x102qn_read_unique_id(cy15x102qn_config_t *conf, cy15x102qn_uid_t *uid)
             }
             else
             {
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error reading the data during RUID command!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -596,7 +597,7 @@ int cy15x102qn_read_unique_id(cy15x102qn_config_t *conf, cy15x102qn_uid_t *uid)
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during RUID command!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -641,7 +642,7 @@ int cy15x102qn_write_serial_number(cy15x102qn_config_t *conf, cy15x102qn_serial_
             }
             else
             {
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the data during WRSN command!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -653,7 +654,7 @@ int cy15x102qn_write_serial_number(cy15x102qn_config_t *conf, cy15x102qn_serial_
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during WRSN command!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -695,7 +696,7 @@ int cy15x102qn_read_serial_number(cy15x102qn_config_t *conf, cy15x102qn_serial_n
             }
             else
             {
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error reading the data during SNR command!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -707,7 +708,7 @@ int cy15x102qn_read_serial_number(cy15x102qn_config_t *conf, cy15x102qn_serial_n
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during SNR command!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -729,7 +730,7 @@ int cy15x102qn_deep_power_down_mode(cy15x102qn_config_t *conf)
 
     if (cy15x102qn_spi_write(conf, &cmd, 1) != 0)
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the DPD command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -747,7 +748,7 @@ int cy15x102qn_hibernate_mode(cy15x102qn_config_t *conf)
 
     if (cy15x102qn_spi_write(conf, &cmd, 1) != 0)
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the HBN command!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */

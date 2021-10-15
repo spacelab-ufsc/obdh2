@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.3
+ * \version 0.8.8
  * 
  * \date 2020/02/01
  * 
@@ -51,7 +51,7 @@
 /* Status mask */
 #define ISIS_ANTENNA_STATUS_MASK                0x8888U     /**< Status mask (all antenna not deployed and disarmed). */
 
-#define ISIS_ANTENNA_REF_VOLTAGE                3300        /**< Reference voltage in millivolts. */
+#define ISIS_ANTENNA_REF_VOLTAGE                3300.0      /**< Reference voltage in millivolts. */
 
 #define ISIS_ANTENNA_MIN_TEMP                   (-50)       /**< Minimum read temperature. */
 #define ISIS_ANTENNA_MAX_TEMP                   132         /**< Maximum read temperature. */

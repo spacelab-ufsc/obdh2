@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.1
+ * \version 0.8.8
  * 
  * \date 2021/10/10
  * 
@@ -49,7 +49,7 @@
 
 #define ISIS_ANTENNA_I2C_OP_ATTEMPTS        10U
 
-tca4311a_config_t ants_config = {0};
+static tca4311a_config_t ants_config = {0};
 
 int isis_antenna_i2c_init(void)
 {
@@ -66,7 +66,7 @@ int isis_antenna_i2c_init(void)
     }
     else
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error initializing the I2C port!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -101,7 +101,7 @@ int isis_antenna_i2c_write(uint8_t *data, uint16_t len)
                     }
                     else
                     {
-                    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                         sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error disabling the I2C bus during a writing operation!");
                         sys_log_new_line();
                     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -112,7 +112,7 @@ int isis_antenna_i2c_write(uint8_t *data, uint16_t len)
             }
             else
             {
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error writing to the I2C bus!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -120,7 +120,7 @@ int isis_antenna_i2c_write(uint8_t *data, uint16_t len)
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error enabling the I2C bus during an writing operation!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -156,7 +156,7 @@ int isis_antenna_i2c_read(uint8_t *data, uint16_t len)
                     }
                     else
                     {
-                    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                         sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error disabling the I2C bus during a reading operation!");
                         sys_log_new_line();
                     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -167,7 +167,7 @@ int isis_antenna_i2c_read(uint8_t *data, uint16_t len)
             }
             else
             {
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the I2C bus!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -175,7 +175,7 @@ int isis_antenna_i2c_read(uint8_t *data, uint16_t len)
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error enabling the I2C bus during an reading operation!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */

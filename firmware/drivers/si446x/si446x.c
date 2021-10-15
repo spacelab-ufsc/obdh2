@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.36
+ * \version 0.8.8
  * 
  * \date 2017/06/01
  * 
@@ -87,7 +87,7 @@ int si446x_configuration_init(uint8_t *p_set_prop_cmd, uint16_t p_set_prop_cmd_l
         {
             if (si446x_set_cmd(cmd, cmd_len) == SI446X_SUCCESS)
             {
-                cmd_start_pos += cmd_len + 1U;
+                cmd_start_pos = cmd_start_pos + cmd_len + 1U;
 
                 err = 0;
             }
@@ -289,7 +289,7 @@ int si446x_fifo_info(bool rst_rx, bool rst_tx, si446x_fifo_info_t *fifo_info)
     uint8_t result[4] = {0};
 
     cmd[0] = SI446X_CMD_FIFO_INFO;
-    cmd[1] = ((uint8_t)rst_rx << 1) | (uint8_t)rst_tx;
+    cmd[1] = ((rst_rx ? 1U : 0U) << 1) | (rst_tx ? 1U : 0U);
 
     int err = si446x_get_cmd(cmd, 2, result, 3);
 
@@ -544,7 +544,7 @@ int si446x_get_adc_reading(uint8_t temp_en, bool bat_volt_en, bool adc_gpio_en, 
     uint8_t result[10] = {0};
 
     cmd[0] = SI446X_CMD_GET_ADC_READING;
-    cmd[1] = ((uint8_t)temp_en << 4) | ((uint8_t)bat_volt_en << 3) | ((uint8_t)adc_gpio_en << 2) | (adc_gpio_pin & 0x03U);
+    cmd[1] = (temp_en << 4) | ((bat_volt_en ? 1U : 0U) << 3) | ((adc_gpio_en ? 1U : 0U) << 2) | (adc_gpio_pin & 0x03U);
 
     int err = si446x_get_cmd(cmd, 2, result, 9);
 

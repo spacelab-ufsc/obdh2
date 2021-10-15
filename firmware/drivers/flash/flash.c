@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.39
+ * \version 0.8.8
  * 
  * \date 2020/03/17
  * 
@@ -37,9 +37,7 @@
 
 #include "flash.h"
 
-char *flash_ptr;
-
-long *current_flash_ptr;
+static long *current_flash_ptr;
 
 int flash_init(void)
 {
@@ -48,6 +46,8 @@ int flash_init(void)
 
 void flash_write(uint8_t *data, uint16_t len)
 {
+    static char *flash_ptr;
+
     uint16_t i;
 
     if ((FCTL3 & LOCKA) > 0)
