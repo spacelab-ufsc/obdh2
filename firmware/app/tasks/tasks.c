@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.6
+ * \version 0.8.11
  * 
  * \date 2019/11/02
  * 
@@ -59,7 +59,7 @@
 void create_tasks(void)
 {
     /* Startup task */
-#if CONFIG_TASK_STARTUP_ENABLED == 1
+#if defined(CONFIG_TASK_STARTUP_ENABLED) && (CONFIG_TASK_STARTUP_ENABLED == 1)
     xTaskCreate(vTaskStartup, TASK_STARTUP_NAME, TASK_STARTUP_STACK_SIZE, NULL, TASK_STARTUP_PRIORITY, &xTaskStartupHandle);
 
     if (xTaskStartupHandle == NULL)
@@ -69,7 +69,7 @@ void create_tasks(void)
 #endif /* CONFIG_TASK_STARTUP_ENABLED */
 
     /* Watchdog reset task */
-#if CONFIG_TASK_WATCHDOG_RESET_ENABLED == 1
+#if defined(CONFIG_TASK_WATCHDOG_RESET_ENABLED) && (CONFIG_TASK_WATCHDOG_RESET_ENABLED == 1)
     xTaskCreate(vTaskWatchdogReset, TASK_WATCHDOG_RESET_NAME, TASK_WATCHDOG_RESET_STACK_SIZE, NULL, TASK_WATCHDOG_RESET_PRIORITY, &xTaskWatchdogResetHandle);
 
     if (xTaskWatchdogResetHandle == NULL)
@@ -79,7 +79,7 @@ void create_tasks(void)
 #endif /* CONFIG_TASK_WATCHDOG_RESET_ENABLED */
 
     /* Heartbeat task */
-#if CONFIG_TASK_HEARTBEAT_ENABLED == 1
+#if defined(CONFIG_TASK_HEARTBEAT_ENABLED) && (CONFIG_TASK_HEARTBEAT_ENABLED == 1)
     xTaskCreate(vTaskHeartbeat, TASK_HEARTBEAT_NAME, TASK_HEARTBEAT_STACK_SIZE, NULL, TASK_HEARTBEAT_PRIORITY, &xTaskHeartbeatHandle);
 
     if (xTaskHeartbeatHandle == NULL)
@@ -88,7 +88,7 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_HEARTBEAT_ENABLED */
 
-#if CONFIG_TASK_SYSTEM_RESET_ENABLED == 1
+#if defined(CONFIG_TASK_SYSTEM_RESET_ENABLED) && (CONFIG_TASK_SYSTEM_RESET_ENABLED == 1)
     xTaskCreate(vTaskSystemReset, TASK_SYSTEM_RESET_NAME, TASK_SYSTEM_RESET_STACK_SIZE, NULL, TASK_SYSTEM_RESET_PRIORITY, &xTaskSystemResetHandle);
 
     if (xTaskSystemResetHandle == NULL)
@@ -97,7 +97,7 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_SYSTEM_RESET_ENABLED */
 
-#if CONFIG_TASK_RADIO_RESET_ENABLED == 1
+#if defined(CONFIG_TASK_RADIO_RESET_ENABLED) && (CONFIG_TASK_RADIO_RESET_ENABLED == 1)
     xTaskCreate(vTaskRadioReset, TASK_RADIO_RESET_NAME, TASK_RADIO_RESET_STACK_SIZE, NULL, TASK_RADIO_RESET_PRIORITY, &xTaskRadioResetHandle);
 
     if (xTaskRadioResetHandle == NULL)
@@ -106,7 +106,7 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_RADIO_RESET_ENABLED */
 
-#if CONFIG_TASK_READ_SENSORS_ENABLED == 1
+#if defined(CONFIG_TASK_READ_SENSORS_ENABLED) && (CONFIG_TASK_READ_SENSORS_ENABLED == 1)
     xTaskCreate(vTaskReadSensors, TASK_READ_SENSORS_NAME, TASK_READ_SENSORS_STACK_SIZE, NULL, TASK_READ_SENSORS_PRIORITY, &xTaskReadSensorsHandle);
 
     if (xTaskReadSensorsHandle == NULL)
@@ -115,7 +115,7 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_READ_TEMP_ENABLED */
 
-#if CONFIG_TASK_BEACON_ENABLED == 1
+#if defined(CONFIG_TASK_BEACON_ENABLED) && (CONFIG_TASK_BEACON_ENABLED == 1)
     xTaskCreate(vTaskBeacon, TASK_BEACON_NAME, TASK_BEACON_STACK_SIZE, NULL, TASK_BEACON_PRIORITY, &xTaskBeaconHandle);
 
     if (xTaskBeaconHandle == NULL)
@@ -124,7 +124,7 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_BEACON_ENABLED */
 
-#if CONFIG_TASK_UPLINK_ENABLED == 1
+#if defined(CONFIG_TASK_UPLINK_ENABLED) && (CONFIG_TASK_UPLINK_ENABLED == 1)
     xTaskCreate(vTaskUplink, TASK_UPLINK_NAME, TASK_UPLINK_STACK_SIZE, NULL, TASK_UPLINK_PRIORITY, &xTaskUplinkHandle);
 
     if (xTaskUplinkHandle == NULL)
@@ -133,7 +133,7 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_UPLINK_ENABLED */
 
-#if CONFIG_TASK_TIME_CONTROL_ENABLED == 1
+#if defined(CONFIG_TASK_TIME_CONTROL_ENABLED) && (CONFIG_TASK_TIME_CONTROL_ENABLED == 1)
     xTaskCreate(vTaskTimeControl, TASK_TIME_CONTROL_NAME, TASK_TIME_CONTROL_STACK_SIZE, NULL, TASK_TIME_CONTROL_PRIORITY, &xTaskTimeControlHandle);
 
     if (xTaskTimeControlHandle == NULL)
@@ -142,7 +142,7 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_BEACON_ENABLED */
 
-#if CONFIG_TASK_CSP_SERVER_ENABLED == 1
+#if defined(CONFIG_TASK_CSP_SERVER_ENABLED) && (CONFIG_TASK_CSP_SERVER_ENABLED == 1)
     xTaskCreate(vTaskCSPServer, TASK_CSP_SERVER_NAME, TASK_CSP_SERVER_STACK_SIZE, NULL, TASK_CSP_SERVER_PRIORITY, &xTaskCSPServerHandle);
 
     if (xTaskCSPServerHandle == NULL)
@@ -151,7 +151,7 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_CSP_SERVER_ENABLED */
 
-#if CONFIG_TASK_READ_EDC_ENABLED == 1
+#if defined(CONFIG_TASK_READ_EDC_ENABLED) && (CONFIG_TASK_READ_EDC_ENABLED == 1)
     xTaskCreate(vTaskReadEDC, TASK_READ_EDC_NAME, TASK_READ_EDC_STACK_SIZE, NULL, TASK_READ_EDC_PRIORITY, &xTaskReadEDCHandle);
 
     if (xTaskReadEDCHandle == NULL)
@@ -160,7 +160,7 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_READ_EDC_ENABLED */
 
-#if CONFIG_TASK_READ_EPS_ENABLED == 1
+#if defined(CONFIG_TASK_READ_EPS_ENABLED) && (CONFIG_TASK_READ_EPS_ENABLED == 1)
     xTaskCreate(vTaskReadEPS, TASK_READ_EPS_NAME, TASK_READ_EPS_STACK_SIZE, NULL, TASK_READ_EPS_PRIORITY, &xTaskReadEPSHandle);
 
     if (xTaskReadEPSHandle == NULL)
@@ -169,7 +169,7 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_READ_EPS_ENABLED */
 
-#if CONFIG_TASK_READ_TTC_ENABLED == 1
+#if defined(CONFIG_TASK_READ_TTC_ENABLED) && (CONFIG_TASK_READ_TTC_ENABLED == 1)
     xTaskCreate(vTaskReadTTC, TASK_READ_TTC_NAME, TASK_READ_TTC_STACK_SIZE, NULL, TASK_READ_TTC_PRIORITY, &xTaskReadTTCHandle);
 
     if (xTaskReadTTCHandle == NULL)
@@ -178,7 +178,7 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_READ_TTC_ENABLED */
 
-#if CONFIG_TASK_READ_ANTENNA_ENABLED == 1
+#if defined(CONFIG_TASK_READ_ANTENNA_ENABLED) && (CONFIG_TASK_READ_ANTENNA_ENABLED == 1)
     xTaskCreate(vTaskReadAntenna, TASK_READ_ANTENNA_NAME, TASK_READ_ANTENNA_STACK_SIZE, NULL, TASK_READ_ANTENNA_PRIORITY, &xTaskReadAntennaHandle);
 
     if (xTaskReadAntennaHandle == NULL)
@@ -187,7 +187,7 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_READ_ANTENNA_ENABLED */
 
-#if CONFIG_TASK_DATA_LOG_ENABLED == 1
+#if defined(CONFIG_TASK_DATA_LOG_ENABLED) && (CONFIG_TASK_DATA_LOG_ENABLED == 1)
     xTaskCreate(vTaskDataLog, TASK_DATA_LOG_NAME, TASK_DATA_LOG_STACK_SIZE, NULL, TASK_DATA_LOG_PRIORITY, &xTaskDataLogHandle);
 
     if (xTaskDataLogHandle == NULL)
@@ -196,7 +196,7 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_DATA_LOG_ENABLED */
 
-#if CONFIG_TASK_PROCESS_TC_ENABLED == 1
+#if defined(CONFIG_TASK_PROCESS_TC_ENABLED) && (CONFIG_TASK_PROCESS_TC_ENABLED == 1)
     xTaskCreate(vTaskProcessTC, TASK_PROCESS_TC_NAME, TASK_PROCESS_TC_STACK_SIZE, NULL, TASK_PROCESS_TC_PRIORITY, &xTaskProcessTCHandle);
 
     if (xTaskProcessTCHandle == NULL)

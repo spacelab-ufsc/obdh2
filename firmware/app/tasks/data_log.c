@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.5
+ * \version 0.8.11
  * 
  * \date 2021/05/24
  * 
@@ -55,7 +55,7 @@ xTaskHandle xTaskDataLogHandle;
  *
  * \return The computed CRC16 value.
  */
-uint16_t crc16_ccitt(uint16_t initial_value, uint8_t* data, uint8_t size);
+static uint16_t crc16_ccitt(uint16_t initial_value, uint8_t* data, uint8_t size);
 
 void vTaskDataLog(void)
 {
@@ -294,7 +294,7 @@ void vTaskDataLog(void)
     }
 }
 
-uint16_t crc16_ccitt(uint16_t initial_value, uint8_t* data, uint8_t size)
+static uint16_t crc16_ccitt(uint16_t initial_value, uint8_t* data, uint8_t size)
 {
     uint8_t x;
     uint16_t crc = initial_value;
