@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.7
+ * \version 0.8.10
  * 
  * \date 2019/11/01
  * 
@@ -52,12 +52,12 @@
  *
  * \return None.
  */
-void antenna_print_status(isis_antenna_status_t status);
-
-bool antenna_is_open = false;
+static void antenna_print_status(isis_antenna_status_t status);
 
 int antenna_init(void)
 {
+    static bool antenna_is_open = false;
+
     int err = -1;
 
     if (antenna_is_open)
@@ -66,7 +66,7 @@ int antenna_init(void)
     }
     else
     {
-    #if CONFIG_DRV_ISIS_ANTENNA_ENABLED == 1
+    #if defined(CONFIG_DRV_ISIS_ANTENNA_ENABLED) && (CONFIG_DRV_ISIS_ANTENNA_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Initializing...");
         sys_log_new_line();
 
@@ -126,7 +126,7 @@ int antenna_get_data(antenna_data_t *data)
     data->status.code = UINT16_MAX;
     data->temperature = UINT16_MAX;
 
-#if CONFIG_DRV_ISIS_ANTENNA_ENABLED == 1
+#if defined(CONFIG_DRV_ISIS_ANTENNA_ENABLED) && (CONFIG_DRV_ISIS_ANTENNA_ENABLED == 1)
     if (isis_antenna_get_data(data) == 0)
     {
         err = 0;
@@ -153,7 +153,7 @@ int antenna_deploy(uint32_t timeout_ms)
     sys_log_print_msg(" ms...");
     sys_log_new_line();
 
-#if CONFIG_DRV_ISIS_ANTENNA_ENABLED == 1
+#if defined(CONFIG_DRV_ISIS_ANTENNA_ENABLED) && (CONFIG_DRV_ISIS_ANTENNA_ENABLED == 1)
     /* Arm */
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Trying to arm the antenna module...");
     sys_log_new_line();
@@ -251,7 +251,7 @@ int antenna_deploy(uint32_t timeout_ms)
     return err;
 }
 
-void antenna_print_status(isis_antenna_status_t status)
+static void antenna_print_status(isis_antenna_status_t status)
 {
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 1 status=");
     sys_log_print_msg((status.antenna_1.status == ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");

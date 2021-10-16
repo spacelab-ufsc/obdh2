@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.26
+ * \version 0.8.10
  * 
  * \date 2020/02/01
  * 
@@ -41,14 +41,14 @@
 
 #include "ttc.h"
 
-ttc_config_t ttc_0_config = {0};
-ttc_config_t ttc_1_config = {0};
-
-bool ttc_0_is_open = false;
-bool ttc_1_is_open = false;
+static ttc_config_t ttc_0_config = {0};
+static ttc_config_t ttc_1_config = {0};
 
 int ttc_init(ttc_e dev)
 {
+    static bool ttc_0_is_open = false;
+    static bool ttc_1_is_open = false;
+
     int err = -2;
 
     ttc_config_t ttc_config = {0};

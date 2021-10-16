@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.22
+ * \version 0.8.10
  * 
  * \date 2020/02/01
  * 
@@ -41,9 +41,9 @@
 
 #include "eps.h"
 
-sl_eps2_config_t eps_config = {0};
+static sl_eps2_config_t eps_config = {0};
 
-bool eps_is_open = false;
+static bool eps_is_open = false;
 
 int eps_init(void)
 {
