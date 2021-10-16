@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.43
+ * \version 0.8.9
  * 
  * \date 2019/11/15
  * 
@@ -40,7 +40,7 @@
 
 #define MT25Q_DUMMY_BYTE        0x00
 
-flash_description_t mt25q_fdo = {0};
+static flash_description_t mt25q_fdo = {0};
 
 /**
  * \brief Writes data into the memory.
@@ -55,7 +55,7 @@ flash_description_t mt25q_fdo = {0};
  *
  * \return The status/error code.
  */
-int mt25q_gen_program(uint32_t adr, uint8_t *data, uint32_t len, uint8_t instr);
+static int mt25q_gen_program(uint32_t adr, uint8_t *data, uint32_t len, uint8_t instr);
 
 int mt25q_init(void)
 {
@@ -132,10 +132,11 @@ int mt25q_read_flash_description(flash_description_t *fdo)
             if (mt25q_spi_transfer(cmd, ans, 350) == 0)
             {
                 /* Remove the SPI command, address and dummy clocks */
-                if (memcpy(ans, &ans[5], 350) == ans)   /* 5 = SPI command + address + dummy clocks */
+                if (memmove(ans, &ans[5], 350) == ans)   /* 5 = SPI command + address + dummy clocks */
                 {
                     /* Check if the read data is valid */
-                    if (memcmp(ans, "SFDP", 4) == 0)
+                    uint8_t sfdp[6] = {'S', 'F', 'D', 'P', 0, 164};
+                    if ((ans != NULL) && (memcmp(ans, sfdp, 4) == 0))
                     {
                         /* The parameter table pointer is at MT25Q_DISCOVERY_TABLE_1 */
                         uint32_t table_address = (uint32_t)ans[MT25Q_DISCOVERY_TABLE_1] |
@@ -763,7 +764,7 @@ flash_description_t mt25q_get_flash_description(void)
     return mt25q_fdo;
 }
 
-int mt25q_gen_program(uint32_t adr, uint8_t *data, uint32_t len, uint8_t instr)
+static int mt25q_gen_program(uint32_t adr, uint8_t *data, uint32_t len, uint8_t instr)
 {
     int err = -1;
 

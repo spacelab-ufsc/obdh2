@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.44
+ * \version 0.8.9
  * 
  * \date 2020/03/31
  * 
@@ -38,7 +38,7 @@
 /**
  * \brief Payload X I2C port.
  */
-px_config_t px_i2c_conf = {0};
+static px_config_t px_i2c_conf = {0};
 
 int px_init(i2c_port_t port, uint32_t bitrate)
 {

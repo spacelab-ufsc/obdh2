@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.8
+ * \version 0.8.9
  * 
  * \date 2021/04/07
  * 
@@ -141,7 +141,7 @@ __interrupt
 #elif defined(__GNUC__)
 __attribute__((interrupt(RTC_VECTOR)))
 #endif
-void RTC_B_ISR(void)
+void RTC_B_ISR(void)    // cppcheck-suppress misra-c2012-8.4
 {
     switch(__even_in_range(RTCIV, 16))
     {

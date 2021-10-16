@@ -55,7 +55,7 @@ jobs:
         run: cppcheck --std=c99 --error-exitcode=-1 --addon=misra.py firmware/devices/
 
       - name: Execute CppCheck on drivers files
-        run: cppcheck --std=c99 --error-exitcode=-1 --addon=misra.py firmware/drivers/
+        run: cppcheck --std=c99 --error-exitcode=-1 --inline-suppr --addon=misra.py firmware/drivers/
 
       - name: Execute CppCheck on system files
         run: cppcheck --std=c99 --error-exitcode=-1 --inline-suppr --addon=misra.py firmware/system/

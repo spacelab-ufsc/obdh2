@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.35
+ * \version 0.8.9
  * 
  * \date 2020/02/05
  * 
@@ -53,7 +53,7 @@
  *
  * \return The computed CRC-8 value of the given data.
  */
-uint8_t sl_eps2_crc8(uint8_t *data, uint8_t len);
+static uint8_t sl_eps2_crc8(uint8_t *data, uint8_t len);
 
 /**
  * \brief Checks the CRC value of a given sequence of bytes.
@@ -66,7 +66,7 @@ uint8_t sl_eps2_crc8(uint8_t *data, uint8_t len);
  *
  * \return TRUE/FALSE if the given CRC value is correct or not.
  */
-bool sl_eps2_check_crc(uint8_t *data, uint8_t len, uint8_t crc);
+static bool sl_eps2_check_crc(uint8_t *data, uint8_t len, uint8_t crc);
 
 int sl_eps2_init(sl_eps2_config_t config)
 {
@@ -1009,7 +1009,7 @@ int sl_eps2_get_heater_mode(sl_eps2_config_t config, uint8_t heater, uint8_t *va
     return res;
 }
 
-uint8_t sl_eps2_crc8(uint8_t *data, uint8_t len)
+static uint8_t sl_eps2_crc8(uint8_t *data, uint8_t len)
 {
     uint8_t crc = SL_EPS2_CRC8_INITIAL_VALUE;
 
@@ -1030,7 +1030,7 @@ uint8_t sl_eps2_crc8(uint8_t *data, uint8_t len)
     return crc;
 }
 
-bool sl_eps2_check_crc(uint8_t *data, uint8_t len, uint8_t crc)
+static bool sl_eps2_check_crc(uint8_t *data, uint8_t len, uint8_t crc)
 {
     return (crc == sl_eps2_crc8(data, len));
 }
