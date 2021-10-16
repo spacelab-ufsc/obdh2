@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.9
+ * \version 0.8.13
  * 
  * \date 2021/05/12
  * 
@@ -68,7 +68,7 @@ int sl_ttc2_init(sl_ttc2_config_t config)
 {
     int err = -1;
 
-    if (spi_init(config.port, config.port_config) == 0)
+    if (sl_ttc2_spi_init(config) == 0)
     {
         sl_ttc2_delay_ms(10);
 
@@ -156,7 +156,7 @@ int sl_ttc2_write_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t val)
     buf[6] = (crc >> 8) & 0xFFU;
     buf[7] = (crc >> 0) & 0xFFU;
 
-    return spi_write(config.port, config.cs_pin, buf, 8);
+    return sl_ttc2_spi_write(config, buf, 8U);
 }
 
 int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
@@ -175,7 +175,7 @@ int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
     rbuf[1] = adr;
 
     /* Register data + Checksum */
-    if (spi_transfer(config.port, config.cs_pin, wbuf, rbuf, 8) == 0)
+    if (sl_ttc2_spi_transfer(config, wbuf, rbuf, 8U) == 0)
     {
         if (sl_ttc2_check_crc(rbuf, 6, ((uint16_t)rbuf[6] << 8) | (uint16_t)rbuf[7]))
         {
@@ -643,7 +643,7 @@ int sl_ttc2_transmit_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t len
         buf[1U + len] = (crc >> 8) & 0xFFU;
         buf[1U + len + 1U] = (crc >> 0) & 0xFFU;
 
-        err = spi_write(config.port, config.cs_pin, buf, 1U + len + 2U);
+        err = sl_ttc2_spi_write(config, buf, 1U + len + 2U);
     }
 
     return err;
@@ -660,7 +660,7 @@ int sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len)
 
     if (sl_ttc2_read_len_rx_pkt_in_fifo(config, len) == 0)
     {
-        if (spi_transfer(config.port, config.cs_pin, wbuf, data, 1U + (*len) + 2U) == 0)
+        if (sl_ttc2_spi_transfer(config, wbuf, data, 1U + (*len) + 2U) == 0)
         {
             if (sl_ttc2_check_crc(data, 1U + (*len), sl_ttc2_crc16(data, 1U + (*len))))
             {

@@ -71,8 +71,8 @@ mt25q_test: $(BUILD_DIR)/mt25q.o $(BUILD_DIR)/mt25q_delay.o $(BUILD_DIR)/mt25q_g
 	$(CC) $(MT25Q_TEST_FLAGS) $(BUILD_DIR)/mt25q.o $(BUILD_DIR)/mt25q_delay.o $(BUILD_DIR)/mt25q_gpio.o $(BUILD_DIR)/mt25q_spi.o $(BUILD_DIR)/mt25q_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/task.o -o $(BUILD_DIR)/$(TARGET_MT25Q) -lm -lcmocka
 
 .PHONY: sl_ttc2_test
-sl_ttc2_test: $(BUILD_DIR)/sl_ttc2.o $(BUILD_DIR)/sl_ttc2_delay.o $(BUILD_DIR)/sl_ttc2_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/task.o
-	$(CC) $(SL_TTC2_TEST_FLAGS) $(BUILD_DIR)/sl_ttc2.o $(BUILD_DIR)/sl_ttc2_delay.o $(BUILD_DIR)/sl_ttc2_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/task.o -o $(BUILD_DIR)/$(TARGET_SL_TTC2) -lm -lcmocka
+sl_ttc2_test: $(BUILD_DIR)/sl_ttc2.o $(BUILD_DIR)/sl_ttc2_spi.o $(BUILD_DIR)/sl_ttc2_delay.o $(BUILD_DIR)/sl_ttc2_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/task.o
+	$(CC) $(SL_TTC2_TEST_FLAGS) $(BUILD_DIR)/sl_ttc2.o $(BUILD_DIR)/sl_ttc2_spi.o $(BUILD_DIR)/sl_ttc2_delay.o $(BUILD_DIR)/sl_ttc2_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/task.o -o $(BUILD_DIR)/$(TARGET_SL_TTC2) -lm -lcmocka
 
 # Drivers
 $(BUILD_DIR)/cy15x102qn.o: ../../drivers/cy15x102qn/cy15x102qn.c
@@ -139,6 +139,9 @@ $(BUILD_DIR)/mt25q_spi.o: ../../drivers/mt25q/mt25q_spi.c
 	$(CC) $(MT25Q_TEST_FLAGS) -c $< -o $@
 
 $(BUILD_DIR)/sl_ttc2.o: ../../drivers/sl_ttc2/sl_ttc2.c
+	$(CC) $(SL_TTC2_TEST_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/sl_ttc2_spi.o: ../../drivers/sl_ttc2/sl_ttc2_spi.c
 	$(CC) $(SL_TTC2_TEST_FLAGS) -c $< -o $@
 
 $(BUILD_DIR)/sl_ttc2_delay.o: ../../drivers/sl_ttc2/sl_ttc2_delay.c
