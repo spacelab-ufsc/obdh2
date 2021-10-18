@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.4
+ * \version 0.8.14
  * 
  * \date 2021/08/16
  * 
@@ -51,56 +51,83 @@ int __wrap_edc_init(edc_config_t config)
     return mock_type(int);
 }
 
-int __wrap_edc_write_cmd(edc_cmd_t cmd)
+int __wrap_edc_write_cmd(edc_config_t config, edc_cmd_t cmd)
 {
+    check_expected(config.port);
+    check_expected(config.bitrate);
+
     check_expected(cmd.id);
     check_expected(cmd.param);
 
     return mock_type(int);
 }
 
-int __wrap_edc_read(uint8_t *data, uint16_t len)
+int __wrap_edc_read(edc_config_t config, uint8_t *data, uint16_t len)
 {
+    check_expected(config.port);
+    check_expected(config.bitrate);
+
     check_expected_ptr(data);
     check_expected(len);
 
     return mock_type(int);
 }
 
-int __wrap_edc_check_device(void)
+int __wrap_edc_check_device(edc_config_t config)
 {
+    check_expected(config.port);
+    check_expected(config.bitrate);
+
     return mock_type(int);
 }
 
-int __wrap_edc_set_rtc_time(uint32_t time)
+int __wrap_edc_set_rtc_time(edc_config_t config, uint32_t time)
 {
+    check_expected(config.port);
+    check_expected(config.bitrate);
+
     check_expected(time);
 
     return mock_type(int);
 }
 
-int __wrap_edc_pop_ptt_pkg(void)
+int __wrap_edc_pop_ptt_pkg(edc_config_t config)
 {
+    check_expected(config.port);
+    check_expected(config.bitrate);
+
     return mock_type(int);
 }
 
-int __wrap_edc_pause_ptt_task(void)
+int __wrap_edc_pause_ptt_task(edc_config_t config)
 {
+    check_expected(config.port);
+    check_expected(config.bitrate);
+
     return mock_type(int);
 }
 
-int __wrap_edc_resume_ptt_task(void)
+int __wrap_edc_resume_ptt_task(edc_config_t config)
 {
+    check_expected(config.port);
+    check_expected(config.bitrate);
+
     return mock_type(int);
 }
 
-int __wrap_edc_start_adc_task(void)
+int __wrap_edc_start_adc_task(edc_config_t config)
 {
+    check_expected(config.port);
+    check_expected(config.bitrate);
+
     return mock_type(int);
 }
 
-int16_t __wrap_edc_get_state_pkg(uint8_t *status)
+int16_t __wrap_edc_get_state_pkg(edc_config_t config, uint8_t *status)
 {
+    check_expected(config.port);
+    check_expected(config.bitrate);
+
     if (status != NULL)
     {
         status = mock_ptr_type(uint8_t*);
@@ -109,8 +136,11 @@ int16_t __wrap_edc_get_state_pkg(uint8_t *status)
     return mock_type(int16_t);
 }
 
-int16_t __wrap_edc_get_ptt_pkg(uint8_t *pkg)
+int16_t __wrap_edc_get_ptt_pkg(edc_config_t config, uint8_t *pkg)
 {
+    check_expected(config.port);
+    check_expected(config.bitrate);
+
     if (pkg != NULL)
     {
         pkg = mock_ptr_type(uint8_t*);
@@ -119,8 +149,11 @@ int16_t __wrap_edc_get_ptt_pkg(uint8_t *pkg)
     return mock_type(int16_t);
 }
 
-int16_t __wrap_edc_get_hk_pkg(uint8_t *hk)
+int16_t __wrap_edc_get_hk_pkg(edc_config_t config, uint8_t *hk)
 {
+    check_expected(config.port);
+    check_expected(config.bitrate);
+
     if (hk != NULL)
     {
         hk = mock_ptr_type(uint8_t*);
@@ -129,8 +162,11 @@ int16_t __wrap_edc_get_hk_pkg(uint8_t *hk)
     return mock_type(int16_t);
 }
 
-int16_t __wrap_edc_get_adc_seq(uint8_t *seq)
+int16_t __wrap_edc_get_adc_seq(edc_config_t config, uint8_t *seq)
 {
+    check_expected(config.port);
+    check_expected(config.bitrate);
+
     if (seq != NULL)
     {
         seq = mock_ptr_type(uint8_t*);
@@ -139,8 +175,11 @@ int16_t __wrap_edc_get_adc_seq(uint8_t *seq)
     return mock_type(int16_t);
 }
 
-int __wrap_edc_echo(void)
+int __wrap_edc_echo(edc_config_t config)
 {
+    check_expected(config.port);
+    check_expected(config.bitrate);
+
     return mock_type(int);
 }
 
@@ -152,8 +191,11 @@ uint16_t __wrap_edc_calc_checksum(uint8_t *data, uint16_t len)
     return mock_type(uint16_t);
 }
 
-int __wrap_edc_get_state(edc_state_t *state_data)
+int __wrap_edc_get_state(edc_config_t config, edc_state_t *state_data)
 {
+    check_expected(config.port);
+    check_expected(config.bitrate);
+
     if (state_data != NULL)
     {
         state_data->current_time    = mock_type(uint32_t);
@@ -165,8 +207,11 @@ int __wrap_edc_get_state(edc_state_t *state_data)
     return mock_type(int);
 }
 
-int __wrap_edc_get_hk(edc_hk_t *hk_data)
+int __wrap_edc_get_hk(edc_config_t config, edc_hk_t *hk_data)
 {
+    check_expected(config.port);
+    check_expected(config.bitrate);
+
     if (hk_data != NULL)
     {
         hk_data->current_time       = mock_type(uint32_t);

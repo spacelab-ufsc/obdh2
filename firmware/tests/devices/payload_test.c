@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.8
+ * \version 0.8.14
  * 
  * \date 2021/08/16
  * 
@@ -48,11 +48,17 @@
 static void payload_init_test(void **state)
 {
     expect_value(__wrap_edc_init, config.port, I2C_PORT_0);
-    expect_value(__wrap_edc_init, config.bitrate, 400000);
+    expect_value(__wrap_edc_init, config.bitrate, 400000UL);
 
     will_return(__wrap_edc_init, 0);
 
+    expect_value(__wrap_edc_pause_ptt_task, config.port, I2C_PORT_0);
+    expect_value(__wrap_edc_pause_ptt_task, config.bitrate, 400000UL);
+
     will_return(__wrap_edc_pause_ptt_task, 0);
+
+    expect_value(__wrap_edc_get_hk, config.port, I2C_PORT_0);
+    expect_value(__wrap_edc_get_hk, config.bitrate, 400000UL);
 
     will_return(__wrap_edc_get_hk, 0);      /* Current time */
     will_return(__wrap_edc_get_hk, 5);      /* Elapsed time */
@@ -86,6 +92,9 @@ static void payload_init_test(void **state)
 
 static void payload_enable_test(void **state)
 {
+    expect_value(__wrap_edc_resume_ptt_task, config.port, I2C_PORT_0);
+    expect_value(__wrap_edc_resume_ptt_task, config.bitrate, 400000UL);
+
     will_return(__wrap_edc_resume_ptt_task, 0);
 
     assert_return_code(payload_enable(PAYLOAD_EDC), 0);
@@ -96,6 +105,9 @@ static void payload_enable_test(void **state)
 
 static void payload_disable_test(void **state)
 {
+    expect_value(__wrap_edc_pause_ptt_task, config.port, I2C_PORT_0);
+    expect_value(__wrap_edc_pause_ptt_task, config.bitrate, 400000UL);
+
     will_return(__wrap_edc_pause_ptt_task, 0);
 
     assert_return_code(payload_disable(PAYLOAD_EDC), 0);
