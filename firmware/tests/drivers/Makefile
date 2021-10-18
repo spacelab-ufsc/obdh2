@@ -51,8 +51,8 @@ tca4311a_test: $(BUILD_DIR)/tca4311a.o $(BUILD_DIR)/tca4311a_test.o $(BUILD_DIR)
 	$(CC) $(TCA4311A_TEST_FLAGS) $(BUILD_DIR)/tca4311a.o $(BUILD_DIR)/tca4311a_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/i2c_wrap.o $(BUILD_DIR)/gpio_wrap.o -o $(BUILD_DIR)/$(TARGET_TCA4311A) -lm -lcmocka
 
 .PHONY: edc_test
-edc_test: $(BUILD_DIR)/edc.o $(BUILD_DIR)/edc_delay.o $(BUILD_DIR)/edc_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/i2c_wrap.o $(BUILD_DIR)/task.o
-	$(CC) $(EDC_TEST_FLAGS) $(BUILD_DIR)/edc.o $(BUILD_DIR)/edc_delay.o $(BUILD_DIR)/edc_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/i2c_wrap.o $(BUILD_DIR)/task.o -o $(BUILD_DIR)/$(TARGET_EDC) -lm -lcmocka
+edc_test: $(BUILD_DIR)/edc.o $(BUILD_DIR)/edc_i2c.o $(BUILD_DIR)/edc_delay.o $(BUILD_DIR)/edc_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/i2c_wrap.o $(BUILD_DIR)/task.o
+	$(CC) $(EDC_TEST_FLAGS) $(BUILD_DIR)/edc.o $(BUILD_DIR)/edc_i2c.o $(BUILD_DIR)/edc_delay.o $(BUILD_DIR)/edc_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/i2c_wrap.o $(BUILD_DIR)/task.o -o $(BUILD_DIR)/$(TARGET_EDC) -lm -lcmocka
 
 .PHONY: isis_antenna_test
 isis_antenna_test: $(BUILD_DIR)/isis_antenna.o $(BUILD_DIR)/isis_antenna_delay.o $(BUILD_DIR)/isis_antenna_i2c.o $(BUILD_DIR)/isis_antenna_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/tca4311a_wrap.o $(BUILD_DIR)/task.o
@@ -91,6 +91,9 @@ $(BUILD_DIR)/tca4311a.o: ../../drivers/tca4311a/tca4311a.c
 	$(CC) $(TCA4311A_TEST_FLAGS) -c $< -o $@
 
 $(BUILD_DIR)/edc.o: ../../drivers/edc/edc.c
+	$(CC) $(EDC_TEST_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/edc_i2c.o: ../../drivers/edc/edc_i2c.c
 	$(CC) $(EDC_TEST_FLAGS) -c $< -o $@
 
 $(BUILD_DIR)/edc_delay.o: ../../drivers/edc/edc_delay.c

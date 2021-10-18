@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.13
+ * \version 0.8.13
  * 
  * \date 2021/09/01
  * 
@@ -123,7 +123,7 @@ static void edc_write_cmd_test(void **state)
 
                 will_return(__wrap_i2c_write, 0);
 
-                assert_return_code(edc_write_cmd(cmd), 0);
+                assert_return_code(edc_write_cmd(conf, cmd), 0);
 
                 break;
             case 0x06:
@@ -137,7 +137,7 @@ static void edc_write_cmd_test(void **state)
 
                 will_return(__wrap_i2c_write, 0);
 
-                assert_return_code(edc_write_cmd(cmd), 0);
+                assert_return_code(edc_write_cmd(conf, cmd), 0);
 
                 break;
             case 0x08:
@@ -151,7 +151,7 @@ static void edc_write_cmd_test(void **state)
 
                 will_return(__wrap_i2c_write, 0);
 
-                assert_return_code(edc_write_cmd(cmd), 0);
+                assert_return_code(edc_write_cmd(conf, cmd), 0);
 
                 break;
             case 0x09:
@@ -165,7 +165,7 @@ static void edc_write_cmd_test(void **state)
 
                 will_return(__wrap_i2c_write, 0);
 
-                assert_return_code(edc_write_cmd(cmd), 0);
+                assert_return_code(edc_write_cmd(conf, cmd), 0);
 
                 break;
             case 0x0A:
@@ -179,7 +179,7 @@ static void edc_write_cmd_test(void **state)
 
                 will_return(__wrap_i2c_write, 0);
 
-                assert_return_code(edc_write_cmd(cmd), 0);
+                assert_return_code(edc_write_cmd(conf, cmd), 0);
 
                 break;
             case 0x30:
@@ -193,7 +193,7 @@ static void edc_write_cmd_test(void **state)
 
                 will_return(__wrap_i2c_write, 0);
 
-                assert_return_code(edc_write_cmd(cmd), 0);
+                assert_return_code(edc_write_cmd(conf, cmd), 0);
 
                 break;
             case 0x31:
@@ -208,7 +208,7 @@ static void edc_write_cmd_test(void **state)
 
                 will_return(__wrap_i2c_write, 0);
 
-                assert_return_code(edc_write_cmd(cmd), 0);
+                assert_return_code(edc_write_cmd(conf, cmd), 0);
 
                 break;
             case 0x32:
@@ -222,7 +222,7 @@ static void edc_write_cmd_test(void **state)
 
                 will_return(__wrap_i2c_write, 0);
 
-                assert_return_code(edc_write_cmd(cmd), 0);
+                assert_return_code(edc_write_cmd(conf, cmd), 0);
 
                 break;
             case 0x34:
@@ -238,7 +238,7 @@ static void edc_write_cmd_test(void **state)
 
                 will_return(__wrap_i2c_write, 0);
 
-                assert_return_code(edc_write_cmd(cmd), 0);
+                assert_return_code(edc_write_cmd(conf, cmd), 0);
 
                 break;
             case 0xF0:
@@ -252,11 +252,11 @@ static void edc_write_cmd_test(void **state)
 
                 will_return(__wrap_i2c_write, 0);
 
-                assert_return_code(edc_write_cmd(cmd), 0);
+                assert_return_code(edc_write_cmd(conf, cmd), 0);
 
                 break;
             default:
-                assert_int_equal(edc_write_cmd(cmd), -1);
+                assert_int_equal(edc_write_cmd(conf, cmd), -1);
         }
     }
 }
@@ -281,7 +281,7 @@ static void edc_read_test(void **state)
 
     uint8_t ans[256] = {0xFF};
 
-    assert_return_code(edc_read(ans, data_len), 0);
+    assert_return_code(edc_read(conf, ans, data_len), 0);
 
     for(i=0; i<data_len; i++)
     {
@@ -317,7 +317,7 @@ static void edc_check_device_test(void **state)
 
     will_return(__wrap_i2c_read, 0);
 
-    assert_return_code(edc_check_device(), 0);
+    assert_return_code(edc_check_device(conf), 0);
 }
 
 static void edc_set_rtc_time_test(void **state)
@@ -340,7 +340,7 @@ static void edc_set_rtc_time_test(void **state)
 
     will_return(__wrap_i2c_write, 0);
 
-    assert_return_code(edc_set_rtc_time(timestamp), 0);
+    assert_return_code(edc_set_rtc_time(conf, timestamp), 0);
 }
 
 static void edc_pop_ptt_pkg_test(void **state)
@@ -357,7 +357,7 @@ static void edc_pop_ptt_pkg_test(void **state)
 
     will_return(__wrap_i2c_write, 0);
 
-    assert_return_code(edc_pop_ptt_pkg(), 0);
+    assert_return_code(edc_pop_ptt_pkg(conf), 0);
 }
 
 static void edc_pause_ptt_task_test(void **state)
@@ -371,7 +371,7 @@ static void edc_pause_ptt_task_test(void **state)
 
     will_return(__wrap_i2c_write, 0);
 
-    assert_return_code(edc_pause_ptt_task(), 0);
+    assert_return_code(edc_pause_ptt_task(conf), 0);
 }
 
 static void edc_resume_ptt_task_test(void **state)
@@ -385,7 +385,7 @@ static void edc_resume_ptt_task_test(void **state)
 
     will_return(__wrap_i2c_write, 0);
 
-    assert_return_code(edc_resume_ptt_task(), 0);
+    assert_return_code(edc_resume_ptt_task(conf), 0);
 }
 
 static void edc_start_adc_task_test(void **state)
@@ -399,7 +399,7 @@ static void edc_start_adc_task_test(void **state)
 
     will_return(__wrap_i2c_write, 0);
 
-    assert_return_code(edc_start_adc_task(), 0);
+    assert_return_code(edc_start_adc_task(conf), 0);
 }
 
 static void edc_get_state_pkg_test(void **state)
@@ -435,7 +435,7 @@ static void edc_get_state_pkg_test(void **state)
 
     uint8_t status[256] = {0xFF};
 
-    assert_int_equal(edc_get_state_pkg(status), 9);
+    assert_int_equal(edc_get_state_pkg(conf, status), 9);
 
     for(i=0; i<9; i++)
     {
@@ -476,7 +476,7 @@ static void edc_get_ptt_pkg_test(void **state)
 
     uint8_t ptt[256] = {0xFF};
 
-    assert_int_equal(edc_get_ptt_pkg(ptt), 49);
+    assert_int_equal(edc_get_ptt_pkg(conf, ptt), 49);
 
     for(i=0; i<49; i++)
     {
@@ -517,7 +517,7 @@ static void edc_get_hk_pkg_test(void **state)
 
     uint8_t hk[256] = {0xFF};
 
-    assert_int_equal(edc_get_hk_pkg(hk), 21);
+    assert_int_equal(edc_get_hk_pkg(conf, hk), 21);
 
     for(i=0; i<21; i++)
     {
@@ -558,7 +558,7 @@ static void edc_get_adc_seq_test(void **state)
 
     uint8_t seq[8199] = {0xFF};
 
-    assert_int_equal(edc_get_adc_seq(seq), 8199);
+    assert_int_equal(edc_get_adc_seq(conf, seq), 8199);
 
     for(i=0; i<8199; i++)
     {
@@ -577,7 +577,7 @@ static void edc_echo_test(void **state)
 
     will_return(__wrap_i2c_write, 0);
 
-    assert_return_code(edc_echo(), 0);
+    assert_return_code(edc_echo(conf), 0);
 }
 
 static void edc_calc_checksum_test(void **state)
@@ -649,7 +649,7 @@ static void edc_get_state_test(void **state)
 
     edc_state_t st = {0};
 
-    assert_return_code(edc_get_state(&st), 0);
+    assert_return_code(edc_get_state(conf, &st), 0);
 }
 
 static void edc_get_ptt_test(void **state)
@@ -696,7 +696,7 @@ static void edc_get_ptt_test(void **state)
 
     edc_ptt_t ptt = {0};
 
-    assert_return_code(edc_get_ptt(&ptt), 0);
+    assert_return_code(edc_get_ptt(conf, &ptt), 0);
 
     assert_int_equal(ptt.time_tag, ((uint32_t)data[4] << 24) | ((uint32_t)data[3] << 16) | ((uint32_t)data[2] << 8) | ((uint32_t)data[1] << 0));
     assert_int_equal(ptt.error_code, data[5]);
@@ -755,7 +755,7 @@ static void edc_get_hk_test(void **state)
 
     edc_hk_t hk_data = {0};
 
-    assert_return_code(edc_get_hk(&hk_data), 0);
+    assert_return_code(edc_get_hk(conf, &hk_data), 0);
 
     assert_int_equal(hk_data.current_time, ((uint32_t)data[4] << 24) | ((uint32_t)data[3] << 16) | ((uint32_t)data[2] << 8) | ((uint32_t)data[1] << 0));
     assert_int_equal(hk_data.elapsed_time, ((uint32_t)data[8] << 24) | ((uint32_t)data[7] << 16) | ((uint32_t)data[6] << 8) | ((uint32_t)data[5] << 0));
