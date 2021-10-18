@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
  * 
- * \version 0.7.44
+ * \version 0.8.14
  * 
  * \date 2021/08/15
  * 
@@ -42,6 +42,8 @@
 
 #include "payload.h"
 
+static edc_config_t edc_conf = {0};
+
 int payload_init(payload_t pl)
 {
     int err = -1;
@@ -50,18 +52,16 @@ int payload_init(payload_t pl)
     {
         case PAYLOAD_EDC:
         {
-            edc_config_t config = {0};
+            edc_conf.port = I2C_PORT_0;
+            edc_conf.bitrate = 400000UL;
 
-            config.port = I2C_PORT_0;
-            config.bitrate = 400000;
-
-            if (edc_init(config) == 0)
+            if (edc_init(edc_conf) == 0)
             {
                 if (payload_disable(PAYLOAD_EDC) == 0)
                 {
                     edc_hk_t hk_data = {0};
 
-                    if (edc_get_hk(&hk_data) == 0)
+                    if (edc_get_hk(edc_conf, &hk_data) == 0)
                     {
                         err = 0;
 
@@ -147,7 +147,7 @@ int payload_enable(payload_t pl)
     switch(pl)
     {
         case PAYLOAD_EDC:
-            if (edc_resume_ptt_task() == 0)
+            if (edc_resume_ptt_task(edc_conf) == 0)
             {
                 err = 0;
             }
@@ -190,7 +190,7 @@ int payload_disable(payload_t pl)
     switch(pl)
     {
         case PAYLOAD_EDC:
-            if (edc_pause_ptt_task() == 0)
+            if (edc_pause_ptt_task(edc_conf) == 0)
             {
                 err = 0;
             }
@@ -279,7 +279,7 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
             {
                 case PAYLOAD_EDC_RAW_STATE:
                 {
-                    int bytes = edc_get_state_pkg(data);
+                    int bytes = edc_get_state_pkg(edc_conf, data);
 
                     if (bytes < 0)
                     {
@@ -295,7 +295,7 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
                 }
                 case PAYLOAD_EDC_RAW_HK:
                 {
-                    int bytes = edc_get_hk_pkg(data);
+                    int bytes = edc_get_hk_pkg(edc_conf, data);
 
                     if (bytes < 0)
                     {
