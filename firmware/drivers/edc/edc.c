@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.8
+ * \version 0.8.14
  * 
  * \date 2019/10/27
  * 
@@ -41,24 +41,13 @@
 
 #include "edc.h"
 
-/**
- * \brief EDC I2C port.
- */
-static i2c_port_t edc_i2c_port;
-
 int edc_init(edc_config_t config)
 {
     int err = -1;
 
-    edc_i2c_port = config.port;
-
-    i2c_config_t i2c_conf = {0};
-
-    i2c_conf.speed_hz = config.bitrate;
-
-    if (i2c_init(config.port, i2c_conf) == 0)
+    if (edc_i2c_init(config) == 0)
     {
-        err = edc_check_device();
+        err = edc_check_device(config);
     }
     else
     {
@@ -71,7 +60,7 @@ int edc_init(edc_config_t config)
     return err;
 }
 
-int edc_write_cmd(edc_cmd_t cmd)
+int edc_write_cmd(edc_config_t config, edc_cmd_t cmd)
 {
     int err = 0;
 
@@ -118,24 +107,24 @@ int edc_write_cmd(edc_cmd_t cmd)
     if (err == 0)
     {
         /* Transmit the command over an I2C port */
-        err = i2c_write(edc_i2c_port, EDC_SLAVE_ADDRESS, cmd_str, cmd_str_len);
+        err = edc_i2c_write(config, cmd_str, cmd_str_len);
     }
 
     return err;
 }
 
-int edc_read(uint8_t *data, uint16_t len)
+int edc_read(edc_config_t config, uint8_t *data, uint16_t len)
 {
-    return i2c_read(edc_i2c_port, EDC_SLAVE_ADDRESS, data, len);
+    return edc_i2c_read(config, data, len);
 }
 
-int edc_check_device(void)
+int edc_check_device(edc_config_t config)
 {
     int err = 0;
 
     uint8_t status[EDC_FRAME_STATE_LEN] = {0};
 
-    if (edc_get_state_pkg(status) != EDC_FRAME_STATE_LEN)
+    if (edc_get_state_pkg(config, status) != EDC_FRAME_STATE_LEN)
     {
     #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error checking the device!");
@@ -147,53 +136,53 @@ int edc_check_device(void)
     return err;
 }
 
-int edc_set_rtc_time(uint32_t time)
+int edc_set_rtc_time(edc_config_t config, uint32_t time)
 {
     edc_cmd_t rtc_cmd;
 
     rtc_cmd.id = EDC_CMD_RTC_SET;
     rtc_cmd.param = time;
 
-    return edc_write_cmd(rtc_cmd);
+    return edc_write_cmd(config, rtc_cmd);
 }
 
-int edc_pop_ptt_pkg(void)
+int edc_pop_ptt_pkg(edc_config_t config)
 {
     edc_cmd_t cmd = {0};
 
     cmd.id = EDC_CMD_PTT_POP;
 
-    return edc_write_cmd(cmd);
+    return edc_write_cmd(config, cmd);
 }
 
-int edc_pause_ptt_task(void)
+int edc_pause_ptt_task(edc_config_t config)
 {
     edc_cmd_t cmd = {0};
 
     cmd.id = EDC_CMD_PTT_PAUSE;
 
-    return edc_write_cmd(cmd);
+    return edc_write_cmd(config, cmd);
 }
 
-int edc_resume_ptt_task(void)
+int edc_resume_ptt_task(edc_config_t config)
 {
     edc_cmd_t cmd = {0};
 
     cmd.id = EDC_CMD_PTT_RESUME;
 
-    return edc_write_cmd(cmd);
+    return edc_write_cmd(config, cmd);
 }
 
-int edc_start_adc_task(void)
+int edc_start_adc_task(edc_config_t config)
 {
     edc_cmd_t cmd = {0};
 
     cmd.id = EDC_CMD_SAMPLER_START;
 
-    return edc_write_cmd(cmd);
+    return edc_write_cmd(config, cmd);
 }
 
-int16_t edc_get_state_pkg(uint8_t *status)
+int16_t edc_get_state_pkg(edc_config_t config, uint8_t *status)
 {
     int16_t res = -1;
 
@@ -201,12 +190,12 @@ int16_t edc_get_state_pkg(uint8_t *status)
 
     cmd.id = EDC_CMD_GET_STATE;
 
-    if (edc_write_cmd(cmd) == 0)
+    if (edc_write_cmd(config, cmd) == 0)
     {
         /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
         edc_delay_ms(10);
 
-        if (edc_read(status, EDC_FRAME_STATE_LEN) == 0)
+        if (edc_read(config, status, EDC_FRAME_STATE_LEN) == 0)
         {
             if (status[0] == EDC_FRAME_ID_STATE)
             {
@@ -241,7 +230,7 @@ int16_t edc_get_state_pkg(uint8_t *status)
     return res;
 }
 
-int16_t edc_get_ptt_pkg(uint8_t *pkg)
+int16_t edc_get_ptt_pkg(edc_config_t config, uint8_t *pkg)
 {
     int res = -1;
 
@@ -249,12 +238,12 @@ int16_t edc_get_ptt_pkg(uint8_t *pkg)
 
     cmd.id = EDC_CMD_GET_PTT_PKG;
 
-    if (edc_write_cmd(cmd) == 0)
+    if (edc_write_cmd(config, cmd) == 0)
     {
         /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
         edc_delay_ms(10);
 
-        if (edc_read(pkg, EDC_FRAME_PTT_LEN) == 0)
+        if (edc_read(config, pkg, EDC_FRAME_PTT_LEN) == 0)
         {
             if (pkg[0] == EDC_FRAME_ID_PTT)
             {
@@ -289,7 +278,7 @@ int16_t edc_get_ptt_pkg(uint8_t *pkg)
     return res;
 }
 
-int16_t edc_get_hk_pkg(uint8_t *hk)
+int16_t edc_get_hk_pkg(edc_config_t config, uint8_t *hk)
 {
     int16_t res = -1;
 
@@ -297,12 +286,12 @@ int16_t edc_get_hk_pkg(uint8_t *hk)
 
     cmd.id = EDC_CMD_GET_HK_PKG;
 
-    if (edc_write_cmd(cmd) == 0)
+    if (edc_write_cmd(config, cmd) == 0)
     {
         /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
         edc_delay_ms(10);
 
-        if (edc_read(hk, EDC_FRAME_HK_LEN) == 0)
+        if (edc_read(config, hk, EDC_FRAME_HK_LEN) == 0)
         {
             if (hk[0] == EDC_FRAME_ID_HK)
             {
@@ -337,7 +326,7 @@ int16_t edc_get_hk_pkg(uint8_t *hk)
     return res;
 }
 
-int16_t edc_get_adc_seq(uint8_t *seq)
+int16_t edc_get_adc_seq(edc_config_t config, uint8_t *seq)
 {
     int16_t res = -1;
 
@@ -345,12 +334,12 @@ int16_t edc_get_adc_seq(uint8_t *seq)
 
     cmd.id = EDC_CMD_GET_ADC_SEQ;
 
-    if (edc_write_cmd(cmd) == 0)
+    if (edc_write_cmd(config, cmd) == 0)
     {
         /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
         edc_delay_ms(10);
 
-        if (edc_read(seq, EDC_FRAME_ADC_SEQ_LEN) == 0)
+        if (edc_read(config, seq, EDC_FRAME_ADC_SEQ_LEN) == 0)
         {
             if (seq[0] == EDC_FRAME_ID_ADC_SEQ)
             {
@@ -385,13 +374,13 @@ int16_t edc_get_adc_seq(uint8_t *seq)
     return res;
 }
 
-int edc_echo(void)
+int edc_echo(edc_config_t config)
 {
     edc_cmd_t cmd = {0};
 
     cmd.id = EDC_CMD_ECHO;
 
-    return edc_write_cmd(cmd);
+    return edc_write_cmd(config, cmd);
 }
 
 uint16_t edc_calc_checksum(uint8_t *data, uint16_t len)
@@ -406,14 +395,14 @@ uint16_t edc_calc_checksum(uint8_t *data, uint16_t len)
     return checksum;
 }
 
-int edc_get_state(edc_state_t *state_data)
+int edc_get_state(edc_config_t config, edc_state_t *state_data)
 {
     int err = -1;
 
     uint8_t state_raw[EDC_FRAME_STATE_LEN] = {0};
 
     /* Get state bytes */
-    if (edc_get_state_pkg(state_raw) == EDC_FRAME_STATE_LEN)
+    if (edc_get_state_pkg(config, state_raw) == EDC_FRAME_STATE_LEN)
     {
         /* Check packet ID */
         if (state_raw[0] == EDC_FRAME_ID_STATE)
@@ -437,14 +426,14 @@ int edc_get_state(edc_state_t *state_data)
     return err;
 }
 
-int edc_get_ptt(edc_ptt_t *ptt_data)
+int edc_get_ptt(edc_config_t config, edc_ptt_t *ptt_data)
 {
     int err = -1;
 
     uint8_t ptt_raw[EDC_FRAME_PTT_LEN] = {0};
 
     /* Get PTT bytes */
-    if (edc_get_ptt_pkg(ptt_raw) == EDC_FRAME_PTT_LEN)
+    if (edc_get_ptt_pkg(config, ptt_raw) == EDC_FRAME_PTT_LEN)
     {
         /* Check packet ID */
         if (ptt_raw[0] == EDC_FRAME_ID_PTT)
@@ -476,14 +465,14 @@ int edc_get_ptt(edc_ptt_t *ptt_data)
     return err;
 }
 
-int edc_get_hk(edc_hk_t *hk_data)
+int edc_get_hk(edc_config_t config, edc_hk_t *hk_data)
 {
     int err = -1;
 
     uint8_t hk_raw[EDC_FRAME_HK_LEN] = {0};
 
     /* Get hk bytes */
-    if (edc_get_hk_pkg(hk_raw) == EDC_FRAME_HK_LEN)
+    if (edc_get_hk_pkg(config, hk_raw) == EDC_FRAME_HK_LEN)
     {
         /* Check packet ID */
         if (hk_raw[0] == EDC_FRAME_ID_HK)

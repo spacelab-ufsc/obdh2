@@ -1,5 +1,5 @@
 /*
- * version.h
+ * edc_i2c.c
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
@@ -16,34 +16,44 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
 /**
- * \brief Version control file.
+ * \brief EDC driver I2C routines implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.8.14
  * 
- * \date 2019/10/25
+ * \date 2021/10/16
  * 
- * \defgroup version Version control
+ * \addtogroup edc
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include <drivers/i2c/i2c.h>
 
-#define FIRMWARE_VERSION            "0.8.14"
+#include "edc.h"
 
-#define FIRMWARE_STATUS             "Development"
+int edc_i2c_init(edc_config_t config)
+{
+    i2c_config_t i2c_conf = {0};
 
-#define FIRMWARE_AUTHOR             "Gabriel Mariano Marcelino"
+    i2c_conf.speed_hz = config.bitrate;
 
-#define FIRMWARE_AUTHOR_EMAIL       "gabriel.mm8@gmail.com"
+    return i2c_init(config.port, i2c_conf);
+}
 
-#endif /* VERSION_H_ */
+int edc_i2c_write(edc_config_t config, uint8_t *data, uint16_t len)
+{
+    return i2c_write(config.port, EDC_SLAVE_ADDRESS, data, len);
+}
 
-/** \} End of version group */
+int edc_i2c_read(edc_config_t config, uint8_t *data, uint16_t len)
+{
+    return i2c_read(config.port, EDC_SLAVE_ADDRESS, data, len);
+}
+
+/** \} End of edc group */
