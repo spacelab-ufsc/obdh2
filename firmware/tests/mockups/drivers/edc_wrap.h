@@ -43,6 +43,10 @@
 
 int __wrap_edc_init(edc_config_t config);
 
+int __wrap_edc_enable(edc_config_t config);
+
+int __wrap_edc_disable(edc_config_t config);
+
 int __wrap_edc_write_cmd(edc_config_t config, edc_cmd_t cmd);
 
 int __wrap_edc_read(edc_config_t config, uint8_t *data, uint16_t len);
