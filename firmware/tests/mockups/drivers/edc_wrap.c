@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.14
+ * \version 0.8.15
  * 
  * \date 2021/08/16
  * 
@@ -219,7 +219,6 @@ uint16_t __wrap_edc_calc_checksum(uint8_t *data, uint16_t len)
 {
     check_expected_ptr(data);
     check_expected(len);
-    check_expected(config.en_pin);
 
     return mock_type(uint16_t);
 }
