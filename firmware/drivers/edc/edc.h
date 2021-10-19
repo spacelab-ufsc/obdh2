@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.14
+ * \version 0.8.15
  * 
  * \date 2019/10/27
  * 
@@ -41,6 +41,7 @@
 #include <stdbool.h>
 
 #include <drivers/i2c/i2c.h>
+#include <drivers/gpio/gpio.h>
 
 #define EDC_MODULE_NAME             "EDC"
 
@@ -77,6 +78,7 @@ typedef struct
 {
     i2c_port_t port;
     uint32_t bitrate;
+    gpio_pin_t en_pin;
 } edc_config_t;
 
 /**
@@ -137,6 +139,24 @@ typedef struct
  * \return The status/error code.
  */
 int edc_init(edc_config_t config);
+
+/**
+ * \brief Enables the EDC module.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
+ * \return The status/error code.
+ */
+int edc_enable(edc_config_t config);
+
+/**
+ * \brief Disables the EDC module.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
+ * \return The status/error code.
+ */
+int edc_disable(edc_config_t config);
 
 /**
  * \brief Writes a command to the EDC module.
@@ -432,6 +452,33 @@ int edc_i2c_write(edc_config_t config, uint8_t *data, uint16_t len);
  * \return The status/error code.
  */
 int edc_i2c_read(edc_config_t config, uint8_t *data, uint16_t len);
+
+/**
+ * \brief GPIO pin initialization.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
+ * \return The status/error code.
+ */
+int edc_gpio_init(edc_config_t config);
+
+/**
+ * \brief Set the GPIO pin state.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
+ * \return The status/error code.
+ */
+int edc_gpio_set(edc_config_t config);
+
+/**
+ * \brief Clears the GPIO pin.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
+ * \return The status/error code.
+ */
+int edc_gpio_clear(edc_config_t config);
 
 /**
  * \brief Milliseconds delay.

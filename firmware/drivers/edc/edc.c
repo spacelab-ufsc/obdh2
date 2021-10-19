@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.14
+ * \version 0.8.15
  * 
  * \date 2019/10/27
  * 
@@ -45,19 +45,49 @@ int edc_init(edc_config_t config)
 {
     int err = -1;
 
-    if (edc_i2c_init(config) == 0)
+    if (edc_gpio_init(config) == 0)
     {
-        err = edc_check_device(config);
+        if (edc_enable(config) == 0)
+        {
+            if (edc_i2c_init(config) == 0)
+            {
+                err = edc_check_device(config);
+            }
+            else
+            {
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error initializing the I2C port!");
+                sys_log_new_line();
+            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            }
+        }
+        else
+        {
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+            sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error enabling the module!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+        }
     }
     else
     {
     #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
-        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error initializing the I2C port!");
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error initializing the GPIO pins!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
     }
 
     return err;
+}
+
+int edc_enable(edc_config_t config)
+{
+    return edc_gpio_set(config);
+}
+
+int edc_disable(edc_config_t config)
+{
+    return edc_gpio_clear(config);
 }
 
 int edc_write_cmd(edc_config_t config, edc_cmd_t cmd)

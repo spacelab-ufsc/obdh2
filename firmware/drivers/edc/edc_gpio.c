@@ -1,5 +1,5 @@
 /*
- * version.h
+ * edc_gpio.c
  * 
  * Copyright (C) 2021, SpaceLab.
  * 
@@ -16,34 +16,45 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
 /**
- * \brief Version control file.
+ * \brief EDC driver GPIO routines implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.8.15
  * 
- * \date 2019/10/25
+ * \date 2021/10/16
  * 
- * \defgroup version Version control
+ * \addtogroup edc
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include <config/config.h>
+#include <system/sys_log/sys_log.h>
 
-#define FIRMWARE_VERSION            "0.8.15"
+#include "edc.h"
 
-#define FIRMWARE_STATUS             "Development"
+int edc_gpio_init(edc_config_t config)
+{
+    gpio_config_t conf = {0};
 
-#define FIRMWARE_AUTHOR             "Gabriel Mariano Marcelino"
+    conf.mode = GPIO_MODE_OUTPUT;
 
-#define FIRMWARE_AUTHOR_EMAIL       "gabriel.mm8@gmail.com"
+    return gpio_init(config.en_pin, conf);
+}
 
-#endif /* VERSION_H_ */
+int edc_gpio_set(edc_config_t config)
+{
+    return gpio_set_state(config.en_pin, true);
+}
 
-/** \} End of version group */
+int edc_gpio_clear(edc_config_t config)
+{
+    return gpio_set_state(config.en_pin, false);
+}
+
+/** \} End of edc group */
