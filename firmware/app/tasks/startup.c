@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.11
+ * \version 0.8.17
  * 
  * \date 2019/12/04
  * 
@@ -171,7 +171,17 @@ void vTaskStartup(void)
 
 #if defined(CONFIG_DEV_PAYLOAD_EDC_ENABLED) && (CONFIG_DEV_PAYLOAD_EDC_ENABLED == 1)
     /* Payload EDC device initialization */
-    if (payload_init(PAYLOAD_EDC) != 0)
+    if (payload_init(PAYLOAD_EDC_1) != 0)
+    {
+        error_counter++;
+    }
+
+    if (payload_disable(PAYLOAD_EDC_1) != 0)
+    {
+        error_counter++;
+    }
+
+    if (payload_init(PAYLOAD_EDC_0) != 0)
     {
         error_counter++;
     }
