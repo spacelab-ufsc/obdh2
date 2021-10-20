@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.47
+ * \version 0.8.18
  * 
  * \date 2020/08/16
  * 
@@ -45,6 +45,20 @@
 #define TASK_READ_EDC_PRIORITY              3                   /**< Task priority. */
 #define TASK_READ_EDC_PERIOD_MS             (60*1000)           /**< Task period in milliseconds. */
 #define TASK_READ_EDC_INIT_TIMEOUT_MS       2000                /**< Wait time to initialize the task in milliseconds. */
+
+/**
+ * \brief EDC housekeeping raw data type.
+ */
+typedef struct
+{
+    uint8_t buffer[30];
+    uint32_t length;
+} pl_edc_hk_raw_t;
+
+/**
+ * \brief EDC housekeepign data buffer.
+ */
+extern pl_edc_hk_raw_t edc_hk_buf;
 
 /**
  * \brief Read EDC handle.

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.47
+ * \version 0.8.18
  * 
  * \date 2020/08/16
  * 
@@ -33,10 +33,17 @@
  * \{
  */
 
+#include <system/sys_log/sys_log.h>
+#include <devices/payload/payload.h>
+
 #include "read_edc.h"
 #include "startup.h"
 
 xTaskHandle xTaskReadEDCHandle;
+
+pl_edc_hk_raw_t edc_hk_buf = {0};
+
+static payload_t pl_edc_active = PAYLOAD_EDC_0;
 
 void vTaskReadEDC(void)
 {
@@ -47,7 +54,11 @@ void vTaskReadEDC(void)
     {
         TickType_t last_cycle = xTaskGetTickCount();
 
-        /* TODO */
+        if (payload_get_data(pl_edc_active, PAYLOAD_EDC_RAW_HK, edc_hk_buf.buffer, &edc_hk_buf.length) != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_EDC_NAME, "Error reading the housekeeping data!");
+            sys_log_new_line();
+        }
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_EDC_PERIOD_MS));
     }
