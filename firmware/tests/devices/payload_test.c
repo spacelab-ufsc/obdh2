@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.15
+ * \version 0.8.17
  * 
  * \date 2021/08/16
  * 
@@ -62,12 +62,6 @@ static void payload_init_test(void **state)
 
     will_return(__wrap_edc_init, 0);
 
-    expect_value(__wrap_edc_disable, config.port, EDC_0_I2C_PORT);
-    expect_value(__wrap_edc_disable, config.bitrate, EDC_0_I2C_CLOCK_HZ);
-    expect_value(__wrap_edc_disable, config.en_pin, EDC_0_GPIO_EN_PIN);
-
-    will_return(__wrap_edc_disable, 0);
-
     expect_value(__wrap_edc_get_hk, config.port, EDC_0_I2C_PORT);
     expect_value(__wrap_edc_get_hk, config.bitrate, EDC_0_I2C_CLOCK_HZ);
     expect_value(__wrap_edc_get_hk, config.en_pin, EDC_0_GPIO_EN_PIN);
@@ -93,12 +87,6 @@ static void payload_init_test(void **state)
     expect_value(__wrap_edc_init, config.en_pin, EDC_1_GPIO_EN_PIN);
 
     will_return(__wrap_edc_init, 0);
-
-    expect_value(__wrap_edc_disable, config.port, EDC_1_I2C_PORT);
-    expect_value(__wrap_edc_disable, config.bitrate, EDC_1_I2C_CLOCK_HZ);
-    expect_value(__wrap_edc_disable, config.en_pin, EDC_1_GPIO_EN_PIN);
-
-    will_return(__wrap_edc_disable, 0);
 
     expect_value(__wrap_edc_get_hk, config.port, EDC_1_I2C_PORT);
     expect_value(__wrap_edc_get_hk, config.bitrate, EDC_1_I2C_CLOCK_HZ);
