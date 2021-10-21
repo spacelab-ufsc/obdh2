@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.47
+ * \version 0.8.19
  * 
  * \date 2021/07/06
  * 
@@ -33,15 +33,39 @@
  * \{
  */
 
+#include <string.h>
+
 #include <config/config.h>
+#include <config/keys.h>
 
 #include <system/sys_log/sys_log.h>
 #include <devices/ttc/ttc.h>
+#include <devices/media/media.h>
+#include <libs/hmac/sha.h>
 
 #include "process_tc.h"
 #include "startup.h"
 
 xTaskHandle xTaskProcessTCHandle;
+
+/**
+ * \brief Checks if a given HMAC is valid or not.
+ *
+ * \param[in] msg is the message to compute the hash.
+ *
+ * \param[in] msg_len is the number of bytes of the given message.
+ *
+ * \param[in] msg_hash is the received hash of the given message.
+ *
+ * \param[in] msg_hash_len is the number of bytes of the received hash.
+ *
+ * \param[in] key is the TC key.
+ *
+ * \param[in] key_len is the number of bytes of the TC key.
+ *
+ * \return TRUE/FALSE if the key is valid or not.
+ */
+static bool process_tc_validate_hmac(uint8_t *msg, uint16_t msg_len, uint8_t *msg_hash, uint16_t msg_hash_len, uint8_t *key, uint16_t key_len);
 
 void vTaskProcessTC(void)
 {
@@ -89,7 +113,28 @@ void vTaskProcessTC(void)
                     case CONFIG_PKT_ID_UPLINK_DEACTIVATE_PAYLOAD:
                         break;
                     case CONFIG_PKT_ID_UPLINK_ERASE_MEMORY:
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Executing the TC \"Erase Memory\"...");
+                        sys_log_new_line();
+
+                        uint8_t tc_key[16] = CONFIG_TC_KEY_ERASE_MEMORY;
+
+                        if (process_tc_validate_hmac(pkt, 1U + 7U, &pkt[8], 20U, tc_key, sizeof(CONFIG_TC_KEY_ERASE_MEMORY)-1U))
+                        {
+                            if (media_erase(MEDIA_NOR, MEDIA_ERASE_DIE, 0U) != 0)
+                            {
+                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error erasing the NOR memory!");
+                                sys_log_new_line();
+                            }
+                        }
+                        else
+                        {
+                            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Erase Memory\" TC! Invalid key!");
+                            sys_log_new_line();
+                        }
+
                         break;
+                    }
                     case CONFIG_PKT_ID_UPLINK_FORCE_RESET:
                         break;
                     case CONFIG_PKT_ID_UPLINK_GET_PAYLOAD_DATA:
@@ -104,6 +149,23 @@ void vTaskProcessTC(void)
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_PROCESS_TC_PERIOD_MS));
     }
+}
+
+bool process_tc_validate_hmac(uint8_t *msg, uint16_t msg_len, uint8_t *msg_hash, uint16_t msg_hash_len, uint8_t *key, uint16_t key_len)
+{
+    bool res = false;
+
+    uint8_t hash[20] = {0};
+
+    if (hmac(SHA1, msg, msg_len, key, key_len, hash) == 0)
+    {
+        if (memcmp((void*)msg, (void*)msg_hash, msg_hash_len) == 0)
+        {
+            res = true;
+        }
+    }
+
+    return res;
 }
 
 /** \} End of process_tc group */
