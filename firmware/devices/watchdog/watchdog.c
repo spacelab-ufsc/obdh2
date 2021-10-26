@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.26
+ * \version 0.8.20
  * 
  * \date 2019/11/01
  * 
@@ -38,29 +38,34 @@
 
 #include "watchdog.h"
 
+/* Internal watchdog */
+#define WATCHDOG_INT_CLK_SRC        WDT_CLK_SRC_ACLK
+#define WATCHDOG_INT_CLK_DIV        WDT_CLK_DIV_32K
+
+/* External watchdog */
+#define WATCHDOG_EXT_WDI_PIN        GPIO_PIN_66
+#define WATCHDOG_EXT_MR_PIN         GPIO_PIN_69
+
+static tps382x_config_t ext_wdt = {0};
+
 int watchdog_init(void)
 {
     wdt_config_t int_wdt;
 
-    int_wdt.clk_src = WDT_CLK_SRC_ACLK;
-    int_wdt.clk_div = WDT_CLK_DIV_32K;
+    int_wdt.clk_src = WATCHDOG_INT_CLK_SRC;
+    int_wdt.clk_div = WATCHDOG_INT_CLK_DIV;
 
-    tps382x_config_t ext_wdt;
-
-    ext_wdt.wdi_pin = GPIO_PIN_66;
+    ext_wdt.wdi_pin = WATCHDOG_EXT_WDI_PIN;
+    ext_wdt.mr_pin = WATCHDOG_EXT_MR_PIN;
 
     return wdt_init(int_wdt) | tps382x_init(ext_wdt);
 }
 
-void watchdog_reset(void)
+int watchdog_reset(void)
 {
     wdt_reset();
 
-    tps382x_config_t ext_wdt;
-
-    ext_wdt.wdi_pin = GPIO_PIN_66;
-
-    tps382x_trigger(ext_wdt);
+    return tps382x_trigger(ext_wdt);
 }
 
 /** \} End of watchdog group */

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.32
+ * \version 0.8.20
  * 
  * \date 2020/01/15
  * 
@@ -37,16 +37,31 @@
 
 int tps382x_init(tps382x_config_t config)
 {
+    int err = -1;
+
     gpio_config_t gpio_conf = {0};
 
     gpio_conf.mode = GPIO_MODE_OUTPUT;
 
-    return gpio_init(config.wdi_pin, gpio_conf);
+    if (gpio_init(config.wdi_pin, gpio_conf) == 0)
+    {
+        if (gpio_init(config.mr_pin, gpio_conf) == 0)
+        {
+            err = 0;
+        }
+    }
+
+    return err;
 }
 
-void tps382x_trigger(tps382x_config_t config)
+int tps382x_trigger(tps382x_config_t config)
 {
-    gpio_toggle(config.wdi_pin);
+    return gpio_toggle(config.wdi_pin);
+}
+
+int tps382x_manual_reset(tps382x_config_t config)
+{
+    return gpio_set_state(config.mr_pin, false);
 }
 
 /** \} End of tps382x group */

@@ -1,7 +1,7 @@
 /*
  * watchdog.h
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.14
+ * \version 0.8.20
  * 
  * \date 2019/11/01
  * 
@@ -47,9 +47,9 @@ int watchdog_init(void);
 /**
  * \brief Watchdog timer reset.
  *
- * \return None.
+ * \return The status/error code.
  */
-void watchdog_reset(void);
+int watchdog_reset(void);
 
 #endif /* WATCHDOG_H_ */
 
