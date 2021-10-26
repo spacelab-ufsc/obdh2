@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.11
+ * \version 0.8.19
  * 
  * \date 2021/08/29
  * 
@@ -45,12 +45,18 @@
 #include <drivers/tps382x/tps382x.h>
 
 #define TPS382X_WDI_PIN         GPIO_PIN_66
+#define TPS382X_MR_PIN          GPIO_PIN_69
 
 tps382x_config_t conf = {0};
 
 static void tps382x_init_test(void **state)
 {
     expect_value(__wrap_gpio_init, pin, TPS382X_WDI_PIN);
+    expect_value(__wrap_gpio_init, config.mode, GPIO_MODE_OUTPUT);
+
+    will_return(__wrap_gpio_init, 0);
+
+    expect_value(__wrap_gpio_init, pin, TPS382X_MR_PIN);
     expect_value(__wrap_gpio_init, config.mode, GPIO_MODE_OUTPUT);
 
     will_return(__wrap_gpio_init, 0);
@@ -67,13 +73,25 @@ static void tps382x_trigger_test(void **state)
     tps382x_trigger(conf);
 }
 
+static void tps382x_manual_reset_test(void **state)
+{
+    expect_value(__wrap_gpio_set_state, pin, TPS382X_MR_PIN);
+    expect_value(__wrap_gpio_set_state, level, false);
+
+    will_return(__wrap_gpio_set_state, 0);
+
+    assert_return_code(tps382x_manual_reset(conf), 0);
+}
+
 int main(void)
 {
     conf.wdi_pin = TPS382X_WDI_PIN;
+    conf.mr_pin = TPS382X_MR_PIN;
 
     const struct CMUnitTest tps382x_tests[] = {
         cmocka_unit_test(tps382x_init_test),
         cmocka_unit_test(tps382x_trigger_test),
+        cmocka_unit_test(tps382x_manual_reset_test),
     };
 
     return cmocka_run_group_tests(tps382x_tests, NULL, NULL);
