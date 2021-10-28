@@ -1,7 +1,7 @@
 /*
  * fsat_pkt.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.3
+ * \version 0.8.21
  * 
- * \date 14/03/2020
+ * \date 2020/03/14
  * 
  * \defgroup fsat_pkt FloripaSat Packet Handler
  * \{
@@ -38,9 +38,7 @@
 
 #include <stdint.h>
 
-#include <ngham/ngham.h>
-
-#define FSAT_PKT_CALLSIGN_PADDING_CHAR      ('0')
+#define FSAT_PKT_CALLSIGN_PADDING_CHAR      (' ')
 
 /**
  * \brief FloripaSat packet.
@@ -49,7 +47,7 @@ typedef struct
 {
     uint8_t id;                             /**< Packet ID. */
     char callsign[7+1];                     /**< Callsign (7 bytes). */
-    uint8_t payload[NGHAM_PL_MAX-7-1];      /**< Packet payload. */
+    uint8_t payload[220-7-1];               /**< Packet payload. */
     uint16_t length;                        /**< Packet payload length. */
 } fsat_pkt_pl_t;
 
@@ -71,9 +69,9 @@ void fsat_pkt_add_id(fsat_pkt_pl_t *pkt, uint8_t id);
  *
  * \param[in] callsign is the callsign of the packet source.
  *
- * \return None.
+ * \return The status/error code.
  */
-void fsat_pkt_add_callsign(fsat_pkt_pl_t *pkt, const char *callsign);
+int fsat_pkt_add_callsign(fsat_pkt_pl_t *pkt, const char *callsign);
 
 /**
  * \brief Add the payload to a FSat packet.

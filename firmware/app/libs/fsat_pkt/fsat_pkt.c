@@ -1,7 +1,7 @@
 /*
- * fsat_pkt.h
+ * fsat_pkt.c
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,9 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.3
+ * \version 0.8.21
  * 
- * \date 14/03/2020
+ * \date 2020/03/14
  * 
  * \addtogroup fsat_pkt
  * \{
@@ -42,16 +42,21 @@ void fsat_pkt_add_id(fsat_pkt_pl_t *pkt, uint8_t id)
     pkt->id = id;
 }
 
-void fsat_pkt_add_callsign(fsat_pkt_pl_t *pkt, const char *callsign)
+int fsat_pkt_add_callsign(fsat_pkt_pl_t *pkt, const char *callsign)
 {
+    int err = -1;
+
     unsigned int cs_len = strlen(callsign);
 
-    if (cs_len > 7)
+    if (cs_len <= 7U)
     {
-        return;     /* Invalid callsign size */
+        if (strncpy(pkt->callsign, callsign, cs_len) == pkt->callsign)
+        {
+            err = 0;
+        }
     }
 
-    strncpy(pkt->callsign, callsign, cs_len);
+    return err;
 }
 
 void fsat_pkt_add_payload(fsat_pkt_pl_t *pkt, uint8_t *pl, uint16_t len)
@@ -68,7 +73,7 @@ void fsat_pkt_encode(fsat_pkt_pl_t pkt, uint8_t *pl, uint16_t *len)
 
     /* Callsign */
     uint8_t cs_len = 0;
-    for(cs_len=0; cs_len<7; cs_len++)
+    for(cs_len = 0U; cs_len < 7U; cs_len++)
     {
         if (pkt.callsign[cs_len] == '\0')
         {
@@ -76,18 +81,18 @@ void fsat_pkt_encode(fsat_pkt_pl_t pkt, uint8_t *pl, uint16_t *len)
         }
     }
 
-    uint8_t i = 0;
-    for(i=0; i<7-cs_len; i++)
+    uint8_t i = 0U;
+    for(i = 0U; i< (7U - cs_len); i++)
     {
-        pl[1+i] = FSAT_PKT_CALLSIGN_PADDING_CHAR;
+        pl[1U + i] = FSAT_PKT_CALLSIGN_PADDING_CHAR;
     }
 
-    memcpy(pl+1+i, pkt.callsign, 7-i);
+    memcpy(&pl[1U + i], pkt.callsign, 7U - i);
 
     /* Packet data */
-    memcpy(pl+1+7, pkt.payload, pkt.length);
+    memcpy(&pl[1 + 7], &pkt.payload[0], pkt.length);
 
-    *len = 1 + 7 + pkt.length;
+    *len = 1U + 7U + pkt.length;
 }
 
 void fsat_pkt_decode(uint8_t *raw_pkt, uint16_t len, fsat_pkt_pl_t *pkt)
@@ -96,24 +101,24 @@ void fsat_pkt_decode(uint8_t *raw_pkt, uint16_t len, fsat_pkt_pl_t *pkt)
     pkt->id = raw_pkt[0];
 
     /* Copy callsign */
-    uint8_t i = 0;
-    for(i=0; i<7; i++)
+    uint8_t i = 0U;
+    for(i = 0U; i < 7U; i++)
     {
-        if ((raw_pkt[i+1] >= 0x41) && (raw_pkt[i+1] <= 0x5A))   /* 0x41 = 'A', 0x5A = 'Z' */
+        if ((raw_pkt[i + 1U] >= 0x41U) && (raw_pkt[i + 1U] <= 0x5AU))   /* 0x41 = 'A', 0x5A = 'Z' */
         {
             break;
         }
     }
 
-    memcpy(pkt->callsign, raw_pkt+1+i, 7-i);
+    memcpy(&pkt->callsign[0], &raw_pkt[1U + i], 7U - i);
 
-    pkt->callsign[7-i] = '\0';
+    pkt->callsign[7U - i] = '\0';
 
     /* Copy payload data */
-    memcpy(pkt->payload, raw_pkt+1+7, len-7-1);
+    memcpy(&pkt->payload[0], &raw_pkt[1 + 7], len - 7U - 1U);
 
     /* Payload data length */
-    pkt->length = len-7-1;
+    pkt->length = len - 7U - 1U;
 }
 
 /** \} End of fsat_pkt group */
