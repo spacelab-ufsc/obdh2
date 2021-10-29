@@ -1,7 +1,7 @@
 /*
  * beacon.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.47
+ * \version 0.8.22
  * 
  * \date 2019/10/27
  * 
@@ -41,7 +41,7 @@
 #include <task.h>
 
 #define TASK_BEACON_NAME                    "Beacon"            /**< Task name. */
-#define TASK_BEACON_STACK_SIZE              2000                /**< Stack size in bytes. */
+#define TASK_BEACON_STACK_SIZE              1000                /**< Stack size in bytes. */
 #define TASK_BEACON_PRIORITY                5                   /**< Task priority. */
 #define TASK_BEACON_PERIOD_MS               60000               /**< Task period in milliseconds. */
 #define TASK_BEACON_INITIAL_DELAY_MS        1000                /**< Delay, in milliseconds, before the first execution. */
