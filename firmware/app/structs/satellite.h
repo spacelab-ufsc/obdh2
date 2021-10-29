@@ -1,7 +1,7 @@
 /*
  * satellite.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.5
+ * \version 0.8.22
  * 
  * \date 2020/07/16
  * 
@@ -38,6 +38,7 @@
 #define SATELLITE_H_
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #include <system/system.h>
 
@@ -84,6 +85,16 @@ typedef struct
 } antenna_telemetry_t;
 
 /**
+ * \brief Payload telemetry type.
+ */
+typedef struct
+{
+    sys_time_t timestamp;           /**< Timestamp of the Payload data. */
+    bool enabled;                   /**< Payload enable flag. */
+    uint8_t data[220];              /**< Payload data. */
+} payload_telemetry_t;
+
+/**
  * \brief Satellite data.
  */
 typedef struct
@@ -93,6 +104,10 @@ typedef struct
     ttc_telemetry_t ttc_0;          /**< TTC 0 telemetry. */
     ttc_telemetry_t ttc_1;          /**< TTC 1 telemetry. */
     antenna_telemetry_t antenna;    /**< Antenna telemetry. */
+    payload_telemetry_t edc_0;      /**< EDC 0 telemetry. */
+    payload_telemetry_t edc_1;      /**< EDC 1 telemetry. */
+    payload_telemetry_t payload_x;  /**< Payload-X telemetry. */
+    payload_telemetry_t harsh;      /**< Harsh payload telemetry. */
 } sat_data_t;
 
 /**

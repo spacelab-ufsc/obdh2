@@ -138,7 +138,27 @@ void vTaskBeacon(void)
         beacon_pl.payload[64] = sat_data_buf.eps.data.battery_heater_1_duty_cycle;
         beacon_pl.payload[65] = sat_data_buf.eps.data.battery_heater_2_duty_cycle;
 
-        beacon_pl.length = 66U;
+        if (!sat_data_buf.edc_0.enabled && !sat_data_buf.edc_0.enabled)
+        {
+            beacon_pl.payload[66] = 0x00U;
+        }
+        else if (sat_data_buf.edc_0.enabled && !sat_data_buf.edc_0.enabled)
+        {
+            beacon_pl.payload[66] = 0x01U;
+        }
+        else if (!sat_data_buf.edc_0.enabled && sat_data_buf.edc_0.enabled)
+        {
+            beacon_pl.payload[66] = 0x02U;
+        }
+        else
+        {
+            beacon_pl.payload[66] = 0x03U;
+        }
+
+        beacon_pl.payload[67] = sat_data_buf.payload_x.enabled ? 0x01U : 0x00U;
+        beacon_pl.payload[68] = sat_data_buf.harsh.enabled ? 0x01U : 0x00U;
+
+        beacon_pl.length = 69U;
 
         uint8_t beacon_pl_raw[220] = {0};
         uint16_t beacon_pl_raw_len = 0;
