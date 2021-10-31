@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.19
+ * \version 0.8.23
  * 
  * \date 2021/07/06
  * 
@@ -136,12 +136,30 @@ void vTaskProcessTC(void)
                         break;
                     }
                     case CONFIG_PKT_ID_UPLINK_FORCE_RESET:
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Executing the TC \"Force Reset\"...");
+                        sys_log_new_line();
+
+                        uint8_t tc_key[16] = CONFIG_TC_KEY_FORCE_RESET;
+
+                        if (process_tc_validate_hmac(pkt, 1U + 7U, &pkt[8], 20U, tc_key, sizeof(CONFIG_TC_KEY_FORCE_RESET)-1U))
+                        {
+                            system_reset();
+                        }
+                        else
+                        {
+                            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Force Reset\" TC! Invalid key!");
+                            sys_log_new_line();
+                        }
+
                         break;
+                    }
                     case CONFIG_PKT_ID_UPLINK_GET_PAYLOAD_DATA:
                         break;
                     default:
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Unknow packet received!");
                         sys_log_new_line();
+
                         break;
                 }
             }
