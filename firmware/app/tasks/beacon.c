@@ -63,7 +63,7 @@ void vTaskBeacon(void)
         fsat_pkt_pl_t beacon_pl = {0};
 
         /* Packet ID */
-        fsat_pkt_add_id(&beacon_pl, CONFIG_PKT_ID_BEACON);
+        fsat_pkt_add_id(&beacon_pl, CONFIG_PKT_ID_DOWNLINK_GENERAL_TELEMETRY);
 
         /* Source callsign */
         fsat_pkt_add_callsign(&beacon_pl, CONFIG_SATELLITE_CALLSIGN);

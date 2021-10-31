@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.6
+ * \version 0.8.22
  * 
  * \date 2019/10/26
  * 
@@ -75,7 +75,12 @@
 #define CONFIG_SATELLITE_CALLSIGN                       "PY0EFS"
 
 /* Packets IDs */
-#define CONFIG_PKT_ID_BEACON                            0x10
+#define CONFIG_PKT_ID_DOWNLINK_GENERAL_TELEMETRY        0x20
+#define CONFIG_PKT_ID_DOWNLINK_PING_ANS                 0x21
+#define CONFIG_PKT_ID_DOWNLINK_DATA_REQUEST_ANS         0x22
+#define CONFIG_PKT_ID_DOWNLINK_MESSAGE_BROADCAST        0x23
+#define CONFIG_PKT_ID_DOWNLINK_PAYLOAD_DATA             0x24
+#define CONFIG_PKT_ID_DOWNLINK_TC_FEEDBACK              0x25
 #define CONFIG_PKT_ID_UPLINK_PING_REQ                   0x40
 #define CONFIG_PKT_ID_UPLINK_DATA_REQ                   0x41
 #define CONFIG_PKT_ID_UPLINK_BROADCAST_MSG              0x42
@@ -88,6 +93,12 @@
 #define CONFIG_PKT_ID_UPLINK_ERASE_MEMORY               0x49
 #define CONFIG_PKT_ID_UPLINK_FORCE_RESET                0x4A
 #define CONFIG_PKT_ID_UPLINK_GET_PAYLOAD_DATA           0x4B
+
+/* Payloads IDs */
+#define CONFIG_PL_ID_EDC_1                              1
+#define CONFIG_PL_ID_EDC_2                              2
+#define CONFIG_PL_ID_PAYLOAD_X                          3
+#define CONFIG_PL_ID_RADIATION_MONITOR                  4
 
 /* CSP */
 #define CONFIG_CSP_ENABLED                              0
