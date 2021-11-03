@@ -1,7 +1,7 @@
 /*
  * process_tc.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -177,7 +177,7 @@ bool process_tc_validate_hmac(uint8_t *msg, uint16_t msg_len, uint8_t *msg_hash,
 
     if (hmac(SHA1, msg, msg_len, key, key_len, hash) == 0)
     {
-        if (memcmp((void*)msg, (void*)msg_hash, msg_hash_len) == 0)
+        if (memcmp(msg, msg_hash, (size_t)msg_hash_len) == 0)
         {
             res = true;
         }

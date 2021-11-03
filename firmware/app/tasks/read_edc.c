@@ -1,7 +1,7 @@
 /*
  * read_edc.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.18
+ * \version 0.8.23
  * 
  * \date 2020/08/16
  * 
@@ -43,10 +43,10 @@ xTaskHandle xTaskReadEDCHandle;
 
 pl_edc_hk_raw_t edc_hk_buf = {0};
 
-static payload_t pl_edc_active = PAYLOAD_EDC_0;
-
 void vTaskReadEDC(void)
 {
+    static payload_t pl_edc_active = PAYLOAD_EDC_0;
+
     /* Wait startup task to finish */
     xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_EDC_INIT_TIMEOUT_MS));
 
