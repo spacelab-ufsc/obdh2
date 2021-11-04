@@ -1,7 +1,7 @@
 /*
  * keys.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.19
+ * \version 0.8.25
  * 
  * \date 2021/10/20
  * 
@@ -41,7 +41,9 @@
 #define CONFIG_TC_KEY_LEAVE_HIBERNATION                 "5d#QvdYzK59`Du>z"
 #define CONFIG_TC_KEY_ACTIVATE_MODULE                   "6mP=VA33u/:m)b+z"
 #define CONFIG_TC_KEY_DEACTIVATE_MODULE                 ":jvDVD_)jR@HWT{_"
-#define CONFIG_TC_KEY_ACTIVATE_PAYLOAD                  "`Uyp)]^n,3q[/zs["
+#define CONFIG_TC_KEY_ACTIVATE_PAYLOAD_EDC              "`Uyp)]^n,3q[/zs["
+#define CONFIG_TC_KEY_ACTIVATE_PAYLOAD_PAYLOAD_X        "d0bG$pIpdPzuSVV^"
+#define CONFIG_TC_KEY_ACTIVATE_PAYLOAD_HARSH            "zhD)GQ7rxD;:U7s$"
 #define CONFIG_TC_KEY_DEACTIVATE_PAYLOAD                "GZ>'`Bs=dVGa[R#/"
 #define CONFIG_TC_KEY_ERASE_MEMORY                      "C:8RkJE${^>%wYVR"
 #define CONFIG_TC_KEY_FORCE_RESET                       "@A)Z-t(x+@nDHpKF"

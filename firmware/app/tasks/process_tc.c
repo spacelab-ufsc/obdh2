@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.24
+ * \version 0.8.25
  * 
  * \date 2021/07/06
  * 
@@ -42,6 +42,7 @@
 #include <system/system.h>
 #include <devices/ttc/ttc.h>
 #include <devices/media/media.h>
+#include <devices/payload/payload.h>
 #include <libs/hmac/sha.h>
 
 #include <fsat_pkt/fsat_pkt.h>
@@ -99,7 +100,7 @@ void vTaskProcessTC(void)
                 {
                     case CONFIG_PKT_ID_UPLINK_PING_REQ:
                     {
-                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Ping TC received!");
+                        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Ping TC received!");
                         sys_log_new_line();
 
                         fsat_pkt_pl_t pong_pl = {0};
@@ -141,12 +142,118 @@ void vTaskProcessTC(void)
                     case CONFIG_PKT_ID_UPLINK_DEACTIVATE_MODULE:
                         break;
                     case CONFIG_PKT_ID_UPLINK_ACTIVATE_PAYLOAD:
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Activate Payload\"...");
+                        sys_log_new_line();
+
+                        switch(pkt[8])
+                        {
+                            case CONFIG_PL_ID_EDC_1:
+                            {
+                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the EDC 1 payload...");
+                                sys_log_new_line();
+
+                                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_PAYLOAD_EDC;
+
+                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_PAYLOAD_EDC)-1U))
+                                {
+                                    if (payload_enable(PAYLOAD_EDC_0) != 0)
+                                    {
+                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the EDC 1 payload!");
+                                        sys_log_new_line();
+                                    }
+                                }
+                                else
+                                {
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the EDC 1 payload! Invalid key!");
+                                    sys_log_new_line();
+                                }
+
+                                break;
+                            }
+                            case CONFIG_PL_ID_EDC_2:
+                            {
+                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the EDC 2 payload...");
+                                sys_log_new_line();
+
+                                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_PAYLOAD_EDC;
+
+                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_PAYLOAD_EDC)-1U))
+                                {
+                                    if (payload_enable(PAYLOAD_EDC_1) != 0)
+                                    {
+                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the EDC 2 payload!");
+                                        sys_log_new_line();
+                                    }
+                                }
+                                else
+                                {
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the EDC 2 payload! Invalid key!");
+                                    sys_log_new_line();
+                                }
+
+                                break;
+                            }
+                            case CONFIG_PL_ID_PAYLOAD_X:
+                            {
+                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the Payload-X payload...");
+                                sys_log_new_line();
+
+                                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_PAYLOAD_PAYLOAD_X;
+
+                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_PAYLOAD_PAYLOAD_X)-1U))
+                                {
+                                    if (payload_enable(PAYLOAD_X) != 0)
+                                    {
+                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the Payload-X payload!");
+                                        sys_log_new_line();
+                                    }
+                                }
+                                else
+                                {
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the Payload-X payload! Invalid key!");
+                                    sys_log_new_line();
+                                }
+
+                                break;
+                            }
+                            case CONFIG_PL_ID_RADIATION_MONITOR:
+                            {
+                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the Harsh payload...");
+                                sys_log_new_line();
+
+                                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_PAYLOAD_HARSH;
+
+                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_PAYLOAD_HARSH)-1U))
+                                {
+                                    if (payload_enable(PAYLOAD_HARSH) != 0)
+                                    {
+                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the Harsh payload!");
+                                        sys_log_new_line();
+                                    }
+                                }
+                                else
+                                {
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the Harsh payload! Invalid key!");
+                                    sys_log_new_line();
+                                }
+
+                                break;
+                            }
+                            default:
+                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid payload to activate!");
+                                sys_log_new_line();
+
+                                break;
+                        }
+
                         break;
+                    }
                     case CONFIG_PKT_ID_UPLINK_DEACTIVATE_PAYLOAD:
                         break;
                     case CONFIG_PKT_ID_UPLINK_ERASE_MEMORY:
                     {
-                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Executing the TC \"Erase Memory\"...");
+                        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Erase Memory\"...");
                         sys_log_new_line();
 
                         uint8_t tc_key[16] = CONFIG_TC_KEY_ERASE_MEMORY;
@@ -169,7 +276,7 @@ void vTaskProcessTC(void)
                     }
                     case CONFIG_PKT_ID_UPLINK_FORCE_RESET:
                     {
-                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Executing the TC \"Force Reset\"...");
+                        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Force Reset\"...");
                         sys_log_new_line();
 
                         uint8_t tc_key[16] = CONFIG_TC_KEY_FORCE_RESET;
