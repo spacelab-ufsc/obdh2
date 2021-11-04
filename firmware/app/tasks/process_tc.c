@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.23
+ * \version 0.8.24
  * 
  * \date 2021/07/06
  * 
@@ -39,9 +39,12 @@
 #include <config/keys.h>
 
 #include <system/sys_log/sys_log.h>
+#include <system/system.h>
 #include <devices/ttc/ttc.h>
 #include <devices/media/media.h>
 #include <libs/hmac/sha.h>
+
+#include <fsat_pkt/fsat_pkt.h>
 
 #include "process_tc.h"
 #include "startup.h"
@@ -95,7 +98,36 @@ void vTaskProcessTC(void)
                 switch(pkt[0])
                 {
                     case CONFIG_PKT_ID_UPLINK_PING_REQ:
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Ping TC received!");
+                        sys_log_new_line();
+
+                        fsat_pkt_pl_t pong_pl = {0};
+
+                        /* Packet ID */
+                        fsat_pkt_add_id(&pong_pl, CONFIG_PKT_ID_DOWNLINK_PING_ANS);
+
+                        /* Source callsign */
+                        fsat_pkt_add_callsign(&pong_pl, CONFIG_SATELLITE_CALLSIGN);
+
+                        if (memcpy(&pong_pl.payload[0], &pkt[1], 7) == &pong_pl.payload[0])
+                        {
+                            pong_pl.length = 7U;
+
+                            uint8_t pong_pl_raw[16] = {0};
+                            uint16_t pong_pl_raw_len = 0;
+
+                            fsat_pkt_encode(pong_pl, pong_pl_raw, &pong_pl_raw_len);
+
+                            if (ttc_send(TTC_1, pong_pl_raw, pong_pl_raw_len) != 0)
+                            {
+                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a ping answer!");
+                                sys_log_new_line();
+                            }
+                        }
+
                         break;
+                    }
                     case CONFIG_PKT_ID_UPLINK_DATA_REQ:
                         break;
                     case CONFIG_PKT_ID_UPLINK_BROADCAST_MSG:
