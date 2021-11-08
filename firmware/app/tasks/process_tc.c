@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.26
+ * \version 0.8.27
  * 
  * \date 2021/07/06
  * 
@@ -132,6 +132,35 @@ void vTaskProcessTC(void)
                     case CONFIG_PKT_ID_UPLINK_DATA_REQ:
                         break;
                     case CONFIG_PKT_ID_UPLINK_BROADCAST_MSG:
+                        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Broadcast message TC received!");
+                        sys_log_new_line();
+
+                        fsat_pkt_pl_t broadcast_pl = {0};
+
+                        /* Packet ID */
+                        fsat_pkt_add_id(&broadcast_pl, CONFIG_PKT_ID_DOWNLINK_MESSAGE_BROADCAST);
+
+                        /* Source callsign */
+                        fsat_pkt_add_callsign(&broadcast_pl, CONFIG_SATELLITE_CALLSIGN);
+
+                        uint16_t msg_len = pkt_len - 7U - 7U - 1U;
+
+                        if (memcpy(&broadcast_pl.payload[0], &pkt[1], 14U + msg_len) == &broadcast_pl.payload[0])
+                        {
+                            broadcast_pl.length = 14U + msg_len;
+
+                            uint8_t broadcast_pl_raw[55] = {0};
+                            uint16_t broadcast_pl_raw_len = 0;
+
+                            fsat_pkt_encode(broadcast_pl, broadcast_pl_raw, &broadcast_pl_raw_len);
+
+                            if (ttc_send(TTC_1, broadcast_pl_raw, broadcast_pl_raw_len) != 0)
+                            {
+                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a message broadcast!");
+                                sys_log_new_line();
+                            }
+                        }
+
                         break;
                     case CONFIG_PKT_ID_UPLINK_ENTER_HIBERNATION:
                         break;
