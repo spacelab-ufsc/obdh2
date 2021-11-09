@@ -36,6 +36,9 @@
 #ifndef KEYS_H_
 #define KEYS_H_
 
+/* NOTE: These keys are just for tests, as this code is hosted in a public repository, */
+/*       all of them should be replaced by the real ones before the launch of the satellite!!*/
+
 /* Telecommands keys */
 #define CONFIG_TC_KEY_ENTER_HIBERNATION                 "#7@rsQVL$Pxf(5eU"
 #define CONFIG_TC_KEY_LEAVE_HIBERNATION                 "5d#QvdYzK59`Du>z"
