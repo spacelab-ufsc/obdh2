@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.22
+ * \version 0.8.28
  * 
  * \date 2019/10/26
  * 
@@ -99,6 +99,11 @@
 #define CONFIG_PL_ID_EDC_2                              2
 #define CONFIG_PL_ID_PAYLOAD_X                          3
 #define CONFIG_PL_ID_RADIATION_MONITOR                  4
+
+/* Modules IDs */
+#define CONFIG_MODULE_ID_BATTERY_HEATER                 1
+#define CONFIG_MODULE_ID_BEACON                         2
+#define CONFIG_MODULE_ID_PERIODIC_TELEMETRY             3
 
 /* CSP */
 #define CONFIG_CSP_ENABLED                              0

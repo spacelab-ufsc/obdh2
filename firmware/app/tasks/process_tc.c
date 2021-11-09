@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.27
+ * \version 0.8.28
  * 
  * \date 2021/07/06
  * 
@@ -167,6 +167,81 @@ void vTaskProcessTC(void)
                     case CONFIG_PKT_ID_UPLINK_LEAVE_HIBERNATION:
                         break;
                     case CONFIG_PKT_ID_UPLINK_ACTIVATE_MODULE:
+                        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Activate Module\"...");
+                        sys_log_new_line();
+
+                        switch(pkt[8])
+                        {
+                            case CONFIG_MODULE_ID_BATTERY_HEATER:
+                            {
+                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the battery heater...");
+                                sys_log_new_line();
+
+                                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_MODULE;
+
+                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_MODULE)-1U))
+                                {
+                                    /* Enable the EPS heater */
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
+                                    sys_log_new_line();
+                                }
+                                else
+                                {
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the battery heater module! Invalid key!");
+                                    sys_log_new_line();
+                                }
+
+                                break;
+                            }
+                            case CONFIG_MODULE_ID_BEACON:
+                            {
+                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the beacon...");
+                                sys_log_new_line();
+
+                                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_MODULE;
+
+                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_MODULE)-1U))
+                                {
+                                    /* Enable the beacon */
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
+                                    sys_log_new_line();
+                                }
+                                else
+                                {
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the beacon module! Invalid key!");
+                                    sys_log_new_line();
+                                }
+
+                                break;
+                            }
+                            case CONFIG_MODULE_ID_PERIODIC_TELEMETRY:
+                            {
+                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the periodic telemetry...");
+                                sys_log_new_line();
+
+                                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_MODULE;
+
+                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_MODULE)-1U))
+                                {
+                                    /* Enable the periodic telemetry */
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
+                                    sys_log_new_line();
+                                }
+                                else
+                                {
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the periodic telemetry module! Invalid key!");
+                                    sys_log_new_line();
+                                }
+
+                                break;
+                            }
+                            default:
+                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid module to activate!");
+                                sys_log_new_line();
+
+                                break;
+                        }
+
                         break;
                     case CONFIG_PKT_ID_UPLINK_DEACTIVATE_MODULE:
                         break;
