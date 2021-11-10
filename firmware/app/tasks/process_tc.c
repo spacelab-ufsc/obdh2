@@ -53,6 +53,138 @@
 xTaskHandle xTaskProcessTCHandle;
 
 /**
+ * \brief Ping request telecommand.
+ *
+ * \param[in] pkt is the packet to process.
+ *
+ * \param[in] pkt_len is the number of bytes of the given packet.
+ *
+ * \return None.
+ */
+static void process_tc_ping_request(uint8_t *pkt, uint16_t pkt_len);
+
+/**
+ * \brief Data request telecommand.
+ *
+ * \param[in] pkt is the packet to process.
+ *
+ * \param[in] pkt_len is the number of bytes of the given packet.
+ *
+ * \return None.
+ */
+//static void process_tc_data_request(uint8_t pkt, uint16_t pkt_len);
+
+/**
+ * \brief Broadcast message telecommand.
+ *
+ * \param[in] pkt is the packet to process.
+ *
+ * \param[in] pkt_len is the number of bytes of the given packet.
+ *
+ * \return None.
+ */
+static void process_tc_broadcast_message(uint8_t *pkt, uint16_t pkt_len);
+
+/**
+ * \brief Enter hibernation telecommand.
+ *
+ * \param[in] pkt is the packet to process.
+ *
+ * \param[in] pkt_len is the number of bytes of the given packet.
+ *
+ * \return None.
+ */
+//static void process_tc_enter_hibernation(uint8_t *pkt, uint16_t pkt_len);
+
+/**
+ * \brief Leave hibernation telecommand.
+ *
+ * \param[in] pkt is the packet to process.
+ *
+ * \param[in] pkt_len is the number of bytes of the given packet.
+ *
+ * \return None.
+ */
+//static void process_tc_leave_hibernation(uint8_t *pkt, uint16_t pkt_len);
+
+/**
+ * \brief Activate module telecommand.
+ *
+ * \param[in] pkt is the packet to process.
+ *
+ * \param[in] pkt_len is the number of bytes of the given packet.
+ *
+ * \return None.
+ */
+static void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len);
+
+/**
+ * \brief Deactivate module telecommand.
+ *
+ * \param[in] pkt is the packet to process.
+ *
+ * \param[in] pkt_len is the number of bytes of the given packet.
+ *
+ * \return None.
+ */
+static void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len);
+
+/**
+ * \brief Activate payload telecommand.
+ *
+ * \param[in] pkt is the packet to process.
+ *
+ * \param[in] pkt_len is the number of bytes of the given packet.
+ *
+ * \return None.
+ */
+static void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len);
+
+/**
+ * \brief Deactivate payload telecommand.
+ *
+ * \param[in] pkt is the packet to process.
+ *
+ * \param[in] pkt_len is the number of bytes of the given packet.
+ *
+ * \return None.
+ */
+static void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len);
+
+/**
+ * \brief Erase memory telecommand.
+ *
+ * \param[in] pkt is the packet to process.
+ *
+ * \param[in] pkt_len is the number of bytes of the given packet.
+ *
+ * \return None.
+ */
+static void process_tc_erase_memory(uint8_t *pkt, uint16_t pkt_len);
+
+/**
+ * \brief Force reset telecommand.
+ *
+ * \param[in] pkt is the packet to process.
+ *
+ * \param[in] pkt_len is the number of bytes of the given packet.
+ *
+ * \return None.
+ */
+static void process_tc_force_reset(uint8_t *pkt, uint16_t pkt_len);
+
+/**
+ * \brief Get payload data telecommand.
+ *
+ * \param[in] pkt is the packet to process.
+ *
+ * \param[in] pkt_len is the number of bytes of the given packet.
+ *
+ * \return None.
+ */
+//static void process_tc_get_payload_data(uint8_t *pkt, uint16_t pkt_len);
+
+/**
  * \brief Checks if a given HMAC is valid or not.
  *
  * \param[in] msg is the message to compute the hash.
@@ -94,72 +226,25 @@ void vTaskProcessTC(void)
 
             uint8_t pkt[300] = {0};
             uint16_t pkt_len = 0;
+
             if (ttc_recv(TTC_1, pkt, &pkt_len) != 0)
             {
                 switch(pkt[0])
                 {
                     case CONFIG_PKT_ID_UPLINK_PING_REQ:
-                    {
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Ping TC received!");
                         sys_log_new_line();
 
-                        fsat_pkt_pl_t pong_pl = {0};
-
-                        /* Packet ID */
-                        fsat_pkt_add_id(&pong_pl, CONFIG_PKT_ID_DOWNLINK_PING_ANS);
-
-                        /* Source callsign */
-                        fsat_pkt_add_callsign(&pong_pl, CONFIG_SATELLITE_CALLSIGN);
-
-                        if (memcpy(&pong_pl.payload[0], &pkt[1], 7) == &pong_pl.payload[0])
-                        {
-                            pong_pl.length = 7U;
-
-                            uint8_t pong_pl_raw[16] = {0};
-                            uint16_t pong_pl_raw_len = 0;
-
-                            fsat_pkt_encode(pong_pl, pong_pl_raw, &pong_pl_raw_len);
-
-                            if (ttc_send(TTC_1, pong_pl_raw, pong_pl_raw_len) != 0)
-                            {
-                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a ping answer!");
-                                sys_log_new_line();
-                            }
-                        }
+                        process_tc_ping_request(pkt, pkt_len);
 
                         break;
-                    }
                     case CONFIG_PKT_ID_UPLINK_DATA_REQ:
                         break;
                     case CONFIG_PKT_ID_UPLINK_BROADCAST_MSG:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Broadcast message TC received!");
                         sys_log_new_line();
 
-                        fsat_pkt_pl_t broadcast_pl = {0};
-
-                        /* Packet ID */
-                        fsat_pkt_add_id(&broadcast_pl, CONFIG_PKT_ID_DOWNLINK_MESSAGE_BROADCAST);
-
-                        /* Source callsign */
-                        fsat_pkt_add_callsign(&broadcast_pl, CONFIG_SATELLITE_CALLSIGN);
-
-                        uint16_t msg_len = pkt_len - 7U - 7U - 1U;
-
-                        if (memcpy(&broadcast_pl.payload[0], &pkt[1], 14U + msg_len) == &broadcast_pl.payload[0])
-                        {
-                            broadcast_pl.length = 14U + msg_len;
-
-                            uint8_t broadcast_pl_raw[55] = {0};
-                            uint16_t broadcast_pl_raw_len = 0;
-
-                            fsat_pkt_encode(broadcast_pl, broadcast_pl_raw, &broadcast_pl_raw_len);
-
-                            if (ttc_send(TTC_1, broadcast_pl_raw, broadcast_pl_raw_len) != 0)
-                            {
-                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a message broadcast!");
-                                sys_log_new_line();
-                            }
-                        }
+                        process_tc_broadcast_message(pkt, pkt_len);
 
                         break;
                     case CONFIG_PKT_ID_UPLINK_ENTER_HIBERNATION:
@@ -170,154 +255,14 @@ void vTaskProcessTC(void)
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Activate Module\"...");
                         sys_log_new_line();
 
-                        switch(pkt[8])
-                        {
-                            case CONFIG_MODULE_ID_BATTERY_HEATER:
-                            {
-                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the battery heater...");
-                                sys_log_new_line();
-
-                                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_MODULE;
-
-                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_MODULE)-1U))
-                                {
-                                    /* Enable the EPS heater */
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
-                                    sys_log_new_line();
-                                }
-                                else
-                                {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the battery heater module! Invalid key!");
-                                    sys_log_new_line();
-                                }
-
-                                break;
-                            }
-                            case CONFIG_MODULE_ID_BEACON:
-                            {
-                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the beacon...");
-                                sys_log_new_line();
-
-                                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_MODULE;
-
-                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_MODULE)-1U))
-                                {
-                                    /* Enable the beacon */
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
-                                    sys_log_new_line();
-                                }
-                                else
-                                {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the beacon module! Invalid key!");
-                                    sys_log_new_line();
-                                }
-
-                                break;
-                            }
-                            case CONFIG_MODULE_ID_PERIODIC_TELEMETRY:
-                            {
-                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the periodic telemetry...");
-                                sys_log_new_line();
-
-                                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_MODULE;
-
-                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_MODULE)-1U))
-                                {
-                                    /* Enable the periodic telemetry */
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
-                                    sys_log_new_line();
-                                }
-                                else
-                                {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the periodic telemetry module! Invalid key!");
-                                    sys_log_new_line();
-                                }
-
-                                break;
-                            }
-                            default:
-                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid module to activate!");
-                                sys_log_new_line();
-
-                                break;
-                        }
+                        process_tc_activate_module(pkt, pkt_len);
 
                         break;
                     case CONFIG_PKT_ID_UPLINK_DEACTIVATE_MODULE:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Deactivate Module\"...");
                         sys_log_new_line();
 
-                        switch(pkt[8])
-                        {
-                            case CONFIG_MODULE_ID_BATTERY_HEATER:
-                            {
-                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the battery heater...");
-                                sys_log_new_line();
-
-                                uint8_t tc_key[16] = CONFIG_TC_KEY_DEACTIVATE_MODULE;
-
-                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_MODULE)-1U))
-                                {
-                                    /* Enable the EPS heater */
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
-                                    sys_log_new_line();
-                                }
-                                else
-                                {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the battery heater module! Invalid key!");
-                                    sys_log_new_line();
-                                }
-
-                                break;
-                            }
-                            case CONFIG_MODULE_ID_BEACON:
-                            {
-                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the beacon...");
-                                sys_log_new_line();
-
-                                uint8_t tc_key[16] = CONFIG_TC_KEY_DEACTIVATE_MODULE;
-
-                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_MODULE)-1U))
-                                {
-                                    /* Enable the beacon */
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
-                                    sys_log_new_line();
-                                }
-                                else
-                                {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the beacon module! Invalid key!");
-                                    sys_log_new_line();
-                                }
-
-                                break;
-                            }
-                            case CONFIG_MODULE_ID_PERIODIC_TELEMETRY:
-                            {
-                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the periodic telemetry...");
-                                sys_log_new_line();
-
-                                uint8_t tc_key[16] = CONFIG_TC_KEY_DEACTIVATE_MODULE;
-
-                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_MODULE)-1U))
-                                {
-                                    /* Enable the periodic telemetry */
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
-                                    sys_log_new_line();
-                                }
-                                else
-                                {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the periodic telemetry module! Invalid key!");
-                                    sys_log_new_line();
-                                }
-
-                                break;
-                            }
-                            default:
-                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid module to deactivate!");
-                                sys_log_new_line();
-
-                                break;
-                        }
+                        process_tc_deactivate_module(pkt, pkt_len);
 
                         break;
                     case CONFIG_PKT_ID_UPLINK_ACTIVATE_PAYLOAD:
@@ -325,106 +270,7 @@ void vTaskProcessTC(void)
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Activate Payload\"...");
                         sys_log_new_line();
 
-                        switch(pkt[8])
-                        {
-                            case CONFIG_PL_ID_EDC_1:
-                            {
-                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the EDC 1 payload...");
-                                sys_log_new_line();
-
-                                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_PAYLOAD_EDC;
-
-                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_PAYLOAD_EDC)-1U))
-                                {
-                                    if (payload_enable(PAYLOAD_EDC_0) != 0)
-                                    {
-                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the EDC 1 payload!");
-                                        sys_log_new_line();
-                                    }
-                                }
-                                else
-                                {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the EDC 1 payload! Invalid key!");
-                                    sys_log_new_line();
-                                }
-
-                                break;
-                            }
-                            case CONFIG_PL_ID_EDC_2:
-                            {
-                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the EDC 2 payload...");
-                                sys_log_new_line();
-
-                                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_PAYLOAD_EDC;
-
-                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_PAYLOAD_EDC)-1U))
-                                {
-                                    if (payload_enable(PAYLOAD_EDC_1) != 0)
-                                    {
-                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the EDC 2 payload!");
-                                        sys_log_new_line();
-                                    }
-                                }
-                                else
-                                {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the EDC 2 payload! Invalid key!");
-                                    sys_log_new_line();
-                                }
-
-                                break;
-                            }
-                            case CONFIG_PL_ID_PAYLOAD_X:
-                            {
-                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the Payload-X payload...");
-                                sys_log_new_line();
-
-                                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_PAYLOAD_PAYLOAD_X;
-
-                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_PAYLOAD_PAYLOAD_X)-1U))
-                                {
-                                    if (payload_enable(PAYLOAD_X) != 0)
-                                    {
-                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the Payload-X payload!");
-                                        sys_log_new_line();
-                                    }
-                                }
-                                else
-                                {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the Payload-X payload! Invalid key!");
-                                    sys_log_new_line();
-                                }
-
-                                break;
-                            }
-                            case CONFIG_PL_ID_RADIATION_MONITOR:
-                            {
-                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the Harsh payload...");
-                                sys_log_new_line();
-
-                                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_PAYLOAD_HARSH;
-
-                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_PAYLOAD_HARSH)-1U))
-                                {
-                                    if (payload_enable(PAYLOAD_HARSH) != 0)
-                                    {
-                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the Harsh payload!");
-                                        sys_log_new_line();
-                                    }
-                                }
-                                else
-                                {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the Harsh payload! Invalid key!");
-                                    sys_log_new_line();
-                                }
-
-                                break;
-                            }
-                            default:
-                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid payload to activate!");
-                                sys_log_new_line();
-
-                                break;
-                        }
+                        process_tc_activate_payload(pkt, pkt_len);
 
                         break;
                     }
@@ -433,106 +279,7 @@ void vTaskProcessTC(void)
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Deactivate Payload\"...");
                         sys_log_new_line();
 
-                        switch(pkt[8])
-                        {
-                            case CONFIG_PL_ID_EDC_1:
-                            {
-                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the EDC 1 payload...");
-                                sys_log_new_line();
-
-                                uint8_t tc_key[16] = CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_EDC;
-
-                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_EDC)-1U))
-                                {
-                                    if (payload_disable(PAYLOAD_EDC_0) != 0)
-                                    {
-                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the EDC 1 payload!");
-                                        sys_log_new_line();
-                                    }
-                                }
-                                else
-                                {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the EDC 1 payload! Invalid key!");
-                                    sys_log_new_line();
-                                }
-
-                                break;
-                            }
-                            case CONFIG_PL_ID_EDC_2:
-                            {
-                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the EDC 2 payload...");
-                                sys_log_new_line();
-
-                                uint8_t tc_key[16] = CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_EDC;
-
-                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_EDC)-1U))
-                                {
-                                    if (payload_disable(PAYLOAD_EDC_1) != 0)
-                                    {
-                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the EDC 2 payload!");
-                                        sys_log_new_line();
-                                    }
-                                }
-                                else
-                                {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the EDC 2 payload! Invalid key!");
-                                    sys_log_new_line();
-                                }
-
-                                break;
-                            }
-                            case CONFIG_PL_ID_PAYLOAD_X:
-                            {
-                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the Payload-X payload...");
-                                sys_log_new_line();
-
-                                uint8_t tc_key[16] = CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_PAYLOAD_X;
-
-                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_PAYLOAD_X)-1U))
-                                {
-                                    if (payload_disable(PAYLOAD_X) != 0)
-                                    {
-                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the Payload-X payload!");
-                                        sys_log_new_line();
-                                    }
-                                }
-                                else
-                                {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the Payload-X payload! Invalid key!");
-                                    sys_log_new_line();
-                                }
-
-                                break;
-                            }
-                            case CONFIG_PL_ID_RADIATION_MONITOR:
-                            {
-                                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the Harsh payload...");
-                                sys_log_new_line();
-
-                                uint8_t tc_key[16] = CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_HARSH;
-
-                                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_HARSH)-1U))
-                                {
-                                    if (payload_disable(PAYLOAD_HARSH) != 0)
-                                    {
-                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the Harsh payload!");
-                                        sys_log_new_line();
-                                    }
-                                }
-                                else
-                                {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the Harsh payload! Invalid key!");
-                                    sys_log_new_line();
-                                }
-
-                                break;
-                            }
-                            default:
-                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid payload to deactivate!");
-                                sys_log_new_line();
-
-                                break;
-                        }
+                        process_tc_deactivate_payload(pkt, pkt_len);
 
                         break;
                     }
@@ -541,21 +288,7 @@ void vTaskProcessTC(void)
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Erase Memory\"...");
                         sys_log_new_line();
 
-                        uint8_t tc_key[16] = CONFIG_TC_KEY_ERASE_MEMORY;
-
-                        if (process_tc_validate_hmac(pkt, 1U + 7U, &pkt[8], 20U, tc_key, sizeof(CONFIG_TC_KEY_ERASE_MEMORY)-1U))
-                        {
-                            if (media_erase(MEDIA_NOR, MEDIA_ERASE_DIE, 0U) != 0)
-                            {
-                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error erasing the NOR memory!");
-                                sys_log_new_line();
-                            }
-                        }
-                        else
-                        {
-                            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Erase Memory\" TC! Invalid key!");
-                            sys_log_new_line();
-                        }
+                        process_tc_erase_memory(pkt, pkt_len);
 
                         break;
                     }
@@ -564,24 +297,14 @@ void vTaskProcessTC(void)
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Force Reset\"...");
                         sys_log_new_line();
 
-                        uint8_t tc_key[16] = CONFIG_TC_KEY_FORCE_RESET;
-
-                        if (process_tc_validate_hmac(pkt, 1U + 7U, &pkt[8], 20U, tc_key, sizeof(CONFIG_TC_KEY_FORCE_RESET)-1U))
-                        {
-                            system_reset();
-                        }
-                        else
-                        {
-                            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Force Reset\" TC! Invalid key!");
-                            sys_log_new_line();
-                        }
+                        process_tc_force_reset(pkt, pkt_len);
 
                         break;
                     }
                     case CONFIG_PKT_ID_UPLINK_GET_PAYLOAD_DATA:
                         break;
                     default:
-                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Unknow packet received!");
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Unknown packet received!");
                         sys_log_new_line();
 
                         break;
@@ -592,6 +315,494 @@ void vTaskProcessTC(void)
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_PROCESS_TC_PERIOD_MS));
     }
 }
+
+void process_tc_ping_request(uint8_t *pkt, uint16_t pkt_len)
+{
+    if (pkt_len >= 8U)
+    {
+        fsat_pkt_pl_t pong_pl = {0};
+
+        /* Packet ID */
+        fsat_pkt_add_id(&pong_pl, CONFIG_PKT_ID_DOWNLINK_PING_ANS);
+
+        /* Source callsign */
+        fsat_pkt_add_callsign(&pong_pl, CONFIG_SATELLITE_CALLSIGN);
+
+        if (memcpy(&pong_pl.payload[0], &pkt[1], 7) == &pong_pl.payload[0])
+        {
+            pong_pl.length = 7U;
+
+            uint8_t pong_pl_raw[16] = {0};
+            uint16_t pong_pl_raw_len = 0;
+
+            fsat_pkt_encode(pong_pl, pong_pl_raw, &pong_pl_raw_len);
+
+            if (ttc_send(TTC_1, pong_pl_raw, pong_pl_raw_len) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a ping answer!");
+                sys_log_new_line();
+            }
+        }
+    }
+}
+
+//void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
+//{
+//}
+
+void process_tc_broadcast_message(uint8_t *pkt, uint16_t pkt_len)
+{
+    if (pkt_len >= 15U)
+    {
+        fsat_pkt_pl_t broadcast_pl = {0};
+
+        /* Packet ID */
+        fsat_pkt_add_id(&broadcast_pl, CONFIG_PKT_ID_DOWNLINK_MESSAGE_BROADCAST);
+
+        /* Source callsign */
+        fsat_pkt_add_callsign(&broadcast_pl, CONFIG_SATELLITE_CALLSIGN);
+
+        uint16_t msg_len = pkt_len - 7U - 7U - 1U;
+
+        if (memcpy(&broadcast_pl.payload[0], &pkt[1], 14U + msg_len) == &broadcast_pl.payload[0])
+        {
+            broadcast_pl.length = 14U + msg_len;
+
+            uint8_t broadcast_pl_raw[55] = {0};
+            uint16_t broadcast_pl_raw_len = 0;
+
+            fsat_pkt_encode(broadcast_pl, broadcast_pl_raw, &broadcast_pl_raw_len);
+
+            if (ttc_send(TTC_1, broadcast_pl_raw, broadcast_pl_raw_len) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a message broadcast!");
+                sys_log_new_line();
+            }
+        }
+    }
+}
+
+//void process_tc_enter_hibernation(uint8_t *pkt, uint16_t pkt_len)
+//{
+//}
+
+//void process_tc_leave_hibernation(uint8_t *pkt, uint16_t pkt_len)
+//{
+//}
+
+void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len)
+{
+    if (pkt_len >= 29U)
+    {
+        switch(pkt[8])
+        {
+            case CONFIG_MODULE_ID_BATTERY_HEATER:
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the battery heater...");
+                sys_log_new_line();
+
+                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_MODULE;
+
+                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_MODULE)-1U))
+                {
+                    /* Enable the EPS heater */
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
+                    sys_log_new_line();
+                }
+                else
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the battery heater module! Invalid key!");
+                    sys_log_new_line();
+                }
+
+                break;
+            }
+            case CONFIG_MODULE_ID_BEACON:
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the beacon...");
+                sys_log_new_line();
+
+                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_MODULE;
+
+                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_MODULE)-1U))
+                {
+                    /* Enable the beacon */
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
+                    sys_log_new_line();
+                }
+                else
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the beacon module! Invalid key!");
+                    sys_log_new_line();
+                }
+
+                break;
+            }
+            case CONFIG_MODULE_ID_PERIODIC_TELEMETRY:
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the periodic telemetry...");
+                sys_log_new_line();
+
+                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_MODULE;
+
+                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_MODULE)-1U))
+                {
+                    /* Enable the periodic telemetry */
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
+                    sys_log_new_line();
+                }
+                else
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the periodic telemetry module! Invalid key!");
+                    sys_log_new_line();
+                }
+
+                break;
+            }
+            default:
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid module to activate!");
+                sys_log_new_line();
+
+                break;
+        }
+    }
+}
+
+void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
+{
+    if (pkt_len >= 29U)
+    {
+        switch(pkt[8])
+        {
+            case CONFIG_MODULE_ID_BATTERY_HEATER:
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the battery heater...");
+                sys_log_new_line();
+
+                uint8_t tc_key[16] = CONFIG_TC_KEY_DEACTIVATE_MODULE;
+
+                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_MODULE)-1U))
+                {
+                    /* Enable the EPS heater */
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
+                    sys_log_new_line();
+                }
+                else
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the battery heater module! Invalid key!");
+                    sys_log_new_line();
+                }
+
+                break;
+            }
+            case CONFIG_MODULE_ID_BEACON:
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the beacon...");
+                sys_log_new_line();
+
+                uint8_t tc_key[16] = CONFIG_TC_KEY_DEACTIVATE_MODULE;
+
+                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_MODULE)-1U))
+                {
+                    /* Enable the beacon */
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
+                    sys_log_new_line();
+                }
+                else
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the beacon module! Invalid key!");
+                    sys_log_new_line();
+                }
+
+                break;
+            }
+            case CONFIG_MODULE_ID_PERIODIC_TELEMETRY:
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the periodic telemetry...");
+                sys_log_new_line();
+
+                uint8_t tc_key[16] = CONFIG_TC_KEY_DEACTIVATE_MODULE;
+
+                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_MODULE)-1U))
+                {
+                    /* Enable the periodic telemetry */
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
+                    sys_log_new_line();
+                }
+                else
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the periodic telemetry module! Invalid key!");
+                    sys_log_new_line();
+                }
+
+                break;
+            }
+            default:
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid module to deactivate!");
+                sys_log_new_line();
+
+                break;
+        }
+    }
+}
+
+void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
+{
+    if (pkt_len >= 29U)
+    {
+        switch(pkt[8])
+        {
+            case CONFIG_PL_ID_EDC_1:
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the EDC 1 payload...");
+                sys_log_new_line();
+
+                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_PAYLOAD_EDC;
+
+                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_PAYLOAD_EDC)-1U))
+                {
+                    if (payload_enable(PAYLOAD_EDC_0) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the EDC 1 payload!");
+                        sys_log_new_line();
+                    }
+                }
+                else
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the EDC 1 payload! Invalid key!");
+                    sys_log_new_line();
+                }
+
+                break;
+            }
+            case CONFIG_PL_ID_EDC_2:
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the EDC 2 payload...");
+                sys_log_new_line();
+
+                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_PAYLOAD_EDC;
+
+                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_PAYLOAD_EDC)-1U))
+                {
+                    if (payload_enable(PAYLOAD_EDC_1) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the EDC 2 payload!");
+                        sys_log_new_line();
+                    }
+                }
+                else
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the EDC 2 payload! Invalid key!");
+                    sys_log_new_line();
+                }
+
+                break;
+            }
+            case CONFIG_PL_ID_PAYLOAD_X:
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the Payload-X payload...");
+                sys_log_new_line();
+
+                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_PAYLOAD_PAYLOAD_X;
+
+                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_PAYLOAD_PAYLOAD_X)-1U))
+                {
+                    if (payload_enable(PAYLOAD_X) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the Payload-X payload!");
+                        sys_log_new_line();
+                    }
+                }
+                else
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the Payload-X payload! Invalid key!");
+                    sys_log_new_line();
+                }
+
+                break;
+            }
+            case CONFIG_PL_ID_RADIATION_MONITOR:
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the Harsh payload...");
+                sys_log_new_line();
+
+                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_PAYLOAD_HARSH;
+
+                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_PAYLOAD_HARSH)-1U))
+                {
+                    if (payload_enable(PAYLOAD_HARSH) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the Harsh payload!");
+                        sys_log_new_line();
+                    }
+                }
+                else
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the Harsh payload! Invalid key!");
+                    sys_log_new_line();
+                }
+
+                break;
+            }
+            default:
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid payload to activate!");
+                sys_log_new_line();
+
+                break;
+        }
+    }
+}
+
+void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
+{
+    if (pkt_len >= 29U)
+    {
+        switch(pkt[8])
+        {
+            case CONFIG_PL_ID_EDC_1:
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the EDC 1 payload...");
+                sys_log_new_line();
+
+                uint8_t tc_key[16] = CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_EDC;
+
+                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_EDC)-1U))
+                {
+                    if (payload_disable(PAYLOAD_EDC_0) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the EDC 1 payload!");
+                        sys_log_new_line();
+                    }
+                }
+                else
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the EDC 1 payload! Invalid key!");
+                    sys_log_new_line();
+                }
+
+                break;
+            }
+            case CONFIG_PL_ID_EDC_2:
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the EDC 2 payload...");
+                sys_log_new_line();
+
+                uint8_t tc_key[16] = CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_EDC;
+
+                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_EDC)-1U))
+                {
+                    if (payload_disable(PAYLOAD_EDC_1) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the EDC 2 payload!");
+                        sys_log_new_line();
+                    }
+                }
+                else
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the EDC 2 payload! Invalid key!");
+                    sys_log_new_line();
+                }
+
+                break;
+            }
+            case CONFIG_PL_ID_PAYLOAD_X:
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the Payload-X payload...");
+                sys_log_new_line();
+
+                uint8_t tc_key[16] = CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_PAYLOAD_X;
+
+                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_PAYLOAD_X)-1U))
+                {
+                    if (payload_disable(PAYLOAD_X) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the Payload-X payload!");
+                        sys_log_new_line();
+                    }
+                }
+                else
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the Payload-X payload! Invalid key!");
+                    sys_log_new_line();
+                }
+
+                break;
+            }
+            case CONFIG_PL_ID_RADIATION_MONITOR:
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the Harsh payload...");
+                sys_log_new_line();
+
+                uint8_t tc_key[16] = CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_HARSH;
+
+                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_HARSH)-1U))
+                {
+                    if (payload_disable(PAYLOAD_HARSH) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the Harsh payload!");
+                        sys_log_new_line();
+                    }
+                }
+                else
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the Harsh payload! Invalid key!");
+                    sys_log_new_line();
+                }
+
+                break;
+            }
+            default:
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid payload to deactivate!");
+                sys_log_new_line();
+
+                break;
+        }
+    }
+}
+
+void process_tc_erase_memory(uint8_t *pkt, uint16_t pkt_len)
+{
+    if (pkt_len >= 28U)
+    {
+        uint8_t tc_key[16] = CONFIG_TC_KEY_ERASE_MEMORY;
+
+        if (process_tc_validate_hmac(pkt, 1U + 7U, &pkt[8], 20U, tc_key, sizeof(CONFIG_TC_KEY_ERASE_MEMORY)-1U))
+        {
+            if (media_erase(MEDIA_NOR, MEDIA_ERASE_DIE, 0U) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error erasing the NOR memory!");
+                sys_log_new_line();
+            }
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Erase Memory\" TC! Invalid key!");
+            sys_log_new_line();
+        }
+    }
+}
+
+void process_tc_force_reset(uint8_t *pkt, uint16_t pkt_len)
+{
+    if (pkt_len >= 28U)
+    {
+        uint8_t tc_key[16] = CONFIG_TC_KEY_FORCE_RESET;
+
+        if (process_tc_validate_hmac(pkt, 1U + 7U, &pkt[8], 20U, tc_key, sizeof(CONFIG_TC_KEY_FORCE_RESET)-1U))
+        {
+            system_reset();
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Force Reset\" TC! Invalid key!");
+            sys_log_new_line();
+        }
+    }
+}
+
+//void process_tc_get_payload_data(uint8_t *pkt, uint16_t pkt_len)
+//{
+//}
 
 bool process_tc_validate_hmac(uint8_t *msg, uint16_t msg_len, uint8_t *msg_hash, uint16_t msg_hash_len, uint8_t *key, uint16_t key_len)
 {
