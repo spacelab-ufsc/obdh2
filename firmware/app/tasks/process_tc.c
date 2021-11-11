@@ -43,7 +43,7 @@
 #include <devices/ttc/ttc.h>
 #include <devices/media/media.h>
 #include <devices/payload/payload.h>
-#include <libs/hmac/sha.h>
+#include <hmac/sha.h>
 
 #include <fsat_pkt/fsat_pkt.h>
 
