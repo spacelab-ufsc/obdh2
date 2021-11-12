@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.30
+ * \version 0.8.31
  * 
  * \date 2021/07/06
  * 
@@ -107,7 +107,7 @@ static void process_tc_enter_hibernation(uint8_t *pkt, uint16_t pkt_len);
  *
  * \return None.
  */
-//static void process_tc_leave_hibernation(uint8_t *pkt, uint16_t pkt_len);
+static void process_tc_leave_hibernation(uint8_t *pkt, uint16_t pkt_len);
 
 /**
  * \brief Activate module telecommand.
@@ -257,6 +257,11 @@ void vTaskProcessTC(void)
 
                         break;
                     case CONFIG_PKT_ID_UPLINK_LEAVE_HIBERNATION:
+                        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Leave Hibernation\"...");
+                        sys_log_new_line();
+
+                        process_tc_leave_hibernation(pkt, pkt_len);
+
                         break;
                     case CONFIG_PKT_ID_UPLINK_ACTIVATE_MODULE:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Activate Module\"...");
@@ -409,9 +414,24 @@ void process_tc_enter_hibernation(uint8_t *pkt, uint16_t pkt_len)
     }
 }
 
-//void process_tc_leave_hibernation(uint8_t *pkt, uint16_t pkt_len)
-//{
-//}
+void process_tc_leave_hibernation(uint8_t *pkt, uint16_t pkt_len)
+{
+    if (pkt_len >= 30U)
+    {
+        uint8_t tc_key[16] = CONFIG_TC_KEY_LEAVE_HIBERNATION;
+
+        if (process_tc_validate_hmac(pkt, 1U + 7U, &pkt[8], 20U, tc_key, sizeof(CONFIG_TC_KEY_LEAVE_HIBERNATION)-1U))
+        {
+            sat_data_buf.obdh.data.mode = OBDH_MODE_NORMAL;
+            sat_data_buf.obdh.data.ts_last_mode_change = system_get_time();
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Leave hibernation\" TC! Invalid key!");
+            sys_log_new_line();
+        }
+    }
+}
 
 void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len)
 {
