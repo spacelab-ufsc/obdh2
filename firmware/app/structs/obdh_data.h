@@ -1,7 +1,7 @@
 /*
  * obdh_data.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.5
+ * \version 0.8.30
  * 
  * \date 2020/07/16
  * 
@@ -38,6 +38,10 @@
 #define OBDH_DATA_H_
 
 #include <stdint.h>
+
+/* Operation modes */
+#define OBDH_MODE_NORMAL            0
+#define OBDH_MODE_HIBERNATION       1
 
 /**
  * \brief Radio data.
@@ -62,6 +66,9 @@ typedef struct
     radio_data_t radio;             /**< Radio data. */
     uint8_t hw_version;             /**< Hardware version. */
     uint32_t fw_version;            /**< Firmware version (ex.: "v1.2.3" = 0x00010203). */
+    uint8_t mode;                   /**< Satellite mode. */
+    sys_time_t ts_last_mode_change; /**< Timestamp of the last change in the operation mode. */
+    uint16_t mode_duration;         /**< Mode duration (valid only in hibernation mode). */
 } obdh_data_t;
 
 #endif /* OBDH_DATA_H_ */
