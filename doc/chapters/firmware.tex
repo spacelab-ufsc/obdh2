@@ -17,7 +17,7 @@
 %
 % \institution Universidade Federal de Santa Catarina (UFSC)
 %
-% \version 0.7.0
+% \version 0.9.0
 %
 % \date 2019/10/30
 %
@@ -149,63 +149,63 @@ This tasks saves the housekeeping data of the satellite in the flash memory at e
 
 The internal variables and parameters of the OBDH firmware can be seen in \autoref{tab:vars-and-pars}.
 
-\begin{table}[!h]
-    \centering
-    \begin{tabular}{cL{0.82\textwidth}l}
-        \toprule[1.5pt]
-        \textbf{ID} & \textbf{Name/Description} & \textbf{Type}\\
-        \midrule
-        0   & Time counter in milliseconds                            & uint32 \\
-        1   & Temperature of the $\mu$C in Kelvin                     & uint16 \\
-        2   & Input current in mA                                     & uint16 \\
-        3   & Input voltage in mV                                     & uint16 \\
-        \multirow{18}{*}{4} & Last reset cause: & \multirow{18}{*}{uint8} \\
-            & - 0x00 = No interrupt pending                           &        \\
-            & - 0x02 = Brownout (BOR)                                 &        \\
-            & - 0x04 = RST/NMI (BOR)                                  &        \\
-            & - 0x06 = PMMSWBOR (BOR)                                 &        \\
-            & - 0x08 = Wakeup from LPMx.5 (BOR)                       &        \\
-            & - 0x0A = Security violation (BOR)                       &        \\
-            & - 0x0C = SVSL (POR)                                     &        \\
-            & - 0x0E = SVSH (POR)                                     &        \\
-            & - 0x10 = SVML\_OVP (POR)                                &        \\
-            & - 0x12 = SVMH\_OVP (POR)                                &        \\
-            & - 0x14 = PMMSWPOR (POR)                                 &        \\
-            & - 0x16 = WDT time out (PUC)                             &        \\
-            & - 0x18 = WDT password violation (PUC)                   &        \\
-            & - 0x1A = Flash password violation (PUC)                 &        \\
-            & - 0x1C = Reserved                                       &        \\
-            & - 0x1E = PERF peripheral/configuration area fetch (PUC) &        \\
-            & - 0x20 = PMM password violation (PUC)                   &        \\
-            & - 0x22 to 0x3E = Reserved                               &        \\
-        5   & Reset counter                                           & uint16 \\
-        6   & Last valid telecommand (uplink packet ID)               & uint8  \\
-        7   & Temperature of the radio in Kelvin                      & uint16 \\
-        8   & RSSI of the last valid telecommand                      & uint16 \\
-        9   & Temperature of the antenna in Kelvin                    & uint16 \\
-        \multirow{17}{*}{10} & Antenna status bits: & \multirow{17}{*}{uint16}  \\
-            & - Bit 15: The antenna 1 is deployed (0) or not (1)      &        \\
-            & - Bit 14: Cause of the latest activation stop for antenna 1 &    \\
-            & - Bit 13: The antenna 1 deployment is active (1) or not (0) &    \\
-            & - Bit 11: The antenna 2 is deployed (0) or not (1)      &        \\
-            & - Bit 10: Cause of the latest activation stop for antenna 2 &    \\
-            & - Bit 9: The antenna 2 deployment is active (1) or not (0)  &    \\
-            & - Bit 8: The antenna is ignoring the deployment switches (1) or not (0) & \\
-            & - Bit 7: The antenna 3 is deployed (0) or not (1)       &        \\
-            & - Bit 6: Cause of the latest activation stop for antenna 3 &     \\
-            & - Bit 5: The antenna 3 deployment is active (1) or not (0) &     \\
-            & - Bit 4: The antenna system independent burn is active (1) or not (0) & \\
-            & - Bit 3: The antenna 4 is deployed (0) or not (1)       &        \\
-            & - Bit 2: Cause of the latest activation stop for antenna 4 &     \\
-            & - Bit 1: The antenna 4 deployment is active (1) or not (0) &     \\
-            & - Bit 0: The antenna system is armed (1) or not (0)     &        \\
-        11  & Hardware version                                        & uint8 \\
-        12  & Firmware version (ex.: ``v1.2.3'' = 0x00010203)         & uint32 \\
-        \bottomrule[1.5pt]
-    \end{tabular}
+\begin{longtable}[c]{cL{0.82\textwidth}l}
+    \toprule[1.5pt]
+    \textbf{ID} & \textbf{Name/Description} & \textbf{Type}\\
+    \midrule
+    0   & Time counter in milliseconds                            & uint32 \\
+    1   & Temperature of the $\mu$C in Kelvin                     & uint16 \\
+    2   & Input current in mA                                     & uint16 \\
+    3   & Input voltage in mV                                     & uint16 \\
+    \multirow{18}{*}{4} & Last reset cause: & \multirow{18}{*}{uint8} \\
+        & - 0x00 = No interrupt pending                           &        \\
+        & - 0x02 = Brownout (BOR)                                 &        \\
+        & - 0x04 = RST/NMI (BOR)                                  &        \\
+        & - 0x06 = PMMSWBOR (BOR)                                 &        \\
+        & - 0x08 = Wakeup from LPMx.5 (BOR)                       &        \\
+        & - 0x0A = Security violation (BOR)                       &        \\
+        & - 0x0C = SVSL (POR)                                     &        \\
+        & - 0x0E = SVSH (POR)                                     &        \\
+        & - 0x10 = SVML\_OVP (POR)                                &        \\
+        & - 0x12 = SVMH\_OVP (POR)                                &        \\
+        & - 0x14 = PMMSWPOR (POR)                                 &        \\
+        & - 0x16 = WDT time out (PUC)                             &        \\
+        & - 0x18 = WDT password violation (PUC)                   &        \\
+        & - 0x1A = Flash password violation (PUC)                 &        \\
+        & - 0x1C = Reserved                                       &        \\
+        & - 0x1E = PERF peripheral/configuration area fetch (PUC) &        \\
+        & - 0x20 = PMM password violation (PUC)                   &        \\
+        & - 0x22 to 0x3E = Reserved                               &        \\
+    5   & Reset counter                                           & uint16 \\
+    6   & Last valid telecommand (uplink packet ID)               & uint8  \\
+    7   & Temperature of the radio in Kelvin                      & uint16 \\
+    8   & RSSI of the last valid telecommand                      & uint16 \\
+    9   & Temperature of the antenna in Kelvin                    & uint16 \\
+    \multirow{17}{*}{10} & Antenna status bits: & \multirow{17}{*}{uint16}  \\
+        & - Bit 15: The antenna 1 is deployed (0) or not (1)      &        \\
+        & - Bit 14: Cause of the latest activation stop for antenna 1 &    \\
+        & - Bit 13: The antenna 1 deployment is active (1) or not (0) &    \\
+        & - Bit 11: The antenna 2 is deployed (0) or not (1)      &        \\
+        & - Bit 10: Cause of the latest activation stop for antenna 2 &    \\
+        & - Bit 9: The antenna 2 deployment is active (1) or not (0)  &    \\
+        & - Bit 8: The antenna is ignoring the deployment switches (1) or not (0) & \\
+        & - Bit 7: The antenna 3 is deployed (0) or not (1)       &        \\
+        & - Bit 6: Cause of the latest activation stop for antenna 3 &     \\
+        & - Bit 5: The antenna 3 deployment is active (1) or not (0) &     \\
+        & - Bit 4: The antenna system independent burn is active (1) or not (0) & \\
+        & - Bit 3: The antenna 4 is deployed (0) or not (1)       &        \\
+        & - Bit 2: Cause of the latest activation stop for antenna 4 &     \\
+        & - Bit 1: The antenna 4 deployment is active (1) or not (0) &     \\
+        & - Bit 0: The antenna system is armed (1) or not (0)     &        \\
+    11  & Hardware version                                        & uint8 \\
+    12  & Firmware version (ex.: ``v1.2.3'' = 0x00010203)         & uint32 \\
+    13  & Mode (``Normal'' = 0, ``Hibernation'' = 1)              & uint8 \\
+    14  & Timestamp of the last mode change                       & uint32 \\
+    15  & Mode duration in hours (valid only in hibernation mode) & uint16 \\
+    \bottomrule[1.5pt]
     \caption{Variables and parameters of the OBDH 2.0.}
     \label{tab:vars-and-pars}
-\end{table}
+\end{longtable}
 
 \section{Telemetry}
 
