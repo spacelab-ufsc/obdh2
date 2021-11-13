@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.22
+ * \version 0.8.32
  * 
  * \date 2019/10/27
  * 
@@ -165,10 +165,13 @@ void vTaskBeacon(void)
 
         fsat_pkt_encode(beacon_pl, beacon_pl_raw, &beacon_pl_raw_len);
 
-        if (ttc_send(TTC_1, beacon_pl_raw, beacon_pl_raw_len) != 0)
+        if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
         {
-            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_BEACON_NAME, "Error transmiting the beacon packet!");
-            sys_log_new_line();
+            if (ttc_send(TTC_1, beacon_pl_raw, beacon_pl_raw_len) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_BEACON_NAME, "Error transmiting the beacon packet!");
+                sys_log_new_line();
+            }
         }
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_BEACON_PERIOD_MS));
