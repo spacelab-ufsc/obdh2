@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.31
+ * \version 0.8.33
  * 
  * \date 2021/07/06
  * 
@@ -404,7 +404,7 @@ void process_tc_enter_hibernation(uint8_t *pkt, uint16_t pkt_len)
         {
             sat_data_buf.obdh.data.mode = OBDH_MODE_HIBERNATION;
             sat_data_buf.obdh.data.ts_last_mode_change = system_get_time();
-            sat_data_buf.obdh.data.mode_duration = ((uint16_t)pkt[8] << 8) | (uint16_t)pkt[9];
+            sat_data_buf.obdh.data.mode_duration = (((sys_time_t)pkt[8] << 8) | (sys_time_t)pkt[9]) * 60UL * 60UL;
         }
         else
         {
