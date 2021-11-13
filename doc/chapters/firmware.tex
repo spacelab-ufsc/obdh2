@@ -201,7 +201,7 @@ The internal variables and parameters of the OBDH firmware can be seen in \autor
     12  & Firmware version (ex.: ``v1.2.3'' = 0x00010203)         & uint32 \\
     13  & Mode (``Normal'' = 0, ``Hibernation'' = 1)              & uint8 \\
     14  & Timestamp of the last mode change                       & uint32 \\
-    15  & Mode duration in hours (valid only in hibernation mode) & uint16 \\
+    15  & Mode duration in sec. (valid only in hibernation mode)  & uint32 \\
     \bottomrule[1.5pt]
     \caption{Variables and parameters of the OBDH 2.0.}
     \label{tab:vars-and-pars}
