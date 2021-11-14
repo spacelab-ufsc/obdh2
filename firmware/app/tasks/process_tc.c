@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.33
+ * \version 0.8.34
  * 
  * \date 2021/07/06
  * 
@@ -74,7 +74,7 @@ static void process_tc_ping_request(uint8_t *pkt, uint16_t pkt_len);
  *
  * \return None.
  */
-//static void process_tc_data_request(uint8_t pkt, uint16_t pkt_len);
+static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len);
 
 /**
  * \brief Broadcast message telecommand.
@@ -241,6 +241,11 @@ void vTaskProcessTC(void)
 
                         break;
                     case CONFIG_PKT_ID_UPLINK_DATA_REQ:
+                        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Data request TC received!");
+                        sys_log_new_line();
+
+                        process_tc_data_request(pkt, pkt_len);
+
                         break;
                     case CONFIG_PKT_ID_UPLINK_BROADCAST_MSG:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Broadcast message TC received!");
@@ -358,9 +363,58 @@ void process_tc_ping_request(uint8_t *pkt, uint16_t pkt_len)
     }
 }
 
-//void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
-//{
-//}
+void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
+{
+    if (pkt_len >= (1U + 7U + 1U + 4U + 4U))
+    {
+        fsat_pkt_pl_t data_pl = {0};
+
+        /* Packet ID */
+        fsat_pkt_add_id(&data_pl, CONFIG_PKT_ID_DOWNLINK_DATA_REQUEST_ANS);
+
+        /* Source callsign */
+        fsat_pkt_add_callsign(&data_pl, CONFIG_SATELLITE_CALLSIGN);
+
+        uint8_t tc_key[16] = CONFIG_TC_KEY_DATA_REQUEST;
+
+        if (process_tc_validate_hmac(pkt, 1U + 7U + 1U + 4U + 4U, &pkt[17], 20U, tc_key, sizeof(CONFIG_TC_KEY_DATA_REQUEST)-1U))
+        {
+            switch(pkt[8])
+            {
+                case CONFIG_DATA_ID_OBDH:
+                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_PROCESS_TC_NAME, "OBDH data request not implemented!");
+                    sys_log_new_line();
+
+                    break;
+                case CONFIG_DATA_ID_EPS:
+                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_PROCESS_TC_NAME, "EPS data request not implemented!");
+                    sys_log_new_line();
+
+                    break;
+                case CONFIG_DATA_ID_TTC_0:
+                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_PROCESS_TC_NAME, "TTC 0 data request not implemented!");
+                    sys_log_new_line();
+
+                    break;
+                case CONFIG_DATA_ID_TTC_1:
+                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_PROCESS_TC_NAME, "TTC 1 data request not implemented!");
+                    sys_log_new_line();
+
+                    break;
+                default:
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Data Request\" TC! Unknown data ID!");
+                    sys_log_new_line();
+
+                    break;
+            }
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Data Request\" TC! Invalid key!");
+            sys_log_new_line();
+        }
+    }
+}
 
 void process_tc_broadcast_message(uint8_t *pkt, uint16_t pkt_len)
 {

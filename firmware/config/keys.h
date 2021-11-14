@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.26
+ * \version 0.8.34
  * 
  * \date 2021/10/20
  * 
@@ -40,6 +40,7 @@
 /*       all of them should be replaced by the real ones before the launch of the satellite!!*/
 
 /* Telecommands keys */
+#define CONFIG_TC_KEY_DATA_REQUEST                      ":*gRc9h.Mhwzl1PW"
 #define CONFIG_TC_KEY_ENTER_HIBERNATION                 "#7@rsQVL$Pxf(5eU"
 #define CONFIG_TC_KEY_LEAVE_HIBERNATION                 "5d#QvdYzK59`Du>z"
 #define CONFIG_TC_KEY_ACTIVATE_MODULE                   "6mP=VA33u/:m)b+z"

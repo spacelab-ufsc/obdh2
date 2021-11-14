@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.28
+ * \version 0.8.34
  * 
  * \date 2019/10/26
  * 
@@ -104,6 +104,12 @@
 #define CONFIG_MODULE_ID_BATTERY_HEATER                 1
 #define CONFIG_MODULE_ID_BEACON                         2
 #define CONFIG_MODULE_ID_PERIODIC_TELEMETRY             3
+
+/* Data IDs */
+#define CONFIG_DATA_ID_OBDH                             0
+#define CONFIG_DATA_ID_EPS                              1
+#define CONFIG_DATA_ID_TTC_0                            2
+#define CONFIG_DATA_ID_TTC_1                            3
 
 /* CSP */
 #define CONFIG_CSP_ENABLED                              0
