@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.34
+ * \version 0.8.35
  * 
  * \date 2021/07/06
  * 
@@ -187,6 +187,28 @@ static void process_tc_force_reset(uint8_t *pkt, uint16_t pkt_len);
 //static void process_tc_get_payload_data(uint8_t *pkt, uint16_t pkt_len);
 
 /**
+ * \brief Set parameter telecommand.
+ *
+ * \param[in] pkt is the packet to process.
+ *
+ * \param[in] pkt_len is the number of bytes of the given packet.
+ *
+ * \return None.
+ */
+static void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len);
+
+/**
+ * \brief Get parameter telecommand.
+ *
+ * \param[in] pkt is the packet to process.
+ *
+ * \param[in] pkt_len is the number of bytes of the given packet.
+ *
+ * \return None.
+ */
+//static void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len);
+
+/**
  * \brief Checks if a given HMAC is valid or not.
  *
  * \param[in] msg is the message to compute the hash.
@@ -283,42 +305,43 @@ void vTaskProcessTC(void)
 
                         break;
                     case CONFIG_PKT_ID_UPLINK_ACTIVATE_PAYLOAD:
-                    {
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Activate Payload\"...");
                         sys_log_new_line();
 
                         process_tc_activate_payload(pkt, pkt_len);
 
                         break;
-                    }
                     case CONFIG_PKT_ID_UPLINK_DEACTIVATE_PAYLOAD:
-                    {
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Deactivate Payload\"...");
                         sys_log_new_line();
 
                         process_tc_deactivate_payload(pkt, pkt_len);
 
                         break;
-                    }
                     case CONFIG_PKT_ID_UPLINK_ERASE_MEMORY:
-                    {
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Erase Memory\"...");
                         sys_log_new_line();
 
                         process_tc_erase_memory(pkt, pkt_len);
 
                         break;
-                    }
                     case CONFIG_PKT_ID_UPLINK_FORCE_RESET:
-                    {
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Force Reset\"...");
                         sys_log_new_line();
 
                         process_tc_force_reset(pkt, pkt_len);
 
                         break;
-                    }
                     case CONFIG_PKT_ID_UPLINK_GET_PAYLOAD_DATA:
+                        break;
+                    case CONFIG_PKT_ID_UPLINK_SET_PARAM:
+                        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Set Parameter\"...");
+                        sys_log_new_line();
+
+                        process_tc_set_parameter(pkt, pkt_len);
+
+                        break;
+                    case CONFIG_PKT_ID_UPLINK_GET_PARAM:
                         break;
                     default:
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Unknown packet received!");
@@ -898,6 +921,43 @@ void process_tc_force_reset(uint8_t *pkt, uint16_t pkt_len)
 }
 
 //void process_tc_get_payload_data(uint8_t *pkt, uint16_t pkt_len)
+//{
+//}
+
+void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
+{
+    if (pkt_len >= (1U + 7U + 1U + 1U + 4U + 20U))
+    {
+        uint8_t tc_key[16] = CONFIG_TC_KEY_SET_PARAMETER;
+
+        if (process_tc_validate_hmac(pkt, 1U + 7U + 1U + 1U + 4U, &pkt[14], 20U, tc_key, sizeof(CONFIG_TC_KEY_SET_PARAMETER)-1U))
+        {
+            switch(pkt[8])
+            {
+                case CONFIG_SUBSYSTEM_ID_OBDH:
+                    break;
+                case CONFIG_SUBSYSTEM_ID_TTC_1:
+                    break;
+                case CONFIG_SUBSYSTEM_ID_TTC_2:
+                    break;
+                case CONFIG_SUBSYSTEM_ID_EPS:
+                    break;
+                default:
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid subsystem to set a parameter!");
+                    sys_log_new_line();
+
+                    break;
+            }
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Set Parameter\" TC! Invalid key!");
+            sys_log_new_line();
+        }
+    }
+}
+
+//void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
 //{
 //}
 

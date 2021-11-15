@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.34
+ * \version 0.8.35
  * 
  * \date 2021/10/20
  * 
@@ -54,6 +54,8 @@
 #define CONFIG_TC_KEY_ERASE_MEMORY                      "C:8RkJE${^>%wYVR"
 #define CONFIG_TC_KEY_FORCE_RESET                       "@A)Z-t(x+@nDHpKF"
 #define CONFIG_TC_KEY_GET_PAYLOAD_DATA                  "BkN&a):^fr(@(5x?"
+#define CONFIG_TC_KEY_SET_PARAMETER                     "x&veg;r[y{z{{T;7"
+#define CONFIG_TC_KEY_GET_PARAMETER                     "EB'YThpxu7,yla,m"
 
 #endif /* KEYS_H_ */
 
