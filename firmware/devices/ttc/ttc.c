@@ -1,7 +1,7 @@
 /*
  * ttc.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.10
+ * \version 0.8.35
  * 
  * \date 2020/02/01
  * 
@@ -160,6 +160,42 @@ int ttc_init(ttc_e dev)
 
             err = -1;
         }
+    }
+
+    return err;
+}
+
+int ttc_set_param(ttc_e dev, ttc_param_id_t param, uint32_t val)
+{
+    int err = -1;
+
+    switch(dev)
+    {
+        case TTC_0:     err = sl_ttc2_write_reg(ttc_0_config, param, val);  break;
+        case TTC_1:     err = sl_ttc2_write_reg(ttc_1_config, param, val);  break;
+        default:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Error writing a parameter to the TTC device! Invalid device!");
+            sys_log_new_line();
+
+            break;
+    }
+
+    return err;
+}
+
+int ttc_get_param(ttc_e dev, ttc_param_id_t param, uint32_t *val)
+{
+    int err = -1;
+
+    switch(dev)
+    {
+        case TTC_0:     err = sl_ttc2_read_reg(ttc_0_config, param, val);   break;
+        case TTC_1:     err = sl_ttc2_read_reg(ttc_1_config, param, val);   break;
+        default:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Error reading a parameter from the TTC device! Invalid device!");
+            sys_log_new_line();
+
+            break;
     }
 
     return err;
