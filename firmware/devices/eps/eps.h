@@ -1,7 +1,7 @@
 /*
  * eps.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.22
+ * \version 0.8.35
  * 
  * \date 2020/02/01
  * 
@@ -44,11 +44,38 @@
 #define EPS_MODULE_NAME         "EPS"
 
 /**
+ * \brief Parameter ID type.
+ */
+typedef uint8_t eps_param_id_t;
+
+/**
  * \brief Initialization of the EPS device.
  *
  * \return The status/error code.
  */
 int eps_init(void);
+
+/**
+ * \brief Sets a parameter of the EPS device.
+ *
+ * \param[in] param is the parameter ID to set.
+ *
+ * \param[in] val is the new value of the given parameter.
+ *
+ * \return The status/error code.
+ */
+int eps_set_param(eps_param_id_t param, uint32_t val);
+
+/**
+ * \brief Gets a parameter from the EPS device.
+ *
+ * \param[in] param is the parameter ID to read.
+ *
+ * \param[in,out] val is a pointer to store the read value.
+ *
+ * \return The status/error code.
+ */
+int eps_get_param(eps_param_id_t param, uint32_t *val);
 
 /**
  * \brief Gets the battery voltage from the EPS module.
