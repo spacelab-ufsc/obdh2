@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.33
+ * \version 0.8.36
  * 
  * \date 2020/07/16
  * 
@@ -38,6 +38,24 @@
 #define OBDH_DATA_H_
 
 #include <stdint.h>
+
+/* OBDH parameter ID */
+#define OBDH_PARAM_ID_TIME_COUNTER              0   /**< Time counter in milliseconds. */
+#define OBDH_PARAM_ID_TEMPERATURE_UC            1   /**< Temperature of the uC in Kelvin. */
+#define OBDH_PARAM_ID_INPUT_CURRENT             2   /**< Input current in mA. */
+#define OBDH_PARAM_ID_INPUT_VOLTAGE             3   /**< Input voltage in mV. */
+#define OBDH_PARAM_ID_LAST_RESET_CAUSE          4   /**< Last reset cause. */
+#define OBDH_PARAM_ID_RESET_COUNTER             5   /**< Reset counter. */
+#define OBDH_PARAM_ID_LAST_VALID_TC             6   /**< Last valid telecommand (uplink packet ID). */
+#define OBDH_PARAM_ID_TEMPERATURE_RADIO         7   /**< Temperature of the radio in Kelvin. */
+#define OBDH_PARAM_ID_RSSI_LAST_TC              8   /**< RSSI of the last valid telecommand. */
+#define OBDH_PARAM_ID_TEMPERATURE_ANTENNA       9   /**< Temperature of the antenna in Kelvin. */
+#define OBDH_PARAM_ID_ANTENNA_STATUS            10  /**< Antenna status bits. */
+#define OBDH_PARAM_ID_HARDWARE_VERSION          11  /**< Hardware version. */
+#define OBDH_PARAM_ID_FIRMWARE_VERSION          12  /**< Firmware version (ex.: "v1.2.3" = 0x00010203). */
+#define OBDH_PARAM_ID_MODE                      13  /**< Mode ("Normal" = 0, "Hibernation" = 1). */
+#define OBDH_PARAM_ID_TIMESTAMP_LAST_MODE       14  /**< Timestamp of the last mode change. */
+#define OBDH_PARAM_ID_MODE_DURATION             15  /**< Mode duration in sec. (valid only in hibernation mode). */
 
 /* Operation modes */
 #define OBDH_MODE_NORMAL            0

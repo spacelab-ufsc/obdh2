@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.35
+ * \version 0.8.36
  * 
  * \date 2021/07/06
  * 
@@ -932,15 +932,51 @@ void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U + 1U + 1U + 4U, &pkt[14], 20U, tc_key, sizeof(CONFIG_TC_KEY_SET_PARAMETER)-1U))
         {
+            uint32_t buf = ((uint32_t)pkt[10] << 24) |
+                           ((uint32_t)pkt[11] << 16) |
+                           ((uint32_t)pkt[12] << 8) |
+                           (uint32_t)pkt[13];
+
             switch(pkt[8])
             {
                 case CONFIG_SUBSYSTEM_ID_OBDH:
+                    switch(pkt[9])
+                    {
+                        case OBDH_PARAM_ID_TIME_COUNTER:        system_set_time(buf);                               break;
+                        case OBDH_PARAM_ID_MODE:                sat_data_buf.obdh.data.mode = (uint8_t)buf;         break;
+                        case OBDH_PARAM_ID_TIMESTAMP_LAST_MODE: sat_data_buf.obdh.data.ts_last_mode_change = buf;   break;
+                        case OBDH_PARAM_ID_MODE_DURATION:       sat_data_buf.obdh.data.mode_duration = buf;         break;
+                        default:
+                            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid parameter to set in OBDH!");
+                            sys_log_new_line();
+
+                            break;
+                    }
+
                     break;
                 case CONFIG_SUBSYSTEM_ID_TTC_1:
+                    if (ttc_set_param(TTC_0, pkt[9], buf) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error writing a TTC 0 parameter!");
+                        sys_log_new_line();
+                    }
+
                     break;
                 case CONFIG_SUBSYSTEM_ID_TTC_2:
+                    if (ttc_set_param(TTC_1, pkt[9], buf) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error writing a TTC 1 parameter!");
+                        sys_log_new_line();
+                    }
+
                     break;
                 case CONFIG_SUBSYSTEM_ID_EPS:
+                    if (eps_set_param(pkt[9], buf) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error writing a EPS parameter!");
+                        sys_log_new_line();
+                    }
+
                     break;
                 default:
                     sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid subsystem to set a parameter!");
