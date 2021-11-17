@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.36
+ * \version 0.8.37
  * 
  * \date 2021/07/06
  * 
@@ -206,7 +206,7 @@ static void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len);
  *
  * \return None.
  */
-//static void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len);
+static void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len);
 
 /**
  * \brief Checks if a given HMAC is valid or not.
@@ -342,6 +342,11 @@ void vTaskProcessTC(void)
 
                         break;
                     case CONFIG_PKT_ID_UPLINK_GET_PARAM:
+                        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Get Parameter\"...");
+                        sys_log_new_line();
+
+                        process_tc_get_parameter(pkt, pkt_len);
+
                         break;
                     default:
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Unknown packet received!");
@@ -993,9 +998,128 @@ void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
     }
 }
 
-//void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
-//{
-//}
+void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
+{
+    if (pkt_len >= (1U + 7U + 1U + 1U + 20U))
+    {
+        uint8_t tc_key[16] = CONFIG_TC_KEY_GET_PARAMETER;
+
+        if (process_tc_validate_hmac(pkt, 1U + 7U + 1U + 1U, &pkt[10], 20U, tc_key, sizeof(CONFIG_TC_KEY_GET_PARAMETER)-1U))
+        {
+            int error = 0;
+
+            uint32_t buf = UINT32_MAX;
+
+            switch(pkt[8])
+            {
+                case CONFIG_SUBSYSTEM_ID_OBDH:
+                    switch(pkt[9])
+                    {
+                        case OBDH_PARAM_ID_TIME_COUNTER:        buf = system_get_time();                                break;
+                        case OBDH_PARAM_ID_TEMPERATURE_UC:      buf = sat_data_buf.obdh.data.temperature;               break;
+                        case OBDH_PARAM_ID_INPUT_CURRENT:       buf = sat_data_buf.obdh.data.current;                   break;
+                        case OBDH_PARAM_ID_INPUT_VOLTAGE:       buf = sat_data_buf.obdh.data.voltage;                   break;
+                        case OBDH_PARAM_ID_LAST_RESET_CAUSE:    buf = sat_data_buf.obdh.data.last_reset_cause;          break;
+                        case OBDH_PARAM_ID_RESET_COUNTER:       buf = sat_data_buf.obdh.data.reset_counter;             break;
+                        case OBDH_PARAM_ID_LAST_VALID_TC:       buf = sat_data_buf.obdh.data.last_valid_tc;             break;
+                        case OBDH_PARAM_ID_TEMPERATURE_RADIO:   buf = sat_data_buf.obdh.data.radio.temperature;         break;
+                        case OBDH_PARAM_ID_RSSI_LAST_TC:        buf = sat_data_buf.obdh.data.radio.last_valid_tc_rssi;  break;
+                        case OBDH_PARAM_ID_TEMPERATURE_ANTENNA: buf = sat_data_buf.antenna.data.temperature;            break;
+                        case OBDH_PARAM_ID_ANTENNA_STATUS:      buf = sat_data_buf.antenna.data.status.code;            break;
+                        case OBDH_PARAM_ID_HARDWARE_VERSION:    buf = sat_data_buf.obdh.data.hw_version;                break;
+                        case OBDH_PARAM_ID_FIRMWARE_VERSION:    buf = sat_data_buf.obdh.data.fw_version;                break;
+                        case OBDH_PARAM_ID_MODE:                buf = sat_data_buf.obdh.data.mode;                      break;
+                        case OBDH_PARAM_ID_TIMESTAMP_LAST_MODE: buf = sat_data_buf.obdh.data.ts_last_mode_change;       break;
+                        case OBDH_PARAM_ID_MODE_DURATION:       buf = sat_data_buf.obdh.data.mode_duration;             break;
+                        default:
+                            error = -1;
+
+                            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid parameter to get from OBDH!");
+                            sys_log_new_line();
+
+                            break;
+                    }
+
+                    break;
+                case CONFIG_SUBSYSTEM_ID_TTC_1:
+                    if (ttc_get_param(TTC_0, pkt[9], &buf) != 0)
+                    {
+                        error = -1;
+
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error reading a parameter from TTC 0!");
+                        sys_log_new_line();
+                    }
+
+                    break;
+                case CONFIG_SUBSYSTEM_ID_TTC_2:
+                    if (ttc_get_param(TTC_1, pkt[9], &buf) != 0)
+                    {
+                        error = -1;
+
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error reading a parameter from TTC 1!");
+                        sys_log_new_line();
+                    }
+
+                    break;
+                case CONFIG_SUBSYSTEM_ID_EPS:
+                    if (eps_get_param(pkt[9], &buf) != 0)
+                    {
+                        error = -1;
+
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error reading a EPS parameter!");
+                        sys_log_new_line();
+                    }
+
+                    break;
+                default:
+                    error = -1;
+
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid subsystem to get a parameter!");
+                    sys_log_new_line();
+
+                    break;
+            }
+
+            if (error == 0)
+            {
+                fsat_pkt_pl_t param_pl = {0};
+
+                /* Packet ID */
+                fsat_pkt_add_id(&param_pl, CONFIG_PKT_ID_DOWNLINK_PARAM_VALUE);
+
+                /* Source callsign */
+                fsat_pkt_add_callsign(&param_pl, CONFIG_SATELLITE_CALLSIGN);
+
+                if (memcpy(&param_pl.payload[0], &pkt[1], 7) == &param_pl.payload[0])
+                {
+                    param_pl.payload[8] = pkt[8];
+                    param_pl.payload[9] = pkt[9];
+                    param_pl.payload[10] = (uint8_t)((buf >> 24) & 0xFFU);
+                    param_pl.payload[11] = (uint8_t)((buf >> 16) & 0xFFU);
+                    param_pl.payload[12] = (uint8_t)((buf >> 8) & 0xFFU);
+                    param_pl.payload[13] = (uint8_t)(buf & 0xFFU);
+
+                    param_pl.length = 6U;
+
+                    uint8_t param_pl_raw[16] = {0};
+                    uint16_t param_pl_raw_len = 0;
+
+                    fsat_pkt_encode(param_pl, param_pl_raw, &param_pl_raw_len);
+
+                    if (ttc_send(TTC_1, param_pl_raw, param_pl_raw_len) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a \"get parameter\" answer!");
+                    }
+                }
+            }
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Get Parameter\" TC! Invalid key!");
+            sys_log_new_line();
+        }
+    }
+}
 
 bool process_tc_validate_hmac(uint8_t *msg, uint16_t msg_len, uint8_t *msg_hash, uint16_t msg_hash_len, uint8_t *key, uint16_t key_len)
 {
