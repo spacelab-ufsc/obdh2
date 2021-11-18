@@ -1,7 +1,7 @@
 /*
  * tasks.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.11
+ * \version 0.8.38
  * 
  * \date 2019/11/02
  * 
@@ -204,6 +204,15 @@ void create_tasks(void)
         /* Error creating the process TC task */
     }
 #endif /* CONFIG_TASK_PROCESS_TC_ENABLED */
+
+#if defined(CONFIG_TASK_ANTENNA_DEPLOYMENT_ENABLED) && (CONFIG_TASK_ANTENNA_DEPLOYMENT_ENABLED == 1)
+    xTaskCreate(vTaskAntennaDeployment, TASK_ANTENNA_DEPLOYMENT_NAME, TASK_ANTENNA_DEPLOYMENT_STACK_SIZE, NULL, TASK_ANTENNA_DEPLOYMENT_PRIORITY, &xTaskAntennaDeploymentHandle);
+
+    if (xTaskAntennaDeploymentHandle == NULL)
+    {
+        /* Error creating the antenna deployment task */
+    }
+#endif /* CONFIG_TASK_ANTENNA_DEPLOYMENT_ENABLED */
 
     create_event_groups();
 }

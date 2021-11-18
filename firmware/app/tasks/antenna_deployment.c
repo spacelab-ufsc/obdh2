@@ -1,5 +1,5 @@
 /*
- * version.h
+ * antenna_deployment.h
  * 
  * Copyright The OBDH 2.0 Contributors.
  * 
@@ -16,34 +16,34 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
 /**
- * \brief Version control file.
+ * \brief Antenna deployment task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.8.38
  * 
- * \date 2019/10/25
+ * \date 2021/11/17
  * 
- * \defgroup version Version control
+ * \addtogroup antenna_deployment
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include <devices/antenna/antenna.h>
 
-#define FIRMWARE_VERSION            "0.8.38"
+#include "antenna_deployment.h"
 
-#define FIRMWARE_STATUS             "Development"
+xTaskHandle xTaskAntennaDeploymentHandle;
 
-#define FIRMWARE_AUTHOR             "Gabriel Mariano Marcelino"
+void vTaskAntennaDeployment(void)
+{
+    vTaskDelay(pdMS_TO_TICKS(TASK_ANTENNA_DEPLOYMENT_PERIOD_MS));
 
-#define FIRMWARE_AUTHOR_EMAIL       "gabriel.mm8@gmail.com"
+    /* TODO: Deployment routine */
+}
 
-#endif /* VERSION_H_ */
-
-/** \} End of version group */
+/** \} End of antenna_deployment group */

@@ -1,7 +1,7 @@
 /*
  * config.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.35
+ * \version 0.8.38
  * 
  * \date 2019/10/26
  * 
@@ -53,6 +53,7 @@
 #define CONFIG_TASK_READ_ANTENNA_ENABLED                1
 #define CONFIG_TASK_DATA_LOG_ENABLED                    1
 #define CONFIG_TASK_PROCESS_TC_ENABLED                  1
+#define CONFIG_TASK_ANTENNA_DEPLOYMENT_ENABLED          0
 
 /* Devices */
 #define CONFIG_DEV_MEDIA_INT_ENABLED                    1
