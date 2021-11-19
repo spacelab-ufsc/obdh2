@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.38
+ * \version 0.8.39
  * 
  * \date 2021/11/17
  * 
@@ -43,7 +43,6 @@
 #define TASK_ANTENNA_DEPLOYMENT_NAME                "Antenna Deployment"    /**< Task name. */
 #define TASK_ANTENNA_DEPLOYMENT_STACK_SIZE          150                     /**< Stack size in bytes. */
 #define TASK_ANTENNA_DEPLOYMENT_PRIORITY            5                       /**< Task priority. */
-#define TASK_ANTENNA_DEPLOYMENT_PERIOD_MS           (45*60*1000)            /**< Task period in milliseconds. */
 
 /**
  * \brief Antenna deployment handle.

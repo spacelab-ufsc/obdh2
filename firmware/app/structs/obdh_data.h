@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.36
+ * \version 0.8.39
  * 
  * \date 2020/07/16
  * 
@@ -56,6 +56,10 @@
 #define OBDH_PARAM_ID_MODE                      13  /**< Mode ("Normal" = 0, "Hibernation" = 1). */
 #define OBDH_PARAM_ID_TIMESTAMP_LAST_MODE       14  /**< Timestamp of the last mode change. */
 #define OBDH_PARAM_ID_MODE_DURATION             15  /**< Mode duration in sec. (valid only in hibernation mode). */
+#define OBDH_PARAM_ID_INITIAL_HIB_EXECUTED      16  /**< Initial hibernation executed flag. */
+#define OBDH_PARAM_ID_INITIAL_HIB_TIME_COUNTER  17  /**< Initial hibernation time counter in minutes. */
+#define OBDH_PARAM_ID_ANT_DEPLOYMENT_EXECUTED   18  /**< Antenna deployment executed flag. */
+#define OBDH_PARAM_ID_ANT_DEPLOYMENT_COUNTER    19  /**< Antenna deployment counter. */
 
 /* Operation modes */
 #define OBDH_MODE_NORMAL            0
@@ -87,6 +91,10 @@ typedef struct
     uint8_t mode;                   /**< Satellite mode. */
     sys_time_t ts_last_mode_change; /**< Timestamp of the last change in the operation mode. */
     sys_time_t mode_duration;       /**< Mode duration (valid only in hibernation mode). */
+    bool initial_hib_executed;      /**< Initial hibernation executed flag. */
+    uint8_t initial_hib_time_count; /**< Initial hibernation time counter in minutes. */
+    bool ant_deployment_executed;   /**< Antenna deployment executed flag. */
+    uint8_t ant_deployment_counter; /**< Antenna deployment counter. */
 } obdh_data_t;
 
 #endif /* OBDH_DATA_H_ */

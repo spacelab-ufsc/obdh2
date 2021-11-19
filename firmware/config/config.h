@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.38
+ * \version 0.8.39
  * 
  * \date 2019/10/26
  * 
@@ -145,6 +145,8 @@
 /* Antenna */
 #define CONFIG_ANTENNA_INDEP_DEPLOY_BURN_TIME_SEC       10U
 #define CONFIG_ANTENNA_SEQ_DEPLOY_BURN_TIME_SEC         20U
+#define CONFIG_ANTENNA_DEPLOYMENT_ATTEMPTS              10U
+#define CONFIG_ANTENNA_DEPLOYMENT_HIBERNATION_MIN       45
 
 /* Memory addresses */
 #define CONFIG_MEM_ADR_SYS_TIME                         0
