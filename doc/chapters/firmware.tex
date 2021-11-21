@@ -54,22 +54,24 @@ A list of the firmware tasks can be seen in the \autoref{tab:firmware-tasks}.
         \toprule[1.5pt]
         \textbf{Name}          & \textbf{Priority} & \textbf{Initial delay [ms]} & \textbf{Period [ms]} & \textbf{Stack [bytes]} \\
         \midrule
-        Startup (boot)         & Highest & 0      & Aperiodic & 350  \\
-        Deployment hibernation & Highest & 0      & Aperiodic & TBD  \\
-        Antenna deployment     & Highest & 0      & Aperiodic & TBD  \\
-        Watchdog reset         & Lowest  & 0      & 100       & 150  \\
-        Heartbeat              & Lowest  & 0      & 500       & 160  \\
-        Beacon                 & Medium  & 1000   & 60000     & 2000 \\
-        Uplink                 & Low     & 1000   & 10000     & 500  \\
-        EPS reading            & Medium  & 5000   & 60000     & 384  \\
-        EDC reading            & High    & 5000   & 60000     & 128  \\
+        Antenna deployment     & Highest & 0      & Aperiodic & 150  \\
+        Antenna reading        & Medium  & 2000   & 60000     & 150  \\
+        Beacon                 & High    & 1000   & 60000     & 1000 \\
+        Data log               & Medium  & 2000   & 600000    & 225  \\
+        EDC reading            & Medium  & 2000   & 60000     & 128  \\
+        EPS reading            & Medium  & 2000   & 60000     & 384  \\
+        Heartbeat              & Lowest  & 2000   & 500       & 160  \\
+        Housekeeping           & Medium  & 2000   & 10000     & 160  \\
         Payload X reading      & Medium  & 5000   & 5000      & TBD  \\
-        TTC writing            & Medium  & 5000   & 10000     & TBD  \\
-        Radio periodoc reset   & Medium  & 600000 & 600000    & 128  \\
+        Radio periodoc reset   & High    & 60000  & 60000     & 128  \\
+        Read sensors           & Medium  & 2000   & 60000     & 140  \\
+        Startup (boot)         & Highest & 0      & Aperiodic & 350  \\
         System reset           & High    & 0      & 36000000  & 128  \\
-        Read sensors           & Medium  & 0      & 60000     & 140  \\
-        CSP Server             & Lowest  & 0      & 500       & 1024 \\
-        Data log               & Medium  & 0      & 600000    & 225  \\
+        Telecommand processing & High    & 1000   & 5000      & 500  \\
+        Time control           & Medium  & 1000   & 1000      & 128  \\
+        TTC reading            & Medium  & 2000   & 60000     & 384  \\
+        Uplink                 & Low     & 1000   & 10000     & 500  \\
+        Watchdog reset         & Lowest  & 0      & 100       & 150  \\
         \bottomrule[1.5pt]
     \end{tabular}
     \caption{Firmware tasks.}
@@ -78,15 +80,15 @@ A list of the firmware tasks can be seen in the \autoref{tab:firmware-tasks}.
 
 All these tasks are better described below.
 
+\subsection{Antenna deployment}
+
+.
+
 \subsection{Startup (boot)}
 
 .
 
 \subsection{Deployment hibernation}
-
-.
-
-\subsection{Antenna deployment}
 
 .
 
@@ -135,11 +137,6 @@ This task resets the microcontroller by software at every 10 hours. This can be 
 \subsection{Read sensors}
 
 This task reads the internal sensors of the OBDH at every 60 seconds.
-
-\subsection{CSP Server}
-
-.
-
 
 \subsection{Data log}
 
