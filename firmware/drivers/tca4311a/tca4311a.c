@@ -1,7 +1,7 @@
 /*
  * tca4311a.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.8
+ * \version 0.8.40
  * 
  * \date 2020/02/01
  * 
@@ -79,13 +79,9 @@ int tca4311a_init(tca4311a_config_t config, bool en)
 
 int tca4311a_enable(tca4311a_config_t config)
 {
-    int err = -1;
+    int err = TCA4311A_READY;
 
-    if (gpio_set_state(config.en_pin, true) == 0)
-    {
-        err = tca4311a_is_ready(config);
-    }
-    else
+    if (gpio_set_state(config.en_pin, true) != 0)
     {
     #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, TCA4311A_MODULE_NAME, "Error during enable!");
@@ -99,13 +95,9 @@ int tca4311a_enable(tca4311a_config_t config)
 
 int tca4311a_disable(tca4311a_config_t config)
 {
-    int err = -1;
+    int err = TCA4311A_READY;
 
-    if (gpio_set_state(config.en_pin, false) == 0)
-    {
-        err = tca4311a_is_ready(config);
-    }
-    else
+    if (gpio_set_state(config.en_pin, false) != 0)
     {
     #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, TCA4311A_MODULE_NAME, "Error during disable!");
@@ -145,13 +137,9 @@ int tca4311a_is_ready(tca4311a_config_t config)
 
 int tca4311a_write(tca4311a_config_t config, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
 {
-    int err = -1;
+    int err = TCA4311A_READY;
 
-    if (i2c_write(config.i2c_port, adr, data, len) == 0)
-    {
-        err = tca4311a_is_ready(config);
-    }
-    else
+    if (i2c_write(config.i2c_port, adr, data, len) != 0)
     {
     #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, TCA4311A_MODULE_NAME, "Error during writing!");
@@ -165,13 +153,9 @@ int tca4311a_write(tca4311a_config_t config, i2c_slave_adr_t adr, uint8_t *data,
 
 int tca4311a_read(tca4311a_config_t config, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
 {
-    int err = -1;
+    int err = TCA4311A_READY;
 
-    if (i2c_read(config.i2c_port, adr, data, len) == 0)
-    {
-        err = tca4311a_is_ready(config);
-    }
-    else
+    if (i2c_read(config.i2c_port, adr, data, len) != 0)
     {
     #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, TCA4311A_MODULE_NAME, "Error during reading!");
@@ -185,13 +169,9 @@ int tca4311a_read(tca4311a_config_t config, i2c_slave_adr_t adr, uint8_t *data, 
 
 int tca4311a_write_byte(tca4311a_config_t config, i2c_slave_adr_t adr, uint8_t byte)
 {
-    int err = -1;
+    int err = TCA4311A_READY;
 
-    if (i2c_write(config.i2c_port, adr, &byte, 1) == 0)
-    {
-        err = tca4311a_is_ready(config);
-    }
-    else
+    if (i2c_write(config.i2c_port, adr, &byte, 1) != 0)
     {
     #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, TCA4311A_MODULE_NAME, "Error writing a byte!");
@@ -205,13 +185,9 @@ int tca4311a_write_byte(tca4311a_config_t config, i2c_slave_adr_t adr, uint8_t b
 
 int tca4311a_read_byte(tca4311a_config_t config, i2c_slave_adr_t adr, uint8_t *byte)
 {
-    int err = -1;
+    int err = TCA4311A_READY;
 
-    if (i2c_read(config.i2c_port, adr, byte, 1) == 0)
-    {
-        err = tca4311a_is_ready(config);
-    }
-    else
+    if (i2c_read(config.i2c_port, adr, byte, 1) != 0)
     {
     #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, TCA4311A_MODULE_NAME, "Error reading a byte!");
