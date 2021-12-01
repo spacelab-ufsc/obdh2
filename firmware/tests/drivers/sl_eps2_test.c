@@ -1,7 +1,7 @@
 /*
  * sl_eps2_test.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.11
+ * \version 0.8.41
  * 
  * \date 2021/09/02
  * 
@@ -69,9 +69,9 @@ static void sl_eps2_init_test(void **state)
     expect_value(__wrap_tca4311a_init, config.en_pin, SL_EPS2_I2C_EN_PIN);
     expect_value(__wrap_tca4311a_init, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
 
-    expect_value(__wrap_tca4311a_init, en, false);
+    expect_value(__wrap_tca4311a_init, en, true);
 
-    will_return(__wrap_tca4311a_init, 1);
+    will_return(__wrap_tca4311a_init, 0);
 
     read_reg(48, 0xEEE2U);
 
@@ -115,14 +115,6 @@ static void sl_eps2_write_reg_test(void **state)
 
     will_return(__wrap_tca4311a_write, 0);
 
-    /* I2C disable */
-    expect_value(__wrap_tca4311a_disable, config.i2c_port, SL_EPS2_I2C_PORT);
-    expect_value(__wrap_tca4311a_disable, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
-    expect_value(__wrap_tca4311a_disable, config.en_pin, SL_EPS2_I2C_EN_PIN);
-    expect_value(__wrap_tca4311a_disable, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
-
-    will_return(__wrap_tca4311a_disable, 1);
-
     uint32_t val = (uint32_t)(data[1] << 24) |
                    (uint32_t)(data[2] << 16) |
                    (uint32_t)(data[3] << 8) |
@@ -158,14 +150,6 @@ static void sl_eps2_read_reg_test(void **state)
 
     will_return(__wrap_tca4311a_write, 0);
 
-    /* I2C disable */
-    expect_value(__wrap_tca4311a_disable, config.i2c_port, SL_EPS2_I2C_PORT);
-    expect_value(__wrap_tca4311a_disable, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
-    expect_value(__wrap_tca4311a_disable, config.en_pin, SL_EPS2_I2C_EN_PIN);
-    expect_value(__wrap_tca4311a_disable, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
-
-    will_return(__wrap_tca4311a_disable, 1);
-
     /* I2C enable */
     expect_value(__wrap_tca4311a_enable, config.i2c_port, SL_EPS2_I2C_PORT);
     expect_value(__wrap_tca4311a_enable, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
@@ -195,14 +179,6 @@ static void sl_eps2_read_reg_test(void **state)
     }
 
     will_return(__wrap_tca4311a_read, 0);
-
-    /* I2C disable */
-    expect_value(__wrap_tca4311a_disable, config.i2c_port, SL_EPS2_I2C_PORT);
-    expect_value(__wrap_tca4311a_disable, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
-    expect_value(__wrap_tca4311a_disable, config.en_pin, SL_EPS2_I2C_EN_PIN);
-    expect_value(__wrap_tca4311a_disable, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
-
-    will_return(__wrap_tca4311a_disable, 1);
 
     uint32_t val = UINT32_MAX;
 
@@ -853,14 +829,6 @@ static void sl_eps2_set_mppt_mode_test(void **state)
 
         will_return(__wrap_tca4311a_write, 0);
 
-        /* I2C disable */
-        expect_value(__wrap_tca4311a_disable, config.i2c_port, SL_EPS2_I2C_PORT);
-        expect_value(__wrap_tca4311a_disable, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
-        expect_value(__wrap_tca4311a_disable, config.en_pin, SL_EPS2_I2C_EN_PIN);
-        expect_value(__wrap_tca4311a_disable, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
-
-        will_return(__wrap_tca4311a_disable, 1);
-
         assert_return_code(sl_eps2_set_mppt_mode(conf, mppt, mode), 0);
     }
 }
@@ -939,14 +907,6 @@ static void sl_eps2_set_heater_mode_test(void **state)
         expect_value(__wrap_tca4311a_write, len, 6);
 
         will_return(__wrap_tca4311a_write, 0);
-
-        /* I2C disable */
-        expect_value(__wrap_tca4311a_disable, config.i2c_port, SL_EPS2_I2C_PORT);
-        expect_value(__wrap_tca4311a_disable, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
-        expect_value(__wrap_tca4311a_disable, config.en_pin, SL_EPS2_I2C_EN_PIN);
-        expect_value(__wrap_tca4311a_disable, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
-
-        will_return(__wrap_tca4311a_disable, 1);
 
         assert_return_code(sl_eps2_set_heater_mode(conf, heater, mode), 0);
     }
@@ -1073,14 +1033,6 @@ void read_reg(uint8_t adr, uint32_t val)
 
     will_return(__wrap_tca4311a_write, 0);
 
-    /* I2C disable */
-    expect_value(__wrap_tca4311a_disable, config.i2c_port, SL_EPS2_I2C_PORT);
-    expect_value(__wrap_tca4311a_disable, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
-    expect_value(__wrap_tca4311a_disable, config.en_pin, SL_EPS2_I2C_EN_PIN);
-    expect_value(__wrap_tca4311a_disable, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
-
-    will_return(__wrap_tca4311a_disable, 1);
-
     /* I2C enable */
     expect_value(__wrap_tca4311a_enable, config.i2c_port, SL_EPS2_I2C_PORT);
     expect_value(__wrap_tca4311a_enable, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
@@ -1110,14 +1062,6 @@ void read_reg(uint8_t adr, uint32_t val)
     }
 
     will_return(__wrap_tca4311a_read, 0);
-
-    /* I2C disable */
-    expect_value(__wrap_tca4311a_disable, config.i2c_port, SL_EPS2_I2C_PORT);
-    expect_value(__wrap_tca4311a_disable, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
-    expect_value(__wrap_tca4311a_disable, config.en_pin, SL_EPS2_I2C_EN_PIN);
-    expect_value(__wrap_tca4311a_disable, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
-
-    will_return(__wrap_tca4311a_disable, 1);
 }
 
 /** \} End of sl_eps2_test group */
