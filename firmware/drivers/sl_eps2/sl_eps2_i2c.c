@@ -1,7 +1,7 @@
 /*
  * sl_eps2_i2c.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.12
+ * \version 0.8.41
  * 
  * \date 2021/10/13
  * 
@@ -46,7 +46,7 @@ int sl_eps2_i2c_init(sl_eps2_config_t config)
 {
     int err = -1;
 
-    if (tca4311a_init(config, false) == TCA4311A_NOT_READY)
+    if (tca4311a_init(config, true) == TCA4311A_READY)
     {
         err = 0;
     }
@@ -74,25 +74,7 @@ int sl_eps2_i2c_write(sl_eps2_config_t config, uint8_t *data, uint16_t len)
 
             if (tca4311a_write(config, SL_EPS2_I2C_SLAVE_ADR, data, len) == TCA4311A_READY)
             {
-                uint8_t j = 0;
-                for(j = 0; j < SL_EPS2_I2C_OP_ATTEMPTS; j++)
-                {
-                    sl_eps2_delay_ms(1);
-
-                    if (tca4311a_disable(config) == TCA4311A_NOT_READY)
-                    {
-                        err = 0;
-
-                        break;
-                    }
-                    else
-                    {
-                    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
-                        sys_log_print_event_from_module(SYS_LOG_ERROR, SL_EPS2_MODULE_NAME, "Error disabling the I2C bus during a writing operation!");
-                        sys_log_new_line();
-                    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-                    }
-                }
+                err = TCA4311A_READY;
 
                 break;
             }
@@ -129,25 +111,7 @@ int sl_eps2_i2c_read(sl_eps2_config_t config, uint8_t *data, uint16_t len)
 
             if (tca4311a_read(config, SL_EPS2_I2C_SLAVE_ADR, data, len) == TCA4311A_READY)
             {
-                uint8_t j = 0;
-                for(j = 0; j < SL_EPS2_I2C_OP_ATTEMPTS; j++)
-                {
-                    sl_eps2_delay_ms(1);
-
-                    if (tca4311a_disable(config) == TCA4311A_NOT_READY)
-                    {
-                        err = 0;
-
-                        break;
-                    }
-                    else
-                    {
-                    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
-                        sys_log_print_event_from_module(SYS_LOG_ERROR, SL_EPS2_MODULE_NAME, "Error disabling the I2C bus during a reading operation!");
-                        sys_log_new_line();
-                    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-                    }
-                }
+                err = TCA4311A_READY;
 
                 break;
             }
