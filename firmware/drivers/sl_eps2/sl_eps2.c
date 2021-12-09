@@ -1,7 +1,7 @@
 /*
  * sl_eps2.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.12
+ * \version 0.8.42
  * 
  * \date 2020/02/05
  * 
@@ -133,7 +133,7 @@ int sl_eps2_read_reg(sl_eps2_config_t config, uint8_t adr, uint32_t *val)
         err = -1;
     }
 
-    sl_eps2_delay_ms(5);
+    sl_eps2_delay_ms(50);
 
     if (sl_eps2_i2c_read(config, buf, 5U) != TCA4311A_READY)
     {
