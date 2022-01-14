@@ -26,7 +26,7 @@
  * \author João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.44
+ * \version 0.8.9
  *
  * \date 2020/03/30
  *
@@ -36,8 +36,8 @@
 
 #include "phj.h"
 
-i2c_port_t phj_i2c_port;
-gpio_pin_t phj_gpio_pin;
+static i2c_port_t phj_i2c_port;
+static gpio_pin_t phj_gpio_pin;
 
 /* I2C configuration */
 int phj_init_i2c(phj_config_i2c_t config)

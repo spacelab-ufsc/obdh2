@@ -1,7 +1,7 @@
 /*
  * obdh_data.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.1
+ * \version 0.8.39
  * 
  * \date 2020/07/16
  * 
@@ -39,6 +39,32 @@
 
 #include <stdint.h>
 
+/* OBDH parameter ID */
+#define OBDH_PARAM_ID_TIME_COUNTER              0   /**< Time counter in milliseconds. */
+#define OBDH_PARAM_ID_TEMPERATURE_UC            1   /**< Temperature of the uC in Kelvin. */
+#define OBDH_PARAM_ID_INPUT_CURRENT             2   /**< Input current in mA. */
+#define OBDH_PARAM_ID_INPUT_VOLTAGE             3   /**< Input voltage in mV. */
+#define OBDH_PARAM_ID_LAST_RESET_CAUSE          4   /**< Last reset cause. */
+#define OBDH_PARAM_ID_RESET_COUNTER             5   /**< Reset counter. */
+#define OBDH_PARAM_ID_LAST_VALID_TC             6   /**< Last valid telecommand (uplink packet ID). */
+#define OBDH_PARAM_ID_TEMPERATURE_RADIO         7   /**< Temperature of the radio in Kelvin. */
+#define OBDH_PARAM_ID_RSSI_LAST_TC              8   /**< RSSI of the last valid telecommand. */
+#define OBDH_PARAM_ID_TEMPERATURE_ANTENNA       9   /**< Temperature of the antenna in Kelvin. */
+#define OBDH_PARAM_ID_ANTENNA_STATUS            10  /**< Antenna status bits. */
+#define OBDH_PARAM_ID_HARDWARE_VERSION          11  /**< Hardware version. */
+#define OBDH_PARAM_ID_FIRMWARE_VERSION          12  /**< Firmware version (ex.: "v1.2.3" = 0x00010203). */
+#define OBDH_PARAM_ID_MODE                      13  /**< Mode ("Normal" = 0, "Hibernation" = 1). */
+#define OBDH_PARAM_ID_TIMESTAMP_LAST_MODE       14  /**< Timestamp of the last mode change. */
+#define OBDH_PARAM_ID_MODE_DURATION             15  /**< Mode duration in sec. (valid only in hibernation mode). */
+#define OBDH_PARAM_ID_INITIAL_HIB_EXECUTED      16  /**< Initial hibernation executed flag. */
+#define OBDH_PARAM_ID_INITIAL_HIB_TIME_COUNTER  17  /**< Initial hibernation time counter in minutes. */
+#define OBDH_PARAM_ID_ANT_DEPLOYMENT_EXECUTED   18  /**< Antenna deployment executed flag. */
+#define OBDH_PARAM_ID_ANT_DEPLOYMENT_COUNTER    19  /**< Antenna deployment counter. */
+
+/* Operation modes */
+#define OBDH_MODE_NORMAL            0
+#define OBDH_MODE_HIBERNATION       1
+
 /**
  * \brief Radio data.
  */
@@ -49,20 +75,10 @@ typedef struct
 } radio_data_t;
 
 /**
- * \brief Antenna data.
- */
-typedef struct
-{
-    uint16_t temperature;           /**< Temperature in Kelvin. */
-    uint16_t status;                /**< Status bits. */
-} antenna_data_t;
-
-/**
  * \brief OBDH data.
  */
 typedef struct
 {
-    uint32_t timestamp;             /**< Timestamp in milliseconds. */
     uint16_t temperature;           /**< Temperature of the uC in Kelvin. */
     uint16_t current;               /**< Input current in mA. */
     uint16_t voltage;               /**< Input voltage in mV. */
@@ -70,9 +86,15 @@ typedef struct
     uint16_t reset_counter;         /**< Reset counter. */
     uint8_t last_valid_tc;          /**< Last valid telecommand ID. */
     radio_data_t radio;             /**< Radio data. */
-    antenna_data_t antenna;         /**< Antenna data. */
     uint8_t hw_version;             /**< Hardware version. */
     uint32_t fw_version;            /**< Firmware version (ex.: "v1.2.3" = 0x00010203). */
+    uint8_t mode;                   /**< Satellite mode. */
+    sys_time_t ts_last_mode_change; /**< Timestamp of the last change in the operation mode. */
+    sys_time_t mode_duration;       /**< Mode duration (valid only in hibernation mode). */
+    bool initial_hib_executed;      /**< Initial hibernation executed flag. */
+    uint8_t initial_hib_time_count; /**< Initial hibernation time counter in minutes. */
+    bool ant_deployment_executed;   /**< Antenna deployment executed flag. */
+    uint8_t ant_deployment_counter; /**< Antenna deployment counter. */
 } obdh_data_t;
 
 #endif /* OBDH_DATA_H_ */

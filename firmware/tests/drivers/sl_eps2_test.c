@@ -1,7 +1,7 @@
 /*
  * sl_eps2_test.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.19
+ * \version 0.8.41
  * 
  * \date 2021/09/02
  * 
@@ -64,122 +64,23 @@ void read_reg(uint8_t adr, uint32_t val);
 static void sl_eps2_init_test(void **state)
 {
     /* I2C initialization */
-    expect_value(__wrap_i2c_init, port, SL_EPS2_I2C_PORT);
-    expect_value(__wrap_i2c_init, config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
+    expect_value(__wrap_tca4311a_init, config.i2c_port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_tca4311a_init, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
+    expect_value(__wrap_tca4311a_init, config.en_pin, SL_EPS2_I2C_EN_PIN);
+    expect_value(__wrap_tca4311a_init, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
 
-    will_return(__wrap_i2c_init, 0);
+    expect_value(__wrap_tca4311a_init, en, true);
 
-    /* Enable pin initialization */
-    expect_value(__wrap_gpio_init, pin, SL_EPS2_I2C_EN_PIN);
-    expect_value(__wrap_gpio_init, config.mode, GPIO_MODE_OUTPUT);
+    will_return(__wrap_tca4311a_init, 0);
 
-    will_return(__wrap_gpio_init, 0);
-
-    /* Ready pin initialization */
-    expect_value(__wrap_gpio_init, pin, SL_EPS2_I2C_RDY_PIN);
-    expect_value(__wrap_gpio_init, config.mode, GPIO_MODE_INPUT);
-
-    will_return(__wrap_gpio_init, 0);
-
-    /* Set state */
-    expect_value(__wrap_gpio_set_state, pin, SL_EPS2_I2C_EN_PIN);
-    expect_value(__wrap_gpio_set_state, level, true);
-
-    will_return(__wrap_gpio_set_state, 0);
-
-    /* Get state */
-    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
-
-    will_return(__wrap_gpio_get_state, 1);
-
-    uint8_t data[256] = {UINT8_MAX};
-
-    data[0] = 48;   /* Device ID register */
-    data[1] = crc8(data, 1);
-
-    /* I2C write */
-    expect_value(__wrap_i2c_write, port, SL_EPS2_I2C_PORT);
-    expect_value(__wrap_i2c_write, adr, SL_EPS2_I2C_ADR);
-    expect_memory(__wrap_i2c_write, data, (void*)data, 2);
-    expect_value(__wrap_i2c_write, len, 2);
-
-    will_return(__wrap_i2c_write, 0);
-
-    /* Get state */
-    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
-
-    will_return(__wrap_gpio_get_state, 1);
-
-    /* I2C read */
-    expect_value(__wrap_i2c_read, port, SL_EPS2_I2C_PORT);
-    expect_value(__wrap_i2c_read, adr, SL_EPS2_I2C_ADR);
-    expect_value(__wrap_i2c_read, len, 5);
-
-    data[0] = 0x00;
-    data[1] = 0x00;
-    data[2] = 0xEE;
-    data[3] = 0xE2;
-    data[4] = crc8(data, 4);
-
-    uint16_t i = 0;
-    for(i=0; i<5; i++)
-    {
-        will_return(__wrap_i2c_read, data[i]);
-    }
-
-    will_return(__wrap_i2c_read, 0);
-
-    /* Get state */
-    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
-
-    will_return(__wrap_gpio_get_state, 1);
+    read_reg(48, 0xEEE2U);
 
     assert_return_code(sl_eps2_init(conf), 0);
 }
 
 static void sl_eps2_check_device_test(void **state)
 {
-    uint8_t data[256] = {UINT8_MAX};
-
-    data[0] = 48;   /* Device ID register */
-    data[1] = crc8(data, 1);
-
-    /* I2C write */
-    expect_value(__wrap_i2c_write, port, SL_EPS2_I2C_PORT);
-    expect_value(__wrap_i2c_write, adr, SL_EPS2_I2C_ADR);
-    expect_memory(__wrap_i2c_write, data, (void*)data, 2);
-    expect_value(__wrap_i2c_write, len, 2);
-
-    will_return(__wrap_i2c_write, 0);
-
-    /* Get state */
-    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
-
-    will_return(__wrap_gpio_get_state, 1);
-
-    /* I2C read */
-    expect_value(__wrap_i2c_read, port, SL_EPS2_I2C_PORT);
-    expect_value(__wrap_i2c_read, adr, SL_EPS2_I2C_ADR);
-    expect_value(__wrap_i2c_read, len, 5);
-
-    data[0] = 0x00;
-    data[1] = 0x00;
-    data[2] = 0xEE;
-    data[3] = 0xE2;
-    data[4] = crc8(data, 4);
-
-    uint16_t i = 0;
-    for(i=0; i<5; i++)
-    {
-        will_return(__wrap_i2c_read, data[i]);
-    }
-
-    will_return(__wrap_i2c_read, 0);
-
-    /* Get state */
-    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
-
-    will_return(__wrap_gpio_get_state, 1);
+    read_reg(48, 0xEEE2U);
 
     assert_return_code(sl_eps2_check_device(conf), 0);
 }
@@ -195,18 +96,24 @@ static void sl_eps2_write_reg_test(void **state)
     data[4] = generate_random(0, UINT8_MAX);
     data[5] = crc8(data, 5);
 
+    /* I2C enable */
+    expect_value(__wrap_tca4311a_enable, config.i2c_port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_tca4311a_enable, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
+    expect_value(__wrap_tca4311a_enable, config.en_pin, SL_EPS2_I2C_EN_PIN);
+    expect_value(__wrap_tca4311a_enable, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
+
+    will_return(__wrap_tca4311a_enable, 0);
+
     /* I2C write */
-    expect_value(__wrap_i2c_write, port, SL_EPS2_I2C_PORT);
-    expect_value(__wrap_i2c_write, adr, SL_EPS2_I2C_ADR);
-    expect_memory(__wrap_i2c_write, data, (void*)data, 6);
-    expect_value(__wrap_i2c_write, len, 6);
+    expect_value(__wrap_tca4311a_write, config.i2c_port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_tca4311a_write, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
+    expect_value(__wrap_tca4311a_write, config.en_pin, SL_EPS2_I2C_EN_PIN);
+    expect_value(__wrap_tca4311a_write, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
+    expect_value(__wrap_tca4311a_write, adr, SL_EPS2_I2C_ADR);
+    expect_memory(__wrap_tca4311a_write, data, (void*)data, 6);
+    expect_value(__wrap_tca4311a_write, len, 6);
 
-    will_return(__wrap_i2c_write, 0);
-
-    /* Get state */
-    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
-
-    will_return(__wrap_gpio_get_state, 1);
+    will_return(__wrap_tca4311a_write, 0);
 
     uint32_t val = (uint32_t)(data[1] << 24) |
                    (uint32_t)(data[2] << 16) |
@@ -224,23 +131,40 @@ static void sl_eps2_read_reg_test(void **state)
     data[0] = adr;
     data[1] = crc8(data, 1);
 
+    /* I2C enable */
+    expect_value(__wrap_tca4311a_enable, config.i2c_port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_tca4311a_enable, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
+    expect_value(__wrap_tca4311a_enable, config.en_pin, SL_EPS2_I2C_EN_PIN);
+    expect_value(__wrap_tca4311a_enable, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
+
+    will_return(__wrap_tca4311a_enable, 0);
+
     /* I2C write */
-    expect_value(__wrap_i2c_write, port, SL_EPS2_I2C_PORT);
-    expect_value(__wrap_i2c_write, adr, SL_EPS2_I2C_ADR);
-    expect_memory(__wrap_i2c_write, data, (void*)data, 2);
-    expect_value(__wrap_i2c_write, len, 2);
+    expect_value(__wrap_tca4311a_write, config.i2c_port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_tca4311a_write, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
+    expect_value(__wrap_tca4311a_write, config.en_pin, SL_EPS2_I2C_EN_PIN);
+    expect_value(__wrap_tca4311a_write, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
+    expect_value(__wrap_tca4311a_write, adr, SL_EPS2_I2C_ADR);
+    expect_memory(__wrap_tca4311a_write, data, (void*)data, 2);
+    expect_value(__wrap_tca4311a_write, len, 2);
 
-    will_return(__wrap_i2c_write, 0);
+    will_return(__wrap_tca4311a_write, 0);
 
-    /* Get state */
-    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
+    /* I2C enable */
+    expect_value(__wrap_tca4311a_enable, config.i2c_port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_tca4311a_enable, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
+    expect_value(__wrap_tca4311a_enable, config.en_pin, SL_EPS2_I2C_EN_PIN);
+    expect_value(__wrap_tca4311a_enable, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
 
-    will_return(__wrap_gpio_get_state, 1);
+    will_return(__wrap_tca4311a_enable, 0);
 
     /* I2C read */
-    expect_value(__wrap_i2c_read, port, SL_EPS2_I2C_PORT);
-    expect_value(__wrap_i2c_read, adr, SL_EPS2_I2C_ADR);
-    expect_value(__wrap_i2c_read, len, 5);
+    expect_value(__wrap_tca4311a_read, config.i2c_port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_tca4311a_read, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
+    expect_value(__wrap_tca4311a_read, config.en_pin, SL_EPS2_I2C_EN_PIN);
+    expect_value(__wrap_tca4311a_read, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
+    expect_value(__wrap_tca4311a_read, adr, SL_EPS2_I2C_ADR);
+    expect_value(__wrap_tca4311a_read, len, 5);
 
     data[0] = generate_random(0, UINT8_MAX);
     data[1] = generate_random(0, UINT8_MAX);
@@ -251,15 +175,10 @@ static void sl_eps2_read_reg_test(void **state)
     uint16_t i = 0;
     for(i=0; i<5; i++)
     {
-        will_return(__wrap_i2c_read, data[i]);
+        will_return(__wrap_tca4311a_read, data[i]);
     }
 
-    will_return(__wrap_i2c_read, 0);
-
-    /* Get state */
-    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
-
-    will_return(__wrap_gpio_get_state, 1);
+    will_return(__wrap_tca4311a_read, 0);
 
     uint32_t val = UINT32_MAX;
 
@@ -891,17 +810,24 @@ static void sl_eps2_set_mppt_mode_test(void **state)
 
         data[5] = crc8(data, 5);
 
-        expect_value(__wrap_i2c_write, port, SL_EPS2_I2C_PORT);
-        expect_value(__wrap_i2c_write, adr, SL_EPS2_I2C_ADR);
-        expect_memory(__wrap_i2c_write, data, (void*)data, 6);
-        expect_value(__wrap_i2c_write, len, 6);
+        /* I2C enable */
+        expect_value(__wrap_tca4311a_enable, config.i2c_port, SL_EPS2_I2C_PORT);
+        expect_value(__wrap_tca4311a_enable, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
+        expect_value(__wrap_tca4311a_enable, config.en_pin, SL_EPS2_I2C_EN_PIN);
+        expect_value(__wrap_tca4311a_enable, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
 
-        will_return(__wrap_i2c_write, 0);
+        will_return(__wrap_tca4311a_enable, 0);
 
-        /* Get state */
-        expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
+        /* I2C write */
+        expect_value(__wrap_tca4311a_write, config.i2c_port, SL_EPS2_I2C_PORT);
+        expect_value(__wrap_tca4311a_write, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
+        expect_value(__wrap_tca4311a_write, config.en_pin, SL_EPS2_I2C_EN_PIN);
+        expect_value(__wrap_tca4311a_write, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
+        expect_value(__wrap_tca4311a_write, adr, SL_EPS2_I2C_ADR);
+        expect_memory(__wrap_tca4311a_write, data, (void*)data, 6);
+        expect_value(__wrap_tca4311a_write, len, 6);
 
-        will_return(__wrap_gpio_get_state, 1);
+        will_return(__wrap_tca4311a_write, 0);
 
         assert_return_code(sl_eps2_set_mppt_mode(conf, mppt, mode), 0);
     }
@@ -963,17 +889,24 @@ static void sl_eps2_set_heater_mode_test(void **state)
 
         data[5] = crc8(data, 5);
 
-        expect_value(__wrap_i2c_write, port, SL_EPS2_I2C_PORT);
-        expect_value(__wrap_i2c_write, adr, SL_EPS2_I2C_ADR);
-        expect_memory(__wrap_i2c_write, data, (void*)data, 6);
-        expect_value(__wrap_i2c_write, len, 6);
+        /* I2C enable */
+        expect_value(__wrap_tca4311a_enable, config.i2c_port, SL_EPS2_I2C_PORT);
+        expect_value(__wrap_tca4311a_enable, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
+        expect_value(__wrap_tca4311a_enable, config.en_pin, SL_EPS2_I2C_EN_PIN);
+        expect_value(__wrap_tca4311a_enable, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
 
-        will_return(__wrap_i2c_write, 0);
+        will_return(__wrap_tca4311a_enable, 0);
 
-        /* Get state */
-        expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
+        /* I2C write */
+        expect_value(__wrap_tca4311a_write, config.i2c_port, SL_EPS2_I2C_PORT);
+        expect_value(__wrap_tca4311a_write, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
+        expect_value(__wrap_tca4311a_write, config.en_pin, SL_EPS2_I2C_EN_PIN);
+        expect_value(__wrap_tca4311a_write, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
+        expect_value(__wrap_tca4311a_write, adr, SL_EPS2_I2C_ADR);
+        expect_memory(__wrap_tca4311a_write, data, (void*)data, 6);
+        expect_value(__wrap_tca4311a_write, len, 6);
 
-        will_return(__wrap_gpio_get_state, 1);
+        will_return(__wrap_tca4311a_write, 0);
 
         assert_return_code(sl_eps2_set_heater_mode(conf, heater, mode), 0);
     }
@@ -1081,23 +1014,40 @@ void read_reg(uint8_t adr, uint32_t val)
     data[0] = adr;
     data[1] = crc8(data, 1);
 
+    /* I2C enable */
+    expect_value(__wrap_tca4311a_enable, config.i2c_port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_tca4311a_enable, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
+    expect_value(__wrap_tca4311a_enable, config.en_pin, SL_EPS2_I2C_EN_PIN);
+    expect_value(__wrap_tca4311a_enable, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
+
+    will_return(__wrap_tca4311a_enable, 0);
+
     /* I2C write */
-    expect_value(__wrap_i2c_write, port, SL_EPS2_I2C_PORT);
-    expect_value(__wrap_i2c_write, adr, SL_EPS2_I2C_ADR);
-    expect_memory(__wrap_i2c_write, data, (void*)data, 2);
-    expect_value(__wrap_i2c_write, len, 2);
+    expect_value(__wrap_tca4311a_write, config.i2c_port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_tca4311a_write, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
+    expect_value(__wrap_tca4311a_write, config.en_pin, SL_EPS2_I2C_EN_PIN);
+    expect_value(__wrap_tca4311a_write, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
+    expect_value(__wrap_tca4311a_write, adr, SL_EPS2_I2C_ADR);
+    expect_memory(__wrap_tca4311a_write, data, (void*)data, 2);
+    expect_value(__wrap_tca4311a_write, len, 2);
 
-    will_return(__wrap_i2c_write, 0);
+    will_return(__wrap_tca4311a_write, 0);
 
-    /* Get state */
-    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
+    /* I2C enable */
+    expect_value(__wrap_tca4311a_enable, config.i2c_port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_tca4311a_enable, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
+    expect_value(__wrap_tca4311a_enable, config.en_pin, SL_EPS2_I2C_EN_PIN);
+    expect_value(__wrap_tca4311a_enable, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
 
-    will_return(__wrap_gpio_get_state, 1);
+    will_return(__wrap_tca4311a_enable, 0);
 
     /* I2C read */
-    expect_value(__wrap_i2c_read, port, SL_EPS2_I2C_PORT);
-    expect_value(__wrap_i2c_read, adr, SL_EPS2_I2C_ADR);
-    expect_value(__wrap_i2c_read, len, 5);
+    expect_value(__wrap_tca4311a_read, config.i2c_port, SL_EPS2_I2C_PORT);
+    expect_value(__wrap_tca4311a_read, config.i2c_config.speed_hz, SL_EPS2_I2C_CLOCK_HZ);
+    expect_value(__wrap_tca4311a_read, config.en_pin, SL_EPS2_I2C_EN_PIN);
+    expect_value(__wrap_tca4311a_read, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
+    expect_value(__wrap_tca4311a_read, adr, SL_EPS2_I2C_ADR);
+    expect_value(__wrap_tca4311a_read, len, 5);
 
     data[0] = (val >> 24) & 0xFF;
     data[1] = (val >> 16) & 0xFF;
@@ -1108,15 +1058,10 @@ void read_reg(uint8_t adr, uint32_t val)
     uint16_t i = 0;
     for(i=0; i<5; i++)
     {
-        will_return(__wrap_i2c_read, data[i]);
+        will_return(__wrap_tca4311a_read, data[i]);
     }
 
-    will_return(__wrap_i2c_read, 0);
-
-    /* Get state */
-    expect_value(__wrap_gpio_get_state, pin, SL_EPS2_I2C_RDY_PIN);
-
-    will_return(__wrap_gpio_get_state, 1);
+    will_return(__wrap_tca4311a_read, 0);
 }
 
 /** \} End of sl_eps2_test group */

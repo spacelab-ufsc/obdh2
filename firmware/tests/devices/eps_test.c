@@ -1,7 +1,7 @@
 /*
  * eps_test.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.21
+ * \version 0.8.35
  * 
  * \date 2021/08/06
  * 
@@ -63,6 +63,56 @@ static void eps_init_test(void **state)
     will_return(__wrap_sl_eps2_init, 0);
 
     assert_return_code(eps_init(), 0);
+}
+
+static void eps_set_param_test(void **state)
+{
+    uint8_t i = 0;
+
+    for(i = 0; i < UINT8_MAX; i++)
+    {
+        expect_value(__wrap_sl_eps2_write_reg, config.i2c_port, EPS_I2C_PORT);
+        expect_value(__wrap_sl_eps2_write_reg, config.i2c_config.speed_hz, EPS_I2C_SPEED_HZ);
+        expect_value(__wrap_sl_eps2_write_reg, config.en_pin, EPS_EN_PIN);
+        expect_value(__wrap_sl_eps2_write_reg, config.ready_pin, EPS_READY_PIN);
+
+        expect_value(__wrap_sl_eps2_write_reg, adr, i);
+
+        uint32_t par_val = generate_random(0, UINT32_MAX-1);
+
+        expect_value(__wrap_sl_eps2_write_reg, val, par_val);
+
+        will_return(__wrap_sl_eps2_write_reg, 0);
+
+        assert_return_code(eps_set_param(i, par_val), 0);
+    }
+}
+
+static void eps_get_param_test(void **state)
+{
+    uint8_t i = 0;
+
+    for(i = 0; i < UINT8_MAX; i++)
+    {
+        expect_value(__wrap_sl_eps2_read_reg, config.i2c_port, EPS_I2C_PORT);
+        expect_value(__wrap_sl_eps2_read_reg, config.i2c_config.speed_hz, EPS_I2C_SPEED_HZ);
+        expect_value(__wrap_sl_eps2_read_reg, config.en_pin, EPS_EN_PIN);
+        expect_value(__wrap_sl_eps2_read_reg, config.ready_pin, EPS_READY_PIN);
+
+        expect_value(__wrap_sl_eps2_read_reg, adr, i);
+
+        uint32_t par_val = generate_random(0, UINT32_MAX-1);
+
+        will_return(__wrap_sl_eps2_read_reg, par_val);
+
+        will_return(__wrap_sl_eps2_read_reg, 0);
+
+        uint32_t par_buf = UINT32_MAX;
+
+        assert_return_code(eps_get_param(i, &par_buf), 0);
+
+        assert_int_equal(par_val, par_buf);
+    }
 }
 
 static void eps_get_bat_voltage_test(void **state)
@@ -242,6 +292,8 @@ int main(void)
 {
     const struct CMUnitTest eps_tests[] = {
         cmocka_unit_test(eps_init_test),
+        cmocka_unit_test(eps_set_param_test),
+        cmocka_unit_test(eps_get_param_test),
         cmocka_unit_test(eps_get_bat_voltage_test),
         cmocka_unit_test(eps_get_bat_current_test),
         cmocka_unit_test(eps_get_bat_charge_test),

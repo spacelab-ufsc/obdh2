@@ -1,7 +1,7 @@
 /*
  * sl_eps2.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.35
+ * \version 0.8.42
  * 
  * \date 2020/02/05
  * 
@@ -34,10 +34,6 @@
  */
 
 #include <stdbool.h>
-
-#include <drivers/tca4311a/tca4311a.h>
-#include <drivers/i2c/i2c.h>
-#include <drivers/gpio/gpio.h>
 
 #include "sl_eps2.h"
 
@@ -53,7 +49,7 @@
  *
  * \return The computed CRC-8 value of the given data.
  */
-uint8_t sl_eps2_crc8(uint8_t *data, uint8_t len);
+static uint8_t sl_eps2_crc8(uint8_t *data, uint8_t len);
 
 /**
  * \brief Checks the CRC value of a given sequence of bytes.
@@ -66,15 +62,15 @@ uint8_t sl_eps2_crc8(uint8_t *data, uint8_t len);
  *
  * \return TRUE/FALSE if the given CRC value is correct or not.
  */
-bool sl_eps2_check_crc(uint8_t *data, uint8_t len, uint8_t crc);
+static bool sl_eps2_check_crc(uint8_t *data, uint8_t len, uint8_t crc);
 
 int sl_eps2_init(sl_eps2_config_t config)
 {
     int err = 0;
 
-    if (tca4311a_init(config, true) != TCA4311A_READY)
+    if (sl_eps2_i2c_init(config) != 0)
     {
-        err = -1;      /* Error initializing the I2C port */
+        err = -1;   /* Error initializing the I2C port */
     }
 
     if (sl_eps2_check_device(config) != 0)
@@ -115,7 +111,7 @@ int sl_eps2_write_reg(sl_eps2_config_t config, uint8_t adr, uint32_t val)
     buf[4] = (val >> 0)  & 0xFFU;
     buf[5] = sl_eps2_crc8(buf, 5);
 
-    if (tca4311a_write(config, SL_EPS2_SLAVE_ADR, buf, 6) != TCA4311A_READY)
+    if (sl_eps2_i2c_write(config, buf, 6U) != TCA4311A_READY)
     {
         err = -1;
     }
@@ -132,19 +128,19 @@ int sl_eps2_read_reg(sl_eps2_config_t config, uint8_t adr, uint32_t *val)
     buf[0] = adr;
     buf[1] = sl_eps2_crc8(buf, 1);
 
-    if (tca4311a_write(config, SL_EPS2_SLAVE_ADR, buf, 2) != TCA4311A_READY)
+    if (sl_eps2_i2c_write(config, buf, 2U) != TCA4311A_READY)
     {
         err = -1;
     }
 
-    sl_eps2_delay_ms(5);
+    sl_eps2_delay_ms(50);
 
-    if (tca4311a_read(config, SL_EPS2_SLAVE_ADR, buf, 5) != TCA4311A_READY)
+    if (sl_eps2_i2c_read(config, buf, 5U) != TCA4311A_READY)
     {
         err = -1;
     }
 
-    if (!sl_eps2_check_crc(buf, 4, buf[4]))
+    if (!sl_eps2_check_crc(buf, 4U, buf[4]))
     {
         err = -1;
     }
@@ -1009,7 +1005,7 @@ int sl_eps2_get_heater_mode(sl_eps2_config_t config, uint8_t heater, uint8_t *va
     return res;
 }
 
-uint8_t sl_eps2_crc8(uint8_t *data, uint8_t len)
+static uint8_t sl_eps2_crc8(uint8_t *data, uint8_t len)
 {
     uint8_t crc = SL_EPS2_CRC8_INITIAL_VALUE;
 
@@ -1030,7 +1026,7 @@ uint8_t sl_eps2_crc8(uint8_t *data, uint8_t len)
     return crc;
 }
 
-bool sl_eps2_check_crc(uint8_t *data, uint8_t len, uint8_t crc)
+static bool sl_eps2_check_crc(uint8_t *data, uint8_t len, uint8_t crc)
 {
     return (crc == sl_eps2_crc8(data, len));
 }

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.42
+ * \version 0.8.8
  * 
  * \date 2019/12/07
  * 
@@ -51,7 +51,7 @@ int i2c_init(i2c_port_t port, i2c_config_t config)
         case USCI_B_I2C_SET_DATA_RATE_100KBPS:      break;
         case USCI_B_I2C_SET_DATA_RATE_400KBPS:      break;
         default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, I2C_MODULE_NAME, "Invalid transfer rate!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -78,7 +78,7 @@ int i2c_init(i2c_port_t port, i2c_config_t config)
                 GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P9, GPIO_PIN5 + GPIO_PIN6);
                 break;
             default:
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, I2C_MODULE_NAME, "Invalid port!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -118,7 +118,7 @@ int i2c_write(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
             case I2C_PORT_1:    base_address = USCI_B1_BASE;    break;
             case I2C_PORT_2:    base_address = USCI_B2_BASE;    break;
             default:
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, I2C_MODULE_NAME, "Invalid port during write!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -146,7 +146,7 @@ int i2c_write(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
                 }
                 else
                 {
-                #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                     sys_log_print_event_from_module(SYS_LOG_WARNING, I2C_MODULE_NAME, "Timeout reached during write!");
                     sys_log_new_line();
                 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -163,7 +163,7 @@ int i2c_write(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
                     {
                         if (USCI_B_I2C_masterSendMultiByteNextWithTimeout(base_address, data[i], I2C_SLAVE_TIMEOUT) != STATUS_SUCCESS)
                         {
-                        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                             sys_log_print_event_from_module(SYS_LOG_WARNING, I2C_MODULE_NAME, "Timeout reached during write!");
                             sys_log_new_line();
                         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -185,7 +185,7 @@ int i2c_write(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
                         }
                         else
                         {
-                        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                             sys_log_print_event_from_module(SYS_LOG_WARNING, I2C_MODULE_NAME, "Timeout reached during write!");
                             sys_log_new_line();
                         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -195,7 +195,7 @@ int i2c_write(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
                 }
                 else
                 {
-                #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                     sys_log_print_event_from_module(SYS_LOG_WARNING, I2C_MODULE_NAME, "Timeout reached during write!");
                     sys_log_new_line();
                 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -208,7 +208,7 @@ int i2c_write(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
     }
     else
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, I2C_MODULE_NAME, "Invalid slave address during write (");
         sys_log_print_hex(adr);
         sys_log_print_msg(")!");
@@ -235,7 +235,7 @@ int i2c_read(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
             case I2C_PORT_1:    base_address = USCI_B1_BASE;    break;
             case I2C_PORT_2:    base_address = USCI_B2_BASE;    break;
             default:
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, I2C_MODULE_NAME, "Invalid port during read!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -289,7 +289,7 @@ int i2c_read(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
 
             if (timeout > I2C_SLAVE_TIMEOUT)
             {
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_WARNING, I2C_MODULE_NAME, "Timeout reached during read!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -299,7 +299,7 @@ int i2c_read(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
     }
     else
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, I2C_MODULE_NAME, "Invalid slave address during read (");
         sys_log_print_hex(adr);
         sys_log_print_msg(")!");

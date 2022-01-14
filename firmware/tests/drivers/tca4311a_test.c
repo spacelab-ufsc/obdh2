@@ -1,7 +1,7 @@
 /*
  * tca4311a_test.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.11
+ * \version 0.8.40
  * 
  * \date 2021/09/01
  * 
@@ -83,11 +83,6 @@ static void tca4311a_init_test(void **state)
 
     will_return(__wrap_gpio_set_state, 0);
 
-    /* Get state */
-    expect_value(__wrap_gpio_get_state, pin, TCA4311A_READY_PIN);
-
-    will_return(__wrap_gpio_get_state, 0);
-
     assert_return_code(tca4311a_init(conf, true), 0);
 }
 
@@ -99,11 +94,6 @@ static void tca4311a_enable_test(void **state)
 
     will_return(__wrap_gpio_set_state, 0);
 
-    /* Get state */
-    expect_value(__wrap_gpio_get_state, pin, TCA4311A_READY_PIN);
-
-    will_return(__wrap_gpio_get_state, 0);
-
     assert_return_code(tca4311a_enable(conf), 0);
 }
 
@@ -114,11 +104,6 @@ static void tca4311a_disable_test(void **state)
     expect_value(__wrap_gpio_set_state, level, false);
 
     will_return(__wrap_gpio_set_state, 0);
-
-    /* Get state */
-    expect_value(__wrap_gpio_get_state, pin, TCA4311A_READY_PIN);
-
-    will_return(__wrap_gpio_get_state, 0);
 
     assert_return_code(tca4311a_disable(conf), 0);
 }
@@ -168,11 +153,6 @@ static void tca4311a_write_test(void **state)
 
     will_return(__wrap_i2c_write, 0);
 
-    /* Get state */
-    expect_value(__wrap_gpio_get_state, pin, TCA4311A_READY_PIN);
-
-    will_return(__wrap_gpio_get_state, 0);
-
     assert_return_code(tca4311a_write(conf, TCA4311A_I2C_ADR, data, data_len), 0);
 }
 
@@ -199,11 +179,6 @@ static void tca4311a_read_test(void **state)
 
     will_return(__wrap_i2c_read, 0);
 
-    /* Get state */
-    expect_value(__wrap_gpio_get_state, pin, TCA4311A_READY_PIN);
-
-    will_return(__wrap_gpio_get_state, 0);
-
     uint8_t data_res[256] = {0xFF};
 
     assert_return_code(tca4311a_read(conf, TCA4311A_I2C_ADR, data_res, data_len), 0);
@@ -226,11 +201,6 @@ static void tca4311a_write_byte_test(void **state)
 
     will_return(__wrap_i2c_write, 0);
 
-    /* Get state */
-    expect_value(__wrap_gpio_get_state, pin, TCA4311A_READY_PIN);
-
-    will_return(__wrap_gpio_get_state, 0);
-
     assert_return_code(tca4311a_write_byte(conf, TCA4311A_I2C_ADR, data), 0);
 }
 
@@ -246,11 +216,6 @@ static void tca4311a_read_byte_test(void **state)
     will_return(__wrap_i2c_read, data);
 
     will_return(__wrap_i2c_read, 0);
-
-    /* Get state */
-    expect_value(__wrap_gpio_get_state, pin, TCA4311A_READY_PIN);
-
-    will_return(__wrap_gpio_get_state, 0);
 
     uint8_t data_res = 0xFF;
 

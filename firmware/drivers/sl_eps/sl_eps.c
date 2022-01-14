@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.46
+ * \version 0.8.9
  * 
  * \date 2020/07/18
  * 
@@ -38,13 +38,13 @@
 
 #include "sl_eps.h"
 
-sl_eps_i2c_config_t i2c_conf = {0};
-
 int sl_eps_init(i2c_port_t port, uint32_t bitrate)
 {
+    static sl_eps_i2c_config_t i2c_conf = {0};
+
     i2c_conf.port = port;
     i2c_conf.bitrate = bitrate;
-#if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+#if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
     sys_log_print_event_from_module(SYS_LOG_ERROR, SL_EPS_MODULE_NAME, "\"sl_eps_init\" not implemented!");
     sys_log_new_line();
 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -54,7 +54,7 @@ int sl_eps_init(i2c_port_t port, uint32_t bitrate)
 int sl_eps_read(sl_eps_data_t *data)
 {
     data->voltage = 0;
-#if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+#if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
     sys_log_print_event_from_module(SYS_LOG_ERROR, SL_EPS_MODULE_NAME, "\"sl_eps_read\" not implemented!");
     sys_log_new_line();
 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */

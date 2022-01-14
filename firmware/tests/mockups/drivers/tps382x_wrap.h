@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.5.11
+ * \version 0.8.19
  * 
  * \date 2021/02/17
  * 
@@ -55,7 +55,16 @@ int __wrap_tps382x_init(tps382x_config_t config);
  *
  * \return None.
  */
-void __wrap_tps382x_trigger(tps382x_config_t config);
+int __wrap_tps382x_trigger(tps382x_config_t config);
+
+/**
+ * \brief Sets the MR pin low to force a manual reset.
+ *
+ * \param[in] config is the configuration parameters of the TPS382x driver.
+ *
+ * \return The status/error code.
+ */
+int __wrap_tps382x_manual_reset(tps382x_config_t config);
 
 #endif /* TPS382X_WRAP_H_ */
 

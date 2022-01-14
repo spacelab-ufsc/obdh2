@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.25
+ * \version 0.8.7
  * 
  * \date 2020/01/22
  * 
@@ -43,7 +43,7 @@
 /* interrupt vector for the chosen tick interrupt source.  This implementation of */
 /* vApplicationSetupTimerInterrupt() generates the tick from timer A0, so in this */
 /* case configTICK_VECTOR is set to TIMER0_A0_VECTOR */
-void vApplicationSetupTimerInterrupt(void)
+void vApplicationSetupTimerInterrupt(void)  // cppcheck-suppress misra-c2012-8.4
 {
     const unsigned short aclk_freq_hz = 32768U;
 

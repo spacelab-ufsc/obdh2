@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.0
+ * \version 0.8.11
  * 
  * \date 2020/08/09
  * 
@@ -56,7 +56,7 @@ xTaskHandle xTaskTimeControlHandle;
  *
  * \return The status/error code.
  */
-int time_control_load_sys_time(sys_time_t *tm);
+static int time_control_load_sys_time(sys_time_t *tm);
 
 /**
  * \brief Saves a given system time to the non-volatile memory.
@@ -65,7 +65,7 @@ int time_control_load_sys_time(sys_time_t *tm);
  *
  * \return The status/error code.
  */
-int time_control_save_sys_time(sys_time_t tm);
+static int time_control_save_sys_time(sys_time_t tm);
 
 /**
  * \brief Computes the CRC-8 of a sequence of bytes.
@@ -76,7 +76,7 @@ int time_control_save_sys_time(sys_time_t tm);
  *
  * \return The computed CRC-8 value of the given data.
  */
-uint8_t time_control_crc8(uint8_t *data, uint8_t len);
+static uint8_t time_control_crc8(uint8_t *data, uint8_t len);
 
 void vTaskTimeControl(void)
 {
@@ -126,7 +126,7 @@ void vTaskTimeControl(void)
     }
 }
 
-int time_control_load_sys_time(sys_time_t *tm)
+static int time_control_load_sys_time(sys_time_t *tm)
 {
     int err = -1;
 
@@ -158,7 +158,7 @@ int time_control_load_sys_time(sys_time_t *tm)
     return err;
 }
 
-int time_control_save_sys_time(sys_time_t tm)
+static int time_control_save_sys_time(sys_time_t tm)
 {
     int err = 0;
 
@@ -182,7 +182,7 @@ int time_control_save_sys_time(sys_time_t tm)
     return err;
 }
 
-uint8_t time_control_crc8(uint8_t *data, uint8_t len)
+static uint8_t time_control_crc8(uint8_t *data, uint8_t len)
 {
     uint8_t crc = TIME_CONTROL_CRC8_INITIAL_VAL;
 

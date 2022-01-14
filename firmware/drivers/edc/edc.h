@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.38
+ * \version 0.8.15
  * 
  * \date 2019/10/27
  * 
@@ -41,6 +41,7 @@
 #include <stdbool.h>
 
 #include <drivers/i2c/i2c.h>
+#include <drivers/gpio/gpio.h>
 
 #define EDC_MODULE_NAME             "EDC"
 
@@ -77,6 +78,7 @@ typedef struct
 {
     i2c_port_t port;
     uint32_t bitrate;
+    gpio_pin_t en_pin;
 } edc_config_t;
 
 /**
@@ -139,16 +141,38 @@ typedef struct
 int edc_init(edc_config_t config);
 
 /**
+ * \brief Enables the EDC module.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
+ * \return The status/error code.
+ */
+int edc_enable(edc_config_t config);
+
+/**
+ * \brief Disables the EDC module.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
+ * \return The status/error code.
+ */
+int edc_disable(edc_config_t config);
+
+/**
  * \brief Writes a command to the EDC module.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
  *
  * \param[in] cmd is the command to be written.
  *
  * \return The status/error code.
  */
-int edc_write_cmd(edc_cmd_t cmd);
+int edc_write_cmd(edc_config_t config, edc_cmd_t cmd);
 
 /**
  * \brief Reads data from the EDC module.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
  *
  * \param[in,out] data is an array to store the read bytes.
  *
@@ -156,57 +180,69 @@ int edc_write_cmd(edc_cmd_t cmd);
  *
  * \return The status/error code.
  */
-int edc_read(uint8_t *data, uint16_t len);
+int edc_read(edc_config_t config, uint8_t *data, uint16_t len);
 
 /**
  * \brief Verifies if the EDC is connected.
  *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
  * \return The status/error code.
  */
-int edc_check_device(void);
+int edc_check_device(edc_config_t config);
 
 /**
  * \brief Sets the RTC time.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
  *
  * \param[in] time is the number of seconds elapsed since J2000 epoch.
  *
  * \return The status/error code.
  */
-int edc_set_rtc_time(uint32_t time);
+int edc_set_rtc_time(edc_config_t config, uint32_t time);
 
 /**
  * \brief Removes current PTT package from the PTT Package FIFO buffer.
  *
  * It allows the reading of the next PTT package, if existent.
  *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
  * \return The status/error code.
  */
-int edc_pop_ptt_pkg(void);
+int edc_pop_ptt_pkg(edc_config_t config);
 
 /**
  * \brief Pauses the PTT decoding task.
  *
  * \note At initialization the PTT task is paused
  *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
  * \return The status/error code.
  */
-int edc_pause_ptt_task(void);
+int edc_pause_ptt_task(edc_config_t config);
 
 /**
  * \brief Resumes the PTT decoding task.
  *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
  * \return The status/error code.
  */
-int edc_resume_ptt_task(void);
+int edc_resume_ptt_task(edc_config_t config);
 
 /**
  * \brief Starts the ADC sampling task.
  *
  * The ADC sampling task stores a sequence composed of 2048 IQ RF front-end samples.
  *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
  * \return The status/error code.
  */
-int edc_start_adc_task(void);
+int edc_start_adc_task(edc_config_t config);
 
 /**
  * \brief Gets the system state frame.
@@ -224,9 +260,11 @@ int edc_start_adc_task(void);
  *
  * \see EDC - Environmental Data Collector User Guide. Section 3.6 - System State Frame. Page 9.
  *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
  * \return The number of read bytes (-1 on error).
  */
-int16_t edc_get_state_pkg(uint8_t *status);
+int16_t edc_get_state_pkg(edc_config_t config, uint8_t *status);
 
 /**
  * \brief Gets the current PTT decoder frame.
@@ -260,9 +298,11 @@ int16_t edc_get_state_pkg(uint8_t *status);
  *
  * \see EDC - Environmental Data Collector User Guide. Section 3.3 - PTT Decoder Frames. Page 7.
  *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
  * \return The number of read bytes (-1 on error).
  */
-int16_t edc_get_ptt_pkg(uint8_t *pkg);
+int16_t edc_get_ptt_pkg(edc_config_t config, uint8_t *pkg);
 
 /**
  * \brief Gets the housekeeping (HK) frame.
@@ -287,9 +327,11 @@ int16_t edc_get_ptt_pkg(uint8_t *pkg);
  *
  * \see EDC - Environmental Data Collector User Guide. Section 3.5 - HK Frame. Page 9.
  *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
  * \return The number of read bytes (-1 on error).
  */
-int16_t edc_get_hk_pkg(uint8_t *hk);
+int16_t edc_get_hk_pkg(edc_config_t config, uint8_t *hk);
 
 /**
  * \brief Gets the current ADC sample frame.
@@ -313,18 +355,22 @@ int16_t edc_get_hk_pkg(uint8_t *hk);
  *
  * \see EDC - Environmental Data Collector User Guide. Section 3.4 - ADC Sample Frame. Page 8.
  *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
  * \return The number of read bytes (-1 on error).
  */
-int16_t edc_get_adc_seq(uint8_t *seq);
+int16_t edc_get_adc_seq(edc_config_t config, uint8_t *seq);
 
 /**
  * \brief Writes the string "ECHO" in the debug interface.
  *
  * \see EDC - Environmental Data Collector User Guide. Table 10 - Command List. Page 11.
  *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
  * \return The status/error code.
  */
-int edc_echo(void);
+int edc_echo(edc_config_t config);
 
 /**
  * \brief Calculates the checksum of an array of bytes.
@@ -342,29 +388,97 @@ uint16_t edc_calc_checksum(uint8_t *data, uint16_t len);
 /**
  * \brief Gets the state data.
  *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
  * \param[in,out] state_data is a pointer to a state structure.
  *
  * \return The status/error code.
  */
-int edc_get_state(edc_state_t *state_data);
+int edc_get_state(edc_config_t config, edc_state_t *state_data);
 
 /**
  * \brief Gets the PTT data.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
  *
  * \param[in,out] ptt_data is a pointer to store the ptt data.
  *
  * \return The status/error code.
  */
-int edc_get_ptt(edc_ptt_t *ptt_data);
+int edc_get_ptt(edc_config_t config, edc_ptt_t *ptt_data);
 
 /**
  * \brief Gets the housekeeping data.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
  *
  * \param[in,out] hk_data is a pointer to store the hk data.
  *
  * \return The status/error code.
  */
-int edc_get_hk(edc_hk_t *hk_data);
+int edc_get_hk(edc_config_t config, edc_hk_t *hk_data);
+
+/**
+ * \brief Initializes the I2C port.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
+ * \return The status/error code.
+ */
+int edc_i2c_init(edc_config_t config);
+
+/**
+ * \brief Writes a given sequence of bytes to the I2C bus.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
+ * \param[in] data is array of bytes to write.
+ *
+ * \param[in] len is the number of bytes to write .
+ *
+ * \return The status/error code.
+ */
+int edc_i2c_write(edc_config_t config, uint8_t *data, uint16_t len);
+
+/**
+ * \brief Reads data from the I2C bus.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
+ * \param[in] data is a pointer to store the read bytes.
+ *
+ * \param[in] len is the number of bytes to read.
+ *
+ * \return The status/error code.
+ */
+int edc_i2c_read(edc_config_t config, uint8_t *data, uint16_t len);
+
+/**
+ * \brief GPIO pin initialization.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
+ * \return The status/error code.
+ */
+int edc_gpio_init(edc_config_t config);
+
+/**
+ * \brief Set the GPIO pin state.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
+ * \return The status/error code.
+ */
+int edc_gpio_set(edc_config_t config);
+
+/**
+ * \brief Clears the GPIO pin.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
+ * \return The status/error code.
+ */
+int edc_gpio_clear(edc_config_t config);
 
 /**
  * \brief Milliseconds delay.

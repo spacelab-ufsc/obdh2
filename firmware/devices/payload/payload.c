@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
  * 
- * \version 0.7.44
+ * \version 0.8.17
  * 
  * \date 2021/08/15
  * 
@@ -42,48 +42,84 @@
 
 #include "payload.h"
 
+static edc_config_t edc_0_conf = {0};
+static edc_config_t edc_1_conf = {0};
+
 int payload_init(payload_t pl)
 {
     int err = -1;
 
     switch(pl)
     {
-        case PAYLOAD_EDC:
+        case PAYLOAD_EDC_0:
         {
-            edc_config_t config = {0};
+            edc_0_conf.port = I2C_PORT_0;
+            edc_0_conf.bitrate = 400000UL;
+            edc_0_conf.en_pin = GPIO_PIN_29;
 
-            config.port = I2C_PORT_0;
-            config.bitrate = 400000;
-
-            if (edc_init(config) == 0)
+            if (edc_init(edc_0_conf) == 0)
             {
-                if (payload_disable(PAYLOAD_EDC) == 0)
+                edc_hk_t hk_data = {0};
+
+                if (edc_get_hk(edc_0_conf, &hk_data) == 0)
                 {
-                    edc_hk_t hk_data = {0};
+                    err = 0;
 
-                    if (edc_get_hk(&hk_data) == 0)
-                    {
-                        err = 0;
-
-                        sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "EDC: Initialization done! (");
-                        sys_log_print_uint(hk_data.temp);
-                        sys_log_print_msg(" oC, ");
-                        sys_log_print_uint(hk_data.voltage_supply);
-                        sys_log_print_msg(" mV, ");
-                        sys_log_print_uint(hk_data.current_supply);
-                        sys_log_print_msg(" mA)");
-                        sys_log_new_line();
-                    }
-                    else
-                    {
-                        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC: Error pausing the PTT task!");
-                        sys_log_new_line();
-                    }
+                    sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "EDC 0: Initialization done! (");
+                    sys_log_print_uint(hk_data.temp);
+                    sys_log_print_msg(" oC, ");
+                    sys_log_print_uint(hk_data.voltage_supply);
+                    sys_log_print_msg(" mV, ");
+                    sys_log_print_uint(hk_data.current_supply);
+                    sys_log_print_msg(" mA)");
+                    sys_log_new_line();
+                }
+                else
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Error reading the housekeeping data!");
+                    sys_log_new_line();
                 }
             }
             else
             {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC: Error during the initialization!");
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Error during the initialization!");
+                sys_log_new_line();
+            }
+
+            break;
+        }
+        case PAYLOAD_EDC_1:
+        {
+            edc_1_conf.port = I2C_PORT_0;
+            edc_1_conf.bitrate = 400000UL;
+            edc_1_conf.en_pin = GPIO_PIN_30;
+
+            if (edc_init(edc_1_conf) == 0)
+            {
+                edc_hk_t hk_data = {0};
+
+                if (edc_get_hk(edc_1_conf, &hk_data) == 0)
+                {
+                    err = 0;
+
+                    sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "EDC 1: Initialization done! (");
+                    sys_log_print_uint(hk_data.temp);
+                    sys_log_print_msg(" oC, ");
+                    sys_log_print_uint(hk_data.voltage_supply);
+                    sys_log_print_msg(" mV, ");
+                    sys_log_print_uint(hk_data.current_supply);
+                    sys_log_print_msg(" mA)");
+                    sys_log_new_line();
+                }
+                else
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 1: Error reading the housekeeping data!");
+                    sys_log_new_line();
+                }
+            }
+            else
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 1: Error during the initialization!");
                 sys_log_new_line();
             }
 
@@ -146,14 +182,26 @@ int payload_enable(payload_t pl)
 
     switch(pl)
     {
-        case PAYLOAD_EDC:
-            if (edc_resume_ptt_task() == 0)
+        case PAYLOAD_EDC_0:
+            if (edc_enable(edc_0_conf) == 0)
             {
                 err = 0;
             }
             else
             {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC: Error enabling!");
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Error enabling!");
+                sys_log_new_line();
+            }
+
+            break;
+        case PAYLOAD_EDC_1:
+            if (edc_enable(edc_1_conf) == 0)
+            {
+                err = 0;
+            }
+            else
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Error enabling!");
                 sys_log_new_line();
             }
 
@@ -189,14 +237,26 @@ int payload_disable(payload_t pl)
 
     switch(pl)
     {
-        case PAYLOAD_EDC:
-            if (edc_pause_ptt_task() == 0)
+        case PAYLOAD_EDC_0:
+            if (edc_disable(edc_0_conf) == 0)
             {
                 err = 0;
             }
             else
             {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC: Error disabling!");
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 1: Error disabling!");
+                sys_log_new_line();
+            }
+
+            break;
+        case PAYLOAD_EDC_1:
+            if (edc_disable(edc_1_conf) == 0)
+            {
+                err = 0;
+            }
+            else
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 1: Error disabling!");
                 sys_log_new_line();
             }
 
@@ -232,8 +292,18 @@ int payload_write_cmd(payload_t pl, payload_cmd_t cmd)
 
     switch(pl)
     {
-        case PAYLOAD_EDC:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC: ");
+        case PAYLOAD_EDC_0:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: ");
+            sys_log_print_hex(cmd);
+            sys_log_print_msg(" command received!");
+            sys_log_new_line();
+
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC: write_cmd() routine not implemented yet!");
+            sys_log_new_line();
+
+            break;
+        case PAYLOAD_EDC_1:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 1: ");
             sys_log_print_hex(cmd);
             sys_log_print_msg(" command received!");
             sys_log_new_line();
@@ -273,17 +343,17 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
 
     switch(pl)
     {
-        case PAYLOAD_EDC:
+        case PAYLOAD_EDC_0:
         {
             switch(id)
             {
                 case PAYLOAD_EDC_RAW_STATE:
                 {
-                    int bytes = edc_get_state_pkg(data);
+                    int bytes = edc_get_state_pkg(edc_0_conf, data);
 
                     if (bytes < 0)
                     {
-                        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC: Error reading state!");
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Error reading state!");
                         sys_log_new_line();
                     }
 
@@ -295,11 +365,11 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
                 }
                 case PAYLOAD_EDC_RAW_HK:
                 {
-                    int bytes = edc_get_hk_pkg(data);
+                    int bytes = edc_get_hk_pkg(edc_0_conf, data);
 
                     if (bytes < 0)
                     {
-                        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC: Error reading housekeeping data!");
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Error reading housekeeping data!");
                         sys_log_new_line();
                     }
 
@@ -310,7 +380,52 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
                     break;
                 }
                 default:
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC: Invalid data ID!");
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Invalid data ID!");
+                    sys_log_new_line();
+
+                    break;
+            }
+
+            break;
+        }
+        case PAYLOAD_EDC_1:
+        {
+            switch(id)
+            {
+                case PAYLOAD_EDC_RAW_STATE:
+                {
+                    int bytes = edc_get_state_pkg(edc_1_conf, data);
+
+                    if (bytes < 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 1: Error reading state!");
+                        sys_log_new_line();
+                    }
+
+                    *len = bytes;
+
+                    err = 0;
+
+                    break;
+                }
+                case PAYLOAD_EDC_RAW_HK:
+                {
+                    int bytes = edc_get_hk_pkg(edc_1_conf, data);
+
+                    if (bytes < 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 1: Error reading housekeeping data!");
+                        sys_log_new_line();
+                    }
+
+                    *len = bytes;
+
+                    err = 0;
+
+                    break;
+                }
+                default:
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 1: Invalid data ID!");
                     sys_log_new_line();
 
                     break;

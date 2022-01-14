@@ -25,7 +25,7 @@
  *
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  *
- * \version 0.7.25
+ * \version 0.8.7
  *
  * \date 2019/11/03
  *
@@ -40,7 +40,7 @@
 #include "sys_log.h"
 #include "sys_log_config.h"
 
-SemaphoreHandle_t xSysLogSemaphore = NULL;
+static SemaphoreHandle_t xSysLogSemaphore = NULL;
 
 int sys_log_mutex_create(void)
 {

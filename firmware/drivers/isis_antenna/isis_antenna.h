@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.45
+ * \version 0.8.8
  * 
  * \date 2020/02/01
  * 
@@ -44,23 +44,25 @@
 
 #define ISIS_ANTENNA_MODULE_NAME                "ISIS Antenna"
 
-/* I2C configuration */
-#define ISIS_ANTENNA_I2C_PORT                   I2C_PORT_2
-#define ISIS_ANTENNA_I2C_CLOCK_HZ               100000
+/* I2C addresses */
 #define ISIS_ANTENNA_I2C_SLAVE_ADDRESS_UC_A     0x31
 #define ISIS_ANTENNA_I2C_SLAVE_ADDRESS_UC_B     0x32
-#define ISIS_ANTENNA_I2C_SLAVE_ADDRESS          ISIS_ANTENNA_I2C_SLAVE_ADDRESS_UC_A
 
 /* Status mask */
 #define ISIS_ANTENNA_STATUS_MASK                0x8888U     /**< Status mask (all antenna not deployed and disarmed). */
 
-#define ISIS_ANTENNA_REF_VOLTAGE                3300        /**< Reference voltage in millivolts. */
+#define ISIS_ANTENNA_REF_VOLTAGE                3300.0      /**< Reference voltage in millivolts. */
 
 #define ISIS_ANTENNA_MIN_TEMP                   (-50)       /**< Minimum read temperature. */
 #define ISIS_ANTENNA_MAX_TEMP                   132         /**< Maximum read temperature. */
 
 #define ISIS_ANTENNA_TEMP_MIN_VOUT              630         /**< Minimum output voltage of the temperature sensor. */
 #define ISIS_ANTENNA_TEMP_MAX_VOUT              2616        /**< Maximum output voltage of the temperature sensor. */
+
+/**
+ * \brief Temperature type.
+ */
+typedef uint16_t isis_antenna_temp_t;
 
 /**
  * \brief Antennas number.
@@ -133,6 +135,15 @@ typedef struct
     uint8_t independent_burn;                               /**< Independent burn. */
     uint8_t armed;                                          /**< Armed. */
 } isis_antenna_status_t;
+
+/**
+ * \brief ISIS Antenna data.
+ */
+typedef struct
+{
+    isis_antenna_status_t status;                           /**< Status data. */
+    isis_antenna_temp_t temperature;                        /**< Temperature in K. */
+} isis_antenna_data_t;
 
 /**
  * \brief Driver initialization.
@@ -211,6 +222,15 @@ int isis_antenna_read_deployment_status_code(uint16_t *status);
  * \return The status/error code.
  */
 int isis_antenna_read_deployment_status(isis_antenna_status_t *status);
+
+/**
+ * \brief Gets the data from the antenna.
+ *
+ * \param[in,out] data is a pointer to store the read data.
+ *
+ * \return The status/errpr code.
+ */
+int isis_antenna_get_data(isis_antenna_data_t *data);
 
 /**
  * \brief Gets the status of antenna.
@@ -309,13 +329,51 @@ int isis_antenna_get_raw_temperature(uint16_t *temp);
 int16_t isis_antenna_raw_to_temp_c(uint16_t raw);
 
 /**
- * \brief Gets the temperature of the antenna module.
+ * \brief Gets the temperature of the antenna module in Celsius.
  *
  * \param[in,out] temp is a pointer to store the temperature value of the antenna system in Celsius.
  *
  * \return The status/error code.
  */
 int isis_antenna_get_temperature_c(int16_t *temp);
+
+/**
+ * \brief Gets the temperature of the antenna module in Kelvin.
+ *
+ * \param[in,out] temp is a pointer to store the temperature value of the antenna system in Kelvin.
+ *
+ * \return The status/error code
+ */
+int isis_antenna_get_temperature_k(isis_antenna_temp_t *temp);
+
+/**
+ * \brief Initializes the I2C port.
+ *
+ * \return The status/error code.
+ */
+int isis_antenna_i2c_init(void);
+
+/**
+ * \brief Writes a given sequence of bytes to the I2C bus.
+ *
+ * \param[in] data is array of bytes to write.
+ *
+ * \param[in] len is the number of bytes to write .
+ *
+ * \return The status/error code.
+ */
+int isis_antenna_i2c_write(uint8_t *data, uint16_t len);
+
+/**
+ * \brief Reads data from the I2C bus.
+ *
+ * \param[in] data is a pointer to store the read bytes.
+ *
+ * \param[in] len is the number of bytes to read.
+ *
+ * \return The status/error code.
+ */
+int isis_antenna_i2c_read(uint8_t *data, uint16_t len);
 
 /**
  * \brief Seconds delay.

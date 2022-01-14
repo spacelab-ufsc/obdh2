@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.40
+ * \version 0.8.8
  * 
  * \date 2020/01/13
  * 
@@ -120,7 +120,7 @@ int gpio_init(gpio_pin_t pin, gpio_config_t config)
         case GPIO_PIN_68:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN6;    break;
         case GPIO_PIN_69:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN7;    break;
         default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, GPIO_MODULE_NAME, "Invalid pin to initialize!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -141,7 +141,7 @@ int gpio_init(gpio_pin_t pin, gpio_config_t config)
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, GPIO_MODULE_NAME, "Invalid mode during the initialization!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -232,7 +232,7 @@ int gpio_set_state(gpio_pin_t pin, bool level)
         case GPIO_PIN_68:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN6;    break;
         case GPIO_PIN_69:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN7;    break;
         default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, GPIO_MODULE_NAME, "Invalid pin to set!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -333,7 +333,7 @@ int gpio_get_state(gpio_pin_t pin)
         case GPIO_PIN_68:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN6;    break;
         case GPIO_PIN_69:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN7;    break;
         default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, GPIO_MODULE_NAME, "Invalid pin to read!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -434,7 +434,7 @@ int gpio_toggle(gpio_pin_t pin)
         case GPIO_PIN_68:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN6;    break;
         case GPIO_PIN_69:   msp_port = GPIO_PORT_P9;    msp_pin = GPIO_PIN7;    break;
         default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, GPIO_MODULE_NAME, "Invalid pin to toggle!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */

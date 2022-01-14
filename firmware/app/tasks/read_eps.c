@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.47
+ * \version 0.8.5
  * 
  * \date 2021/05/08
  * 
@@ -58,7 +58,11 @@ void vTaskReadEPS(void)
             sys_log_new_line();
         }
 
-        if (eps_get_data(&sat_data_buf.eps) != 0)
+        if (eps_get_data(&sat_data_buf.eps.data) == 0)
+        {
+            sat_data_buf.eps.timestamp = system_get_time();
+        }
+        else
         {
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_EPS_NAME, "Error reading data from the EPS device!");
             sys_log_new_line();

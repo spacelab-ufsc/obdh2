@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.9
+ * \version 0.8.3
  * 
  * \date 2021/08/07
  * 
@@ -66,14 +66,15 @@ int __wrap_isis_antenna_disarm(void)
 
 int __wrap_isis_antenna_start_sequential_deploy(uint8_t sec)
 {
-    function_called();
+    check_expected(sec);
 
     return mock_type(int);
 }
 
-int __wrap_isis_antenna_start_independent_deploy(uint8_t ant, uint8_t sec, uint8_t ovr)
+int __wrap_isis_antenna_start_independent_deploy(isis_antenna_ant_t ant, uint8_t sec, isis_antenna_override_t ovr)
 {
     check_expected(ant);
+    check_expected(sec);
     check_expected(ovr);
 
     return mock_type(int);
@@ -91,47 +92,56 @@ int __wrap_isis_antenna_read_deployment_status_code(uint16_t *status)
 
 int __wrap_isis_antenna_read_deployment_status(isis_antenna_status_t *status)
 {
-    uint16_t code_val           = mock_type(uint16_t);
-    uint8_t ant_1_status_val    = mock_type(uint8_t);
-    uint8_t ant_1_timeout_val   = mock_type(uint8_t);
-    uint8_t ant_1_burning_val   = mock_type(uint8_t);
-    uint8_t ant_2_status_val    = mock_type(uint8_t);
-    uint8_t ant_2_timeout_val   = mock_type(uint8_t);
-    uint8_t ant_2_burning_val   = mock_type(uint8_t);
-    uint8_t ant_3_status_val    = mock_type(uint8_t);
-    uint8_t ant_3_timeout_val   = mock_type(uint8_t);
-    uint8_t ant_3_burning_val   = mock_type(uint8_t);
-    uint8_t ant_4_status_val    = mock_type(uint8_t);
-    uint8_t ant_4_timeout_val   = mock_type(uint8_t);
-    uint8_t ant_4_burning_bal   = mock_type(uint8_t);
-    uint8_t ignoring_switches   = mock_type(uint8_t);
-    uint8_t independent_burn    = mock_type(uint8_t);
-    uint8_t armed               = mock_type(uint8_t);
-
     if (status != NULL)
     {
-        status->code                = code_val;
-        status->antenna_1.status    = ant_1_status_val;
-        status->antenna_1.timeout   = ant_1_timeout_val;
-        status->antenna_1.burning   = ant_1_burning_val;
-        status->antenna_2.status    = ant_2_status_val;
-        status->antenna_2.timeout   = ant_2_timeout_val;
-        status->antenna_2.burning   = ant_2_burning_val;
-        status->antenna_3.status    = ant_3_status_val;
-        status->antenna_3.timeout   = ant_3_timeout_val;
-        status->antenna_3.burning   = ant_3_burning_val;
-        status->antenna_4.status    = ant_4_status_val;
-        status->antenna_4.timeout   = ant_4_timeout_val;
-        status->antenna_4.burning   = ant_4_burning_bal;
-        status->ignoring_switches   = ignoring_switches;
-        status->independent_burn    = independent_burn;
-        status->armed               = armed;
+        status->code                = mock_type(uint16_t);
+        status->antenna_1.status    = mock_type(uint8_t);
+        status->antenna_1.timeout   = mock_type(uint8_t);
+        status->antenna_1.burning   = mock_type(uint8_t);
+        status->antenna_2.status    = mock_type(uint8_t);
+        status->antenna_2.timeout   = mock_type(uint8_t);
+        status->antenna_2.burning   = mock_type(uint8_t);
+        status->antenna_3.status    = mock_type(uint8_t);
+        status->antenna_3.timeout   = mock_type(uint8_t);
+        status->antenna_3.burning   = mock_type(uint8_t);
+        status->antenna_4.status    = mock_type(uint8_t);
+        status->antenna_4.timeout   = mock_type(uint8_t);
+        status->antenna_4.burning   = mock_type(uint8_t);
+        status->ignoring_switches   = mock_type(uint8_t);
+        status->independent_burn    = mock_type(uint8_t);
+        status->armed               = mock_type(uint8_t);
     }
 
     return mock_type(int);
 }
 
-int __wrap_isis_antenna_get_antenna_status(uint8_t ant, uint8_t *ant_status)
+int __wrap_isis_antenna_get_data(isis_antenna_data_t *data)
+{
+    if (data != NULL)
+    {
+        data->status.code               = mock_type(uint16_t);
+        data->status.antenna_1.status   = mock_type(uint8_t);
+        data->status.antenna_1.timeout  = mock_type(uint8_t);
+        data->status.antenna_1.burning  = mock_type(uint8_t);
+        data->status.antenna_2.status   = mock_type(uint8_t);
+        data->status.antenna_2.timeout  = mock_type(uint8_t);
+        data->status.antenna_2.burning  = mock_type(uint8_t);
+        data->status.antenna_3.status   = mock_type(uint8_t);
+        data->status.antenna_3.timeout  = mock_type(uint8_t);
+        data->status.antenna_3.burning  = mock_type(uint8_t);
+        data->status.antenna_4.status   = mock_type(uint8_t);
+        data->status.antenna_4.timeout  = mock_type(uint8_t);
+        data->status.antenna_4.burning  = mock_type(uint8_t);
+        data->status.ignoring_switches  = mock_type(uint8_t);
+        data->status.independent_burn   = mock_type(uint8_t);
+        data->status.armed              = mock_type(uint8_t);
+        data->temperature               = mock_type(isis_antenna_temp_t);
+    }
+
+    return mock_type(int);
+}
+
+int __wrap_isis_antenna_get_antenna_status(isis_antenna_ant_t ant, uint8_t *ant_status)
 {
     check_expected(ant);
 
@@ -143,7 +153,7 @@ int __wrap_isis_antenna_get_antenna_status(uint8_t ant, uint8_t *ant_status)
     return mock_type(int);
 }
 
-int __wrap_isis_antenna_get_antenna_timeout(uint8_t ant, uint8_t *ant_timeout)
+int __wrap_isis_antenna_get_antenna_timeout(isis_antenna_ant_t ant, uint8_t *ant_timeout)
 {
     check_expected(ant);
 
@@ -155,7 +165,7 @@ int __wrap_isis_antenna_get_antenna_timeout(uint8_t ant, uint8_t *ant_timeout)
     return mock_type(int);
 }
 
-int __wrap_isis_antenna_get_burning(uint8_t ant, uint8_t *ant_burn)
+int __wrap_isis_antenna_get_burning(isis_antenna_ant_t ant, uint8_t *ant_burn)
 {
     check_expected(ant);
 
@@ -197,6 +207,16 @@ int __wrap_isis_antenna_get_temperature_c(int16_t *temp)
     if (temp != NULL)
     {
         *temp = mock_type(int16_t);
+    }
+
+    return mock_type(int);
+}
+
+int __wrap_isis_antenna_get_temperature_k(isis_antenna_temp_t *temp)
+{
+    if (temp != NULL)
+    {
+        *temp = mock_type(isis_antenna_temp_t);
     }
 
     return mock_type(int);

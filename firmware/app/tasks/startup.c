@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.47
+ * \version 0.8.17
  * 
  * \date 2019/12/04
  * 
@@ -95,7 +95,7 @@ void vTaskStartup(void)
     sys_log_print_hex(system_get_reset_cause());
     sys_log_new_line();
 
-#if CONFIG_DEV_MEDIA_INT_ENABLED == 1
+#if defined(CONFIG_DEV_MEDIA_INT_ENABLED) && (CONFIG_DEV_MEDIA_INT_ENABLED == 1)
     /* Internal non-volatile memory initialization */
     if (media_init(MEDIA_INT_FLASH) != 0)
     {
@@ -103,7 +103,7 @@ void vTaskStartup(void)
     }
 #endif /* CONFIG_DEV_MEDIA_INT_ENABLED */
 
-#if CONFIG_DEV_MEDIA_NOR_ENABLED == 1
+#if defined(CONFIG_DEV_MEDIA_NOR_ENABLED) && (CONFIG_DEV_MEDIA_NOR_ENABLED == 1)
     /* NOR memory initialization */
     if (media_init(MEDIA_NOR) != 0)
     {
@@ -111,7 +111,7 @@ void vTaskStartup(void)
     }
 #endif /* CONFIG_DEV_MEDIA_NOR_ENABLED */
 
-#if CONFIG_DEV_LEDS_ENABLED == 1
+#if defined(CONFIG_DEV_LEDS_ENABLED) && (CONFIG_DEV_LEDS_ENABLED == 1)
     /* LEDs device initialization */
     if (leds_init() != 0)
     {
@@ -119,7 +119,7 @@ void vTaskStartup(void)
     }
 #endif /* CONFIG_DEV_LEDS_ENABLED */
 
-#if CONFIG_DEV_CURRENT_SENSOR_ENABLED == 1
+#if defined(CONFIG_DEV_CURRENT_SENSOR_ENABLED) && (CONFIG_DEV_CURRENT_SENSOR_ENABLED == 1)
     /* Current sensor device initialization */
     if (current_sensor_init() != 0)
     {
@@ -127,7 +127,7 @@ void vTaskStartup(void)
     }
 #endif /* CONFIG_DEV_CURRENT_SENSOR_ENABLED */
 
-#if CONFIG_DEV_VOLTAGE_SENSOR_ENABLED == 1
+#if defined(CONFIG_DEV_VOLTAGE_SENSOR_ENABLED) && (CONFIG_DEV_VOLTAGE_SENSOR_ENABLED == 1)
     /* Voltage sensor device initialization */
     if (voltage_sensor_init() != 0)
     {
@@ -135,7 +135,7 @@ void vTaskStartup(void)
     }
 #endif /* CONFIG_DEV_VOLTAGE_SENSOR_ENABLED */
 
-#if CONFIG_DEV_TEMP_SENSOR_ENABLED == 1
+#if defined(CONFIG_DEV_TEMP_SENSOR_ENABLED) && (CONFIG_DEV_TEMP_SENSOR_ENABLED == 1)
     /* Temperature sensor device initialization */
     if (temp_sensor_init() != 0)
     {
@@ -143,7 +143,7 @@ void vTaskStartup(void)
     }
 #endif /* CONFIG_DEV_TEMP_SENSOR_ENABLED */
 
-#if CONFIG_DEV_EPS_ENABLED == 1
+#if defined(CONFIG_DEV_EPS_ENABLED) && (CONFIG_DEV_EPS_ENABLED == 1)
     /* EPS device initialization */
     if (eps_init() != 0)
     {
@@ -151,7 +151,7 @@ void vTaskStartup(void)
     }
 #endif /* CONFIG_DEV_EPS_ENABLED */
 
-#if CONFIG_DEV_RADIO_ENABLED == 1
+#if defined(CONFIG_DEV_RADIO_ENABLED) && (CONFIG_DEV_RADIO_ENABLED == 1)
     /* Radio device initialization */
     if (radio_init() != 0)
     {
@@ -169,15 +169,25 @@ void vTaskStartup(void)
         error_counter++;
     }
 
-#if CONFIG_DEV_PAYLOAD_EDC_ENABLED == 1
+#if defined(CONFIG_DEV_PAYLOAD_EDC_ENABLED) && (CONFIG_DEV_PAYLOAD_EDC_ENABLED == 1)
     /* Payload EDC device initialization */
-    if (payload_init(PAYLOAD_EDC) != 0)
+    if (payload_init(PAYLOAD_EDC_1) != 0)
+    {
+        error_counter++;
+    }
+
+    if (payload_disable(PAYLOAD_EDC_1) != 0)
+    {
+        error_counter++;
+    }
+
+    if (payload_init(PAYLOAD_EDC_0) != 0)
     {
         error_counter++;
     }
 #endif /* CONFIG_DEV_PAYLOAD_EDC_ENABLED */
 
-#if CONFIG_DEV_ANTENNA_ENABLED == 1
+#if defined(CONFIG_DEV_ANTENNA_ENABLED) && (CONFIG_DEV_ANTENNA_ENABLED == 1)
     /* Antenna device initialization */
     if (antenna_init() != 0)
     {
@@ -210,7 +220,7 @@ void vTaskStartup(void)
 
 int startup_init_csp(void)
 {
-#if CONFIG_CSP_ENABLED == 1
+#if defined(CONFIG_CSP_ENABLED) && (CONFIG_CSP_ENABLED == 1)
     int err = CSP_ERR_NONE;
 
     /* CSP initialization */

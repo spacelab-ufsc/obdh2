@@ -1,7 +1,7 @@
 /*
  * ttc.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.22
+ * \version 0.8.35
  * 
  * \date 2020/02/01
  * 
@@ -60,6 +60,11 @@ typedef enum
 } ttc_e;
 
 /**
+ * \brief Parameter ID type.
+ */
+typedef uint8_t ttc_param_id_t;
+
+/**
  * \brief Initialization routine of the TTC device.
  *
  * \param[in] dev is the TTC device to initialized. It can be:
@@ -72,6 +77,42 @@ typedef enum
  * \return The status/error code.
  */
 int ttc_init(ttc_e dev);
+
+/**
+ * \brief Sets a parameter of the TTC device.
+ *
+ * \param[in] dev is the TTC device to set a parameter. It can be:
+ * \parblock
+ *      -\b TTC_0
+ *      -\b TTC_1
+ *      .
+ * \endparblock
+ *
+ * \param[in] param is the parameter ID to set.
+ *
+ * \param[in] val is the new value of the given parameter.
+ *
+ * \return The status/error code.
+ */
+int ttc_set_param(ttc_e dev, ttc_param_id_t param, uint32_t val);
+
+/**
+ * \brief Gets a parameter from the TTC device.
+ *
+ * \param[in] dev is the TTC device to get a parameter. It can be:
+ * \parblock
+ *      -\b TTC_0
+ *      -\b TTC_1
+ *      .
+ * \endparblock
+ *
+ * \param[in] param is the parameter ID to read.
+ *
+ * \param[in,out] val is a pointer to store the read value.
+ *
+ * \return The status/error code.
+ */
+int ttc_get_param(ttc_e dev, ttc_param_id_t param, uint32_t *val);
 
 /**
  * \brief Reads the housekeeping data from the TTC device.

@@ -1,4 +1,4 @@
-VERSION=v0.8
+VERSION=v0.9
 SRC=main
 TARGET=slb-obdh2-doc-$(VERSION)
 

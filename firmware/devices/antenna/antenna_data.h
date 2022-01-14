@@ -1,7 +1,7 @@
 /*
  * antenna_data.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright (C) 2021, SpaceLab.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.4.14
+ * \version 0.8.4
  * 
  * \date 2020/07/24
  * 
@@ -34,39 +34,18 @@
  * \{
  */
 
-#ifndef ANT_DATA_H_
-#define ANT_DATA_H_
+#ifndef ANTENNA_DATA_H_
+#define ANTENNA_DATA_H_
 
 #include <stdint.h>
 
-/**
- * \brief Antenna status type.
- */
-typedef uint8_t ant_status_t;
+#include <drivers/isis_antenna/isis_antenna.h>
 
 /**
- * \brief Antena report.
+ * \brief Antenna data type.
  */
-typedef struct
-{
-    uint8_t activation_count;       /**< Activation count. */
-    uint16_t activation_time;       /**< Activation time. */
-} ant_report_t;
+typedef isis_antenna_data_t antenna_data_t;
 
-/**
- * \brief Antenna data.
- */
-typedef struct
-{
-    uint32_t timestamp;             /**< Data timestamp (system ticks). */
-    uint16_t temperature;           /**< Antenna raw temperature. */
-    ant_status_t status;            /**< Antenna status. */
-    ant_report_t antenna_1;         /**< Antenna 1 report. */
-    ant_report_t antenna_2;         /**< Antenna 2 report. */
-    ant_report_t antenna_3;         /**< Antenna 3 report. */
-    ant_report_t antenna_4;         /**< Antenna 4 report. */
-} ant_data_t;
-
-#endif /* ANT_DATA_H_ */
+#endif /* ANTENNA_DATA_H_ */
 
 /** \} End of antenna_data group */

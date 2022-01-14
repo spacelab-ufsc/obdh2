@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.45
+ * \version 0.8.8
  * 
  * \date 2020/02/01
  * 
@@ -36,18 +36,12 @@
 #include <config/config.h>
 #include <system/sys_log/sys_log.h>
 
-#include <drivers/i2c/i2c.h>
-
 #include "isis_antenna.h"
 #include "isis_antenna_cmds.h"
 
 int isis_antenna_init(void)
 {
-    i2c_config_t conf = {0};
-
-    conf.speed_hz = ISIS_ANTENNA_I2C_CLOCK_HZ;
-
-    return i2c_init(ISIS_ANTENNA_I2C_PORT, conf);
+    return isis_antenna_i2c_init();
 }
 
 int isis_antenna_arm(void)
@@ -56,7 +50,7 @@ int isis_antenna_arm(void)
 
     uint8_t cmd = ISIS_ANTENNA_CMD_ARM;
 
-    if (i2c_write(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, &cmd, 1) == 0)
+    if (isis_antenna_i2c_write(&cmd, 1) == 0)
     {
         isis_antenna_delay_ms(100);
 
@@ -70,7 +64,7 @@ int isis_antenna_arm(void)
             }
             else
             {
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "The antenna is not armed after the command to arm!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -78,7 +72,7 @@ int isis_antenna_arm(void)
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading if the antenna is armed or not!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -86,7 +80,7 @@ int isis_antenna_arm(void)
     }
     else
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error writing the command to arm!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -101,7 +95,7 @@ int isis_antenna_disarm(void)
 
     uint8_t cmd = ISIS_ANTENNA_CMD_DISARM;
 
-    if (i2c_write(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, &cmd, 1) == 0)
+    if (isis_antenna_i2c_write(&cmd, 1) == 0)
     {
         isis_antenna_delay_ms(100);
 
@@ -115,7 +109,7 @@ int isis_antenna_disarm(void)
             }
             else
             {
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "The antenna is not disarmed after the command to disarm!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -123,7 +117,7 @@ int isis_antenna_disarm(void)
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading if the antenna is disarmed or not!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -131,7 +125,7 @@ int isis_antenna_disarm(void)
     }
     else
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error writing the command to disarm!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -149,7 +143,7 @@ int isis_antenna_start_sequential_deploy(uint8_t sec)
     cmd[0] = ISIS_ANTENNA_CMD_DEPLOY_SEQUENTIAL;
     cmd[1] = sec;
 
-    if (i2c_write(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, cmd, 2) == 0)
+    if (isis_antenna_i2c_write(cmd, 2) == 0)
     {
         isis_antenna_delay_ms(100);
 
@@ -157,7 +151,7 @@ int isis_antenna_start_sequential_deploy(uint8_t sec)
     }
     else
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error writing the command to start the sequential deploy!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -191,7 +185,7 @@ int isis_antenna_start_independent_deploy(isis_antenna_ant_t ant, uint8_t sec, i
                 cmd[0] = ISIS_ANTENNA_CMD_DEPLOY_ANT_4_WITH_OVERRIDE;
                 break;
             default:
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error writing the command to start the sequential deploy: ");
                 sys_log_print_int(ant);
                 sys_log_print_msg(" is an invalid antenna!");
@@ -218,7 +212,7 @@ int isis_antenna_start_independent_deploy(isis_antenna_ant_t ant, uint8_t sec, i
                 cmd[0] = ISIS_ANTENNA_CMD_DEPLOY_ANT_4;
                 break;
             default:
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error writing the command to start the sequential deploy: ");
                 sys_log_print_int(ant);
                 sys_log_print_msg(" is an invalid antenna!");
@@ -230,7 +224,7 @@ int isis_antenna_start_independent_deploy(isis_antenna_ant_t ant, uint8_t sec, i
     }
     else
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error writing the command to start the sequential deploy: ");
         sys_log_print_int(ovr);
         sys_log_print_msg(" is an invalid override option!");
@@ -241,13 +235,13 @@ int isis_antenna_start_independent_deploy(isis_antenna_ant_t ant, uint8_t sec, i
 
     if (err == 0)
     {
-        if (i2c_write(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, cmd, 2) == 0)
+        if (isis_antenna_i2c_write(cmd, 2) == 0)
         {
             isis_antenna_delay_ms(100);
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error writing the command to start the independent deploy!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -266,13 +260,13 @@ int isis_antenna_read_deployment_status_code(uint16_t *status)
 
     uint8_t cmd = ISIS_ANTENNA_CMD_REPORT_DEPLOY_STATUS;
 
-    if (i2c_write(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, &cmd, 1) == 0)
+    if (isis_antenna_i2c_write(&cmd, 1) == 0)
     {
         isis_antenna_delay_ms(100);
 
         uint8_t status_bytes[2] = {0};
 
-        if (i2c_read(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, status_bytes, 2) == 0)
+        if (isis_antenna_i2c_read(status_bytes, 2) == 0)
         {
             status_code = ((uint16_t)status_bytes[0] << 8) | (uint16_t)status_bytes[1];
 
@@ -282,7 +276,7 @@ int isis_antenna_read_deployment_status_code(uint16_t *status)
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the deployment status code!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -290,7 +284,7 @@ int isis_antenna_read_deployment_status_code(uint16_t *status)
     }
     else
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error writing the command to read the deployment status code!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -328,10 +322,25 @@ int isis_antenna_read_deployment_status(isis_antenna_status_t *status)
     }
     else
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the deployment status code!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+    }
+
+    return err;
+}
+
+int isis_antenna_get_data(isis_antenna_data_t *data)
+{
+    int err = -1;
+
+    if (isis_antenna_read_deployment_status(&data->status) == 0)
+    {
+        if (isis_antenna_get_temperature_k(&data->temperature) == 0)
+        {
+            err = 0;
+        }
     }
 
     return err;
@@ -348,7 +357,7 @@ int isis_antenna_get_antenna_status(isis_antenna_ant_t ant, uint8_t *ant_status)
         case ISIS_ANTENNA_ANT_3:    break;
         case ISIS_ANTENNA_ANT_4:    break;
         default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the antenna status! ");
             sys_log_print_int(ant);
             sys_log_print_msg(" is an invalid antenna!");
@@ -375,7 +384,7 @@ int isis_antenna_get_antenna_status(isis_antenna_ant_t ant, uint8_t *ant_status)
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the antenna status!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -397,7 +406,7 @@ int isis_antenna_get_antenna_timeout(isis_antenna_ant_t ant, uint8_t *ant_timeou
         case ISIS_ANTENNA_ANT_3:    break;
         case ISIS_ANTENNA_ANT_4:    break;
         default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the antenna timeout! ");
             sys_log_print_int(ant);
             sys_log_print_msg(" is an invalid antenna!");
@@ -424,7 +433,7 @@ int isis_antenna_get_antenna_timeout(isis_antenna_ant_t ant, uint8_t *ant_timeou
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the antenna timeout!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -446,7 +455,7 @@ int isis_antenna_get_burning(isis_antenna_ant_t ant, uint8_t *ant_burn)
         case ISIS_ANTENNA_ANT_3:    break;
         case ISIS_ANTENNA_ANT_4:    break;
         default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the antenna burning! ");
             sys_log_print_int(ant);
             sys_log_print_msg(" is an invalid antenna!");
@@ -473,7 +482,7 @@ int isis_antenna_get_burning(isis_antenna_ant_t ant, uint8_t *ant_burn)
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the antenna burning!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -498,7 +507,7 @@ int isis_antenna_get_arming_status(bool *armed)
     }
     else
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the arming status!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -513,13 +522,13 @@ int isis_antenna_get_raw_temperature(uint16_t *temp)
 
     uint8_t cmd = ISIS_ANTENNA_CMD_MEASURE_TEMPERATURE;
 
-    if (i2c_write(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, &cmd, 1) == 0)
+    if (isis_antenna_i2c_write(&cmd, 1) == 0)
     {
         isis_antenna_delay_ms(100);
 
         uint8_t temp_bytes[2] = {0};
 
-        if (i2c_read(ISIS_ANTENNA_I2C_PORT, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, temp_bytes, 2) == 0)
+        if (isis_antenna_i2c_read(temp_bytes, 2) == 0)
         {
             uint16_t raw_data = ((uint16_t)temp_bytes[0] << 8) | temp_bytes[1];
 
@@ -529,7 +538,7 @@ int isis_antenna_get_raw_temperature(uint16_t *temp)
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the raw temperature!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -537,7 +546,7 @@ int isis_antenna_get_raw_temperature(uint16_t *temp)
     }
     else
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error writing the command to read the raw temperature!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -550,7 +559,7 @@ int16_t isis_antenna_raw_to_temp_c(uint16_t raw)
 {
     int16_t res = INT16_MAX;
 
-    uint32_t vout = (ISIS_ANTENNA_REF_VOLTAGE/1023.0) * raw;
+    uint32_t vout = (ISIS_ANTENNA_REF_VOLTAGE/1023.0) * (uint32_t)raw;
 
 /*    if (vout >= 2616U)          { res = -50; }
     else if (vout >= 2607U)     { res = -49; }
@@ -772,10 +781,33 @@ int isis_antenna_get_temperature_c(int16_t *temp)
     }
     else
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, ISIS_ANTENNA_MODULE_NAME, "Error reading the temperature!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+    }
+
+    return err;
+}
+
+int isis_antenna_get_temperature_k(isis_antenna_temp_t *temp)
+{
+    int err = -1;
+
+    int16_t temp_c = INT16_MAX;
+
+    if (isis_antenna_get_temperature_c(&temp_c) == 0)
+    {
+        if (temp_c != INT16_MAX)
+        {
+            *temp = temp_c + 273;
+        }
+        else
+        {
+            *temp = UINT16_MAX;
+        }
+
+        err = 0;
     }
 
     return err;

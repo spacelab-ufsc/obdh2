@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.9
+ * \version 0.8.19
  * 
  * \date 2021/02/16
  * 
@@ -47,17 +47,20 @@
 
 #define WATCHDOG_INTERNAL_CLK_SRC       WDT_CLK_SRC_ACLK
 #define WATCHDOG_INTERNAL_CLK_DIV       WDT_CLK_DIV_32K
-#define WATCHDOG_EXTERNAL_PIN           GPIO_PIN_66
+#define WATCHDOG_EXTERNAL_WDI_PIN       GPIO_PIN_66
+#define WATCHDOG_EXTERNAL_MR_PIN        GPIO_PIN_69
 
 static void watchdog_init_test(void **state)
 {
     expect_value(__wrap_wdt_init, config.clk_src, WATCHDOG_INTERNAL_CLK_SRC);
     expect_value(__wrap_wdt_init, config.clk_div, WATCHDOG_INTERNAL_CLK_DIV);
 
-    expect_value(__wrap_tps382x_init, config.wdi_pin, WATCHDOG_EXTERNAL_PIN);
-    will_return(__wrap_tps382x_init, 0);
-
     will_return(__wrap_wdt_init, 0);
+
+    expect_value(__wrap_tps382x_init, config.wdi_pin, WATCHDOG_EXTERNAL_WDI_PIN);
+    expect_value(__wrap_tps382x_init, config.mr_pin, WATCHDOG_EXTERNAL_MR_PIN);
+
+    will_return(__wrap_tps382x_init, 0);
 
     assert_return_code(watchdog_init(), 0);
 }
@@ -66,9 +69,12 @@ static void watchdog_reset_test(void **state)
 {
     expect_function_call(__wrap_wdt_reset);
 
-    expect_value(__wrap_tps382x_trigger, config.wdi_pin, WATCHDOG_EXTERNAL_PIN);
+    expect_value(__wrap_tps382x_trigger, config.wdi_pin, WATCHDOG_EXTERNAL_WDI_PIN);
+    expect_value(__wrap_tps382x_trigger, config.mr_pin, WATCHDOG_EXTERNAL_MR_PIN);
 
-    watchdog_reset();
+    will_return(__wrap_tps382x_trigger, 0);
+
+    assert_return_code(watchdog_reset(), 0);
 }
 
 int main(void)

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.47
+ * \version 0.8.5
  * 
  * \date 2021/05/14
  * 
@@ -64,13 +64,21 @@ void vTaskReadTTC(void)
             sys_log_new_line();
         }
 
-        if (ttc_get_data(TTC_0, &sat_data_buf.ttc_0) != 0)
+        if (ttc_get_data(TTC_0, &sat_data_buf.ttc_0.data) == 0)
+        {
+            sat_data_buf.ttc_0.timestamp = system_get_time();
+        }
+        else
         {
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_TTC_NAME, "Error reading data from the TTC 0 device!");
             sys_log_new_line();
         }
 
-        if (ttc_get_data(TTC_1, &sat_data_buf.ttc_1) != 0)
+        if (ttc_get_data(TTC_1, &sat_data_buf.ttc_1.data) == 0)
+        {
+            sat_data_buf.ttc_1.timestamp = system_get_time();
+        }
+        else
         {
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_TTC_NAME, "Error reading data from the TTC 1 device!");
             sys_log_new_line();

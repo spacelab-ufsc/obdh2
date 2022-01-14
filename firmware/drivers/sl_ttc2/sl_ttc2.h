@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.34
+ * \version 0.8.13
  * 
  * \date 2021/05/12
  * 
@@ -524,6 +524,56 @@ int sl_ttc2_transmit_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t len
  * \return The status/error code.
  */
 int sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len);
+
+/**
+ * \brief SPI interface initialization.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \return The status/error code.
+ */
+int sl_ttc2_spi_init(sl_ttc2_config_t config);
+
+/**
+ * \brief Writes the device using the SPI interface.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] data is an array of bytes to write.
+ *
+ * \param[in] len is the number of bytes to write.
+ *
+ * \return The status/error code.
+ */
+int sl_ttc2_spi_write(sl_ttc2_config_t config, uint8_t *data, uint16_t len);
+
+/**
+ * \brief Reads the device using the SPI interface.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] data is an array to store the read bytes.
+ *
+ * \param[in] len is the number of bytes to write.
+ *
+ * \return The status/error code.
+ */
+int sl_ttc2_spi_read(sl_ttc2_config_t config, uint8_t *data, uint16_t len);
+
+/**
+ * \brief SPI transfer operation (write and/or read).
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] wdata is a pointer to the data to be written during the SPI transfer.
+ *
+ * \param[in,out] rdata is a pointer to store the read data during the SPI transfer.
+ *
+ * \param[in] len is the number of bytes of the transfer operation.
+ *
+ * \return The status/error code.
+ */
+int sl_ttc2_spi_transfer(sl_ttc2_config_t config, uint8_t *wdata, uint8_t *rdata, uint16_t len);
 
 /**
  * \brief Milliseconds delay.
