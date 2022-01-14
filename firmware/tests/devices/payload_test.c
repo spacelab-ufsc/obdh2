@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.8
+ * \version 0.8.17
  * 
  * \date 2021/08/16
  * 
@@ -45,14 +45,26 @@
 #include <drivers/gpio/gpio.h>
 #include <drivers/i2c/i2c.h>
 
+#define EDC_0_I2C_PORT              I2C_PORT_0
+#define EDC_0_I2C_CLOCK_HZ          400000UL
+#define EDC_0_GPIO_EN_PIN           GPIO_PIN_29
+
+#define EDC_1_I2C_PORT              I2C_PORT_0
+#define EDC_1_I2C_CLOCK_HZ          400000UL
+#define EDC_1_GPIO_EN_PIN           GPIO_PIN_30
+
 static void payload_init_test(void **state)
 {
-    expect_value(__wrap_edc_init, config.port, I2C_PORT_0);
-    expect_value(__wrap_edc_init, config.bitrate, 400000);
+    /* EDC 0 */
+    expect_value(__wrap_edc_init, config.port, EDC_0_I2C_PORT);
+    expect_value(__wrap_edc_init, config.bitrate, EDC_1_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_init, config.en_pin, EDC_0_GPIO_EN_PIN);
 
     will_return(__wrap_edc_init, 0);
 
-    will_return(__wrap_edc_pause_ptt_task, 0);
+    expect_value(__wrap_edc_get_hk, config.port, EDC_0_I2C_PORT);
+    expect_value(__wrap_edc_get_hk, config.bitrate, EDC_0_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_get_hk, config.en_pin, EDC_0_GPIO_EN_PIN);
 
     will_return(__wrap_edc_get_hk, 0);      /* Current time */
     will_return(__wrap_edc_get_hk, 5);      /* Elapsed time */
@@ -67,7 +79,34 @@ static void payload_init_test(void **state)
 
     will_return(__wrap_edc_get_hk, 0);
 
-    assert_return_code(payload_init(PAYLOAD_EDC), 0);
+    assert_return_code(payload_init(PAYLOAD_EDC_0), 0);
+
+    /* EDC 1 */
+    expect_value(__wrap_edc_init, config.port, EDC_1_I2C_PORT);
+    expect_value(__wrap_edc_init, config.bitrate, EDC_1_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_init, config.en_pin, EDC_1_GPIO_EN_PIN);
+
+    will_return(__wrap_edc_init, 0);
+
+    expect_value(__wrap_edc_get_hk, config.port, EDC_1_I2C_PORT);
+    expect_value(__wrap_edc_get_hk, config.bitrate, EDC_1_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_get_hk, config.en_pin, EDC_1_GPIO_EN_PIN);
+
+    will_return(__wrap_edc_get_hk, 0);      /* Current time */
+    will_return(__wrap_edc_get_hk, 5);      /* Elapsed time */
+    will_return(__wrap_edc_get_hk, 100);    /* Current supply */
+    will_return(__wrap_edc_get_hk, 5000);   /* Voltage supply */
+    will_return(__wrap_edc_get_hk, 18);     /* Temperature */
+    will_return(__wrap_edc_get_hk, 1);      /* PLL sync bit */
+    will_return(__wrap_edc_get_hk, 4);      /* ADC RMS */
+    will_return(__wrap_edc_get_hk, 1);      /* Number of RX PTT */
+    will_return(__wrap_edc_get_hk, 6);      /* Max parl decode */
+    will_return(__wrap_edc_get_hk, 0);      /* Memory error count */
+
+    will_return(__wrap_edc_get_hk, 0);
+
+    assert_return_code(payload_init(PAYLOAD_EDC_1), 0);
+
 //    assert_return_code(payload_init(PAYLOAD_X), 0);
 
     expect_value(__wrap_phj_init_i2c, config.port, I2C_PORT_0);
@@ -86,9 +125,24 @@ static void payload_init_test(void **state)
 
 static void payload_enable_test(void **state)
 {
-    will_return(__wrap_edc_resume_ptt_task, 0);
+    /* EDC 0 */
+    expect_value(__wrap_edc_enable, config.port, EDC_0_I2C_PORT);
+    expect_value(__wrap_edc_enable, config.bitrate, EDC_0_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_enable, config.en_pin, EDC_0_GPIO_EN_PIN);
 
-    assert_return_code(payload_enable(PAYLOAD_EDC), 0);
+    will_return(__wrap_edc_enable, 0);
+
+    assert_return_code(payload_enable(PAYLOAD_EDC_0), 0);
+
+    /* EDC 1 */
+    expect_value(__wrap_edc_enable, config.port, EDC_1_I2C_PORT);
+    expect_value(__wrap_edc_enable, config.bitrate, EDC_1_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_enable, config.en_pin, EDC_1_GPIO_EN_PIN);
+
+    will_return(__wrap_edc_enable, 0);
+
+    assert_return_code(payload_enable(PAYLOAD_EDC_1), 0);
+
 //    assert_return_code(payload_enable(PAYLOAD_X), 0);
 //    assert_return_code(payload_enable(PAYLOAD_PHJ), 0);
 //    assert_return_code(payload_enable(PAYLOAD_HARSH), 0);
@@ -96,9 +150,24 @@ static void payload_enable_test(void **state)
 
 static void payload_disable_test(void **state)
 {
-    will_return(__wrap_edc_pause_ptt_task, 0);
+    /* EDC 0 */
+    expect_value(__wrap_edc_disable, config.port, EDC_0_I2C_PORT);
+    expect_value(__wrap_edc_disable, config.bitrate, EDC_0_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_disable, config.en_pin, EDC_0_GPIO_EN_PIN);
 
-    assert_return_code(payload_disable(PAYLOAD_EDC), 0);
+    will_return(__wrap_edc_disable, 0);
+
+    assert_return_code(payload_disable(PAYLOAD_EDC_0), 0);
+
+    /* EDC 1 */
+    expect_value(__wrap_edc_disable, config.port, EDC_1_I2C_PORT);
+    expect_value(__wrap_edc_disable, config.bitrate, EDC_1_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_disable, config.en_pin, EDC_1_GPIO_EN_PIN);
+
+    will_return(__wrap_edc_disable, 0);
+
+    assert_return_code(payload_disable(PAYLOAD_EDC_1), 0);
+//    assert_return_code(payload_disable(PAYLOAD_X), 0);
 //    assert_return_code(payload_disable(PAYLOAD_X), 0);
 //    assert_return_code(payload_disable(PAYLOAD_PHJ), 0);
 //    assert_return_code(payload_disable(PAYLOAD_HARSH), 0);
@@ -106,7 +175,7 @@ static void payload_disable_test(void **state)
 
 static void payload_write_cmd_test(void **state)
 {
-//    assert_return_code(payload_write_cmd(PAYLOAD_EDC, ), 0);
+//    assert_return_code(payload_write_cmd(PAYLOAD_EDC_0, ), 0);
 //    assert_return_code(payload_write_cmd(PAYLOAD_X, ), 0);
 //    assert_return_code(payload_write_cmd(PAYLOAD_PHJ, ), 0);
 //    assert_return_code(payload_write_cmd(PAYLOAD_HARSH, ), 0);
@@ -121,7 +190,7 @@ static void payload_get_data_test(void **state)
 
 //    uint32_t raw_state_len = 0;
 
-//    assert_return_code(payload_get_data(PAYLOAD_EDC, PAYLOAD_EDC_RAW_STATE, raw_state_data, &raw_state_len), 0);
+//    assert_return_code(payload_get_data(PAYLOAD_EDC_0, PAYLOAD_EDC_RAW_STATE, raw_state_data, &raw_state_len), 0);
 
 //    uint8_t raw_hk_data[500] = {0xFF};
 
@@ -130,7 +199,7 @@ static void payload_get_data_test(void **state)
 
 //    uint32_t raw_hk_len = 0;
 
-//    assert_return_code(payload_get_data(PAYLOAD_EDC, PAYLOAD_EDC_RAW_HK, raw_hk_data, &raw_hk_len), 0);
+//    assert_return_code(payload_get_data(PAYLOAD_EDC_0, PAYLOAD_EDC_RAW_HK, raw_hk_data, &raw_hk_len), 0);
 //    assert_return_code(payload_get_data(PAYLOAD_X, ), 0);
 //    assert_return_code(payload_get_data(PAYLOAD_PHJ, ), 0);
 //    assert_return_code(payload_get_data(PAYLOAD_HARSH, ), 0);

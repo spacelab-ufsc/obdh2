@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.35
+ * \version 0.8.12
  * 
  * \date 2020/02/01
  * 
@@ -41,7 +41,9 @@
 
 #include <drivers/tca4311a/tca4311a.h>
 
-#define SL_EPS2_SLAVE_ADR                       0x36    /**< 7-bit slave address. */
+#define SL_EPS2_MODULE_NAME                     "SpaceLab EPS 2.0"
+
+#define SL_EPS2_I2C_SLAVE_ADR                   0x36    /**< 7-bit slave address. */
 
 #define SL_EPS2_DEVICE_ID                       0xEEE2U /**< EPS 2.0 device ID. */
 
@@ -726,6 +728,35 @@ int sl_eps2_set_heater_mode(sl_eps2_config_t config, uint8_t heater, uint8_t mod
  * \return The status/error code.
  */
 int sl_eps2_get_heater_mode(sl_eps2_config_t config, uint8_t heater, uint8_t *val);
+
+/**
+ * \brief Initializes the I2C port.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_i2c_init(sl_eps2_config_t config);
+
+/**
+ * \brief Writes a given sequence of bytes to the I2C bus.
+ *
+ * \param[in] data is array of bytes to write.
+ *
+ * \param[in] len is the number of bytes to write .
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_i2c_write(sl_eps2_config_t config, uint8_t *data, uint16_t len);
+
+/**
+ * \brief Reads data from the I2C bus.
+ *
+ * \param[in] data is a pointer to store the read bytes.
+ *
+ * \param[in] len is the number of bytes to read.
+ *
+ * \return The status/error code.
+ */
+int sl_eps2_i2c_read(sl_eps2_config_t config, uint8_t *data, uint16_t len);
 
 /**
  * \brief Milliseconds delay.

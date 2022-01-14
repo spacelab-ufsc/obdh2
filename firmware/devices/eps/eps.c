@@ -1,7 +1,7 @@
 /*
  * eps.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.22
+ * \version 0.8.35
  * 
  * \date 2020/02/01
  * 
@@ -41,9 +41,9 @@
 
 #include "eps.h"
 
-sl_eps2_config_t eps_config = {0};
+static sl_eps2_config_t eps_config = {0};
 
-bool eps_is_open = false;
+static bool eps_is_open = false;
 
 int eps_init(void)
 {
@@ -85,6 +85,16 @@ int eps_init(void)
     }
 
     return err;
+}
+
+int eps_set_param(eps_param_id_t param, uint32_t val)
+{
+    return sl_eps2_write_reg(eps_config, param, val);
+}
+
+int eps_get_param(eps_param_id_t param, uint32_t *val)
+{
+    return sl_eps2_read_reg(eps_config, param, val);
 }
 
 int eps_get_bat_voltage(eps_voltage_t *bat_volt)

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.37
+ * \version 0.8.9
  * 
  * \date 2021/04/07
  * 
@@ -38,7 +38,7 @@
 
 #include "rtc.h"
 
-rtc_calendar_t calendar_buf = {0};
+static rtc_calendar_t calendar_buf = {0};
 
 int rtc_init(void)
 {
@@ -66,7 +66,7 @@ int rtc_set_calendar(rtc_calendar_t calendar)
 
     if (calendar.Seconds > 59)
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, RTC_MODULE_NAME, "Invalid calendar data! The seconds are out of range!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -75,7 +75,7 @@ int rtc_set_calendar(rtc_calendar_t calendar)
 
     if (calendar.Minutes > 59)
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, RTC_MODULE_NAME, "Invalid calendar data! The minutes are out of range!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -84,7 +84,7 @@ int rtc_set_calendar(rtc_calendar_t calendar)
 
     if (calendar.Hours > 23)
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, RTC_MODULE_NAME, "Invalid calendar data! The hours are out of range!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -93,7 +93,7 @@ int rtc_set_calendar(rtc_calendar_t calendar)
 
     if (calendar.DayOfWeek > 6)
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, RTC_MODULE_NAME, "Invalid calendar data! The day of the week is out of range!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -102,7 +102,7 @@ int rtc_set_calendar(rtc_calendar_t calendar)
 
     if (calendar.DayOfMonth > 31)
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, RTC_MODULE_NAME, "Invalid calendar data! The day of the month is out of range!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -111,7 +111,7 @@ int rtc_set_calendar(rtc_calendar_t calendar)
 
     if (calendar.Month > 12)
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, RTC_MODULE_NAME, "Invalid calendar data! The month is out of range!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -120,7 +120,7 @@ int rtc_set_calendar(rtc_calendar_t calendar)
 
     if (calendar.Year > 4095)
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, RTC_MODULE_NAME, "Invalid calendar data! The year is out of range!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -141,7 +141,7 @@ __interrupt
 #elif defined(__GNUC__)
 __attribute__((interrupt(RTC_VECTOR)))
 #endif
-void RTC_B_ISR(void)
+void RTC_B_ISR(void)    // cppcheck-suppress misra-c2012-8.4
 {
     switch(__even_in_range(RTCIV, 16))
     {

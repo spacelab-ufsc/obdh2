@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.4
+ * \version 0.8.16
  * 
  * \date 2021/08/15
  * 
@@ -46,7 +46,8 @@
  */
 typedef enum
 {
-    PAYLOAD_EDC=0,              /**< Payload EDC. */
+    PAYLOAD_EDC_0=0,            /**< Payload EDC 0. */
+    PAYLOAD_EDC_1,              /**< Payload EDC 1. */
     PAYLOAD_X,                  /**< Payload-X. */
     PAYLOAD_PHJ,                /**< Payload PHJ. */
     PAYLOAD_HARSH               /**< Payload Harsh. */

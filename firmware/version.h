@@ -1,7 +1,7 @@
 /*
  * version.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.0
+ * \version 0.8.42
  * 
  * \date 2019/10/25
  * 
@@ -36,7 +36,7 @@
 #ifndef VERSION_H_
 #define VERSION_H_
 
-#define FIRMWARE_VERSION            "0.8.0"
+#define FIRMWARE_VERSION            "0.8.42"
 
 #define FIRMWARE_STATUS             "Development"
 

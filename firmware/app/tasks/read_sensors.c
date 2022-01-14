@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.47
+ * \version 0.8.5
  * 
  * \date 2020/07/12
  * 
@@ -58,23 +58,23 @@ void vTaskReadSensors(void)
         /* OBDH current */
         if (current_sensor_read_ma(&buf) == 0)
         {
-            sat_data_buf.obdh.current = buf;
+            sat_data_buf.obdh.data.current = buf;
         }
 
         /* OBDH voltage */
         if (voltage_sensor_read_mv(&buf) == 0)
         {
-            sat_data_buf.obdh.voltage = buf;
+            sat_data_buf.obdh.data.voltage = buf;
         }
 
         /* OBDH temperature */
         if (temp_sensor_read_raw(&buf) == 0)
         {
-            sat_data_buf.obdh.temperature = buf;
+            sat_data_buf.obdh.data.temperature = buf;
         }
 
         /* Data timestamp */
-        sat_data_buf.obdh.timestamp = (uint32_t)xTaskGetTickCount();
+        sat_data_buf.obdh.timestamp = system_get_time();
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_SENSORS_PERIOD_MS));
     }

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.33
+ * \version 0.8.9
  * 
  * \date 2019/12/07
  * 
@@ -45,12 +45,12 @@
 
 #include "spi.h"
 
-bool spi_port_0_is_open = false;
-bool spi_port_1_is_open = false;
-bool spi_port_2_is_open = false;
-bool spi_port_3_is_open = false;
-bool spi_port_4_is_open = false;
-bool spi_port_5_is_open = false;
+static bool spi_port_0_is_open = false;
+static bool spi_port_1_is_open = false;
+static bool spi_port_2_is_open = false;
+static bool spi_port_3_is_open = false;
+static bool spi_port_4_is_open = false;
+static bool spi_port_5_is_open = false;
 
 /**
  * \brief Checks if a SPI port is already initialized or not.
@@ -59,9 +59,9 @@ bool spi_port_5_is_open = false;
  *
  * \return TRUE/FALSE if the given port is already initialized or not.
  */
-bool spi_check_port(spi_port_t port);
+static bool spi_check_port(spi_port_t port);
 
-int spi_setup_gpio(spi_port_t port)
+static int spi_setup_gpio(spi_port_t port)
 {
     int err = 0;
 
@@ -104,7 +104,7 @@ int spi_setup_gpio(spi_port_t port)
             GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P9, GPIO_PIN1 + GPIO_PIN5 + GPIO_PIN6);
             break;
         default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error during GPIO configuration: Invalid port!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -132,7 +132,7 @@ int spi_select_slave(spi_port_t port, spi_cs_t cs, bool active)
                 case SPI_CS_4:      gpio_set_state(GPIO_PIN_46, !active);     break;
                 case SPI_CS_NONE:                                             break;
                 default:
-                #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                     sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error selecting a slave from port 0: Invalid CS pin!");
                     sys_log_new_line();
                 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -158,7 +158,7 @@ int spi_select_slave(spi_port_t port, spi_cs_t cs, bool active)
             /* TODO: Define the CS pins pf port 5 */
             break;
         default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error selecting a slave: Invalid port!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -187,7 +187,7 @@ int spi_init(spi_port_t port, spi_config_t config)
             case SPI_PORT_4:    base_address = USCI_B1_BASE;    break;
             case SPI_PORT_5:    base_address = USCI_B2_BASE;    break;
             default:
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error during initialization: Invalid port!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -229,7 +229,7 @@ int spi_init(spi_port_t port, spi_config_t config)
                             spi_params.clockPolarity    = USCI_A_SPI_CLOCKPOLARITY_INACTIVITY_HIGH;
                             break;
                         default:
-                        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                             sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error during initialization: Invalid mode!");
                             sys_log_new_line();
                         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -244,7 +244,7 @@ int spi_init(spi_port_t port, spi_config_t config)
                     }
                     else
                     {
-                    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                         sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error configuring as master!");
                         sys_log_new_line();
                     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -280,7 +280,7 @@ int spi_init(spi_port_t port, spi_config_t config)
                             spi_params.clockPolarity    = USCI_B_SPI_CLOCKPOLARITY_INACTIVITY_HIGH;
                             break;
                         default:
-                        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                             sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error during initialization: Invalid mode!");
                             sys_log_new_line();
                         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -297,7 +297,7 @@ int spi_init(spi_port_t port, spi_config_t config)
                         }
                         else
                         {
-                        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+                        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                             sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error configuring as master!");
                             sys_log_new_line();
                         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -327,7 +327,7 @@ int spi_init(spi_port_t port, spi_config_t config)
     return err;
 }
 
-void spi_write_byte(uint16_t base_address, uint8_t byte)
+static void spi_write_byte(uint16_t base_address, uint8_t byte)
 {
     if ((base_address == USCI_A0_BASE) || (base_address == USCI_A1_BASE) || (base_address == USCI_A2_BASE))
     {
@@ -355,7 +355,7 @@ void spi_write_byte(uint16_t base_address, uint8_t byte)
     }
 }
 
-uint8_t spi_read_byte(uint16_t base_address)
+static uint8_t spi_read_byte(uint16_t base_address)
 {
     uint8_t res = 0;
 
@@ -387,7 +387,7 @@ uint8_t spi_read_byte(uint16_t base_address)
     return res;
 }
 
-uint8_t spi_transfer_byte(uint16_t base_address, uint8_t wb)
+static uint8_t spi_transfer_byte(uint16_t base_address, uint8_t wb)
 {
     spi_write_byte(base_address, wb);
 
@@ -409,7 +409,7 @@ int spi_write(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len)
         case SPI_PORT_4:    base_address = USCI_B1_BASE;    break;
         case SPI_PORT_5:    base_address = USCI_B2_BASE;    break;
         default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error during writing: Invalid port!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -442,7 +442,7 @@ int spi_write(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len)
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error during writing: Port ");
             sys_log_print_uint(port);
             sys_log_print_msg(" is not initialized!");
@@ -470,7 +470,7 @@ int spi_read(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len)
         case SPI_PORT_4:    base_address = USCI_B1_BASE;    break;
         case SPI_PORT_5:    base_address = USCI_B2_BASE;    break;
         default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error during reading: Invalid port!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -503,7 +503,7 @@ int spi_read(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len)
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error during writing: Port ");
             sys_log_print_uint(port);
             sys_log_print_msg(" is not initialized!");
@@ -557,7 +557,7 @@ int spi_transfer(spi_port_t port, spi_cs_t cs, uint8_t *wd, uint8_t *rd, uint16_
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error during writing: Port ");
             sys_log_print_uint(port);
             sys_log_print_msg(" is not initialized!");

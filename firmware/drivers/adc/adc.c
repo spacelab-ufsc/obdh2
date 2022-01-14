@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.28
+ * \version 0.8.5
  * 
  * \date 2020/03/03
  * 
@@ -46,16 +46,15 @@
 
 #include "adc.h"
 
-bool adc_is_ready = false;
-
-float adc_mref = 0;
-float adc_nref = 0;
-
-uint8_t adc_cal_bytes;
-struct s_TLV_ADC_Cal_Data *adc_cal_data;
+static float adc_mref = 0.0;
+static float adc_nref = 0.0;
 
 int adc_init(void)
 {
+    static bool adc_is_ready = false;
+    static uint8_t adc_cal_bytes = 0U;
+    static struct s_TLV_ADC_Cal_Data *adc_cal_data;
+
     if (!adc_is_ready)
     {
         /* Daughterboard, current and voltage sensor pins */
@@ -147,14 +146,14 @@ int adc_init(void)
         /* Temperature sensor calibration data */
         TLV_getInfo(TLV_TAG_ADCCAL, 0, &adc_cal_bytes, &adc_cal_data);
 
-        adc_mref = ((float)(adc_cal_data->adc_ref15_85_temp - adc_cal_data->adc_ref15_30_temp)) / (85 - 30);
+        adc_mref = ((float)(adc_cal_data->adc_ref15_85_temp - adc_cal_data->adc_ref15_30_temp)) / (85.0 - 30.0);
         adc_nref = adc_cal_data->adc_ref15_85_temp - (adc_mref * 85.0);
 
         adc_is_ready = true;
     }
     else
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_WARNING, ADC_MODULE_NAME, "ADC driver already initialized!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -521,7 +520,7 @@ int adc_read(adc_port_t port, uint16_t *val)
 
                 break;
             default:
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, ADC_MODULE_NAME, "Error reading the ADC port ");
                 sys_log_print_uint(port);
                 sys_log_print_msg("! Invalid port!");

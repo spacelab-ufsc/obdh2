@@ -1,7 +1,7 @@
 /*
  * satellite.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.23
+ * \version 0.8.22
  * 
  * \date 2020/07/16
  * 
@@ -38,21 +38,76 @@
 #define SATELLITE_H_
 
 #include <stdint.h>
+#include <stdbool.h>
+
+#include <system/system.h>
 
 #include <devices/eps/eps_data.h>
 #include <devices/ttc/ttc_data.h>
+#include <devices/antenna/antenna_data.h>
 
 #include "obdh_data.h"
+
+/**
+ * \brief OBDH telemetry type.
+ */
+typedef struct
+{
+    sys_time_t timestamp;           /**< Timestamp of the OBDH data. */
+    obdh_data_t data;               /**< OBDH data. */
+} obdh_telemetry_t;
+
+/**
+ * \brief EPS telemetry type.
+ */
+typedef struct
+{
+    sys_time_t timestamp;           /**< Timestamp of the EPS data. */
+    eps_data_t data;                /**< EPS data. */
+} eps_telemetry_t;
+
+/**
+ * \brief TTC telemetry type.
+ */
+typedef struct
+{
+    sys_time_t timestamp;           /**< Timestamp of the TTC data. */
+    ttc_data_t data;                /**< TTC data. */
+} ttc_telemetry_t;
+
+/**
+ * \brief Antenna telemetry type.
+ */
+typedef struct
+{
+    sys_time_t timestamp;           /**< Timestamp of the Antenna data. */
+    antenna_data_t data;            /**< Antenna data. */
+} antenna_telemetry_t;
+
+/**
+ * \brief Payload telemetry type.
+ */
+typedef struct
+{
+    sys_time_t timestamp;           /**< Timestamp of the Payload data. */
+    bool enabled;                   /**< Payload enable flag. */
+    uint8_t data[220];              /**< Payload data. */
+} payload_telemetry_t;
 
 /**
  * \brief Satellite data.
  */
 typedef struct
 {
-    obdh_data_t obdh;               /**< OBDH data. */
-    eps_data_t eps;                 /**< EPS data. */
-    ttc_data_t ttc_0;               /**< TTC 0 data. */
-    ttc_data_t ttc_1;               /**< TTC 1 data. */
+    obdh_telemetry_t obdh;          /**< OBDH telemetry. */
+    eps_telemetry_t eps;            /**< EPS telemetry. */
+    ttc_telemetry_t ttc_0;          /**< TTC 0 telemetry. */
+    ttc_telemetry_t ttc_1;          /**< TTC 1 telemetry. */
+    antenna_telemetry_t antenna;    /**< Antenna telemetry. */
+    payload_telemetry_t edc_0;      /**< EDC 0 telemetry. */
+    payload_telemetry_t edc_1;      /**< EDC 1 telemetry. */
+    payload_telemetry_t payload_x;  /**< Payload-X telemetry. */
+    payload_telemetry_t harsh;      /**< Harsh payload telemetry. */
 } sat_data_t;
 
 /**

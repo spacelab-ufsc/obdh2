@@ -1,0 +1,192 @@
+Yubikey-c-client NEWS -- History of user-visible changes.      -*- outline -*-
+
+* Version 2.15 (released 2015-11-12)
+
+** Add ykclient_get_server_response() to the library.
+
+** Show more information from the commandline on debug.
+
+** Add proxy support via Curl.
+
+* Version 2.14 (released 2015-03-05)
+
+** Switch default templates to https.
+
+** Fixup call to curl_easy_escape() to use a easy handle.
+
+* Version 2.13 (released 2014-09-12)
+
+** libykclient: Skip responses where the curl status isn't CURLE_OK.
+
+** libykclient: Add forgotten prototype for ykclient_set_ca_info.
+
+* Version 2.12 (released 2013-10-18)
+
+** Use pkg-config to find curl, instead of libcurl.m4.
+
+** ykclient: Added --cai parameter to specify GnuTLS-compatible CA Info.
+
+** libykclient: Added ykclient_set_ca_info function.
+Used when curl is linked with GnuTLS, used to set CA Info.
+
+** libykclient: Added ykclient_set_url_bases function.
+Uses a more reasonable/extensible URL string syntax.  The old
+ykclient_set_url_templates is hereby deprecated.
+
+** Added shared library versioning script.
+
+** Valgrind is used for selftests.
+
+* Version 2.11 (released 2013-07-24)
+
+** Fix breakage with latest automake.
+
+* Version 2.10 (released 2013-05-15)
+
+** Add ykclient_global_init and ykclient_global_done.
+
+** Add ykclient_version.h header file with versioning information.
+New symbols are YKCLIENT_VERSION_STRING, YKCLIENT_VERSION_NUMBER,
+YKCLIENT_VERSION_MAJOR, YKCLIENT_VERSION_MINOR,
+YKCLIENT_VERSION_PATCH.  New function ykclient_check_version.
+
+** Modified API to use 'ykclient_rc' enum as return type instead of 'int'.
+** Enum also moved to separate new header file ykclient_errors.h.
+This should be backwards compatible.  It makes the return type
+clearer.  From Arran Cudbard-Bell <a.cudbardb@freeradius.org>.
+
+** Improve curl multi usage.
+From Arran Cudbard-Bell <a.cudbardb@freeradius.org>.
+
+** ykclient: Cleanup command line tool a bit to make it more useful.
+Added --help, --version and --debug.  Defaults to silent output.  Exit
+codes are documented and more useful.  Added manpage.
+
+* Version 2.9 (released 2012-08-07)
+
+** Compability with curl versions before 7.20.
+
+** Fix signature checking on ARM (at least).
+
+* Version 2.8 (released 2012-06-15)
+
+** ykclient: Add C++ namespace protection.
+
+** Add multi-server support with curl_multi.
+   Enabled by default for YubiCloud servers.
+   Settable with the new library function set_template_urls() or
+   the urls parameter to ykclient_verify_otp_v2().
+
+** Remove extra % in ykclient help.
+
+** Add ca path option to ykclient, --ca.
+   Patch from Jay Kline <jay.kline.ctr@hpcmo.hpc.mil>.
+
+** Make the nonce unique for consecutive calls to the same ykclient handle.
+
+** Do url encoding of OTP before sending.
+
+** Fix segfault on curl error.
+   Patch from Lee Hinman <lee.hinman.ctr@hpc.mil>
+
+* Version 2.7 (released 2011-11-23)
+
+** Verify server signatures per default when a key is provided. The old
+behavior can be restored with ykclient_set_verify_signature (ykc, 0);
+Reported by Dominic Rutherford <dominic@rutherfordfamily.co.uk>.
+
+** Return YKCLIENT_BAD_SERVER_SIGNATURE on missing signature.
+
+* Version 2.6 (released 2011-06-06)
+
+** Use fprintf+exit instead of glibc-ism errx.
+Reported by Jussi Sallinen <jussi@jus.si>.
+
+** Indent code and replace // comments with /* */ comments (for C89).
+
+** Fix dates of releases for 2.4 and 2.5 below (2011 not 2010).
+
+* Version 2.5 (released 2011-05-31)
+
+** Implement almost all of Validation protocol 2.0.
+The part still known to be missing is parallell querys to all validation
+servers using curl-multi. Includes significant patches by
+Sebastien Martini <seb@dbzteam.org> and qistoph@gmail.com.
+
+* Version 2.4 (released 2011-03-02)
+
+** Add possibility to supply validation service URL.
+Patch by Remi Mollon <remi.mollon@cern.ch>.
+
+** Make Validation protocol 2.0 servers not reject our requests.
+They would reject our requests because they did not have a nonce
+parameter. Patch by Remi Mollon <remi.mollon@cern.ch>.
+
+** Add new API ykclient_set_ca_path to set a trusted CA certificates path.
+
+** Fix issue with insecure rpath in the ykclient executable.
+
+** Documentation converted to asciidoc after move to Github.
+
+* Version 2.3 (released 2009-05-11)
+
+** Add new API ykclient_set_client_b64 to set client key in b64 format.
+
+** Fix memory leaks.
+
+** Fix usage when sending multiple requests.
+
+* Version 2.2 (released 2009-03-31)
+
+** Add new API ykclient_set_client_hex to set client key in hex format.
+
+** Change API ykclient_verify_otp to take a hex key rather than a binary one.
+
+** Improved instructions in README on how to build the package.
+
+* Version 2.1 (released 2009-03-25)
+
+** Add new API ykclient_get_last_url, mostly for debugging purposes.
+
+** Create signatures on requests.
+
+* Version 2.0 (released 2009-03-25)
+
+** Major rewrite of library.
+The library changed name from libyubikey-client.* to libykclient.* and
+the header file changed from libykclient.h to ykclient.h.  All
+interfaces were also renamed, see ykclient.h.
+
+* Version 1.5 (released 2009-01-13)
+
+** Add libtool -export-symbols-regex to restrict exported symbols.
+
+** Avoid use of asprintf, to make it work under Solaris too.
+
+** Fix memory leaks.
+
+* Version 1.4 (released 2008-09-15)
+
+** Added include paths to make aclocal find libcurl.m4.
+Thanks to Oden Eriksson <oeriksson@mandriva.com>.
+
+* Version 1.3 (released 2008-09-15)
+
+** ykclient: Add new API yubikey_client_set_url_template.
+Allows setting a private server to query.
+
+* Version 1.2 (released 2008-07-24)
+
+** ykclient: Set exit code as per OTP verification result.
+Inspired by discussion in
+<http://forum.yubico.com/viewtopic.php?f=3&t=89>.
+
+** Install libykclient.h.
+
+* Version 1.1 (released 2008-06-25)
+
+** Install libykclient.h in $prefix.
+
+* Version 1.0 (released 2008-06-17)
+
+** Initial release, code from yubico-pam.

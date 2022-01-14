@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.27
+ * \version 0.8.10
  * 
  * \date 2020/07/21
  * 
@@ -42,7 +42,7 @@
 
 #include "media.h"
 
-cy15x102qn_config_t fram_conf = {0};
+static cy15x102qn_config_t fram_conf = {0};
 
 int media_init(media_t med)
 {
@@ -262,7 +262,15 @@ int media_erase(media_t med, media_erase_t type, uint32_t sector)
     {
         case MEDIA_INT_FLASH:
         {
-            uint8_t sector_conv = sector;
+            uint8_t sector_conv = UINT8_MAX;
+            if (sector > UINT8_MAX)
+            {
+                sector_conv = UINT8_MAX;
+            }
+            else
+            {
+                sector_conv = (uint8_t)sector;
+            }
 
             flash_write_single(0xFF, &sector_conv);
 

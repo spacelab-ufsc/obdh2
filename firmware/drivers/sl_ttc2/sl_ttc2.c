@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.34
+ * \version 0.8.13
  * 
  * \date 2021/05/12
  * 
@@ -49,7 +49,7 @@
  *
  * \return The computed CRC-16 value of the given data.
  */
-uint16_t sl_ttc2_crc16(uint8_t *data, uint16_t len);
+static uint16_t sl_ttc2_crc16(uint8_t *data, uint16_t len);
 
 /**
  * \brief Checks the CRC value of a given sequence of bytes.
@@ -62,13 +62,13 @@ uint16_t sl_ttc2_crc16(uint8_t *data, uint16_t len);
  *
  * \return TRUE/FALSE if the given CRC value is correct or not.
  */
-bool sl_ttc2_check_crc(uint8_t *data, uint16_t len, uint16_t crc);
+static bool sl_ttc2_check_crc(uint8_t *data, uint16_t len, uint16_t crc);
 
 int sl_ttc2_init(sl_ttc2_config_t config)
 {
     int err = -1;
 
-    if (spi_init(config.port, config.port_config) == 0)
+    if (sl_ttc2_spi_init(config) == 0)
     {
         sl_ttc2_delay_ms(10);
 
@@ -79,7 +79,7 @@ int sl_ttc2_init(sl_ttc2_config_t config)
     }
     else
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error initializing the SPI port!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -108,7 +108,7 @@ int sl_ttc2_check_device(sl_ttc2_config_t config)
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error checking the device! Invalid radio index!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -119,7 +119,7 @@ int sl_ttc2_check_device(sl_ttc2_config_t config)
         {
             if (id != ref_id)
             {
-            #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error checking the device! (read=");
                 sys_log_print_hex(id);
                 sys_log_print_msg(", expected=");
@@ -156,7 +156,7 @@ int sl_ttc2_write_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t val)
     buf[6] = (crc >> 8) & 0xFFU;
     buf[7] = (crc >> 0) & 0xFFU;
 
-    return spi_write(config.port, config.cs_pin, buf, 8);
+    return sl_ttc2_spi_write(config, buf, 8U);
 }
 
 int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
@@ -175,7 +175,7 @@ int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
     rbuf[1] = adr;
 
     /* Register data + Checksum */
-    if (spi_transfer(config.port, config.cs_pin, wbuf, rbuf, 8) == 0)
+    if (sl_ttc2_spi_transfer(config, wbuf, rbuf, 8U) == 0)
     {
         if (sl_ttc2_check_crc(rbuf, 6, ((uint16_t)rbuf[6] << 8) | (uint16_t)rbuf[7]))
         {
@@ -188,7 +188,7 @@ int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
         }
         else
         {
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the register ");
             sys_log_print_hex(adr);
             sys_log_print_msg("! Invalid data!");
@@ -198,7 +198,7 @@ int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
     }
     else
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the register ");
         sys_log_print_hex(adr);
         sys_log_print_msg("! Error during SPI transfer!");
@@ -397,7 +397,7 @@ int sl_ttc2_read_voltage(sl_ttc2_config_t config, uint8_t volt, sl_ttc2_voltage_
 
             break;
         default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the voltage! Invalid voltage type!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -428,7 +428,7 @@ int sl_ttc2_read_current(sl_ttc2_config_t config, uint8_t cur, sl_ttc2_current_t
 
             break;
         default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the current! Invalid current type!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -465,7 +465,7 @@ int sl_ttc2_read_temp(sl_ttc2_config_t config, uint8_t temp, sl_ttc2_temp_t *val
 
             break;
         default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the temperature! Invalid temperature type!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -543,7 +543,7 @@ int sl_ttc2_read_tx_enable(sl_ttc2_config_t config, uint8_t *val)
 
 int sl_ttc2_set_tx_enable(sl_ttc2_config_t config, bool en)
 {
-    return sl_ttc2_write_reg(config, SL_TTC2_REG_TX_ENABLE, (uint32_t)en);
+    return sl_ttc2_write_reg(config, SL_TTC2_REG_TX_ENABLE, (en? 1UL : 0UL));
 }
 
 int sl_ttc2_read_pkt_counter(sl_ttc2_config_t config, uint8_t pkt, uint32_t *val)
@@ -555,7 +555,7 @@ int sl_ttc2_read_pkt_counter(sl_ttc2_config_t config, uint8_t pkt, uint32_t *val
         case SL_TTC2_TX_PKT:    err = sl_ttc2_read_reg(config, SL_TTC2_REG_TX_PACKET_COUNTER, val);     break;
         case SL_TTC2_RX_PKT:    err = sl_ttc2_read_reg(config, SL_TTC2_REG_RX_PACKET_COUNTER, val);     break;
         default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the packet counter! Invalid packet type!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -586,7 +586,7 @@ int sl_ttc2_read_fifo_pkts(sl_ttc2_config_t config, uint8_t pkt, uint8_t *val)
 
             break;
         default:
-        #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the FIFO buffer! Invalid packet type!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -619,7 +619,7 @@ int sl_ttc2_check_pkt_avail(sl_ttc2_config_t config)
     }
     else
     {
-    #if CONFIG_DRIVERS_DEBUG_ENABLED == 1
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the available RX packets!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
@@ -643,7 +643,7 @@ int sl_ttc2_transmit_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t len
         buf[1U + len] = (crc >> 8) & 0xFFU;
         buf[1U + len + 1U] = (crc >> 0) & 0xFFU;
 
-        err = spi_write(config.port, config.cs_pin, buf, 1U + len + 2U);
+        err = sl_ttc2_spi_write(config, buf, 1U + len + 2U);
     }
 
     return err;
@@ -660,7 +660,7 @@ int sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len)
 
     if (sl_ttc2_read_len_rx_pkt_in_fifo(config, len) == 0)
     {
-        if (spi_transfer(config.port, config.cs_pin, wbuf, data, 1U + (*len) + 2U) == 0)
+        if (sl_ttc2_spi_transfer(config, wbuf, data, 1U + (*len) + 2U) == 0)
         {
             if (sl_ttc2_check_crc(data, 1U + (*len), sl_ttc2_crc16(data, 1U + (*len))))
             {
@@ -679,7 +679,7 @@ int sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len)
     return err;
 }
 
-uint16_t sl_ttc2_crc16(uint8_t *data, uint16_t len)
+static uint16_t sl_ttc2_crc16(uint8_t *data, uint16_t len)
 {
     uint8_t x;
     uint16_t crc = 0;   /* Initial value */
@@ -695,7 +695,7 @@ uint16_t sl_ttc2_crc16(uint8_t *data, uint16_t len)
     return crc;
 }
 
-bool sl_ttc2_check_crc(uint8_t *data, uint16_t len, uint16_t crc)
+static bool sl_ttc2_check_crc(uint8_t *data, uint16_t len, uint16_t crc)
 {
     return (crc == sl_ttc2_crc16(data, len));
 }

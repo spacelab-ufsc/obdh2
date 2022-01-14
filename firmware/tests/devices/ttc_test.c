@@ -1,7 +1,7 @@
 /*
  * ttc_test.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.22
+ * \version 0.8.35
  * 
  * \date 2021/08/06
  * 
@@ -133,6 +133,126 @@ static void ttc_init_test(void **state)
         }
 
         assert_return_code(ttc_init(ttc_dev), 0);
+    }
+}
+
+static void ttc_set_param_test(void **state)
+{
+    ttc_e ttc_dev = 0;
+
+    for(ttc_dev = 0; ttc_dev < UINT8_MAX; ttc_dev++)
+    {
+        uint8_t i = 0;
+
+        uint32_t par_val = generate_random(0, UINT32_MAX-1);
+
+        if (ttc_dev == TTC_0)
+        {
+            for(i = 0; i < UINT8_MAX; i++)
+            {
+                expect_value(__wrap_sl_ttc2_write_reg, config.port, TTC_0_SPI_PORT);
+                expect_value(__wrap_sl_ttc2_write_reg, config.cs_pin, TTC_0_SPI_CS_PIN);
+                expect_value(__wrap_sl_ttc2_write_reg, config.port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
+                expect_value(__wrap_sl_ttc2_write_reg, config.port_config.mode, TTC_0_SPI_MODE);
+                expect_value(__wrap_sl_ttc2_write_reg, config.id, TTC_0_ID);
+
+                expect_value(__wrap_sl_ttc2_write_reg, adr, i);
+
+                expect_value(__wrap_sl_ttc2_write_reg, val, par_val);
+
+                will_return(__wrap_sl_ttc2_write_reg, 0);
+
+                assert_return_code(ttc_set_param(ttc_dev, i, par_val), 0);
+            }
+        }
+        else if (ttc_dev == TTC_1)
+        {
+            for(i = 0; i < UINT8_MAX; i++)
+            {
+                expect_value(__wrap_sl_ttc2_write_reg, config.port, TTC_1_SPI_PORT);
+                expect_value(__wrap_sl_ttc2_write_reg, config.cs_pin, TTC_1_SPI_CS_PIN);
+                expect_value(__wrap_sl_ttc2_write_reg, config.port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
+                expect_value(__wrap_sl_ttc2_write_reg, config.port_config.mode, TTC_1_SPI_MODE);
+                expect_value(__wrap_sl_ttc2_write_reg, config.id, TTC_1_ID);
+
+                expect_value(__wrap_sl_ttc2_write_reg, adr, i);
+
+                expect_value(__wrap_sl_ttc2_write_reg, val, par_val);
+
+                will_return(__wrap_sl_ttc2_write_reg, 0);
+
+                assert_return_code(ttc_set_param(ttc_dev, i, par_val), 0);
+            }
+        }
+        else
+        {
+            assert_int_equal(ttc_set_param(ttc_dev, i, par_val), -1);
+
+            continue;
+        }
+    }
+}
+
+static void ttc_get_param_test(void **state)
+{
+    ttc_e ttc_dev = 0;
+
+    for(ttc_dev = 0; ttc_dev < UINT8_MAX; ttc_dev++)
+    {
+        uint8_t i = 0;
+
+        uint32_t par_val = generate_random(0, UINT32_MAX-1);
+
+        uint32_t par_buf = UINT32_MAX;
+
+        if (ttc_dev == TTC_0)
+        {
+            for(i = 0; i < UINT8_MAX; i++)
+            {
+                expect_value(__wrap_sl_ttc2_read_reg, config.port, TTC_0_SPI_PORT);
+                expect_value(__wrap_sl_ttc2_read_reg, config.cs_pin, TTC_0_SPI_CS_PIN);
+                expect_value(__wrap_sl_ttc2_read_reg, config.port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
+                expect_value(__wrap_sl_ttc2_read_reg, config.port_config.mode, TTC_0_SPI_MODE);
+                expect_value(__wrap_sl_ttc2_read_reg, config.id, TTC_0_ID);
+
+                expect_value(__wrap_sl_ttc2_read_reg, adr, i);
+
+                will_return(__wrap_sl_ttc2_read_reg, par_val);
+
+                will_return(__wrap_sl_ttc2_read_reg, 0);
+
+                assert_return_code(ttc_get_param(ttc_dev, i, &par_buf), 0);
+
+                assert_int_equal(par_val, par_buf);
+            }
+        }
+        else if (ttc_dev == TTC_1)
+        {
+            for(i = 0; i < UINT8_MAX; i++)
+            {
+                expect_value(__wrap_sl_ttc2_read_reg, config.port, TTC_1_SPI_PORT);
+                expect_value(__wrap_sl_ttc2_read_reg, config.cs_pin, TTC_1_SPI_CS_PIN);
+                expect_value(__wrap_sl_ttc2_read_reg, config.port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
+                expect_value(__wrap_sl_ttc2_read_reg, config.port_config.mode, TTC_1_SPI_MODE);
+                expect_value(__wrap_sl_ttc2_read_reg, config.id, TTC_1_ID);
+
+                expect_value(__wrap_sl_ttc2_read_reg, adr, i);
+
+                will_return(__wrap_sl_ttc2_read_reg, par_val);
+
+                will_return(__wrap_sl_ttc2_read_reg, 0);
+
+                assert_return_code(ttc_get_param(ttc_dev, i, &par_buf), 0);
+
+                assert_int_equal(par_val, par_buf);
+            }
+        }
+        else
+        {
+            assert_int_equal(ttc_get_param(ttc_dev, i, &par_buf), -1);
+
+            continue;
+        }
     }
 }
 
@@ -469,6 +589,8 @@ int main(void)
 {
     const struct CMUnitTest ttc_tests[] = {
         cmocka_unit_test(ttc_init_test),
+        cmocka_unit_test(ttc_set_param_test),
+        cmocka_unit_test(ttc_get_param_test),
         cmocka_unit_test(ttc_get_data_test),
         cmocka_unit_test(ttc_send_test),
         cmocka_unit_test(ttc_recv_test),
