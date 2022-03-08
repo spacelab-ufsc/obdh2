@@ -1,5 +1,18 @@
 ===========================================
 
+v0.9 - 2022/03/07
+
+- Adding enable/disable routines to the EDC driver
+- Adding an HMAC authentication library
+- Source files partially compliant with the MISRA-C:2012 standard
+- Implementatino of the telecommands processing
+- Initial hibernation and antenna deployment routines
+- Removing unused libraries
+- Unit tests and mockups implementation
+- General fixes and updates
+
+===========================================
+
 v0.8 - 2021/10/10
 
 - FRAM interface on media device
