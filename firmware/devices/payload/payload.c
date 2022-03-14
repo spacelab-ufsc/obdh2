@@ -1,7 +1,7 @@
 /*
  * payload.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
  * 
- * \version 0.8.17
+ * \version 0.9.1
  * 
  * \date 2021/08/15
  * 
@@ -34,6 +34,7 @@
  * \{
  */
 
+#include <system/system.h>
 #include <system/sys_log/sys_log.h>
 
 #include <drivers/gpio/gpio.h>
@@ -41,6 +42,8 @@
 #include <drivers/phj/phj.h>
 
 #include "payload.h"
+
+#define PAYLOAD_UNIX_TO_J2000_EPOCH(x)      ((x) - 946684800)   /* Unix to J2000 epoch conversion */
 
 static edc_config_t edc_0_conf = {0};
 static edc_config_t edc_1_conf = {0};
@@ -59,6 +62,12 @@ int payload_init(payload_t pl)
 
             if (edc_init(edc_0_conf) == 0)
             {
+                if (edc_set_rtc_time(edc_0_conf, PAYLOAD_UNIX_TO_J2000_EPOCH(system_get_time())) != 0)
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Error configuring the RTC time!");
+                    sys_log_new_line();
+                }
+
                 edc_hk_t hk_data = {0};
 
                 if (edc_get_hk(edc_0_conf, &hk_data) == 0)
@@ -96,6 +105,12 @@ int payload_init(payload_t pl)
 
             if (edc_init(edc_1_conf) == 0)
             {
+                if (edc_set_rtc_time(edc_1_conf, PAYLOAD_UNIX_TO_J2000_EPOCH(system_get_time())) != 0)
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 1: Error configuring the RTC time!");
+                    sys_log_new_line();
+                }
+
                 edc_hk_t hk_data = {0};
 
                 if (edc_get_hk(edc_1_conf, &hk_data) == 0)
