@@ -16,7 +16,7 @@ endif
 
 CC=gcc
 INC=../../
-FLAGS=-fpic -std=c99 -Wall -pedantic -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -I$(INC) -I../../tests/freertos_sim/ -Wl,--wrap=sys_log_init,--wrap=sys_log_print_event,--wrap=sys_log_print_event_from_module,--wrap=sys_log_print_msg,--wrap=sys_log_print_str,--wrap=sys_log_new_line,--wrap=sys_log_print_uint,--wrap=sys_log_print_int,--wrap=sys_log_print_hex,--wrap=sys_log_dump_hex,--wrap=sys_log_print_float,--wrap=sys_log_print_byte,--wrap=sys_log_print_system_time,--wrap=sys_log_print_license_msg,--wrap=sys_log_print_splash_screen,--wrap=sys_log_print_firmware_version
+FLAGS=-fpic -std=c99 -Wall -pedantic -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -I$(INC) -I../../tests/freertos_sim/ -Wl,--wrap=sys_log_init,--wrap=sys_log_print_event,--wrap=sys_log_print_event_from_module,--wrap=sys_log_print_msg,--wrap=sys_log_print_str,--wrap=sys_log_new_line,--wrap=sys_log_print_uint,--wrap=sys_log_print_int,--wrap=sys_log_print_hex,--wrap=sys_log_dump_hex,--wrap=sys_log_print_float,--wrap=sys_log_print_byte,--wrap=sys_log_print_system_time,--wrap=sys_log_print_license_msg,--wrap=sys_log_print_splash_screen,--wrap=sys_log_print_firmware_version,--wrap=system_get_time
 
 CURRENT_SENSOR_TEST_FLAGS=$(FLAGS),--wrap=adc_init,--wrap=adc_read,--wrap=adc_temp_get_mref,--wrap=adc_temp_get_nref
 
@@ -84,8 +84,8 @@ media_test: $(BUILD_DIR)/media.o $(BUILD_DIR)/media_test.o $(BUILD_DIR)/sys_log_
 	$(CC) $(MEDIA_TEST_FLAGS) $(BUILD_DIR)/media.o $(BUILD_DIR)/media_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/flash_wrap.o $(BUILD_DIR)/mt25q_wrap.o $(BUILD_DIR)/cy15x102qn_wrap.o -o $(BUILD_DIR)/$(TARGET_MEDIA) -lm -lcmocka
 
 .PHONY: payload_test
-payload_test: $(BUILD_DIR)/payload.o $(BUILD_DIR)/payload_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/edc_wrap.o $(BUILD_DIR)/phj_wrap.o
-	$(CC) $(PAYLOAD_TEST_FLAGS) $(BUILD_DIR)/payload.o $(BUILD_DIR)/payload_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/edc_wrap.o $(BUILD_DIR)/phj_wrap.o -o $(BUILD_DIR)/$(TARGET_PAYLOAD) -lm -lcmocka
+payload_test: $(BUILD_DIR)/payload.o $(BUILD_DIR)/payload_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/system_wrap.o $(BUILD_DIR)/edc_wrap.o $(BUILD_DIR)/phj_wrap.o
+	$(CC) $(PAYLOAD_TEST_FLAGS) $(BUILD_DIR)/payload.o $(BUILD_DIR)/payload_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/system_wrap.o $(BUILD_DIR)/edc_wrap.o $(BUILD_DIR)/phj_wrap.o -o $(BUILD_DIR)/$(TARGET_PAYLOAD) -lm -lcmocka
 
 # Devices
 $(BUILD_DIR)/current_sensor.o: ../../devices/current_sensor/current_sensor.c
@@ -157,6 +157,9 @@ $(BUILD_DIR)/payload_test.o: payload_test.c
 
 # Mockups
 $(BUILD_DIR)/sys_log_wrap.o: ../mockups/system/sys_log_wrap.c
+	$(CC) $(FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/system_wrap.o: ../mockups/system/system_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
 $(BUILD_DIR)/adc_wrap.o: ../mockups/drivers/adc_wrap.c

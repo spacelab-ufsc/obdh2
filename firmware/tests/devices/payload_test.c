@@ -1,7 +1,7 @@
 /*
  * payload_test.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.17
+ * \version 0.9.0
  * 
  * \date 2021/08/16
  * 
@@ -57,10 +57,20 @@ static void payload_init_test(void **state)
 {
     /* EDC 0 */
     expect_value(__wrap_edc_init, config.port, EDC_0_I2C_PORT);
-    expect_value(__wrap_edc_init, config.bitrate, EDC_1_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_init, config.bitrate, EDC_0_I2C_CLOCK_HZ);
     expect_value(__wrap_edc_init, config.en_pin, EDC_0_GPIO_EN_PIN);
 
     will_return(__wrap_edc_init, 0);
+
+    will_return(__wrap_system_get_time, 946684800);
+
+    expect_value(__wrap_edc_set_rtc_time, config.port, EDC_0_I2C_PORT);
+    expect_value(__wrap_edc_set_rtc_time, config.bitrate, EDC_0_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_set_rtc_time, config.en_pin, EDC_0_GPIO_EN_PIN);
+
+    expect_value(__wrap_edc_set_rtc_time, time, 0);
+
+    will_return(__wrap_edc_set_rtc_time, 0);
 
     expect_value(__wrap_edc_get_hk, config.port, EDC_0_I2C_PORT);
     expect_value(__wrap_edc_get_hk, config.bitrate, EDC_0_I2C_CLOCK_HZ);
@@ -87,6 +97,16 @@ static void payload_init_test(void **state)
     expect_value(__wrap_edc_init, config.en_pin, EDC_1_GPIO_EN_PIN);
 
     will_return(__wrap_edc_init, 0);
+
+    will_return(__wrap_system_get_time, 946684800);
+
+    expect_value(__wrap_edc_set_rtc_time, config.port, EDC_1_I2C_PORT);
+    expect_value(__wrap_edc_set_rtc_time, config.bitrate, EDC_1_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_set_rtc_time, config.en_pin, EDC_1_GPIO_EN_PIN);
+
+    expect_value(__wrap_edc_set_rtc_time, time, 0);
+
+    will_return(__wrap_edc_set_rtc_time, 0);
 
     expect_value(__wrap_edc_get_hk, config.port, EDC_1_I2C_PORT);
     expect_value(__wrap_edc_get_hk, config.bitrate, EDC_1_I2C_CLOCK_HZ);
