@@ -37,25 +37,25 @@
 
 #include "edc.h"
 
-int edc_uart_init()
+int edc_uart_init(void)
 {
     /* int uart_init(uart_port_t port, uart_config_t config); */
     return -1;
 }
 
-int edc_uart_write()
+int edc_uart_write(void)
 {
     /* return uart_write(uart_port_t port, uint8_t *data, uint16_t len); */
     return -1;
 }
 
-int edc_uart_read()
+int edc_uart_read(void)
 {
     /* return uart_read(uart_port_t port, uint8_t *data, uint16_t len); */
     return -1;
 }
 
-int edc_uart_rx_available()
+int edc_uart_rx_available(void)
 {
     /* return uart_available(uart_port_t port); */
     return -1;

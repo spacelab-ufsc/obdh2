@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.15
+ * \version 0.9.2
  * 
  * \date 2019/10/27
  * 
@@ -49,16 +49,40 @@ int edc_init(edc_config_t config)
     {
         if (edc_enable(config) == 0)
         {
-            if (edc_i2c_init(config) == 0)
+            if(config.mode == 0)
             {
-                err = edc_check_device(config);
+                if (edc_uart_init() == 0)
+                {
+                    err = edc_check_device(config);
+                }
+                else
+                {
+                #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error initializing the UART port!");
+                    sys_log_new_line();
+                #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                }
+            }
+            else if(config.mode == 1)
+            {
+                if (edc_i2c_init(config) == 0)
+                {
+                    err = edc_check_device(config);
+                }
+                else
+                {
+                #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error initializing the I2C port!");
+                    sys_log_new_line();
+                #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                }
             }
             else
             {
-            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
-                sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error initializing the I2C port!");
-                sys_log_new_line();
-            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "EDC mode non existing");
+                    sys_log_new_line();
+                #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
             }
         }
         else
@@ -136,8 +160,20 @@ int edc_write_cmd(edc_config_t config, edc_cmd_t cmd)
 
     if (err == 0)
     {
-        /* Transmit the command over an I2C port */
-        err = edc_i2c_write(config, cmd_str, cmd_str_len);
+        if(config.mode == 0)
+        {
+            /* Transmit the command over an UART PORT */
+            err = edc_uart_write();
+        }
+        else if (config.mode == 1)
+        {
+            /* Transmit the command over an I2C port */
+            err = edc_i2c_write(config, cmd_str, cmd_str_len);
+        }
+        else
+        {
+            err = -1;
+        }
     }
 
     return err;
@@ -145,7 +181,23 @@ int edc_write_cmd(edc_config_t config, edc_cmd_t cmd)
 
 int edc_read(edc_config_t config, uint8_t *data, uint16_t len)
 {
-    return edc_i2c_read(config, data, len);
+    if(config.mode == 0)
+    {
+        if(edc_uart_rx_available())
+        {
+            /* Read the EDC UART PORT */
+            return edc_uart_read();
+        }
+    }
+    else if (config.mode == 1)
+    {
+        /* Reads the I2C bus */
+        return edc_i2c_read(config, data, len);
+    }
+    else
+    {
+        return -1;
+    }
 }
 
 int edc_check_device(edc_config_t config)

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.15
+ * \version 0.9.2
  * 
  * \date 2019/10/27
  * 
@@ -79,6 +79,7 @@ typedef struct
     i2c_port_t port;
     uint32_t bitrate;
     gpio_pin_t en_pin;
+    uint8_t mode;
 } edc_config_t;
 
 /**
@@ -130,6 +131,15 @@ typedef struct
     uint8_t max_parl_decod;                 /**< Maximum number of active PTT decoder channels registered since last system initialization. */
     uint8_t mem_err_count;                  /**< Number of double bit errors detected by MSS data memory controller since last system initialization. */
 } edc_hk_t;
+
+/**
+ * \brief EDC modes
+ */
+typedef enum
+{
+    EDC_MODE_UART=0,       /**< Mode 0 = UART */
+    EDC_MODE_I2C           /**< Mode 1 = I2C */
+} edc_mode_t;
 
 /**
  * \brief Device initialization.
@@ -488,6 +498,34 @@ int edc_gpio_clear(edc_config_t config);
  * \return None.
  */
 void edc_delay_ms(uint32_t ms);
+
+/**
+ * \brief Initializes the EDC UART port.
+ *
+ * \return The status/error code.
+ */
+int edc_uart_init(void);
+
+/**
+ * \brief Writes data to EDC UART port.
+ *
+ * \return The status/error code.
+ */
+int edc_uart_write(void);
+
+/**
+ * \brief Reads data from the EDC UART port.
+ *
+ * \return The status/error code.
+ */
+int edc_uart_read(void);
+
+/**
+ * \brief Verifies if there is data available to received in the RX buffer from EDC.
+ *
+ * \return The status/error code.
+ */
+int edc_uart_rx_available(void);
 
 #endif /* EDC_H_ */
 
