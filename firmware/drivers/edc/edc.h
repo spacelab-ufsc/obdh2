@@ -1,7 +1,7 @@
 /*
  * edc.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -24,6 +24,7 @@
  * \brief EDC driver definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Bruno Benedetti <brunobenedetti45@gmail.com>
  * 
  * \version 0.9.2
  * 
@@ -72,14 +73,24 @@
 #define EDC_FRAME_HK_LEN            21      /**< Housekeeping frame length. */
 
 /**
+ * \brief EDC interfaces.
+ */
+typedef enum
+{
+    EDC_IF_UART=0,                          /**< UART interface */
+    EDC_IF_I2C                              /**< I2C interface */
+} edc_if_t;
+
+/**
  * \brief EDC configuration parameters.
  */
 typedef struct
 {
-    i2c_port_t port;
-    uint32_t bitrate;
-    gpio_pin_t en_pin;
-    uint8_t mode;
+    edc_if_t interface;                     /**< Interface option (EDC_IF_UART or EDC_IF_I2C). */
+    i2c_port_t i2c_port;                    /**< I2C port. */
+    uint32_t i2c_bitrate;                   /**< I2C bitrate in bps. */
+    uart_port_t uart_port;                  /**< UART port. */
+    gpio_pin_t en_pin;                      /**< Enable pin. */
 } edc_config_t;
 
 /**
@@ -131,15 +142,6 @@ typedef struct
     uint8_t max_parl_decod;                 /**< Maximum number of active PTT decoder channels registered since last system initialization. */
     uint8_t mem_err_count;                  /**< Number of double bit errors detected by MSS data memory controller since last system initialization. */
 } edc_hk_t;
-
-/**
- * \brief EDC modes
- */
-typedef enum
-{
-    EDC_MODE_UART=0,       /**< Mode 0 = UART */
-    EDC_MODE_I2C           /**< Mode 1 = I2C */
-} edc_mode_t;
 
 /**
  * \brief Device initialization.
@@ -502,30 +504,46 @@ void edc_delay_ms(uint32_t ms);
 /**
  * \brief Initializes the EDC UART port.
  *
- * \return The status/error code.
- */
-int edc_uart_init(void);
-
-/**
- * \brief Writes data to EDC UART port.
+ * \param[in] config is the configuration parameters of the EDC driver.
  *
  * \return The status/error code.
  */
-int edc_uart_write(void);
+int edc_uart_init(edc_config_t config);
 
 /**
- * \brief Reads data from the EDC UART port.
+ * \brief Writes data to the UART port.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
+ * \param[in] data is array of bytes to write.
+ *
+ * \param[in] len is the number of bytes to write .
  *
  * \return The status/error code.
  */
-int edc_uart_read(void);
+int edc_uart_write(edc_config_t config, uint8_t *data, uint16_t len);
 
 /**
- * \brief Verifies if there is data available to received in the RX buffer from EDC.
+ * \brief Reads data from the UART port.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
+ * \param[in] data is a pointer to store the read bytes.
+ *
+ * \param[in] len is the number of bytes to read.
  *
  * \return The status/error code.
  */
-int edc_uart_rx_available(void);
+int edc_uart_read(edc_config_t config, uint8_t *data, uint16_t len);
+
+/**
+ * \brief Verifies if there is data available to received in the UART RX buffer.
+ *
+ * \param[in] config is the configuration parameters of the EDC driver.
+ *
+ * \return The number of available bytes, -1 on error.
+ */
+int edc_uart_rx_available(edc_config_t config);
 
 #endif /* EDC_H_ */
 

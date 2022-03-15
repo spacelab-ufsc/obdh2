@@ -1,7 +1,7 @@
 /*
  * edc.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -24,6 +24,7 @@
  * \brief EDC driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Bruno Benedetti <brunobenedetti45@gmail.com>
  * 
  * \version 0.9.2
  * 
@@ -49,40 +50,42 @@ int edc_init(edc_config_t config)
     {
         if (edc_enable(config) == 0)
         {
-            if(config.mode == 0)
+            switch(config.interface)
             {
-                if (edc_uart_init() == 0)
-                {
-                    err = edc_check_device(config);
-                }
-                else
-                {
+                case EDC_IF_UART:
+                    if (edc_uart_init() == 0)
+                    {
+                        err = edc_check_device(config);
+                    }
+                    else
+                    {
+                    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error initializing the UART port!");
+                        sys_log_new_line();
+                    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                    }
+
+                    break;
+                case EDC_IF_I2C:
+                    if (edc_i2c_init(config) == 0)
+                    {
+                        err = edc_check_device(config);
+                    }
+                    else
+                    {
+                    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error initializing the I2C port!");
+                        sys_log_new_line();
+                    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                    }
+
+                    break;
+                default:
                 #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error initializing the UART port!");
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Unexpected interface!");
                     sys_log_new_line();
                 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-                }
-            }
-            else if(config.mode == 1)
-            {
-                if (edc_i2c_init(config) == 0)
-                {
-                    err = edc_check_device(config);
-                }
-                else
-                {
-                #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error initializing the I2C port!");
-                    sys_log_new_line();
-                #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-                }
-            }
-            else
-            {
-                #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "EDC mode non existing");
-                    sys_log_new_line();
-                #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                    break;
             }
         }
         else
@@ -160,19 +163,17 @@ int edc_write_cmd(edc_config_t config, edc_cmd_t cmd)
 
     if (err == 0)
     {
-        if(config.mode == 0)
+        switch(config.interface)
         {
-            /* Transmit the command over an UART PORT */
-            err = edc_uart_write();
-        }
-        else if (config.mode == 1)
-        {
-            /* Transmit the command over an I2C port */
-            err = edc_i2c_write(config, cmd_str, cmd_str_len);
-        }
-        else
-        {
-            err = -1;
+            case EDC_IF_UART:   err = edc_uart_write(config, cmd_str, cmd_str_len); break;
+            case EDC_IF_I2C:    err = edc_i2c_write(config, cmd_str, cmd_str_len);  break;
+            default:
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Unexpected interface!");
+                sys_log_new_line();
+            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                err = -1;
+                break;
         }
     }
 
@@ -181,23 +182,29 @@ int edc_write_cmd(edc_config_t config, edc_cmd_t cmd)
 
 int edc_read(edc_config_t config, uint8_t *data, uint16_t len)
 {
-    if(config.mode == 0)
+    int err = -1;
+
+    switch(config.interface)
     {
-        if(edc_uart_rx_available())
-        {
-            /* Read the EDC UART PORT */
-            return edc_uart_read();
-        }
+        case EDC_IF_UART:
+            if (edc_uart_rx_available(config) > 0)
+            {
+                err = edc_uart_read();
+            }
+
+            break;
+        case EDC_IF_I2C:
+            err = edc_i2c_read(config, data, len);
+            break;
+        default:
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+            sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Unexpected interface!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            break;
     }
-    else if (config.mode == 1)
-    {
-        /* Reads the I2C bus */
-        return edc_i2c_read(config, data, len);
-    }
-    else
-    {
-        return -1;
-    }
+
+    return err;
 }
 
 int edc_check_device(edc_config_t config)
