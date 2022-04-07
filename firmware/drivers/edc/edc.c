@@ -53,7 +53,7 @@ int edc_init(edc_config_t config)
             switch(config.interface)
             {
                 case EDC_IF_UART:
-                    if (edc_uart_init() == 0)
+                    if (edc_uart_init(config) == 0)
                     {
                         err = edc_check_device(config);
                     }
@@ -189,7 +189,7 @@ int edc_read(edc_config_t config, uint8_t *data, uint16_t len)
         case EDC_IF_UART:
             if (edc_uart_rx_available(config) > 0)
             {
-                err = edc_uart_read();
+                err = edc_uart_read(config, data, len);
             }
 
             break;

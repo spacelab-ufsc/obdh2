@@ -43,6 +43,7 @@
 
 #include <drivers/i2c/i2c.h>
 #include <drivers/gpio/gpio.h>
+#include <drivers/uart/uart.h>
 
 #define EDC_MODULE_NAME             "EDC"
 
