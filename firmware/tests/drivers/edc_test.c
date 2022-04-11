@@ -24,8 +24,9 @@
  * \brief Unit test of the EDC driver.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
- * 
- * \version 0.8.14
+ * \author Bruno Benedetti <brunobenedetti45@gmail.com> 
+ *
+ * \version 0.9.2
  * 
  * \date 2021/09/01
  * 
@@ -47,13 +48,24 @@
 #include <drivers/i2c/i2c.h>
 #include <drivers/gpio/gpio.h>
 #include <drivers/edc/edc.h>
+#include <drivers/uart/uart.h>
 
 #define EDC_I2C_PORT                I2C_PORT_1
 #define EDC_I2C_CLOCK               100000UL
 #define EDC_I2C_ADR                 0x13
+
 #define EDC_GPIO_EN_PIN             GPIO_PIN_29
 
+#define EDC_UART_BAUD_RATE          115200
+#define EDC_UART_DATA_BITS          8
+#define EDC_UART_PARITY             UART_NO_PARITY
+#define EDC_UART_STOP_BITS          UART_ONE_STOP_BIT
+#define EDC_UART_PORT               UART_PORT_1
+#define EDC_UART_CLOCK              1 /* placeholder */
+
+
 edc_config_t conf = {0};
+uart_config_t conf_uart = {0};
 
 unsigned int generate_random(unsigned int l, unsigned int r);
 
@@ -93,15 +105,45 @@ static void edc_init_test(void **state)
     expect_value(__wrap_i2c_read, adr, EDC_I2C_ADR);
     expect_value(__wrap_i2c_read, len, 9);
 
-    uint8_t cmd_ans[16] = {0x11};
+    uint8_t cmd_ans_i2c[16] = {0x11};
 
     uint16_t i = 0;
     for(i=0; i<9; i++)
     {
-        will_return(__wrap_i2c_read, cmd_ans[i]);
+        will_return(__wrap_i2c_read, cmd_ans_i2c[i]);
     }
 
     will_return(__wrap_i2c_read, 0);
+
+    /* UART init */
+    expect_value(__wrap_uart_init, port, EDC_UART_PORT);
+    expect_value(__wrap_uart_init, conf_uart.clock, EDC_UART_CLOCK);
+    expect_value(__wrap_uart_init, conf_uart.baudrate, EDC_UART_BAUD_RATE);
+    expect_value(__wrap_uart_init, conf_uart.data_bits, EDC_UART_DATA_BITS);
+    expect_value(__wrap_uart_init, conf_uart.parity, EDC_UART_PARITY);
+    expect_value(__wrap_uart_init, conf_uart.stop_bits, EDC_UART_STOP_BITS);
+
+    will_return(__wrap_uart_init, 0);
+
+    /* UART write */
+    expect_value (__wrap_uart_write, port, EDC_UART_PORT);
+    expect_memory(__wrap_uart_write, data, (void*)cmd, cmd_len);
+    expect_value (__wrap_uart_write, len, cmd_len);
+
+    will_return(__wrap_uart_write, 0);
+
+    /* UART read */
+    expect_value(__wrap_uart_read, port, EDC_UART_PORT);
+
+    uint8_t cmd_ans_uart[16] = {0x11};
+    i = 0;
+
+    for(i=0; i<9; i++)
+    {
+        will_return(__wrap_uart_read, cmd_ans_uart[i]);
+    }
+
+    will_return(__wrap_uart_read, 0);
 
     assert_return_code(edc_init(conf), 9);
 }
@@ -892,9 +934,9 @@ static void edc_gpio_clear_test(void **state)
 
 int main(void)
 {
-    conf.port       = EDC_I2C_PORT;
-    conf.bitrate    = EDC_I2C_CLOCK;
-    conf.en_pin     = EDC_GPIO_EN_PIN;
+    conf.i2c_port     = EDC_I2C_PORT;
+    conf.i2c_bitrate  = EDC_I2C_CLOCK;
+    conf.en_pin       = EDC_GPIO_EN_PIN;
 
     const struct CMUnitTest edc_tests[] = {
         cmocka_unit_test(edc_init_test),
