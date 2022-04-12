@@ -192,12 +192,20 @@ static void edc_write_cmd_test(void **state)
                 cmd_arr[4] = (uint8_t)(cmd.param >> 24);
                 cmd_len = 5;
 
+                /* I2C write */
                 expect_value(__wrap_i2c_write, port, EDC_I2C_PORT);
                 expect_value(__wrap_i2c_write, adr, EDC_I2C_ADR);
                 expect_memory(__wrap_i2c_write, data, (void*)cmd_arr, cmd_len);
                 expect_value(__wrap_i2c_write, len, cmd_len);
 
                 will_return(__wrap_i2c_write, 0);
+
+                /* UART write */
+                expect_value (__wrap_uart_write, port, EDC_UART_PORT);
+                expect_memory(__wrap_uart_write, data, (void*)cmd_arr, cmd_len);
+                expect_value (__wrap_uart_write, len, cmd_len);
+
+                will_return(__wrap_uart_write, 0);
 
                 assert_return_code(edc_write_cmd(conf, cmd), 0);
 
@@ -206,12 +214,20 @@ static void edc_write_cmd_test(void **state)
                 cmd_arr[0] = i;
                 cmd_len = 1;
 
+                /* I2C write */
                 expect_value(__wrap_i2c_write, port, EDC_I2C_PORT);
                 expect_value(__wrap_i2c_write, adr, EDC_I2C_ADR);
                 expect_memory(__wrap_i2c_write, data, (void*)cmd_arr, cmd_len);
                 expect_value(__wrap_i2c_write, len, cmd_len);
 
                 will_return(__wrap_i2c_write, 0);
+
+                /* UART write */
+                expect_value (__wrap_uart_write, port, EDC_UART_PORT);
+                expect_memory(__wrap_uart_write, data, (void*)cmd_arr, cmd_len);
+                expect_value (__wrap_uart_write, len, cmd_len);
+
+                will_return(__wrap_uart_write, 0);
 
                 assert_return_code(edc_write_cmd(conf, cmd), 0);
 
@@ -220,12 +236,20 @@ static void edc_write_cmd_test(void **state)
                 cmd_arr[0] = i;
                 cmd_len = 1;
 
+                /* I2C write */
                 expect_value(__wrap_i2c_write, port, EDC_I2C_PORT);
                 expect_value(__wrap_i2c_write, adr, EDC_I2C_ADR);
                 expect_memory(__wrap_i2c_write, data, (void*)cmd_arr, cmd_len);
                 expect_value(__wrap_i2c_write, len, cmd_len);
 
                 will_return(__wrap_i2c_write, 0);
+
+                /* UART write */
+                expect_value (__wrap_uart_write, port, EDC_UART_PORT);
+                expect_memory(__wrap_uart_write, data, (void*)cmd_arr, cmd_len);
+                expect_value (__wrap_uart_write, len, cmd_len);
+
+                will_return(__wrap_uart_write, 0);
 
                 assert_return_code(edc_write_cmd(conf, cmd), 0);
 
@@ -234,12 +258,20 @@ static void edc_write_cmd_test(void **state)
                 cmd_arr[0] = i;
                 cmd_len = 1;
 
+                /* I2C write */
                 expect_value(__wrap_i2c_write, port, EDC_I2C_PORT);
                 expect_value(__wrap_i2c_write, adr, EDC_I2C_ADR);
                 expect_memory(__wrap_i2c_write, data, (void*)cmd_arr, cmd_len);
                 expect_value(__wrap_i2c_write, len, cmd_len);
 
                 will_return(__wrap_i2c_write, 0);
+
+                /* UART write */
+                expect_value (__wrap_uart_write, port, EDC_UART_PORT);
+                expect_memory(__wrap_uart_write, data, (void*)cmd_arr, cmd_len);
+                expect_value (__wrap_uart_write, len, cmd_len);
+
+                will_return(__wrap_uart_write, 0);
 
                 assert_return_code(edc_write_cmd(conf, cmd), 0);
 
@@ -248,12 +280,20 @@ static void edc_write_cmd_test(void **state)
                 cmd_arr[0] = i;
                 cmd_len = 1;
 
+                /* I2C write */
                 expect_value(__wrap_i2c_write, port, EDC_I2C_PORT);
                 expect_value(__wrap_i2c_write, adr, EDC_I2C_ADR);
                 expect_memory(__wrap_i2c_write, data, (void*)cmd_arr, cmd_len);
                 expect_value(__wrap_i2c_write, len, cmd_len);
 
                 will_return(__wrap_i2c_write, 0);
+
+                /* UART write */
+                expect_value (__wrap_uart_write, port, EDC_UART_PORT);
+                expect_memory(__wrap_uart_write, data, (void*)cmd_arr, cmd_len);
+                expect_value (__wrap_uart_write, len, cmd_len);
+
+                will_return(__wrap_uart_write, 0);
 
                 assert_return_code(edc_write_cmd(conf, cmd), 0);
 
@@ -261,13 +301,21 @@ static void edc_write_cmd_test(void **state)
             case 0x30:
                 cmd_arr[0] = i;
                 cmd_len = 1;
-
+                
+                /* I2C write */
                 expect_value(__wrap_i2c_write, port, EDC_I2C_PORT);
                 expect_value(__wrap_i2c_write, adr, EDC_I2C_ADR);
                 expect_memory(__wrap_i2c_write, data, (void*)cmd_arr, cmd_len);
                 expect_value(__wrap_i2c_write, len, cmd_len);
 
                 will_return(__wrap_i2c_write, 0);
+
+                /* UART write */
+                expect_value (__wrap_uart_write, port, EDC_UART_PORT);
+                expect_memory(__wrap_uart_write, data, (void*)cmd_arr, cmd_len);
+                expect_value (__wrap_uart_write, len, cmd_len);
+
+                will_return(__wrap_uart_write, 0);
 
                 assert_return_code(edc_write_cmd(conf, cmd), 0);
 
@@ -277,12 +325,20 @@ static void edc_write_cmd_test(void **state)
                 cmd_arr[1] = 0;
                 cmd_len = 2;
 
+                /* I2C write */
                 expect_value(__wrap_i2c_write, port, EDC_I2C_PORT);
                 expect_value(__wrap_i2c_write, adr, EDC_I2C_ADR);
                 expect_memory(__wrap_i2c_write, data, (void*)cmd_arr, cmd_len);
                 expect_value(__wrap_i2c_write, len, cmd_len);
 
                 will_return(__wrap_i2c_write, 0);
+
+                /* UART write */
+                expect_value (__wrap_uart_write, port, EDC_UART_PORT);
+                expect_memory(__wrap_uart_write, data, (void*)cmd_arr, cmd_len);
+                expect_value (__wrap_uart_write, len, cmd_len);
+
+                will_return(__wrap_uart_write, 0);
 
                 assert_return_code(edc_write_cmd(conf, cmd), 0);
 
@@ -291,12 +347,20 @@ static void edc_write_cmd_test(void **state)
                 cmd_arr[0] = i;
                 cmd_len = 1;
 
+                /* I2C write */
                 expect_value(__wrap_i2c_write, port, EDC_I2C_PORT);
                 expect_value(__wrap_i2c_write, adr, EDC_I2C_ADR);
                 expect_memory(__wrap_i2c_write, data, (void*)cmd_arr, cmd_len);
                 expect_value(__wrap_i2c_write, len, cmd_len);
 
                 will_return(__wrap_i2c_write, 0);
+
+                /* UART write */
+                expect_value (__wrap_uart_write, port, EDC_UART_PORT);
+                expect_memory(__wrap_uart_write, data, (void*)cmd_arr, cmd_len);
+                expect_value (__wrap_uart_write, len, cmd_len);
+
+                will_return(__wrap_uart_write, 0);
 
                 assert_return_code(edc_write_cmd(conf, cmd), 0);
 
@@ -307,12 +371,20 @@ static void edc_write_cmd_test(void **state)
                 cmd_arr[2] = 0;
                 cmd_len = 3;
 
+                /* I2C write */
                 expect_value(__wrap_i2c_write, port, EDC_I2C_PORT);
                 expect_value(__wrap_i2c_write, adr, EDC_I2C_ADR);
                 expect_memory(__wrap_i2c_write, data, (void*)cmd_arr, cmd_len);
                 expect_value(__wrap_i2c_write, len, cmd_len);
 
                 will_return(__wrap_i2c_write, 0);
+
+                /* UART write */
+                expect_value (__wrap_uart_write, port, EDC_UART_PORT);
+                expect_memory(__wrap_uart_write, data, (void*)cmd_arr, cmd_len);
+                expect_value (__wrap_uart_write, len, cmd_len);
+
+                will_return(__wrap_uart_write, 0);
 
                 assert_return_code(edc_write_cmd(conf, cmd), 0);
 
@@ -321,12 +393,20 @@ static void edc_write_cmd_test(void **state)
                 cmd_arr[0] = i;
                 cmd_len = 1;
 
+                /* I2C write */
                 expect_value(__wrap_i2c_write, port, EDC_I2C_PORT);
                 expect_value(__wrap_i2c_write, adr, EDC_I2C_ADR);
                 expect_memory(__wrap_i2c_write, data, (void*)cmd_arr, cmd_len);
                 expect_value(__wrap_i2c_write, len, cmd_len);
 
                 will_return(__wrap_i2c_write, 0);
+
+                /* UART write */
+                expect_value (__wrap_uart_write, port, EDC_UART_PORT);
+                expect_memory(__wrap_uart_write, data, (void*)cmd_arr, cmd_len);
+                expect_value (__wrap_uart_write, len, cmd_len);
+
+                will_return(__wrap_uart_write, 0);
 
                 assert_return_code(edc_write_cmd(conf, cmd), 0);
 
