@@ -422,6 +422,7 @@ static void edc_read_test(void **state)
     uint8_t data[256] = {0xFF};
     uint16_t data_len = generate_random(1, 256);
 
+    /* I2C read */
     expect_value(__wrap_i2c_read, port, EDC_I2C_PORT);
     expect_value(__wrap_i2c_read, adr, EDC_I2C_ADR);
     expect_value(__wrap_i2c_read, len, data_len);
@@ -434,6 +435,22 @@ static void edc_read_test(void **state)
     }
 
     will_return(__wrap_i2c_read, 0);
+
+    /* UART rx available */
+    expect_value(__wrap_uart_available, port, EDC_UART_PORT);
+
+    will_return(__wrap_uart_available, 0);
+
+    /* UART read */
+    expect_value(__wrap_uart_read, port, EDC_UART_PORT);
+
+    i = 0;
+    for(i=0; i<data_len; i++)
+    {
+        will_return(__wrap_uart_read, data[i]);
+    }
+    
+    will_return(__wrap_uart_read, 0);
 
     uint8_t ans[256] = {0xFF};
 
