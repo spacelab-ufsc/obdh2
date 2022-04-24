@@ -437,9 +437,9 @@ static void edc_read_test(void **state)
     will_return(__wrap_i2c_read, 0);
 
     /* UART rx available */
-    expect_value(__wrap_uart_available, port, EDC_UART_PORT);
+    expect_value(__wrap_uart_read_available, port, EDC_UART_PORT);
 
-    will_return(__wrap_uart_available, 0);
+    will_return(__wrap_uart_read_available, 0);
 
     /* UART read */
     expect_value(__wrap_uart_read, port, EDC_UART_PORT);
