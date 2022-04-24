@@ -47,7 +47,14 @@ int edc_uart_init(edc_config_t config)
     uart_conf.parity    = UART_NO_PARITY;
     uart_conf.stop_bits = UART_ONE_STOP_BIT;
 
-    return uart_init(config.uart_port, uart_conf);
+    int err = -1;
+
+    if (uart_init(config.uart_port, uart_conf) == 0)
+    {
+        err = uart_rx_enable(config.uart_port);
+    }
+
+    return err;
 }
 
 int edc_uart_write(edc_config_t config, uint8_t *data, uint16_t len)
