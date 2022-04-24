@@ -40,26 +40,29 @@
 
 int edc_uart_init(edc_config_t config)
 {
-    /* int uart_init(uart_port_t port, uart_config_t config); */
-    return -1;
+    uart_config_t uart_conf = {0};
+
+    uart_conf.baudrate  = 115200;
+    uart_conf.data_bits = 8;
+    uart_conf.parity    = UART_NO_PARITY;
+    uart_conf.stop_bits = UART_ONE_STOP_BIT;
+
+    return uart_init(config.uart_port, uart_conf);
 }
 
 int edc_uart_write(edc_config_t config, uint8_t *data, uint16_t len)
 {
-    /* return uart_write(uart_port_t port, uint8_t *data, uint16_t len); */
-    return -1;
+    return uart_write(config.uart_port, data, len);
 }
 
 int edc_uart_read(edc_config_t config, uint8_t *data, uint16_t len)
 {
-    /* return uart_read(uart_port_t port, uint8_t *data, uint16_t len); */
-    return -1;
+    return uart_read(config.uart_port, data, len);
 }
 
 int edc_uart_rx_available(edc_config_t config)
 {
-    /* return uart_available(uart_port_t port); */
-    return -1;
+    return (int)uart_read_available(config.uart_port);
 }
 
 /** \} End of edc group */
