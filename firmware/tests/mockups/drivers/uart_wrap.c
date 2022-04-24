@@ -1,7 +1,7 @@
 /*
  * uart_wrap.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -24,8 +24,9 @@
  * \brief UART driver wrap implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Miguel Boing <miguelboing13@gmail.com>
  * 
- * \version 0.7.8
+ * \version 0.9.2
  * 
  * \date 2021/08/25
  * 
@@ -55,20 +56,6 @@ int __wrap_uart_init(uart_port_t port, uart_config_t config)
     return mock_type(int);
 }
 
-int __wrap_uart_available(uart_port_t port)
-{
-    check_expected(port);
-
-    return mock_type(int);
-}
-
-int __wrap_uart_flush(uart_port_t port)
-{
-    check_expected(port);
-
-    return mock_type(int);
-}
-
 int __wrap_uart_write(uart_port_t port, uint8_t *data, uint16_t len)
 {
     check_expected(port);
@@ -81,6 +68,7 @@ int __wrap_uart_write(uart_port_t port, uint8_t *data, uint16_t len)
 int __wrap_uart_read(uart_port_t port, uint8_t *data, uint16_t len)
 {
     check_expected(port);
+    check_expected(len);
 
     if (data != NULL)
     {
@@ -90,6 +78,34 @@ int __wrap_uart_read(uart_port_t port, uint8_t *data, uint16_t len)
             data[i] = mock_type(uint8_t);
         }
     }
+
+    return mock_type(int);
+}
+
+int __wrap_uart_rx_enable(uart_port_t port)
+{
+    check_expected(port);
+
+    return mock_type(int);
+}
+
+int __wrap_uart_rx_disable(uart_port_t port)
+{
+    check_expected(port);
+
+    return mock_type(int);
+}
+
+uint16_t __wrap_uart_read_available(uart_port_t port)
+{
+    check_expected(port);
+
+    return mock_type(int);
+}
+
+int __wrap_uart_flush(uart_port_t port)
+{
+    check_expected(port);
 
     return mock_type(int);
 }
