@@ -71,6 +71,7 @@ unsigned int generate_random(unsigned int l, unsigned int r);
 
 static void edc_init_test(void **state)
 {
+    conf.interface = EDC_IF_I2C;
     /* GPIO init */
     expect_value(__wrap_gpio_init, pin, EDC_GPIO_EN_PIN);
     expect_value(__wrap_gpio_init, config.mode, GPIO_MODE_OUTPUT);
@@ -115,6 +116,10 @@ static void edc_init_test(void **state)
 
     will_return(__wrap_i2c_read, 0);
 
+    assert_return_code(edc_init(conf), 9);
+    
+    conf.interface = EDC_IF_UART;
+
     /* UART init */
     expect_value(__wrap_uart_init, port, EDC_UART_PORT);
     expect_value(__wrap_uart_init, conf_uart.clock, EDC_UART_CLOCK);
@@ -124,7 +129,6 @@ static void edc_init_test(void **state)
     expect_value(__wrap_uart_init, conf_uart.stop_bits, EDC_UART_STOP_BITS);
 
     will_return(__wrap_uart_init, 0);
-
     /* UART write */
     expect_value (__wrap_uart_write, port, EDC_UART_PORT);
     expect_memory(__wrap_uart_write, data, (void*)cmd, cmd_len);
@@ -134,6 +138,7 @@ static void edc_init_test(void **state)
 
     /* UART read */
     expect_value(__wrap_uart_read, port, EDC_UART_PORT);
+    expect_value(__wrap_uart_read, len, cmd_len);
 
     uint8_t cmd_ans_uart[16] = {0x11};
     i = 0;
@@ -1029,11 +1034,76 @@ static void edc_gpio_clear_test(void **state)
     assert_return_code(edc_gpio_clear(conf), 0);
 }
 
+static void edc_uart_init_test(void **state)
+{
+    expect_value(__wrap_uart_init, port, EDC_UART_PORT);
+    expect_value(__wrap_uart_init, conf_uart.clock, EDC_UART_CLOCK);
+    expect_value(__wrap_uart_init, conf_uart.baudrate, EDC_UART_BAUD_RATE);
+    expect_value(__wrap_uart_init, conf_uart.data_bits, EDC_UART_DATA_BITS);
+    expect_value(__wrap_uart_init, conf_uart.parity, EDC_UART_PARITY);
+    expect_value(__wrap_uart_init, conf_uart.stop_bits, EDC_UART_STOP_BITS);
+
+    will_return(__wrap_uart_init, 0);
+
+    assert_return_code(edc_uart_init(conf), 0);
+}
+
+static void edc_uart_write_test(void **state)
+{
+    uint16_t cmd_len = generate_random(1, 256);
+    uint8_t cmd[256] = {0};
+
+    uint16_t i = 0;
+    for(i = 0; i < cmd_len; i++)
+    {
+        cmd[i] = generate_random(0, UINT8_MAX);
+    }
+
+    expect_value (__wrap_uart_write, port, EDC_UART_PORT);
+    expect_memory(__wrap_uart_write, data, (void*)cmd, cmd_len);
+    expect_value (__wrap_uart_write, len, cmd_len);
+
+    will_return(__wrap_uart_write, 0);
+
+    assert_return_code(edc_uart_write(conf, cmd, cmd_len), 0);
+}
+
+static void edc_uart_read_test(void **state)
+{
+    uint16_t ans_len = generate_random(1, UINT8_MAX);
+
+    expect_value(__wrap_uart_read, port, EDC_UART_PORT);
+    expect_value(__wrap_uart_read, len, ans_len);
+
+    uint8_t ans[256] = {0};
+
+    uint16_t i = 0;
+    for(i = 0; i < ans_len; i++)
+    {
+        ans[i] = generate_random(0, UINT8_MAX);
+        will_return(__wrap_uart_read, ans[i]);
+    }
+
+    will_return(__wrap_uart_read, 0);
+
+    uint8_t data[256] = {0};
+
+    assert_return_code(edc_uart_read(conf, data, ans_len), 0);
+
+    assert_memory_equal((void*)ans, (void*)data, ans_len);
+}
+
+static void edc_uart_rx_enable_test(void **state)
+{
+    assert_return_code(edc_uart_rx_available(conf), 0);
+}
+
 int main(void)
 {
     conf.i2c_port     = EDC_I2C_PORT;
     conf.i2c_bitrate  = EDC_I2C_CLOCK;
     conf.en_pin       = EDC_GPIO_EN_PIN;
+    conf.uart_port    = EDC_UART_PORT;
 
     const struct CMUnitTest edc_tests[] = {
         cmocka_unit_test(edc_init_test),
@@ -1062,6 +1132,10 @@ int main(void)
         cmocka_unit_test(edc_gpio_init_test),
         cmocka_unit_test(edc_gpio_set_test),
         cmocka_unit_test(edc_gpio_clear_test),
+        cmocka_unit_test(edc_uart_init_test),
+        cmocka_unit_test(edc_uart_write_test),
+        cmocka_unit_test(edc_uart_read_test),
+        cmocka_unit_test(edc_uart_rx_enable_test),
     };
 
     return cmocka_run_group_tests(edc_tests, NULL, NULL);
