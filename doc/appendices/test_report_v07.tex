@@ -68,22 +68,22 @@ This appendix is a test report of the first manufactured and assembled PCB (vers
     \item \textbf{Test description/Objective}: Inspection of the board, visually and with a multimeter, searching for fabrication and assembly mistakes.
     \item \textbf{Material}:
         \begin{itemize}
-            \item Code Composer Studio v9.3.0
+            \item Code Composer Studio v11
             \item MSP-FET Flash Emulation Tool
             \item USB-UART converter
-            \item Screen (Linux software)
+            \item PuTTy
         \end{itemize}
-    \item \textbf{Results}: %The results of this are available in \autoref{fig:log-first-boot}, where the log messages of the first boot of the board can be seen.
-    \item \textbf{Conclusion}: %No problems were identified on this test.
+    \item \textbf{Results}: The results of this are available in \autoref{fig:log-first-boot}, where the log messages of the first boot of the board can be seen.
+    \item \textbf{Conclusion}: No problems were identified on this test.
 \end{itemize}
 
-%\begin{figure}[!ht]
-%    \begin{center}
-%        \includegraphics[width=0.7\columnwidth]{figures/v06/log-first-boot.png}
-%        \caption{Log messages during the first boot.}
-%        \label{fig:log-first-boot}
-%    \end{center}
-%\end{figure}
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=0.7\columnwidth]{figures/v07/obdh2-boot.png}
+        \caption{Log messages during the first boot.}
+        \label{fig:log-first-boot}
+    \end{center}
+\end{figure}
 
 \section{Communication Busses}
 
@@ -97,90 +97,44 @@ This appendix is a test report of the first manufactured and assembled PCB (vers
     \item \textbf{Material}:
         \begin{itemize}
             \item Saleae Logic Analyzer (24 MHz, 8 channels)
-            \item Saleae Logic software (v1.2.18)
+            \item Saleae Logic software (v2)
             \item MSP-FET Flash Emulation Tool
         \end{itemize}
-    \item \textbf{Results}: %The results of this test can be seen in Figures \ref{fig:test-i2c-0}, \ref{fig:test-i2c-1} and \ref{fig:test-i2c-2}.
-    \item \textbf{Conclusion:} %No problems were identified on this test, all buses are working as expected.
+    \item \textbf{Results}: The results of this test can be seen in Figures \ref{fig:test-i2c-0}, \ref{fig:test-i2c-1} and \ref{fig:test-i2c-2}.
+    \item \textbf{Conclusion:} No problems were identified on this test, all buses are working as expected.
 \end{itemize}
 
-%\begin{figure}[!htb]
-%    \begin{center}
-%        \subfigure[Connections of the I$^{2}$C port 0 test.\label{fig:connections-i2c-0}]{\includegraphics[height=0.22\textheight]{figures/v05/test-i2c-0.jpg}}
-%        ~
-%        \subfigure[Waveforms of the I$^{2}$C port 0 test.\label{fig:waveform-i2c-0}]{\includegraphics[height=0.22\textheight]{figures/v05/waveform-i2c-0.png}}
-%        \caption{I$^{2}$C port 0 test.}
-%        \label{fig:test-i2c-0}
-%    \end{center}
-%\end{figure}
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=\columnwidth]{figures/v07/obdh2-i2c-test.jpg}
+        \caption{Setup of the I2C port tests.}
+        \label{fig:test-i2c}
+    \end{center}
+\end{figure}
 
-%\begin{figure}[!ht]
-%    \begin{center}
-%        \includegraphics[width=0.7\columnwidth]{figures/v05/test-i2c-0.jpg}
-%        \caption{Connections of the I2C port 0 test.}
-%        \label{fig:test-i2c-0}
-%    \end{center}
-%\end{figure}
-%
-%\begin{figure}[!ht]
-%    \begin{center}
-%        \includegraphics[width=\columnwidth]{figures/v05/waveform-i2c-0.png}
-%        \caption{Waveform of the I2C port 0.}
-%        \label{fig:waveform-i2c-0}
-%    \end{center}
-%\end{figure}
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=\columnwidth]{figures/v07/obdh2-pl-i2c.png}
+        \caption{Waveform of the I2C port 0.}
+        \label{fig:test-i2c-0}
+    \end{center}
+\end{figure}
 
-%\begin{figure}[!htb]
-%    \begin{center}
-%        \subfigure[Connections of the I$^{2}$C port 1 test.\label{fig:connections-i2c-1}]{\includegraphics[height=0.22\textheight]{figures/v07/test-i2c-1.jpg}}
-%        ~
-%        \subfigure[Waveforms of the I$^{2}$C port 1 test.\label{fig:waveform-i2c-1}]{\includegraphics[height=0.22\textheight]{figures/v07/waveform-i2c-1.png}}
-%        \caption{I$^{2}$C port 1 test.}
-%        \label{fig:test-i2c-1}
-%    \end{center}
-%\end{figure}
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=\columnwidth]{figures/v07/obdh2-eps-i2c.png}
+        \caption{Waveform of the I2C port 1.}
+        \label{fig:test-i2c-1}
+    \end{center}
+\end{figure}
 
-%\begin{figure}[!ht]
-%    \begin{center}
-%        \includegraphics[width=0.7\columnwidth]{figures/v07/test-i2c-1.jpg}
-%        \caption{Connections of the I2C port 1 test.}
-%        \label{fig:test-i2c-1}
-%    \end{center}
-%\end{figure}
-%
-%\begin{figure}[!ht]
-%    \begin{center}
-%        \includegraphics[width=\columnwidth]{figures/v07/waveform-i2c-1.png}
-%        \caption{Waveform of the I2C port 1.}
-%        \label{fig:waveform-i2c-1}
-%    \end{center}
-%\end{figure}
-
-%\begin{figure}[!htb]
-%    \begin{center}
-%        \subfigure[Connections of the I$^{2}$C port 2 test.\label{fig:connections-i2c-2}]{\includegraphics[height=0.22\textheight]{figures/v07/test-i2c-2.jpg}}
-%        ~
-%        \subfigure[Waveforms of the I$^{2}$C port 2 test.\label{fig:waveform-i2c-2}]{\includegraphics[height=0.22\textheight]{figures/v07/waveform-i2c-2.png}}
-%        \caption{I$^{2}$C port 2 test.}
-%        \label{fig:test-i2c-2}
-%    \end{center}
-%\end{figure}
-
-%\begin{figure}[!ht]
-%    \begin{center}
-%        \includegraphics[width=0.7\columnwidth]{figures/v07/test-i2c-2.jpg}
-%        \caption{Connections of the I2C port 2 test.}
-%        \label{fig:test-i2c-2}
-%    \end{center}
-%\end{figure}
-%
-%\begin{figure}[!ht]
-%    \begin{center}
-%        \includegraphics[width=\columnwidth]{figures/v07/waveform-i2c-2.png}
-%        \caption{Waveform of the I2C port 2.}
-%        \label{fig:waveform-i2c-2}
-%    \end{center}
-%\end{figure}
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=\columnwidth]{figures/v07/obdh2-ant-i2c.png}
+        \caption{Waveform of the I2C port 2.}
+        \label{fig:test-i2c-2}
+    \end{center}
+\end{figure}
 
 \section{Sensors}
 
