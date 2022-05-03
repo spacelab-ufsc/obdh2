@@ -1547,6 +1547,14 @@ static void edc_uart_read_test(void **state)
     assert_memory_equal((void*)ans, (void*)data, ans_len);
 }
 
+static void edc_uart_rx_available_test(void **state)
+{
+    expect_value(__wrap_uart_read_available, port, EDC_UART_PORT);
+    will_return(__wrap_uart_read_available, 0);
+
+    assert_return_code(edc_uart_rx_available(conf), 0);
+}
+
 int main(void)
 {
     conf.i2c_port     = EDC_I2C_PORT;
@@ -1584,6 +1592,7 @@ int main(void)
         cmocka_unit_test(edc_uart_init_test),
         cmocka_unit_test(edc_uart_write_test),
         cmocka_unit_test(edc_uart_read_test),
+        cmocka_unit_test(edc_uart_rx_available_test),
     };
 
     return cmocka_run_group_tests(edc_tests, NULL, NULL);
