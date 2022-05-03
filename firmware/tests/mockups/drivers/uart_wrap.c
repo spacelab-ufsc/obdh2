@@ -47,7 +47,6 @@
 int __wrap_uart_init(uart_port_t port, uart_config_t config)
 {
     check_expected(port);
-    check_expected(config.clock);
     check_expected(config.baudrate);
     check_expected(config.data_bits);
     check_expected(config.parity);
