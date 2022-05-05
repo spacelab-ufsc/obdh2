@@ -46,36 +46,72 @@
 
 int __wrap_edc_init(edc_config_t config)
 {
-    check_expected(config.i2c_port);
-    check_expected(config.i2c_bitrate);
+    check_expected(config.interface);
     check_expected(config.en_pin);
+
+    if (config.interface == EDC_IF_UART)
+    {
+        check_expected(config.uart_port);
+    }
+    else if (config.interface == EDC_IF_I2C)
+    {
+        check_expected(config.i2c_port);
+        check_expected(config.i2c_bitrate);
+    }
 
     return mock_type(int);
 }
 
 int __wrap_edc_enable(edc_config_t config)
 {
-    check_expected(config.i2c_port);
-    check_expected(config.i2c_bitrate);
+    check_expected(config.interface);
     check_expected(config.en_pin);
+
+    if (config.interface == EDC_IF_UART)
+    {
+        check_expected(config.uart_port);
+    }
+    else if (config.interface == EDC_IF_I2C)
+    {
+        check_expected(config.i2c_port);
+        check_expected(config.i2c_bitrate);
+    }
 
     return mock_type(int);
 }
 
 int __wrap_edc_disable(edc_config_t config)
 {
-    check_expected(config.i2c_port);
-    check_expected(config.i2c_bitrate);
+    check_expected(config.interface);
     check_expected(config.en_pin);
+
+    if (config.interface == EDC_IF_UART)
+    {
+        check_expected(config.uart_port);
+    }
+    else if (config.interface == EDC_IF_I2C)
+    {
+        check_expected(config.i2c_port);
+        check_expected(config.i2c_bitrate);
+    }
 
     return mock_type(int);
 }
 
 int __wrap_edc_write_cmd(edc_config_t config, edc_cmd_t cmd)
 {
-    check_expected(config.i2c_port);
-    check_expected(config.i2c_bitrate);
+    check_expected(config.interface);
     check_expected(config.en_pin);
+
+    if (config.interface == EDC_IF_UART)
+    {
+        check_expected(config.uart_port);
+    }
+    else if (config.interface == EDC_IF_I2C)
+    {
+        check_expected(config.i2c_port);
+        check_expected(config.i2c_bitrate);
+    }
 
     check_expected(cmd.id);
     check_expected(cmd.param);
@@ -85,9 +121,18 @@ int __wrap_edc_write_cmd(edc_config_t config, edc_cmd_t cmd)
 
 int __wrap_edc_read(edc_config_t config, uint8_t *data, uint16_t len)
 {
-    check_expected(config.i2c_port);
-    check_expected(config.i2c_bitrate);
+    check_expected(config.interface);
     check_expected(config.en_pin);
+
+    if (config.interface == EDC_IF_UART)
+    {
+        check_expected(config.uart_port);
+    }
+    else if (config.interface == EDC_IF_I2C)
+    {
+        check_expected(config.i2c_port);
+        check_expected(config.i2c_bitrate);
+    }
 
     check_expected_ptr(data);
     check_expected(len);
@@ -97,18 +142,36 @@ int __wrap_edc_read(edc_config_t config, uint8_t *data, uint16_t len)
 
 int __wrap_edc_check_device(edc_config_t config)
 {
-    check_expected(config.i2c_port);
-    check_expected(config.i2c_bitrate);
+    check_expected(config.interface);
     check_expected(config.en_pin);
+
+    if (config.interface == EDC_IF_UART)
+    {
+        check_expected(config.uart_port);
+    }
+    else if (config.interface == EDC_IF_I2C)
+    {
+        check_expected(config.i2c_port);
+        check_expected(config.i2c_bitrate);
+    }
 
     return mock_type(int);
 }
 
 int __wrap_edc_set_rtc_time(edc_config_t config, uint32_t time)
 {
-    check_expected(config.i2c_port);
-    check_expected(config.i2c_bitrate);
+    check_expected(config.interface);
     check_expected(config.en_pin);
+
+    if (config.interface == EDC_IF_UART)
+    {
+        check_expected(config.uart_port);
+    }
+    else if (config.interface == EDC_IF_I2C)
+    {
+        check_expected(config.i2c_port);
+        check_expected(config.i2c_bitrate);
+    }
 
     check_expected(time);
 
@@ -117,45 +180,90 @@ int __wrap_edc_set_rtc_time(edc_config_t config, uint32_t time)
 
 int __wrap_edc_pop_ptt_pkg(edc_config_t config)
 {
-    check_expected(config.i2c_port);
-    check_expected(config.i2c_bitrate);
+    check_expected(config.interface);
     check_expected(config.en_pin);
+
+    if (config.interface == EDC_IF_UART)
+    {
+        check_expected(config.uart_port);
+    }
+    else if (config.interface == EDC_IF_I2C)
+    {
+        check_expected(config.i2c_port);
+        check_expected(config.i2c_bitrate);
+    }
 
     return mock_type(int);
 }
 
 int __wrap_edc_pause_ptt_task(edc_config_t config)
 {
-    check_expected(config.i2c_port);
-    check_expected(config.i2c_bitrate);
+    check_expected(config.interface);
     check_expected(config.en_pin);
+
+    if (config.interface == EDC_IF_UART)
+    {
+        check_expected(config.uart_port);
+    }
+    else if (config.interface == EDC_IF_I2C)
+    {
+        check_expected(config.i2c_port);
+        check_expected(config.i2c_bitrate);
+    }
 
     return mock_type(int);
 }
 
 int __wrap_edc_resume_ptt_task(edc_config_t config)
 {
-    check_expected(config.i2c_port);
-    check_expected(config.i2c_bitrate);
+    check_expected(config.interface);
     check_expected(config.en_pin);
+
+    if (config.interface == EDC_IF_UART)
+    {
+        check_expected(config.uart_port);
+    }
+    else if (config.interface == EDC_IF_I2C)
+    {
+        check_expected(config.i2c_port);
+        check_expected(config.i2c_bitrate);
+    }
 
     return mock_type(int);
 }
 
 int __wrap_edc_start_adc_task(edc_config_t config)
 {
-    check_expected(config.i2c_port);
-    check_expected(config.i2c_bitrate);
+    check_expected(config.interface);
     check_expected(config.en_pin);
+
+    if (config.interface == EDC_IF_UART)
+    {
+        check_expected(config.uart_port);
+    }
+    else if (config.interface == EDC_IF_I2C)
+    {
+        check_expected(config.i2c_port);
+        check_expected(config.i2c_bitrate);
+    }
 
     return mock_type(int);
 }
 
 int16_t __wrap_edc_get_state_pkg(edc_config_t config, uint8_t *status)
 {
-    check_expected(config.i2c_port);
-    check_expected(config.i2c_bitrate);
+    check_expected(config.interface);
     check_expected(config.en_pin);
+
+    if (config.interface == EDC_IF_UART)
+    {
+        check_expected(config.uart_port);
+    }
+    else if (config.interface == EDC_IF_I2C)
+    {
+        check_expected(config.i2c_port);
+        check_expected(config.i2c_bitrate);
+    }
 
     if (status != NULL)
     {
@@ -167,9 +275,18 @@ int16_t __wrap_edc_get_state_pkg(edc_config_t config, uint8_t *status)
 
 int16_t __wrap_edc_get_ptt_pkg(edc_config_t config, uint8_t *pkg)
 {
-    check_expected(config.i2c_port);
-    check_expected(config.i2c_bitrate);
+    check_expected(config.interface);
     check_expected(config.en_pin);
+
+    if (config.interface == EDC_IF_UART)
+    {
+        check_expected(config.uart_port);
+    }
+    else if (config.interface == EDC_IF_I2C)
+    {
+        check_expected(config.i2c_port);
+        check_expected(config.i2c_bitrate);
+    }
 
     if (pkg != NULL)
     {
@@ -181,9 +298,18 @@ int16_t __wrap_edc_get_ptt_pkg(edc_config_t config, uint8_t *pkg)
 
 int16_t __wrap_edc_get_hk_pkg(edc_config_t config, uint8_t *hk)
 {
-    check_expected(config.i2c_port);
-    check_expected(config.i2c_bitrate);
+    check_expected(config.interface);
     check_expected(config.en_pin);
+
+    if (config.interface == EDC_IF_UART)
+    {
+        check_expected(config.uart_port);
+    }
+    else if (config.interface == EDC_IF_I2C)
+    {
+        check_expected(config.i2c_port);
+        check_expected(config.i2c_bitrate);
+    }
 
     if (hk != NULL)
     {
@@ -195,9 +321,18 @@ int16_t __wrap_edc_get_hk_pkg(edc_config_t config, uint8_t *hk)
 
 int16_t __wrap_edc_get_adc_seq(edc_config_t config, uint8_t *seq)
 {
-    check_expected(config.i2c_port);
-    check_expected(config.i2c_bitrate);
+    check_expected(config.interface);
     check_expected(config.en_pin);
+
+    if (config.interface == EDC_IF_UART)
+    {
+        check_expected(config.uart_port);
+    }
+    else if (config.interface == EDC_IF_I2C)
+    {
+        check_expected(config.i2c_port);
+        check_expected(config.i2c_bitrate);
+    }
 
     if (seq != NULL)
     {
@@ -209,9 +344,18 @@ int16_t __wrap_edc_get_adc_seq(edc_config_t config, uint8_t *seq)
 
 int __wrap_edc_echo(edc_config_t config)
 {
-    check_expected(config.i2c_port);
-    check_expected(config.i2c_bitrate);
+    check_expected(config.interface);
     check_expected(config.en_pin);
+
+    if (config.interface == EDC_IF_UART)
+    {
+        check_expected(config.uart_port);
+    }
+    else if (config.interface == EDC_IF_I2C)
+    {
+        check_expected(config.i2c_port);
+        check_expected(config.i2c_bitrate);
+    }
 
     return mock_type(int);
 }
@@ -226,9 +370,18 @@ uint16_t __wrap_edc_calc_checksum(uint8_t *data, uint16_t len)
 
 int __wrap_edc_get_state(edc_config_t config, edc_state_t *state_data)
 {
-    check_expected(config.i2c_port);
-    check_expected(config.i2c_bitrate);
+    check_expected(config.interface);
     check_expected(config.en_pin);
+
+    if (config.interface == EDC_IF_UART)
+    {
+        check_expected(config.uart_port);
+    }
+    else if (config.interface == EDC_IF_I2C)
+    {
+        check_expected(config.i2c_port);
+        check_expected(config.i2c_bitrate);
+    }
 
     if (state_data != NULL)
     {
@@ -243,9 +396,18 @@ int __wrap_edc_get_state(edc_config_t config, edc_state_t *state_data)
 
 int __wrap_edc_get_hk(edc_config_t config, edc_hk_t *hk_data)
 {
-    check_expected(config.i2c_port);
-    check_expected(config.i2c_bitrate);
+    check_expected(config.interface);
     check_expected(config.en_pin);
+
+    if (config.interface == EDC_IF_UART)
+    {
+        check_expected(config.uart_port);
+    }
+    else if (config.interface == EDC_IF_I2C)
+    {
+        check_expected(config.i2c_port);
+        check_expected(config.i2c_bitrate);
+    }
 
     if (hk_data != NULL)
     {
@@ -270,6 +432,5 @@ void __wrap_edc_delay_ms(uint32_t ms)
 
     return;
 }
-
 
 /** \} End of edc_wrap group */
