@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
  * 
- * \version 0.9.1
+ * \version 0.9.2
  * 
  * \date 2021/08/15
  * 
@@ -56,8 +56,8 @@ int payload_init(payload_t pl)
     {
         case PAYLOAD_EDC_0:
         {
-            edc_0_conf.port = I2C_PORT_0;
-            edc_0_conf.bitrate = 400000UL;
+            edc_0_conf.interface = EDC_IF_UART;
+            edc_0_conf.uart_port = UART_PORT_1;
             edc_0_conf.en_pin = GPIO_PIN_29;
 
             if (edc_init(edc_0_conf) == 0)
@@ -99,8 +99,8 @@ int payload_init(payload_t pl)
         }
         case PAYLOAD_EDC_1:
         {
-            edc_1_conf.port = I2C_PORT_0;
-            edc_1_conf.bitrate = 400000UL;
+            edc_1_conf.interface = EDC_IF_UART;
+            edc_1_conf.uart_port = UART_PORT_1;
             edc_1_conf.en_pin = GPIO_PIN_30;
 
             if (edc_init(edc_1_conf) == 0)

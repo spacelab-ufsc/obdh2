@@ -24,8 +24,9 @@
  * \brief Unit test of the payload device.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Bruno Benedetti <brunobenedetti45@gmail.com> 
  * 
- * \version 0.9.0
+ * \version 0.9.2
  * 
  * \date 2021/08/16
  * 
@@ -42,39 +43,39 @@
 #include <cmocka.h>
 
 #include <devices/payload/payload.h>
+#include <drivers/edc/edc.h>
 #include <drivers/gpio/gpio.h>
+#include <drivers/uart/uart.h>
 #include <drivers/i2c/i2c.h>
 
-#define EDC_0_I2C_PORT              I2C_PORT_0
-#define EDC_0_I2C_CLOCK_HZ          400000UL
+#define EDC_0_UART_PORT             UART_PORT_1
 #define EDC_0_GPIO_EN_PIN           GPIO_PIN_29
 
-#define EDC_1_I2C_PORT              I2C_PORT_0
-#define EDC_1_I2C_CLOCK_HZ          400000UL
+#define EDC_1_UART_PORT             UART_PORT_1
 #define EDC_1_GPIO_EN_PIN           GPIO_PIN_30
 
 static void payload_init_test(void **state)
 {
     /* EDC 0 */
-    expect_value(__wrap_edc_init, config.port, EDC_0_I2C_PORT);
-    expect_value(__wrap_edc_init, config.bitrate, EDC_0_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_init, config.interface, EDC_IF_UART);
     expect_value(__wrap_edc_init, config.en_pin, EDC_0_GPIO_EN_PIN);
+    expect_value(__wrap_edc_init, config.uart_port, EDC_0_UART_PORT);
 
     will_return(__wrap_edc_init, 0);
 
     will_return(__wrap_system_get_time, 946684800);
 
-    expect_value(__wrap_edc_set_rtc_time, config.port, EDC_0_I2C_PORT);
-    expect_value(__wrap_edc_set_rtc_time, config.bitrate, EDC_0_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_set_rtc_time, config.interface, EDC_IF_UART);
     expect_value(__wrap_edc_set_rtc_time, config.en_pin, EDC_0_GPIO_EN_PIN);
+    expect_value(__wrap_edc_set_rtc_time, config.uart_port, EDC_0_UART_PORT);
 
     expect_value(__wrap_edc_set_rtc_time, time, 0);
 
     will_return(__wrap_edc_set_rtc_time, 0);
 
-    expect_value(__wrap_edc_get_hk, config.port, EDC_0_I2C_PORT);
-    expect_value(__wrap_edc_get_hk, config.bitrate, EDC_0_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_get_hk, config.interface, EDC_IF_UART);
     expect_value(__wrap_edc_get_hk, config.en_pin, EDC_0_GPIO_EN_PIN);
+    expect_value(__wrap_edc_get_hk, config.uart_port, EDC_0_UART_PORT);
 
     will_return(__wrap_edc_get_hk, 0);      /* Current time */
     will_return(__wrap_edc_get_hk, 5);      /* Elapsed time */
@@ -92,25 +93,25 @@ static void payload_init_test(void **state)
     assert_return_code(payload_init(PAYLOAD_EDC_0), 0);
 
     /* EDC 1 */
-    expect_value(__wrap_edc_init, config.port, EDC_1_I2C_PORT);
-    expect_value(__wrap_edc_init, config.bitrate, EDC_1_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_init, config.interface, EDC_IF_UART);
     expect_value(__wrap_edc_init, config.en_pin, EDC_1_GPIO_EN_PIN);
+    expect_value(__wrap_edc_init, config.uart_port, EDC_1_UART_PORT);
 
     will_return(__wrap_edc_init, 0);
 
     will_return(__wrap_system_get_time, 946684800);
 
-    expect_value(__wrap_edc_set_rtc_time, config.port, EDC_1_I2C_PORT);
-    expect_value(__wrap_edc_set_rtc_time, config.bitrate, EDC_1_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_set_rtc_time, config.interface, EDC_IF_UART);
     expect_value(__wrap_edc_set_rtc_time, config.en_pin, EDC_1_GPIO_EN_PIN);
+    expect_value(__wrap_edc_set_rtc_time, config.uart_port, EDC_1_UART_PORT);
 
     expect_value(__wrap_edc_set_rtc_time, time, 0);
 
     will_return(__wrap_edc_set_rtc_time, 0);
 
-    expect_value(__wrap_edc_get_hk, config.port, EDC_1_I2C_PORT);
-    expect_value(__wrap_edc_get_hk, config.bitrate, EDC_1_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_get_hk, config.interface, EDC_IF_UART);
     expect_value(__wrap_edc_get_hk, config.en_pin, EDC_1_GPIO_EN_PIN);
+    expect_value(__wrap_edc_get_hk, config.uart_port, EDC_1_UART_PORT);
 
     will_return(__wrap_edc_get_hk, 0);      /* Current time */
     will_return(__wrap_edc_get_hk, 5);      /* Elapsed time */
@@ -146,18 +147,18 @@ static void payload_init_test(void **state)
 static void payload_enable_test(void **state)
 {
     /* EDC 0 */
-    expect_value(__wrap_edc_enable, config.port, EDC_0_I2C_PORT);
-    expect_value(__wrap_edc_enable, config.bitrate, EDC_0_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_enable, config.interface, EDC_IF_UART);
     expect_value(__wrap_edc_enable, config.en_pin, EDC_0_GPIO_EN_PIN);
+    expect_value(__wrap_edc_enable, config.uart_port, EDC_0_UART_PORT);
 
     will_return(__wrap_edc_enable, 0);
 
     assert_return_code(payload_enable(PAYLOAD_EDC_0), 0);
 
     /* EDC 1 */
-    expect_value(__wrap_edc_enable, config.port, EDC_1_I2C_PORT);
-    expect_value(__wrap_edc_enable, config.bitrate, EDC_1_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_enable, config.interface, EDC_IF_UART);
     expect_value(__wrap_edc_enable, config.en_pin, EDC_1_GPIO_EN_PIN);
+    expect_value(__wrap_edc_enable, config.uart_port, EDC_1_UART_PORT);
 
     will_return(__wrap_edc_enable, 0);
 
@@ -171,18 +172,18 @@ static void payload_enable_test(void **state)
 static void payload_disable_test(void **state)
 {
     /* EDC 0 */
-    expect_value(__wrap_edc_disable, config.port, EDC_0_I2C_PORT);
-    expect_value(__wrap_edc_disable, config.bitrate, EDC_0_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_disable, config.interface, EDC_IF_UART);
     expect_value(__wrap_edc_disable, config.en_pin, EDC_0_GPIO_EN_PIN);
+    expect_value(__wrap_edc_disable, config.uart_port, EDC_0_UART_PORT);
 
     will_return(__wrap_edc_disable, 0);
 
     assert_return_code(payload_disable(PAYLOAD_EDC_0), 0);
 
     /* EDC 1 */
-    expect_value(__wrap_edc_disable, config.port, EDC_1_I2C_PORT);
-    expect_value(__wrap_edc_disable, config.bitrate, EDC_1_I2C_CLOCK_HZ);
+    expect_value(__wrap_edc_disable, config.interface, EDC_IF_UART);
     expect_value(__wrap_edc_disable, config.en_pin, EDC_1_GPIO_EN_PIN);
+    expect_value(__wrap_edc_disable, config.uart_port, EDC_1_UART_PORT);
 
     will_return(__wrap_edc_disable, 0);
 
