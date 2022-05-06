@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.38
+ * \version 0.9.4
  * 
  * \date 2019/11/02
  * 
@@ -48,7 +48,6 @@
 #include "beacon.h"
 #include "uplink.h"
 #include "time_control.h"
-#include "csp_server.h"
 #include "read_edc.h"
 #include "read_eps.h"
 #include "read_ttc.h"
@@ -141,15 +140,6 @@ void create_tasks(void)
         /* Error creating the time control task */
     }
 #endif /* CONFIG_TASK_BEACON_ENABLED */
-
-#if defined(CONFIG_TASK_CSP_SERVER_ENABLED) && (CONFIG_TASK_CSP_SERVER_ENABLED == 1)
-    xTaskCreate(vTaskCSPServer, TASK_CSP_SERVER_NAME, TASK_CSP_SERVER_STACK_SIZE, NULL, TASK_CSP_SERVER_PRIORITY, &xTaskCSPServerHandle);
-
-    if (xTaskCSPServerHandle == NULL)
-    {
-        /* Error creating the CSP server task */
-    }
-#endif /* CONFIG_TASK_CSP_SERVER_ENABLED */
 
 #if defined(CONFIG_TASK_READ_EDC_ENABLED) && (CONFIG_TASK_READ_EDC_ENABLED == 1)
     xTaskCreate(vTaskReadEDC, TASK_READ_EDC_NAME, TASK_READ_EDC_STACK_SIZE, NULL, TASK_READ_EDC_PRIORITY, &xTaskReadEDCHandle);
