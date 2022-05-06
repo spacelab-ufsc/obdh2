@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.39
+ * \version 0.9.3
  * 
  * \date 2019/10/26
  * 
@@ -57,6 +57,7 @@
 
 /* Devices */
 #define CONFIG_DEV_MEDIA_INT_ENABLED                    1
+#define CONFIG_DEV_MEDIA_FRAM_ENABLED                   1
 #define CONFIG_DEV_MEDIA_NOR_ENABLED                    1
 #define CONFIG_DEV_LEDS_ENABLED                         1
 #define CONFIG_DEV_CURRENT_SENSOR_ENABLED               1

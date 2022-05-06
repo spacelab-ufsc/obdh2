@@ -1,7 +1,7 @@
 /*
  * startup.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.17
+ * \version 0.9.3
  * 
  * \date 2019/12/04
  * 
@@ -102,6 +102,17 @@ void vTaskStartup(void)
         error_counter++;
     }
 #endif /* CONFIG_DEV_MEDIA_INT_ENABLED */
+
+#if defined(CONFIG_DEV_MEDIA_FRAM_ENABLED) && (CONFIG_DEV_MEDIA_FRAM_ENABLED == 1)
+    /* FRAM memory initialization */
+    if (system_get_hw_version() >= HW_VERSION_1)
+    {
+        if (media_init(MEDIA_FRAM) != 0)
+        {
+            error_counter++;
+        }
+    }
+#endif /* CONFIG_DEV_MEDIA_FRAM_ENABLED */
 
 #if defined(CONFIG_DEV_MEDIA_NOR_ENABLED) && (CONFIG_DEV_MEDIA_NOR_ENABLED == 1)
     /* NOR memory initialization */
