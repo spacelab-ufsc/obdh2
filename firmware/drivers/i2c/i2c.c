@@ -222,7 +222,6 @@ int i2c_write(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
 
 int i2c_read(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
 {
-    int b;
     int err = 0;
 
     /* Verifies if the slave address is lesser than 7-bits */
@@ -264,7 +263,7 @@ int i2c_read(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
             }
 
             uint16_t i = 0;
-            for(i = 0; i < (len /* - 1U*/); i++)
+            for(i = 0; i < len; i++)
             {
                 /* Wait to receive data and shift data on buffer */
                 while((!(HWREG8(base_address + OFS_UCBxIFG) & UCRXIFG)) && (timeout < I2C_SLAVE_TIMEOUT))
@@ -274,7 +273,6 @@ int i2c_read(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
 
                 /* Receive a byte and increment the pointer */
                 data[i] = HWREG8(base_address + OFS_UCBxRXBUF);
-                b=data[i];
             }
 
             /* Prepares to stop the transmission */
@@ -288,7 +286,6 @@ int i2c_read(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
 
             /* Receive a byte and increment the pointer */
             data[i] = HWREG8(base_address + OFS_UCBxRXBUF);
-            b=data[i];
 
             if (timeout > I2C_SLAVE_TIMEOUT)
             {
