@@ -37,6 +37,8 @@
 
 #include <config/config.h>
 
+#include <system/sys_log/sys_log.h>
+
 #include "cy15x102qn.h"
 
 #define CY15X102QN_DUMMY_BYTE   0x00
