@@ -282,7 +282,7 @@ int16_t edc_get_state_pkg(edc_config_t config, uint8_t *status)
     if (edc_write_cmd(config, cmd) == 0)
     {
         /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
-        edc_delay_ms(10);
+        edc_delay_ms(100);
 
         if (edc_read(config, status, EDC_FRAME_STATE_LEN) == 0)
         {
@@ -330,7 +330,7 @@ int16_t edc_get_ptt_pkg(edc_config_t config, uint8_t *pkg)
     if (edc_write_cmd(config, cmd) == 0)
     {
         /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
-        edc_delay_ms(10);
+        edc_delay_ms(100);
 
         if (edc_read(config, pkg, EDC_FRAME_PTT_LEN) == 0)
         {
@@ -378,7 +378,7 @@ int16_t edc_get_hk_pkg(edc_config_t config, uint8_t *hk)
     if (edc_write_cmd(config, cmd) == 0)
     {
         /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
-        edc_delay_ms(10);
+        edc_delay_ms(100);
 
         if (edc_read(config, hk, EDC_FRAME_HK_LEN) == 0)
         {
@@ -426,7 +426,7 @@ int16_t edc_get_adc_seq(edc_config_t config, uint8_t *seq)
     if (edc_write_cmd(config, cmd) == 0)
     {
         /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
-        edc_delay_ms(10);
+        edc_delay_ms(100);
 
         if (edc_read(config, seq, EDC_FRAME_ADC_SEQ_LEN) == 0)
         {

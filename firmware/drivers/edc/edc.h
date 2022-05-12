@@ -71,7 +71,7 @@
 #define EDC_FRAME_STATE_LEN         9       /**< State frame length. */
 #define EDC_FRAME_PTT_LEN           49      /**< PTT frame length. */
 #define EDC_FRAME_ADC_SEQ_LEN       8199    /**< ADC sequence frame length. */
-#define EDC_FRAME_HK_LEN            21      /**< Housekeeping frame length. */
+#define EDC_FRAME_HK_LEN            26      /**< Housekeeping frame length. */
 
 /**
  * \brief EDC interfaces.
