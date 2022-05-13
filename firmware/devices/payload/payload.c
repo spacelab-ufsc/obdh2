@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
  * 
- * \version 0.9.2
+ * \version 0.9.5
  * 
  * \date 2021/08/15
  * 
@@ -75,11 +75,11 @@ int payload_init(payload_t pl)
                     err = 0;
 
                     sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "EDC 0: Initialization done! (");
-                    sys_log_print_uint(hk_data.temp);
+                    sys_log_print_int(hk_data.temp);
                     sys_log_print_msg(" oC, ");
                     sys_log_print_uint(hk_data.voltage_supply);
                     sys_log_print_msg(" mV, ");
-                    sys_log_print_uint(hk_data.current_supply);
+                    sys_log_print_uint(hk_data.current_supply_d + hk_data.current_supply_a);
                     sys_log_print_msg(" mA)");
                     sys_log_new_line();
                 }
@@ -118,11 +118,11 @@ int payload_init(payload_t pl)
                     err = 0;
 
                     sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "EDC 1: Initialization done! (");
-                    sys_log_print_uint(hk_data.temp);
+                    sys_log_print_int(hk_data.temp);
                     sys_log_print_msg(" oC, ");
                     sys_log_print_uint(hk_data.voltage_supply);
                     sys_log_print_msg(" mV, ");
-                    sys_log_print_uint(hk_data.current_supply);
+                    sys_log_print_uint(hk_data.current_supply_d + hk_data.current_supply_a);
                     sys_log_print_msg(" mA)");
                     sys_log_new_line();
                 }
