@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Bruno Benedetti <brunobenedetti45@gmail.com> 
  *
- * \version 0.9.2
+ * \version 0.9.5
  * 
  * \date 2021/09/01
  * 
@@ -935,13 +935,13 @@ static void edc_get_hk_pkg_test(void **state)
 
     expect_value(__wrap_i2c_read, port, EDC_I2C_PORT);
     expect_value(__wrap_i2c_read, adr, EDC_I2C_ADR);
-    expect_value(__wrap_i2c_read, len, 21);
+    expect_value(__wrap_i2c_read, len, 26);
 
     data[0] = 0x44;
     will_return(__wrap_i2c_read, 0x44);
 
     uint16_t i = 0;
-    for(i=1; i<21; i++)
+    for(i=1; i<26; i++)
     {
         data[i] = generate_random(0, 255);
         will_return(__wrap_i2c_read, data[i]);
@@ -951,9 +951,9 @@ static void edc_get_hk_pkg_test(void **state)
 
     uint8_t hk[256] = {0xFF};
 
-    assert_int_equal(edc_get_hk_pkg(conf, hk), 21);
+    assert_int_equal(edc_get_hk_pkg(conf, hk), 26);
 
-    for(i=0; i<21; i++)
+    for(i=0; i<26; i++)
     {
         assert_int_equal(hk[i], data[i]);
     }
@@ -970,24 +970,24 @@ static void edc_get_hk_pkg_test(void **state)
     /* UART read available */
     expect_value (__wrap_uart_read_available, port, EDC_UART_PORT);
 
-    will_return(__wrap_uart_read_available, 21);
+    will_return(__wrap_uart_read_available, 26);
 
     /* UART read */
     expect_value(__wrap_uart_read, port, EDC_UART_PORT);
-    expect_value(__wrap_uart_read, len, 21);
+    expect_value(__wrap_uart_read, len, 26);
 
     will_return(__wrap_uart_read, 0x44);
 
-    for(i=1; i<21; i++)
+    for(i=1; i<26; i++)
     {
         will_return(__wrap_uart_read, data[i]);
     }
 
     will_return(__wrap_uart_read, 0);
 
-    assert_int_equal(edc_get_hk_pkg(conf, hk), 21);
+    assert_int_equal(edc_get_hk_pkg(conf, hk), 26);
 
-    for(i=0; i<21; i++)
+    for(i=0; i<26; i++)
     {
         assert_int_equal(hk[i], data[i]);
     }
@@ -1012,13 +1012,13 @@ static void edc_get_adc_seq_test(void **state)
 
     expect_value(__wrap_i2c_read, port, EDC_I2C_PORT);
     expect_value(__wrap_i2c_read, adr, EDC_I2C_ADR);
-    expect_value(__wrap_i2c_read, len, 8199);
+    expect_value(__wrap_i2c_read, len, 8200);
 
     data[0] = 0x33;
     will_return(__wrap_i2c_read, 0x33);
 
     uint16_t i = 0;
-    for(i=1; i<8199; i++)
+    for(i=1; i<8200; i++)
     {
         data[i] = generate_random(0, 255);
         will_return(__wrap_i2c_read, data[i]);
@@ -1026,11 +1026,11 @@ static void edc_get_adc_seq_test(void **state)
 
     will_return(__wrap_i2c_read, 0);
 
-    uint8_t seq[8199] = {0xFF};
+    uint8_t seq[8200] = {0xFF};
 
-    assert_int_equal(edc_get_adc_seq(conf, seq), 8199);
+    assert_int_equal(edc_get_adc_seq(conf, seq), 8200);
 
-    for(i=0; i<8199; i++)
+    for(i=0; i<8200; i++)
     {
         assert_int_equal(seq[i], data[i]);
     }
@@ -1047,24 +1047,24 @@ static void edc_get_adc_seq_test(void **state)
     /* UART read available */
     expect_value (__wrap_uart_read_available, port, EDC_UART_PORT);
 
-    will_return(__wrap_uart_read_available, 8199);
+    will_return(__wrap_uart_read_available, 8200);
 
     /* UART read */
     expect_value(__wrap_uart_read, port, EDC_UART_PORT);
-    expect_value(__wrap_uart_read, len, 8199);
+    expect_value(__wrap_uart_read, len, 8200);
 
     will_return(__wrap_uart_read, 0x33);
 
-    for(i=1; i<8199; i++)
+    for(i=1; i<8200; i++)
     {
         will_return(__wrap_uart_read, data[i]);
     }
 
     will_return(__wrap_uart_read, 0);
 
-    assert_int_equal(edc_get_adc_seq(conf, seq), 8199);
+    assert_int_equal(edc_get_adc_seq(conf, seq), 8200);
 
-    for(i=0; i<8199; i++)
+    for(i=0; i<8200; i++)
     {
         assert_int_equal(seq[i], data[i]);
     }
@@ -1324,11 +1324,11 @@ static void edc_get_hk_test(void **state)
 
     expect_value(__wrap_i2c_read, port, EDC_I2C_PORT);
     expect_value(__wrap_i2c_read, adr, EDC_I2C_ADR);
-    expect_value(__wrap_i2c_read, len, 21);
+    expect_value(__wrap_i2c_read, len, 26);
 
     uint16_t i = 0;
     uint8_t checksum = 0;
-    for(i=0; i<20; i++)
+    for(i=0; i<25; i++)
     {
         if (i == 0)
         {
@@ -1355,14 +1355,15 @@ static void edc_get_hk_test(void **state)
 
     assert_int_equal(hk_data.current_time, ((uint32_t)data[4] << 24) | ((uint32_t)data[3] << 16) | ((uint32_t)data[2] << 8) | ((uint32_t)data[1] << 0));
     assert_int_equal(hk_data.elapsed_time, ((uint32_t)data[8] << 24) | ((uint32_t)data[7] << 16) | ((uint32_t)data[6] << 8) | ((uint32_t)data[5] << 0));
-    assert_int_equal(hk_data.current_supply, ((uint32_t)data[10] << 8) | ((uint32_t)data[9] << 0));
-    assert_int_equal(hk_data.voltage_supply, ((uint32_t)data[12] << 8) | ((uint32_t)data[11] << 0));
-    assert_int_equal(hk_data.temp, (int8_t)data[13] - 40);
-    assert_int_equal(hk_data.pll_sync_bit, data[14]);
-    assert_int_equal(hk_data.adc_rms, (int16_t)(((uint32_t)data[16] << 8) | ((uint32_t)data[15] << 0)));
-    assert_int_equal(hk_data.num_rx_ptt, data[17]);
-    assert_int_equal(hk_data.max_parl_decod, data[18]);
-    assert_int_equal(hk_data.mem_err_count, data[19]);
+    assert_int_equal(hk_data.current_supply_d, ((uint32_t)data[10] << 8) | ((uint32_t)data[9] << 0));
+    assert_int_equal(hk_data.current_supply_a, ((uint32_t)data[12] << 8) | ((uint32_t)data[11] << 0));
+    assert_int_equal(hk_data.voltage_supply, ((uint32_t)data[14] << 8) | ((uint32_t)data[13] << 0));
+    assert_int_equal(hk_data.temp, (int8_t)data[15] - 40);
+    assert_int_equal(hk_data.pll_sync_bit, data[16]);
+    assert_int_equal(hk_data.adc_rms, (int16_t)(((uint32_t)data[18] << 8) | ((uint32_t)data[17] << 0)));
+    assert_int_equal(hk_data.num_rx_ptt, ((uint32_t)data[22] << 24) | ((uint32_t)data[21] << 16) | ((uint32_t)data[20] << 8) | ((uint32_t)data[19] << 0));
+    assert_int_equal(hk_data.max_parl_decod, data[23]);
+    assert_int_equal(hk_data.mem_err_count, data[24]);
 
     conf.interface = EDC_IF_UART;
 
@@ -1376,15 +1377,15 @@ static void edc_get_hk_test(void **state)
     /* UART read available */
     expect_value (__wrap_uart_read_available, port, EDC_UART_PORT);
 
-    will_return(__wrap_uart_read_available, 21);
+    will_return(__wrap_uart_read_available, 26);
 
     /* UART read */
     expect_value(__wrap_uart_read, port, EDC_UART_PORT);
-    expect_value(__wrap_uart_read, len, 21);
+    expect_value(__wrap_uart_read, len, 26);
 
     will_return(__wrap_uart_read, 0x44);
 
-    for(i=1; i<20; i++)
+    for(i=1; i<25; i++)
     {
         will_return(__wrap_uart_read, data[i]);
     }
@@ -1397,14 +1398,15 @@ static void edc_get_hk_test(void **state)
 
     assert_int_equal(hk_data.current_time, ((uint32_t)data[4] << 24) | ((uint32_t)data[3] << 16) | ((uint32_t)data[2] << 8) | ((uint32_t)data[1] << 0));
     assert_int_equal(hk_data.elapsed_time, ((uint32_t)data[8] << 24) | ((uint32_t)data[7] << 16) | ((uint32_t)data[6] << 8) | ((uint32_t)data[5] << 0));
-    assert_int_equal(hk_data.current_supply, ((uint32_t)data[10] << 8) | ((uint32_t)data[9] << 0));
-    assert_int_equal(hk_data.voltage_supply, ((uint32_t)data[12] << 8) | ((uint32_t)data[11] << 0));
-    assert_int_equal(hk_data.temp, (int8_t)data[13] - 40);
-    assert_int_equal(hk_data.pll_sync_bit, data[14]);
-    assert_int_equal(hk_data.adc_rms, (int16_t)(((uint32_t)data[16] << 8) | ((uint32_t)data[15] << 0)));
-    assert_int_equal(hk_data.num_rx_ptt, data[17]);
-    assert_int_equal(hk_data.max_parl_decod, data[18]);
-    assert_int_equal(hk_data.mem_err_count, data[19]);
+    assert_int_equal(hk_data.current_supply_d, ((uint32_t)data[10] << 8) | ((uint32_t)data[9] << 0));
+    assert_int_equal(hk_data.current_supply_a, ((uint32_t)data[12] << 8) | ((uint32_t)data[11] << 0));
+    assert_int_equal(hk_data.voltage_supply, ((uint32_t)data[14] << 8) | ((uint32_t)data[13] << 0));
+    assert_int_equal(hk_data.temp, (int8_t)data[15] - 40);
+    assert_int_equal(hk_data.pll_sync_bit, data[16]);
+    assert_int_equal(hk_data.adc_rms, (int16_t)(((uint32_t)data[18] << 8) | ((uint32_t)data[17] << 0)));
+    assert_int_equal(hk_data.num_rx_ptt, ((uint32_t)data[22] << 24) | ((uint32_t)data[21] << 16) | ((uint32_t)data[20] << 8) | ((uint32_t)data[19] << 0));
+    assert_int_equal(hk_data.max_parl_decod, data[23]);
+    assert_int_equal(hk_data.mem_err_count, data[24]);
 }
 
 static void edc_i2c_init_test(void **state)
