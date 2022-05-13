@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Bruno Benedetti <brunobenedetti45@gmail.com>
  * 
- * \version 0.9.2
+ * \version 0.9.5
  * 
  * \date 2019/10/27
  * 
@@ -70,8 +70,8 @@
 /* Frames length */
 #define EDC_FRAME_STATE_LEN         9       /**< State frame length. */
 #define EDC_FRAME_PTT_LEN           49      /**< PTT frame length. */
-#define EDC_FRAME_ADC_SEQ_LEN       8199    /**< ADC sequence frame length. */
-#define EDC_FRAME_HK_LEN            21      /**< Housekeeping frame length. */
+#define EDC_FRAME_ADC_SEQ_LEN       8200    /**< ADC sequence frame length. */
+#define EDC_FRAME_HK_LEN            26      /**< Housekeeping frame length. */
 
 /**
  * \brief EDC interfaces.
@@ -134,12 +134,13 @@ typedef struct
 {
     uint32_t current_time;                  /**< Current time in number of seconds elapsed since J2000 epoch. */
     uint32_t elapsed_time;                  /**< Elapsed time since last system initialization in seconds. */
-    uint16_t current_supply;                /**< System current supply in mA. */
+    uint16_t current_supply_d;              /**< Current supply of the digital components in mA. */
+    uint16_t current_supply_a;              /**< Current supply of the RF front-end in mA. */
     uint16_t voltage_supply;                /**< System voltage supply in mV. */
     int8_t temp;                            /**< EDC board temperature in Celsius. */
     uint8_t pll_sync_bit;                   /**< RF Front End LO frequency synthesizer indicator of PLL synchronization. */
     int16_t adc_rms;                        /**< RMS level at front-end output. */
-    uint8_t num_rx_ptt;                     /**< Number of generated PTT package since last system initialization. */
+    uint32_t num_rx_ptt;                    /**< Number of generated PTT package since last system initialization. */
     uint8_t max_parl_decod;                 /**< Maximum number of active PTT decoder channels registered since last system initialization. */
     uint8_t mem_err_count;                  /**< Number of double bit errors detected by MSS data memory controller since last system initialization. */
 } edc_hk_t;
@@ -323,20 +324,21 @@ int16_t edc_get_ptt_pkg(edc_config_t config, uint8_t *pkg);
  * The HK Frame contains the most recent housekeeping information. Its contents are updated whenever a read
  * request is received.
  *
- * | Byte  | Name           | Data | Description                                                            |
- * | :---- | :------------- | :--- | :--------------------------------------------------------------------- |
- * | 0     | Frame type     | u8   | 0x44                                                                   |
- * | 1-4   | Current time   | u32  | Seconds since J2000 epoch                                              |
- * | 5-8   | Elapsed time   | u32  | Elapsed time since last boot in seconds                                |
- * | 9-10  | Current supply | u16  | System current supply in mA                                            |
- * | 11-12 | Voltage supply | u16  | System voltage supply in mV                                            |
- * | 13    | Temperature    | u8   | Board temperature (add -40 to get the result in Celsius)               |
- * | 14    | PLL sync bit   | u8   | RF front-end LO frequency synthesizer indicator of PLL synchronization |
- * | 15-16 | ADC RMS        | u16  | RMS level at front-end output (saturation point is 32768)              |
- * | 17    | Num of RX PTT  | u8   | Number of generated PTT packages since last system initialization      |
- * | 18    | Max parl decod | u8   | Max number of active PTT decoder channels registered since last boot   |
- * | 19    | Mem err count  | u8   | Number of double bit err detected by MSS data mem ctrl since last boot |
- * | 20    | Checksum       | u8   | Bitwise XOR operation between all transmitted bytes                    |
+ * | Byte  | Name                   | Data | Description                                                            |
+ * | :---- | :--------------------- | :--- | :--------------------------------------------------------------------- |
+ * | 0     | Frame type             | u8   | 0x44                                                                   |
+ * | 1-4   | Current time           | u32  | Seconds since J2000 epoch                                              |
+ * | 5-8   | Elapsed time           | u32  | Elapsed time since last boot in seconds                                |
+ * | 9-10  | Current supply Digital | u16  | Current supply of the digital components in mA                         |
+ * | 11-12 | Current supply Analog  | u16  | Current supply of the RF Front-End in mA                               |
+ * | 13-14 | Voltage supply         | u16  | System voltage supply in mV                                            |
+ * | 15    | Temperature            | u8   | Board temperature (add -40 to get the result in Celsius)               |
+ * | 16    | PLL sync bit           | u8   | RF front-end LO frequency synthesizer indicator of PLL synchronization |
+ * | 17-18 | ADC RMS                | u16  | RMS level at front-end output (saturation point is 32768)              |
+ * | 19-22 | Num of RX PTT          | u8   | Number of generated PTT packages since last system initialization      |
+ * | 23    | Max parl decod         | u8   | Max number of active PTT decoder channels registered since last boot   |
+ * | 24    | Mem err count          | u8   | Number of double bit err detected by MSS data mem ctrl since last boot |
+ * | 25    | Checksum               | u8   | Bitwise XOR operation between all transmitted bytes                    |
  *
  * \see EDC - Environmental Data Collector User Guide. Section 3.5 - HK Frame. Page 9.
  *

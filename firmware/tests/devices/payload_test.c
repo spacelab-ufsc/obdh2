@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Bruno Benedetti <brunobenedetti45@gmail.com> 
  * 
- * \version 0.9.2
+ * \version 0.9.5
  * 
  * \date 2021/08/16
  * 
@@ -79,7 +79,8 @@ static void payload_init_test(void **state)
 
     will_return(__wrap_edc_get_hk, 0);      /* Current time */
     will_return(__wrap_edc_get_hk, 5);      /* Elapsed time */
-    will_return(__wrap_edc_get_hk, 100);    /* Current supply */
+    will_return(__wrap_edc_get_hk, 55);     /* Current supply digital */
+    will_return(__wrap_edc_get_hk, 45);     /* Current supply RF front-end */
     will_return(__wrap_edc_get_hk, 5000);   /* Voltage supply */
     will_return(__wrap_edc_get_hk, 18);     /* Temperature */
     will_return(__wrap_edc_get_hk, 1);      /* PLL sync bit */
@@ -115,7 +116,8 @@ static void payload_init_test(void **state)
 
     will_return(__wrap_edc_get_hk, 0);      /* Current time */
     will_return(__wrap_edc_get_hk, 5);      /* Elapsed time */
-    will_return(__wrap_edc_get_hk, 100);    /* Current supply */
+    will_return(__wrap_edc_get_hk, 55);     /* Current supply digital*/
+    will_return(__wrap_edc_get_hk, 45);     /* Current supply RF front-end */
     will_return(__wrap_edc_get_hk, 5000);   /* Voltage supply */
     will_return(__wrap_edc_get_hk, 18);     /* Temperature */
     will_return(__wrap_edc_get_hk, 1);      /* PLL sync bit */

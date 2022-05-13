@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Bruno Benedetti <brunobenedetti45@gmail.com> 
  * 
- * \version 0.9.2
+ * \version 0.9.5
  * 
  * \date 2021/08/16
  * 
@@ -413,12 +413,13 @@ int __wrap_edc_get_hk(edc_config_t config, edc_hk_t *hk_data)
     {
         hk_data->current_time       = mock_type(uint32_t);
         hk_data->elapsed_time       = mock_type(uint32_t);
-        hk_data->current_supply     = mock_type(uint16_t);
+        hk_data->current_supply_d   = mock_type(uint16_t);
+        hk_data->current_supply_a   = mock_type(uint16_t);
         hk_data->voltage_supply     = mock_type(uint16_t);
         hk_data->temp               = mock_type(int8_t);
         hk_data->pll_sync_bit       = mock_type(uint8_t);
         hk_data->adc_rms            = mock_type(int16_t);
-        hk_data->num_rx_ptt         = mock_type(uint8_t);
+        hk_data->num_rx_ptt         = mock_type(uint32_t);
         hk_data->max_parl_decod     = mock_type(uint8_t);
         hk_data->mem_err_count      = mock_type(uint8_t);
     }
