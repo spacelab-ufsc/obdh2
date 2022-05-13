@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Bruno Benedetti <brunobenedetti45@gmail.com>
  * 
- * \version 0.9.2
+ * \version 0.9.5
  * 
  * \date 2019/10/27
  * 
@@ -282,7 +282,7 @@ int16_t edc_get_state_pkg(edc_config_t config, uint8_t *status)
     if (edc_write_cmd(config, cmd) == 0)
     {
         /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
-        edc_delay_ms(100);
+        edc_delay_ms(100);  /* 10 ms is not enough when using the UART interface! */
 
         if (edc_read(config, status, EDC_FRAME_STATE_LEN) == 0)
         {
@@ -330,7 +330,7 @@ int16_t edc_get_ptt_pkg(edc_config_t config, uint8_t *pkg)
     if (edc_write_cmd(config, cmd) == 0)
     {
         /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
-        edc_delay_ms(100);
+        edc_delay_ms(100);  /* 10 ms is not enough when using the UART interface! */
 
         if (edc_read(config, pkg, EDC_FRAME_PTT_LEN) == 0)
         {
@@ -378,7 +378,7 @@ int16_t edc_get_hk_pkg(edc_config_t config, uint8_t *hk)
     if (edc_write_cmd(config, cmd) == 0)
     {
         /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
-        edc_delay_ms(100);
+        edc_delay_ms(100);  /* 10 ms is not enough when using the UART interface! */
 
         if (edc_read(config, hk, EDC_FRAME_HK_LEN) == 0)
         {
@@ -426,7 +426,7 @@ int16_t edc_get_adc_seq(edc_config_t config, uint8_t *seq)
     if (edc_write_cmd(config, cmd) == 0)
     {
         /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
-        edc_delay_ms(100);
+        edc_delay_ms(100);  /* 10 ms is not enough when using the UART interface! */
 
         if (edc_read(config, seq, EDC_FRAME_ADC_SEQ_LEN) == 0)
         {
@@ -577,14 +577,18 @@ int edc_get_hk(edc_config_t config, edc_hk_t *hk_data)
                                               ((uint32_t)hk_raw[7] << 16) |
                                               ((uint32_t)hk_raw[6] << 8)  |
                                               ((uint32_t)hk_raw[5] << 0);
-                hk_data->current_supply     = ((uint32_t)hk_raw[10] << 8) | ((uint32_t)hk_raw[9] << 0);
-                hk_data->voltage_supply     = ((uint32_t)hk_raw[12] << 8) | ((uint32_t)hk_raw[11] << 0);
-                hk_data->temp               = (int8_t)hk_raw[13] - 40;
-                hk_data->pll_sync_bit       = hk_raw[14];
-                hk_data->adc_rms            = ((uint16_t)hk_raw[16] << 8) | ((uint16_t)hk_raw[15] << 0);
-                hk_data->num_rx_ptt         = hk_raw[17];
-                hk_data->max_parl_decod     = hk_raw[18];
-                hk_data->mem_err_count      = hk_raw[19];
+                hk_data->current_supply_d   = ((uint32_t)hk_raw[10] << 8) | ((uint32_t)hk_raw[9] << 0);
+                hk_data->current_supply_a   = ((uint32_t)hk_raw[12] << 8) | ((uint32_t)hk_raw[11] << 0);
+                hk_data->voltage_supply     = ((uint32_t)hk_raw[14] << 8) | ((uint32_t)hk_raw[13] << 0);
+                hk_data->temp               = (int8_t)hk_raw[15] - 40;
+                hk_data->pll_sync_bit       = hk_raw[16];
+                hk_data->adc_rms            = ((uint16_t)hk_raw[18] << 8) | ((uint16_t)hk_raw[17] << 0);
+                hk_data->num_rx_ptt         = ((uint32_t)hk_raw[22] << 24) |
+                                              ((uint32_t)hk_raw[21] << 16) |
+                                              ((uint32_t)hk_raw[20] << 8) |
+                                              ((uint32_t)hk_raw[19] << 0);
+                hk_data->max_parl_decod     = hk_raw[23];
+                hk_data->mem_err_count      = hk_raw[24];
 
                 err = 0;
             }
