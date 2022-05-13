@@ -42,7 +42,7 @@
 
 #define FIRMWARE_AUTHOR             "SpaceLab-UFSC"
 
-#define FIRMWARE_AUTHOR_EMAIL       "spacelab.ufsc@gmail.com"
+#define FIRMWARE_AUTHOR_EMAIL       "contact@spacelab.ufsc.br"
 
 #endif /* VERSION_H_ */
 
