@@ -136,7 +136,7 @@ int sl_eps2_read_reg(sl_eps2_config_t config, uint8_t adr, uint32_t *val)
 
     sl_eps2_delay_ms(50);
 
-    if (sl_eps2_i2c_read(config, buf, 5U) != TCA4311A_READY)
+    if (sl_eps2_i2c_read(config, buf, 6U) != TCA4311A_READY)
     {
         err = -1;
     }
