@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
  * 
- * \version 0.9.5
+ * \version 0.9.6
  * 
  * \date 2021/08/15
  * 
@@ -378,6 +378,22 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
 
                     break;
                 }
+                case PAYLOAD_EDC_RAW_PTT:
+                {
+                    int bytes = edc_get_ptt_pkg(edc_0_conf, data);
+
+                    if (bytes < 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Error reading PTT package!");
+                        sys_log_new_line();
+                    }
+
+                    *len = bytes;
+
+                    err = 0;
+
+                    break;
+                }
                 case PAYLOAD_EDC_RAW_HK:
                 {
                     int bytes = edc_get_hk_pkg(edc_0_conf, data);
@@ -414,6 +430,22 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
                     if (bytes < 0)
                     {
                         sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 1: Error reading state!");
+                        sys_log_new_line();
+                    }
+
+                    *len = bytes;
+
+                    err = 0;
+
+                    break;
+                }
+                case PAYLOAD_EDC_RAW_PTT:
+                {
+                    int bytes = edc_get_ptt_pkg(edc_1_conf, data);
+
+                    if (bytes < 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 1: Error reading PTT package!");
                         sys_log_new_line();
                     }
 
