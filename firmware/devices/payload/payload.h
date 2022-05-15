@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.9.6
+ * \version 0.9.7
  * 
  * \date 2021/08/15
  * 
@@ -59,8 +59,11 @@ typedef enum
 typedef enum
 {
     PAYLOAD_EDC_RAW_STATE=0,    /**< EDC raw state. */
+    PAYLOAD_EDC_STATE,          /**< EDC state. */
     PAYLOAD_EDC_RAW_PTT,        /**< EDC raw PTT packet. */
-    PAYLOAD_EDC_RAW_HK          /**< EDC raw housekeeping. */
+    PAYLOAD_EDC_PTT,            /**< EDC PTT packet. */
+    PAYLOAD_EDC_RAW_HK,         /**< EDC raw housekeeping. */
+    PAYLOAD_EDC_HK              /**< EDC housekeeping. */
 } payload_data_id_t;
 
 /**
@@ -73,7 +76,8 @@ typedef uint8_t payload_cmd_t;
  *
  * \param[in] pl is the payload device to initialize. It can be:
  * \parblock
- *      -\b PAYLOAD_EDC
+ *      -\b PAYLOAD_EDC_0
+ *      -\b PAYLOAD_EDC_1
  *      -\b PAYLOAD_X
  *      -\b PAYLOAD_PHJ
  *      -\b PAYLOAD_HARSH
@@ -89,7 +93,8 @@ int payload_init(payload_t pl);
  *
  * \param[in] pl is the payload device to enable. It can be:
  * \parblock
- *      -\b PAYLOAD_EDC
+ *      -\b PAYLOAD_EDC_0
+ *      -\b PAYLOAD_EDC_1
  *      -\b PAYLOAD_X
  *      -\b PAYLOAD_PHJ
  *      -\b PAYLOAD_HARSH
@@ -105,7 +110,8 @@ int payload_enable(payload_t pl);
  *
  * \param[in] pl is the payload device to disable. It can be:
  * \parblock
- *      -\b PAYLOAD_EDC
+ *      -\b PAYLOAD_EDC_0
+ *      -\b PAYLOAD_EDC_1
  *      -\b PAYLOAD_X
  *      -\b PAYLOAD_PHJ
  *      -\b PAYLOAD_HARSH
@@ -121,7 +127,8 @@ int payload_disable(payload_t pl);
  *
  * \param[in] pl is the payload device to disable. It can be:
  * \parblock
- *      -\b PAYLOAD_EDC
+ *      -\b PAYLOAD_EDC_0
+ *      -\b PAYLOAD_EDC_1
  *      -\b PAYLOAD_X
  *      -\b PAYLOAD_PHJ
  *      -\b PAYLOAD_HARSH
@@ -139,7 +146,8 @@ int payload_write_cmd(payload_t pl, payload_cmd_t cmd);
  *
  * \param[in] pl is the payload device to initialize. It can be:
  * \parblock
- *      -\b PAYLOAD_EDC
+ *      -\b PAYLOAD_EDC_0
+ *      -\b PAYLOAD_EDC_1
  *      -\b PAYLOAD_X
  *      -\b PAYLOAD_PHJ
  *      -\b PAYLOAD_HARSH
@@ -149,7 +157,11 @@ int payload_write_cmd(payload_t pl, payload_cmd_t cmd);
  * param[in] id is the data ID. It can be:
  * \parblock
  *      -\b PAYLOAD_EDC_RAW_STATE
+ *      -\b PAYLOAD_EDC_STATE
+ *      -\b PAYLOAD_EDC_RAW_PTT
+ *      -\b PAYLOAD_EDC_PTT
  *      -\b PAYLOAD_EDC_RAW_HK
+ *      -\b PAYLOAD_EDC_HK
  *      .
  * \endparblock
  *

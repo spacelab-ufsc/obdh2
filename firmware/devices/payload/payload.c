@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
  * 
- * \version 0.9.6
+ * \version 0.9.7
  * 
  * \date 2021/08/15
  * 
@@ -378,6 +378,30 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
 
                     break;
                 }
+                case PAYLOAD_EDC_STATE:
+                {
+                    edc_state_t state = {0};
+
+                    if (edc_get_state(edc_0_conf, &state) == 0)
+                    {
+                        uint8_t i = 0;
+                        for(i = 0; i < sizeof(edc_state_t); i++)
+                        {
+                            data[i] = ((uint8_t*)&state)[i];
+                        }
+
+                        *len = sizeof(edc_state_t);
+                    }
+                    else
+                    {
+                        *len = 0U;
+
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Error reading state!");
+                        sys_log_new_line();
+                    }
+
+                    break;
+                }
                 case PAYLOAD_EDC_RAW_PTT:
                 {
                     int bytes = edc_get_ptt_pkg(edc_0_conf, data);
@@ -394,6 +418,30 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
 
                     break;
                 }
+                case PAYLOAD_EDC_PTT:
+                {
+                    edc_ptt_t ptt = {0};
+
+                    if (edc_get_ptt(edc_0_conf, &ptt) == 0)
+                    {
+                        uint8_t i = 0;
+                        for(i = 0; i < sizeof(edc_ptt_t); i++)
+                        {
+                            data[i] = ((uint8_t*)&ptt)[i];
+                        }
+
+                        *len = sizeof(edc_ptt_t);
+                    }
+                    else
+                    {
+                        *len = 0U;
+
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Error reading PTT package!");
+                        sys_log_new_line();
+                    }
+
+                    break;
+                }
                 case PAYLOAD_EDC_RAW_HK:
                 {
                     int bytes = edc_get_hk_pkg(edc_0_conf, data);
@@ -407,6 +455,30 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
                     *len = bytes;
 
                     err = 0;
+
+                    break;
+                }
+                case PAYLOAD_EDC_HK:
+                {
+                    edc_hk_t hk = {0};
+
+                    if (edc_get_hk(edc_0_conf, &hk) == 0)
+                    {
+                        uint8_t i = 0;
+                        for(i = 0; i < sizeof(edc_hk_t); i++)
+                        {
+                            data[i] = ((uint8_t*)&hk)[i];
+                        }
+
+                        *len = sizeof(edc_hk_t);
+                    }
+                    else
+                    {
+                        *len = 0U;
+
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Error reading housekeeping data!");
+                        sys_log_new_line();
+                    }
 
                     break;
                 }
@@ -439,6 +511,30 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
 
                     break;
                 }
+                case PAYLOAD_EDC_STATE:
+                {
+                    edc_state_t state = {0};
+
+                    if (edc_get_state(edc_1_conf, &state) == 0)
+                    {
+                        uint8_t i = 0;
+                        for(i = 0; i < sizeof(edc_state_t); i++)
+                        {
+                            data[i] = ((uint8_t*)&state)[i];
+                        }
+
+                        *len = sizeof(edc_state_t);
+                    }
+                    else
+                    {
+                        *len = 0U;
+
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 1: Error reading state!");
+                        sys_log_new_line();
+                    }
+
+                    break;
+                }
                 case PAYLOAD_EDC_RAW_PTT:
                 {
                     int bytes = edc_get_ptt_pkg(edc_1_conf, data);
@@ -455,6 +551,30 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
 
                     break;
                 }
+                case PAYLOAD_EDC_PTT:
+                {
+                    edc_ptt_t ptt_pkg = {0};
+
+                    if (edc_get_ptt(edc_1_conf, &ptt_pkg) == 0)
+                    {
+                        uint8_t i = 0;
+                        for(i = 0; i < sizeof(edc_ptt_t); i++)
+                        {
+                            data[i] = ((uint8_t*)&ptt_pkg)[i];
+                        }
+
+                        *len = sizeof(edc_ptt_t);
+                    }
+                    else
+                    {
+                        *len = 0U;
+
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 1: Error reading PTT package!");
+                        sys_log_new_line();
+                    }
+
+                    break;
+                }
                 case PAYLOAD_EDC_RAW_HK:
                 {
                     int bytes = edc_get_hk_pkg(edc_1_conf, data);
@@ -468,6 +588,30 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
                     *len = bytes;
 
                     err = 0;
+
+                    break;
+                }
+                case PAYLOAD_EDC_HK:
+                {
+                    edc_hk_t hk = {0};
+
+                    if (edc_get_hk(edc_1_conf, &hk) == 0)
+                    {
+                        uint8_t i = 0;
+                        for(i = 0; i < sizeof(edc_hk_t); i++)
+                        {
+                            data[i] = ((uint8_t*)&hk)[i];
+                        }
+
+                        *len = sizeof(edc_hk_t);
+                    }
+                    else
+                    {
+                        *len = 0U;
+
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 1: Error reading housekeeping data!");
+                        sys_log_new_line();
+                    }
 
                     break;
                 }
