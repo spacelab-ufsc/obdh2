@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.41
+ * \version 0.9.6
  * 
  * \date 2021/09/02
  * 
@@ -164,16 +164,16 @@ static void sl_eps2_read_reg_test(void **state)
     expect_value(__wrap_tca4311a_read, config.en_pin, SL_EPS2_I2C_EN_PIN);
     expect_value(__wrap_tca4311a_read, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
     expect_value(__wrap_tca4311a_read, adr, SL_EPS2_I2C_ADR);
-    expect_value(__wrap_tca4311a_read, len, 5);
+    expect_value(__wrap_tca4311a_read, len, 6);
 
-    data[0] = generate_random(0, UINT8_MAX);
     data[1] = generate_random(0, UINT8_MAX);
     data[2] = generate_random(0, UINT8_MAX);
     data[3] = generate_random(0, UINT8_MAX);
-    data[4] = crc8(data, 4);
+    data[4] = generate_random(0, UINT8_MAX);
+    data[5] = crc8(data, 5);
 
     uint16_t i = 0;
-    for(i=0; i<5; i++)
+    for(i=0; i<6; i++)
     {
         will_return(__wrap_tca4311a_read, data[i]);
     }
@@ -184,10 +184,10 @@ static void sl_eps2_read_reg_test(void **state)
 
     assert_return_code(sl_eps2_read_reg(conf, adr, &val), 0);
 
-    assert_int_equal(data[0], (val >> 24) & 0xFF);
-    assert_int_equal(data[1], (val >> 16) & 0xFF);
-    assert_int_equal(data[2], (val >> 8) & 0xFF);
-    assert_int_equal(data[3], (val >> 0) & 0xFF);
+    assert_int_equal(data[1], (val >> 24) & 0xFF);
+    assert_int_equal(data[2], (val >> 16) & 0xFF);
+    assert_int_equal(data[3], (val >> 8) & 0xFF);
+    assert_int_equal(data[4], (val >> 0) & 0xFF);
 }
 
 static void sl_eps2_read_data_test(void **state)
@@ -1047,16 +1047,17 @@ void read_reg(uint8_t adr, uint32_t val)
     expect_value(__wrap_tca4311a_read, config.en_pin, SL_EPS2_I2C_EN_PIN);
     expect_value(__wrap_tca4311a_read, config.ready_pin, SL_EPS2_I2C_RDY_PIN);
     expect_value(__wrap_tca4311a_read, adr, SL_EPS2_I2C_ADR);
-    expect_value(__wrap_tca4311a_read, len, 5);
+    expect_value(__wrap_tca4311a_read, len, 6);
 
-    data[0] = (val >> 24) & 0xFF;
-    data[1] = (val >> 16) & 0xFF;
-    data[2] = (val >> 8) & 0xFF;
-    data[3] = (val >> 0) & 0xFF;
-    data[4] = crc8(data, 4);
+    data[0] = adr;
+    data[1] = (val >> 24) & 0xFF;
+    data[2] = (val >> 16) & 0xFF;
+    data[3] = (val >> 8) & 0xFF;
+    data[4] = (val >> 0) & 0xFF;
+    data[5] = crc8(data, 5);
 
     uint16_t i = 0;
-    for(i=0; i<5; i++)
+    for(i=0; i<6; i++)
     {
         will_return(__wrap_tca4311a_read, data[i]);
     }
