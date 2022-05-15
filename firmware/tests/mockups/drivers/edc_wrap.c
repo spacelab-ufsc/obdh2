@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Bruno Benedetti <brunobenedetti45@gmail.com> 
  * 
- * \version 0.9.5
+ * \version 0.9.6
  * 
  * \date 2021/08/16
  * 
@@ -389,6 +389,38 @@ int __wrap_edc_get_state(edc_config_t config, edc_state_t *state_data)
         state_data->ptt_available   = mock_type(uint8_t);
         state_data->ptt_is_paused   = mock_type(bool);
         state_data->sampler_state   = mock_type(uint8_t);
+    }
+
+    return mock_type(int);
+}
+
+int __wrap_edc_get_ptt(edc_config_t config, edc_ptt_t *ptt_data)
+{
+    check_expected(config.interface);
+    check_expected(config.en_pin);
+
+    if (config.interface == EDC_IF_UART)
+    {
+        check_expected(config.uart_port);
+    }
+    else if (config.interface == EDC_IF_I2C)
+    {
+        check_expected(config.i2c_port);
+        check_expected(config.i2c_bitrate);
+    }
+
+    if (ptt_data != NULL)
+    {
+        ptt_data->time_tag          = mock_type(uint32_t);
+        ptt_data->error_code        = mock_type(uint8_t);
+        ptt_data->carrier_freq      = mock_type(int32_t);
+        ptt_data->carrier_abs       = mock_type(uint16_t);
+        ptt_data->msg_byte_length   = mock_type(uint8_t);
+        uint16_t i = 0;
+        for(i = 0; i < ptt_data->msg_byte_length; i++)
+        {
+            ptt_data->user_msg[i]   = mock_type(uint8_t);
+        }
     }
 
     return mock_type(int);

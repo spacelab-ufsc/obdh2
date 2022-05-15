@@ -1,7 +1,7 @@
 /*
  * edc_wrap.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.14
+ * \version 0.9.6
  * 
  * \date 2021/08/16
  * 
@@ -76,6 +76,8 @@ int __wrap_edc_echo(edc_config_t config);
 uint16_t __wrap_edc_calc_checksum(uint8_t *data, uint16_t len);
 
 int __wrap_edc_get_state(edc_config_t config, edc_state_t *state_data);
+
+int __wrap_edc_get_ptt(edc_config_t config, edc_ptt_t *ptt_data);
 
 int __wrap_edc_get_hk(edc_config_t config, edc_hk_t *hk_data);
 
