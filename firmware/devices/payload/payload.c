@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
  * 
- * \version 0.9.7
+ * \version 0.9.8
  * 
  * \date 2021/08/15
  * 
@@ -88,6 +88,12 @@ int payload_init(payload_t pl)
                     sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Error reading the housekeeping data!");
                     sys_log_new_line();
                 }
+
+                if (edc_resume_ptt_task(edc_0_conf) != 0)
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Error starting PTT task!");
+                    sys_log_new_line();
+                }
             }
             else
             {
@@ -129,6 +135,12 @@ int payload_init(payload_t pl)
                 else
                 {
                     sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 1: Error reading the housekeeping data!");
+                    sys_log_new_line();
+                }
+
+                if (edc_resume_ptt_task(edc_1_conf) != 0)
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 1: Error starting PTT task!");
                     sys_log_new_line();
                 }
             }
