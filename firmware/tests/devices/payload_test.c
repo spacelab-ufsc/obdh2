@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Bruno Benedetti <brunobenedetti45@gmail.com> 
  * 
- * \version 0.9.5
+ * \version 0.9.8
  * 
  * \date 2021/08/16
  * 
@@ -91,6 +91,12 @@ static void payload_init_test(void **state)
 
     will_return(__wrap_edc_get_hk, 0);
 
+    expect_value(__wrap_edc_resume_ptt_task, config.interface, EDC_IF_UART);
+    expect_value(__wrap_edc_resume_ptt_task, config.en_pin, EDC_0_GPIO_EN_PIN);
+    expect_value(__wrap_edc_resume_ptt_task, config.uart_port, EDC_0_UART_PORT);
+
+    will_return(__wrap_edc_resume_ptt_task, 0);
+
     assert_return_code(payload_init(PAYLOAD_EDC_0), 0);
 
     /* EDC 1 */
@@ -127,6 +133,12 @@ static void payload_init_test(void **state)
     will_return(__wrap_edc_get_hk, 0);      /* Memory error count */
 
     will_return(__wrap_edc_get_hk, 0);
+
+    expect_value(__wrap_edc_resume_ptt_task, config.interface, EDC_IF_UART);
+    expect_value(__wrap_edc_resume_ptt_task, config.en_pin, EDC_1_GPIO_EN_PIN);
+    expect_value(__wrap_edc_resume_ptt_task, config.uart_port, EDC_1_UART_PORT);
+
+    will_return(__wrap_edc_resume_ptt_task, 0);
 
     assert_return_code(payload_init(PAYLOAD_EDC_1), 0);
 
