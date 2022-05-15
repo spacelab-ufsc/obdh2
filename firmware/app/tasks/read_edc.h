@@ -1,7 +1,7 @@
 /*
  * read_edc.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.18
+ * \version 0.9.10
  * 
  * \date 2020/08/16
  * 
@@ -41,7 +41,7 @@
 #include <task.h>
 
 #define TASK_READ_EDC_NAME                  "EDC Task"          /**< Task name. */
-#define TASK_READ_EDC_STACK_SIZE            128                 /**< Stack size in bytes. */
+#define TASK_READ_EDC_STACK_SIZE            300                 /**< Stack size in bytes. */
 #define TASK_READ_EDC_PRIORITY              3                   /**< Task priority. */
 #define TASK_READ_EDC_PERIOD_MS             (60*1000)           /**< Task period in milliseconds. */
 #define TASK_READ_EDC_INIT_TIMEOUT_MS       2000                /**< Wait time to initialize the task in milliseconds. */
