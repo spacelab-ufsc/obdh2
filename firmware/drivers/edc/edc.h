@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Bruno Benedetti <brunobenedetti45@gmail.com>
  * 
- * \version 0.9.5
+ * \version 0.9.13
  * 
  * \date 2019/10/27
  * 
@@ -72,6 +72,7 @@
 #define EDC_FRAME_PTT_LEN           49      /**< PTT frame length. */
 #define EDC_FRAME_ADC_SEQ_LEN       8200    /**< ADC sequence frame length. */
 #define EDC_FRAME_HK_LEN            26      /**< Housekeeping frame length. */
+#define EDC_FRAME_ECHO_LEN          4       /**< Echo frame length. */
 
 /**
  * \brief EDC interfaces.

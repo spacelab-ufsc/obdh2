@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Bruno Benedetti <brunobenedetti45@gmail.com>
  * 
- * \version 0.9.5
+ * \version 0.9.13
  * 
  * \date 2019/10/27
  * 
@@ -465,11 +465,59 @@ int16_t edc_get_adc_seq(edc_config_t config, uint8_t *seq)
 
 int edc_echo(edc_config_t config)
 {
+    int res = -1;
+
     edc_cmd_t cmd = {0};
 
     cmd.id = EDC_CMD_ECHO;
 
-    return edc_write_cmd(config, cmd);
+    if (edc_write_cmd(config, cmd) == 0)
+    {
+        if (config.interface == EDC_IF_UART)    /* The echo command just answers when using the UART interface (I think...) */
+        {
+            /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
+            edc_delay_ms(100);  /* 10 ms is not enough when using the UART interface! */
+
+            uint8_t echo_ans[5] = {0};
+
+            if (edc_read(config, echo_ans, EDC_FRAME_ECHO_LEN) == 0)
+            {
+                uint8_t echo[4] = {'E', 'C', 'H', 'O'}; /* Expected response */
+
+                if (memcmp(echo_ans, echo, 4) != 0)
+                {
+                #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading the \"ECHO\" command response! Wrong answer!");
+                    sys_log_new_line();
+                #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                }
+                else
+                {
+                    res = 0;
+                }
+            }
+            else
+            {
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading the \"ECHO\" command response!");
+                sys_log_new_line();
+            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            }
+        }
+        else
+        {
+            res = 0;
+        }
+    }
+    else
+    {
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error writing the \"ECHO\" command!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+    }
+
+    return res;
 }
 
 uint16_t edc_calc_checksum(uint8_t *data, uint16_t len)
