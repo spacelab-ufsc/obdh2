@@ -26,7 +26,7 @@
  * \author Bruno Benedetti <brunobenedetti45@gmail.com>
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  *
- * \version 0.9.2
+ * \version 0.9.12
  *
  * \date 2022/03/15
  *
@@ -59,6 +59,8 @@ int edc_uart_init(edc_config_t config)
 
 int edc_uart_write(edc_config_t config, uint8_t *data, uint16_t len)
 {
+    int dummy = uart_flush(config.uart_port);
+
     return uart_write(config.uart_port, data, len);
 }
 
