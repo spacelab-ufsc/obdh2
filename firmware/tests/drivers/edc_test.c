@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Bruno Benedetti <brunobenedetti45@gmail.com> 
  *
- * \version 0.9.12
+ * \version 0.9.13
  * 
  * \date 2021/09/01
  * 
@@ -1203,6 +1203,25 @@ static void edc_echo_test(void **state)
     expect_value (__wrap_uart_write, len, 1);
 
     will_return(__wrap_uart_write, 0);
+
+    /* UART read available */
+    expect_value (__wrap_uart_read_available, port, EDC_UART_PORT);
+
+    will_return(__wrap_uart_read_available, 4);
+
+    /* UART read */
+    expect_value(__wrap_uart_read, port, EDC_UART_PORT);
+    expect_value(__wrap_uart_read, len, 4);
+
+    uint8_t data[5] = {'E', 'C', 'H', 'O'};
+
+    uint8_t i = 0;
+    for(i=0; i<4; i++)
+    {
+        will_return(__wrap_uart_read, data[i]);
+    }
+
+    will_return(__wrap_uart_read, 0);
 
     assert_return_code(edc_echo(conf), 0);
 }
