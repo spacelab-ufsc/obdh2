@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Bruno Benedetti <brunobenedetti45@gmail.com> 
  *
- * \version 0.9.5
+ * \version 0.9.12
  * 
  * \date 2021/09/01
  * 
@@ -145,6 +145,11 @@ static void edc_init_test(void **state)
 
     will_return(__wrap_uart_rx_enable, 0);
 
+    /* UART flush */
+    expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+    will_return(__wrap_uart_flush, 0);
+
     /* UART write */
     expect_value (__wrap_uart_write, port, EDC_UART_PORT);
     expect_memory(__wrap_uart_write, data, (void*)cmd, cmd_len);
@@ -231,6 +236,11 @@ static void edc_write_cmd_test(void **state)
                 
                 conf.interface = EDC_IF_UART;
 
+                /* UART flush */
+                expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+                will_return(__wrap_uart_flush, 0);
+
                 /* UART write */
                 expect_value (__wrap_uart_write, port, EDC_UART_PORT);
                 expect_memory(__wrap_uart_write, data, (void*)cmd_arr, cmd_len);
@@ -258,6 +268,11 @@ static void edc_write_cmd_test(void **state)
                 assert_return_code(edc_write_cmd(conf, cmd), 0);
 
                 conf.interface = EDC_IF_UART;
+
+                /* UART flush */
+                expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+                will_return(__wrap_uart_flush, 0);
 
                 /* UART write */
                 expect_value (__wrap_uart_write, port, EDC_UART_PORT);
@@ -287,6 +302,11 @@ static void edc_write_cmd_test(void **state)
 
                 conf.interface = EDC_IF_UART;
 
+                /* UART flush */
+                expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+                will_return(__wrap_uart_flush, 0);
+
                 /* UART write */
                 expect_value (__wrap_uart_write, port, EDC_UART_PORT);
                 expect_memory(__wrap_uart_write, data, (void*)cmd_arr, cmd_len);
@@ -314,6 +334,11 @@ static void edc_write_cmd_test(void **state)
                 assert_return_code(edc_write_cmd(conf, cmd), 0);
 
                 conf.interface = EDC_IF_UART;
+
+                /* UART flush */
+                expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+                will_return(__wrap_uart_flush, 0);
 
                 /* UART write */
                 expect_value (__wrap_uart_write, port, EDC_UART_PORT);
@@ -343,6 +368,11 @@ static void edc_write_cmd_test(void **state)
 
                 conf.interface = EDC_IF_UART;
 
+                /* UART flush */
+                expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+                will_return(__wrap_uart_flush, 0);
+
                 /* UART write */
                 expect_value (__wrap_uart_write, port, EDC_UART_PORT);
                 expect_memory(__wrap_uart_write, data, (void*)cmd_arr, cmd_len);
@@ -370,6 +400,11 @@ static void edc_write_cmd_test(void **state)
                 assert_return_code(edc_write_cmd(conf, cmd), 0);
 
                 conf.interface = EDC_IF_UART;
+
+                /* UART flush */
+                expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+                will_return(__wrap_uart_flush, 0);
 
                 /* UART write */
                 expect_value (__wrap_uart_write, port, EDC_UART_PORT);
@@ -400,6 +435,11 @@ static void edc_write_cmd_test(void **state)
 
                 conf.interface = EDC_IF_UART;
 
+                /* UART flush */
+                expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+                will_return(__wrap_uart_flush, 0);
+
                 /* UART write */
                 expect_value (__wrap_uart_write, port, EDC_UART_PORT);
                 expect_memory(__wrap_uart_write, data, (void*)cmd_arr, cmd_len);
@@ -427,6 +467,11 @@ static void edc_write_cmd_test(void **state)
                 assert_return_code(edc_write_cmd(conf, cmd), 0);
 
                 conf.interface = EDC_IF_UART;
+
+                /* UART flush */
+                expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+                will_return(__wrap_uart_flush, 0);
 
                 /* UART write */
                 expect_value (__wrap_uart_write, port, EDC_UART_PORT);
@@ -458,6 +503,11 @@ static void edc_write_cmd_test(void **state)
 
                 conf.interface = EDC_IF_UART;
 
+                /* UART flush */
+                expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+                will_return(__wrap_uart_flush, 0);
+
                 /* UART write */
                 expect_value (__wrap_uart_write, port, EDC_UART_PORT);
                 expect_memory(__wrap_uart_write, data, (void*)cmd_arr, cmd_len);
@@ -485,6 +535,11 @@ static void edc_write_cmd_test(void **state)
                 assert_return_code(edc_write_cmd(conf, cmd), 0);
 
                 conf.interface = EDC_IF_UART;
+
+                /* UART flush */
+                expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+                will_return(__wrap_uart_flush, 0);
 
                 /* UART write */
                 expect_value (__wrap_uart_write, port, EDC_UART_PORT);
@@ -592,6 +647,11 @@ static void edc_check_device_test(void **state)
 
     conf.interface = EDC_IF_UART;
 
+    /* UART flush */
+    expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+    will_return(__wrap_uart_flush, 0);
+
     /* UART write */
     expect_value (__wrap_uart_write, port, EDC_UART_PORT);
     expect_memory(__wrap_uart_write, data, (void*)cmd, cmd_len);
@@ -643,6 +703,11 @@ static void edc_set_rtc_time_test(void **state)
 
     conf.interface = EDC_IF_UART;
 
+    /* UART flush */
+    expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+    will_return(__wrap_uart_flush, 0);
+
     /* UART write */
     expect_value (__wrap_uart_write, port, EDC_UART_PORT);
     expect_memory(__wrap_uart_write, data, (void*)cmd_arr, cmd_len);
@@ -672,6 +737,11 @@ static void edc_pop_ptt_pkg_test(void **state)
 
     conf.interface = EDC_IF_UART;
 
+    /* UART flush */
+    expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+    will_return(__wrap_uart_flush, 0);
+
     /* UART write */
     expect_value (__wrap_uart_write, port, EDC_UART_PORT);
     expect_memory(__wrap_uart_write, data, (void*)cmd_arr, cmd_len);
@@ -697,6 +767,11 @@ static void edc_pause_ptt_task_test(void **state)
     assert_return_code(edc_pause_ptt_task(conf), 0);
 
     conf.interface = EDC_IF_UART;
+
+    /* UART flush */
+    expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+    will_return(__wrap_uart_flush, 0);
 
     /* UART write */
     expect_value (__wrap_uart_write, port, EDC_UART_PORT);
@@ -725,6 +800,11 @@ static void edc_resume_ptt_task_test(void **state)
 
     conf.interface = EDC_IF_UART;
 
+    /* UART flush */
+    expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+    will_return(__wrap_uart_flush, 0);
+
     /* UART write */
     expect_value (__wrap_uart_write, port, EDC_UART_PORT);
     expect_memory(__wrap_uart_write, data, (void*)&cmd, 1);
@@ -751,6 +831,11 @@ static void edc_start_adc_task_test(void **state)
     assert_return_code(edc_start_adc_task(conf), 0);
 
     conf.interface = EDC_IF_UART;
+
+    /* UART flush */
+    expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+    will_return(__wrap_uart_flush, 0);
 
     /* UART write */
     expect_value (__wrap_uart_write, port, EDC_UART_PORT);
@@ -805,6 +890,11 @@ static void edc_get_state_pkg_test(void **state)
     }
 
     conf.interface = EDC_IF_UART;
+
+    /* UART flush */
+    expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+    will_return(__wrap_uart_flush, 0);
 
     /* UART Write */
     expect_value (__wrap_uart_write, port, EDC_UART_PORT);
@@ -883,6 +973,11 @@ static void edc_get_ptt_pkg_test(void **state)
 
     conf.interface = EDC_IF_UART;
 
+    /* UART flush */
+    expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+    will_return(__wrap_uart_flush, 0);
+
     /* UART Write */
     expect_value (__wrap_uart_write, port, EDC_UART_PORT);
     expect_memory(__wrap_uart_write, data, (void*)cmd, 2);
@@ -959,6 +1054,11 @@ static void edc_get_hk_pkg_test(void **state)
     }
 
     conf.interface = EDC_IF_UART;
+
+    /* UART flush */
+    expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+    will_return(__wrap_uart_flush, 0);
 
     /* UART Write */
     expect_value (__wrap_uart_write, port, EDC_UART_PORT);
@@ -1037,6 +1137,11 @@ static void edc_get_adc_seq_test(void **state)
 
     conf.interface = EDC_IF_UART;
 
+    /* UART flush */
+    expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+    will_return(__wrap_uart_flush, 0);
+
     /* UART Write */
     expect_value (__wrap_uart_write, port, EDC_UART_PORT);
     expect_memory(__wrap_uart_write, data, (void*)&cmd, 3);
@@ -1086,6 +1191,11 @@ static void edc_echo_test(void **state)
     assert_return_code(edc_echo(conf), 0);
 
     conf.interface = EDC_IF_UART;
+
+    /* UART flush */
+    expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+    will_return(__wrap_uart_flush, 0);
 
     /* UART Write */
     expect_value (__wrap_uart_write, port, EDC_UART_PORT);
@@ -1171,6 +1281,11 @@ static void edc_get_state_test(void **state)
     assert_return_code(edc_get_state(conf, &st), 0);
 
     conf.interface = EDC_IF_UART;
+
+    /* UART flush */
+    expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+    will_return(__wrap_uart_flush, 0);
 
     /* UART Write */
     expect_value (__wrap_uart_write, port, EDC_UART_PORT);
@@ -1263,6 +1378,11 @@ static void edc_get_ptt_test(void **state)
     }
 
     conf.interface = EDC_IF_UART;
+
+    /* UART flush */
+    expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+    will_return(__wrap_uart_flush, 0);
 
     /* UART Write */
     expect_value (__wrap_uart_write, port, EDC_UART_PORT);
@@ -1366,6 +1486,11 @@ static void edc_get_hk_test(void **state)
     assert_int_equal(hk_data.mem_err_count, data[24]);
 
     conf.interface = EDC_IF_UART;
+
+    /* UART flush */
+    expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+    will_return(__wrap_uart_flush, 0);
 
     /* UART Write */
     expect_value (__wrap_uart_write, port, EDC_UART_PORT);
@@ -1524,6 +1649,10 @@ static void edc_uart_write_test(void **state)
     {
         cmd[i] = generate_random(0, UINT8_MAX);
     }
+
+    expect_value (__wrap_uart_flush, port, EDC_UART_PORT);
+
+    will_return(__wrap_uart_flush, 0);
 
     expect_value (__wrap_uart_write, port, EDC_UART_PORT);
     expect_memory(__wrap_uart_write, data, (void*)cmd, cmd_len);
