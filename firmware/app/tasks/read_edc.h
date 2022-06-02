@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.9.10
+ * \version 0.9.14
  * 
  * \date 2020/08/16
  * 
@@ -43,7 +43,7 @@
 #define TASK_READ_EDC_NAME                  "EDC Task"          /**< Task name. */
 #define TASK_READ_EDC_STACK_SIZE            300                 /**< Stack size in bytes. */
 #define TASK_READ_EDC_PRIORITY              3                   /**< Task priority. */
-#define TASK_READ_EDC_PERIOD_MS             (60*1000)           /**< Task period in milliseconds. */
+#define TASK_READ_EDC_PERIOD_MS             (60000)             /**< Task period in milliseconds. */
 #define TASK_READ_EDC_INIT_TIMEOUT_MS       2000                /**< Wait time to initialize the task in milliseconds. */
 
 /**
