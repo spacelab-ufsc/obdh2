@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.9.15
+ * \version 0.9.16
  * 
  * \date 2019/12/07
  * 
@@ -79,6 +79,7 @@ static int spi_setup_gpio(spi_port_t port)
             gpio_init(GPIO_PIN_28, conf);
             gpio_init(GPIO_PIN_45, conf);
             gpio_init(GPIO_PIN_46, conf);
+            gpio_init(GPIO_PIN_63, conf);
 
             /* Set all CS pins to high */
             gpio_set_state(GPIO_PIN_5, true);
@@ -86,6 +87,7 @@ static int spi_setup_gpio(spi_port_t port)
             gpio_set_state(GPIO_PIN_28, true);
             gpio_set_state(GPIO_PIN_45, true);
             gpio_set_state(GPIO_PIN_46, true);
+            gpio_set_state(GPIO_PIN_63, true);
 
             break;
         case SPI_PORT_1:
