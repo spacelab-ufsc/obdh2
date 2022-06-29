@@ -1,7 +1,7 @@
 /*
  * time_control.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.11
+ * \version 0.9.17
  * 
  * \date 2020/08/09
  * 
@@ -41,7 +41,7 @@
 #include "time_control.h"
 #include "startup.h"
 
-#define TIME_CONTROL_MEDIA              MEDIA_NOR
+#define TIME_CONTROL_MEDIA              MEDIA_FRAM
 #define TIME_CONTROL_SAVE_PERIOD_SEC    60
 #define TIME_CONTROL_MEM_ID             0x12U
 #define TIME_CONTROL_CRC8_INITIAL_VAL   0x00U       /* CRC8-CCITT initial value. */
