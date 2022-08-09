@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.9.19
+ * \version 0.9.20
  * 
  * \date 2019/12/04
  * 
@@ -48,8 +48,6 @@
 #include <devices/antenna/antenna.h>
 #include <devices/media/media.h>
 #include <devices/payload/payload.h>
-
-#include <ngham/ngham.h>
 
 #include "startup.h"
 
@@ -156,10 +154,6 @@ void vTaskStartup(void)
         error_counter++;
     }
 #endif /* CONFIG_DEV_EPS_ENABLED */
-
-    /* NGHam initialization */
-    ngham_init_arrays();
-    ngham_init();
 
 #if defined(CONFIG_DEV_PAYLOAD_EDC_ENABLED) && (CONFIG_DEV_PAYLOAD_EDC_ENABLED == 1)
     /* Payload EDC device initialization */
