@@ -161,9 +161,6 @@ $(BUILD_DIR)/wdt_wrap.o: ../mockups/drivers/wdt_wrap.c
 $(BUILD_DIR)/tps382x_wrap.o: ../mockups/drivers/tps382x_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
-$(BUILD_DIR)/si446x_wrap.o: ../mockups/drivers/si446x_wrap.c
-	$(CC) $(FLAGS) -c $< -o $@
-
 $(BUILD_DIR)/sl_ttc2_wrap.o: ../mockups/drivers/sl_ttc2_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 

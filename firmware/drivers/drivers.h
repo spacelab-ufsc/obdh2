@@ -1,7 +1,7 @@
 /*
  * drivers.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.6
+ * \version 0.9.20
  * 
  * \date 2019/10/26
  * 
@@ -41,7 +41,6 @@
 #include "isis_antenna/isis_antenna.h"
 #include "mt25q/mt25q.h"
 #include "spi/spi.h"
-#include "si446x/si446x.h"
 #include "uart/uart.h"
 #include "gpio/gpio.h"
 #include "tps382x/tps382x.h"
