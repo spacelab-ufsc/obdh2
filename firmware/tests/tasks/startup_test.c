@@ -1,7 +1,7 @@
 /*
  * startup_test.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.2
+ * \version 0.9.19
  * 
  * \date 2021/08/14
  * 
@@ -48,7 +48,6 @@
 #include <devices/voltage_sensor/voltage_sensor.h>
 #include <devices/temp_sensor/temp_sensor.h>
 #include <devices/eps/eps.h>
-#include <devices/radio/radio.h>
 #include <devices/payload_edc/payload_edc.h>
 #include <devices/antenna/antenna.h>
 
@@ -80,9 +79,6 @@ static void vTaskStartup_test(void **state)
 //
 //    /* EPS initialization */
 //    will_return(__wrap_eps_init, 0);
-//
-//    /* Radio initialization */
-//    will_return(__wrap_radio_init, 0);
 //
 //    /* Antenna initialization */
 //    will_return(__wrap_antenna_init, 0);
