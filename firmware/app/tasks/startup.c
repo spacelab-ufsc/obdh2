@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.9.4
+ * \version 0.9.19
  * 
  * \date 2019/12/04
  * 
@@ -42,7 +42,6 @@
 #include <devices/watchdog/watchdog.h>
 #include <devices/leds/leds.h>
 #include <devices/eps/eps.h>
-#include <devices/radio/radio.h>
 #include <devices/current_sensor/current_sensor.h>
 #include <devices/voltage_sensor/voltage_sensor.h>
 #include <devices/temp_sensor/temp_sensor.h>
@@ -157,14 +156,6 @@ void vTaskStartup(void)
         error_counter++;
     }
 #endif /* CONFIG_DEV_EPS_ENABLED */
-
-#if defined(CONFIG_DEV_RADIO_ENABLED) && (CONFIG_DEV_RADIO_ENABLED == 1)
-    /* Radio device initialization */
-    if (radio_init() != 0)
-    {
-        error_counter++;
-    }
-#endif /* CONFIG_DEV_RADIO_ENABLED */
 
     /* NGHam initialization */
     ngham_init_arrays();

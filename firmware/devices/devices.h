@@ -1,7 +1,7 @@
 /*
  * devices.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.5
+ * \version 0.9.19
  * 
  * \date 2019/10/26
  * 
@@ -36,7 +36,6 @@
 #ifndef DEVICES_H_
 #define DEVICES_H_
 
-#include "radio/radio.h"
 #include "leds/leds.h"
 #include "eps/eps.h"
 #include "ttc/ttc.h"

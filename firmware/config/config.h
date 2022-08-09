@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.9.18
+ * \version 0.9.19
  * 
  * \date 2019/10/26
  * 
@@ -61,7 +61,6 @@
 #define CONFIG_DEV_VOLTAGE_SENSOR_ENABLED               1
 #define CONFIG_DEV_TEMP_SENSOR_ENABLED                  1
 #define CONFIG_DEV_EPS_ENABLED                          1
-#define CONFIG_DEV_RADIO_ENABLED                        0
 #define CONFIG_DEV_PAYLOAD_EDC_ENABLED                  1
 #define CONFIG_DEV_ANTENNA_ENABLED                      1
 
@@ -121,9 +120,6 @@
 
 /* Ports */
 #define CONFIG_SPI_PORT_0_SPEED_BPS                     1000000UL
-
-/* Radio */
-#define SI446X_XO_TUNE_REG_VALUE                        97
 
 /* Antenna */
 #define CONFIG_ANTENNA_INDEP_DEPLOY_BURN_TIME_SEC       10U
