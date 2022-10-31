@@ -1,7 +1,7 @@
 %
 % firmware.tex
 %
-% Copyright (C) 2020 by Universidade Federal de Santa Catarina.
+% Copyright (C) 2021 by Universidade Federal de Santa Catarina.
 %
 % OBDH 2.0 Documentation
 %
@@ -17,7 +17,7 @@
 %
 % \institution Universidade Federal de Santa Catarina (UFSC)
 %
-% \version 0.5.0
+% \version 0.9.0
 %
 % \date 2019/10/30
 %
@@ -32,16 +32,12 @@ The firmware depends on external libraries to access the embedded hardware or to
     \centering
     \begin{tabular}{L{5cm}R{4cm}}
         \toprule[1.5pt]
-        \textit{Library}        & \textit{Version} \\
+        \textbf{Library}        & \textbf{Version} \\
         \midrule
             MSP430 DriverLib    & v2.91.11.01 \\
             FreeRTOS            & v10.2.1 \\
             NGHam protocol      & - \\
             libcsp              & v1.5.16 \\
-            FatFS               & R0.14 \\
-            Reliance Edge       & v2.4 \\
-            FreeMODBUS          & v1.6 \\
-            JSMN                & v1.1.0 \\
         \bottomrule[1.5pt]
     \end{tabular}
     \caption{External libraries and dependencies of the firmware.}
@@ -56,23 +52,26 @@ A list of the firmware tasks can be seen in the \autoref{tab:firmware-tasks}.
     \centering
     \begin{tabular}{lccccc}
         \toprule[1.5pt]
-        \textit{Name}          & \textit{Priority} & \textit{Initial delay [ms]} & \textit{Period [ms]} & \textit{Stack [bytes]} \\
+        \textbf{Name}          & \textbf{Priority} & \textbf{Initial delay [ms]} & \textbf{Period [ms]} & \textbf{Stack [bytes]} \\
         \midrule
-        Startup (boot)         & Highest           & 0                           & Aperiodic            & 500                    \\
-        Deployment hibernation & Highest           & 0                           & Aperiodic            & TBD                    \\
-        Antenna deployment     & Highest           & 0                           & Aperiodic            & TBD                    \\
-        Watchdog reset         & Lowest            & 0                           & 100                  & 128                    \\
-        Heartbeat              & Lowest            & 0                           & 500                  & 128                    \\
-        Beacon                 & Medium            & 1000                        & 60000                & 2000                   \\
-        Uplink                 & Low               & 1000                        & 10000                & 500                    \\
-        EPS reading            & Medium            & 5000                        & 60000                & TBD                    \\
-        EDC reading            & High              & 5000                        & 1000                 & TBD                    \\
-        Payload X reading      & Medium            & 5000                        & 5000                 & TBD                    \\
-        TTC writing            & Medium            & 5000                        & 10000                & TBD                    \\
-        Radio periodoc reset   & Medium            & 600000                      & 600000               & 128                    \\
-        System reset           & High              & 0                           & 36000000             & 128                    \\
-        Read temperature       & Medium            & 0                           & 60000                & 128                    \\
-        CSP Server             & Lowest            & 0                           & 500                  & 1024                   \\
+        Antenna deployment     & Highest & 0      & Aperiodic & 150  \\
+        Antenna reading        & Medium  & 2000   & 60000     & 150  \\
+        Beacon                 & High    & 1000   & 60000     & 1000 \\
+        Data log               & Medium  & 2000   & 600000    & 225  \\
+        EDC reading            & Medium  & 2000   & 60000     & 128  \\
+        EPS reading            & Medium  & 2000   & 60000     & 384  \\
+        Heartbeat              & Lowest  & 2000   & 500       & 160  \\
+        Housekeeping           & Medium  & 2000   & 10000     & 160  \\
+        Payload X reading      & Medium  & 5000   & 5000      & TBD  \\
+        Radio periodoc reset   & High    & 60000  & 60000     & 128  \\
+        Read sensors           & Medium  & 2000   & 60000     & 140  \\
+        Startup (boot)         & Highest & 0      & Aperiodic & 350  \\
+        System reset           & High    & 0      & 36000000  & 128  \\
+        Telecommand processing & High    & 1000   & 5000      & 500  \\
+        Time control           & Medium  & 1000   & 1000      & 128  \\
+        TTC reading            & Medium  & 2000   & 60000     & 384  \\
+        Uplink                 & Low     & 1000   & 10000     & 500  \\
+        Watchdog reset         & Lowest  & 0      & 100       & 150  \\
         \bottomrule[1.5pt]
     \end{tabular}
     \caption{Firmware tasks.}
@@ -81,15 +80,71 @@ A list of the firmware tasks can be seen in the \autoref{tab:firmware-tasks}.
 
 All these tasks are better described below.
 
+\subsection{Antenna deployment}
+
+.
+
+\subsection{Antenna reading}
+
+.
+
+\subsection{Beacon}
+
+.
+
+\subsection{Data log}
+
+This tasks saves the housekeeping data of the satellite in the flash memory at every 10 minutes.
+
+\subsection{EDC reading}
+
+.
+
+\subsection{EPS reading}
+
+.
+
+\subsection{Heartbeat}
+
+The heartbeat task keeps blinking a LED (``\textit{System LED}'' in \autoref{fig:status-leds}) at a rate of 1 Hz during the execution of the system. Its purpose is to give a visual feedback of the execution of the scheduler. This is tasks does not have a specific purpose on the flight version of the module (the flight version of the PCB does not have LEDs).
+
+\subsection{Housekeeping}
+
+.
+
+\subsection{Payload X reading}
+
+.
+
+\subsection{Radio periodic reset}
+
+.
+
+\subsection{Read sensors}
+
+This task reads the internal sensors of the OBDH at every 60 seconds.
+
 \subsection{Startup (boot)}
 
+This task is the first executed task when the system starts. All devices, libraries and data structures are initialized in this task. When the execution is done, the remaining tasks of the system are allowed to execute.
+
+\subsection{System reset}
+
+This task resets the microcontroller by software at every 10 hours. This can be useful to cleanup possible wrong values in variables, repeat the antenna deployment routine (limited to $n$ times), cleanup the RAM memory, etc.
+
+\subsection{Telecommand processing}
+
 .
 
-\subsection{Deployment hibernation}
+\subsection{Time control}
+
+This task is responsible for the time management of the system. At every second it increments the system time (epoch). Also, at every minute it saves the current system time in the non-volatile memory.
+
+\subsection{TTC reading}
 
 .
 
-\subsection{Antenna deployment}
+\subsection{Uplink}
 
 .
 
@@ -99,49 +154,71 @@ This task resets the internal and external watchdog timer at every 100 ms. The i
 
 To prevent the system to not reset during an anomaly on some task (like an execution time longer than planned), this task has lowest possible priority: 0.
 
-\subsection{Heartbeat}
+\section{Variables and Parameters}
 
-The heartbeat task keeps blinking a LED (``\textit{System LED}'' in \autoref{fig:status-leds}) at a rate of 1 Hz during the execution of the system. Its purpose is to give a visual feedback of the execution of the scheduler. This is tasks does not have a specific purpose on the flight version of the module (the flight version of the PCB does not have LEDs).
+The internal variables and parameters of the OBDH firmware can be seen in \autoref{tab:vars-and-pars}.
 
-\subsection{Beacon}
-
-.
-
-\subsection{Uplink}
-
-.
-
-\subsection{EPS reading}
-
-.
-
-\subsection{EDC reading}
-
-.
-
-\subsection{Payload X reading}
-
-.
-
-\subsection{TTC writing}
-
-.
-
-\subsection{Radio periodic reset}
-
-.
-
-\subsection{System reset}
-
-This task resets the microcontroller by software at every 10 hours. This can be useful to cleanup possible wrong values in variables, repeat the antenna deployment routine (limited to $n$ times), cleanup the RAM memory, etc.
-
-\subsection{Read temperature}
-
-This task reads the internal temperature of the microcontroller of the OBDH at every 60 seconds.
-
-\subsection{CSP Server}
-
-.
+\begin{longtable}[c]{cL{0.82\textwidth}l}
+    \toprule[1.5pt]
+    \textbf{ID} & \textbf{Name/Description} & \textbf{Type}\\
+    \midrule
+    0   & Time counter in milliseconds                            & uint32 \\
+    1   & Temperature of the $\mu$C in Kelvin                     & uint16 \\
+    2   & Input current in mA                                     & uint16 \\
+    3   & Input voltage in mV                                     & uint16 \\
+    \multirow{18}{*}{4} & Last reset cause: & \multirow{18}{*}{uint8} \\
+        & - 0x00 = No interrupt pending                           &        \\
+        & - 0x02 = Brownout (BOR)                                 &        \\
+        & - 0x04 = RST/NMI (BOR)                                  &        \\
+        & - 0x06 = PMMSWBOR (BOR)                                 &        \\
+        & - 0x08 = Wakeup from LPMx.5 (BOR)                       &        \\
+        & - 0x0A = Security violation (BOR)                       &        \\
+        & - 0x0C = SVSL (POR)                                     &        \\
+        & - 0x0E = SVSH (POR)                                     &        \\
+        & - 0x10 = SVML\_OVP (POR)                                &        \\
+        & - 0x12 = SVMH\_OVP (POR)                                &        \\
+        & - 0x14 = PMMSWPOR (POR)                                 &        \\
+        & - 0x16 = WDT time out (PUC)                             &        \\
+        & - 0x18 = WDT password violation (PUC)                   &        \\
+        & - 0x1A = Flash password violation (PUC)                 &        \\
+        & - 0x1C = Reserved                                       &        \\
+        & - 0x1E = PERF peripheral/configuration area fetch (PUC) &        \\
+        & - 0x20 = PMM password violation (PUC)                   &        \\
+        & - 0x22 to 0x3E = Reserved                               &        \\
+    5   & Reset counter                                           & uint16 \\
+    6   & Last valid telecommand (uplink packet ID)               & uint8  \\
+    7   & Temperature of the radio in Kelvin                      & uint16 \\
+    8   & RSSI of the last valid telecommand                      & uint16 \\
+    9   & Temperature of the antenna in Kelvin                    & uint16 \\
+    \multirow{17}{*}{10} & Antenna status bits: & \multirow{17}{*}{uint16}  \\
+        & - Bit 15: The antenna 1 is deployed (0) or not (1)      &        \\
+        & - Bit 14: Cause of the latest activation stop for antenna 1 &    \\
+        & - Bit 13: The antenna 1 deployment is active (1) or not (0) &    \\
+        & - Bit 11: The antenna 2 is deployed (0) or not (1)      &        \\
+        & - Bit 10: Cause of the latest activation stop for antenna 2 &    \\
+        & - Bit 9: The antenna 2 deployment is active (1) or not (0)  &    \\
+        & - Bit 8: The antenna is ignoring the deployment switches (1) or not (0) & \\
+        & - Bit 7: The antenna 3 is deployed (0) or not (1)       &        \\
+        & - Bit 6: Cause of the latest activation stop for antenna 3 &     \\
+        & - Bit 5: The antenna 3 deployment is active (1) or not (0) &     \\
+        & - Bit 4: The antenna system independent burn is active (1) or not (0) & \\
+        & - Bit 3: The antenna 4 is deployed (0) or not (1)       &        \\
+        & - Bit 2: Cause of the latest activation stop for antenna 4 &     \\
+        & - Bit 1: The antenna 4 deployment is active (1) or not (0) &     \\
+        & - Bit 0: The antenna system is armed (1) or not (0)     &        \\
+    11  & Hardware version                                        & uint8 \\
+    12  & Firmware version (ex.: ``v1.2.3'' = 0x00010203)         & uint32 \\
+    13  & Mode (``Normal'' = 0, ``Hibernation'' = 1)              & uint8 \\
+    14  & Timestamp of the last mode change                       & uint32 \\
+    15  & Mode duration in sec. (valid only in hibernation mode)  & uint32 \\
+    16  & Initial hibernation executed                            & boolean \\
+    17  & Initial hibernation time counter (minutes)              & uint8 \\
+    18  & Antenna deployment executed                             & boolean \\
+    19  & Antenna deployment counter                              & uint8 \\
+    \bottomrule[1.5pt]
+    \caption{Variables and parameters of the OBDH 2.0.}
+    \label{tab:vars-and-pars}
+\end{longtable}
 
 \section{Telemetry}
 
@@ -170,7 +247,7 @@ The beacon packet is transmitted at every 1 minute and contains a basic telemetr
         Last reset cause   & Last reset cause ID    & 1 \\
         System time        & System time in ticks   & 4 \\
         Radio temperature  & Raw radio temperature  & 4 \\
-        Last TC RSSI       & Raw RSSI value         & 2??? \\
+        Last TC RSSI       & Raw RSSI value         & 2 \\
         Last received TC   & Last received TC ID    & 1 \\
         Battery 1 voltage  & Raw battery 1 voltage  & 2 \\
         Battery 2 voltage  & Raw battery 2 voltage  & 2 \\
@@ -449,9 +526,9 @@ As the Hardware Abstraction Layer (HAL\nomenclature{\textbf{HAL}}{\textit{Hardwa
 
 The DriverLib is meant to provide a ``software'' layer to the programmer in order to facilitate higher level of programming compared to direct register accesses. By using the high level software APIs provided by DriverLib, users can create powerful and intuitive code which is highly portable between not only devices within the MSP430 platform, but between different families in the MSP430/MSP432 platforms.
 
-\section{File System}
+\section{Memory Management}
 
-As file system, the Reliance Edge library is used \cite{reliance_edge} (version 2.4). Reliance Edge is a failsafe filesystem with an small footprint, targeting critical embedded systems with fewer resources. It works with a broad array of storage media including: eMMC, SD/MMC, NVRAM, USB mass storage and SATA (or PATA) disk.
+.
 
 \section{Protocols}
 
