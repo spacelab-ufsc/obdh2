@@ -1,7 +1,7 @@
 /*
  * startup.h
  * 
- * Copyright (C) 2019, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.47
+ * \version 0.9.4
  * 
  * \date 2019/12/04
  * 
@@ -66,13 +66,6 @@ extern EventGroupHandle_t task_startup_status;
  * \return None.
  */
 void vTaskStartup(void);
-
-/**
- * \brief CSP initialization.
- *
- * \return The status/error code.
- */
-int startup_init_csp(void);
 
 #endif /* STARTUP_H_ */
 

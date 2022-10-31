@@ -1,7 +1,7 @@
 /*
  * edc.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -24,8 +24,9 @@
  * \brief EDC driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Bruno Benedetti <brunobenedetti45@gmail.com>
  * 
- * \version 0.8.15
+ * \version 0.9.13
  * 
  * \date 2019/10/27
  * 
@@ -49,16 +50,42 @@ int edc_init(edc_config_t config)
     {
         if (edc_enable(config) == 0)
         {
-            if (edc_i2c_init(config) == 0)
+            switch(config.interface)
             {
-                err = edc_check_device(config);
-            }
-            else
-            {
-            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
-                sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error initializing the I2C port!");
-                sys_log_new_line();
-            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                case EDC_IF_UART:
+                    if (edc_uart_init(config) == 0)
+                    {
+                        err = edc_check_device(config);
+                    }
+                    else
+                    {
+                    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error initializing the UART port!");
+                        sys_log_new_line();
+                    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                    }
+
+                    break;
+                case EDC_IF_I2C:
+                    if (edc_i2c_init(config) == 0)
+                    {
+                        err = edc_check_device(config);
+                    }
+                    else
+                    {
+                    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error initializing the I2C port!");
+                        sys_log_new_line();
+                    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                    }
+
+                    break;
+                default:
+                #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Unexpected interface!");
+                    sys_log_new_line();
+                #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                    break;
             }
         }
         else
@@ -136,8 +163,18 @@ int edc_write_cmd(edc_config_t config, edc_cmd_t cmd)
 
     if (err == 0)
     {
-        /* Transmit the command over an I2C port */
-        err = edc_i2c_write(config, cmd_str, cmd_str_len);
+        switch(config.interface)
+        {
+            case EDC_IF_UART:   err = edc_uart_write(config, cmd_str, cmd_str_len); break;
+            case EDC_IF_I2C:    err = edc_i2c_write(config, cmd_str, cmd_str_len);  break;
+            default:
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Unexpected interface!");
+                sys_log_new_line();
+            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                err = -1;
+                break;
+        }
     }
 
     return err;
@@ -145,7 +182,29 @@ int edc_write_cmd(edc_config_t config, edc_cmd_t cmd)
 
 int edc_read(edc_config_t config, uint8_t *data, uint16_t len)
 {
-    return edc_i2c_read(config, data, len);
+    int err = -1;
+
+    switch(config.interface)
+    {
+        case EDC_IF_UART:
+            if (edc_uart_rx_available(config) > 0)
+            {
+                err = edc_uart_read(config, data, len);
+            }
+
+            break;
+        case EDC_IF_I2C:
+            err = edc_i2c_read(config, data, len);
+            break;
+        default:
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+            sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Unexpected interface!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            break;
+    }
+
+    return err;
 }
 
 int edc_check_device(edc_config_t config)
@@ -223,7 +282,7 @@ int16_t edc_get_state_pkg(edc_config_t config, uint8_t *status)
     if (edc_write_cmd(config, cmd) == 0)
     {
         /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
-        edc_delay_ms(10);
+        edc_delay_ms(100);  /* 10 ms is not enough when using the UART interface! */
 
         if (edc_read(config, status, EDC_FRAME_STATE_LEN) == 0)
         {
@@ -271,7 +330,7 @@ int16_t edc_get_ptt_pkg(edc_config_t config, uint8_t *pkg)
     if (edc_write_cmd(config, cmd) == 0)
     {
         /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
-        edc_delay_ms(10);
+        edc_delay_ms(100);  /* 10 ms is not enough when using the UART interface! */
 
         if (edc_read(config, pkg, EDC_FRAME_PTT_LEN) == 0)
         {
@@ -319,7 +378,7 @@ int16_t edc_get_hk_pkg(edc_config_t config, uint8_t *hk)
     if (edc_write_cmd(config, cmd) == 0)
     {
         /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
-        edc_delay_ms(10);
+        edc_delay_ms(100);  /* 10 ms is not enough when using the UART interface! */
 
         if (edc_read(config, hk, EDC_FRAME_HK_LEN) == 0)
         {
@@ -367,7 +426,7 @@ int16_t edc_get_adc_seq(edc_config_t config, uint8_t *seq)
     if (edc_write_cmd(config, cmd) == 0)
     {
         /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
-        edc_delay_ms(10);
+        edc_delay_ms(100);  /* 10 ms is not enough when using the UART interface! */
 
         if (edc_read(config, seq, EDC_FRAME_ADC_SEQ_LEN) == 0)
         {
@@ -406,11 +465,59 @@ int16_t edc_get_adc_seq(edc_config_t config, uint8_t *seq)
 
 int edc_echo(edc_config_t config)
 {
+    int res = -1;
+
     edc_cmd_t cmd = {0};
 
     cmd.id = EDC_CMD_ECHO;
 
-    return edc_write_cmd(config, cmd);
+    if (edc_write_cmd(config, cmd) == 0)
+    {
+        if (config.interface == EDC_IF_UART)    /* The echo command just answers when using the UART interface (I think...) */
+        {
+            /* A minimum time gap of 10 ms must be forced between consecutive I2C commands */
+            edc_delay_ms(100);  /* 10 ms is not enough when using the UART interface! */
+
+            uint8_t echo_ans[5] = {0};
+
+            if (edc_read(config, echo_ans, EDC_FRAME_ECHO_LEN) == 0)
+            {
+                uint8_t echo[4] = {'E', 'C', 'H', 'O'}; /* Expected response */
+
+                if (memcmp(echo_ans, echo, 4) != 0)
+                {
+                #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading the \"ECHO\" command response! Wrong answer!");
+                    sys_log_new_line();
+                #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                }
+                else
+                {
+                    res = 0;
+                }
+            }
+            else
+            {
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error reading the \"ECHO\" command response!");
+                sys_log_new_line();
+            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            }
+        }
+        else
+        {
+            res = 0;
+        }
+    }
+    else
+    {
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+        sys_log_print_event_from_module(SYS_LOG_ERROR, EDC_MODULE_NAME, "Error writing the \"ECHO\" command!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+    }
+
+    return res;
 }
 
 uint16_t edc_calc_checksum(uint8_t *data, uint16_t len)
@@ -518,14 +625,18 @@ int edc_get_hk(edc_config_t config, edc_hk_t *hk_data)
                                               ((uint32_t)hk_raw[7] << 16) |
                                               ((uint32_t)hk_raw[6] << 8)  |
                                               ((uint32_t)hk_raw[5] << 0);
-                hk_data->current_supply     = ((uint32_t)hk_raw[10] << 8) | ((uint32_t)hk_raw[9] << 0);
-                hk_data->voltage_supply     = ((uint32_t)hk_raw[12] << 8) | ((uint32_t)hk_raw[11] << 0);
-                hk_data->temp               = (int8_t)hk_raw[13] - 40;
-                hk_data->pll_sync_bit       = hk_raw[14];
-                hk_data->adc_rms            = ((uint16_t)hk_raw[16] << 8) | ((uint16_t)hk_raw[15] << 0);
-                hk_data->num_rx_ptt         = hk_raw[17];
-                hk_data->max_parl_decod     = hk_raw[18];
-                hk_data->mem_err_count      = hk_raw[19];
+                hk_data->current_supply_d   = ((uint32_t)hk_raw[10] << 8) | ((uint32_t)hk_raw[9] << 0);
+                hk_data->current_supply_a   = ((uint32_t)hk_raw[12] << 8) | ((uint32_t)hk_raw[11] << 0);
+                hk_data->voltage_supply     = ((uint32_t)hk_raw[14] << 8) | ((uint32_t)hk_raw[13] << 0);
+                hk_data->temp               = (int8_t)hk_raw[15] - 40;
+                hk_data->pll_sync_bit       = hk_raw[16];
+                hk_data->adc_rms            = ((uint16_t)hk_raw[18] << 8) | ((uint16_t)hk_raw[17] << 0);
+                hk_data->num_rx_ptt         = ((uint32_t)hk_raw[22] << 24) |
+                                              ((uint32_t)hk_raw[21] << 16) |
+                                              ((uint32_t)hk_raw[20] << 8) |
+                                              ((uint32_t)hk_raw[19] << 0);
+                hk_data->max_parl_decod     = hk_raw[23];
+                hk_data->mem_err_count      = hk_raw[24];
 
                 err = 0;
             }

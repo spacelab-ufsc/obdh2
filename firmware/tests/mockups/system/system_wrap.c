@@ -1,5 +1,5 @@
 /*
- * devices.h
+ * system_wrap.c
  * 
  * Copyright The OBDH 2.0 Contributors.
  * 
@@ -21,31 +21,56 @@
  */
 
 /**
- * \brief Devices layer.
+ * \brief System wrap implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.9.19
+ * \version 0.9.0
  * 
- * \date 2019/10/26
+ * \date 2022/03/14
  * 
- * \defgroup devices Devices
+ * \addtogroup system_wrap
  * \{
  */
 
-#ifndef DEVICES_H_
-#define DEVICES_H_
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <setjmp.h>
+#include <float.h>
+#include <cmocka.h>
 
-#include "leds/leds.h"
-#include "eps/eps.h"
-#include "ttc/ttc.h"
-#include "antenna/antenna.h"
-#include "temp_sensor/temp_sensor.h"
-#include "current_sensor/current_sensor.h"
-#include "voltage_sensor/voltage_sensor.h"
-#include "media/media.h"
-#include "payload/payload.h"
+#include "system_wrap.h"
 
-#endif /* DEVICES_H_ */
+void __wrap_system_reset(void)
+{
+    function_called();
+}
 
-/** \} End of devices group */
+uint8_t __wrap_system_get_reset_cause(void)
+{
+    return mock_type(uint8_t);
+}
+
+void __wrap_system_set_time(sys_time_t tm)
+{
+    check_expected(tm);
+}
+
+void __wrap_system_increment_time(void)
+{
+    function_called();
+}
+
+sys_time_t __wrap_system_get_time(void)
+{
+    return mock_type(sys_time_t);
+}
+
+sys_hw_version_t __wrap_system_get_hw_version(void)
+{
+    return mock_type(sys_hw_version_t);
+}
+
+/** \} End of system_wrap group */

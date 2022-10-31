@@ -1,7 +1,7 @@
 /*
  * uart.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -24,8 +24,9 @@
  * \brief UART driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
- * 
- * \version 0.8.8
+ * \author Miguel Boing <miguelboing13@gmail.com>
+ *
+ * \version 0.9.2
  * 
  * \date 2019/12/07
  * 
@@ -38,8 +39,41 @@
 
 #include <config/config.h>
 #include <system/sys_log/sys_log.h>
+#include <libs/containers/queue.h>
 
 #include "uart.h"
+
+static queue_t uart_port_0_rx_buffer;
+static queue_t uart_port_1_rx_buffer;
+static queue_t uart_port_2_rx_buffer;
+
+/**
+ * \brief Reads the MTU value of a given UART RX buffer.
+ *
+ * \param[in,out] uart_rx_buffer is the UART RX buffer to get the MTU size.
+ *
+ * \return The MTU of the given RX buffer.
+ */
+static uint16_t uart_read_mtu(queue_t *uart_rx_buffer);
+
+/**
+ * \brief Reads the RX ISR buffer.
+ *
+ * \param[in] port is the UART port to read. It can be:
+ * \parblock
+ *      -\b UART_PORT_0
+ *      -\b UART_PORT_1
+ *      -\b UART_PORT_2
+ *      .
+ * \endparblock
+ *
+ * \param[in] data is an array to store the read data.
+ *
+ * \param[in] len is the number of bytes to be read from the buffer.
+ *
+ * \return The status/error code.
+ */
+static int uart_read_isr_rx_buffer(uart_port_t port, uint8_t *data, uint16_t len);
 
 int uart_init(uart_port_t port, uart_config_t config)
 {
@@ -124,17 +158,23 @@ int uart_init(uart_port_t port, uart_config_t config)
 
             GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P2, GPIO_PIN4 + GPIO_PIN5);
 
+            queue_init(&uart_port_0_rx_buffer);
+
             break;
         case UART_PORT_1:
             base_address = USCI_A1_BASE;
 
             GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P8, GPIO_PIN2 + GPIO_PIN3);
 
+            queue_init(&uart_port_1_rx_buffer);
+
             break;
         case UART_PORT_2:
             base_address = USCI_A2_BASE;
 
             GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P9, GPIO_PIN2 + GPIO_PIN3);
+
+            queue_init(&uart_port_2_rx_buffer);
 
             break;
         default:
@@ -161,70 +201,6 @@ int uart_init(uart_port_t port, uart_config_t config)
     return err;
 }
 
-int uart_available(uart_port_t port)
-{
-    int err = 0;
-
-    uint16_t base_address;
-
-    switch(port)
-    {
-        case UART_PORT_0:   base_address = USCI_A0_BASE;    break;
-        case UART_PORT_1:   base_address = USCI_A1_BASE;    break;
-        case UART_PORT_2:   base_address = USCI_A2_BASE;    break;
-        default:
-        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
-            sys_log_print_event_from_module(SYS_LOG_ERROR, UART_MODULE_NAME, "Error during RX buffer verification: Invalid port!");
-            sys_log_new_line();
-        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-            err = -1;   /* Invalid UART port */
-
-            break;
-    }
-
-    /* Check RX interrupt flag */
-    uint8_t status = USCI_A_UART_getInterruptStatus(base_address, USCI_A_UART_RECEIVE_INTERRUPT_FLAG);
-
-    if ((status | USCI_A_UART_RECEIVE_INTERRUPT_FLAG) > 0)
-    {
-        err = UART_AVAILABLE;
-    }
-    else
-    {
-        err = UART_NOT_AVAILABLE;
-    }
-
-    return err;
-}
-
-int uart_flush(uart_port_t port)
-{
-    int err = 0;
-
-    switch(port)
-    {
-        case UART_PORT_0:   break;
-        case UART_PORT_1:   break;
-        case UART_PORT_2:   break;
-        default:
-        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
-            sys_log_print_event_from_module(SYS_LOG_ERROR, UART_MODULE_NAME, "Error flushing the RX buffer: Invalid port!");
-            sys_log_new_line();
-        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-            err = -1;   /* Invalid UART port */
-
-            break;
-    }
-
-    while(uart_available(port) == (int)UART_AVAILABLE)
-    {
-        uint8_t dummy;
-        err = uart_read(port, &dummy, 1);
-    }
-
-    return err;
-}
-
 int uart_write(uart_port_t port, uint8_t *data, uint16_t len)
 {
     int err = 0;
@@ -242,14 +218,16 @@ int uart_write(uart_port_t port, uint8_t *data, uint16_t len)
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
             err = -1;
-
             break;
     }
 
-    uint16_t i = 0;
-    for(i=0; i<len; i++)
+    if (err == 0)
     {
-        USCI_A_UART_transmitData(base_address, data[i]);
+        uint16_t i = 0U;
+        for(i = 0U; i < len; i++)
+        {
+            USCI_A_UART_transmitData(base_address, data[i]);
+        }
     }
 
     return err;
@@ -272,17 +250,219 @@ int uart_read(uart_port_t port, uint8_t *data, uint16_t len)
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
             err = -1;
-
             break;
     }
 
-    uint16_t i = 0;
-    for(i=0; i<len; i++)
+    if (err == 0)
     {
-        data[i] = USCI_A_UART_receiveData(base_address);
+        err = uart_read_isr_rx_buffer(port, data, len);
     }
 
     return err;
+}
+
+int uart_rx_enable(uart_port_t port)
+{
+    int err = 0;
+
+    uint16_t base_address;
+
+    switch(port)
+    {
+        case UART_PORT_0:   base_address = USCI_A0_BASE;    break;
+        case UART_PORT_1:   base_address = USCI_A1_BASE;    break;
+        case UART_PORT_2:   base_address = USCI_A2_BASE;    break;
+        default:
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+            sys_log_print_event_from_module(SYS_LOG_ERROR, UART_MODULE_NAME, "Error during enabling uart interruption: Invalid port!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            err = -1;   /*Invalid UART port */
+            break;
+    }
+
+    if (err == 0)
+    {
+        USCI_A_UART_enableInterrupt(base_address, USCI_A_UART_RECEIVE_INTERRUPT);
+    }
+
+    return err;
+}
+
+int uart_rx_disable(uart_port_t port)
+{
+    int err = 0;
+
+    uint16_t base_address;
+
+    switch(port)
+    {
+        case UART_PORT_0:   base_address = USCI_A0_BASE;    break;
+        case UART_PORT_1:   base_address = USCI_A1_BASE;    break;
+        case UART_PORT_2:   base_address = USCI_A2_BASE;    break;
+        default:
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+            sys_log_print_event_from_module(SYS_LOG_ERROR, UART_MODULE_NAME, "Error during disabling uart interruption: Invalid port!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            err = -1;   /*Invalid UART port */
+            break;
+    }
+
+    if (err == 0)
+    {
+        USCI_A_UART_disableInterrupt(base_address, USCI_A_UART_RECEIVE_INTERRUPT);
+    }
+
+    return err;
+}
+
+int uart_read_isr_rx_buffer(uart_port_t port, uint8_t *data, uint16_t len)
+{
+    int err = 0;
+
+    uint16_t num_bytes = len;
+
+    uint16_t i = 0U;
+
+    switch(port)
+    {
+        case UART_PORT_0:
+            if (num_bytes > uart_read_mtu(&uart_port_0_rx_buffer))
+            {
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                sys_log_print_event_from_module(SYS_LOG_WARNING, UART_MODULE_NAME, "Port 0: Read size is bigger than RX buffer size!");
+                sys_log_new_line();
+            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                num_bytes = uart_read_mtu(&uart_port_0_rx_buffer);
+            }
+
+            for(i = 0U; i < num_bytes; i++)
+            {
+                data[i] = queue_pop_front(&uart_port_0_rx_buffer);
+            }
+
+            break;
+        case UART_PORT_1:
+            if (num_bytes > uart_read_mtu(&uart_port_1_rx_buffer))
+            {
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                sys_log_print_event_from_module(SYS_LOG_WARNING, UART_MODULE_NAME, "Port 1: Read size is bigger than RX buffer size!");
+                sys_log_new_line();
+            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                num_bytes = uart_read_mtu(&uart_port_1_rx_buffer);
+            }
+
+            for(i = 0U; i < num_bytes; i++)
+            {
+                data[i] = queue_pop_front(&uart_port_1_rx_buffer);
+            }
+
+            break;
+        case UART_PORT_2:
+            if (num_bytes > uart_read_mtu(&uart_port_2_rx_buffer))
+            {
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                sys_log_print_event_from_module(SYS_LOG_WARNING, UART_MODULE_NAME, "Port 2: Read size is bigger than RX buffer size!");
+                sys_log_new_line();
+            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                num_bytes = uart_read_mtu(&uart_port_2_rx_buffer);
+            }
+
+            for(i = 0U; i < num_bytes; i++)
+            {
+                data[i] = queue_pop_front(&uart_port_2_rx_buffer);
+            }
+
+            break;
+        default:
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+            sys_log_print_event_from_module(SYS_LOG_ERROR, UART_MODULE_NAME, "Error during reading isr rx buffer: Invalid port!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            err = -1;
+            break;
+    }
+
+    return err;
+}
+
+static uint16_t uart_read_mtu(queue_t *uart_rx_buffer)
+{
+    return queue_length(uart_rx_buffer);
+}
+
+uint16_t uart_read_available(uart_port_t port)
+{
+    uint16_t available_bytes = 0U;
+
+    switch(port)
+    {
+        case UART_PORT_0:   available_bytes = queue_size(&uart_port_0_rx_buffer);  break;
+        case UART_PORT_1:   available_bytes = queue_size(&uart_port_1_rx_buffer);  break;
+        case UART_PORT_2:   available_bytes = queue_size(&uart_port_2_rx_buffer);  break;
+        default:
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+            sys_log_print_event_from_module(SYS_LOG_ERROR, UART_MODULE_NAME, "Error during reading buffer available bytes: Invalid port!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            break;
+    }
+
+    return available_bytes;
+}
+
+int uart_flush(uart_port_t port)
+{
+    int err = 0;
+
+    switch(port)
+    {
+        case UART_PORT_0:   queue_clear(&uart_port_0_rx_buffer);   break;
+        case UART_PORT_1:   queue_clear(&uart_port_1_rx_buffer);   break;
+        case UART_PORT_2:   queue_clear(&uart_port_2_rx_buffer);   break;
+        default:
+        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+            sys_log_print_event_from_module(SYS_LOG_ERROR, UART_MODULE_NAME, "Error flushing the RX buffer: Invalid port!");
+            sys_log_new_line();
+        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            err = -1;
+            break;
+    }
+
+    return err;
+}
+
+/* Interrupt Service Routines */
+
+#pragma vector=USCI_A0_VECTOR
+__interrupt void USCI_A0_ISR(void) // cppcheck-suppress misra-c2012-8.4
+{
+    if (USCI_A_UART_getInterruptStatus(USCI_A0_BASE, USCI_A_UART_RECEIVE_INTERRUPT_FLAG) == USCI_A_UART_RECEIVE_INTERRUPT_FLAG)
+    {
+        queue_push_back(&uart_port_0_rx_buffer, USCI_A_UART_receiveData(USCI_A0_BASE));
+        USCI_A_UART_clearInterrupt(USCI_A0_BASE, USCI_A_UART_RECEIVE_INTERRUPT_FLAG);
+    }
+}
+
+#pragma vector=USCI_A1_VECTOR
+__interrupt void USCI_A1_ISR(void) // cppcheck-suppress misra-c2012-8.4
+{
+    if (USCI_A_UART_getInterruptStatus(USCI_A1_BASE, USCI_A_UART_RECEIVE_INTERRUPT_FLAG) == USCI_A_UART_RECEIVE_INTERRUPT_FLAG)
+    {
+        queue_push_back(&uart_port_1_rx_buffer, USCI_A_UART_receiveData(USCI_A1_BASE));
+        USCI_A_UART_clearInterrupt(USCI_A1_BASE, USCI_A_UART_RECEIVE_INTERRUPT_FLAG);
+    }
+}
+
+#pragma vector=USCI_A2_VECTOR
+__interrupt void USCI_A2_ISR(void) // cppcheck-suppress misra-c2012-8.4
+{
+    if (USCI_A_UART_getInterruptStatus(USCI_A2_BASE, USCI_A_UART_RECEIVE_INTERRUPT_FLAG) == USCI_A_UART_RECEIVE_INTERRUPT_FLAG)
+    {
+        queue_push_back(&uart_port_2_rx_buffer, USCI_A_UART_receiveData(USCI_A2_BASE));
+        USCI_A_UART_clearInterrupt(USCI_A2_BASE, USCI_A_UART_RECEIVE_INTERRUPT_FLAG);
+    }
 }
 
 /** \} End of uart group */

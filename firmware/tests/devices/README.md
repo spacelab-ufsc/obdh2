@@ -5,7 +5,6 @@
 * EPS
 * LEDs
 * Media
-* Radio
 * Temperature sensor
 * TTC
 * Voltage sensor

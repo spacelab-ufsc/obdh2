@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.39
+ * \version 0.9.19
  * 
  * \date 2019/10/26
  * 
@@ -41,12 +41,9 @@
 #define CONFIG_TASK_WATCHDOG_RESET_ENABLED              1
 #define CONFIG_TASK_HEARTBEAT_ENABLED                   1
 #define CONFIG_TASK_SYSTEM_RESET_ENABLED                1
-#define CONFIG_TASK_RADIO_RESET_ENABLED                 0
 #define CONFIG_TASK_READ_SENSORS_ENABLED                1
 #define CONFIG_TASK_BEACON_ENABLED                      0
-#define CONFIG_TASK_UPLINK_ENABLED                      0
 #define CONFIG_TASK_TIME_CONTROL_ENABLED                1
-#define CONFIG_TASK_CSP_SERVER_ENABLED                  0
 #define CONFIG_TASK_READ_EDC_ENABLED                    1
 #define CONFIG_TASK_READ_EPS_ENABLED                    1
 #define CONFIG_TASK_READ_TTC_ENABLED                    1
@@ -57,13 +54,13 @@
 
 /* Devices */
 #define CONFIG_DEV_MEDIA_INT_ENABLED                    1
+#define CONFIG_DEV_MEDIA_FRAM_ENABLED                   1
 #define CONFIG_DEV_MEDIA_NOR_ENABLED                    1
 #define CONFIG_DEV_LEDS_ENABLED                         1
 #define CONFIG_DEV_CURRENT_SENSOR_ENABLED               1
 #define CONFIG_DEV_VOLTAGE_SENSOR_ENABLED               1
 #define CONFIG_DEV_TEMP_SENSOR_ENABLED                  1
 #define CONFIG_DEV_EPS_ENABLED                          1
-#define CONFIG_DEV_RADIO_ENABLED                        0
 #define CONFIG_DEV_PAYLOAD_EDC_ENABLED                  1
 #define CONFIG_DEV_ANTENNA_ENABLED                      1
 
@@ -121,26 +118,8 @@
 #define CONFIG_DATA_ID_TTC_0                            2
 #define CONFIG_DATA_ID_TTC_1                            3
 
-/* CSP */
-#define CONFIG_CSP_ENABLED                              0
-#define CONFIG_CSP_MY_ADDRESS                           0
-#define CONFIG_CSP_TTC_ADDRESS                          1
-#define CONFIG_CSP_EPS_ADDRESS                          2
-#define CONFIG_CSP_BUFFER_MAX_PKTS                      5
-#define CONFIG_CSP_BUFFER_MAX_SIZE                      300
-#define CONFIG_CSP_ROUTER_WORD_STACK                    300
-#define CONFIG_CSP_ROUTER_TASK_PRIORITY                 1
-#define CONFIG_CSP_MAX_CONN                             10
-#define CONFIG_CSP_WAIT_CONN_TIMEOUT_MS                 (10*1000)
-#define CONFIG_CSP_READ_PKT_TIMEOUT_MS                  1000
-#define CONFIG_CSP_PRIMARY_PORT                         10
-#define CONFIG_CSP_SECONDARY_PORT                       11
-
 /* Ports */
 #define CONFIG_SPI_PORT_0_SPEED_BPS                     1000000UL
-
-/* Radio */
-#define SI446X_XO_TUNE_REG_VALUE                        97
 
 /* Antenna */
 #define CONFIG_ANTENNA_INDEP_DEPLOY_BURN_TIME_SEC       10U

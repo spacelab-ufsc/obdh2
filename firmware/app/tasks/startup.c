@@ -1,7 +1,7 @@
 /*
  * startup.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.17
+ * \version 0.9.20
  * 
  * \date 2019/12/04
  * 
@@ -42,19 +42,12 @@
 #include <devices/watchdog/watchdog.h>
 #include <devices/leds/leds.h>
 #include <devices/eps/eps.h>
-#include <devices/radio/radio.h>
 #include <devices/current_sensor/current_sensor.h>
 #include <devices/voltage_sensor/voltage_sensor.h>
 #include <devices/temp_sensor/temp_sensor.h>
 #include <devices/antenna/antenna.h>
 #include <devices/media/media.h>
 #include <devices/payload/payload.h>
-
-#include <ngham/ngham.h>
-
-#include <csp/csp.h>
-#include <csp/interfaces/csp_if_spi.h>
-#include <csp/interfaces/csp_if_i2c.h>
 
 #include "startup.h"
 
@@ -102,6 +95,17 @@ void vTaskStartup(void)
         error_counter++;
     }
 #endif /* CONFIG_DEV_MEDIA_INT_ENABLED */
+
+#if defined(CONFIG_DEV_MEDIA_FRAM_ENABLED) && (CONFIG_DEV_MEDIA_FRAM_ENABLED == 1)
+    /* FRAM memory initialization */
+    if (system_get_hw_version() >= HW_VERSION_1)
+    {
+        if (media_init(MEDIA_FRAM) != 0)
+        {
+            error_counter++;
+        }
+    }
+#endif /* CONFIG_DEV_MEDIA_FRAM_ENABLED */
 
 #if defined(CONFIG_DEV_MEDIA_NOR_ENABLED) && (CONFIG_DEV_MEDIA_NOR_ENABLED == 1)
     /* NOR memory initialization */
@@ -151,24 +155,6 @@ void vTaskStartup(void)
     }
 #endif /* CONFIG_DEV_EPS_ENABLED */
 
-#if defined(CONFIG_DEV_RADIO_ENABLED) && (CONFIG_DEV_RADIO_ENABLED == 1)
-    /* Radio device initialization */
-    if (radio_init() != 0)
-    {
-        error_counter++;
-    }
-#endif /* CONFIG_DEV_RADIO_ENABLED */
-
-    /* NGHam initialization */
-    ngham_init_arrays();
-    ngham_init();
-
-    /* CSP initialization */
-    if (startup_init_csp() != CSP_ERR_NONE)
-    {
-        error_counter++;
-    }
-
 #if defined(CONFIG_DEV_PAYLOAD_EDC_ENABLED) && (CONFIG_DEV_PAYLOAD_EDC_ENABLED == 1)
     /* Payload EDC device initialization */
     if (payload_init(PAYLOAD_EDC_1) != 0)
@@ -216,45 +202,6 @@ void vTaskStartup(void)
     xEventGroupSetBits(task_startup_status, TASK_STARTUP_DONE);
 
     vTaskSuspend(xTaskStartupHandle);
-}
-
-int startup_init_csp(void)
-{
-#if defined(CONFIG_CSP_ENABLED) && (CONFIG_CSP_ENABLED == 1)
-    int err = CSP_ERR_NONE;
-
-    /* CSP initialization */
-    err = csp_init(CONFIG_CSP_MY_ADDRESS);
-
-    if (err == CSP_ERR_NONE)
-    {
-        /* Buffer initialization */
-        err = csp_buffer_init(CONFIG_CSP_BUFFER_MAX_PKTS, CONFIG_CSP_BUFFER_MAX_SIZE);
-
-        if (err == CSP_ERR_NONE)
-        {
-            err = csp_route_set(CONFIG_CSP_TTC_ADDRESS, &csp_if_spi, CSP_NODE_MAC);
-
-            if (err == CSP_ERR_NONE)
-            {
-                err = csp_route_set(CONFIG_CSP_EPS_ADDRESS, &csp_if_i2c, CSP_NODE_MAC);
-
-                if (err == CSP_ERR_NONE)
-                {
-                    /* CSP router task initialization */
-                    err = csp_route_start_task(CONFIG_CSP_ROUTER_WORD_STACK, CONFIG_CSP_ROUTER_TASK_PRIORITY);
-                }
-            }
-        }
-    }
-
-    return err;
-#else
-    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "libcsp disabled!");
-    sys_log_new_line();
-
-    return CSP_ERR_NONE;
-#endif /* CONFIG_CSP_ENABLED */
 }
 
 /** \} End of startup group */

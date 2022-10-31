@@ -1,5 +1,5 @@
 /*
- * devices.h
+ * system_wrap.h
  * 
  * Copyright The OBDH 2.0 Contributors.
  * 
@@ -21,31 +21,36 @@
  */
 
 /**
- * \brief Devices layer.
+ * \brief System wrap definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.9.19
+ * \version 0.9.0
  * 
- * \date 2019/10/26
+ * \date 2022/03/14
  * 
- * \defgroup devices Devices
+ * \defgroup system_wrap System Wrap
+ * \ingroup tests
  * \{
  */
 
-#ifndef DEVICES_H_
-#define DEVICES_H_
+#ifndef SYSTEM_WRAP_H_
+#define SYSTEM_WRAP_H_
 
-#include "leds/leds.h"
-#include "eps/eps.h"
-#include "ttc/ttc.h"
-#include "antenna/antenna.h"
-#include "temp_sensor/temp_sensor.h"
-#include "current_sensor/current_sensor.h"
-#include "voltage_sensor/voltage_sensor.h"
-#include "media/media.h"
-#include "payload/payload.h"
+#include <system/system.h>
 
-#endif /* DEVICES_H_ */
+void __wrap_system_reset(void);
 
-/** \} End of devices group */
+uint8_t __wrap_system_get_reset_cause(void);
+
+void __wrap_system_set_time(sys_time_t tm);
+
+void __wrap_system_increment_time(void);
+
+sys_time_t __wrap_system_get_time(void);
+
+sys_hw_version_t __wrap_system_get_hw_version(void);
+
+#endif /* SYSTEM_WRAP_H_ */
+
+/** \} End of system_wrap group */

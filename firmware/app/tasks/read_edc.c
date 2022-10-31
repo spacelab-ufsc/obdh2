@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.23
+ * \version 0.9.10
  * 
  * \date 2020/08/16
  * 
@@ -35,6 +35,7 @@
 
 #include <system/sys_log/sys_log.h>
 #include <devices/payload/payload.h>
+#include <drivers/edc/edc.h>
 
 #include "read_edc.h"
 #include "startup.h"
@@ -54,9 +55,76 @@ void vTaskReadEDC(void)
     {
         TickType_t last_cycle = xTaskGetTickCount();
 
+        /* Read housekeeping data */
         if (payload_get_data(pl_edc_active, PAYLOAD_EDC_RAW_HK, edc_hk_buf.buffer, &edc_hk_buf.length) != 0)
         {
-            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_EDC_NAME, "Error reading the housekeeping data!");
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_EDC_NAME, "Error reading the housekeeping data!");
+            sys_log_new_line();
+        }
+
+        vTaskDelay(pdMS_TO_TICKS(500));     /* Wait a while for the next command */
+
+        /* Read packets */
+        uint8_t state_arr[10] = {0};
+        uint32_t state_len = 0;
+
+        if (payload_get_data(pl_edc_active, PAYLOAD_EDC_STATE, state_arr, &state_len) == 0)
+        {
+            if (state_len >= sizeof(edc_state_t))
+            {
+                edc_state_t state = *(edc_state_t*)&state_arr[0];
+
+                if (state.ptt_available > 0)
+                {
+                    sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_EDC_NAME, "");
+                    sys_log_print_uint(state.ptt_available);
+                    sys_log_print_msg(" PTT packet(s) available to read!");
+                    sys_log_new_line();
+
+                    uint8_t i = 0;
+                    for(i = 0; i < state.ptt_available; i++)
+                    {
+                        uint8_t ptt_arr[50] = {0};
+                        uint32_t ptt_len = 0;
+
+                        if (payload_get_data(pl_edc_active, PAYLOAD_EDC_PTT, ptt_arr, &ptt_len) == 0)
+                        {
+                            edc_ptt_t ptt = *(edc_ptt_t*)&ptt_arr[0];
+
+                            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_EDC_NAME, "Received PTT packet:");
+                            sys_log_new_line();
+                            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_EDC_NAME, "\tTime: ");
+                            sys_log_print_uint(ptt.time_tag);
+                            sys_log_print_msg(" sec");
+                            sys_log_new_line();
+                            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_EDC_NAME, "\tError code: ");
+                            sys_log_print_uint(ptt.error_code);
+                            sys_log_new_line();
+                            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_EDC_NAME, "\tCarrier frequency: ");
+                            sys_log_print_uint(ptt.carrier_freq);
+                            sys_log_print_msg(" Hz");
+                            sys_log_new_line();
+                            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_EDC_NAME, "\tCarrier amplitude: ");
+                            sys_log_print_uint(ptt.carrier_abs);
+                            sys_log_new_line();
+                            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_EDC_NAME, "\tUser message: ");
+                            sys_log_dump_hex(ptt.user_msg, ptt.msg_byte_length);
+                            sys_log_new_line();
+                        }
+                        else
+                        {
+                            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_EDC_NAME, "Error reading PTT package!");
+                            sys_log_new_line();
+                        }
+
+                        vTaskDelay(pdMS_TO_TICKS(500));     /* Wait a while for the next command */
+                    }
+                }
+            }
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_EDC_NAME, "Error reading the state data!");
             sys_log_new_line();
         }
 
