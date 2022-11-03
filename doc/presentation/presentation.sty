@@ -1,0 +1,87 @@
+%
+% presentation.tex
+%
+% Copyright (C) 2022 by SpaceLab.
+%
+% OBDH 2.0 Module
+%
+% This work is licensed under the Creative Commons Attribution-ShareAlike 4.0
+% International License. To view a copy of this license,
+% visit http://creativecommons.org/licenses/by-sa/4.0/.
+%
+
+%
+% \brief Presentation config.
+%
+% \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+% \author Bruno Benedetti <brunobenedetti45@gmail.com>
+%
+% \version 0.1.0
+%
+% \date 2022/06/24
+%
+
+\ProvidesPackage{presentation}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{ae}
+\usepackage{adjustbox}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{amstext}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{pgf}
+\usepackage{upgreek}
+%\usepackage{hyperref}
+
+\beamertemplatenavigationsymbolsempty
+
+\usetheme{metropolis}
+\setbeamercolor{background canvas}{bg=white}
+\setbeamertemplate{bibliography item}{\insertbiblabel}
+
+\logo{\pgfputat{\pgfxy(-11.1,-1)}{\pgfbox[center,base]{\includegraphics[height=0.7cm,keepaspectratio]{figures/spacelab.png}}}}
+
+\captionsetup[figure]{labelformat=empty}
+
+% Section frame with a picture
+\makeatletter
+\defbeamertemplate*{section page}{mytheme}[1][]{
+  \centering
+  \begin{minipage}{22em}
+    \raggedright
+    \usebeamercolor[fg]{section title}
+    \usebeamerfont{section title}
+    \insertsectionhead\\[-1ex]
+    \usebeamertemplate*{progress bar in section page}
+    \par
+    \ifx\insertsubsectionhead\@empty\else%
+      \usebeamercolor[fg]{subsection title}%
+      \usebeamerfont{subsection title}%
+      \insertsubsectionhead
+    \fi
+    \vskip0.5cm
+    \ifstrempty{#1}{}{%
+        \includegraphics[width=\textwidth]{#1}%
+    }
+  \end{minipage}
+  \par
+  \vspace{\baselineskip}
+}
+\makeatother
+
+% Define a command to include picture in section, make section, and revert to old template
+\newcommand{\sectionpic}[2]{
+   \setbeamertemplate{section page}[mytheme][#2]
+   \section*{#1}
+   \setbeamertemplate{section page}[mytheme]
+}
+
+% Table cell size limit and alignment
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}

@@ -1,0 +1,68 @@
+%
+% main.tex
+%
+% Copyright (C) 2022 by SpaceLab.
+%
+% OBDH 2.0 Module
+%
+% This work is licensed under the Creative Commons Attribution-ShareAlike 4.0
+% International License. To view a copy of this license,
+% visit http://creativecommons.org/licenses/by-sa/4.0/.
+%
+
+%
+% \brief Main file.
+%
+% \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+% \author Bruno Benedetti <brunobenedetti45@gmail.com>
+%
+% \version 0.1.0
+%
+% \date 2022/07/28
+%
+
+\documentclass{beamer}
+
+\usepackage{presentation}
+
+\title[Presentation]{SpaceLab OBDH 2.0}
+\author[SpaceLab]{Bruno Benedetti, Gabriel M. Marcelino}
+\institute[]{SpaceLab - UFSC}
+\date{2022 August 17}
+
+\hypersetup
+{
+    pdfauthor	= {SpaceLab},
+    pdfsubject	= {OBDH 2.0 module},
+    pdftitle	= {\title},
+    pdfkeywords	= {Nanosatellites, CubeSats, OBDH}
+}
+
+\begin{document}
+
+    \include{header/titlepage}
+    \include{header/contents}
+
+    \section{Project Overview}
+
+        \include{sections/introduction}
+
+    \section{Hardware}
+
+        \include{sections/hardware}
+
+    \section{Firmware}
+
+        \include{sections/firmware}
+
+    \section{Documentation}
+
+        \include{sections/documentation}
+
+    \section{Management}
+
+        \include{sections/management}
+
+    \sectionpic{Thanks!}{figures/brazil-south.jpeg}
+
+\end{document}
