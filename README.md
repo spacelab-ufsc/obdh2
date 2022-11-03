@@ -35,7 +35,7 @@
 </p>
 
 <p align="center">
-	<img width="70%" src="https://github.com/spacelab-ufsc/obdh2/blob/master/doc/figures/obdh2-pcb-3d.png">
+	<img width="70%" src="https://github.com/spacelab-ufsc/obdh2/blob/master/doc/user_manual/figures/obdh2-pcb-3d.png">
 </p>
 
 ## Overview
