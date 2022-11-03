@@ -1,5 +1,16 @@
 ===========================================
 
+v0.10 - 2022/11/03
+
+- edc driver fully tested and working
+- mt25q driver tested and working
+- CY15x102QN driver tested and working
+- Code cleanup
+- Documentation updates and improvements
+- General fixes and updates
+
+===========================================
+
 v0.9 - 2022/03/07
 
 - Adding enable/disable routines to the EDC driver
