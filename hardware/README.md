@@ -39,8 +39,8 @@
 </p>
 
 <p align="center">
-    <img width="45%" src="https://github.com/spacelab-ufsc/obdh2/blob/master/doc/figures/obdh2-pcb-top.png">
-    <img width="45%" src="https://github.com/spacelab-ufsc/obdh2/blob/master/doc/figures/obdh2-pcb-bottom.png">
+    <img width="45%" src="https://github.com/spacelab-ufsc/obdh2/blob/master/doc/user_manual/figures/obdh2-pcb-top.png">
+    <img width="45%" src="https://github.com/spacelab-ufsc/obdh2/blob/master/doc/user_manual/figures/obdh2-pcb-bottom.png">
 </p>
 
 
@@ -73,7 +73,7 @@ The board has components that should not be soldered simultaneously. Refer to th
 The board requires external supply from the PC-104 connector or the JTAG programmer interface. The following diagram present a simplified diagram of the board power. Refer to the [documentation](https://github.com/spacelab-ufsc/obdh2/tree/master/doc) in the "Instructions" chapter.
 
 <p align="center">
-    <img width="70%" src="https://github.com/spacelab-ufsc/obdh2/blob/master/doc/figures/power-diagram.png">
+    <img width="70%" src="https://github.com/spacelab-ufsc/obdh2/blob/master/doc/user_manual/figures/power-diagram.png">
 </p>
 
 > This image refers to the v0.5 release.
