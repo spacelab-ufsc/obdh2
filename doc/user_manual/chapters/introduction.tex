@@ -18,16 +18,16 @@
 %
 % \institution Universidade Federal de Santa Catarina (UFSC)
 %
-% \version 0.6.0
+% \version 0.10.0
 %
 % \date 2019/07/18
 %
 
 \chapter{Introduction} \label{ch:introduction}
 
-The OBDH 2.0\nomenclature{\textbf{OBDH}}{\textit{On-Board Data Handling.}} is an On-Board Computer (OBC\nomenclature{\textbf{OBC}}{\textit{On-Board Computer.}}) module designed for nanosatellites. It is one of the service modules developed for the FloripaSat-2 CubeSat Mission \cite{floripasat2}. The module is responsible for synchronizing actions and the data flow between other modules (i.e., power module, communication module, payloads) and the Earth segment. It packs the generated data into data frames and transmit back to Earth through a communication module, or stores it on a non-volatile memory for later retrieval. Commands sent from Earth segment to the CubeSat are received by radio transceivers located in the communication module and redirected to the OBDH 2.0, which takes the appropriate action or forward the commands to the target module.
+The OBDH 2.0\nomenclature{\textbf{OBDH}}{\textit{On-Board Data Handling.}} is an On-Board Computer (OBC\nomenclature{\textbf{OBC}}{\textit{On-Board Computer.}}) module designed for nanosatellites. It is one of the service modules developed for the GOLDS-UFSC CubeSat Mission \cite{floripasat2}. The module is responsible for synchronizing actions and the data flow between other modules (i.e., power module, communication module, payloads) and the Earth segment. It packs the generated data into data frames and transmits it back to Earth through a communication module or stores it on non-volatile memory for later retrieval. Commands sent from the Earth segment to the CubeSat are received by radio transceivers located in the communication module and redirected to the OBDH 2.0, which takes the appropriate action or forward the commands to the target module.
 
-The module is a direct upgrade from the OBDH of FloripaSat-1 \cite{obdh-fsat}, which grants a flight heritage rating. The improvements focus on providing a cleaner and more generic implementation in comparison with the previous version, more reliability in software and hardware implementations, and adaptations for the new mission requirements. All the project, source and documentation files are available freely on a GitHub repository \cite{obdh2-repo} under the GPLv3 license.
+The module is a direct upgrade from the OBDH of FloripaSat-1 \cite{obdh-fsat}, which grants a flight heritage rating. The improvements focus on providing a cleaner and more generic implementation compared to the previous version, along with more reliability in software and hardware implementations and adaptations for the new mission requirements. The whole project, including source and documentation files, is available freely on a GitHub repository \cite{obdh2-repo} under the GPLv3 license.
 
 
 \begin{figure}[!ht]

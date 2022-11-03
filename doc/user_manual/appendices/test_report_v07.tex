@@ -28,8 +28,8 @@ This appendix is a test report of the first manufactured and assembled PCB (vers
     \item \textbf{PCB manufacturer}: PCBWay (China)
     \item \textbf{PCB assembly}: PCBWay (China)
     \item \textbf{PCB arrival date}: 2022/04/18
-    \item \textbf{Execution date}: 2022/04/22 to \textcolor{red}{TBC}
-    \item \textbf{Tester}: Gabriel M. Marcelino and Vitória B. Bianchin
+    \item \textbf{Execution date}: 2022/04/22 to 2022/08/10
+    \item \textbf{Tester}: Gabriel M. Marcelino, Vitória B. Bianchin and Bruno Benedetti
     \item \textbf{DNP components}: P8, P2, P5, P6, P7, D1, D2, D3, D4, D5, D6, D7, D8, U10, R19, R20, R\_ESD, J\_PC3, J\_PC4, R2, R3, R4, R5, R6, R7, R12, R13, J\_V3, J\_PC5, J\_PC6, J\_PC7, J\_PC1, J\_PC2, V1, V4, R36, C36
 \end{itemize}
 
@@ -73,7 +73,7 @@ This appendix is a test report of the first manufactured and assembled PCB (vers
             \item USB-UART converter
             \item PuTTy
         \end{itemize}
-    \item \textbf{Results}: The results of this are available in \autoref{fig:log-first-boot}, where the log messages of the first boot of the board can be seen.
+    \item \textbf{Results}: The results of this are available in \autoref{fig:v07-log-first-boot}, where the log messages of the first boot of the board can be seen.
     \item \textbf{Conclusion}: No problems were identified on this test.
 \end{itemize}
 
@@ -81,7 +81,7 @@ This appendix is a test report of the first manufactured and assembled PCB (vers
     \begin{center}
         \includegraphics[width=0.7\columnwidth]{figures/v07/obdh2-boot.png}
         \caption{Log messages during the first boot.}
-        \label{fig:log-first-boot}
+        \label{fig:v07-log-first-boot}
     \end{center}
 \end{figure}
 
@@ -100,7 +100,7 @@ This appendix is a test report of the first manufactured and assembled PCB (vers
             \item Saleae Logic software (v2)
             \item MSP-FET Flash Emulation Tool
         \end{itemize}
-    \item \textbf{Results}: The results of this test can be seen in Figures \ref{fig:test-i2c-0}, \ref{fig:test-i2c-1} and \ref{fig:test-i2c-2}.
+    \item \textbf{Results}: The results of this test can be seen in Figures \ref{fig:v07-test-i2c-0}, \ref{fig:v07-test-i2c-1} and \ref{fig:v07-test-i2c-2}.
     \item \textbf{Conclusion:} No problems were identified on this test, all buses are working as expected.
 \end{itemize}
 
@@ -108,7 +108,7 @@ This appendix is a test report of the first manufactured and assembled PCB (vers
     \begin{center}
         \includegraphics[width=\columnwidth]{figures/v07/obdh2-i2c-test.jpg}
         \caption{Setup of the I2C port tests.}
-        \label{fig:test-i2c}
+        \label{fig:v07-test-i2c}
     \end{center}
 \end{figure}
 
@@ -116,7 +116,7 @@ This appendix is a test report of the first manufactured and assembled PCB (vers
     \begin{center}
         \includegraphics[width=\columnwidth]{figures/v07/obdh2-pl-i2c.png}
         \caption{Waveform of the I2C port 0.}
-        \label{fig:test-i2c-0}
+        \label{fig:v07-test-i2c-0}
     \end{center}
 \end{figure}
 
@@ -124,7 +124,7 @@ This appendix is a test report of the first manufactured and assembled PCB (vers
     \begin{center}
         \includegraphics[width=\columnwidth]{figures/v07/obdh2-eps-i2c.png}
         \caption{Waveform of the I2C port 1.}
-        \label{fig:test-i2c-1}
+        \label{fig:v07-test-i2c-1}
     \end{center}
 \end{figure}
 
@@ -132,7 +132,7 @@ This appendix is a test report of the first manufactured and assembled PCB (vers
     \begin{center}
         \includegraphics[width=\columnwidth]{figures/v07/obdh2-ant-i2c.png}
         \caption{Waveform of the I2C port 2.}
-        \label{fig:test-i2c-2}
+        \label{fig:v07-test-i2c-2}
     \end{center}
 \end{figure}
 
@@ -141,95 +141,85 @@ This appendix is a test report of the first manufactured and assembled PCB (vers
 \subsection{Input Voltage}
 
 \begin{itemize}
-    \item \textbf{Test description/Objective}: .
+    \item \textbf{Test description/Objective}: Verify the input voltage measurements of the board.
     \item \textbf{Material}:
         \begin{itemize}
-            \item Code Composer Studio v9.3.0
+            \item Code Composer Studio v11
             \item MSP-FET Flash Emulation Tool
+            \item Programmable power supply
             \item USB-UART converter
             \item Screen (Linux software)
         \end{itemize}
-    \item \textbf{Results}: .
-    \item \textbf{Conclusion:} .
+    \item \textbf{Results}: TBC.
+    \item \textbf{Conclusion:} The input voltage was measured correctly by the sensor.
 \end{itemize}
 
 \subsection{Input Current}
 
 \begin{itemize}
-    \item \textbf{Test description/Objective}: .
+    \item \textbf{Test description/Objective}: Verify the input current measurements of the board.
     \item \textbf{Material}:
         \begin{itemize}
-            \item Code Composer Studio v9.3.0
+            \item Code Composer Studio v11
             \item MSP-FET Flash Emulation Tool
+            \item Programmable power supply
             \item USB-UART converter
             \item Screen (Linux software)
         \end{itemize}
-    \item \textbf{Results}: .
-    \item \textbf{Conclusion:} .
+    \item \textbf{Results}: TBC.
+    \item \textbf{Conclusion:} The input current was measured correctly by the sensor.
 \end{itemize}
-
-%\begin{figure}[!htb]
-%    \begin{center}
-%        \subfigure[Current sensing circuit.\label{fig:current-sensing-circuit-v07}]{\includegraphics[width=0.8\textwidth]{figures/v07/current-sensor-circuit.png}}
-%
-%        \subfigure[MAX9934 pinout.\label{fig:max9934-pinout}]{\includegraphics[width=0.4\textwidth]{figures/v07/max9934-top-view.png}}
-%        ~
-%        \subfigure[Current sensing layout (bottom layer).\label{fig:}]{\includegraphics[width=0.4\textwidth]{figures/v07/current-sensor-layout.png}}
-%        \caption{.}
-%        \label{fig:current-sensing-error-v07}
-%    \end{center}
-%\end{figure}
-
-%\begin{figure}[!ht]
-%    \begin{center}
-%        \includegraphics[width=0.7\columnwidth]{figures/v07/log-current-sensor.png}
-%        \caption{Log messages with the read values from the current sensor.}
-%        \label{fig:log-current-sensor}
-%    \end{center}
-%\end{figure}
 
 \section{Peripherals}
 
 \subsection{NOR Flash Memory}
 
-%\begin{itemize}
-%    \item \textbf{Test description/Objective}: Test the functionality of the NOR flash memory by verifying the device ID register of the IC.
-%    \item \textbf{Material}:
-%        \begin{itemize}
-%            \item Saleae Logic Analyzer (24 MHz, 8 channels)
-%            \item Saleae Logic software (v1.2.18)
-%            \item MSP-FET Flash Emulation Tool
-%        \end{itemize}
-%    \item \textbf{Results}: %The results of this test can be seen in \autoref{fig:test-nor-memory}.
-%    \item \textbf{Conclusion:} %No problems were identified on this test, as can be seen in \autoref{fig:waveform-spi-mem}, the device ID register was read as expected.
-%\end{itemize}
+\begin{itemize}
+    \item \textbf{Test description/Objective}: Test the functionality of the NOR flash memory by verifying the device ID register of the IC and performing writing/reading operations.
+    \item \textbf{Material}:
+        \begin{itemize}
+            \item Code Composer Studio v11
+            \item MSP-FET Flash Emulation Tool
+            \item USB-UART converter
+            \item Screen (Linux software)
+        \end{itemize}
+    \item \textbf{Results}: The results of this test can be seen in \autoref{fig:v07-nor-test}.
+    \item \textbf{Conclusion:} No problems were identified on this test, as can be seen in \autoref{fig:v07-nor-test}, an writing/reading operation were executed with success.
+\end{itemize}
 
-%\begin{figure}[!htb]
-%    \begin{center}
-%        \subfigure[Connections of the NOR flash memory test.\label{fig:connections-nor-memory}]{\includegraphics[height=0.22\textheight]{figures/v07/test-nor-memory.jpg}}
-%        ~
-%        \subfigure[Waveforms of the NOR memory SPI.\label{fig:waveform-spi-mem}]{\includegraphics[height=0.22\textheight]{figures/v07/waveform-spi-mem.png}}
-%        \caption{NOR memory SPI test.}
-%        \label{fig:test-nor-memory}
-%    \end{center}
-%\end{figure}
+\begin{figure}[!ht]
+    \begin{center}
+        \includegraphics[width=0.6\textwidth]{figures/v07/obdh2-v07-nor-results.png}
+        \caption{Test results of the NOR flash memory.}
+        \label{fig:v07-nor-test}
+    \end{center}
+\end{figure}
 
-%\begin{figure}[!ht]
-%    \begin{center}
-%        \includegraphics[width=0.7\columnwidth]{figures/v05/test-nor-memory.jpg}
-%        \caption{Connections of the NOR flash memory test.}
-%        \label{fig:test-nor-memory}
-%    \end{center}
-%\end{figure}
-%
-%\begin{figure}[!ht]
-%    \begin{center}
-%        \includegraphics[width=\columnwidth]{figures/v05/waveform-spi-mem.png}
-%        \caption{Waveform of the NOR memory SPI.}
-%        \label{fig:waveform-spi-mem}
-%    \end{center}
-%\end{figure}
+\subsection{FRAM Memory}
+
+\begin{itemize}
+    \item \textbf{Test description/Objective}: Test the functionality of the FRAM memory by verifying the device ID register of the IC and performing writing/reading operations.
+    \item \textbf{Material}:
+        \begin{itemize}
+            \item Code Composer Studio v11
+            \item MSP-FET Flash Emulation Tool
+            \item USB-UART converter
+            \item Screen (Linux software)
+        \end{itemize}
+    \item \textbf{Results}: The results of this test can be seen in \autoref{fig:v07-fram-test}.
+    \item \textbf{Conclusion:} No problems were identified on this test.
+\end{itemize}
+
+\begin{figure}[!htb]
+    \begin{center}
+        \subfigure[\label{fig:v07-fram-test1}]{\includegraphics[width=\textwidth]{figures/v07/obdh2-v07-fram-results1.png}}
+        ~
+        \subfigure[\label{fig:v07-fram-test2}]{\includegraphics[width=\textwidth]{figures/v07/obdh2-v07-fram-results2.png}}
+        \caption{Test results of the FRAM memory.}
+        \label{fig:v07-fram-test}
+    \end{center}
+\end{figure}
 
 \section{Conclusion}
 
-.
+No major problems were identified during the executed tests, all peripherals all working as expected.

@@ -18,14 +18,14 @@
 %
 % \institution Universidade Federal de Santa Catarina (UFSC)
 %
-% \version 0.8.0
+% \version 0.10.0
 %
 % \date 2019/10/20
 %
 
 \chapter{Hardware} \label{ch:hardware}
 
-The OBDH 2.0 architecture focus on low-power operation and low-cost production, maintaining performance and proposing different approaches to increase the overall reliability. Therefore, the board was developed using these criteria and the changes from the original design were necessary to improve bottlenecks and achieve the requirements of further space mission. The \autoref{fig:block-diagram} presents the module architecture from the hardware perspective, including the main PCB components and interfaces: microcontroller, buffers, transceivers, memory, watchdog and voltage monitor, and connectors. In the following sections, the hardware design, interfaces, and standards are described in detail. The Figures \ref{fig:pcb-top}, \ref{fig:pcb-bottom} and \ref{fig:pcb-side} present 3D rendered images of the top, bottom and side views of the board, respectively.
+The OBDH 2.0 architecture focuses on the low-power operation and low-cost production, maintaining performance and proposing different approaches to increase overall reliability. Therefore, the board was developed using these criteria, and the changes from the original design were necessary to improve bottlenecks and achieve the requirements of the further space mission. The \autoref{fig:block-diagram} presents the module architecture from the hardware perspective, including the main PCB components and interfaces: microcontroller, buffers, transceivers, memory, watchdog and voltage monitor, and connectors. The following sections describe the hardware design, interfaces, and standards in detail. The Figures \ref{fig:pcb-top}, \ref{fig:pcb-bottom}, and \ref{fig:pcb-side} present 3D-rendered images of the top, bottom, and side views of the board, respectively.
 
 \begin{figure}[!ht]
     \begin{center}
@@ -56,7 +56,7 @@ The OBDH 2.0 architecture focus on low-power operation and low-cost production, 
 
 % Add jtag, daughterboard connector and update the interfaces/payload in the interface diagram
 
-The \autoref{fig:diagram-interfaces} presents the board interfaces, which consists of communication with other modules, debug access points, and internal peripherals. From the perspective of the microcontroller, there are 6 individual and shared communication buses and the JTAG interface, in the following scheme: A0-SPI (shared with Radio, TTC, and external memory chip); A1-UART (shared with redundant payloads); A2-UART (dedicated for debug); B0-I2C (dedicated for the payload); B1-I2C (dedicated for the EPS); B2-I2C (dedicated for the Antenna module). Currently, ``\textit{Payload 1}'' and ``\textit{Payload 2}'' are ``\textit{Payload-X}'' and ``\textit{Payload EDC\nomenclature{\textbf{EDC}}{\textit{Environmental Data Collector.}}}'' respectively.
+The \autoref{fig:diagram-interfaces} presents the board interfaces, which consist of communication with other modules, debug access points, and internal peripherals. From the perspective of the microcontroller, there are 6 individual and shared communication buses and the JTAG interface in the following scheme: A0-SPI (shared with Radio, TTC, and external memory chip); A1-UART (shared with redundant payloads); A2-UART (dedicated for debugging); B0-I2C (dedicated for the payload); B1-I2C (dedicated for the EPS); B2-I2C (dedicated for the Antenna module). Currently, ``\textit{Payload 1}'' and ``\textit{Payload 2}'' are ``\textit{Radiation instrument}'' and ``\textit{Payload EDC\nomenclature{\textbf{EDC}}{\textit{Environmental Data Collector.}}}'' respectively.
 
 \begin{figure}[!ht]
     \begin{center}
@@ -66,7 +66,8 @@ The \autoref{fig:diagram-interfaces} presents the board interfaces, which consis
     \end{center}
 \end{figure}
 
-\begin{table}[!h]
+
+\begin{table}[!ht]
     \centering
     \begin{tabular}{lrrr}
         \toprule[1.5pt]
@@ -76,9 +77,9 @@ The \autoref{fig:diagram-interfaces} presents the board interfaces, which consis
         Radio (downlink/link)   & A0            & SPI               & Radio config./NGHam \\
         NOR Memory              & A0            & SPI               & - \\
         FRAM Memory             & A0            & SPI               & - \\
-        Payload port            & A1            & UART              & -\footnotemark \\
+        Payload port            & A1            & UART              & -\footnotemark[1] \\
         PC (log messages)       & A2            & UART              & ANSI messages \\
-        Payload port            & B0            & I$^{2}$C          & -\footnotemark \\
+        Payload port            & B0            & I$^{2}$C          & -\footnotemark[1] \\
         EPS                     & B1            & I$^{2}$C          & Register read/write \\
         Antenna Module          & B2            & I$^{2}$C          & - \\
         \bottomrule[1.5pt]
@@ -87,17 +88,18 @@ The \autoref{fig:diagram-interfaces} presents the board interfaces, which consis
     \label{tab:interfaces}
 \end{table}
 
-\footnotetext{The communication protocol of the payload ports depends of the used payload.}
-
 \section{External Connectors}
 
-The external interfaces are connected to the microcontroller using different connector types: EPS, TTC, Radio, and Payloads through PC-104; Antenna module with 6H header and 6P picoblade connectors; JTAG through 14H header and 6P picoblade connectors; and debug access using a dedicated 2H header and shared with the JTAG connectors. The following topics describe these interfaces and present the connectors pinout.
+The external interfaces are connected to the microcontroller using different connector types: EPS, TTC, Radio, and Payloads through PC-104; Antenna module with 6H header and 6P picoblade connectors; JTAG through 14H header and 6P picoblade connectors; and debug access using a dedicated 2H header and shared with the JTAG connectors. The following topics describe these interfaces and present the pinout of the connectors.
+
+\footnotetext[1]{The communication protocol of the payload ports depends of the used payload.}
+\addtocounter{footnote}{1}
 
 \subsection{PC-104} \label{sec:pc104}
 
 % Synchronize nomenclature of the PC-104
 
-The connector referred as PC-104 is a junction of two double row 28H headers (\textit{SSW-126-04-G-D}). These connectors create a solid 104-pin interconnection across the different satellite modules. The \autoref{fig:pc-104-scheme} shows the PC-104 interface from the bottom side of the PCB, which allows visualize the simplified label scheme in the board. Also, the \autoref{tab:pc104-pins} provides the connector pinout\footnote{This pinout is simplified since additional interfaces were omitted. Refer to \textit{option sheet} in chapter \ref{ch:assembly}.} for the pins that are connected to the module. 
+The connector PC-104 is a junction of two double-row 28H headers (\textit{SSW-126-04-G-D}). These connectors create a solid 104-pin interconnection across the different satellite modules. The \autoref{fig:pc-104-scheme} shows the PC-104 interface from the bottom side of the PCB, which allows visualizing the simplified label scheme in the board. Also, the \autoref{tab:pc104-pins} provides the connector pinout\footnote{This pinout is simplified since additional interfaces were omitted. Refer to \textit{option sheet} in chapter \ref{ch:assembly}.} for the pins that are connected to the module.
 
 \begin{figure}[!ht]
     \begin{center}
@@ -147,9 +149,9 @@ The connector referred as PC-104 is a junction of two double row 28H headers (\t
 
 \subsection{Antenna Module}
 
-The communication with the Antenna module is performed through external connectors, which are presented in the \autoref{fig:ant-connectors}. Both connectors have the same connections, but the \ref{fig:ant-debug-connector} (6H header) is used for development and the \ref{fig:ant-main-connector} (6P picoblade) as the connector for the flight model. This interface consists of a dedicated I2C, power supply, and GPIO, which are described in the \autoref{tab:antenna-connector-pins}.
+The communication with the Antenna module is performed through external connectors, which are presented in the \autoref{fig:ant-connectors}. Both connectors have the same connections, but the \ref{fig:ant-debug-connector} (6H header) is used for development, and the \ref{fig:ant-main-connector} (6P picoblade) as the connector for the flight model. This interface consists of a dedicated I2C, power supply, and GPIO, described in the \autoref{tab:antenna-connector-pins}.
 
-\begin{table}[!h]
+\begin{table}[!ht]
     \centering
     \begin{tabular}{cllll}
         \toprule[1.5pt]
@@ -179,7 +181,7 @@ The communication with the Antenna module is performed through external connecto
 
 \subsection{Programmer and Debug} \label{sec:programer-and-debug}
 
-The interface with the microcontroller programmer is performed through external connectors, which are presented in the \autoref{fig:jtag-connectors}. Both connectors have the same JTAG and UART interfaces, but the 14H header is used during development and the 6P picoblade (provide more compact and reliable attachment) as the connector for the flight model, which are described in the \autoref{tab:jtag-header-connector-pins} and \autoref{tab:jtag-picoblade-connector-pins}, respectively. This interface consists of a dedicated debug UART, a JTAG, and an external power supply. The debug UART connection has another access point in a dedicated 2H header (P7), as shown in \autoref{fig:uart-debug-connector}. Also, to use this external supply, it is necessary to connect both pins of a 2H header jumper (P6).
+The interface with the microcontroller programmer is performed through external connectors, which are presented in the \autoref{fig:jtag-connectors}. Both connectors have the same JTAG and UART interfaces. However, the 14H header is used during development, and the 6P picoblade (provides a more compact and reliable attachment) as the connector for the flight model, which is described in the \autoref{tab:jtag-header-connector-pins} and \autoref{tab:jtag-picoblade-connector-pins}, respectively. This interface consists of a dedicated debug UART, a JTAG, and an external power supply. The debug UART connection has another access point in a dedicated 2H header (P7), as shown in \autoref{fig:uart-debug-connector}. Also, to use this external supply, it is necessary to connect both pins of a 2H header jumper (P6).
 
 \begin{figure}[!ht]
     \begin{center}
@@ -189,7 +191,7 @@ The interface with the microcontroller programmer is performed through external 
     \end{center}
 \end{figure}
 
-\begin{table}[!h]
+\begin{table}[!ht]
     \centering
     \begin{tabular}{cllll}
         \toprule[1.5pt]
@@ -208,18 +210,18 @@ The interface with the microcontroller programmer is performed through external 
     \label{tab:jtag-header-connector-pins}
 \end{table}
 
-\begin{table}[!h]
+\begin{table}[!ht]
     \centering
     \begin{tabular}{cllll}
         \toprule[1.5pt]
         \textbf{Pin} & \textbf{Row} \\
         \midrule
-        1            & VCC\_3V3       \\
-        2            & TDO\_TDI       \\
-        3            & TCK            \\
-        4            & UART\_TX       \\
-        5            & UART\_RX       \\
-        6            & GND            \\
+        1            & VCC\_3V3 \\
+        2            & TDO\_TDI \\
+        3            & TCK \\
+        4            & UART\_TX \\
+        5            & UART\_RX \\
+        6            & GND \\
         \bottomrule[1.5pt]
     \end{tabular}
     \caption{Programmer picoblade connector pinout.}
@@ -236,7 +238,7 @@ The interface with the microcontroller programmer is performed through external 
 
 \subsection{Daughterboard} \label{sec:daughterboard-interface}
 
-The daughterboard interface uses the Samtec FSI-110-D connector \cite{fsi-conn}, which can be seen in the \autoref{fig:samtec-connector}. This connector has metal contacts in format of arcs that are flexible and four polymer guide pins (a pair for top and bottom). When the daughterboard is attached, there is some pressure to this metal contacts that bend and create a meaningful pin connection to the daughterboard copper pads\footnote{These daughterboard pads are similar to the ones used as footprint in the OBDH, despite a slightly bigger size.}. A picture of this connector on the PCB can be seen in \autoref{fig:daughterboard-connector}.
+The daughterboard interface uses the Samtec FSI-110-D connector \cite{fsi-conn}, which can be seen in the \autoref{fig:samtec-connector}. This connector has metal contacts in the format of flexible arcs and four polymer guide pins (a pair for the top and bottom). When the daughterboard is attached, there is some pressure on the metal contacts that bend and create a meaningful pin connection to the daughterboard copper pads\footnote{These daughterboard pads are similar to the ones used as a footprint in the OBDH, despite a slightly bigger size.}. A picture of this connector on the PCB can be seen in \autoref{fig:daughterboard-connector}.
 
 \begin{figure}[!ht]
     \begin{center}
@@ -254,9 +256,9 @@ The daughterboard interface uses the Samtec FSI-110-D connector \cite{fsi-conn},
     \end{center}
 \end{figure}
 
-The pinout of the daughterboard interface are available in the \autoref{tab:daugtherboard-connector-pins}. There are different power supply lines (OBDH, Antenna, and battery), communication buses (I2C and SPI), GPIO, and ADC\nomenclature{\textbf{ADC}}{\textit{Analog-to-Digital Converter.}} interfaces available. Besides the GPIO and ADC pins, the other interfaces are shared with other modules and peripherals.
+The pinout of the daughterboard interface is available in the \autoref{tab:daugtherboard-connector-pins}. There are different power supply lines (OBDH, Antenna, and battery), communication buses (I2C and SPI), GPIO, and ADC\nomenclature{\textbf{ADC}}{\textit{Analog-to-Digital Converter.}} interfaces available. Besides the GPIO and ADC pins, the other interfaces are shared with other modules and peripherals.
 
-\begin{table}[!h]
+\begin{table}[!ht]
     \centering
     \begin{tabular}{cllll}
         \toprule[1.5pt]
@@ -280,7 +282,7 @@ The pinout of the daughterboard interface are available in the \autoref{tab:daug
 
 \subsubsection{Guidelines}
 
-The recommended shape and size of the daughterboard can be seen in the \autoref{fig:daughterboard-size}. Besides that, there are mandatory and suggested elements placement: four M3 holes for mechanical attachment, required; contact connector pads (in light gray on the bottom layer), required; two debug headers in the left and bottom sides, suggested; and a general purpose flight model picoblade, suggested.
+The recommended shape and size of the daughterboard can be seen in the \autoref{fig:daughterboard-size}. Besides that, there are mandatory and suggested elements placement: four M3 holes for mechanical attachment, required; contact connector pads (in light gray on the bottom layer), required; two debug headers on the left and bottom sides, suggested; and a general purpose flight model picoblade suggested.
 
 \begin{figure}[!ht]
     \begin{center}
@@ -300,9 +302,9 @@ The recommended shape and size of the daughterboard can be seen in the \autoref{
 
 \section{Microcontroller}
 
-The OBDH 2.0 uses a low-power and low-cost microcontroller family from Texas Instruments, the MSP430F6659 \cite{msp430f6659}. This device provide sufficient performance for low and medium complexity software and algorithms, allowing the module to execute the required tasks. The \autoref{tab:msp430-summary} presents a summary of the main available features and \autoref{fig:msp430-diagram} shows the internal subsystems, descriptions, and peripherals. The microcontroller interfaces, configurations, and auxiliary components are described in the following topics.
+The OBDH 2.0 uses a low-power and low-cost microcontroller family from Texas Instruments; the MSP430F6659 \cite{msp430f6659}. This device provides sufficient performance for low and medium-complexity software and algorithms, allowing the module to execute the required tasks. The \autoref{tab:msp430-summary} presents a summary of the main available features and \autoref{fig:msp430-diagram} shows the internal subsystems, descriptions, and peripherals. The microcontroller interfaces, configurations, and auxiliary components are described in the following topics.
 
-\begin{table}[!h]
+\begin{table}[!ht]
     \centering
     \begin{tabular}{cllllllll}
         \toprule[1.5pt]
@@ -325,9 +327,9 @@ The OBDH 2.0 uses a low-power and low-cost microcontroller family from Texas Ins
 
 \subsection{Interfaces Configuration}
 
-The microcontroller has 6 Universal Serial Communication Interfaces (USCI\nomenclature{\textbf{USCI}}{\textit{Universal Serial Communication Interfaces.}}) that can be configured to operate with different protocols and parameters. These interfaces are connected to different modules and peripherals, as presented in the \autoref{fig:diagram-interfaces}. The \autoref{tab:usci-config} describes each interface configurations.
+The microcontroller has 6 Universal Serial Communication Interfaces (USCI\nomenclature{\textbf{USCI}}{\textit{Universal Serial Communication Interfaces.}}) that can be configured to operate with different protocols and parameters. These interfaces are connected to different modules and peripherals, as presented in the \autoref{fig:diagram-interfaces}. The \autoref{tab:usci-config} describes each interface configuration.
 
-\begin{table}[!h]
+\begin{table}[!ht]
     \centering
     \begin{tabular}{lrrrrl}
         \toprule[1.5pt]
@@ -350,7 +352,7 @@ The microcontroller has 6 Universal Serial Communication Interfaces (USCI\nomenc
 
 \subsection{Clocks Configuration}
 
-Besides the internal clock sources, the microcontroller has two dedicated clock inputs for external crystals: the main clock and the auxiliary clock inputs. There are a $32\ MHz$ crystal and a $32.769\ kHz$ connected to these inputs, respectively. The first source is used for generating the Master Clock (MCLK) and the Subsystem Master Clock (SMCLK), which are used by the CPU and the internal peripheral modules. The second source is used for generating the Auxiliary Clock (ACLK) that handles the low-power modes and might be used for peripherals.
+Besides the internal clock sources, the microcontroller has two dedicated clock inputs for external crystals: the main clock and the auxiliary. A $32\ MHz$ crystal and a $32.769\ kHz$ are connected to these inputs. The first source is used for generating the Master Clock (MCLK) and the Subsystem Master Clock (SMCLK), which are used by the CPU and the internal peripheral modules. The second source is used for generating the Auxiliary Clock (ACLK) that handles the low-power modes and might be used for peripherals.
 
 \subsection{Pinout}
 
@@ -383,8 +385,8 @@ An illustration of the microcontroller pinout positions can be seen in the \auto
     P2.3              & 20                  & -                     \\
     P2.4              & 21                  & SPI\_MOSI             \\
     P2.5              & 22                  & SPI\_MISO             \\
-    P2.6              & 23                  & -                     \\
-    P2.7              & 24                  & -                     \\
+    P2.6              & 23                  & VERSION\_BIT0         \\
+    P2.7              & 24                  & VERSION\_BIT1         \\
     \midrule
     P3.0              & 42                  & I2C0\_EN              \\
     P3.1              & 43                  & I2C1\_EN              \\
@@ -400,9 +402,9 @@ An illustration of the microcontroller pinout positions can be seen in the \auto
     P4.2              & 52                  & MEM\_HOLD             \\
     P4.3              & 53                  & MEM\_RESET            \\
     P4.4              & 54                  & MEM\_SPI\_CS          \\
-    P4.5              & 55                  & -                     \\
-    P4.6              & 56                  & -                     \\
-    P4.7              & 57                  & -                     \\
+    P4.5              & 55                  & PC104\_GPIO4          \\
+    P4.6              & 56                  & PC104\_GPIO5          \\
+    P4.7              & 57                  & PC104\_GPIO6          \\
     \midrule
     P5.0              & 9                   & VREF                  \\
     P5.1              & 10                  & AGND                  \\
@@ -440,7 +442,7 @@ An illustration of the microcontroller pinout positions can be seen in the \auto
     P8.6              & 66                  & I2C1\_SCL             \\
     P8.7              & 67                  & ANTENNA\_GPIO         \\
     \midrule
-    P9.0              & 68                  & -                     \\
+    P9.0              & 68                  & FRAM\_WP              \\
     P9.1              & 69                  & FRAM\_SPI\_CS         \\
     P9.2              & 70                  & UART0\_TX             \\
     P9.3              & 71                  & UART0\_RX             \\
@@ -465,11 +467,11 @@ An illustration of the microcontroller pinout positions can be seen in the \auto
 
 \section{External Watchdog}
 
-Additionally to the internal watchdog timer of the microcontroller, to ensure a system reset in case of a software freeze, an external watchdog circuit is being used. For that, the TPS3823 IC\nomenclature{\textbf{IC}}{\textit{Integrated Circuit.}} from Texas Instruments \cite{tps382x} was chosen. This IC is a voltage monitor with a watchdog timer feature. This circuit can be seen in the \autoref{fig:ext-wdt-circuit}.
+In addition to the internal watchdog timer of the microcontroller, to ensure a system reset in case of a software freeze, an external watchdog circuit is being used. For that, the TPS3823 IC\nomenclature{\textbf{IC}}{\textit{Integrated Circuit.}} from Texas Instruments \cite{tps382x} was chosen. This IC is a voltage monitor with a watchdog timer feature. This circuit can be seen in the \autoref{fig:ext-wdt-circuit}.
 
-This circuit works this way: if the WDI pin remains high or low longer than the timeout period, then reset is triggered. The timer clears when reset is asserted or when WDI sees a rising edge or a falling edge.
+This circuit works this way: if the WDI pin remains high or low longer than the timeout period, then reset is triggered. The timer clears when reset is asserted or when WDI sees a rising or falling edge.
 
-The watchdog timer task clears the TPS3823 timer by toggling the WDI pin at every $100\ ms$. If the WDI pin state stays unmodified for more than $1600\ ms$, the reset pin is cleared and the microcontroller is reseted.
+The watchdog timer task clears the TPS3823 timer by toggling the WDI pin every $100\ ms$. If the WDI pin state stays unmodified for more than $1600\ ms$, the reset pin is cleared, and the microcontroller is reset.
 
 \begin{figure}[!ht]
     \begin{center}
@@ -485,9 +487,9 @@ There are two non-volatile memories available on the module: one flash NOR memor
 
 \subsection{Flash NOR}
 
-The flash NOR non-volatile memory model is the Micron MT25QL01GBBB, which is composed by a NOR flash architecture with 1 Gb of capacity (or 128 MB) and features extended SPI configurations. As can be seen in \autoref{fig:diagram-interfaces}, a SPI bus is used to communicate with this peripheral, using the \autoref{tab:usci-config} configurations. Also, there are some control pins that are connected to microcontroller GPIOs: HOLD\#, RESET\#, and W\#.
+The flash NOR non-volatile memory model is the Micron MT25QL01GBBB, which is composed of a NOR flash architecture with 1 Gb of capacity (or 128 MB) and features extended SPI configurations. As seen in \autoref{fig:diagram-interfaces}, an SPI bus is used to communicate with this peripheral, using the \autoref{tab:usci-config} configurations. Also, some control pins are connected to microcontroller GPIOs: HOLD\#, RESET\#, and W\#.
 
-When RESET\# is driven LOW, the device is reset and the outputs are tri-stated. The HOLD\# signal pauses serial communications without deselecting or resetting the device, consequently outputs are tri-stated and inputs are ignored. The W\# signal handles as a write protection, which freezes the status register, turning its non-volatile bits read-only and preventing the write operation to be executed.
+When RESET\# is driven LOW, the device is reset, and the outputs are tri-stated. The HOLD\# signal pauses serial communications without deselecting or resetting the device; outputs are tri-stated, and inputs are ignored. The W\# signal handles as write protection, freezes the status register, turning its non-volatile bits read-only and preventing the write operation from being executed.
 
 
 \begin{figure}[!ht]
@@ -500,6 +502,8 @@ When RESET\# is driven LOW, the device is reset and the outputs are tri-stated. 
 
 \subsection{FRAM}
 
+The EXCELON™ Auto CY15X102QN is an automotive grade, 2Mb non-volatile memory employing an advanced ferroelectric process. A ferroelectric random access memory or F-RAM is non-volatile and performs reads and writes similar to RAM. It provides reliable data retention for 121 years. The schematics of the memory can be seen in \autoref{fig:fram-mem-circuit}, an SPI bus is used to communicate with this peripheral.
+
 \begin{figure}[!ht]
     \begin{center}
         \includegraphics[width=0.65\textwidth]{figures/fram-memory-circuit.png}
@@ -510,9 +514,9 @@ When RESET\# is driven LOW, the device is reset and the outputs are tri-stated. 
 
 \section{I2C Buffers}
 
-The microcontroller I2C interfaces have dedicated IC buffers, which improve the signal quality throughout the various connectors and offers reliability enhancements, since it protects the bus in case of failures. This measure was adopted in all the satellite modules due to previous failures in I2C buses. Using this scheme, the modules connected though this protocol might have shared connections without losing performance or reliability. 
+The microcontroller I2C interfaces have dedicated IC buffers, which improve the signal quality throughout the various connectors and offer reliability enhancements since it protects the bus in case of failures. This measure was adopted in all the satellite modules due to previous failures in I2C buses. Using this scheme, the modules connected through this protocol might have shared connections without losing performance or reliability.
 
-The buffer selected for this function is the Texas Instruments TCA4311 device. Besides the I2C inputs and outputs, it features control and status signals that are connected to GPIOs in the microcontroller: an enable and an operation ready status. Also, both inputs and outputs in these I2C lines have external pull-up resistors.
+The buffer selected for this function is the Texas Instruments TCA4311 device. Besides the I2C inputs and outputs, it features control and status signals that are connected to GPIOs in the microcontroller: an enable and an operation-ready status. Also, both inputs and outputs in these I2C lines have external pull-up resistors.
 
 \begin{figure}[!ht]
     \begin{center}
@@ -524,7 +528,7 @@ The buffer selected for this function is the Texas Instruments TCA4311 device. B
 
 \section{RS-485 Transceiver}
 
-The module features an RS-485 interface, which is connected to a 4H header (P8). This interface uses a transceiver (THVD1451) to convert the incoming RS-485 signals to UART and vice-versa. The outputs are $120\ \Omega$ differential pairs that have termination resistors before connecting to the header pins.
+The module features an RS-485 interface connected to a 4H header (P8). This interface uses a transceiver (THVD1451) to convert the incoming RS-485 signals to UART and vice-versa. The outputs are $120\ \Omega$ differential pairs that have termination resistors before connecting to the header pins.
 
 \begin{figure}[!ht]
     \begin{center}
@@ -536,4 +540,4 @@ The module features an RS-485 interface, which is connected to a 4H header (P8).
 
 \section{Voltage and Current Sensors}
 
-In order to monitor the board overall current and voltage, the module have a current sensor using a Maxim Integrated IC (MAX9934) and a buffered voltage divider circuit with a Texas Instruments IC (TLV341A). These circuits have direct analog outputs that are connected to ADC inputs. The microcontroller internal ADC peripheral has a dedicated input for a voltage reference, which is connected to the REF5030A IC. This device generates a precise $3\ V$ output that enhances the measures and convertions performed by the microcontroller.
+To monitor the board's overall current and voltage, the module has a current sensor using a Maxim Integrated IC (MAX9934) and a buffered voltage divider circuit with a Texas Instruments IC (TLV341A). These circuits have direct analog outputs that are connected to ADC inputs. The microcontroller's internal ADC peripheral has a dedicated input for a voltage reference, which is connected to the REF5030A IC. This device generates a precise $3\ V$ output that enhances the measures and conversions performed by the microcontroller.
