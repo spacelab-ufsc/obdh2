@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.14
+ * \version 0.9.2
  * 
  * \date 2021/10/16
  * 
@@ -41,19 +41,19 @@ int edc_i2c_init(edc_config_t config)
 {
     i2c_config_t i2c_conf = {0};
 
-    i2c_conf.speed_hz = config.bitrate;
+    i2c_conf.speed_hz = config.i2c_bitrate;
 
-    return i2c_init(config.port, i2c_conf);
+    return i2c_init(config.i2c_port, i2c_conf);
 }
 
 int edc_i2c_write(edc_config_t config, uint8_t *data, uint16_t len)
 {
-    return i2c_write(config.port, EDC_SLAVE_ADDRESS, data, len);
+    return i2c_write(config.i2c_port, EDC_SLAVE_ADDRESS, data, len);
 }
 
 int edc_i2c_read(edc_config_t config, uint8_t *data, uint16_t len)
 {
-    return i2c_read(config.port, EDC_SLAVE_ADDRESS, data, len);
+    return i2c_read(config.i2c_port, EDC_SLAVE_ADDRESS, data, len);
 }
 
 /** \} End of edc group */

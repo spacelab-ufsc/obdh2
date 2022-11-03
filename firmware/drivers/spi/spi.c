@@ -1,7 +1,7 @@
 /*
  * spi.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.9
+ * \version 0.9.16
  * 
  * \date 2019/12/07
  * 
@@ -79,6 +79,7 @@ static int spi_setup_gpio(spi_port_t port)
             gpio_init(GPIO_PIN_28, conf);
             gpio_init(GPIO_PIN_45, conf);
             gpio_init(GPIO_PIN_46, conf);
+            gpio_init(GPIO_PIN_63, conf);
 
             /* Set all CS pins to high */
             gpio_set_state(GPIO_PIN_5, true);
@@ -86,6 +87,7 @@ static int spi_setup_gpio(spi_port_t port)
             gpio_set_state(GPIO_PIN_28, true);
             gpio_set_state(GPIO_PIN_45, true);
             gpio_set_state(GPIO_PIN_46, true);
+            gpio_set_state(GPIO_PIN_63, true);
 
             break;
         case SPI_PORT_1:
@@ -130,6 +132,7 @@ int spi_select_slave(spi_port_t port, spi_cs_t cs, bool active)
                 case SPI_CS_2:      gpio_set_state(GPIO_PIN_28, !active);     break;
                 case SPI_CS_3:      gpio_set_state(GPIO_PIN_45, !active);     break;
                 case SPI_CS_4:      gpio_set_state(GPIO_PIN_46, !active);     break;
+                case SPI_CS_5:      gpio_set_state(GPIO_PIN_63, !active);     break;
                 case SPI_CS_NONE:                                             break;
                 default:
                 #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)

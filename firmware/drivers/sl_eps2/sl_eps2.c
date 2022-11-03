@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.42
+ * \version 0.9.6
  * 
  * \date 2020/02/05
  * 
@@ -121,6 +121,7 @@ int sl_eps2_write_reg(sl_eps2_config_t config, uint8_t adr, uint32_t val)
 
 int sl_eps2_read_reg(sl_eps2_config_t config, uint8_t adr, uint32_t *val)
 {
+
     int err = 0;
 
     uint8_t buf[1 + 4 + 1] = {0};
@@ -135,20 +136,20 @@ int sl_eps2_read_reg(sl_eps2_config_t config, uint8_t adr, uint32_t *val)
 
     sl_eps2_delay_ms(50);
 
-    if (sl_eps2_i2c_read(config, buf, 5U) != TCA4311A_READY)
+    if (sl_eps2_i2c_read(config, buf, 6U) != TCA4311A_READY)
     {
         err = -1;
     }
 
-    if (!sl_eps2_check_crc(buf, 4U, buf[4]))
+    if (!sl_eps2_check_crc(buf, 5U, buf[5]))
     {
         err = -1;
     }
 
-    *val = ((uint32_t)buf[0] << 24) |
-           ((uint32_t)buf[1] << 16) |
-           ((uint32_t)buf[2] << 8)  |
-           ((uint32_t)buf[3] << 0);
+    *val = ((uint32_t)buf[1] << 24) |
+           ((uint32_t)buf[2] << 16) |
+           ((uint32_t)buf[3] << 8)  |
+           ((uint32_t)buf[4] << 0);
 
     return err;
 }

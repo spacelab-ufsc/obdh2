@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.38
+ * \version 0.9.18
  * 
  * \date 2019/11/02
  * 
@@ -43,12 +43,9 @@
 #include "watchdog_reset.h"
 #include "heartbeat.h"
 #include "system_reset.h"
-#include "radio_reset.h"
 #include "read_sensors.h"
 #include "beacon.h"
-#include "uplink.h"
 #include "time_control.h"
-#include "csp_server.h"
 #include "read_edc.h"
 #include "read_eps.h"
 #include "read_ttc.h"
@@ -97,15 +94,6 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_SYSTEM_RESET_ENABLED */
 
-#if defined(CONFIG_TASK_RADIO_RESET_ENABLED) && (CONFIG_TASK_RADIO_RESET_ENABLED == 1)
-    xTaskCreate(vTaskRadioReset, TASK_RADIO_RESET_NAME, TASK_RADIO_RESET_STACK_SIZE, NULL, TASK_RADIO_RESET_PRIORITY, &xTaskRadioResetHandle);
-
-    if (xTaskRadioResetHandle == NULL)
-    {
-        /* Error creating the radio reset task */
-    }
-#endif /* CONFIG_TASK_RADIO_RESET_ENABLED */
-
 #if defined(CONFIG_TASK_READ_SENSORS_ENABLED) && (CONFIG_TASK_READ_SENSORS_ENABLED == 1)
     xTaskCreate(vTaskReadSensors, TASK_READ_SENSORS_NAME, TASK_READ_SENSORS_STACK_SIZE, NULL, TASK_READ_SENSORS_PRIORITY, &xTaskReadSensorsHandle);
 
@@ -124,15 +112,6 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_BEACON_ENABLED */
 
-#if defined(CONFIG_TASK_UPLINK_ENABLED) && (CONFIG_TASK_UPLINK_ENABLED == 1)
-    xTaskCreate(vTaskUplink, TASK_UPLINK_NAME, TASK_UPLINK_STACK_SIZE, NULL, TASK_UPLINK_PRIORITY, &xTaskUplinkHandle);
-
-    if (xTaskUplinkHandle == NULL)
-    {
-        /* Error creating the uplink task */
-    }
-#endif /* CONFIG_TASK_UPLINK_ENABLED */
-
 #if defined(CONFIG_TASK_TIME_CONTROL_ENABLED) && (CONFIG_TASK_TIME_CONTROL_ENABLED == 1)
     xTaskCreate(vTaskTimeControl, TASK_TIME_CONTROL_NAME, TASK_TIME_CONTROL_STACK_SIZE, NULL, TASK_TIME_CONTROL_PRIORITY, &xTaskTimeControlHandle);
 
@@ -141,15 +120,6 @@ void create_tasks(void)
         /* Error creating the time control task */
     }
 #endif /* CONFIG_TASK_BEACON_ENABLED */
-
-#if defined(CONFIG_TASK_CSP_SERVER_ENABLED) && (CONFIG_TASK_CSP_SERVER_ENABLED == 1)
-    xTaskCreate(vTaskCSPServer, TASK_CSP_SERVER_NAME, TASK_CSP_SERVER_STACK_SIZE, NULL, TASK_CSP_SERVER_PRIORITY, &xTaskCSPServerHandle);
-
-    if (xTaskCSPServerHandle == NULL)
-    {
-        /* Error creating the CSP server task */
-    }
-#endif /* CONFIG_TASK_CSP_SERVER_ENABLED */
 
 #if defined(CONFIG_TASK_READ_EDC_ENABLED) && (CONFIG_TASK_READ_EDC_ENABLED == 1)
     xTaskCreate(vTaskReadEDC, TASK_READ_EDC_NAME, TASK_READ_EDC_STACK_SIZE, NULL, TASK_READ_EDC_PRIORITY, &xTaskReadEDCHandle);
