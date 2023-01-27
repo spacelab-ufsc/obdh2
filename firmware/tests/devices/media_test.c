@@ -1,7 +1,7 @@
 /*
  * media_test.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.26
+ * \version 0.10.1
  * 
  * \date 2021/08/07
  * 
@@ -50,7 +50,7 @@
 
 #define MEDIA_FRAM_SPI_PORT         SPI_PORT_0
 #define MEDIA_FRAM_SPI_CS_PIN       SPI_CS_5
-#define MEDIA_FRAM_SPI_CLOCK_HZ     1000000UL
+#define MEDIA_FRAM_SPI_CLOCK_HZ     100000UL
 #define MEDIA_FRAM_WP_PIN           GPIO_PIN_62
 
 unsigned int generate_random(unsigned int l, unsigned int r);
