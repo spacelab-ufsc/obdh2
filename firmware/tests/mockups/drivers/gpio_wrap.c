@@ -82,4 +82,11 @@ int __wrap_gpio_toggle(gpio_pin_t pin)
     return mock_type(int);
 }
 
+int __wrap_gpio_init_mr_pin(gpio_pin_t mr_pin)
+{
+    check_expected(mr_pin);
+
+    return mock_type(int);
+}
+
 /** \} End of gpio_wrap group */
