@@ -45,11 +45,14 @@ int tps382x_init(tps382x_config_t config)
 
     if (gpio_init(config.wdi_pin, gpio_conf) == 0)
     {
-        if (gpio_init(config.mr_pin, gpio_conf) == 0)
+        if (gpio_init_mr_pin(config.mr_pin) == 0)
         {
             err = 0;
         }
     }
+
+    gpio_set_state(config.mr_pin, true);
+    gpio_set_state(config.wdi_pin, true);
 
     return err;
 }
