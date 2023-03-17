@@ -193,6 +193,20 @@ int gpio_get_state(gpio_pin_t pin);
  */
 int gpio_toggle(gpio_pin_t pin);
 
+/**
+ * \brief Configures the MR GPIO pin to initialize in high as output.
+ *
+ * Adaptation from the hal/gpio function, this function must be used to configure the
+ * external watchdog MR pin as output and avoid accidental resets during configuration.
+ *
+ * \see SLVS165L - TPS382x Voltage Monitor With Watchdog Timer.
+ *
+ * \param[in] mr_pin is the watchdog Manual Reset pin.
+ *
+ * \return status/error code.
+ */
+int gpio_init_mr_pin(gpio_pin_t mr_pin);
+
 #endif /* GPIO_H_ */
 
 /** \} End of gpio group */
