@@ -56,10 +56,23 @@ static void tps382x_init_test(void **state)
 
     will_return(__wrap_gpio_init, 0);
 
-    expect_value(__wrap_gpio_init, pin, TPS382X_MR_PIN);
-    expect_value(__wrap_gpio_init, config.mode, GPIO_MODE_OUTPUT);
 
-    will_return(__wrap_gpio_init, 0);
+    expect_value(__wrap_gpio_init_mr_pin, mr_pin, TPS382X_MR_PIN);
+
+    will_return(__wrap_gpio_init_mr_pin, 0);
+
+
+    expect_value(__wrap_gpio_set_state, pin, TPS382X_MR_PIN);
+    expect_value(__wrap_gpio_set_state, level, true);
+
+    will_return(__wrap_gpio_set_state, 0);
+
+
+    expect_value(__wrap_gpio_set_state, pin, TPS382X_WDI_PIN);
+    expect_value(__wrap_gpio_set_state, level, true);
+
+    will_return(__wrap_gpio_set_state, 0);
+
 
     assert_return_code(tps382x_init(conf), 0);
 }
