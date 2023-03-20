@@ -1,7 +1,7 @@
 /*
  * gpio.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.40
+ * \version 0.10.2
  * 
  * \date 2020/01/13
  * 
@@ -192,6 +192,20 @@ int gpio_get_state(gpio_pin_t pin);
  * \return The status/error code.
  */
 int gpio_toggle(gpio_pin_t pin);
+
+/**
+ * \brief Configures the MR GPIO pin to initialize in high as output.
+ *
+ * Adaptation from the hal/gpio function, this function must be used to configure the
+ * external watchdog MR pin as output and avoid accidental resets during configuration.
+ *
+ * \see SLVS165L - TPS382x Voltage Monitor With Watchdog Timer.
+ *
+ * \param[in] mr_pin is the watchdog Manual Reset pin.
+ *
+ * \return status/error code.
+ */
+int gpio_init_mr_pin(gpio_pin_t mr_pin);
 
 #endif /* GPIO_H_ */
 

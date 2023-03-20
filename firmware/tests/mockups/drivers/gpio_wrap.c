@@ -1,7 +1,7 @@
 /*
  * gpio_wrap.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.8
+ * \version 0.10.2
  * 
  * \date 2021/02/13
  * 
@@ -78,6 +78,13 @@ int __wrap_gpio_get_state(gpio_pin_t pin)
 int __wrap_gpio_toggle(gpio_pin_t pin)
 {
     check_expected(pin);
+
+    return mock_type(int);
+}
+
+int __wrap_gpio_init_mr_pin(gpio_pin_t mr_pin)
+{
+    check_expected(mr_pin);
 
     return mock_type(int);
 }
