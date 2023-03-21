@@ -67,7 +67,7 @@ int antenna_init(void)
     else
     {
     #if defined(CONFIG_DRV_ISIS_ANTENNA_ENABLED) && (CONFIG_DRV_ISIS_ANTENNA_ENABLED == 1)
-        sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Initializing...");
+        sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Initializing antenna...");
         sys_log_new_line();
 
         if (isis_antenna_init() == 0)
