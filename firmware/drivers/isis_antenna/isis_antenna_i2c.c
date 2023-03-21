@@ -60,7 +60,7 @@ int isis_antenna_i2c_init(void)
     ants_config.en_pin              = ISIS_ANTENNA_I2C_EN_PIN;
     ants_config.ready_pin           = ISIS_ANTENNA_I2C_RDY_PIN;
 
-    if (tca4311a_init(ants_config, false) == TCA4311A_NOT_READY)
+    if (tca4311a_init(ants_config, false) == TCA4311A_READY)
     {
         err = 0;
     }
