@@ -68,7 +68,7 @@ static void isis_antenna_init_test(void **state)
 
     expect_value(__wrap_tca4311a_init, en, false);
 
-    will_return(__wrap_tca4311a_init, 1);
+    will_return(__wrap_tca4311a_init, 0);
 
     assert_return_code(isis_antenna_init(), 0);
 }
