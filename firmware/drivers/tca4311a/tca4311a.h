@@ -1,7 +1,7 @@
 /*
  * tca4311a.h
  * 
- * Copyright (C) 2020, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.3.9
+ * \version 0.10.2
  * 
  * \date 01/02/2020
  * 
