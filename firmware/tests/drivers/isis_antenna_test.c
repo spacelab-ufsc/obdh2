@@ -1,7 +1,7 @@
 /*
  * isis_antenna_test.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.2
+ * \version 0.10.2
  * 
  * \date 2021/09/01
  * 
@@ -68,7 +68,7 @@ static void isis_antenna_init_test(void **state)
 
     expect_value(__wrap_tca4311a_init, en, false);
 
-    will_return(__wrap_tca4311a_init, 1);
+    will_return(__wrap_tca4311a_init, 0);
 
     assert_return_code(isis_antenna_init(), 0);
 }

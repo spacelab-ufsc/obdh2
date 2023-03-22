@@ -1,7 +1,7 @@
 /*
  * antenna.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.10
+ * \version 0.10.2
  * 
  * \date 2019/11/01
  * 
@@ -67,7 +67,7 @@ int antenna_init(void)
     else
     {
     #if defined(CONFIG_DRV_ISIS_ANTENNA_ENABLED) && (CONFIG_DRV_ISIS_ANTENNA_ENABLED == 1)
-        sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Initializing...");
+        sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Initializing the antenna...");
         sys_log_new_line();
 
         if (isis_antenna_init() == 0)
