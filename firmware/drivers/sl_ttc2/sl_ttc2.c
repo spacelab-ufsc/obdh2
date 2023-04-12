@@ -1,7 +1,7 @@
 /*
  * sl_ttc2.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.13
+ * \version 0.10.3
  * 
  * \date 2021/05/12
  * 
@@ -151,47 +151,54 @@ int sl_ttc2_write_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t val)
     buf[4] = (val >> 8)  & 0xFFU;
     buf[5] = (val >> 0)  & 0xFFU;
 
-    /* Checksum (CRC16) */
-    uint16_t crc = sl_ttc2_crc16(buf, 6);
-    buf[6] = (crc >> 8) & 0xFFU;
-    buf[7] = (crc >> 0) & 0xFFU;
-
-    return sl_ttc2_spi_write(config, buf, 8U);
+    return sl_ttc2_spi_write(config, buf, 6U);
 }
 
 int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
 {
     int err = -1;
 
-    uint8_t wbuf[8] = {0};
-    uint8_t rbuf[8] = {0};
+    uint8_t wbuf[6] = {0};
+    uint8_t rbuf[6] = {0};
 
     /* Command ID */
     wbuf[0] = SL_TTC2_CMD_READ_REG;
-    rbuf[0] = SL_TTC2_CMD_READ_REG;
 
     /* Register address */
     wbuf[1] = adr;
-    rbuf[1] = adr;
 
     /* Register data + Checksum */
-    if (sl_ttc2_spi_transfer(config, wbuf, rbuf, 8U) == 0)
+    if (sl_ttc2_spi_write(config, wbuf, 2) == 0)
     {
-        if (sl_ttc2_check_crc(rbuf, 6, ((uint16_t)rbuf[6] << 8) | (uint16_t)rbuf[7]))
-        {
-            *val = ((uint32_t)rbuf[2] << 24) |
-                   ((uint32_t)rbuf[3] << 16) |
-                   ((uint32_t)rbuf[4] << 8)  |
-                   ((uint32_t)rbuf[5] << 0);
+        sl_ttc2_delay_ms(100);
 
-            err = 0;
+        if (sl_ttc2_spi_read(config, rbuf, 6) == 0)
+        {
+            if ((rbuf[0] == SL_TTC2_CMD_READ_REG) && (rbuf[1] == adr))
+            {
+                *val = ((uint32_t)rbuf[2] << 24) |
+                       ((uint32_t)rbuf[3] << 16) |
+                       ((uint32_t)rbuf[4] << 8)  |
+                       ((uint32_t)rbuf[5] << 0);
+
+                err = 0;
+            }
+            else
+            {
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the register ");
+                sys_log_print_hex(adr);
+                sys_log_print_msg("! Invalid response!");
+                sys_log_new_line();
+            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            }
         }
         else
         {
         #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the register ");
             sys_log_print_hex(adr);
-            sys_log_print_msg("! Invalid data!");
+            sys_log_print_msg("! Error during SPI reading!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         }
@@ -201,7 +208,7 @@ int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
     #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the register ");
         sys_log_print_hex(adr);
-        sys_log_print_msg("! Error during SPI transfer!");
+        sys_log_print_msg("! Error during SPI writing!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
     }
