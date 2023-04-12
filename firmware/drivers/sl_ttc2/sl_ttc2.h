@@ -1,7 +1,7 @@
 /*
  * sl_ttc2.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.13
+ * \version 0.10.4
  * 
  * \date 2021/05/12
  * 
@@ -49,37 +49,37 @@
 #define SL_TTC2_DEVICE_ID_RADIO_1               0xCC2BU /**< TTC 2.0 device ID (radio 2). */
 
 /* TTC 2.0 Commands */
-#define SL_TTC2_CMD_NOP                         0       /**< No operation. */
-#define SL_TTC2_CMD_READ_REG                    1       /**< Read register command. */
-#define SL_TTC2_CMD_WRITE_REG                   2       /**< Write register command. */
-#define SL_TTC2_CMD_TRANSMIT_PKT                3       /**< Transmit packet command. */
-#define SL_TTC2_CMD_RECEIVE_PKT                 4       /**< Receive packet command. */
+#define SL_TTC2_CMD_NOP                         0U      /**< No operation. */
+#define SL_TTC2_CMD_READ_REG                    1U      /**< Read register command. */
+#define SL_TTC2_CMD_WRITE_REG                   2U      /**< Write register command. */
+#define SL_TTC2_CMD_TRANSMIT_PKT                3U      /**< Transmit packet command. */
+#define SL_TTC2_CMD_RECEIVE_PKT                 4U      /**< Receive packet command. */
 
 /* TTC 2.0 Registers */
-#define SL_TTC2_REG_DEVICE_ID                   0       /**< Device ID (0xCC2A or 0xCC2B). */
-#define SL_TTC2_REG_HARDWARE_VERSION            1       /**< Hardware version. */
-#define SL_TTC2_REG_FIRMWARE_VERSION            2       /**< Firmware version. */
-#define SL_TTC2_REG_TIME_COUNTER                3       /**< Time counter in millseconds. */
-#define SL_TTC2_REG_RESET_COUNTER               4       /**< Reset counter. */
-#define SL_TTC2_REG_LAST_RESET_CAUSE            5       /**< Last reset cause. */
-#define SL_TTC2_REG_INPUT_VOLTAGE_MCU           6       /**< Input voltage of the uC in mV. */
-#define SL_TTC2_REG_INPUT_CURRENT_MCU           7       /**< Input current of the uC in mA. */
-#define SL_TTC2_REG_TEMPERATURE_MCU             8       /**< Temperature of the uC in K. */
-#define SL_TTC2_REG_INPUT_VOLTAGE_RADIO         9       /**< Input voltage of the radio in mV. */
-#define SL_TTC2_REG_INPUT_CURRENT_RADIO         10      /**< Input current of the radio in mA. */
-#define SL_TTC2_REG_TEMPERATURE_RADIO           11      /**< Temperature of the radio in K. */
-#define SL_TTC2_REG_LAST_VALID_TC               12      /**< Last valid telecommand (uplink packet ID). */
-#define SL_TTC2_REG_RSSI_LAST_VALID_TC          13      /**< RSSI of the last valid telecommand. */
-#define SL_TTC2_REG_TEMPERATURE_ANTENNA         14      /**< Temperature of the antenna module in K. */
-#define SL_TTC2_REG_ANTENNA_STATUS              15      /**< Antenna module status bits. */
-#define SL_TTC2_REG_ANTENNA_DEPLOYMENT_STATUS   16      /**< Antenna deployment status (0=never executed, 1=executed). */
-#define SL_TTC2_REG_ANTENNA_DEP_HIB_STATUS      17      /**< Antenna deployment hibernation status (0=never executed, 1=executed). */
-#define SL_TTC2_REG_TX_ENABLE                   18      /**< TX enable (0=off, 1=on). */
-#define SL_TTC2_REG_TX_PACKET_COUNTER           19      /**< TX packet counter. */
-#define SL_TTC2_REG_RX_PACKET_COUNTER           20      /**< RX packet counter. */
-#define SL_TTC2_REG_FIFO_TX_PACKET              21      /**< Number of packets in the TX FIFO. */
-#define SL_TTC2_REG_FIFO_RX_PACKET              22      /**< Number of packets in the RX FIFO. */
-#define SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO 23      /**< Number of bytes of the first available packet in the RX buffer. */
+#define SL_TTC2_REG_DEVICE_ID                   0U      /**< Device ID (0xCC2A or 0xCC2B). */
+#define SL_TTC2_REG_HARDWARE_VERSION            1U      /**< Hardware version. */
+#define SL_TTC2_REG_FIRMWARE_VERSION            2U      /**< Firmware version. */
+#define SL_TTC2_REG_TIME_COUNTER                3U      /**< Time counter in millseconds. */
+#define SL_TTC2_REG_RESET_COUNTER               4U      /**< Reset counter. */
+#define SL_TTC2_REG_LAST_RESET_CAUSE            5U      /**< Last reset cause. */
+#define SL_TTC2_REG_INPUT_VOLTAGE_MCU           6U      /**< Input voltage of the uC in mV. */
+#define SL_TTC2_REG_INPUT_CURRENT_MCU           7U      /**< Input current of the uC in mA. */
+#define SL_TTC2_REG_TEMPERATURE_MCU             8U      /**< Temperature of the uC in K. */
+#define SL_TTC2_REG_INPUT_VOLTAGE_RADIO         9U      /**< Input voltage of the radio in mV. */
+#define SL_TTC2_REG_INPUT_CURRENT_RADIO         10U     /**< Input current of the radio in mA. */
+#define SL_TTC2_REG_TEMPERATURE_RADIO           11U     /**< Temperature of the radio in K. */
+#define SL_TTC2_REG_LAST_VALID_TC               12U     /**< Last valid telecommand (uplink packet ID). */
+#define SL_TTC2_REG_RSSI_LAST_VALID_TC          13U     /**< RSSI of the last valid telecommand. */
+#define SL_TTC2_REG_TEMPERATURE_ANTENNA         14U     /**< Temperature of the antenna module in K. */
+#define SL_TTC2_REG_ANTENNA_STATUS              15U     /**< Antenna module status bits. */
+#define SL_TTC2_REG_ANTENNA_DEPLOYMENT_STATUS   16U     /**< Antenna deployment status (0=never executed, 1=executed). */
+#define SL_TTC2_REG_ANTENNA_DEP_HIB_STATUS      17U     /**< Antenna deployment hibernation status (0=never executed, 1=executed). */
+#define SL_TTC2_REG_TX_ENABLE                   18U     /**< TX enable (0=off, 1=on). */
+#define SL_TTC2_REG_TX_PACKET_COUNTER           19U     /**< TX packet counter. */
+#define SL_TTC2_REG_RX_PACKET_COUNTER           20U     /**< RX packet counter. */
+#define SL_TTC2_REG_FIFO_TX_PACKET              21U     /**< Number of packets in the TX FIFO. */
+#define SL_TTC2_REG_FIFO_RX_PACKET              22U     /**< Number of packets in the RX FIFO. */
+#define SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO 23U     /**< Number of bytes of the first available packet in the RX buffer. */
 
 /**
  * \brief Temperature type.
