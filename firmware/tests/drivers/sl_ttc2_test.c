@@ -1,7 +1,7 @@
 /*
  * sl_ttc2_test.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.19
+ * \version 0.10.3
  * 
  * \date 2021/09/08
  * 
@@ -81,29 +81,33 @@ static void sl_ttc2_init_test(void **state)
     ans[3] = 0;     /* Dummy byte */
     ans[4] = 0xCC;  /* Radio 0 ID */
     ans[5] = 0x2A;  /* Radio 0 ID */
-    ans[6] = 0x93;  /* CRC16 */
-    ans[7] = 0xB1;  /* CRC16 */
 
-    expect_value(__wrap_spi_transfer, port, SL_TTC2_SPI_PORT);
-    expect_value(__wrap_spi_transfer, cs, SL_TTC2_SPI_CS);
-    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 8);
-    expect_value(__wrap_spi_transfer, len, 8);
+    expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)cmd, 2);
+    expect_value(__wrap_spi_write, len, 2);
+
+    will_return(__wrap_spi_write, 0);
+
+    expect_value(__wrap_spi_read, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_read, cs, SL_TTC2_SPI_CS);
+    expect_value(__wrap_spi_read, len, 6);
 
     uint16_t i = 0;
-    for(i=0; i<8; i++)
+    for(i = 0; i < 6; i++)
     {
-        will_return(__wrap_spi_transfer, ans[i]);
+        will_return(__wrap_spi_read, ans[i]);
     }
 
-    will_return(__wrap_spi_transfer, 0);
+    will_return(__wrap_spi_read, 0);
 
     assert_return_code(sl_ttc2_init(conf), 0);
 }
 
 static void sl_ttc2_check_device_test(void **state)
 {
-    uint8_t cmd[8] = {0};
-    uint8_t ans[8] = {0};
+    uint8_t cmd[6] = {0};
+    uint8_t ans[6] = {0};
 
     cmd[0] = 1;     /* Read reg. command */
     cmd[1] = 0;     /* Read device ID */
@@ -114,21 +118,25 @@ static void sl_ttc2_check_device_test(void **state)
     ans[3] = 0;     /* Dummy byte */
     ans[4] = 0xCC;  /* Radio 0 ID */
     ans[5] = 0x2A;  /* Radio 0 ID */
-    ans[6] = 0x93;  /* CRC16 */
-    ans[7] = 0xB1;  /* CRC16 */
 
-    expect_value(__wrap_spi_transfer, port, SL_TTC2_SPI_PORT);
-    expect_value(__wrap_spi_transfer, cs, SL_TTC2_SPI_CS);
-    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 8);
-    expect_value(__wrap_spi_transfer, len, 8);
+    expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)cmd, 2);
+    expect_value(__wrap_spi_write, len, 2);
+
+    will_return(__wrap_spi_write, 0);
+
+    expect_value(__wrap_spi_read, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_read, cs, SL_TTC2_SPI_CS);
+    expect_value(__wrap_spi_read, len, 6);
 
     uint16_t i = 0;
-    for(i=0; i<8; i++)
+    for(i = 0; i < 6; i++)
     {
-        will_return(__wrap_spi_transfer, ans[i]);
+        will_return(__wrap_spi_read, ans[i]);
     }
 
-    will_return(__wrap_spi_transfer, 0);
+    will_return(__wrap_spi_read, 0);
 
     assert_return_code(sl_ttc2_check_device(conf), 0);
 }
@@ -138,7 +146,7 @@ static void sl_ttc2_write_reg_test(void **state)
     uint8_t adr = generate_random(0, 255);
     uint32_t val = generate_random(0, UINT32_MAX-1);
 
-    uint8_t cmd[8] = {0};
+    uint8_t cmd[6] = {0};
 
     cmd[0] = 2;     /* Write reg. command */
     cmd[1] = adr;   /* Address */
@@ -147,15 +155,10 @@ static void sl_ttc2_write_reg_test(void **state)
     cmd[4] = (val >> 8) & 0xFF;
     cmd[5] = val & 0xFF;
 
-    uint16_t checksum = crc16_ccitt(cmd, 6);
-
-    cmd[6] = (checksum >> 8) & 0xFF;
-    cmd[7] = checksum & 0xFF;
-
     expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
     expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
-    expect_memory(__wrap_spi_write, data, (void*)cmd, 8);
-    expect_value(__wrap_spi_write, len, 8);
+    expect_memory(__wrap_spi_write, data, (void*)cmd, 6);
+    expect_value(__wrap_spi_write, len, 6);
 
     will_return(__wrap_spi_write, 0);
 
@@ -167,8 +170,8 @@ static void sl_ttc2_read_reg_test(void **state)
     uint8_t adr = generate_random(0, 255);
     uint32_t val = generate_random(0, UINT32_MAX-1);
 
-    uint8_t cmd[8] = {0};
-    uint8_t ans[8] = {0};
+    uint8_t cmd[6] = {0};
+    uint8_t ans[6] = {0};
 
     cmd[0] = 1;     /* Write reg. command */
     cmd[1] = adr;   /* Address */
@@ -180,23 +183,24 @@ static void sl_ttc2_read_reg_test(void **state)
     ans[4] = (val >> 8) & 0xFF;
     ans[5] = val & 0xFF;
 
-    uint16_t checksum = crc16_ccitt(ans, 6);
+    expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)cmd, 2);
+    expect_value(__wrap_spi_write, len, 2);
 
-    ans[6] = (checksum >> 8) & 0xFF;
-    ans[7] = checksum & 0xFF;
+    will_return(__wrap_spi_write, 0);
 
-    expect_value(__wrap_spi_transfer, port, SL_TTC2_SPI_PORT);
-    expect_value(__wrap_spi_transfer, cs, SL_TTC2_SPI_CS);
-    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 8);
-    expect_value(__wrap_spi_transfer, len, 8);
+    expect_value(__wrap_spi_read, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_read, cs, SL_TTC2_SPI_CS);
+    expect_value(__wrap_spi_read, len, 6);
 
     uint16_t i = 0;
-    for(i=0; i<8; i++)
+    for(i = 0; i < 6; i++)
     {
-        will_return(__wrap_spi_transfer, ans[i]);
+        will_return(__wrap_spi_read, ans[i]);
     }
 
-    will_return(__wrap_spi_transfer, 0);
+    will_return(__wrap_spi_read, 0);
 
     uint32_t res = UINT32_MAX;
 
@@ -555,7 +559,7 @@ static void sl_ttc2_set_tx_enable_test(void **state)
     uint8_t adr = 18;   /* TX enable register */
     uint32_t val = generate_random(0, 1);
 
-    uint8_t cmd[8] = {0};
+    uint8_t cmd[6] = {0};
 
     cmd[0] = 2;     /* Write reg. command */
     cmd[1] = adr;   /* Address */
@@ -564,15 +568,10 @@ static void sl_ttc2_set_tx_enable_test(void **state)
     cmd[4] = (val >> 8) & 0xFF;
     cmd[5] = val & 0xFF;
 
-    uint16_t checksum = crc16_ccitt(cmd, 6);
-
-    cmd[6] = (checksum >> 8) & 0xFF;
-    cmd[7] = checksum & 0xFF;
-
     expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
     expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
-    expect_memory(__wrap_spi_write, data, (void*)cmd, 8);
-    expect_value(__wrap_spi_write, len, 8);
+    expect_memory(__wrap_spi_write, data, (void*)cmd, 6);
+    expect_value(__wrap_spi_write, len, 6);
 
     will_return(__wrap_spi_write, 0);
 
@@ -798,8 +797,8 @@ uint16_t crc16_ccitt(uint8_t *data, uint16_t len)
 
 void read_adr(uint8_t adr, uint32_t val)
 {
-    uint8_t cmd[8] = {0};
-    uint8_t ans[8] = {0};
+    uint8_t cmd[6] = {0};
+    uint8_t ans[6] = {0};
 
     cmd[0] = 1;     /* Read reg. command */
     cmd[1] = adr;   /* Address */
@@ -811,23 +810,24 @@ void read_adr(uint8_t adr, uint32_t val)
     ans[4] = (val >> 8) & 0xFF;
     ans[5] = val & 0xFF;
 
-    uint16_t checksum = crc16_ccitt(ans, 6);
+    expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)cmd, 2);
+    expect_value(__wrap_spi_write, len, 2);
 
-    ans[6] = (checksum >> 8) & 0xFF;
-    ans[7] = checksum & 0xFF;
+    will_return(__wrap_spi_write, 0);
 
-    expect_value(__wrap_spi_transfer, port, SL_TTC2_SPI_PORT);
-    expect_value(__wrap_spi_transfer, cs, SL_TTC2_SPI_CS);
-    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 8);
-    expect_value(__wrap_spi_transfer, len, 8);
+    expect_value(__wrap_spi_read, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_read, cs, SL_TTC2_SPI_CS);
+    expect_value(__wrap_spi_read, len, 6);
 
     uint16_t i = 0;
-    for(i=0; i<8; i++)
+    for(i = 0; i < 6; i++)
     {
-        will_return(__wrap_spi_transfer, ans[i]);
+        will_return(__wrap_spi_read, ans[i]);
     }
 
-    will_return(__wrap_spi_transfer, 0);
+    will_return(__wrap_spi_read, 0);
 }
 
 /** \} End of sl_ttc2_test group */
