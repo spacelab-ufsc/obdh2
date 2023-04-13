@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.5
+ * \version 0.10.6
  * 
  * \date 2021/09/08
  * 
@@ -931,40 +931,42 @@ static void sl_ttc2_transmit_packet_test(void **state)
 static void sl_ttc2_read_packet_test(void **state)
 {
     uint8_t adr = 23;   /* Length of the first available RX packet register */
-    uint8_t pkt[1+220+2] = {UINT8_MAX};
+    uint8_t cmd[2] = {0};
+    uint8_t pkt[220] = {UINT8_MAX};
     uint16_t pkt_len = generate_random(1, 220);
 
     read_adr(adr, (uint32_t)pkt_len);
 
-    pkt[0] = 4;
+    cmd[0] = 4;
 
-    expect_value(__wrap_spi_transfer, port, SL_TTC2_SPI_PORT);
-    expect_value(__wrap_spi_transfer, cs, SL_TTC2_SPI_CS);
-    expect_memory(__wrap_spi_transfer, wd, (void*)pkt, 1);
-    expect_value(__wrap_spi_transfer, len, 1+pkt_len+2);
+    expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)cmd, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
+    expect_value(__wrap_spi_read, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_read, cs, SL_TTC2_SPI_CS);
+    expect_value(__wrap_spi_read, len, 1 + 1 + pkt_len);
+
+    will_return(__wrap_spi_read, 4);
+    will_return(__wrap_spi_read, pkt_len);
 
     uint16_t i = 0;
-    for(i=0; i<pkt_len+1; i++)
+    for(i = 0; i < pkt_len; i++)
     {
-        will_return(__wrap_spi_transfer, pkt[i]);
+        will_return(__wrap_spi_read, pkt[i]);
     }
 
-    uint16_t checksum = crc16_ccitt(pkt, 1+pkt_len);
-
-    pkt[1+pkt_len] = (checksum >> 8) & 0xFF;
-    pkt[1+pkt_len+1] = checksum & 0xFF;
-
-    will_return(__wrap_spi_transfer, pkt[1+pkt_len]);
-    will_return(__wrap_spi_transfer, pkt[1+pkt_len+1]);
-
-    will_return(__wrap_spi_transfer, 0);
+    will_return(__wrap_spi_read, 0);
 
     uint8_t res_pkt[256] = {UINT8_MAX};
     uint16_t res_pkt_len = UINT16_MAX;
 
     assert_return_code(sl_ttc2_read_packet(conf, res_pkt, &res_pkt_len), 0);
 
-    assert_memory_equal((void*)res_pkt, (void*)(pkt+1), pkt_len);
+    assert_memory_equal((void*)res_pkt, (void*)pkt, pkt_len);
     assert_int_equal(res_pkt_len, pkt_len);
 }
 
