@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.5
+ * \version 0.10.6
  * 
  * \date 2021/05/12
  * 
@@ -797,25 +797,25 @@ int sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len)
 {
     int err = -1;
 
-    uint8_t wbuf[2] = {0};
-
-    wbuf[0] = SL_TTC2_CMD_RECEIVE_PKT;
-    data[0] = SL_TTC2_CMD_RECEIVE_PKT;
+    uint8_t cmd = SL_TTC2_CMD_RECEIVE_PKT;
 
     if (sl_ttc2_read_len_rx_pkt_in_fifo(config, len) == 0)
     {
-        if (sl_ttc2_spi_transfer(config, wbuf, data, 1U + (*len) + 2U) == 0)
+        if (*len > 0)
         {
-            if (sl_ttc2_check_crc(data, 1U + (*len), sl_ttc2_crc16(data, 1U + (*len))))
+            sl_ttc2_delay_ms(100);
+
+            if (sl_ttc2_spi_write(config, &cmd, 1U) == 0)
             {
-                if (memcpy(data, &data[1], *len) == data)
+                sl_ttc2_delay_ms(100);
+
+                if (sl_ttc2_spi_read(config, data, 1U + 1U + (*len)) == 0)
                 {
-                    err = 0;
+                    if (memcpy(data, &data[2], *len) == data)
+                    {
+                        err = 0;
+                    }
                 }
-            }
-            else
-            {
-                *len = 0U;
             }
         }
     }
