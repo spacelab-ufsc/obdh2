@@ -37,24 +37,16 @@
 #include <system/sys_log/sys_log.h>
 #include <config/config.h>
 #include <predict/predict.h>
+#include <structs/satellite.h>
 
 #include "pos_det.h"
 #include "startup.h"
 
-xTaskHandle xTaskPosDetHandle;
+#ifndef M_PI
+    #define M_PI 3.14159265358979323846
+#endif /* M_PI */
 
-/**
- * \brief Convertes the internal system time to the libpredict time format.
- *
- * The libpredict time format is the number of days since 1979/12/31 00:00:00 UTC.
- *
- * The OBDH firmware uses the Unix epoch as time format (the number of seconds since 1970/01/01 00:00:00 UTC).
- *
- * \param[in] tm is the system time value to convert.
- *
- * \return The system time in libpredict time format.
- */
-double system_time_to_libpredict_time(sys_time_t tm);
+xTaskHandle xTaskPosDetHandle;
 
 void vTaskPosDet(void)
 {
@@ -77,13 +69,14 @@ void vTaskPosDet(void)
             /* Predict satellite position */
             struct predict_position my_orbit;
 
-            predict_orbit(satellite, &my_orbit, system_time_to_libpredict_time(system_get_time()));
+            predict_julian_date_t curr_time = predict_to_julian(system_get_time() - 631065600UL);   /* Unix timestamp in 1989/12/31 00:00:00 UTC */
 
-            /*
-             * lattitude in degrees     = my_orbit.latitude*180.0/M_PI (float)
-             * longitude in degrees     = my_orbit.longitude*180.0/M_PI (float)
-             * altitude in kilometers   = my_orbit.altitude (float)
-             */
+            predict_orbit(satellite, &my_orbit, curr_time);
+
+            sat_data_buf.obdh.data.latitude     = (uint16_t)(my_orbit.latitude * 180.0 / M_PI);
+            sat_data_buf.obdh.data.longitude    = (uint16_t)(my_orbit.longitude * 180.0 / M_PI);
+            sat_data_buf.obdh.data.altitude     = (uint16_t)(my_orbit.altitude);
+            /* sat_data_buf.obdh.timestamp = system_get_time(); */
         }
         else
         {
@@ -93,11 +86,6 @@ void vTaskPosDet(void)
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_POS_DET_PERIOD_MS));
     }
-}
-
-double system_time_to_libpredict_time(sys_time_t tm)
-{
-    /* TODO */
 }
 
 /** \} End of pos_det group */
