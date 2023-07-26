@@ -80,6 +80,19 @@ typedef struct
 } radio_data_t;
 
 /**
+ * \brief Position data.
+ */
+typedef struct
+{
+    sys_time_t timestamp;           /**< Timestamp of the position data. */
+    uint8_t tle_line1[70];          /**< TLE line 1 in ASCII. */
+    uint8_t tle_line2[70];          /**< TLE line 2 in ASCII. */
+    int16_t latitude;               /**< Latitude in degrees. */
+    int16_t longitude;              /**< Lontitude in degrees. */
+    int16_t altitude;               /**< Altitude in kilometers. */
+} position_data_t;
+
+/**
  * \brief OBDH data.
  */
 typedef struct
@@ -100,11 +113,7 @@ typedef struct
     uint8_t initial_hib_time_count; /**< Initial hibernation time counter in minutes. */
     bool ant_deployment_executed;   /**< Antenna deployment executed flag. */
     uint8_t ant_deployment_counter; /**< Antenna deployment counter. */
-    uint8_t tle_line1[70];          /**< TLE line 1 in ASCII. */
-    uint8_t tle_line2[70];          /**< TLE line 2 in ASCII. */
-    uint16_t latitude;              /**< Latitude in degrees. */
-    uint16_t longitude;             /**< Lontitude in degrees. */
-    uint16_t altitude;              /**< Altitude in kilometers. */
+    position_data_t position;       /**< Current position of the satellite. */
 } obdh_data_t;
 
 #endif /* OBDH_DATA_H_ */
