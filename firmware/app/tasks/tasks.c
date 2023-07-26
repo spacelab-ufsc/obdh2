@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.9.18
+ * \version 0.10.7
  * 
  * \date 2019/11/02
  * 
@@ -52,6 +52,7 @@
 #include "read_antenna.h"
 #include "data_log.h"
 #include "process_tc.h"
+#include "pos_det.h"
 
 void create_tasks(void)
 {
@@ -183,6 +184,15 @@ void create_tasks(void)
         /* Error creating the antenna deployment task */
     }
 #endif /* CONFIG_TASK_ANTENNA_DEPLOYMENT_ENABLED */
+
+#if defined(CONFIG_TASK_POSITION_DETERMINATION_ENABLED) && (CONFIG_TASK_POSITION_DETERMINATION_ENABLED == 1)
+    xTaskCreate(vTaskPosDet, TASK_POS_DET_NAME, TASK_POS_DET_STACK_SIZE, NULL, TASK_POS_DET_PRIORITY, &xTaskPosDetHandle);
+
+    if (xTaskPosDetHandle == NULL)
+    {
+        /* Error creating the position determination task */
+    }
+#endif /* CONFIG_TASK_POSITION_DETERMINATION_ENABLED */
 
     create_event_groups();
 }
