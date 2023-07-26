@@ -40,8 +40,8 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
-#define TASK_POS_DET_NAME                       "Pos. Det."         /**< Task name. */
-#define TASK_POS_DET_STACK_SIZE                 256                 /**< Stack size in bytes. */
+#define TASK_POS_DET_NAME                       "Position"          /**< Task name. */
+#define TASK_POS_DET_STACK_SIZE                 1024                /**< Stack size in bytes. */
 #define TASK_POS_DET_PRIORITY                   2                   /**< Task priority. */
 #define TASK_POS_DET_PERIOD_MS                  60000               /**< Task period in milliseconds. */
 #define TASK_POS_DET_INIT_TIMEOUT_MS            1000                /**< Wait time to initialize the task in milliseconds. */

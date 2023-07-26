@@ -69,20 +69,37 @@ void vTaskPosDet(void)
             /* Predict satellite position */
             struct predict_position my_orbit;
 
-            predict_julian_date_t curr_time = predict_to_julian(system_get_time() - 631065600UL);   /* Unix timestamp in 1989/12/31 00:00:00 UTC */
+            sys_time_t now = system_get_time();
+
+            predict_julian_date_t curr_time = predict_to_julian(now - 631065600UL);   /* Unix timestamp in 1989/12/31 00:00:00 UTC */
 
             predict_orbit(satellite, &my_orbit, curr_time);
 
-            sat_data_buf.obdh.data.latitude     = (uint16_t)(my_orbit.latitude * 180.0 / M_PI);
-            sat_data_buf.obdh.data.longitude    = (uint16_t)(my_orbit.longitude * 180.0 / M_PI);
-            sat_data_buf.obdh.data.altitude     = (uint16_t)(my_orbit.altitude);
-            /* sat_data_buf.obdh.timestamp = system_get_time(); */
+            float lat = my_orbit.latitude * 180.0 / M_PI;
+            float lon = my_orbit.longitude * 180.0 / M_PI;
+            float alt = my_orbit.altitude;
+
+            sat_data_buf.obdh.data.position.latitude    = (int16_t)lat;
+            sat_data_buf.obdh.data.position.longitude   = (int16_t)lon;
+            sat_data_buf.obdh.data.position.altitude    = (int16_t)alt;
+            sat_data_buf.obdh.data.position.timestamp   = now;
+
+            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_POS_DET_NAME, "Current position (lat/lon/alt): ");
+            sys_log_print_float(lat, 2);
+            sys_log_print_msg(" deg/");
+            sys_log_print_float(lon, 2);
+            sys_log_print_msg(" deg/");
+            sys_log_print_float(alt, 2);
+            sys_log_print_msg(" km");
+            sys_log_new_line();
         }
         else
         {
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_POS_DET_NAME, "Failed to initialize orbit from TLE!");
             sys_log_new_line();
         }
+
+        predict_destroy_orbital_elements(satellite);
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_POS_DET_PERIOD_MS));
     }
