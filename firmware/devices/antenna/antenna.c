@@ -240,7 +240,6 @@ int antenna_deploy(uint32_t timeout_ms)
         err++;
     }
 
-    return err;
 #else
     sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "No driver to read the status!");
     sys_log_new_line();
