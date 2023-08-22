@@ -54,7 +54,7 @@ int px_init(i2c_port_t port, uint32_t bitrate)
 
 int px_write(uint8_t *data, uint16_t len)
 {
-    return i2c_read(px_i2c_conf.port, PX_SLAVE_ADDRESS, data, len);
+    return i2c_write(px_i2c_conf.port, PX_SLAVE_ADDRESS, data, len);
 }
 
 int px_read(uint8_t *data, uint16_t len)
