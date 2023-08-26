@@ -39,6 +39,7 @@
 #include <config/config.h>
 
 #include "tasks.h"
+#include "antenna_deployment.h"
 #include "startup.h"
 #include "watchdog_reset.h"
 #include "heartbeat.h"
