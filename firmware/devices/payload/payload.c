@@ -706,11 +706,13 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
         case PAYLOAD_X:
             if( px_read(data, len) == 0){
                 sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "Payload-X: ");
+                /*
                 uint8_t i = 0;
                 for(i = 0; i < sizeof(data); i++)
                 {
                     sys_log_print_msg(data[i]);
                 }
+                */
                 sys_log_print_msg(" data received!");
                 sys_log_new_line();
              }
