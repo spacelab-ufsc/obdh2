@@ -55,7 +55,7 @@ void vTaskAntennaDeployment(void)
 
         for(i = initial_hib_time_counter; i < CONFIG_ANTENNA_DEPLOYMENT_HIBERNATION_MIN; i++)
         {
-            vTaskDelay(pdMS_TO_TICKS(60*1000));
+            vTaskDelay(pdMS_TO_TICKS(60000U));
 
             sat_data_buf.obdh.data.initial_hib_time_count++;
         }
@@ -84,7 +84,7 @@ void vTaskAntennaDeployment(void)
             sys_log_new_line();
         }
 
-        sat_data_buf.obdh.data.ant_deployment_counter = true;
+        sat_data_buf.obdh.data.ant_deployment_executed = true;
 
         sat_data_buf.obdh.data.ant_deployment_counter++;
     }
