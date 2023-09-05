@@ -201,7 +201,7 @@ int antenna_deploy(uint32_t timeout_ms)
     }
 
     /* Sequential deployment */
-    sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Trying an sequential deploy...");
+    sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Trying a sequential deploy...");
     sys_log_new_line();
 
     if (isis_antenna_start_sequential_deploy(ANTENNA_SEQUENTIAL_DEPLOY_BURN_TIME_SEC) != 0)
