@@ -95,6 +95,9 @@ void vTaskAntennaDeployment(void)
         sys_log_print_msg(")");
         sys_log_new_line();
     }
+
+    /* Startup task status = Done */
+    vTaskSuspend(xTaskAntennaDeploymentHandle);
 }
 
 /** \} End of antenna_deployment group */
