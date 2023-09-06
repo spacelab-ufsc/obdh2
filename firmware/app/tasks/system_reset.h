@@ -45,6 +45,8 @@
 #define TASK_SYSTEM_RESET_PRIORITY                  2                       /**< Task priority. */
 #define TASK_SYSTEM_RESET_PERIOD_MS                 (1000UL*60U*60U*10U)    /**< Task period in milliseconds. */
 
+#define pdMS_TO_TICKS_64( xTimeInMs ) ( ( TickType_t ) ( ( ( TickType_t ) ( xTimeInMs ) * ( TickType_t ) configTICK_RATE_HZ ) / ( TickType_t ) 1000 ) )
+
 /**
  * \brief Periodic system reset handle.
  */
