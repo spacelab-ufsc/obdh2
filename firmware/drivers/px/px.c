@@ -1,7 +1,7 @@
 /*
  * px.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.9
+ * \version 0.10.8
  * 
  * \date 2020/03/31
  * 
@@ -35,31 +35,23 @@
 
 #include "px.h"
 
-/**
- * \brief Payload X I2C port.
- */
-static px_config_t px_i2c_conf = {0};
-
-int px_init(i2c_port_t port, uint32_t bitrate)
+int px_init(px_config_t conf)
 {
-    px_i2c_conf.port    = port;
-    px_i2c_conf.bitrate = bitrate;
-
     i2c_config_t i2c_conf = {0};
 
     i2c_conf.speed_hz = bitrate;
 
-    return i2c_init(port, i2c_conf);
+    return i2c_init(conf.port, i2c_conf);
 }
 
-int px_write(uint8_t *data, uint16_t len)
+int px_write(px_config_t conf, uint8_t *data, uint16_t len)
 {
-    return i2c_write(px_i2c_conf.port, PX_SLAVE_ADDRESS, data, len);
+    return i2c_write(conf.port, PX_SLAVE_ADDRESS, data, len);
 }
 
-int px_read(uint8_t *data, uint16_t len)
+int px_read(px_config_t conf, uint8_t *data, uint16_t len)
 {
-    return i2c_read(px_i2c_conf.port, PX_SLAVE_ADDRESS, data, len);
+    return i2c_read(conf.port, PX_SLAVE_ADDRESS, data, len);
 }
 
 /** \} End of px group */

@@ -1,7 +1,7 @@
 /*
  * px.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.44
+ * \version 0.10.8
  * 
  * \date 2020/10/31
  * 
@@ -55,16 +55,16 @@ typedef struct
 /**
  * \brief Device initialization.
  *
- * \param[in] port is the I2C port which the Payload-X is connected.
- *
- * \param[in] bitrate is the bitrate in bps.
+ * \param[in] conf is the configuration parameter of a Payload-X device.
  *
  * \return The status/error code.
  */
-int px_init(i2c_port_t port, uint32_t bitrate);
+int px_init(px_config_t conf);
 
 /**
  * \brief Writes data to the Payload X.
+ *
+ * \param[in] conf is the configuration parameter of a Payload-X device.
  *
  * \param[in] data is an array of bytes to write.
  *
@@ -72,10 +72,12 @@ int px_init(i2c_port_t port, uint32_t bitrate);
  *
  * \return The status/error code.
  */
-int px_write(uint8_t *data, uint16_t len);
+int px_write(px_config_t conf, uint8_t *data, uint16_t len);
 
 /**
  * \brief Reads data from the Payload X.
+ *
+ * \param[in] conf is the configuration parameter of a Payload-X device.
  *
  * \param[in,out] data is a pointer to store the read data.
  *
@@ -83,7 +85,7 @@ int px_write(uint8_t *data, uint16_t len);
  *
  * \return The status/error code.
  */
-int px_read(uint8_t *data, uint16_t len);
+int px_read(px_config_t conf, uint8_t *data, uint16_t len);
 
 #endif /* PX_H_ */
 
