@@ -1,7 +1,7 @@
 /*
  * sl_ttc2.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.13
+ * \version 0.10.6
  * 
  * \date 2021/05/12
  * 
@@ -39,6 +39,32 @@
 #include <system/sys_log/sys_log.h>
 
 #include "sl_ttc2.h"
+
+/* TTC 2.0 registers lenght in bytes */
+#define SL_TTC2_REG_DEVICE_ID_NUM_BYTES                     2
+#define SL_TTC2_REG_HARDWARE_VERSION_NUM_BYTES              1
+#define SL_TTC2_REG_FIRMWARE_VERSION_NUM_BYTES              4
+#define SL_TTC2_REG_TIME_COUNTER_NUM_BYTES                  4
+#define SL_TTC2_REG_RESET_COUNTER_NUM_BYTES                 2
+#define SL_TTC2_REG_LAST_RESET_CAUSE_NUM_BYTES              1
+#define SL_TTC2_REG_INPUT_VOLTAGE_MCU_NUM_BYTES             2
+#define SL_TTC2_REG_INPUT_CURRENT_MCU_NUM_BYTES             2
+#define SL_TTC2_REG_TEMPERATURE_MCU_NUM_BYTES               2
+#define SL_TTC2_REG_INPUT_VOLTAGE_RADIO_NUM_BYTES           2
+#define SL_TTC2_REG_INPUT_CURRENT_RADIO_NUM_BYTES           2
+#define SL_TTC2_REG_TEMPERATURE_RADIO_NUM_BYTES             2
+#define SL_TTC2_REG_LAST_VALID_TC_NUM_BYTES                 1
+#define SL_TTC2_REG_RSSI_LAST_VALID_TC_NUM_BYTES            2
+#define SL_TTC2_REG_TEMPERATURE_ANTENNA_NUM_BYTES           2
+#define SL_TTC2_REG_ANTENNA_STATUS_NUM_BYTES                2
+#define SL_TTC2_REG_ANTENNA_DEPLOYMENT_STATUS_NUM_BYTES     1
+#define SL_TTC2_REG_ANTENNA_DEP_HIB_STATUS_NUM_BYTES        1
+#define SL_TTC2_REG_TX_ENABLE_NUM_BYTES                     1
+#define SL_TTC2_REG_TX_PACKET_COUNTER_NUM_BYTES             4
+#define SL_TTC2_REG_RX_PACKET_COUNTER_NUM_BYTES             4
+#define SL_TTC2_REG_FIFO_TX_PACKET_NUM_BYTES                1
+#define SL_TTC2_REG_FIFO_RX_PACKET_NUM_BYTES                1
+#define SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO_NUM_BYTES   2
 
 /**
  * \brief Computes the CRC-16 of a sequence of bytes.
@@ -63,6 +89,15 @@ static uint16_t sl_ttc2_crc16(uint8_t *data, uint16_t len);
  * \return TRUE/FALSE if the given CRC value is correct or not.
  */
 static bool sl_ttc2_check_crc(uint8_t *data, uint16_t len, uint16_t crc);
+
+/**
+ * \brief Gets the number of bytes needed to store the register value.
+ *
+ * \param[in] adr is the address to get the number of bytes.
+ *
+ * \return The number of bytes of the given register.
+ */
+static uint8_t sl_ttc2_get_reg_num_bytes(uint8_t adr);
 
 int sl_ttc2_init(sl_ttc2_config_t config)
 {
@@ -146,52 +181,161 @@ int sl_ttc2_write_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t val)
     buf[1] = adr;
 
     /* Register data */
-    buf[2] = (val >> 24) & 0xFFU;
-    buf[3] = (val >> 16) & 0xFFU;
-    buf[4] = (val >> 8)  & 0xFFU;
-    buf[5] = (val >> 0)  & 0xFFU;
+    switch(adr)
+    {
+        case SL_TTC2_REG_DEVICE_ID:
+            buf[2] = (val >> 8) & 0xFFU;
+            buf[3] = (val >> 0) & 0xFFU;
+            break;
+        case SL_TTC2_REG_HARDWARE_VERSION:
+            buf[2] = val & 0xFFU;
+            break;
+        case SL_TTC2_REG_RESET_COUNTER:
+            buf[2] = (val >> 8) & 0xFFU;
+            buf[3] = (val >> 0) & 0xFFU;
+            break;
+        case SL_TTC2_REG_LAST_RESET_CAUSE:
+            buf[2] = val & 0xFFU;
+            break;
+        case SL_TTC2_REG_INPUT_VOLTAGE_MCU:
+            buf[2] = (val >> 8) & 0xFFU;
+            buf[3] = (val >> 0) & 0xFFU;
+            break;
+        case SL_TTC2_REG_INPUT_CURRENT_MCU:
+            buf[2] = (val >> 8) & 0xFFU;
+            buf[3] = (val >> 0) & 0xFFU;
+            break;
+        case SL_TTC2_REG_TEMPERATURE_MCU:
+            buf[2] = (val >> 8) & 0xFFU;
+            buf[3] = (val >> 0) & 0xFFU;
+            break;
+        case SL_TTC2_REG_INPUT_VOLTAGE_RADIO:
+            buf[2] = (val >> 8) & 0xFFU;
+            buf[3] = (val >> 0) & 0xFFU;
+            break;
+        case SL_TTC2_REG_INPUT_CURRENT_RADIO:
+            buf[2] = (val >> 8) & 0xFFU;
+            buf[3] = (val >> 0) & 0xFFU;
+            break;
+        case SL_TTC2_REG_TEMPERATURE_RADIO:
+            buf[2] = (val >> 8) & 0xFFU;
+            buf[3] = (val >> 0) & 0xFFU;
+            break;
+        case SL_TTC2_REG_LAST_VALID_TC:
+            buf[2] = val & 0xFFU;
+            break;
+        case SL_TTC2_REG_RSSI_LAST_VALID_TC:
+            buf[2] = (val >> 8) & 0xFFU;
+            buf[3] = (val >> 0) & 0xFFU;
+            break;
+        case SL_TTC2_REG_TEMPERATURE_ANTENNA:
+            buf[2] = (val >> 8) & 0xFFU;
+            buf[3] = (val >> 0) & 0xFFU;
+            break;
+        case SL_TTC2_REG_ANTENNA_STATUS:
+            buf[2] = (val >> 8) & 0xFFU;
+            buf[3] = (val >> 0) & 0xFFU;
+            break;
+        case SL_TTC2_REG_ANTENNA_DEPLOYMENT_STATUS:
+            buf[2] = val & 0xFFU;
+            break;
+        case SL_TTC2_REG_ANTENNA_DEP_HIB_STATUS:
+            buf[2] = val & 0xFFU;
+            break;
+        case SL_TTC2_REG_TX_ENABLE:
+            buf[2] = val & 0xFFU;
+            break;
+        case SL_TTC2_REG_FIFO_TX_PACKET:
+            buf[2] = val & 0xFFU;
+            break;
+        case SL_TTC2_REG_FIFO_RX_PACKET:
+            buf[2] = val & 0xFFU;
+            break;
+        case SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO:
+            buf[2] = (val >> 8) & 0xFFU;
+            buf[3] = (val >> 0) & 0xFFU;
+            break;
+        default:
+            buf[2] = (val >> 24) & 0xFFU;
+            buf[3] = (val >> 16) & 0xFFU;
+            buf[4] = (val >> 8)  & 0xFFU;
+            buf[5] = (val >> 0)  & 0xFFU;
+            break;
+    }
 
-    /* Checksum (CRC16) */
-    uint16_t crc = sl_ttc2_crc16(buf, 6);
-    buf[6] = (crc >> 8) & 0xFFU;
-    buf[7] = (crc >> 0) & 0xFFU;
-
-    return sl_ttc2_spi_write(config, buf, 8U);
+    return sl_ttc2_spi_write(config, buf, 1U + 1U + sl_ttc2_get_reg_num_bytes(adr));
 }
 
 int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
 {
     int err = -1;
 
-    uint8_t wbuf[8] = {0};
-    uint8_t rbuf[8] = {0};
+    uint8_t wbuf[6] = {0};
+    uint8_t rbuf[6] = {0};
 
     /* Command ID */
     wbuf[0] = SL_TTC2_CMD_READ_REG;
-    rbuf[0] = SL_TTC2_CMD_READ_REG;
 
     /* Register address */
     wbuf[1] = adr;
-    rbuf[1] = adr;
 
     /* Register data + Checksum */
-    if (sl_ttc2_spi_transfer(config, wbuf, rbuf, 8U) == 0)
+    if (sl_ttc2_spi_write(config, wbuf, 2) == 0)
     {
-        if (sl_ttc2_check_crc(rbuf, 6, ((uint16_t)rbuf[6] << 8) | (uint16_t)rbuf[7]))
-        {
-            *val = ((uint32_t)rbuf[2] << 24) |
-                   ((uint32_t)rbuf[3] << 16) |
-                   ((uint32_t)rbuf[4] << 8)  |
-                   ((uint32_t)rbuf[5] << 0);
+        sl_ttc2_delay_ms(100);
 
-            err = 0;
+        if (sl_ttc2_spi_read(config, rbuf, 1U + 1U + sl_ttc2_get_reg_num_bytes(adr)) == 0)
+        {
+            if ((rbuf[0] == SL_TTC2_CMD_READ_REG) && (rbuf[1] == adr))
+            {
+                uint32_t val_buf = ((uint32_t)rbuf[2] << 24) |
+                                   ((uint32_t)rbuf[3] << 16) |
+                                   ((uint32_t)rbuf[4] << 8)  |
+                                   ((uint32_t)rbuf[5] << 0);
+
+                switch(adr)
+                {
+                    case SL_TTC2_REG_DEVICE_ID:                     *val = val_buf >> 16;   break;
+                    case SL_TTC2_REG_HARDWARE_VERSION:              *val = val_buf >> 24;   break;
+                    case SL_TTC2_REG_RESET_COUNTER:                 *val = val_buf >> 16;   break;
+                    case SL_TTC2_REG_LAST_RESET_CAUSE:              *val = val_buf >> 24;   break;
+                    case SL_TTC2_REG_INPUT_VOLTAGE_MCU:             *val = val_buf >> 16;   break;
+                    case SL_TTC2_REG_INPUT_CURRENT_MCU:             *val = val_buf >> 16;   break;
+                    case SL_TTC2_REG_TEMPERATURE_MCU:               *val = val_buf >> 16;   break;
+                    case SL_TTC2_REG_INPUT_VOLTAGE_RADIO:           *val = val_buf >> 16;   break;
+                    case SL_TTC2_REG_INPUT_CURRENT_RADIO:           *val = val_buf >> 16;   break;
+                    case SL_TTC2_REG_TEMPERATURE_RADIO:             *val = val_buf >> 16;   break;
+                    case SL_TTC2_REG_LAST_VALID_TC:                 *val = val_buf >> 24;   break;
+                    case SL_TTC2_REG_RSSI_LAST_VALID_TC:            *val = val_buf >> 16;   break;
+                    case SL_TTC2_REG_TEMPERATURE_ANTENNA:           *val = val_buf >> 16;   break;
+                    case SL_TTC2_REG_ANTENNA_STATUS:                *val = val_buf >> 16;   break;
+                    case SL_TTC2_REG_ANTENNA_DEPLOYMENT_STATUS:     *val = val_buf >> 24;   break;
+                    case SL_TTC2_REG_ANTENNA_DEP_HIB_STATUS:        *val = val_buf >> 24;   break;
+                    case SL_TTC2_REG_TX_ENABLE:                     *val = val_buf >> 24;   break;
+                    case SL_TTC2_REG_FIFO_TX_PACKET:                *val = val_buf >> 24;   break;
+                    case SL_TTC2_REG_FIFO_RX_PACKET:                *val = val_buf >> 24;   break;
+                    case SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO:   *val = val_buf >> 16;   break;
+                    default:                                        *val = val_buf;         break;
+                }
+
+                err = 0;
+            }
+            else
+            {
+            #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the register ");
+                sys_log_print_hex(adr);
+                sys_log_print_msg("! Invalid response!");
+                sys_log_new_line();
+            #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+            }
         }
         else
         {
         #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
             sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the register ");
             sys_log_print_hex(adr);
-            sys_log_print_msg("! Invalid data!");
+            sys_log_print_msg("! Error during SPI reading!");
             sys_log_new_line();
         #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
         }
@@ -201,7 +345,7 @@ int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
     #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error reading the register ");
         sys_log_print_hex(adr);
-        sys_log_print_msg("! Error during SPI transfer!");
+        sys_log_print_msg("! Error during SPI writing!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
     }
@@ -653,25 +797,25 @@ int sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len)
 {
     int err = -1;
 
-    uint8_t wbuf[2] = {0};
-
-    wbuf[0] = SL_TTC2_CMD_RECEIVE_PKT;
-    data[0] = SL_TTC2_CMD_RECEIVE_PKT;
+    uint8_t cmd = SL_TTC2_CMD_RECEIVE_PKT;
 
     if (sl_ttc2_read_len_rx_pkt_in_fifo(config, len) == 0)
     {
-        if (sl_ttc2_spi_transfer(config, wbuf, data, 1U + (*len) + 2U) == 0)
+        if (*len > 0)
         {
-            if (sl_ttc2_check_crc(data, 1U + (*len), sl_ttc2_crc16(data, 1U + (*len))))
+            sl_ttc2_delay_ms(100);
+
+            if (sl_ttc2_spi_write(config, &cmd, 1U) == 0)
             {
-                if (memcpy(data, &data[1], *len) == data)
+                sl_ttc2_delay_ms(100);
+
+                if (sl_ttc2_spi_read(config, data, 1U + 1U + (*len)) == 0)
                 {
-                    err = 0;
+                    if (memcpy(data, &data[2], *len) == data)
+                    {
+                        err = 0;
+                    }
                 }
-            }
-            else
-            {
-                *len = 0U;
             }
         }
     }
@@ -698,6 +842,42 @@ static uint16_t sl_ttc2_crc16(uint8_t *data, uint16_t len)
 static bool sl_ttc2_check_crc(uint8_t *data, uint16_t len, uint16_t crc)
 {
     return (crc == sl_ttc2_crc16(data, len));
+}
+
+static uint8_t sl_ttc2_get_reg_num_bytes(uint8_t adr)
+{
+    uint8_t num_bytes = 0U;
+
+    switch(adr)
+    {
+        case SL_TTC2_REG_DEVICE_ID:                     num_bytes = SL_TTC2_REG_DEVICE_ID_NUM_BYTES;                    break;
+        case SL_TTC2_REG_HARDWARE_VERSION:              num_bytes = SL_TTC2_REG_HARDWARE_VERSION_NUM_BYTES;             break;
+        case SL_TTC2_REG_FIRMWARE_VERSION:              num_bytes = SL_TTC2_REG_FIRMWARE_VERSION_NUM_BYTES;             break;
+        case SL_TTC2_REG_TIME_COUNTER:                  num_bytes = SL_TTC2_REG_TIME_COUNTER_NUM_BYTES;                 break;
+        case SL_TTC2_REG_RESET_COUNTER:                 num_bytes = SL_TTC2_REG_RESET_COUNTER_NUM_BYTES;                break;
+        case SL_TTC2_REG_LAST_RESET_CAUSE:              num_bytes = SL_TTC2_REG_LAST_RESET_CAUSE_NUM_BYTES;             break;
+        case SL_TTC2_REG_INPUT_VOLTAGE_MCU:             num_bytes = SL_TTC2_REG_INPUT_VOLTAGE_MCU_NUM_BYTES;            break;
+        case SL_TTC2_REG_INPUT_CURRENT_MCU:             num_bytes = SL_TTC2_REG_INPUT_CURRENT_MCU_NUM_BYTES;            break;
+        case SL_TTC2_REG_TEMPERATURE_MCU:               num_bytes = SL_TTC2_REG_TEMPERATURE_MCU_NUM_BYTES;              break;
+        case SL_TTC2_REG_INPUT_VOLTAGE_RADIO:           num_bytes = SL_TTC2_REG_INPUT_VOLTAGE_RADIO_NUM_BYTES;          break;
+        case SL_TTC2_REG_INPUT_CURRENT_RADIO:           num_bytes = SL_TTC2_REG_INPUT_CURRENT_RADIO_NUM_BYTES;          break;
+        case SL_TTC2_REG_TEMPERATURE_RADIO:             num_bytes = SL_TTC2_REG_TEMPERATURE_RADIO_NUM_BYTES;            break;
+        case SL_TTC2_REG_LAST_VALID_TC:                 num_bytes = SL_TTC2_REG_LAST_VALID_TC_NUM_BYTES;                break;
+        case SL_TTC2_REG_RSSI_LAST_VALID_TC:            num_bytes = SL_TTC2_REG_RSSI_LAST_VALID_TC_NUM_BYTES;           break;
+        case SL_TTC2_REG_TEMPERATURE_ANTENNA:           num_bytes = SL_TTC2_REG_TEMPERATURE_ANTENNA_NUM_BYTES;          break;
+        case SL_TTC2_REG_ANTENNA_STATUS:                num_bytes = SL_TTC2_REG_ANTENNA_STATUS_NUM_BYTES;               break;
+        case SL_TTC2_REG_ANTENNA_DEPLOYMENT_STATUS:     num_bytes = SL_TTC2_REG_ANTENNA_DEPLOYMENT_STATUS_NUM_BYTES;    break;
+        case SL_TTC2_REG_ANTENNA_DEP_HIB_STATUS:        num_bytes = SL_TTC2_REG_ANTENNA_DEP_HIB_STATUS_NUM_BYTES;       break;
+        case SL_TTC2_REG_TX_ENABLE:                     num_bytes = SL_TTC2_REG_TX_ENABLE_NUM_BYTES;                    break;
+        case SL_TTC2_REG_TX_PACKET_COUNTER:             num_bytes = SL_TTC2_REG_TX_PACKET_COUNTER_NUM_BYTES;            break;
+        case SL_TTC2_REG_RX_PACKET_COUNTER:             num_bytes = SL_TTC2_REG_RX_PACKET_COUNTER_NUM_BYTES;            break;
+        case SL_TTC2_REG_FIFO_TX_PACKET:                num_bytes = SL_TTC2_REG_FIFO_TX_PACKET_NUM_BYTES;               break;
+        case SL_TTC2_REG_FIFO_RX_PACKET:                num_bytes = SL_TTC2_REG_FIFO_RX_PACKET_NUM_BYTES;               break;
+        case SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO:   num_bytes = SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO_NUM_BYTES;  break;
+        default:                                        num_bytes = 4U;                                                 break;
+    }
+
+    return num_bytes;
 }
 
 /** \} End of sl_ttc2 group */

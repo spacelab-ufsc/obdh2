@@ -63,7 +63,8 @@ typedef enum
     PAYLOAD_EDC_RAW_PTT,        /**< EDC raw PTT packet. */
     PAYLOAD_EDC_PTT,            /**< EDC PTT packet. */
     PAYLOAD_EDC_RAW_HK,         /**< EDC raw housekeeping. */
-    PAYLOAD_EDC_HK              /**< EDC housekeeping. */
+    PAYLOAD_EDC_HK,              /**< EDC housekeeping. */
+    PAYLOAD_X_PONG              /**< PX ping pong. */
 } payload_data_id_t;
 
 /**
