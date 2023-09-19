@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.39
+ * \version 0.10.7
  * 
  * \date 2021/11/17
  * 
@@ -55,7 +55,7 @@ void vTaskAntennaDeployment(void)
 
         for(i = initial_hib_time_counter; i < CONFIG_ANTENNA_DEPLOYMENT_HIBERNATION_MIN; i++)
         {
-            vTaskDelay(pdMS_TO_TICKS(60*1000));
+            vTaskDelay(pdMS_TO_TICKS(60000U));
 
             sat_data_buf.obdh.data.initial_hib_time_count++;
         }
@@ -84,7 +84,7 @@ void vTaskAntennaDeployment(void)
             sys_log_new_line();
         }
 
-        sat_data_buf.obdh.data.ant_deployment_counter = true;
+        sat_data_buf.obdh.data.ant_deployment_executed = true;
 
         sat_data_buf.obdh.data.ant_deployment_counter++;
     }
@@ -95,6 +95,9 @@ void vTaskAntennaDeployment(void)
         sys_log_print_msg(")");
         sys_log_new_line();
     }
+
+    /* Startup task status = Done */
+    vTaskSuspend(xTaskAntennaDeploymentHandle);
 }
 
 /** \} End of antenna_deployment group */

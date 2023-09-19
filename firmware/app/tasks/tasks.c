@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.9.18
+ * \version 0.10.7
  * 
  * \date 2019/11/02
  * 
@@ -39,6 +39,7 @@
 #include <config/config.h>
 
 #include "tasks.h"
+#include "antenna_deployment.h"
 #include "startup.h"
 #include "watchdog_reset.h"
 #include "heartbeat.h"

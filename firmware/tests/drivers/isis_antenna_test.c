@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.2
+ * \version 0.10.7
  * 
  * \date 2021/09/01
  * 
@@ -611,7 +611,7 @@ void write_test(uint8_t *wd, uint16_t wd_len)
     expect_value(__wrap_tca4311a_disable, config.en_pin,                ISIS_ANTENNA_IIC_EN_PIN);
     expect_value(__wrap_tca4311a_disable, config.ready_pin,             ISIS_ANTENNA_IIC_RDY_PIN);
 
-    will_return(__wrap_tca4311a_disable, 1);
+    will_return(__wrap_tca4311a_disable, 0);
 }
 
 void read_test(uint8_t *rd, uint16_t rd_len)
@@ -644,7 +644,7 @@ void read_test(uint8_t *rd, uint16_t rd_len)
     expect_value(__wrap_tca4311a_disable, config.en_pin,                ISIS_ANTENNA_IIC_EN_PIN);
     expect_value(__wrap_tca4311a_disable, config.ready_pin,             ISIS_ANTENNA_IIC_RDY_PIN);
 
-    will_return(__wrap_tca4311a_disable, 1);
+    will_return(__wrap_tca4311a_disable, 0);
 }
 
 /** \} End of isis_antenna_test group */
