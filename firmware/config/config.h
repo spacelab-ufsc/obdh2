@@ -51,6 +51,7 @@
 #define CONFIG_TASK_DATA_LOG_ENABLED                    1
 #define CONFIG_TASK_PROCESS_TC_ENABLED                  1
 #define CONFIG_TASK_ANTENNA_DEPLOYMENT_ENABLED          0
+#define CONFIG_TASK_PAYLOAD_X_ENABLED                   1
 
 /* Devices */
 #define CONFIG_DEV_MEDIA_INT_ENABLED                    1
@@ -63,7 +64,7 @@
 #define CONFIG_DEV_EPS_ENABLED                          1
 #define CONFIG_DEV_PAYLOAD_EDC_ENABLED                  1
 #define CONFIG_DEV_ANTENNA_ENABLED                      1
-#define CONFIG_DEV_PAYLOAD_X_ENABLED                  1
+#define CONFIG_DEV_PAYLOAD_X_ENABLED                    1
 
 /* Drivers */
 #define CONFIG_DRV_ISIS_ANTENNA_ENABLED                 1

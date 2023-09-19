@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.7
+ * \version 0.9.18
  * 
  * \date 2019/11/02
  * 
@@ -39,7 +39,6 @@
 #include <config/config.h>
 
 #include "tasks.h"
-#include "antenna_deployment.h"
 #include "startup.h"
 #include "watchdog_reset.h"
 #include "heartbeat.h"
@@ -53,6 +52,7 @@
 #include "read_antenna.h"
 #include "data_log.h"
 #include "process_tc.h"
+#include "read_px.h"
 
 void create_tasks(void)
 {
@@ -184,6 +184,15 @@ void create_tasks(void)
         /* Error creating the antenna deployment task */
     }
 #endif /* CONFIG_TASK_ANTENNA_DEPLOYMENT_ENABLED */
+
+#if defined(CONFIG_TASK_PAYLOAD_X_ENABLED) && (CONFIG_TASK_PAYLOAD_X_ENABLED == 1)
+    xTaskCreate(vTaskReadPX, TASK_READ_PX_NAME, TASK_READ_PX_STACK_SIZE, NULL, TASK_READ_PX_PRIORITY, &xTaskReadPXHandle);
+
+    if (xTaskReadPXHandle == NULL)
+    {
+        /* Error creating the Read PX task */
+    }
+#endif /* CONFIG_TASK_PAYLOAD_X_ENABLED */
 
     create_event_groups();
 }

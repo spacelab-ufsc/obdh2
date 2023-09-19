@@ -47,7 +47,7 @@ pl_px_buf_t px_buf = {0};
 void vTaskReadPX(void)
 {
     static payload_t pl_px_active = PAYLOAD_X;
-    px_buf.lenth = PX_PONG_BUF_SIZE;
+    px_buf.length = PX_PONG_BUF_SIZE;
 
     /* Wait startup task to finish */
     xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_PX_INIT_TIMEOUT_MS));
@@ -60,6 +60,12 @@ void vTaskReadPX(void)
         if (payload_get_data(pl_px_active, PAYLOAD_X_PONG, px_buf.buffer, &px_buf.length) != 0)
         {
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_PX_NAME, "Error reading the ping-pong data!");
+
+            uint8_t i = 0;
+            for(i=0;i<px_buf.length;i++){
+                sys_log_print_uint(px_buf.buffer[i]);
+            }
+
             sys_log_new_line();
         }
         else
@@ -67,11 +73,12 @@ void vTaskReadPX(void)
             sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_PX_NAME, "Received Payload X packet:");
             sys_log_new_line();
 
+            /*
             uint8_t i = 0;
             for(i=0;i<px_buf.length;i++){
                 sys_log_print_uint(px_buf.buffer[i]);
             }
-
+            */
         }
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_PX_PERIOD_MS));
