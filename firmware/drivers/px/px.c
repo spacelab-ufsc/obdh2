@@ -39,7 +39,7 @@ int px_init(px_config_t conf)
 {
     i2c_config_t i2c_conf = {0};
 
-    i2c_conf.speed_hz = bitrate;
+    i2c_conf.speed_hz = conf.bitrate;
 
     return i2c_init(conf.port, i2c_conf);
 }
