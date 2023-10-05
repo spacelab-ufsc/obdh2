@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.7
+ * \version 0.10.8
  * 
  * \date 2021/09/01
  * 
@@ -233,8 +233,8 @@ static void isis_antenna_get_data_test(void **state)
 
     write_test(&cmd, 1);
 
-    ans[0] = raw_temp >> 8;
-    ans[1] = raw_temp & 0xFF;
+    ans[0] = raw_temp & 0xFF;
+    ans[1] = raw_temp >> 8;
 
     read_test(ans, 2);
 
@@ -455,14 +455,14 @@ static void isis_antenna_get_raw_temperature_test(void **state)
     uint8_t cmd = 0xC0;
 
     uint16_t raw = 0;
-    for(raw=0; raw<1023; raw+=50)
+    for(raw = 0; raw < 1023; raw += 50)
     {
         write_test(&cmd, 1);
 
         uint8_t ans[2] = {0};
 
-        ans[0] = raw >> 8;
-        ans[1] = raw & 0xFF;
+        ans[0] = raw & 0xFF;
+        ans[1] = raw >> 8;
 
         read_test(ans, 2);
 
@@ -504,8 +504,8 @@ static void isis_antenna_get_temperature_c_test(void **state)
 
         uint8_t ans[2] = {0};
 
-        ans[0] = raw >> 8;
-        ans[1] = raw & 0xFF;
+        ans[0] = raw & 0xFF;
+        ans[1] = raw >> 8;
 
         read_test(ans, 2);
 
@@ -530,14 +530,14 @@ static void isis_antenna_get_temperature_k_test(void **state)
     uint8_t cmd = 0xC0;
 
     uint16_t raw = 0;
-    for(raw=0; raw<1023; raw+=50)
+    for(raw = 0; raw < 1023; raw += 50)
     {
         write_test(&cmd, 1);
 
         uint8_t ans[2] = {0};
 
-        ans[0] = raw >> 8;
-        ans[1] = raw & 0xFF;
+        ans[0] = raw & 0xFF;
+        ans[1] = raw >> 8;
 
         read_test(ans, 2);
 
