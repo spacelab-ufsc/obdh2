@@ -1,7 +1,7 @@
 /*
  * isis_antenna.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.8
+ * \version 0.10.8
  * 
  * \date 2020/02/01
  * 
@@ -530,7 +530,7 @@ int isis_antenna_get_raw_temperature(uint16_t *temp)
 
         if (isis_antenna_i2c_read(temp_bytes, 2) == 0)
         {
-            uint16_t raw_data = ((uint16_t)temp_bytes[0] << 8) | temp_bytes[1];
+            uint16_t raw_data = ((uint16_t)temp_bytes[1] << 8) | temp_bytes[0];
 
             *temp = raw_data;
 
