@@ -1,5 +1,5 @@
 /*
- * version.h
+ * px_wrap.h
  * 
  * Copyright The OBDH 2.0 Contributors.
  * 
@@ -21,29 +21,32 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief Payload-X driver wrap definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
  * \version 0.10.8
  * 
- * \date 2019/10/25
+ * \date 2023/09/18
  * 
- * \defgroup version Version control
+ * \defgroup px_wrap Payload-X Driver Wrap
+ * \ingroup tests
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#ifndef PX_WRAP_H_
+#define PX_WRAP_H_
 
-#define FIRMWARE_VERSION            "0.10.8"
+#include <stdint.h>
 
-#define FIRMWARE_STATUS             "Development"
+#include <drivers/px/px.h>
 
-#define FIRMWARE_AUTHOR             "SpaceLab-UFSC"
+int __wrap_px_init(px_config_t conf);
 
-#define FIRMWARE_AUTHOR_EMAIL       "contact@spacelab.ufsc.br"
+int __wrap_px_write(px_config_t conf, uint8_t *data, uint16_t len);
 
-#endif /* VERSION_H_ */
+int __wrap_px_read(px_config_t conf, uint8_t *data, uint16_t len);
 
-/** \} End of version group */
+#endif /* PX_WRAP_H_ */
+
+/** \} End of px_wrap group */

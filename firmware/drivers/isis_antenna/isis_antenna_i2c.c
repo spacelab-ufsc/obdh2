@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.2
+ * \version 0.10.7
  * 
  * \date 2021/10/10
  * 
@@ -93,7 +93,7 @@ int isis_antenna_i2c_write(uint8_t *data, uint16_t len)
                 {
                     isis_antenna_delay_ms(1);
 
-                    if (tca4311a_disable(ants_config) == TCA4311A_NOT_READY)
+                    if (tca4311a_disable(ants_config) == TCA4311A_READY)
                     {
                         err = 0;
 
@@ -148,7 +148,7 @@ int isis_antenna_i2c_read(uint8_t *data, uint16_t len)
                 {
                     isis_antenna_delay_ms(1);
 
-                    if (tca4311a_disable(ants_config) == TCA4311A_NOT_READY)
+                    if (tca4311a_disable(ants_config) == TCA4311A_READY)
                     {
                         err = 0;
 
