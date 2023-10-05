@@ -52,6 +52,7 @@
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/freertos/include"/>
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/config"/>
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/freertos/portable/CCS/MSP430X"/>
+									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/app/libs/libpredict/include"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.MSP430_20.2.compilerID.ADVICE__POWER.1830676181" name="Enable checking of ULP power rules (--advice:power)" superClass="com.ti.ccstudio.buildDefinitions.MSP430_20.2.compilerID.ADVICE__POWER" value="all" valueType="string"/>
 								<option id="com.ti.ccstudio.buildDefinitions.MSP430_20.2.compilerID.DEBUGGING_MODEL.15640321" name="Debugging model" superClass="com.ti.ccstudio.buildDefinitions.MSP430_20.2.compilerID.DEBUGGING_MODEL" value="com.ti.ccstudio.buildDefinitions.MSP430_20.2.compilerID.DEBUGGING_MODEL.SYMDEBUG__DWARF" valueType="enumerated"/>
@@ -91,13 +92,13 @@
 								<inputType id="com.ti.ccstudio.buildDefinitions.MSP430_20.2.exeLinker.inputType__GEN_CMDS.956007209" name="Generated Linker Command Files" superClass="com.ti.ccstudio.buildDefinitions.MSP430_20.2.exeLinker.inputType__GEN_CMDS"/>
 							</tool>
 							<tool id="com.ti.ccstudio.buildDefinitions.MSP430_20.2.hex.106550725" name="MSP430 Hex Utility" superClass="com.ti.ccstudio.buildDefinitions.MSP430_20.2.hex">
-								<option id="com.ti.ccstudio.buildDefinitions.MSP430_20.2.hex.ROMWIDTH.172863297" name="Specify rom width (--romwidth, -romwidth=width)" superClass="com.ti.ccstudio.buildDefinitions.MSP430_20.2.hex.ROMWIDTH" value="8" valueType="string"/>
-								<option id="com.ti.ccstudio.buildDefinitions.MSP430_20.2.hex.MEMWIDTH.301150425" name="Specify memory width (--memwidth, -memwidth=width)" superClass="com.ti.ccstudio.buildDefinitions.MSP430_20.2.hex.MEMWIDTH" value="8" valueType="string"/>
+								<option id="com.ti.ccstudio.buildDefinitions.MSP430_20.2.hex.ROMWIDTH.172863297" name="Specify rom width (--romwidth, -romwidth)" superClass="com.ti.ccstudio.buildDefinitions.MSP430_20.2.hex.ROMWIDTH" value="8" valueType="string"/>
+								<option id="com.ti.ccstudio.buildDefinitions.MSP430_20.2.hex.MEMWIDTH.301150425" name="Specify memory width (--memwidth, -memwidth)" superClass="com.ti.ccstudio.buildDefinitions.MSP430_20.2.hex.MEMWIDTH" value="8" valueType="string"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="app/libs/ff14/documents|tests" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="app/libs/libpredict/examples|app/libs/libpredict/tests|app/libs/ff14/documents|tests" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

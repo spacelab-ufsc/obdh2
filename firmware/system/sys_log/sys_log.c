@@ -1,7 +1,7 @@
 /*
  * sys_log.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.25
+ * \version 0.10.7
  * 
  * \date 2019/11/03
  * 
@@ -277,13 +277,13 @@ void sys_log_dump_hex(uint8_t *data, uint16_t len)
 
 void sys_log_print_float(float flt, uint8_t digits)
 {
-    float flt_pos = 0.0;
+    float flt_pos = flt;
 
     if (flt < 0.0)
     {
         sys_log_print_msg("-");
 
-        flt_pos = abs(flt);
+        flt_pos = fabs(flt);
     }
 
     /* Extract integer part */

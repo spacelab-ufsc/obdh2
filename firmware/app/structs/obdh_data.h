@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.39
+ * \version 0.10.7
  * 
  * \date 2020/07/16
  * 
@@ -60,6 +60,11 @@
 #define OBDH_PARAM_ID_INITIAL_HIB_TIME_COUNTER  17  /**< Initial hibernation time counter in minutes. */
 #define OBDH_PARAM_ID_ANT_DEPLOYMENT_EXECUTED   18  /**< Antenna deployment executed flag. */
 #define OBDH_PARAM_ID_ANT_DEPLOYMENT_COUNTER    19  /**< Antenna deployment counter. */
+#define OBDH_PARAM_ID_TLE_LINE1                 20  /**< TLE line 1. */
+#define OBDH_PARAM_ID_TLE_LINE2                 21  /**< TLE line 2. */
+#define OBDH_PARAM_ID_LATITUDE                  22  /**< Latitude in degrees. */
+#define OBDH_PARAM_ID_LONGITUDE                 23  /**< Longitude in degrees. */
+#define OBDH_PARAM_ID_ALTITUDE                  24  /**< Altitude in kilometers. */
 
 /* Operation modes */
 #define OBDH_MODE_NORMAL            0
@@ -73,6 +78,19 @@ typedef struct
     uint16_t temperature;           /**< Temperature in Kelvin. */
     uint16_t last_valid_tc_rssi;    /**< RSSI of the last valid telecommand. */
 } radio_data_t;
+
+/**
+ * \brief Position data.
+ */
+typedef struct
+{
+    sys_time_t timestamp;           /**< Timestamp of the position data. */
+    uint8_t tle_line1[70];          /**< TLE line 1 in ASCII. */
+    uint8_t tle_line2[70];          /**< TLE line 2 in ASCII. */
+    int16_t latitude;               /**< Latitude in degrees. */
+    int16_t longitude;              /**< Lontitude in degrees. */
+    int16_t altitude;               /**< Altitude in kilometers. */
+} position_data_t;
 
 /**
  * \brief OBDH data.
@@ -95,6 +113,7 @@ typedef struct
     uint8_t initial_hib_time_count; /**< Initial hibernation time counter in minutes. */
     bool ant_deployment_executed;   /**< Antenna deployment executed flag. */
     uint8_t ant_deployment_counter; /**< Antenna deployment counter. */
+    position_data_t position;       /**< Current position of the satellite. */
 } obdh_data_t;
 
 #endif /* OBDH_DATA_H_ */
