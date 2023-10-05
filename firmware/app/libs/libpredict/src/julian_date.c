@@ -18,12 +18,12 @@ time_t mktime_utc(const struct tm* timeinfo_utc)
 
 	//get UTC time, interpret resulting tm as a localtime
 	struct tm timeinfo_gmt;
-	gmtime_r(&curr_time, &timeinfo_gmt);
+	timeinfo_gmt = *gmtime(&curr_time);
 	time_t time_gmt = mktime(&timeinfo_gmt);
 
 	//get localtime, interpret resulting tm as localtime
 	struct tm timeinfo_local;
-	localtime_r(&curr_time, &timeinfo_local);
+	timeinfo_local = *localtime(&curr_time);
 	time_t time_local = mktime(&timeinfo_local);
 
 	//find the time difference between the two interpretations
@@ -73,7 +73,7 @@ time_t predict_from_julian(predict_julian_date_t date)
 	
 	//add number of seconds since julian start day to the julian start day, get current time_t
 	struct tm timeinfo;
-	gmtime_r(&ret_time, &timeinfo); 
+	timeinfo = *gmtime(&ret_time);
 	timeinfo.tm_sec += seconds_since;
 	ret_time = mktime_utc(&timeinfo);
 	return ret_time;
