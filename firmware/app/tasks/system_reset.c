@@ -1,7 +1,7 @@
 /*
  * system_reset.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.47
+ * \version 0.10.7
  * 
  * \date 2020/01/12
  * 
@@ -44,7 +44,7 @@ void vTaskSystemReset(void)
 {
     while(1)
     {
-        vTaskDelay(pdMS_TO_TICKS(TASK_SYSTEM_RESET_PERIOD_MS));
+        vTaskDelay(pdMS_TO_TICKS_64(TASK_SYSTEM_RESET_PERIOD_MS));
 
         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_SYSTEM_RESET_NAME, "Restarting the system...");
         sys_log_new_line();

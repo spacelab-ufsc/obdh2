@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
  * 
- * \version 0.9.9
+ * \version 0.10.8
  * 
  * \date 2021/08/15
  * 
@@ -40,6 +40,7 @@
 #include <drivers/gpio/gpio.h>
 #include <drivers/edc/edc.h>
 #include <drivers/phj/phj.h>
+#include <drivers/px/px.h>
 
 #include "payload.h"
 
@@ -47,6 +48,8 @@
 
 static edc_config_t edc_0_conf = {0};
 static edc_config_t edc_1_conf = {0};
+
+static px_config_t px_conf = {0};
 
 int payload_init(payload_t pl)
 {
@@ -153,10 +156,25 @@ int payload_init(payload_t pl)
             break;
         }
         case PAYLOAD_X:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: init() not implemented yet");
-            sys_log_new_line();
+        {
+            px_conf.port = I2C_PORT_0;
+            px_conf.bitrate = 400000UL;
+
+            if (px_init(px_conf) == 0)
+            {
+                err = 0;
+
+                sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "Payload-X: Initialization done!");
+                sys_log_new_line();
+            }
+            else
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: Error initializing the I2C configuration!");
+                sys_log_new_line();
+            }
 
             break;
+        }
         case PAYLOAD_PHJ:
         {
             phj_config_i2c_t config_i2c;
@@ -340,8 +358,18 @@ int payload_write_cmd(payload_t pl, payload_cmd_t cmd)
 
             break;
         case PAYLOAD_X:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: write_cmd() routine not implemented yet!");
-            sys_log_new_line();
+            if (px_write(px_conf, &cmd, 1U) == 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "Payload-X: ");
+                sys_log_print_hex(cmd);
+                sys_log_print_msg(" command send!");
+                sys_log_new_line();
+            }
+            else
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: Error in sending through I2C bus");
+                sys_log_new_line();
+            }
 
             break;
         case PAYLOAD_PHJ:
@@ -681,8 +709,24 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
             break;
         }
         case PAYLOAD_X:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: get_data() routine not implemented yet!");
-            sys_log_new_line();
+            if (px_read(px_conf, data, *len) == 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "Payload-X: ");
+                /*
+                uint8_t i = 0;
+                for(i = 0; i < sizeof(data); i++)
+                {
+                    sys_log_print_msg(data[i]);
+                }
+                */
+                sys_log_print_msg(" data received!");
+                sys_log_new_line();
+             }
+             else
+             {
+                 sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: Error in receiving data through I2C bus");
+                 sys_log_new_line();
+             }
 
             break;
         case PAYLOAD_PHJ:

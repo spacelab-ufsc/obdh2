@@ -53,6 +53,7 @@
 #include "data_log.h"
 #include "process_tc.h"
 #include "pos_det.h"
+#include "read_px.h"
 
 void create_tasks(void)
 {
@@ -193,6 +194,15 @@ void create_tasks(void)
         /* Error creating the position determination task */
     }
 #endif /* CONFIG_TASK_POSITION_DETERMINATION_ENABLED */
+
+#if defined(CONFIG_TASK_PAYLOAD_X_ENABLED) && (CONFIG_TASK_PAYLOAD_X_ENABLED == 1)
+    xTaskCreate(vTaskReadPX, TASK_READ_PX_NAME, TASK_READ_PX_STACK_SIZE, NULL, TASK_READ_PX_PRIORITY, &xTaskReadPXHandle);
+
+    if (xTaskReadPXHandle == NULL)
+    {
+        /* Error creating the Read PX task */
+    }
+#endif /* CONFIG_TASK_PAYLOAD_X_ENABLED */
 
     create_event_groups();
 }

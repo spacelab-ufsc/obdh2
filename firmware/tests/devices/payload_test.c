@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Bruno Benedetti <brunobenedetti45@gmail.com> 
  * 
- * \version 0.9.8
+ * \version 0.10.8
  * 
  * \date 2021/08/16
  * 
@@ -44,6 +44,7 @@
 
 #include <devices/payload/payload.h>
 #include <drivers/edc/edc.h>
+#include <drivers/px/px.h>
 #include <drivers/gpio/gpio.h>
 #include <drivers/uart/uart.h>
 #include <drivers/i2c/i2c.h>
@@ -53,6 +54,9 @@
 
 #define EDC_1_UART_PORT             UART_PORT_1
 #define EDC_1_GPIO_EN_PIN           GPIO_PIN_30
+
+#define PX_I2C_PORT                 I2C_PORT_0
+#define PX_I2C_BITRATE              400000UL
 
 static void payload_init_test(void **state)
 {
@@ -142,8 +146,15 @@ static void payload_init_test(void **state)
 
     assert_return_code(payload_init(PAYLOAD_EDC_1), 0);
 
-//    assert_return_code(payload_init(PAYLOAD_X), 0);
+    /* Payload-X */
+    expect_value(__wrap_px_init, conf.port, PX_I2C_PORT);
+    expect_value(__wrap_px_init, conf.bitrate, PX_I2C_BITRATE);
 
+    will_return(__wrap_px_init, 0);
+
+    assert_return_code(payload_init(PAYLOAD_X), 0);
+
+    /* Payload Joinville */
     expect_value(__wrap_phj_init_i2c, config.port, I2C_PORT_0);
     expect_value(__wrap_phj_init_i2c, config.bitrate, 400000);
 
@@ -155,7 +166,6 @@ static void payload_init_test(void **state)
     will_return(__wrap_phj_init_gpio, 0);
 
     assert_return_code(payload_init(PAYLOAD_PHJ), 0);
-//    assert_return_code(payload_init(PAYLOAD_HARSH), 0);
 }
 
 static void payload_enable_test(void **state)
@@ -180,7 +190,6 @@ static void payload_enable_test(void **state)
 
 //    assert_return_code(payload_enable(PAYLOAD_X), 0);
 //    assert_return_code(payload_enable(PAYLOAD_PHJ), 0);
-//    assert_return_code(payload_enable(PAYLOAD_HARSH), 0);
 }
 
 static void payload_disable_test(void **state)
@@ -203,9 +212,7 @@ static void payload_disable_test(void **state)
 
     assert_return_code(payload_disable(PAYLOAD_EDC_1), 0);
 //    assert_return_code(payload_disable(PAYLOAD_X), 0);
-//    assert_return_code(payload_disable(PAYLOAD_X), 0);
 //    assert_return_code(payload_disable(PAYLOAD_PHJ), 0);
-//    assert_return_code(payload_disable(PAYLOAD_HARSH), 0);
 }
 
 static void payload_write_cmd_test(void **state)
@@ -213,7 +220,6 @@ static void payload_write_cmd_test(void **state)
 //    assert_return_code(payload_write_cmd(PAYLOAD_EDC_0, ), 0);
 //    assert_return_code(payload_write_cmd(PAYLOAD_X, ), 0);
 //    assert_return_code(payload_write_cmd(PAYLOAD_PHJ, ), 0);
-//    assert_return_code(payload_write_cmd(PAYLOAD_HARSH, ), 0);
 }
 
 static void payload_get_data_test(void **state)
