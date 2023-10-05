@@ -64,7 +64,7 @@ void vTaskPosDet(void)
         /* Create orbit object */
         predict_orbital_elements_t *satellite = predict_parse_tle(tle_line_1, tle_line_2);
 
-        if (satellite)
+        if (satellite != NULL)
         {
             /* Predict satellite position */
             struct predict_position my_orbit;
