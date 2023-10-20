@@ -268,7 +268,7 @@ int isis_antenna_read_deployment_status_code(uint16_t *status)
 
         if (isis_antenna_i2c_read(status_bytes, 2) == 0)
         {
-            status_code = ((uint16_t)status_bytes[0] << 8) | (uint16_t)status_bytes[1];
+            status_code = ((uint16_t)status_bytes[1] << 8) | (uint16_t)status_bytes[0];
 
             *status = status_code;
 
