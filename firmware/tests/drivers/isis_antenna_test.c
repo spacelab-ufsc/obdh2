@@ -83,7 +83,7 @@ static void isis_antenna_arm_test(void **state)
 
     write_test(&cmd, 1);
 
-    uint8_t ans[2] = {0x00, 0x01};
+    uint8_t ans[2] = {0x01, 0x00};
 
     read_test(ans, 2);
 
@@ -161,8 +161,8 @@ static void isis_antenna_read_deployment_status_code_test(void **state)
 
     uint8_t ans[2] = {0};
 
-    ans[0] = raw_status >> 8;
-    ans[1] = raw_status & 0xFF;
+    ans[0] = raw_status & 0xFF;
+    ans[1] = raw_status >> 8;
 
     read_test(ans, 2);
 
@@ -183,8 +183,8 @@ static void isis_antenna_read_deployment_status_test(void **state)
 
     uint16_t raw_status = generate_random(0, UINT16_MAX);
 
-    ans[0] = raw_status >> 8;
-    ans[1] = raw_status & 0xFF;
+    ans[0] = raw_status & 0xFF;
+    ans[1] = raw_status >> 8;
 
     read_test(ans, 2);
 
@@ -221,8 +221,8 @@ static void isis_antenna_get_data_test(void **state)
 
     uint16_t raw_status = generate_random(0, UINT16_MAX);
 
-    ans[0] = raw_status >> 8;
-    ans[1] = raw_status & 0xFF;
+    ans[0] = raw_status & 0xFF;
+    ans[1] = raw_status >> 8;
 
     read_test(ans, 2);
 
@@ -296,8 +296,8 @@ static void isis_antenna_get_antenna_status_test(void **state)
 
         uint16_t raw_status = generate_random(0, UINT16_MAX);
 
-        ans[0] = raw_status >> 8;
-        ans[1] = raw_status & 0xFF;
+        ans[0] = raw_status & 0xFF;
+        ans[1] = raw_status >> 8;
 
         read_test(ans, 2);
 
@@ -349,8 +349,8 @@ static void isis_antenna_get_antenna_timeout_test(void **state)
 
         uint16_t raw_status = generate_random(0, UINT16_MAX);
 
-        ans[0] = raw_status >> 8;
-        ans[1] = raw_status & 0xFF;
+        ans[0] = raw_status & 0xFF;
+        ans[1] = raw_status >> 8;
 
         read_test(ans, 2);
 
@@ -402,8 +402,8 @@ static void isis_antenna_get_burning_test(void **state)
 
         uint16_t raw_status = generate_random(0, UINT16_MAX);
 
-        ans[0] = raw_status >> 8;
-        ans[1] = raw_status & 0xFF;
+        ans[0] = raw_status & 0xFF;
+        ans[1] = raw_status >> 8;
 
         read_test(ans, 2);
 
@@ -439,8 +439,8 @@ static void isis_antenna_get_arming_status_test(void **state)
 
     uint16_t raw_status = generate_random(0, UINT16_MAX);
 
-    ans[0] = raw_status >> 8;
-    ans[1] = raw_status & 0xFF;
+    ans[0] = raw_status & 0xFF;
+    ans[1] = raw_status >> 8;
 
     read_test(ans, 2);
 
