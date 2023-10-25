@@ -61,6 +61,15 @@ void vTaskReadAntenna(void)
         if (antenna_get_data(&sat_data_buf.antenna.data) == 0)
         {
             sat_data_buf.antenna.timestamp = system_get_time();
+
+            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_ANTENNA_NAME, "Temperature: ");
+            sys_log_print_uint(sat_data_buf.antenna.data.temperature);
+            sys_log_print_msg(" K");
+            sys_log_new_line();
+
+            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_ANTENNA_NAME, "Status: ");
+            sys_log_print_hex(sat_data_buf.antenna.data.status.code);
+            sys_log_new_line();
         }
         else
         {
