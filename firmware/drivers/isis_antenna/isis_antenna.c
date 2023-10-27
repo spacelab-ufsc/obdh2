@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.8
+ * \version 0.10.9
  * 
  * \date 2020/02/01
  * 
@@ -268,7 +268,7 @@ int isis_antenna_read_deployment_status_code(uint16_t *status)
 
         if (isis_antenna_i2c_read(status_bytes, 2) == 0)
         {
-            status_code = ((uint16_t)status_bytes[0] << 8) | (uint16_t)status_bytes[1];
+            status_code = ((uint16_t)status_bytes[1] << 8) | (uint16_t)status_bytes[0];
 
             *status = status_code;
 
