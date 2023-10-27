@@ -5,6 +5,7 @@
 * TCA4311A
 * EDC
 * ISIS Antenna
+* Payload-X
 * SpaceLab EPS 2.0
 * MT25Q
 * SpaceLab TTC 2.0
