@@ -48,6 +48,9 @@
 #define SL_TTC2_DEVICE_ID_RADIO_0               0xCC2AU /**< TTC 2.0 device ID (radio 1). */
 #define SL_TTC2_DEVICE_ID_RADIO_1               0xCC2BU /**< TTC 2.0 device ID (radio 2). */
 
+/* TTC 2.0 Preamble byte */
+#define SL_TTC2_PKT_PREAMBLE                    0x7EU   /**< Preamble byte value. */
+
 /* TTC 2.0 Commands */
 #define SL_TTC2_CMD_NOP                         0U      /**< No operation. */
 #define SL_TTC2_CMD_READ_REG                    1U      /**< Read register command. */
@@ -108,7 +111,7 @@ typedef enum
 {
     SL_TTC2_RADIO_0=0,                                  /**< TTC radio 0. */
     SL_TTC2_RADIO_1                                     /**< TTC radio 1. */
-} sl_ttc2_radio_t;
+} sl_ttc2_radio_e;
 
 /**
  * \brief Voltage types.
@@ -179,7 +182,7 @@ typedef struct
     spi_port_t port;                /**< SPI port. */
     spi_cs_t cs_pin;                /**< SPI CS pin. */
     spi_config_t port_config;       /**< SPI configuration. */
-    sl_ttc2_radio_t id;             /**< Device ID (radio 1 or 2). */
+    sl_ttc2_radio_e id;             /**< Device ID (radio 1 or 2). */
 } sl_ttc2_config_t;
 
 /**
