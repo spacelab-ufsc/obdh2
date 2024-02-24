@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.7
+ * \version 0.10.9
  * 
  * \date 2020/07/16
  * 
@@ -38,6 +38,9 @@
 #define OBDH_DATA_H_
 
 #include <stdint.h>
+
+#include <system/system.h>
+#include <devices/media/media.h>
 
 /* OBDH parameter ID */
 #define OBDH_PARAM_ID_TIME_COUNTER              0   /**< Time counter in milliseconds. */
@@ -65,19 +68,38 @@
 #define OBDH_PARAM_ID_LATITUDE                  22  /**< Latitude in degrees. */
 #define OBDH_PARAM_ID_LONGITUDE                 23  /**< Longitude in degrees. */
 #define OBDH_PARAM_ID_ALTITUDE                  24  /**< Altitude in kilometers. */
+#define OBDH_PARAM_ID_LAST_MEM_ADR_SAT_DATA     25  /**< Last used memory address of the service module data. */
+#define OBDH_PARAM_ID_LAST_MEM_ADR_PL_DATA      26  /**< Last used memory address of the payload data. */
+
+/* Default values */
+#define OBDH_TIMESTAMP_DEFAULT_VAL                      0U
+#define OBDH_PARAM_TEMPERATURE_UC_DEFAULT_VAL           0U
+#define OBDH_PARAM_CURRENT_DEFAULT_VAL                  0U
+#define OBDH_PARAM_VOLTAGE_DEFAULT_VAL                  0U
+#define OBDH_PARAM_LAST_RESET_CAUSE_DEFAULT_VAL         0U
+#define OBDH_PARAM_RESET_COUNTER_DEFAULT_VAL            0U
+#define OBDH_PARAM_LAST_VALID_TC_DEFAULT_VAL            0U
+#define OBDH_PARAM_HW_VERSION_DEFAULT_VAL               0U
+#define OBDH_PARAM_FW_VERSION_DEFAULT_VAL               0U
+#define OBDH_PARAM_MODE_DEFAULT_VAL                     0U
+#define OBDH_PARAM_TS_LAST_MODE_CHANGE_DEFAULT_VAL      0U
+#define OBDH_PARAM_MODE_DURATION_DEFAULT_VAL            0U
+#define OBDH_PARAM_INITIAL_HIB_EXECUTED_DEFAULT_VAL     0U
+#define OBDH_PARAM_INITIAL_HIB_TIME_COUNT_DEFAULT_VAL   0U
+#define OBDH_PARAM_ANT_DEPLOYMENT_EXECUTED_DEFAULT_VAL  0U
+#define OBDH_PARAM_ANT_DEPLOYMENT_COUNTER_DEFAULT_VAL   0U
+#define OBDH_PARAM_POSITION_TIMESTAMP_DEFAULT_VAL       0U
+#define OBDH_PARAM_POSITION_TLE_LINE1_DEFAULT_VAL       "1 44885U 19093G   24055.47450690  .00005228  00000-0  56684-3 0  9991"
+#define OBDH_PARAM_POSITION_TLE_LINE2_DEFAULT_VAL       "2 44885  97.8473 139.0522 0012434 335.2519  24.8100 14.88559378226444"
+#define OBDH_PARAM_POSITION_LATITUDE_DEFAULT_VAL        0U
+#define OBDH_PARAM_POSITION_LONGITUDE_DEFAULT_VAL       0U
+#define OBDH_PARAM_POSITION_ALTITUDE_DEFAULT_VAL        0U
+#define OBDH_PARAM_MEDIA_LAST_ADR_SAT_DATA_DEFAULT_VAL  0U
+#define OBDH_PARAM_MEDIA_LAST_ADR_PL_DATA_DEFAULT_VAL   0U
 
 /* Operation modes */
 #define OBDH_MODE_NORMAL            0
 #define OBDH_MODE_HIBERNATION       1
-
-/**
- * \brief Radio data.
- */
-typedef struct
-{
-    uint16_t temperature;           /**< Temperature in Kelvin. */
-    uint16_t last_valid_tc_rssi;    /**< RSSI of the last valid telecommand. */
-} radio_data_t;
 
 /**
  * \brief Position data.
@@ -93,6 +115,15 @@ typedef struct
 } position_data_t;
 
 /**
+ * \brief Media data.
+ */
+typedef struct
+{
+    uint32_t last_adr_sat_data;     /**< Last used memory address of the service module data. */
+    uint32_t last_adr_pl_data;      /**< Last used memory address of the payload data. */
+} media_data_t;
+
+/**
  * \brief OBDH data.
  */
 typedef struct
@@ -103,7 +134,6 @@ typedef struct
     uint8_t last_reset_cause;       /**< Last reset cause code. */
     uint16_t reset_counter;         /**< Reset counter. */
     uint8_t last_valid_tc;          /**< Last valid telecommand ID. */
-    radio_data_t radio;             /**< Radio data. */
     uint8_t hw_version;             /**< Hardware version. */
     uint32_t fw_version;            /**< Firmware version (ex.: "v1.2.3" = 0x00010203). */
     uint8_t mode;                   /**< Satellite mode. */
@@ -114,6 +144,7 @@ typedef struct
     bool ant_deployment_executed;   /**< Antenna deployment executed flag. */
     uint8_t ant_deployment_counter; /**< Antenna deployment counter. */
     position_data_t position;       /**< Current position of the satellite. */
+    media_data_t media;             /**< Memories data. */
 } obdh_data_t;
 
 #endif /* OBDH_DATA_H_ */
