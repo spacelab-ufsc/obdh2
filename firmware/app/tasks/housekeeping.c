@@ -25,13 +25,15 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.33
+ * \version 0.10.9
  * 
  * \date 2021/04/27
  * 
  * \addtogroup housekeeping
  * \{
  */
+
+#include <system/sys_log/sys_log.h>
 
 #include <devices/current_sensor/current_sensor.h>
 #include <devices/voltage_sensor/voltage_sensor.h>
@@ -60,6 +62,16 @@ void vTaskHousekeeping(void)
             {
                 sat_data_buf.obdh.data.mode = OBDH_MODE_NORMAL;
                 sat_data_buf.obdh.data.ts_last_mode_change = system_get_time();
+            }
+        }
+
+        /* Save the last available OBDH data at every minute */
+        if ((system_get_time() % (60U*1000U)) == 0U)
+        {
+            if (mem_mng_save_obdh_data_to_fram(sat_data_buf.obdh) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HOUSEKEEPING_NAME, "Error writing data to the FRAM memory!");
+                sys_log_new_line();
             }
         }
 
