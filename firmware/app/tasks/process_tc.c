@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.37
+ * \version 0.10.9
  * 
  * \date 2021/07/06
  * 
@@ -1022,8 +1022,6 @@ void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
                         case OBDH_PARAM_ID_LAST_RESET_CAUSE:    buf = sat_data_buf.obdh.data.last_reset_cause;          break;
                         case OBDH_PARAM_ID_RESET_COUNTER:       buf = sat_data_buf.obdh.data.reset_counter;             break;
                         case OBDH_PARAM_ID_LAST_VALID_TC:       buf = sat_data_buf.obdh.data.last_valid_tc;             break;
-                        case OBDH_PARAM_ID_TEMPERATURE_RADIO:   buf = sat_data_buf.obdh.data.radio.temperature;         break;
-                        case OBDH_PARAM_ID_RSSI_LAST_TC:        buf = sat_data_buf.obdh.data.radio.last_valid_tc_rssi;  break;
                         case OBDH_PARAM_ID_TEMPERATURE_ANTENNA: buf = sat_data_buf.antenna.data.temperature;            break;
                         case OBDH_PARAM_ID_ANTENNA_STATUS:      buf = sat_data_buf.antenna.data.status.code;            break;
                         case OBDH_PARAM_ID_HARDWARE_VERSION:    buf = sat_data_buf.obdh.data.hw_version;                break;
