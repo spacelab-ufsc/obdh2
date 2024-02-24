@@ -39,7 +39,7 @@
 
 #include <system/system.h>
 
-#include <app/structs/obdh_data.h>
+#include <app/structs/satellite.h>
 
 /**
  * \brief Checks if the FRAM memory is initialized or not.
@@ -63,26 +63,31 @@ int mem_mng_init_fram(void);
 int mem_mng_reset_fram(void);
 
 /**
+ * \brief Loads the OBDH data from default values.
+ *
+ * \param[in] tel is a pointer to store the default values of the OBDH data.
+ *
+ * \return None.
+ */
+void mem_mng_load_obdh_data_from_default_values(obdh_telemetry_t *tel);
+
+/**
  * \brief Saves the OBDH data to the FRAM memory.
  *
- * \param[in] data is the OBDH data structure with the data to be saved.
- *
- * \param[in] ts is the timestamp of the given data.
+ * \param[in] tel is the OBDH telemetry data to be saved.
  *
  * \return The status/error code.
  */
-int mem_mng_save_obdh_data_to_fram(obdh_data_t data, sys_time_t ts);
+int mem_mng_save_obdh_data_to_fram(obdh_telemetry_t tel);
 
 /**
  * \brief Loads the last saved OBDH data from the FRAM memory.
  *
- * \param[in] data is a pointer to store the read data.
- *
- * \param[in] ts is a pointer to store the read timestamp of the data.
+ * \param[in] tel is a pointer to store the read data.
  *
  * \return The status/error code.
  */
-int mem_mng_load_obdh_data_from_fram(obdh_data_t *data, sys_time_t *ts);
+int mem_mng_load_obdh_data_from_fram(obdh_telemetry_t *tel);
 
 #endif /* MEM_MNG_H_ */
 
