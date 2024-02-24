@@ -39,6 +39,8 @@
 
 #include <stdint.h>
 
+#include <config/config.h>
+
 #include <system/system.h>
 #include <devices/media/media.h>
 
@@ -68,8 +70,14 @@
 #define OBDH_PARAM_ID_LATITUDE                  22  /**< Latitude in degrees. */
 #define OBDH_PARAM_ID_LONGITUDE                 23  /**< Longitude in degrees. */
 #define OBDH_PARAM_ID_ALTITUDE                  24  /**< Altitude in kilometers. */
-#define OBDH_PARAM_ID_LAST_MEM_ADR_SAT_DATA     25  /**< Last used memory address of the service module data. */
-#define OBDH_PARAM_ID_LAST_MEM_ADR_PL_DATA      26  /**< Last used memory address of the payload data. */
+#define OBDH_PARAM_ID_LAST_PAGE_OBDH_DATA       25  /**< Last used memory page of the OBDH data. */
+#define OBDH_PARAM_ID_LAST_PAGE_EPS_DATA        26  /**< Last used memory page of the EPS data. */
+#define OBDH_PARAM_ID_LAST_PAGE_TTC_0_DATA      27  /**< Last used memory page of the TTC 0 data. */
+#define OBDH_PARAM_ID_LAST_PAGE_TTC_1_DATA      28  /**< Last used memory page of the TTC 1 data. */
+#define OBDH_PARAM_ID_LAST_PAGE_ANT_DATA        29  /**< Last used memory page of the Antenna data. */
+#define OBDH_PARAM_ID_LAST_PAGE_EDC_DATA        30  /**< Last used memory page of the EDC data. */
+#define OBDH_PARAM_ID_LAST_PAGE_PX_DATA         31  /**< Last used memory page of the Payload-X data. */
+#define OBDH_PARAM_ID_LAST_PAGE_SBCD_PKTS       32  /**< Last used memory page of the SBCD packets. */
 
 /* Default values */
 #define OBDH_TIMESTAMP_DEFAULT_VAL                      0U
@@ -94,8 +102,14 @@
 #define OBDH_PARAM_POSITION_LATITUDE_DEFAULT_VAL        0U
 #define OBDH_PARAM_POSITION_LONGITUDE_DEFAULT_VAL       0U
 #define OBDH_PARAM_POSITION_ALTITUDE_DEFAULT_VAL        0U
-#define OBDH_PARAM_MEDIA_LAST_ADR_SAT_DATA_DEFAULT_VAL  0U
-#define OBDH_PARAM_MEDIA_LAST_ADR_PL_DATA_DEFAULT_VAL   0U
+#define OBDH_PARAM_MEDIA_LAST_OBDH_DATA_DEFAULT_VAL     CONFIG_MEM_OBDH_DATA_START_PAGE
+#define OBDH_PARAM_MEDIA_LAST_EPS_DATA_DEFAULT_VAL      CONFIG_MEM_EPS_DATA_START_PAGE
+#define OBDH_PARAM_MEDIA_LAST_TTC_0_DATA_DEFAULT_VAL    CONFIG_MEM_TTC_0_DATA_START_PAGE
+#define OBDH_PARAM_MEDIA_LAST_TTC_1_DATA_DEFAULT_VAL    CONFIG_MEM_TTC_1_DATA_END_PAGE
+#define OBDH_PARAM_MEDIA_LAST_ANT_DATA_DEFAULT_VAL      CONFIG_MEM_ANT_DATA_START_PAGE
+#define OBDH_PARAM_MEDIA_LAST_EDC_DATA_DEFAULT_VAL      CONFIG_MEM_EDC_DATA_START_PAGE
+#define OBDH_PARAM_MEDIA_LAST_PX_DATA_DEFAULT_VAL       CONFIG_MEM_PX_DATA_START_PAGE
+#define OBDH_PARAM_MEDIA_LAST_SBCD_PKTS_DEFAULT_VAL     CONFIG_MEM_SBCD_PKTS_START_PAGE
 
 /* Operation modes */
 #define OBDH_MODE_NORMAL            0
@@ -119,8 +133,14 @@ typedef struct
  */
 typedef struct
 {
-    uint32_t last_adr_sat_data;     /**< Last used memory address of the service module data. */
-    uint32_t last_adr_pl_data;      /**< Last used memory address of the payload data. */
+    uint32_t last_page_obdh_data;   /**< Last used memory page of the OBDH data. */
+    uint32_t last_page_eps_data;    /**< Last used memory page of the EPS data. */
+    uint32_t last_page_ttc_0_data;  /**< Last used memory page of the TTC 0 data. */
+    uint32_t last_page_ttc_1_data;  /**< Last used memory page of the TTC 1 data. */
+    uint32_t last_page_ant_data;    /**< Last used memory page of the Antenna data. */
+    uint32_t last_page_edc_data;    /**< Last used memory page of the EDC data. */
+    uint32_t last_page_px_data;     /**< Last used memory page of the Payload-X data. */
+    uint32_t last_page_sbcd_pkts;   /**< Last used memory page of the SBCD packets. */
 } media_data_t;
 
 /**

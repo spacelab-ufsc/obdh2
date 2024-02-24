@@ -88,23 +88,23 @@ int mem_mng_reset_fram(void)
 
 void mem_mng_load_obdh_data_from_default_values(obdh_telemetry_t *tel)
 {
-    tel->timestamp                      = OBDH_TIMESTAMP_DEFAULT_VAL;
-    tel->data.temperature               = OBDH_PARAM_TEMPERATURE_UC_DEFAULT_VAL;
-    tel->data.current                   = OBDH_PARAM_CURRENT_DEFAULT_VAL;
-    tel->data.voltage                   = OBDH_PARAM_VOLTAGE_DEFAULT_VAL;
-    tel->data.last_reset_cause          = OBDH_PARAM_LAST_RESET_CAUSE_DEFAULT_VAL;
-    tel->data.reset_counter             = OBDH_PARAM_RESET_COUNTER_DEFAULT_VAL;
-    tel->data.last_valid_tc             = OBDH_PARAM_LAST_VALID_TC_DEFAULT_VAL;
-    tel->data.hw_version                = OBDH_PARAM_HW_VERSION_DEFAULT_VAL;
-    tel->data.fw_version                = OBDH_PARAM_FW_VERSION_DEFAULT_VAL;
-    tel->data.mode                      = OBDH_PARAM_MODE_DEFAULT_VAL;
-    tel->data.ts_last_mode_change       = OBDH_PARAM_TS_LAST_MODE_CHANGE_DEFAULT_VAL;
-    tel->data.mode_duration             = OBDH_PARAM_MODE_DURATION_DEFAULT_VAL;
-    tel->data.initial_hib_executed      = OBDH_PARAM_INITIAL_HIB_EXECUTED_DEFAULT_VAL;
-    tel->data.initial_hib_time_count    = OBDH_PARAM_INITIAL_HIB_TIME_COUNT_DEFAULT_VAL;
-    tel->data.ant_deployment_executed   = OBDH_PARAM_ANT_DEPLOYMENT_EXECUTED_DEFAULT_VAL;
-    tel->data.ant_deployment_counter    = OBDH_PARAM_ANT_DEPLOYMENT_COUNTER_DEFAULT_VAL;
-    tel->data.position.timestamp        = OBDH_PARAM_POSITION_TIMESTAMP_DEFAULT_VAL;
+    tel->timestamp                          = OBDH_TIMESTAMP_DEFAULT_VAL;
+    tel->data.temperature                   = OBDH_PARAM_TEMPERATURE_UC_DEFAULT_VAL;
+    tel->data.current                       = OBDH_PARAM_CURRENT_DEFAULT_VAL;
+    tel->data.voltage                       = OBDH_PARAM_VOLTAGE_DEFAULT_VAL;
+    tel->data.last_reset_cause              = OBDH_PARAM_LAST_RESET_CAUSE_DEFAULT_VAL;
+    tel->data.reset_counter                 = OBDH_PARAM_RESET_COUNTER_DEFAULT_VAL;
+    tel->data.last_valid_tc                 = OBDH_PARAM_LAST_VALID_TC_DEFAULT_VAL;
+    tel->data.hw_version                    = OBDH_PARAM_HW_VERSION_DEFAULT_VAL;
+    tel->data.fw_version                    = OBDH_PARAM_FW_VERSION_DEFAULT_VAL;
+    tel->data.mode                          = OBDH_PARAM_MODE_DEFAULT_VAL;
+    tel->data.ts_last_mode_change           = OBDH_PARAM_TS_LAST_MODE_CHANGE_DEFAULT_VAL;
+    tel->data.mode_duration                 = OBDH_PARAM_MODE_DURATION_DEFAULT_VAL;
+    tel->data.initial_hib_executed          = OBDH_PARAM_INITIAL_HIB_EXECUTED_DEFAULT_VAL;
+    tel->data.initial_hib_time_count        = OBDH_PARAM_INITIAL_HIB_TIME_COUNT_DEFAULT_VAL;
+    tel->data.ant_deployment_executed       = OBDH_PARAM_ANT_DEPLOYMENT_EXECUTED_DEFAULT_VAL;
+    tel->data.ant_deployment_counter        = OBDH_PARAM_ANT_DEPLOYMENT_COUNTER_DEFAULT_VAL;
+    tel->data.position.timestamp            = OBDH_PARAM_POSITION_TIMESTAMP_DEFAULT_VAL;
 
     uint8_t tle_line1[70] = OBDH_PARAM_POSITION_TLE_LINE1_DEFAULT_VAL;
     uint8_t tle_line2[70] = OBDH_PARAM_POSITION_TLE_LINE2_DEFAULT_VAL;
@@ -112,11 +112,17 @@ void mem_mng_load_obdh_data_from_default_values(obdh_telemetry_t *tel)
     memcpy(&tel->data.position.tle_line1, &tle_line1[0], 70U);
     memcpy(&tel->data.position.tle_line2, &tle_line2[0], 70U);
 
-    tel->data.position.latitude         = OBDH_PARAM_POSITION_LATITUDE_DEFAULT_VAL;
-    tel->data.position.longitude        = OBDH_PARAM_POSITION_LONGITUDE_DEFAULT_VAL;
-    tel->data.position.altitude         = OBDH_PARAM_POSITION_ALTITUDE_DEFAULT_VAL;
-    tel->data.media.last_adr_sat_data   = OBDH_PARAM_MEDIA_LAST_ADR_SAT_DATA_DEFAULT_VAL;
-    tel->data.media.last_adr_pl_data    = OBDH_PARAM_MEDIA_LAST_ADR_PL_DATA_DEFAULT_VAL;
+    tel->data.position.latitude             = OBDH_PARAM_POSITION_LATITUDE_DEFAULT_VAL;
+    tel->data.position.longitude            = OBDH_PARAM_POSITION_LONGITUDE_DEFAULT_VAL;
+    tel->data.position.altitude             = OBDH_PARAM_POSITION_ALTITUDE_DEFAULT_VAL;
+    tel->data.media.last_page_obdh_data     = OBDH_PARAM_MEDIA_LAST_OBDH_DATA_DEFAULT_VAL;
+    tel->data.media.last_page_eps_data      = OBDH_PARAM_MEDIA_LAST_EPS_DATA_DEFAULT_VAL;
+    tel->data.media.last_page_ttc_0_data    = OBDH_PARAM_MEDIA_LAST_TTC_0_DATA_DEFAULT_VAL;
+    tel->data.media.last_page_ttc_1_data    = OBDH_PARAM_MEDIA_LAST_TTC_1_DATA_DEFAULT_VAL;
+    tel->data.media.last_page_ant_data      = OBDH_PARAM_MEDIA_LAST_ANT_DATA_DEFAULT_VAL;
+    tel->data.media.last_page_edc_data      = OBDH_PARAM_MEDIA_LAST_EDC_DATA_DEFAULT_VAL;
+    tel->data.media.last_page_px_data       = OBDH_PARAM_MEDIA_LAST_PX_DATA_DEFAULT_VAL;
+    tel->data.media.last_page_sbcd_pkts     = OBDH_PARAM_MEDIA_LAST_SBCD_PKTS_DEFAULT_VAL;
 }
 
 int mem_mng_save_obdh_data_to_fram(obdh_telemetry_t tel)
