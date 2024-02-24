@@ -132,8 +132,8 @@
 
 /* Memory */
 #define CONFIG_MEM_ADR_INIT_WORD                        0
-#define CONFIG_MEM_ADR_SYS_PARAM                        256
-#define CONFIG_MEM_ADR_SYS_TIME                         512
+#define CONFIG_MEM_ADR_SYS_TIME                         256
+#define CONFIG_MEM_ADR_SYS_PARAM                        512
 #define CONFIG_MEM_INIT_WORD                            {228, 80, 142, 227, 77, 121, 176, 244}
 #define CONFIG_MEM_OBDH_DATA_START_PAGE                 0U
 #define CONFIG_MEM_OBDH_DATA_END_PAGE                   56999U
