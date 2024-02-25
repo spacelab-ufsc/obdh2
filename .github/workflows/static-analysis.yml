@@ -1,7 +1,7 @@
 #
 # static-analysis-workflow.yml
 #
-# Copyright (C) 2021, SpaceLab.
+# Copyright The OBDH 2.0 Contributors.
 #
 # This file is part of OBDH 2.0.
 #
@@ -49,7 +49,13 @@ jobs:
         run: sudo apt install -y cppcheck
 
       - name: Execute CppCheck on tasks files
-        run: cppcheck --std=c99 --force --error-exitcode=-1 --addon=misra.py firmware/app/tasks/
+        run: cppcheck --std=c99 --force --error-exitcode=-1 --inline-suppr --addon=misra.py firmware/app/tasks/
+
+      - name: Execute CppCheck on utils files
+        run: cppcheck --std=c99 --force --error-exitcode=-1 --addon=misra.py firmware/app/utils/
+
+      - name: Execute CppCheck on structs files
+        run: cppcheck --std=c99 --force --error-exitcode=-1 --addon=misra.py firmware/app/structs/
 
       - name: Execute CppCheck on devices files
         run: cppcheck --std=c99 --error-exitcode=-1 --addon=misra.py firmware/devices/
