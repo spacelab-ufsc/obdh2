@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.10
+ * \version 0.10.11
  * 
  * \date 2021/07/06
  * 
@@ -847,6 +847,15 @@ void process_tc_erase_memory(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U, &pkt[8], 20U, tc_key, sizeof(CONFIG_TC_KEY_ERASE_MEMORY)-1U))
         {
+            sat_data_buf.obdh.data.media.last_page_obdh_data    = CONFIG_MEM_OBDH_DATA_START_PAGE;
+            sat_data_buf.obdh.data.media.last_page_eps_data     = CONFIG_MEM_EPS_DATA_START_PAGE;
+            sat_data_buf.obdh.data.media.last_page_ttc_0_data   = CONFIG_MEM_TTC_0_DATA_START_PAGE;
+            sat_data_buf.obdh.data.media.last_page_ttc_1_data   = CONFIG_MEM_TTC_1_DATA_END_PAGE;
+            sat_data_buf.obdh.data.media.last_page_ant_data     = CONFIG_MEM_ANT_DATA_START_PAGE;
+            sat_data_buf.obdh.data.media.last_page_edc_data     = CONFIG_MEM_EDC_DATA_START_PAGE;
+            sat_data_buf.obdh.data.media.last_page_px_data      = CONFIG_MEM_PX_DATA_START_PAGE;
+            sat_data_buf.obdh.data.media.last_page_sbcd_pkts    = CONFIG_MEM_SBCD_PKTS_START_PAGE;
+
             if (media_erase(MEDIA_NOR, MEDIA_ERASE_DIE, 0U) != 0)
             {
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error erasing the NOR memory!");
