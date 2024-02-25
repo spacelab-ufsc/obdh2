@@ -45,7 +45,7 @@ int mem_mng_check_fram(void)
     int err = -1;
 
     uint8_t mem_word_ref[8] = CONFIG_MEM_INIT_WORD;
-    uint8_t mem_word[8] = {0U};
+    uint8_t mem_word[8] = {0};
 
     if (media_read(MEDIA_FRAM, CONFIG_MEM_ADR_INIT_WORD, mem_word, 8U) == 0)
     {
@@ -76,7 +76,7 @@ int mem_mng_reset_fram(void)
 {
     int err = -1;
 
-    uint8_t mem_word[8] = {0U};
+    uint8_t mem_word[8] = {0};
 
     if (media_write(MEDIA_FRAM, CONFIG_MEM_ADR_INIT_WORD, mem_word, 8U) == 0)
     {
@@ -129,7 +129,7 @@ int mem_mng_save_obdh_data_to_fram(obdh_telemetry_t tel)
 {
     int err = -1;
 
-    uint8_t buf[256] = {0U};
+    uint8_t buf[256] = {0};
 
     memcpy(&buf[0], &tel, sizeof(obdh_telemetry_t));
 
@@ -145,7 +145,7 @@ int mem_mng_load_obdh_data_from_fram(obdh_telemetry_t *tel)
 {
     int err = -1;
 
-    uint8_t sys_par[256] = {0U};
+    uint8_t sys_par[256] = {0};
 
     if (media_read(MEDIA_FRAM, CONFIG_MEM_ADR_SYS_PARAM, sys_par, sizeof(obdh_telemetry_t)) == 0)
     {

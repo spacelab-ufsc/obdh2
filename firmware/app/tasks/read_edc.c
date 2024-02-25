@@ -89,7 +89,7 @@ void vTaskReadEDC(void)
                     uint8_t i = 0;
                     for(i = 0; i < state.ptt_available; i++)
                     {
-                        uint8_t ptt_arr[50] = {0U};
+                        uint8_t ptt_arr[50] = {0};
                         uint32_t ptt_len = 0;
 
                         if (payload_get_data(pl_edc_active, PAYLOAD_EDC_PTT, ptt_arr, &ptt_len) == 0)

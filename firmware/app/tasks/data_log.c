@@ -69,14 +69,15 @@ void vTaskDataLog(void)
     media_info_t nor_info = media_get_info(MEDIA_NOR);
 
     uint32_t mem_page = 0U;
-    uint8_t page_buf[256] = {0U};
+    uint8_t page_buf[256] = {0};
+    uint8_t *null_ptr;
 
     while(1)
     {
         TickType_t last_cycle = xTaskGetTickCount();
 
         /* OBDH data */
-        memcpy(&page_buf[0], &sat_data_buf.obdh, sizeof(obdh_telemetry_t));
+        null_ptr = memcpy(&page_buf[0], &sat_data_buf.obdh, sizeof(obdh_telemetry_t));
 
         if (write_data_to_flash_page(page_buf, &sat_data_buf.obdh.data.media.last_page_obdh_data, nor_info.page_size, CONFIG_MEM_OBDH_DATA_START_PAGE, CONFIG_MEM_OBDH_DATA_END_PAGE) != 0)
         {
@@ -84,10 +85,10 @@ void vTaskDataLog(void)
             sys_log_new_line();
         }
 
-        memset(&page_buf[0], 0, 256);
+        null_ptr = memset(&page_buf[0], 0, 256);
 
         /* EPS data */
-        memcpy(&page_buf[0], &sat_data_buf.eps, sizeof(eps_telemetry_t));
+        null_ptr = memcpy(&page_buf[0], &sat_data_buf.eps, sizeof(eps_telemetry_t));
 
         if (write_data_to_flash_page(page_buf, &sat_data_buf.obdh.data.media.last_page_eps_data, nor_info.page_size, CONFIG_MEM_EPS_DATA_START_PAGE, CONFIG_MEM_EPS_DATA_END_PAGE) != 0)
         {
@@ -95,10 +96,10 @@ void vTaskDataLog(void)
             sys_log_new_line();
         }
 
-        memset(&page_buf[0], 0, 256);
+        null_ptr = memset(&page_buf[0], 0, 256);
 
         /* TTC 0 data */
-        memcpy(&page_buf[0], &sat_data_buf.ttc_0, sizeof(ttc_telemetry_t));
+        null_ptr = memcpy(&page_buf[0], &sat_data_buf.ttc_0, sizeof(ttc_telemetry_t));
 
         if (write_data_to_flash_page(page_buf, &sat_data_buf.obdh.data.media.last_page_ttc_0_data, nor_info.page_size, CONFIG_MEM_TTC_0_DATA_START_PAGE, CONFIG_MEM_TTC_0_DATA_END_PAGE) != 0)
         {
@@ -106,10 +107,10 @@ void vTaskDataLog(void)
             sys_log_new_line();
         }
 
-        memset(&page_buf[0], 0, 256);
+        null_ptr = memset(&page_buf[0], 0, 256);
 
         /* TTC 1 data */
-        memcpy(&page_buf[0], &sat_data_buf.ttc_1, sizeof(ttc_telemetry_t));
+        null_ptr = memcpy(&page_buf[0], &sat_data_buf.ttc_1, sizeof(ttc_telemetry_t));
 
         if (write_data_to_flash_page(page_buf, &sat_data_buf.obdh.data.media.last_page_ttc_1_data, nor_info.page_size, CONFIG_MEM_TTC_1_DATA_START_PAGE, CONFIG_MEM_TTC_1_DATA_END_PAGE) != 0)
         {
@@ -117,10 +118,10 @@ void vTaskDataLog(void)
             sys_log_new_line();
         }
 
-        memset(&page_buf[0], 0, 256);
+        null_ptr = memset(&page_buf[0], 0, 256);
 
         /* Antenna data */
-        memcpy(&page_buf[0], &sat_data_buf.antenna, sizeof(antenna_telemetry_t));
+        null_ptr = memcpy(&page_buf[0], &sat_data_buf.antenna, sizeof(antenna_telemetry_t));
 
         if (write_data_to_flash_page(page_buf, &sat_data_buf.obdh.data.media.last_page_ant_data, nor_info.page_size, CONFIG_MEM_ANT_DATA_START_PAGE, CONFIG_MEM_ANT_DATA_END_PAGE) != 0)
         {
@@ -128,10 +129,10 @@ void vTaskDataLog(void)
             sys_log_new_line();
         }
 
-        memset(&page_buf[0], 0, 256);
+        null_ptr = memset(&page_buf[0], 0, 256);
 
         /* EDC data */
-        memcpy(&page_buf[0], &sat_data_buf.edc_0, sizeof(payload_telemetry_t));
+        null_ptr = memcpy(&page_buf[0], &sat_data_buf.edc_0, sizeof(payload_telemetry_t));
 
         if (write_data_to_flash_page(page_buf, &sat_data_buf.obdh.data.media.last_page_edc_data, nor_info.page_size, CONFIG_MEM_EDC_DATA_START_PAGE, CONFIG_MEM_EDC_DATA_END_PAGE) != 0)
         {
@@ -139,10 +140,10 @@ void vTaskDataLog(void)
             sys_log_new_line();
         }
 
-        memset(&page_buf[0], 0, 256);
+        null_ptr = memset(&page_buf[0], 0, 256);
 
         /* Payload-X data */
-        memcpy(&page_buf[0], &sat_data_buf.payload_x, sizeof(payload_telemetry_t));
+        null_ptr = memcpy(&page_buf[0], &sat_data_buf.payload_x, sizeof(payload_telemetry_t));
 
         if (write_data_to_flash_page(page_buf, &sat_data_buf.obdh.data.media.last_page_px_data, nor_info.page_size, CONFIG_MEM_PX_DATA_START_PAGE, CONFIG_MEM_PX_DATA_END_PAGE) != 0)
         {
@@ -150,7 +151,7 @@ void vTaskDataLog(void)
             sys_log_new_line();
         }
 
-        memset(&page_buf[0], 0, 256);
+        null_ptr = memset(&page_buf[0], 0, 256);
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_DATA_LOG_PERIOD_MS));
     }
@@ -162,11 +163,11 @@ int write_data_to_flash_page(uint8_t *data, uint32_t *page, uint32_t page_size, 
 
     if (media_write(MEDIA_NOR, (*page) * page_size, data, page_size) == 0)
     {
-        *page++;
+        *page++;    // cppcheck-suppress misra-c2012-17.8
 
-        if (*page > CONFIG_MEM_OBDH_DATA_END_PAGE)
+        if (*page > end_page)
         {
-            *page = CONFIG_MEM_OBDH_DATA_START_PAGE;
+            *page = start_page;
         }
 
         err = 0;
