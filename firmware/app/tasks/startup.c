@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.9.20
+ * \version 0.10.9
  * 
  * \date 2019/12/04
  * 
@@ -48,6 +48,7 @@
 #include <devices/antenna/antenna.h>
 #include <devices/media/media.h>
 #include <devices/payload/payload.h>
+#include <app/structs/satellite.h>
 
 #include "startup.h"
 
@@ -100,7 +101,38 @@ void vTaskStartup(void)
     /* FRAM memory initialization */
     if (system_get_hw_version() >= HW_VERSION_1)
     {
-        if (media_init(MEDIA_FRAM) != 0)
+        if (media_init(MEDIA_FRAM) == 0)
+        {
+            /* Check if FRAM is initialized */
+            if (mem_mng_check_fram() == 0)
+            {
+                /* Load last saved OBDH data from FRAM */
+                if (mem_mng_load_obdh_data_from_fram(&sat_data_buf.obdh) != 0)
+                {
+                    error_counter++;
+                }
+            }
+            else
+            {
+                /* Initialize FRAM */
+                if (mem_mng_init_fram() == 0)
+                {
+                    /* Load default values to the OBDH data buffer */
+                    mem_mng_load_obdh_data_from_default_values(&sat_data_buf.obdh);
+
+                    /* Write the OBDH data to the FRAM memory */
+                    if (mem_mng_save_obdh_data_to_fram(sat_data_buf.obdh) != 0)
+                    {
+                        error_counter++;
+                    }
+                }
+                else
+                {
+                    error_counter++;
+                }
+            }
+        }
+        else
         {
             error_counter++;
         }

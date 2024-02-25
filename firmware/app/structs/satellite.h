@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.22
+ * \version 0.10.9
  * 
  * \date 2020/07/16
  * 
@@ -107,7 +107,6 @@ typedef struct
     payload_telemetry_t edc_0;      /**< EDC 0 telemetry. */
     payload_telemetry_t edc_1;      /**< EDC 1 telemetry. */
     payload_telemetry_t payload_x;  /**< Payload-X telemetry. */
-    payload_telemetry_t harsh;      /**< Harsh payload telemetry. */
 } sat_data_t;
 
 /**

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.32
+ * \version 0.10.9
  * 
  * \date 2019/10/27
  * 
@@ -156,9 +156,8 @@ void vTaskBeacon(void)
         }
 
         beacon_pl.payload[67] = sat_data_buf.payload_x.enabled ? 0x01U : 0x00U;
-        beacon_pl.payload[68] = sat_data_buf.harsh.enabled ? 0x01U : 0x00U;
 
-        beacon_pl.length = 69U;
+        beacon_pl.length = 68U;
 
         uint8_t beacon_pl_raw[220] = {0};
         uint16_t beacon_pl_raw_len = 0;
