@@ -131,11 +131,12 @@ int mem_mng_save_obdh_data_to_fram(obdh_telemetry_t tel)
 
     uint8_t buf[256] = {0};
 
-    memcpy(&buf[0], &tel, sizeof(obdh_telemetry_t));
-
-    if (media_write(MEDIA_FRAM, CONFIG_MEM_ADR_SYS_PARAM, buf, 256U) == 0)
+    if (memcpy(&buf[0], &tel, sizeof(obdh_telemetry_t)) == &buf[0])
     {
-        err = 0;
+        if (media_write(MEDIA_FRAM, CONFIG_MEM_ADR_SYS_PARAM, buf, 256U) == 0)
+        {
+            err = 0;
+        }
     }
 
     return err;
@@ -149,9 +150,10 @@ int mem_mng_load_obdh_data_from_fram(obdh_telemetry_t *tel)
 
     if (media_read(MEDIA_FRAM, CONFIG_MEM_ADR_SYS_PARAM, sys_par, sizeof(obdh_telemetry_t)) == 0)
     {
-        memcpy(&tel, &sys_par[0], sizeof(obdh_telemetry_t));
-
-        err = 0;
+        if (memcpy(&tel, &sys_par[0], sizeof(obdh_telemetry_t)) == &tel)
+        {
+            err = 0;
+        }
     }
 
     return err;
