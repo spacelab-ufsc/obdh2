@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.11
+ * \version 0.10.12
  * 
  * \date 2021/07/06
  * 
@@ -395,25 +395,67 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 {
     if (pkt_len >= (1U + 7U + 1U + 4U + 4U))
     {
-        fsat_pkt_pl_t data_pl = {0};
+        fsat_pkt_pl_t data_req_ans_pkt = {0};
+        uint8_t data_req_ans_pl[220] = {0};
+        uint8_t data_req_ans_raw[300] = {0};
+        uint16_t data_req_ans_raw_len = UINT16_MAX;
 
         /* Packet ID */
-        fsat_pkt_add_id(&data_pl, CONFIG_PKT_ID_DOWNLINK_DATA_REQUEST_ANS);
+        fsat_pkt_add_id(&data_req_ans_pkt, CONFIG_PKT_ID_DOWNLINK_DATA_REQUEST_ANS);
 
         /* Source callsign */
-        fsat_pkt_add_callsign(&data_pl, CONFIG_SATELLITE_CALLSIGN);
+        fsat_pkt_add_callsign(&data_req_ans_pkt, CONFIG_SATELLITE_CALLSIGN);
 
         uint8_t tc_key[16] = CONFIG_TC_KEY_DATA_REQUEST;
 
         if (process_tc_validate_hmac(pkt, 1U + 7U + 1U + 4U + 4U, &pkt[17], 20U, tc_key, sizeof(CONFIG_TC_KEY_DATA_REQUEST)-1U))
         {
+            uint16_t start_idx = ((uint32_t)pkt[9] << 24) | ((uint32_t)pkt[10] << 16) | ((uint32_t)pkt[11] << 8) | (uint32_t)pkt[12];
+            uint16_t end_idx = ((uint32_t)pkt[13] << 24) | ((uint32_t)pkt[14] << 16) | ((uint32_t)pkt[15] << 8) | (uint32_t)pkt[16];
+
+            media_info_t nor_info = media_get_info(MEDIA_NOR);
+
             switch(pkt[8])
             {
                 case CONFIG_DATA_ID_OBDH:
-                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_PROCESS_TC_NAME, "OBDH data request not implemented!");
-                    sys_log_new_line();
+                {
+                    uint32_t start_page = sat_data_buf.obdh.data.media.last_page_obdh_data - (uint32_t)end_idx;
+                    uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_obdh_data - (uint32_t)start_idx;
+
+                    uint8_t page_buf[256] = {0};
+
+                    uint32_t i = 0;
+                    for(i = start_page; i < end_page; i++)
+                    {
+                        if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(obdh_telemetry_t)) == 0)
+                        {
+                            /* Requester callsign */
+                            if (memcpy(&data_req_ans_pl[0], &pkt[1], 7) == &data_req_ans_pl[0])
+                            {
+                                /* Data ID */
+                                data_req_ans_pl[7] = CONFIG_DATA_ID_OBDH;
+
+                                /* Timestamp and Data */
+                                if (memcpy(&data_req_ans_pl[7 + 1], &page_buf[0], sizeof(obdh_telemetry_t)) == &data_req_ans_pl[7 + 1])
+                                {
+                                    fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, 7U + 1U + sizeof(obdh_telemetry_t));
+
+                                    fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                                    if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                    {
+                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the OBDH data log of memory page ");
+                                        sys_log_print_uint(i);
+                                        sys_log_print_msg("!");
+                                        sys_log_new_line();
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     break;
+                }
                 case CONFIG_DATA_ID_EPS:
                     sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_PROCESS_TC_NAME, "EPS data request not implemented!");
                     sys_log_new_line();
@@ -426,6 +468,11 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                     break;
                 case CONFIG_DATA_ID_TTC_1:
                     sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_PROCESS_TC_NAME, "TTC 1 data request not implemented!");
+                    sys_log_new_line();
+
+                    break;
+                case CONFIG_DATA_ID_ANT:
+                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_PROCESS_TC_NAME, "Antenna data request not implemented!");
                     sys_log_new_line();
 
                     break;

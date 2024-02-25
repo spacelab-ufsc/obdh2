@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.9
+ * \version 0.10.12
  * 
  * \date 2019/10/26
  * 
@@ -120,6 +120,7 @@
 #define CONFIG_DATA_ID_EPS                              1
 #define CONFIG_DATA_ID_TTC_0                            2
 #define CONFIG_DATA_ID_TTC_1                            3
+#define CONFIG_DATA_ID_ANT                              4
 
 /* Ports */
 #define CONFIG_SPI_PORT_0_SPEED_BPS                     100000UL
