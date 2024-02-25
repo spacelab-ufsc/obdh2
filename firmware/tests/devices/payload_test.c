@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Bruno Benedetti <brunobenedetti45@gmail.com> 
  * 
- * \version 0.10.8
+ * \version 0.10.10
  * 
  * \date 2021/08/16
  * 
@@ -242,8 +242,6 @@ static void payload_get_data_test(void **state)
 
 //    assert_return_code(payload_get_data(PAYLOAD_EDC_0, PAYLOAD_EDC_RAW_HK, raw_hk_data, &raw_hk_len), 0);
 //    assert_return_code(payload_get_data(PAYLOAD_X, ), 0);
-//    assert_return_code(payload_get_data(PAYLOAD_PHJ, ), 0);
-//    assert_return_code(payload_get_data(PAYLOAD_HARSH, ), 0);
 }
 
 int main(void)

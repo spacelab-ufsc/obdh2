@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.9.7
+ * \version 0.10.10
  * 
  * \date 2021/08/15
  * 
@@ -48,9 +48,7 @@ typedef enum
 {
     PAYLOAD_EDC_0=0,            /**< Payload EDC 0. */
     PAYLOAD_EDC_1,              /**< Payload EDC 1. */
-    PAYLOAD_X,                  /**< Payload-X. */
-    PAYLOAD_PHJ,                /**< Payload PHJ. */
-    PAYLOAD_HARSH               /**< Payload Harsh. */
+    PAYLOAD_X                   /**< Payload-X. */
 } payload_t;
 
 /**
@@ -80,8 +78,6 @@ typedef uint8_t payload_cmd_t;
  *      -\b PAYLOAD_EDC_0
  *      -\b PAYLOAD_EDC_1
  *      -\b PAYLOAD_X
- *      -\b PAYLOAD_PHJ
- *      -\b PAYLOAD_HARSH
  *      .
  * \endparblock
  *
@@ -97,8 +93,6 @@ int payload_init(payload_t pl);
  *      -\b PAYLOAD_EDC_0
  *      -\b PAYLOAD_EDC_1
  *      -\b PAYLOAD_X
- *      -\b PAYLOAD_PHJ
- *      -\b PAYLOAD_HARSH
  *      .
  * \endparblock
  *
@@ -114,8 +108,6 @@ int payload_enable(payload_t pl);
  *      -\b PAYLOAD_EDC_0
  *      -\b PAYLOAD_EDC_1
  *      -\b PAYLOAD_X
- *      -\b PAYLOAD_PHJ
- *      -\b PAYLOAD_HARSH
  *      .
  * \endparblock
  *
@@ -131,8 +123,6 @@ int payload_disable(payload_t pl);
  *      -\b PAYLOAD_EDC_0
  *      -\b PAYLOAD_EDC_1
  *      -\b PAYLOAD_X
- *      -\b PAYLOAD_PHJ
- *      -\b PAYLOAD_HARSH
  *      .
  * \endparblock
  *
@@ -150,8 +140,6 @@ int payload_write_cmd(payload_t pl, payload_cmd_t cmd);
  *      -\b PAYLOAD_EDC_0
  *      -\b PAYLOAD_EDC_1
  *      -\b PAYLOAD_X
- *      -\b PAYLOAD_PHJ
- *      -\b PAYLOAD_HARSH
  *      .
  * \endparblock
  *

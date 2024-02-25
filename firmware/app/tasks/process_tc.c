@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.9
+ * \version 0.10.10
  * 
  * \date 2021/07/06
  * 
@@ -746,29 +746,6 @@ void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
 
                 break;
             }
-            case CONFIG_PL_ID_RADIATION_MONITOR:
-            {
-                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the Harsh payload...");
-                sys_log_new_line();
-
-                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_PAYLOAD_HARSH;
-
-                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_PAYLOAD_HARSH)-1U))
-                {
-                    if (payload_enable(PAYLOAD_HARSH) != 0)
-                    {
-                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the Harsh payload!");
-                        sys_log_new_line();
-                    }
-                }
-                else
-                {
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the Harsh payload! Invalid key!");
-                    sys_log_new_line();
-                }
-
-                break;
-            }
             default:
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid payload to activate!");
                 sys_log_new_line();
@@ -848,29 +825,6 @@ void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
                 else
                 {
                     sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the Payload-X payload! Invalid key!");
-                    sys_log_new_line();
-                }
-
-                break;
-            }
-            case CONFIG_PL_ID_RADIATION_MONITOR:
-            {
-                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the Harsh payload...");
-                sys_log_new_line();
-
-                uint8_t tc_key[16] = CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_HARSH;
-
-                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_HARSH)-1U))
-                {
-                    if (payload_disable(PAYLOAD_HARSH) != 0)
-                    {
-                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the Harsh payload!");
-                        sys_log_new_line();
-                    }
-                }
-                else
-                {
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the Harsh payload! Invalid key!");
                     sys_log_new_line();
                 }
 
