@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.12
+ * \version 0.10.13
  * 
  * \date 2021/07/06
  * 
@@ -410,8 +410,8 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U + 1U + 4U + 4U, &pkt[17], 20U, tc_key, sizeof(CONFIG_TC_KEY_DATA_REQUEST)-1U))
         {
-            uint16_t start_idx = ((uint32_t)pkt[9] << 24) | ((uint32_t)pkt[10] << 16) | ((uint32_t)pkt[11] << 8) | (uint32_t)pkt[12];
-            uint16_t end_idx = ((uint32_t)pkt[13] << 24) | ((uint32_t)pkt[14] << 16) | ((uint32_t)pkt[15] << 8) | (uint32_t)pkt[16];
+            uint32_t start_idx = ((uint32_t)pkt[9] << 24) | ((uint32_t)pkt[10] << 16) | ((uint32_t)pkt[11] << 8) | (uint32_t)pkt[12];
+            uint32_t end_idx = ((uint32_t)pkt[13] << 24) | ((uint32_t)pkt[14] << 16) | ((uint32_t)pkt[15] << 8) | (uint32_t)pkt[16];
 
             media_info_t nor_info = media_get_info(MEDIA_NOR);
 
