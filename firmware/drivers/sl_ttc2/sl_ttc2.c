@@ -39,6 +39,7 @@
 #include <system/sys_log/sys_log.h>
 
 #include "sl_ttc2.h"
+#include "sl_ttc2_mutex.h"
 
 /* TTC 2.0 registers lenght in bytes */
 #define SL_TTC2_REG_DEVICE_ID_NUM_BYTES                     2
@@ -101,6 +102,8 @@ static uint8_t sl_ttc2_get_reg_num_bytes(uint8_t adr);
 
 int sl_ttc2_init(sl_ttc2_config_t config)
 {
+    static bool mutex_is_initialized = false;
+
     int err = -1;
 
     if (sl_ttc2_spi_init(config) == 0)
@@ -118,6 +121,16 @@ int sl_ttc2_init(sl_ttc2_config_t config)
         sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error initializing the SPI port!");
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+    }
+
+    if (!mutex_is_initialized)
+    {
+        err = sl_ttc2_mutex_create();
+
+        if (err == 0)
+        {
+            mutex_is_initialized = true;
+        }
     }
 
     return err;
@@ -172,6 +185,8 @@ int sl_ttc2_check_device(sl_ttc2_config_t config)
 
 int sl_ttc2_write_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t val)
 {
+    int retval = -1;
+
     uint8_t buf[8] = {0};
 
     /* Adding preamble byte */
@@ -266,7 +281,15 @@ int sl_ttc2_write_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t val)
             break;
     }
 
-    return sl_ttc2_spi_write(config, buf, 7U);
+    sl_ttc2_mutex_take();
+
+    retval = sl_ttc2_spi_write(config, buf, 7U);
+
+    sl_ttc2_delay_ms(110);
+
+    sl_ttc2_mutex_give();
+
+    return retval;
 }
 
 int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
@@ -285,10 +308,12 @@ int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
     /* Register address */
     wbuf[2] = adr;
 
+    sl_ttc2_mutex_take();
+
     /* Register data */
     if (sl_ttc2_spi_write(config, wbuf, 7U) == 0)
     {
-        sl_ttc2_delay_ms(100);
+        sl_ttc2_delay_ms(110);
 
         if (sl_ttc2_spi_read(config, rbuf, 7U) == 0)
         {
@@ -355,6 +380,10 @@ int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
         sys_log_new_line();
     #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
     }
+
+    sl_ttc2_delay_ms(110);
+
+    sl_ttc2_mutex_give();
 
     return err;
 }
@@ -470,6 +499,7 @@ int sl_ttc2_read_hk_data(sl_ttc2_config_t config, sl_ttc2_hk_data_t *data)
     }
 
     return err_counter;
+
 }
 
 int sl_ttc2_read_device_id(sl_ttc2_config_t config, uint16_t *val)
@@ -793,15 +823,21 @@ int sl_ttc2_transmit_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t len
     /* Packet lenght */
     buf[2] = len;
 
+    sl_ttc2_mutex_take();
+
     if (sl_ttc2_spi_write(config, buf, 7U) == 0)
     {
-        sl_ttc2_delay_ms(100);
+        sl_ttc2_delay_ms(110);
 
         if (memcpy(&buf[3], data, len) == &buf[3])
         {
             err = sl_ttc2_spi_write(config, buf, 3U + len);
         }
     }
+
+    sl_ttc2_delay_ms(110);
+
+    sl_ttc2_mutex_give();
 
     return err;
 }
@@ -822,11 +858,11 @@ int sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len)
     {
         if (*len > 0)
         {
-            sl_ttc2_delay_ms(100);
+            sl_ttc2_mutex_take();
 
             if (sl_ttc2_spi_write(config, buf, 7U) == 0)
             {
-                sl_ttc2_delay_ms(100);
+                sl_ttc2_delay_ms(110);
 
                 if (sl_ttc2_spi_read(config, data, 1U + 1U + (*len)) == 0)
                 {
@@ -836,6 +872,10 @@ int sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len)
                     }
                 }
             }
+
+            sl_ttc2_delay_ms(110);
+
+            sl_ttc2_mutex_give();
         }
     }
 
