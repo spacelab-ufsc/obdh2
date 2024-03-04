@@ -36,7 +36,7 @@
 #ifndef DRIVERS_SL_TTC2_SL_TTC2_MUTEX_H_
 #define DRIVERS_SL_TTC2_SL_TTC2_MUTEX_H_
 
-#define SL_TTC2_MUTEX_WAIT_TIME_MS 600U
+#define SL_TTC2_MUTEX_WAIT_TIME_MS 1200U
 
 /**
  * \brief Creates the sl_ttc2 create.
