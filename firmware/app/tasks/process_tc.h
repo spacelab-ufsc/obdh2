@@ -43,7 +43,7 @@
 #define TASK_PROCESS_TC_NAME                "Process TC"        /**< Task name. */
 #define TASK_PROCESS_TC_STACK_SIZE          500                 /**< Stack size in bytes. */
 #define TASK_PROCESS_TC_PRIORITY            4                   /**< Task priority. */
-#define TASK_PROCESS_TC_PERIOD_MS           5                   /**< Task period in milliseconds. */
+#define TASK_PROCESS_TC_PERIOD_MS           1000                   /**< Task period in milliseconds. */
 #define TASK_PROCESS_TC_INITIAL_DELAY_MS    1000                /**< Delay, in milliseconds, before the first execution. */
 #define TASK_PROCESS_TC_INIT_TIMEOUT_MS     (10*1000)           /**< Wait time to initialize the task in milliseconds. */
 
