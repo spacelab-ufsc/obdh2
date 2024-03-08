@@ -69,6 +69,7 @@
 
 /* Drivers */
 #define CONFIG_DRV_ISIS_ANTENNA_ENABLED                 1
+#define CONFIG_DRV_SL_ANTENNA_ENABLED                   0
 
 /* Debug and log messages */
 #define CONFIG_DRIVERS_DEBUG_ENABLED                    0
