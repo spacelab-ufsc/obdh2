@@ -37,14 +37,15 @@
 #include <freertos/include/semphr.h>
 #include <stdbool.h>
 
-#include "spi_mutex.h"
+#include "spi.h"
 
 static xSemaphoreHandle spi_port0_mutex = NULL;
 
+static bool mutex_is_initialized = false;
+
 int spi_mutex_create(void)
 {
-    static bool mutex_is_initialized = false;
-    int err = -1;
+    int err = 0;
     
     if (!mutex_is_initialized)
     {
@@ -53,7 +54,10 @@ int spi_mutex_create(void)
         if (spi_port0_mutex != NULL)
         {
             mutex_is_initialized = true;
-            err = 0;
+        }
+        else 
+        {
+            err = -1;
         }
     }
 

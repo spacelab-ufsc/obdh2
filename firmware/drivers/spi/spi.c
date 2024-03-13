@@ -309,6 +309,18 @@ int spi_init(spi_port_t port, spi_config_t config)
                     }
                 }
 
+                if (err == 0 && port == SPI_PORT_0)
+                {
+                    if (spi_mutex_create() != 0) 
+                    {
+                    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, SPI_MODULE_NAME, "Error creating the mutex for port 0");
+                        sys_log_new_line();
+                    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                        err = -1;   /* Error initializing the SPI port */
+                    }
+                }
+
                 switch(port)
                 {
                     case SPI_PORT_0:    spi_port_0_is_open = true;  break;
