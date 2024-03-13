@@ -29,7 +29,7 @@
  *
  * \date 2024/02/26
  *
- * \addtogroup sl_ttc2_mutex
+ * \addtogroup sl_ttc2
  * \{
  */
 
@@ -37,7 +37,7 @@
 #include <freertos/include/FreeRTOS.h>
 #include <freertos/include/semphr.h>
 
-#include "sl_ttc2_mutex.h"
+#include "sl_ttc2.h"
 
 static xSemaphoreHandle sl_ttc2_mutex = NULL;
 

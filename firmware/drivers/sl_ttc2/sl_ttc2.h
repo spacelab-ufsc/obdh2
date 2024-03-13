@@ -48,6 +48,9 @@
 #define SL_TTC2_DEVICE_ID_RADIO_0               0xCC2AU /**< TTC 2.0 device ID (radio 1). */
 #define SL_TTC2_DEVICE_ID_RADIO_1               0xCC2BU /**< TTC 2.0 device ID (radio 2). */
 
+/* TTC 2.0 Mutex wait time */
+#define SL_TTC2_MUTEX_WAIT_TIME_MS              5000U   /**< TTC 2.0 mutex wait time. */
+
 /* TTC 2.0 Preamble byte */
 #define SL_TTC2_PKT_PREAMBLE                    0x7EU   /**< Preamble byte value. */
 
@@ -586,6 +589,27 @@ int sl_ttc2_spi_transfer(sl_ttc2_config_t config, uint8_t *wdata, uint8_t *rdata
  * \return None.
  */
 void sl_ttc2_delay_ms(uint32_t ms);
+
+/**
+ * \brief Creates the sl_ttc2 create.
+ *
+ * \return The status/error code.
+ */
+int sl_ttc2_mutex_create(void);
+
+/**
+ * \brief Takes the sl_ttc2 mutex.
+ *
+ * \return The status/error code.
+ */
+int sl_ttc2_mutex_take(void);
+
+/**
+ * \brief Gives the sl_ttc2 mutex.
+ *
+ * \return The status/error code.
+ */
+int sl_ttc2_mutex_give(void);
 
 #endif /* SL_TTC2_H_ */
 
