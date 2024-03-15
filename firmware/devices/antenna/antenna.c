@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.7
+ * \version 0.10.13
  * 
  * \date 2019/11/01
  * 
@@ -109,7 +109,7 @@ int antenna_init(void)
             sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "Error during the initialization!");
             sys_log_new_line();
         }
-    #elif defined (CONFIG_DRV_SL_ANTENNA_ENABLED) && (CONFIG_DRV_SL_ANTENNA_ENABLED == 1) && (CONFIG_DRV_ISIS_ANTENNA_ENABLED == 0)
+    #elif defined(CONFIG_DRV_SL_ANTENNA_ENABLED) && (CONFIG_DRV_SL_ANTENNA_ENABLED == 1)
         sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Initializing the antenna...");
         sys_log_new_line();
 
@@ -253,7 +253,7 @@ int antenna_deploy(uint32_t timeout_ms)
 
         err++;
     }
-#elif defined (CONFIG_DRV_SL_ANTENNA_ENABLED) && (CONFIG_DRV_SL_ANTENNA_ENABLED == 1) && (CONFIG_DRV_ISIS_ANTENNA_ENABLED == 0)
+#elif defined(CONFIG_DRV_SL_ANTENNA_ENABLED) && (CONFIG_DRV_SL_ANTENNA_ENABLED == 1)
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Trying a sequential deploy...");
     sys_log_new_line();
 
