@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  *
  */
 
@@ -25,7 +25,7 @@
  *
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  *
- * \version 0.10.9
+ * \version 0.10.13
  *
  * \date 2024/03/06
  *
@@ -54,7 +54,7 @@
  * \brief Deployment transition duration time in seconds.
  *
  * Between each stage there is a transition time for switching the 
- * gpio state for the required one.
+ * gpio state to the required one.
  */
 #define SL_ANTENNA_TRANSITION_DURATION_SEC 10U
 #define SL_ANTENNA_HALF_TRANSITION_DURATION_SEC (SL_ANTENNA_TRANSITION_DURATION_SEC >> 1U)

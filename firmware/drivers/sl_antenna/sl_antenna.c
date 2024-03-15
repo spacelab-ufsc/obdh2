@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  *
  */
 
@@ -25,7 +25,7 @@
  *
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  *
- * \version 0.10.9
+ * \version 0.10.13
  *
  * \date 2024/03/06
  *
@@ -40,10 +40,9 @@
 /* Antenna gpio pin */
 #define SL_ANTENNA_DEPLOY_PIN GPIO_PIN_61
 
-static sl_antenna_config_t ant_config = {0};
-
 int sl_antenna_init(void)
 {
+    sl_antenna_config_t ant_config = {0};
     int err = -1;
 
     ant_config.mode = GPIO_MODE_OUTPUT;
@@ -62,7 +61,6 @@ int sl_antenna_init(void)
 int sl_antenna_start_sequential_deploy(void)
 {
     int err = -1;
-    int tmp = 0;
 
     if (gpio_set_state(SL_ANTENNA_DEPLOY_PIN, SL_ANTENNA_FIRST_STAGE_STATE) == 0)
     {
@@ -89,7 +87,7 @@ int sl_antenna_start_sequential_deploy(void)
         }
     }
 
-    tmp = gpio_set_state(SL_ANTENNA_DEPLOY_PIN, GPIO_STATE_LOW);
+    (void)gpio_set_state(SL_ANTENNA_DEPLOY_PIN, GPIO_STATE_LOW);
 
     return err;
 }

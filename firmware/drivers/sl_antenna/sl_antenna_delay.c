@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  *
  */
 
@@ -25,7 +25,7 @@
  *
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  *
- * \version 0.10.9
+ * \version 0.10.13
  *
  * \date 2024/03/06
  *
@@ -35,6 +35,8 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+
+#include "sl_antenna.h"
 
 void sl_antenna_delay_s(uint8_t s)
 {
