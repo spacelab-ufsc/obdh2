@@ -79,7 +79,18 @@ void vTaskReadEDC(void)
             {
                 edc_state_t state = *(edc_state_t*)&state_arr[0];
 
-                if (state.ptt_available > 0)
+                if (state.ptt_is_paused)
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_EDC_NAME, "PTT Task is not enabled");
+                    sys_log_new_line();
+
+                    if (payload_write_cmd(PAYLOAD_EDC_0, EDC_CMD_PTT_RESUME) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_EDC_NAME, "Failed to enable the PTT Task");
+                        sys_log_new_line();
+                    }
+                }
+                else if (state.ptt_available > 0)
                 {
                     sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_EDC_NAME, "");
                     sys_log_print_uint(state.ptt_available);
