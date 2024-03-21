@@ -282,13 +282,34 @@ int payload_write_cmd(payload_t pl, payload_cmd_t cmd)
     switch(pl)
     {
         case PAYLOAD_EDC_0:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: ");
-            sys_log_print_hex(cmd);
-            sys_log_print_msg(" command received!");
-            sys_log_new_line();
+            switch (cmd) 
+            {
+                case EDC_CMD_PTT_RESUME:        
+                    if (edc_resume_ptt_task(edc_0_conf) == 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "EDC 0: ");
+                        sys_log_print_hex(cmd);
+                        sys_log_print_msg(" command send!");
+                        sys_log_new_line();
+                    }
+                    else
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Error in sending through uart");
+                        sys_log_new_line();
+                        err = -1;
+                    }
+                    break;
+                default:
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: ");
+                    sys_log_print_hex(cmd);
+                    sys_log_print_msg(" command received!");
+                    sys_log_new_line();
 
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC: write_cmd() routine not implemented yet!");
-            sys_log_new_line();
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC: write_cmd() routine is not fully implemented yet!");
+                    sys_log_new_line();
+                    err = -1;   /* Command yet to be impĺemented */
+                    break;
+            }
 
             break;
         case PAYLOAD_EDC_1:
