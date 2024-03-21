@@ -39,7 +39,7 @@
 #include <system/sys_log/sys_log.h>
 
 #include "sl_ttc2.h"
-#include "sl_ttc2_mutex.h"
+
 
 /* TTC 2.0 registers lenght in bytes */
 #define SL_TTC2_REG_DEVICE_ID_NUM_BYTES                     2
@@ -115,8 +115,7 @@ int sl_ttc2_init(sl_ttc2_config_t config)
             mutex_is_initialized = true;
         }
     }
-
-    if (mutex_is_initialized)
+    else
     {
         if (sl_ttc2_spi_init(config) == 0)
         {
@@ -290,7 +289,7 @@ int sl_ttc2_write_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t val)
 
         sl_ttc2_delay_ms(110);
 
-        sl_ttc2_mutex_give();
+        (void)sl_ttc2_mutex_give();
     }
     else 
     {
@@ -394,7 +393,7 @@ int sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
 
         sl_ttc2_delay_ms(110);
 
-        sl_ttc2_mutex_give();
+        (void)sl_ttc2_mutex_give();
     }
     else 
     {
@@ -856,7 +855,7 @@ int sl_ttc2_transmit_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t len
 
         sl_ttc2_delay_ms(110);
 
-        sl_ttc2_mutex_give();
+        (void)sl_ttc2_mutex_give();
     }
     else 
     {
@@ -902,7 +901,7 @@ int sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len)
 
                 sl_ttc2_delay_ms(110);
 
-                sl_ttc2_mutex_give();
+                (void)sl_ttc2_mutex_give();
             }
             else 
             {
