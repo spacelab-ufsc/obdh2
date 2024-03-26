@@ -67,39 +67,6 @@
 #define SL_TTC2_REG_FIFO_RX_PACKET_NUM_BYTES                1
 #define SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO_NUM_BYTES   2
 
-/**
- * \brief Computes the CRC-16 of a sequence of bytes.
- *
- * \param[in] data is an array of data to compute the CRC-16.
- *
- * \param[in] len is the number of bytes of the given array.
- *
- * \return The computed CRC-16 value of the given data.
- */
-static uint16_t sl_ttc2_crc16(uint8_t *data, uint16_t len);
-
-/**
- * \brief Checks the CRC value of a given sequence of bytes.
- *
- * \param[in] data is the data to check the CRC.
- *
- * \param[in] len is the number of bytes to check the CRC value.
- *
- * \param[in] crc is the CRC-16 value to check.
- *
- * \return TRUE/FALSE if the given CRC value is correct or not.
- */
-static bool sl_ttc2_check_crc(uint8_t *data, uint16_t len, uint16_t crc);
-
-/**
- * \brief Gets the number of bytes needed to store the register value.
- *
- * \param[in] adr is the address to get the number of bytes.
- *
- * \return The number of bytes of the given register.
- */
-static uint8_t sl_ttc2_get_reg_num_bytes(uint8_t adr);
-
 int sl_ttc2_init(sl_ttc2_config_t config)
 {
     static bool mutex_is_initialized = false;
@@ -882,7 +849,7 @@ int sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len)
 
     if (sl_ttc2_read_len_rx_pkt_in_fifo(config, len) == 0)
     {
-        if (*len > 0)
+        if ((*len > 0) && (*len <= 230))
         {
             if (sl_ttc2_mutex_take() == 0)
             {
@@ -914,63 +881,6 @@ int sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len)
     }
 
     return err;
-}
-
-static uint16_t sl_ttc2_crc16(uint8_t *data, uint16_t len)
-{
-    uint8_t x;
-    uint16_t crc = 0;   /* Initial value */
-
-    uint16_t i = 0;
-    for(i = 0; i< len; i++)
-    {
-        x = (crc >> 8) ^ data[i];
-        x ^= x >> 4;
-        crc = (crc << 8) ^ ((uint16_t)x << 12) ^ ((uint16_t)x << 5) ^ (uint16_t)x;
-    }
-
-    return crc;
-}
-
-static bool sl_ttc2_check_crc(uint8_t *data, uint16_t len, uint16_t crc)
-{
-    return (crc == sl_ttc2_crc16(data, len));
-}
-
-static uint8_t sl_ttc2_get_reg_num_bytes(uint8_t adr)
-{
-    uint8_t num_bytes = 0U;
-
-    switch(adr)
-    {
-        case SL_TTC2_REG_DEVICE_ID:                     num_bytes = SL_TTC2_REG_DEVICE_ID_NUM_BYTES;                    break;
-        case SL_TTC2_REG_HARDWARE_VERSION:              num_bytes = SL_TTC2_REG_HARDWARE_VERSION_NUM_BYTES;             break;
-        case SL_TTC2_REG_FIRMWARE_VERSION:              num_bytes = SL_TTC2_REG_FIRMWARE_VERSION_NUM_BYTES;             break;
-        case SL_TTC2_REG_TIME_COUNTER:                  num_bytes = SL_TTC2_REG_TIME_COUNTER_NUM_BYTES;                 break;
-        case SL_TTC2_REG_RESET_COUNTER:                 num_bytes = SL_TTC2_REG_RESET_COUNTER_NUM_BYTES;                break;
-        case SL_TTC2_REG_LAST_RESET_CAUSE:              num_bytes = SL_TTC2_REG_LAST_RESET_CAUSE_NUM_BYTES;             break;
-        case SL_TTC2_REG_INPUT_VOLTAGE_MCU:             num_bytes = SL_TTC2_REG_INPUT_VOLTAGE_MCU_NUM_BYTES;            break;
-        case SL_TTC2_REG_INPUT_CURRENT_MCU:             num_bytes = SL_TTC2_REG_INPUT_CURRENT_MCU_NUM_BYTES;            break;
-        case SL_TTC2_REG_TEMPERATURE_MCU:               num_bytes = SL_TTC2_REG_TEMPERATURE_MCU_NUM_BYTES;              break;
-        case SL_TTC2_REG_INPUT_VOLTAGE_RADIO:           num_bytes = SL_TTC2_REG_INPUT_VOLTAGE_RADIO_NUM_BYTES;          break;
-        case SL_TTC2_REG_INPUT_CURRENT_RADIO:           num_bytes = SL_TTC2_REG_INPUT_CURRENT_RADIO_NUM_BYTES;          break;
-        case SL_TTC2_REG_TEMPERATURE_RADIO:             num_bytes = SL_TTC2_REG_TEMPERATURE_RADIO_NUM_BYTES;            break;
-        case SL_TTC2_REG_LAST_VALID_TC:                 num_bytes = SL_TTC2_REG_LAST_VALID_TC_NUM_BYTES;                break;
-        case SL_TTC2_REG_RSSI_LAST_VALID_TC:            num_bytes = SL_TTC2_REG_RSSI_LAST_VALID_TC_NUM_BYTES;           break;
-        case SL_TTC2_REG_TEMPERATURE_ANTENNA:           num_bytes = SL_TTC2_REG_TEMPERATURE_ANTENNA_NUM_BYTES;          break;
-        case SL_TTC2_REG_ANTENNA_STATUS:                num_bytes = SL_TTC2_REG_ANTENNA_STATUS_NUM_BYTES;               break;
-        case SL_TTC2_REG_ANTENNA_DEPLOYMENT_STATUS:     num_bytes = SL_TTC2_REG_ANTENNA_DEPLOYMENT_STATUS_NUM_BYTES;    break;
-        case SL_TTC2_REG_ANTENNA_DEP_HIB_STATUS:        num_bytes = SL_TTC2_REG_ANTENNA_DEP_HIB_STATUS_NUM_BYTES;       break;
-        case SL_TTC2_REG_TX_ENABLE:                     num_bytes = SL_TTC2_REG_TX_ENABLE_NUM_BYTES;                    break;
-        case SL_TTC2_REG_TX_PACKET_COUNTER:             num_bytes = SL_TTC2_REG_TX_PACKET_COUNTER_NUM_BYTES;            break;
-        case SL_TTC2_REG_RX_PACKET_COUNTER:             num_bytes = SL_TTC2_REG_RX_PACKET_COUNTER_NUM_BYTES;            break;
-        case SL_TTC2_REG_FIFO_TX_PACKET:                num_bytes = SL_TTC2_REG_FIFO_TX_PACKET_NUM_BYTES;               break;
-        case SL_TTC2_REG_FIFO_RX_PACKET:                num_bytes = SL_TTC2_REG_FIFO_RX_PACKET_NUM_BYTES;               break;
-        case SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO:   num_bytes = SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO_NUM_BYTES;  break;
-        default:                                        num_bytes = 4U;                                                 break;
-    }
-
-    return num_bytes;
 }
 
 /** \} End of sl_ttc2 group */
