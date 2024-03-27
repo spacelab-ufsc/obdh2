@@ -251,7 +251,7 @@ void vTaskProcessTC(void)
             uint8_t pkt[300] = {0};
             uint16_t pkt_len = 0;
 
-            if (ttc_recv(TTC_1, pkt, &pkt_len) != 0)
+            if (ttc_recv(TTC_1, pkt, &pkt_len) == 0)
             {
                 switch(pkt[0])
                 {
