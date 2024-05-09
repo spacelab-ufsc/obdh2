@@ -82,7 +82,8 @@ int sl_ttc2_init(sl_ttc2_config_t config)
             mutex_is_initialized = true;
         }
     }
-    else
+
+    if (mutex_is_initialized)
     {
         if (sl_ttc2_spi_init(config) == 0)
         {
