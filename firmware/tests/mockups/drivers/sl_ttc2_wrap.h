@@ -96,6 +96,16 @@ int __wrap_sl_ttc2_transmit_packet(sl_ttc2_config_t config, uint8_t *data, uint1
 
 int __wrap_sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len);
 
+int __wrap_sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len);
+
+int __wrap_sl_ttc2_mutex_create(void);
+
+int __wrap_sl_ttc2_mutex_take(void);
+
+int __wrap_sl_ttc2_mutex_give(void);
+
+int __wrap_sl_ttc2_spi_read(sl_ttc2_config_t config, uint8_t *data, uint16_t len);
+
 void __wrap_sl_ttc2_delay_ms(uint32_t ms);
 
 #endif /* SL_TTC2_WRAP_H_ */
