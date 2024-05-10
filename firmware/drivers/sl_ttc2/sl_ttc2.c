@@ -840,7 +840,7 @@ int sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len)
 {
     int err = -1;
 
-    uint8_t buf[8] = {0};
+    uint8_t buf[7] = {0};
 
     /* Adding preamble byte */
     buf[0] = SL_TTC2_PKT_PREAMBLE;
@@ -850,7 +850,7 @@ int sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len)
 
     if (sl_ttc2_read_len_rx_pkt_in_fifo(config, len) == 0)
     {
-        if ((*len > 0) && (*len <= 230))
+        if ((*len > 0) && (*len <= 220))
         {
             if (sl_ttc2_mutex_take() == 0)
             {
