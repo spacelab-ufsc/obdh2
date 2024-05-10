@@ -33,13 +33,14 @@
  * \{
  */
 
+#include <stddef.h>
 
-#include <freertos/include/FreeRTOS.h>
-#include <freertos/include/semphr.h>
+#include <FreeRTOS.h>
+#include <semphr.h>
 
 #include "sl_ttc2.h"
 
-static xSemaphoreHandle sl_ttc2_mutex = NULL;
+static SemaphoreHandle_t sl_ttc2_mutex = NULL;
 
 int sl_ttc2_mutex_create(void)
 {
