@@ -49,13 +49,13 @@
 #define TTC_0_SPI_PORT              SPI_PORT_0
 #define TTC_0_SPI_CS_PIN            SPI_CS_0
 #define TTC_0_SPI_MODE              SPI_MODE_0
-#define TTC_0_SPI_CLOCK_HZ          100000UL
+#define TTC_0_SPI_CLOCK_HZ          1000000UL
 #define TTC_0_ID                    SL_TTC2_RADIO_0
 
 #define TTC_1_SPI_PORT              SPI_PORT_0
 #define TTC_1_SPI_CS_PIN            SPI_CS_1
 #define TTC_1_SPI_MODE              SPI_MODE_0
-#define TTC_1_SPI_CLOCK_HZ          100000UL
+#define TTC_1_SPI_CLOCK_HZ          1000000UL
 #define TTC_1_ID                    SL_TTC2_RADIO_1
 
 unsigned int generate_random(unsigned int l, unsigned int r);
