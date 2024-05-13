@@ -24,8 +24,9 @@
  * \brief SpaceLab TTC 2.0 driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.6
+ * \version 0.10.14
  * 
  * \date 2021/05/12
  * 

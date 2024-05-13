@@ -1,7 +1,7 @@
 /*
  * sl_ttc2_wrap.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -24,8 +24,9 @@
  * \brief SpaceLab TTC 2.0 wrap definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.7.2
+ * \version 0.10.14
  * 
  * \date 2021/08/06
  * 
