@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.35
+ * \version 0.10.10
  * 
  * \date 2021/10/20
  * 
@@ -47,10 +47,8 @@
 #define CONFIG_TC_KEY_DEACTIVATE_MODULE                 ":jvDVD_)jR@HWT{_"
 #define CONFIG_TC_KEY_ACTIVATE_PAYLOAD_EDC              "`Uyp)]^n,3q[/zs["
 #define CONFIG_TC_KEY_ACTIVATE_PAYLOAD_PAYLOAD_X        "d0bG$pIpdPzuSVV^"
-#define CONFIG_TC_KEY_ACTIVATE_PAYLOAD_HARSH            "zhD)GQ7rxD;:U7s$"
 #define CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_EDC            "Bdks$V>JzK*3*A}2"
 #define CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_PAYLOAD_X      "fna%&wM|Y(wIF32J"
-#define CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_HARSH          "=jG,3r:bxiN'I;cK"
 #define CONFIG_TC_KEY_ERASE_MEMORY                      "C:8RkJE${^>%wYVR"
 #define CONFIG_TC_KEY_FORCE_RESET                       "@A)Z-t(x+@nDHpKF"
 #define CONFIG_TC_KEY_GET_PAYLOAD_DATA                  "BkN&a):^fr(@(5x?"

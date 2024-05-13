@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Bruno Benedetti <brunobenedetti45@gmail.com> 
  * 
- * \version 0.10.8
+ * \version 0.10.11
  * 
  * \date 2021/08/16
  * 
@@ -153,19 +153,6 @@ static void payload_init_test(void **state)
     will_return(__wrap_px_init, 0);
 
     assert_return_code(payload_init(PAYLOAD_X), 0);
-
-    /* Payload Joinville */
-    expect_value(__wrap_phj_init_i2c, config.port, I2C_PORT_0);
-    expect_value(__wrap_phj_init_i2c, config.bitrate, 400000);
-
-    will_return(__wrap_phj_init_i2c, 0);
-
-    expect_value(__wrap_phj_init_gpio, config.pin, GPIO_PIN_0);
-    expect_value(__wrap_phj_init_gpio, config.mode, GPIO_MODE_INPUT);
-
-    will_return(__wrap_phj_init_gpio, 0);
-
-    assert_return_code(payload_init(PAYLOAD_PHJ), 0);
 }
 
 static void payload_enable_test(void **state)
@@ -242,8 +229,6 @@ static void payload_get_data_test(void **state)
 
 //    assert_return_code(payload_get_data(PAYLOAD_EDC_0, PAYLOAD_EDC_RAW_HK, raw_hk_data, &raw_hk_len), 0);
 //    assert_return_code(payload_get_data(PAYLOAD_X, ), 0);
-//    assert_return_code(payload_get_data(PAYLOAD_PHJ, ), 0);
-//    assert_return_code(payload_get_data(PAYLOAD_HARSH, ), 0);
 }
 
 int main(void)

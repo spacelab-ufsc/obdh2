@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.9.10
+ * \version 0.10.9
  * 
  * \date 2020/08/16
  * 
@@ -35,7 +35,10 @@
 
 #include <system/sys_log/sys_log.h>
 #include <devices/payload/payload.h>
+#include <devices/media/media.h>
 #include <drivers/edc/edc.h>
+
+#include <structs/satellite.h>
 
 #include "read_edc.h"
 #include "startup.h"
@@ -50,6 +53,8 @@ void vTaskReadEDC(void)
 
     /* Wait startup task to finish */
     xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_EDC_INIT_TIMEOUT_MS));
+
+    media_info_t nor_info = media_get_info(MEDIA_NOR);
 
     while(1)
     {
@@ -89,6 +94,21 @@ void vTaskReadEDC(void)
 
                         if (payload_get_data(pl_edc_active, PAYLOAD_EDC_PTT, ptt_arr, &ptt_len) == 0)
                         {
+                            if (media_write(MEDIA_NOR, sat_data_buf.obdh.data.media.last_page_sbcd_pkts * nor_info.page_size, ptt_arr, nor_info.page_size) == 0)
+                            {
+                                sat_data_buf.obdh.data.media.last_page_sbcd_pkts++;
+
+                                if (sat_data_buf.obdh.data.media.last_page_sbcd_pkts > CONFIG_MEM_SBCD_PKTS_END_PAGE)
+                                {
+                                    sat_data_buf.obdh.data.media.last_page_sbcd_pkts = CONFIG_MEM_SBCD_PKTS_START_PAGE;
+                                }
+                            }
+                            else
+                            {
+                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_EDC_NAME, "Error writing the PTT packet to the flash memory!");
+                                sys_log_new_line();
+                            }
+
                             edc_ptt_t ptt = *(edc_ptt_t*)&ptt_arr[0];
 
                             sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_EDC_NAME, "Received PTT packet:");

@@ -120,6 +120,7 @@
 #define CONFIG_DATA_ID_EPS                              1
 #define CONFIG_DATA_ID_TTC_0                            2
 #define CONFIG_DATA_ID_TTC_1                            3
+#define CONFIG_DATA_ID_ANT                              4
 
 /* Ports */
 #define CONFIG_SPI_PORT_0_SPEED_BPS                     1000000UL
@@ -130,8 +131,27 @@
 #define CONFIG_ANTENNA_DEPLOYMENT_ATTEMPTS              10U
 #define CONFIG_ANTENNA_DEPLOYMENT_HIBERNATION_MIN       45
 
-/* Memory addresses */
-#define CONFIG_MEM_ADR_SYS_TIME                         0
+/* Memory */
+#define CONFIG_MEM_ADR_INIT_WORD                        0
+#define CONFIG_MEM_ADR_SYS_TIME                         256
+#define CONFIG_MEM_ADR_SYS_PARAM                        512
+#define CONFIG_MEM_INIT_WORD                            {228, 80, 142, 227, 77, 121, 176, 244}
+#define CONFIG_MEM_OBDH_DATA_START_PAGE                 0U
+#define CONFIG_MEM_OBDH_DATA_END_PAGE                   56999U
+#define CONFIG_MEM_EPS_DATA_START_PAGE                  57000U
+#define CONFIG_MEM_EPS_DATA_END_PAGE                    113999U
+#define CONFIG_MEM_TTC_0_DATA_START_PAGE                114000U
+#define CONFIG_MEM_TTC_0_DATA_END_PAGE                  170999U
+#define CONFIG_MEM_TTC_1_DATA_START_PAGE                171000U
+#define CONFIG_MEM_TTC_1_DATA_END_PAGE                  227999U
+#define CONFIG_MEM_ANT_DATA_START_PAGE                  228000U
+#define CONFIG_MEM_ANT_DATA_END_PAGE                    284999U
+#define CONFIG_MEM_EDC_DATA_START_PAGE                  285000U
+#define CONFIG_MEM_EDC_DATA_END_PAGE                    341999U
+#define CONFIG_MEM_PX_DATA_START_PAGE                   342000U
+#define CONFIG_MEM_PX_DATA_END_PAGE                     398999U
+#define CONFIG_MEM_SBCD_PKTS_START_PAGE                 399000U
+#define CONFIG_MEM_SBCD_PKTS_END_PAGE                   499999U
 
 #endif /* CONFIG_H_ */
 
