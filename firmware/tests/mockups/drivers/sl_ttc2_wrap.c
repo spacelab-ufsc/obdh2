@@ -1,7 +1,7 @@
 /*
  * sl_ttc2_wrap.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -24,8 +24,9 @@
  * \brief SpaceLab TTC 2.0 wrap implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.7.22
+ * \version 0.10.14
  * 
  * \date 2021/08/06
  * 
@@ -490,11 +491,46 @@ int __wrap_sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t 
     return mock_type(int);
 }
 
+int __wrap_sl_ttc2_mutex_create(void)
+{
+    return mock_type(int);
+}
+
+int __wrap_sl_ttc2_mutex_take(void)
+{
+    return mock_type(int);
+}
+
+int __wrap_sl_ttc2_mutex_give(void)
+{
+    return mock_type(int);
+}
+
 void __wrap_sl_ttc2_delay_ms(uint32_t ms)
 {
     function_called();
 
     return;
+}
+
+int __wrap_sl_ttc2_spi_read(sl_ttc2_config_t config, uint8_t *data, uint16_t len)
+{
+    check_expected(config.port);
+    check_expected(config.cs_pin);
+    check_expected(config.port_config.speed_hz);
+    check_expected(config.port_config.mode);
+    check_expected(len);
+
+    if (data != NULL)
+    {
+        uint16_t i = 0;
+        for(i=0; i<len; i++)
+        {
+            data[i] = mock_type(uint8_t);
+        }
+    }
+
+    return mock_type(int);
 }
 
 /** \} End of sl_ttc2_wrap group */

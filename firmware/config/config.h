@@ -124,7 +124,7 @@
 #define CONFIG_DATA_ID_ANT                              4
 
 /* Ports */
-#define CONFIG_SPI_PORT_0_SPEED_BPS                     100000UL
+#define CONFIG_SPI_PORT_0_SPEED_BPS                     1000000UL
 
 /* Antenna */
 #define CONFIG_ANTENNA_INDEP_DEPLOY_BURN_TIME_SEC       10U

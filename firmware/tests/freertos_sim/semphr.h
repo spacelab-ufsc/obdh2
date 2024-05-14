@@ -1,5 +1,5 @@
 /*
- * version.h
+ * semphr.h
  * 
  * Copyright The OBDH 2.0 Contributors.
  * 
@@ -21,29 +21,40 @@
  */
 
 /**
- * \brief Version control file.
+ * \brief FreeRTOS semphr simulation definition.
  * 
- * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Miguel Boing <miguelboing13@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
  * \version 0.10.14
  * 
- * \date 2019/10/25
+ * \date 2024/04/25
  * 
- * \defgroup version Version control
+ * \defgroup semphr_sim FreeRTOS semphr
+ * \ingroup tests
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#ifndef SEMPHR_SIM_H_
+#define SEMPHR_SIM_H_
 
-#define FIRMWARE_VERSION            "0.10.14"
+#include <stdint.h>
+#include "FreeRTOS.h"
 
-#define FIRMWARE_STATUS             "Development"
+typedef enum
+{
+	pdFALSE=0x00,
+	pdTRUE=0x01,
+}BaseType_t;
 
-#define FIRMWARE_AUTHOR             "SpaceLab-UFSC"
+typedef int* SemaphoreHandle_t;
 
-#define FIRMWARE_AUTHOR_EMAIL       "contact@spacelab.ufsc.br"
+SemaphoreHandle_t xSemaphoreCreateMutex(void);
 
-#endif /* VERSION_H_ */
+BaseType_t xSemaphoreTake(SemaphoreHandle_t xSemaphore, TickType_t xBlockTime);
 
-/** \} End of version group */
+BaseType_t xSemaphoreGive(SemaphoreHandle_t xSemaphore);
+
+#endif /* SEMPHR_SIM_H_ */
+
+/** \} End of semphr_sim group */

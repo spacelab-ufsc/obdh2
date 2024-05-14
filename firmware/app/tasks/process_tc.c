@@ -24,8 +24,9 @@
  * \brief Process TC task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.13
+ * \version 0.10.14
  * 
  * \date 2021/07/06
  * 
@@ -251,7 +252,7 @@ void vTaskProcessTC(void)
             uint8_t pkt[300] = {0};
             uint16_t pkt_len = 0;
 
-            if (ttc_recv(TTC_1, pkt, &pkt_len) != 0)
+            if (ttc_recv(TTC_1, pkt, &pkt_len) == 0)
             {
                 switch(pkt[0])
                 {
