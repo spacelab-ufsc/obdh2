@@ -24,8 +24,9 @@
  * \brief Antenna device implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.13
+ * \version 0.10.14
  * 
  * \date 2019/11/01
  * 

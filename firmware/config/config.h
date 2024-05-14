@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.12
+ * \version 0.10.15
  * 
  * \date 2019/10/26
  * 
