@@ -37,54 +37,18 @@
 
 #include <FreeRTOS.h>
 #include <semphr.h>
+#include <drivers/spi/spi.h>
 
 #include "sl_ttc2.h"
 
-static SemaphoreHandle_t sl_ttc2_mutex = NULL;
-
-int sl_ttc2_mutex_create(void)
-{
-    int err = 0;
-
-    sl_ttc2_mutex = xSemaphoreCreateMutex();
-
-    if (sl_ttc2_mutex == NULL)
-    {
-        err = -1;
-    }
-
-    return err;
-}
-
 int sl_ttc2_mutex_take(void)
 {
-    int err = -1;
-
-    if (sl_ttc2_mutex != NULL)
-    {
-        /* See if we can obtain the semaphore. If the semaphore is not */
-        /* available wait SL_TTC2_MUTEX_WAIT_TIME_MS ms to see if it becomes free */
-        if (xSemaphoreTake(sl_ttc2_mutex, pdMS_TO_TICKS(SL_TTC2_MUTEX_WAIT_TIME_MS)) == pdTRUE)
-        {
-            err = 0;
-        }
-    }
-
-    return err;
+    return spi_mutex_take();
 }
 
 int sl_ttc2_mutex_give(void)
 {
-    int err = -1;
-
-    if (sl_ttc2_mutex != NULL)
-    {
-        xSemaphoreGive(sl_ttc2_mutex);
-
-        err = 0;
-    }
-
-    return err;
+    return spi_mutex_give();
 }
 
 /** \} End of sl_ttc2_mutex group */
