@@ -108,4 +108,19 @@ int __wrap_spi_transfer(spi_port_t port, spi_cs_t cs, uint8_t *wd, uint8_t *rd, 
     return mock_type(int);
 }
 
+int __wrap_spi_mutex_create(void)
+{
+    return mock_type(int);
+}
+
+int __wrap_spi_mutex_take(void)
+{
+    return mock_type(int);
+}
+
+int __wrap_spi_mutex_give(void)
+{
+    return mock_type(int);
+}
+
 /** \} End of spi_wrap group */

@@ -51,6 +51,12 @@ int __wrap_spi_read(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len);
 
 int __wrap_spi_transfer(spi_port_t port, spi_cs_t cs, uint8_t *wd, uint8_t *rd, uint16_t len);
 
+int __wrap_spi_mutex_create(void);
+
+int __wrap_spi_mutex_take(void);
+
+int __wrap_spi_mutex_give(void);
+
 #endif /* SPI_WRAP_H_ */
 
 /** \} End of spi_wrap group */
