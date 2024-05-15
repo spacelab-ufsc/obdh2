@@ -33,23 +33,25 @@
  * \{
  */
 
-#include <freertos/include/FreeRTOS.h>
-#include <freertos/include/semphr.h>
 #include <stdbool.h>
+#include <stddef.h>
+
+#include <FreeRTOS.h>
+#include <semphr.h>
 
 #include "spi.h"
 
-static xSemaphoreHandle spi_port0_mutex = NULL;
-
-static bool mutex_is_initialized = false;
+static SemaphoreHandle_t spi_port0_mutex = NULL;
 
 int spi_mutex_create(void)
 {
+    static bool mutex_is_initialized = false;
+
     int err = 0;
     
     if (!mutex_is_initialized)
     {
-        spi_port0_mutex = xSemaphoreCreateMutex();
+        spi_port0_mutex = xSemaphoreCreateRecursiveMutex();
 
         if (spi_port0_mutex != NULL)
         {
@@ -70,7 +72,7 @@ int spi_mutex_take(void)
 
     if (spi_port0_mutex != NULL)
     {
-        if (xSemaphoreTake(spi_port0_mutex, pdMS_TO_TICKS(SPI_MUTEX_WAIT_TIME_MS)) == pdTRUE)
+        if (xSemaphoreTakeRecursive(spi_port0_mutex, pdMS_TO_TICKS(SPI_MUTEX_WAIT_TIME_MS)) == pdTRUE)
         {
             err = 0;
         }
@@ -85,7 +87,7 @@ int spi_mutex_give(void)
 
     if (spi_port0_mutex != NULL)
     {
-        xSemaphoreGive(spi_port0_mutex);
+        xSemaphoreGiveRecursive(spi_port0_mutex);
 
         err = 0;
     }
