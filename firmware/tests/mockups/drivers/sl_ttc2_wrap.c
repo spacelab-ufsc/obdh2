@@ -491,11 +491,6 @@ int __wrap_sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t 
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_mutex_create(void)
-{
-    return mock_type(int);
-}
-
 int __wrap_sl_ttc2_mutex_take(void)
 {
     return mock_type(int);
