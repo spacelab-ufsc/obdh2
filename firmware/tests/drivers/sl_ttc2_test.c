@@ -60,9 +60,6 @@ static inline void read_adr(uint8_t adr, uint32_t val);
 
 static void sl_ttc2_init_test(void **state)
 {
-    /* Mutex creation */
-    will_return(__wrap_sl_ttc2_mutex_create, 0);
-
     /* SPI init */
     expect_value(__wrap_spi_init, port, SL_TTC2_SPI_PORT);
     expect_value(__wrap_spi_init, config.speed_hz, SL_TTC2_SPI_CLOCK_HZ);
@@ -84,7 +81,7 @@ static void sl_ttc2_init_test(void **state)
     ans[3] = 0xCC;  /* Radio 0 ID */
     ans[4] = 0x2A;  /* Radio 0 ID */
 
-    will_return(__wrap_sl_ttc2_mutex_take, 0);
+    will_return(__wrap_spi_mutex_take, 0);
 
     expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
     expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
@@ -107,7 +104,7 @@ static void sl_ttc2_init_test(void **state)
 
     will_return(__wrap_sl_ttc2_spi_read, 0);
 
-    will_return(__wrap_sl_ttc2_mutex_give, 0);
+    will_return(__wrap_spi_mutex_give, 0);
 
     assert_return_code(sl_ttc2_init(conf), 0);
 }
@@ -241,7 +238,7 @@ static void sl_ttc2_write_reg_test(void **state)
             break;
     }
 
-    will_return(__wrap_sl_ttc2_mutex_take, 0);
+    will_return(__wrap_spi_mutex_take, 0);
 
     expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
     expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
@@ -250,7 +247,7 @@ static void sl_ttc2_write_reg_test(void **state)
 
     will_return(__wrap_spi_write, 0);
 
-    will_return(__wrap_sl_ttc2_mutex_give, 0);
+    will_return(__wrap_spi_mutex_give, 0);
 
     assert_return_code(sl_ttc2_write_reg(conf, adr, val), 0);
 }
@@ -375,7 +372,7 @@ static void sl_ttc2_read_reg_test(void **state)
             break;
     }
 
-    will_return(__wrap_sl_ttc2_mutex_take, 0);
+    will_return(__wrap_spi_mutex_take, 0);
 
     expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
     expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
@@ -398,7 +395,7 @@ static void sl_ttc2_read_reg_test(void **state)
 
     will_return(__wrap_sl_ttc2_spi_read, 0);
 
-    will_return(__wrap_sl_ttc2_mutex_give, 0);
+    will_return(__wrap_spi_mutex_give, 0);
 
     assert_return_code(sl_ttc2_read_reg(conf, adr, &res), 0);
 
@@ -762,7 +759,7 @@ static void sl_ttc2_set_tx_enable_test(void **state)
     cmd[2] = adr;   /* Address */
     cmd[3] = val;
 
-    will_return(__wrap_sl_ttc2_mutex_take, 0);
+    will_return(__wrap_spi_mutex_take, 0);
 
     expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
     expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
@@ -771,7 +768,7 @@ static void sl_ttc2_set_tx_enable_test(void **state)
 
     will_return(__wrap_spi_write, 0);
 
-    will_return(__wrap_sl_ttc2_mutex_give, 0);
+    will_return(__wrap_spi_mutex_give, 0);
 
     assert_return_code(sl_ttc2_set_tx_enable(conf, (bool)val), 0);
 }
@@ -873,7 +870,7 @@ static void sl_ttc2_transmit_packet_test(void **state)
     cmd[1] = SL_TTC2_CMD_TRANSMIT_PKT;     /* Transmit packet command */
     cmd[2] = data_len;     /* Data lenght */
 
-    will_return(__wrap_sl_ttc2_mutex_take, 0);
+    will_return(__wrap_spi_mutex_take, 0);
 
     expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
     expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
@@ -895,7 +892,7 @@ static void sl_ttc2_transmit_packet_test(void **state)
 
     will_return(__wrap_spi_write, 0);
 
-    will_return(__wrap_sl_ttc2_mutex_give, 0);
+    will_return(__wrap_spi_mutex_give, 0);
 
     assert_return_code(sl_ttc2_transmit_packet(conf, &cmd[3], data_len), 0);
 }
@@ -924,7 +921,7 @@ static void sl_ttc2_read_packet_test(void **state)
 
     read_adr(adr, (uint32_t)pkt_len); 
 
-    will_return(__wrap_sl_ttc2_mutex_take, 0);
+    will_return(__wrap_spi_mutex_take, 0);
 
     expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
     expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
@@ -951,7 +948,7 @@ static void sl_ttc2_read_packet_test(void **state)
 
     will_return(__wrap_sl_ttc2_spi_read, 0);
 
-    will_return(__wrap_sl_ttc2_mutex_give, 0);
+    will_return(__wrap_spi_mutex_give, 0);
 
     assert_return_code(sl_ttc2_read_packet(conf, res_pkt, &res_pkt_len), 0);
 
@@ -1120,7 +1117,7 @@ static inline void read_adr(uint8_t adr, uint32_t val)
             break;
     }
 
-    will_return(__wrap_sl_ttc2_mutex_take, 0);
+    will_return(__wrap_spi_mutex_take, 0);
 
     expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
     expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
@@ -1143,7 +1140,7 @@ static inline void read_adr(uint8_t adr, uint32_t val)
 
     will_return(__wrap_sl_ttc2_spi_read, 0);
 
-    will_return(__wrap_sl_ttc2_mutex_give, 0);
+    will_return(__wrap_spi_mutex_give, 0);
 }
 
 /** \} End of sl_ttc2_test group */
