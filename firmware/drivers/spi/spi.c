@@ -309,7 +309,7 @@ int spi_init(spi_port_t port, spi_config_t config)
                     }
                 }
 
-                if (err == 0 && port == SPI_PORT_0)
+                if ((err == 0) && (port == SPI_PORT_0))
                 {
                     if (spi_mutex_create() != 0) 
                     {
