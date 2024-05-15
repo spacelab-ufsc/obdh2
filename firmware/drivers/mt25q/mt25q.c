@@ -300,6 +300,7 @@ int mt25q_write_enable(void)
                 if (status.write_enable_latch == MT25Q_WRITE_ENABLED)
                 {
                     err = 0;
+                    break;
                 }
             }
         }
@@ -326,6 +327,7 @@ int mt25q_write_disable(void)
                 if (status.write_enable_latch == MT25Q_WRITE_DISABLED)
                 {
                     err = 0;
+                    break;
                 }
             }
         }
