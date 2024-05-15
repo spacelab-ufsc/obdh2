@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.12
+ * \version 0.10.15
  * 
  * \date 2019/10/26
  * 
@@ -69,6 +69,7 @@
 
 /* Drivers */
 #define CONFIG_DRV_ISIS_ANTENNA_ENABLED                 1
+#define CONFIG_DRV_SL_ANTENNA_ENABLED                   0
 
 /* Debug and log messages */
 #define CONFIG_DRIVERS_DEBUG_ENABLED                    0
@@ -123,7 +124,7 @@
 #define CONFIG_DATA_ID_ANT                              4
 
 /* Ports */
-#define CONFIG_SPI_PORT_0_SPEED_BPS                     100000UL
+#define CONFIG_SPI_PORT_0_SPEED_BPS                     1000000UL
 
 /* Antenna */
 #define CONFIG_ANTENNA_INDEP_DEPLOY_BURN_TIME_SEC       10U
