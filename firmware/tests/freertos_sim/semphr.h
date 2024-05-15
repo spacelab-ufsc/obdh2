@@ -55,6 +55,12 @@ BaseType_t xSemaphoreTake(SemaphoreHandle_t xSemaphore, TickType_t xBlockTime);
 
 BaseType_t xSemaphoreGive(SemaphoreHandle_t xSemaphore);
 
+SemaphoreHandle_t xSemaphoreCreateRecursiveMutex(void);
+
+BaseType_t xSemaphoreTakeRecursive(SemaphoreHandle_t xSemaphore, TickType_t xBlockTime);
+
+BaseType_t xSemaphoreGiveRecursive(SemaphoreHandle_t xSemaphore);
+
 #endif /* SEMPHR_SIM_H_ */
 
 /** \} End of semphr_sim group */
