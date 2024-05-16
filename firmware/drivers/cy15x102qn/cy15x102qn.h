@@ -621,6 +621,20 @@ int cy15x102qn_gpio_set_write_protect(cy15x102qn_config_t *conf);
  */
 int cy15x102qn_gpio_clear_write_protect(cy15x102qn_config_t *conf);
 
+/**
+ * \brief Takes the cy15x102qn mutex.
+ *
+ * \return The status/error code.
+ */
+int cy15x102qn_mutex_take(void);
+
+/**
+ * \brief Gives the cy15x102qn mutex.
+ *
+ * \return The status/error code.
+ */
+int cy15x102qn_mutex_give(void);
+
 #endif /* CY15X102QN_H_ */
 
 /** \} End of cy15x102qn group */
