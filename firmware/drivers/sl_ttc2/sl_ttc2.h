@@ -592,13 +592,6 @@ int sl_ttc2_spi_transfer(sl_ttc2_config_t config, uint8_t *wdata, uint8_t *rdata
 void sl_ttc2_delay_ms(uint32_t ms);
 
 /**
- * \brief Creates the sl_ttc2 create.
- *
- * \return The status/error code.
- */
-int sl_ttc2_mutex_create(void);
-
-/**
  * \brief Takes the sl_ttc2 mutex.
  *
  * \return The status/error code.

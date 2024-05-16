@@ -21,7 +21,7 @@
  */
 
 /**
- * \brief SpaceLab TTC 2.0 driver mutex definition.
+ * \brief SpaceLab TTC 2.0 driver mutex implementation.
  *
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  *
