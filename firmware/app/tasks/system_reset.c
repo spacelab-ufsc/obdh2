@@ -42,9 +42,11 @@ xTaskHandle xTaskSystemResetHandle;
 
 void vTaskSystemReset(void)
 {
+    TickType_t reset_period_ticks = pdMS_TO_TICKS_64((TickType_t) TASK_SYSTEM_RESET_PERIOD_MS);
+
     while(1)
     {
-        vTaskDelay(pdMS_TO_TICKS_64(TASK_SYSTEM_RESET_PERIOD_MS)); // cppcheck-suppress misra-c2012-10.8
+        vTaskDelay(reset_period_ticks); 
 
         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_SYSTEM_RESET_NAME, "Restarting the system...");
         sys_log_new_line();
