@@ -45,7 +45,7 @@ int mem_mng_check_fram(void)
     int err = -1;
 
     uint8_t mem_word_ref[8] = CONFIG_MEM_INIT_WORD;
-    uint8_t mem_word[8] = {0};
+    uint8_t mem_word[8];
 
     if (media_read(MEDIA_FRAM, CONFIG_MEM_ADR_INIT_WORD, mem_word, 8U) == 0)
     {
@@ -109,9 +109,8 @@ void mem_mng_load_obdh_data_from_default_values(obdh_telemetry_t *tel)
     uint8_t tle_line1[70] = OBDH_PARAM_POSITION_TLE_LINE1_DEFAULT_VAL;
     uint8_t tle_line2[70] = OBDH_PARAM_POSITION_TLE_LINE2_DEFAULT_VAL;
 
-    void *null_ptr;
-    null_ptr = memcpy(&tel->data.position.tle_line1, &tle_line1[0], 70U);
-    null_ptr = memcpy(&tel->data.position.tle_line2, &tle_line2[0], 70U);
+    (void)memcpy(&tel->data.position.tle_line1, &tle_line1[0], 70U);
+    (void)memcpy(&tel->data.position.tle_line2, &tle_line2[0], 70U);
 
     tel->data.position.latitude             = OBDH_PARAM_POSITION_LATITUDE_DEFAULT_VAL;
     tel->data.position.longitude            = OBDH_PARAM_POSITION_LONGITUDE_DEFAULT_VAL;
@@ -126,18 +125,17 @@ void mem_mng_load_obdh_data_from_default_values(obdh_telemetry_t *tel)
     tel->data.media.last_page_sbcd_pkts     = OBDH_PARAM_MEDIA_LAST_SBCD_PKTS_DEFAULT_VAL;
 }
 
-int mem_mng_save_obdh_data_to_fram(obdh_telemetry_t tel)
+int mem_mng_save_obdh_data_to_fram(obdh_telemetry_t* tel)
 {
     int err = -1;
 
-    uint8_t buf[256] = {0};
+    uint8_t buf[256];
 
-    if (memcpy(&buf[0], &tel, sizeof(obdh_telemetry_t)) == &buf[0])
+    (void)memcpy(buf, tel, sizeof(obdh_telemetry_t));
+
+    if (media_write(MEDIA_FRAM, CONFIG_MEM_ADR_SYS_PARAM, buf, 256U) == 0)
     {
-        if (media_write(MEDIA_FRAM, CONFIG_MEM_ADR_SYS_PARAM, buf, 256U) == 0)
-        {
-            err = 0;
-        }
+        err = 0;
     }
 
     return err;
@@ -147,14 +145,12 @@ int mem_mng_load_obdh_data_from_fram(obdh_telemetry_t *tel)
 {
     int err = -1;
 
-    uint8_t sys_par[256] = {0};
+    uint8_t sys_par[256];
 
     if (media_read(MEDIA_FRAM, CONFIG_MEM_ADR_SYS_PARAM, sys_par, sizeof(obdh_telemetry_t)) == 0)
     {
-        if (memcpy(&tel, &sys_par[0], sizeof(obdh_telemetry_t)) == &tel)
-        {
-            err = 0;
-        }
+        (void)memcpy(tel, sys_par, sizeof(obdh_telemetry_t));
+        err = 0;
     }
 
     return err;

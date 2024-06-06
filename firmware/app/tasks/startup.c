@@ -121,7 +121,7 @@ void vTaskStartup(void)
                     mem_mng_load_obdh_data_from_default_values(&sat_data_buf.obdh);
 
                     /* Write the OBDH data to the FRAM memory */
-                    if (mem_mng_save_obdh_data_to_fram(sat_data_buf.obdh) != 0)
+                    if (mem_mng_save_obdh_data_to_fram(&sat_data_buf.obdh) != 0)
                     {
                         error_counter++;
                     }
