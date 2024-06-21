@@ -68,7 +68,7 @@ void vTaskReadSensors(void)
         }
 
         /* OBDH temperature */
-        if (temp_sensor_read_raw(&buf) == 0)
+        if (temp_sensor_read_k(&buf) == 0)
         {
             sat_data_buf.obdh.data.temperature = buf;
         }
