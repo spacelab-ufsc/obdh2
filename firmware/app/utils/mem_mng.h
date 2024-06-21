@@ -78,7 +78,7 @@ void mem_mng_load_obdh_data_from_default_values(obdh_telemetry_t *tel);
  *
  * \return The status/error code.
  */
-int mem_mng_save_obdh_data_to_fram(obdh_telemetry_t tel);
+int mem_mng_save_obdh_data_to_fram(obdh_telemetry_t *tel);
 
 /**
  * \brief Loads the last saved OBDH data from the FRAM memory.

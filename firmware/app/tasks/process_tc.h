@@ -1,7 +1,7 @@
 /*
  * process_tc.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -24,8 +24,9 @@
  * \brief Process TC task definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.7.47
+ * \version 0.10.14
  * 
  * \date 2021/07/06
  * 
@@ -43,8 +44,8 @@
 #define TASK_PROCESS_TC_NAME                "Process TC"        /**< Task name. */
 #define TASK_PROCESS_TC_STACK_SIZE          500                 /**< Stack size in bytes. */
 #define TASK_PROCESS_TC_PRIORITY            4                   /**< Task priority. */
-#define TASK_PROCESS_TC_PERIOD_MS           5                   /**< Task period in milliseconds. */
-#define TASK_PROCESS_TC_INITIAL_DELAY_MS    1000                /**< Delay, in milliseconds, before the first execution. */
+#define TASK_PROCESS_TC_PERIOD_MS           1000                /**< Task period in milliseconds. */
+#define TASK_PROCESS_TC_INITIAL_DELAY_MS    6500                /**< Delay, in milliseconds, before the first execution. */
 #define TASK_PROCESS_TC_INIT_TIMEOUT_MS     (10*1000)           /**< Wait time to initialize the task in milliseconds. */
 
 /**

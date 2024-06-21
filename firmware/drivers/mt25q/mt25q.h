@@ -473,6 +473,20 @@ int mt25q_gpio_set_reset(bool state);
  */
 void mt25q_delay_ms(uint32_t ms);
 
+/**
+ * \brief Takes the mt25q mutex.
+ *
+ * \return The status/error code.
+ */
+int mt25q_mutex_take(void);
+
+/**
+ * \brief Gives the mt25q mutex.
+ *
+ * \return The status/error code.
+ */
+int mt25q_mutex_give(void);
+
 #endif /* MT25Q_H_ */
 
 /** \} End of mt25q group */

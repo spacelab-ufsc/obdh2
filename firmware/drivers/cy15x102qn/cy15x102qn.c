@@ -24,8 +24,9 @@
  * \brief CY15x102QN driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.8.8
+ * \version 0.10.15
  * 
  * \date 2021/06/04
  * 
@@ -163,26 +164,40 @@ int cy15x102qn_write(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uin
     adr_arr[1] = (adr >> 8) & 0xFFU;
     adr_arr[2] = adr & 0xFFU;
 
-    if (cy15x102qn_spi_select(conf) == 0)
+    if (cy15x102qn_mutex_take() == 0)
     {
-        /* Write opcode */
-        if (cy15x102qn_spi_write_only(conf, &cmd, 1) == 0)
+        if (cy15x102qn_spi_select(conf) == 0)
         {
-            /* Write address */
-            if (cy15x102qn_spi_write_only(conf, adr_arr, 3) == 0)
+            /* Write opcode */
+            if (cy15x102qn_spi_write_only(conf, &cmd, 1) == 0)
             {
-                /* Write data */
-                if (cy15x102qn_spi_write_only(conf, data, len) == 0)
+                /* Write address */
+                if (cy15x102qn_spi_write_only(conf, adr_arr, 3) == 0)
                 {
-                    if (cy15x102qn_spi_unselect(conf) == 0)
+                    /* Write data */
+                    if (cy15x102qn_spi_write_only(conf, data, len) == 0)
                     {
-                        err = 0;
+                        if (cy15x102qn_spi_unselect(conf) == 0)
+                        {
+                            err = 0;
+                        }
+                    }
+                    else
+                    {
+                    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the data during WRITE command!");
+                        sys_log_new_line();
+                    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                        if (cy15x102qn_spi_unselect(conf) != 0)
+                        {
+                            err = -2;
+                        }
                     }
                 }
                 else
                 {
                 #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the data during WRITE command!");
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the address during WRITE command!");
                     sys_log_new_line();
                 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
                     if (cy15x102qn_spi_unselect(conf) != 0)
@@ -194,7 +209,7 @@ int cy15x102qn_write(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uin
             else
             {
             #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
-                sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the address during WRITE command!");
+                sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during WRITE command!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
                 if (cy15x102qn_spi_unselect(conf) != 0)
@@ -203,17 +218,8 @@ int cy15x102qn_write(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uin
                 }
             }
         }
-        else
-        {
-        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
-            sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during WRITE command!");
-            sys_log_new_line();
-        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-            if (cy15x102qn_spi_unselect(conf) != 0)
-            {
-                err = -2;
-            }
-        }
+
+        (void)cy15x102qn_mutex_give();
     }
 
     return err;
@@ -230,26 +236,40 @@ int cy15x102qn_read(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uint
     adr_arr[1] = (adr >> 8) & 0xFFU;
     adr_arr[2] = adr & 0xFFU;
 
-    if (cy15x102qn_spi_select(conf) == 0)
+    if (cy15x102qn_mutex_take() == 0)
     {
-        /* Write opcode */
-        if (cy15x102qn_spi_write_only(conf, &cmd, 1) == 0)
+        if (cy15x102qn_spi_select(conf) == 0)
         {
-            /* Write address */
-            if (cy15x102qn_spi_write_only(conf, adr_arr, 3) == 0)
+            /* Write opcode */
+            if (cy15x102qn_spi_write_only(conf, &cmd, 1) == 0)
             {
-                /* Read data */
-                if (cy15x102qn_spi_read_only(conf, data, len) == 0)
+                /* Write address */
+                if (cy15x102qn_spi_write_only(conf, adr_arr, 3) == 0)
                 {
-                    if (cy15x102qn_spi_unselect(conf) == 0)
+                    /* Read data */
+                    if (cy15x102qn_spi_read_only(conf, data, len) == 0)
                     {
-                        err = 0;
+                        if (cy15x102qn_spi_unselect(conf) == 0)
+                        {
+                            err = 0;
+                        }
+                    }
+                    else
+                    {
+                    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error reading the data during READ command!");
+                        sys_log_new_line();
+                    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
+                        if (cy15x102qn_spi_unselect(conf) != 0)
+                        {
+                            err = -2;
+                        }
                     }
                 }
                 else
                 {
                 #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error reading the data during READ command!");
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the address during READ command!");
                     sys_log_new_line();
                 #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
                     if (cy15x102qn_spi_unselect(conf) != 0)
@@ -261,7 +281,7 @@ int cy15x102qn_read(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uint
             else
             {
             #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
-                sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the address during READ command!");
+                sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during READ command!");
                 sys_log_new_line();
             #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
                 if (cy15x102qn_spi_unselect(conf) != 0)
@@ -270,17 +290,8 @@ int cy15x102qn_read(cy15x102qn_config_t *conf, uint32_t adr, uint8_t *data, uint
                 }
             }
         }
-        else
-        {
-        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
-            sys_log_print_event_from_module(SYS_LOG_ERROR, CY15X102QN_MODULE_NAME, "Error writing the opcode during READ command!");
-            sys_log_new_line();
-        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-            if (cy15x102qn_spi_unselect(conf) != 0)
-            {
-                err = -2;
-            }
-        }
+
+        (void)cy15x102qn_mutex_give();
     }
 
     return err;

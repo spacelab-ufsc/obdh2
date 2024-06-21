@@ -50,8 +50,8 @@
 #define CURRENT_SENSOR_RSENSE_VALUE_MOHM    50              /**< Rsense resistor value in mOhm. */
 
 /* Rload value */
-#define CURRENT_SENSOR_RL_VALUE_OHM         1650            /**< RL resistor value in Ohms. */
-#define CURRENT_SENSOR_RL_VALUE_KOHM        1.65            /**< RL resistor value in kOhms. */
+#define CURRENT_SENSOR_RL_VALUE_OHM         12000           /**< RL resistor value in Ohms. */
+#define CURRENT_SENSOR_RL_VALUE_KOHM        12              /**< RL resistor value in kOhms. */
 
 /* Gain value */
 #define CURRENT_SENSOR_GAIN_A_V             0.025           /**< Current gain of max9934 in A/V. */

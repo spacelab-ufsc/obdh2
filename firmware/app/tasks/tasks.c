@@ -54,6 +54,7 @@
 #include "process_tc.h"
 #include "pos_det.h"
 #include "read_px.h"
+#include "housekeeping.h"
 
 void create_tasks(void)
 {
@@ -203,6 +204,15 @@ void create_tasks(void)
         /* Error creating the Read PX task */
     }
 #endif /* CONFIG_TASK_PAYLOAD_X_ENABLED */
+
+#if defined(CONFIG_TASK_HOUSEKEEPING_ENABLED) && (CONFIG_TASK_HOUSEKEEPING_ENABLED == 1)
+    xTaskCreate(vTaskHousekeeping, TASK_HOUSEKEEPING_NAME, TASK_HOUSEKEEPING_STACK_SIZE, NULL, TASK_HOUSEKEEPING_PRIORITY, &xTaskHousekeepingHandle);
+
+    if (xTaskHousekeepingHandle == NULL)
+    {
+        /* Error creating the Housekeeping task */
+    }
+#endif /* CONFIG_TASK_HOUSEKEEPING_ENABLED */
 
     create_event_groups();
 }

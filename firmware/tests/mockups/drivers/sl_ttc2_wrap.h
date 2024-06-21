@@ -1,7 +1,7 @@
 /*
  * sl_ttc2_wrap.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -24,8 +24,9 @@
  * \brief SpaceLab TTC 2.0 wrap definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.7.2
+ * \version 0.10.14
  * 
  * \date 2021/08/06
  * 
@@ -95,6 +96,16 @@ int __wrap_sl_ttc2_check_pkt_avail(sl_ttc2_config_t config);
 int __wrap_sl_ttc2_transmit_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t len);
 
 int __wrap_sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len);
+
+int __wrap_sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len);
+
+int __wrap_sl_ttc2_mutex_create(void);
+
+int __wrap_sl_ttc2_mutex_take(void);
+
+int __wrap_sl_ttc2_mutex_give(void);
+
+int __wrap_sl_ttc2_spi_read(sl_ttc2_config_t config, uint8_t *data, uint16_t len);
 
 void __wrap_sl_ttc2_delay_ms(uint32_t ms);
 

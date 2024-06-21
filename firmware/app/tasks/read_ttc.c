@@ -1,7 +1,7 @@
 /*
  * read_ttc.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -24,8 +24,9 @@
  * \brief Read TTC data task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.8.5
+ * \version 0.10.14
  * 
  * \date 2021/05/14
  * 
@@ -47,6 +48,9 @@ void vTaskReadTTC(void)
 {
     /* Wait startup task to finish */
     xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_TTC_INIT_TIMEOUT_MS));
+
+    /* Delay before the first cycle */
+    vTaskDelay(pdMS_TO_TICKS(TASK_READ_TTC_INITIAL_DELAY_MS));
 
     while(1)
     {

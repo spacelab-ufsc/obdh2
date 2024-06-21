@@ -66,7 +66,7 @@ void vTaskHousekeeping(void)
         }
 
         /* Save the last available OBDH data at every minute */
-        if ((system_get_time() % (60U*1000U)) == 0U)
+        if ((system_get_time() % 60U) == 0U)
         {
             if (mem_mng_save_obdh_data_to_fram(sat_data_buf.obdh) != 0)
             {

@@ -1,49 +1,51 @@
 /*
- * version.h
- * 
+ * sl_antenna_delay.c
+ *
  * Copyright The OBDH 2.0 Contributors.
- * 
+ *
  * This file is part of OBDH 2.0.
- * 
+ *
  * OBDH 2.0 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * OBDH 2.0 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
- * 
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
+ *
  */
 
 /**
- * \brief Version control file.
- * 
- * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
- * 
- * \version 0.10.16
- * 
- * \date 2019/10/25
- * 
- * \defgroup version Version control
+ * \brief SpaceLab Antenna Driver delay implementation.
+ *
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
+ *
+ * \version 0.10.15
+ *
+ * \date 2024/03/06
+ *
+ * \addtogroup sl_antenna
  * \{
  */
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#include "FreeRTOS.h"
+#include "task.h"
 
-#define FIRMWARE_VERSION            "0.10.16"
+#include "sl_antenna.h"
 
-#define FIRMWARE_STATUS             "Development"
+void sl_antenna_delay_s(uint8_t s)
+{
+    vTaskDelay(pdMS_TO_TICKS(1000U*s));
+}
 
-#define FIRMWARE_AUTHOR             "SpaceLab-UFSC"
+void sl_antenna_delay_ms(uint16_t ms)
+{
+    vTaskDelay(pdMS_TO_TICKS(ms));
+}
 
-#define FIRMWARE_AUTHOR_EMAIL       "contact@spacelab.ufsc.br"
-
-#endif /* VERSION_H_ */
-
-/** \} End of version group */
+/** \} End of sl_antenna group */
