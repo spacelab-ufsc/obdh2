@@ -65,6 +65,33 @@ void vTaskReadEDC(void)
         {
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_EDC_NAME, "Error reading the housekeeping data!");
             sys_log_new_line();
+        } 
+        else 
+        {
+            uint16_t curr_dig = (edc_hk_buf.buffer[10] << 8U) | edc_hk_buf.buffer[9];
+            uint16_t curr_rf = (edc_hk_buf.buffer[12] << 8U) | edc_hk_buf.buffer[11];
+            uint16_t volt = (edc_hk_buf.buffer[14] << 8U) | edc_hk_buf.buffer[13];
+            int16_t temp = edc_hk_buf.buffer[15] - 40;
+
+            sys_log_print_event_from_module(SYS_LOG_INFO, "EDC Status", "Current(Dig): ");
+            sys_log_print_uint((uint32_t) curr_dig);
+            sys_log_print_msg(" mA");
+            sys_log_new_line();
+
+            sys_log_print_event_from_module(SYS_LOG_INFO, "EDC Status", "Current(RF): ");
+            sys_log_print_uint((uint32_t) curr_rf);
+            sys_log_print_msg(" mA");
+            sys_log_new_line();
+
+            sys_log_print_event_from_module(SYS_LOG_INFO, "EDC Status", "Sys Voltage: ");
+            sys_log_print_uint((uint32_t) volt);
+            sys_log_print_msg(" mV");
+            sys_log_new_line();
+
+            sys_log_print_event_from_module(SYS_LOG_INFO, "EDC Status", "Board Temp: ");
+            sys_log_print_int((int32_t) temp);
+            sys_log_print_msg(" oC");
+            sys_log_new_line();
         }
 
         vTaskDelay(pdMS_TO_TICKS(500));     /* Wait a while for the next command */
