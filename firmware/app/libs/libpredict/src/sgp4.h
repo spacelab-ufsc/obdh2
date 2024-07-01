@@ -46,4 +46,9 @@ void sgp4_init(const predict_orbital_elements_t *orbital_elements, struct _sgp4 
  **/
 void sgp4_predict(const struct _sgp4 *m, double tsince, struct model_output *output);
 
+/**
+ * Returns ptr to static allocated _sgp4 struct
+ **/
+struct _sgp4 *sgp4_static_alloc(void);
+
 #endif

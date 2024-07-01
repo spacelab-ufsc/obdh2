@@ -3,6 +3,14 @@
 #include "defs.h"
 #include "unsorted.h"
 
+/* Static Allocated sgp4 struct */
+static struct _sgp4 sgp4_;
+
+struct _sgp4 *sgp4_static_alloc(void)
+{
+    return &sgp4_;
+}
+
 void sgp4_init(const predict_orbital_elements_t *orbital_elements, struct _sgp4 *m)
 {
 	m->simpleFlag = 0;

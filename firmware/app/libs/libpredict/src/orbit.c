@@ -7,6 +7,9 @@
 #include "sgp4.h"
 #include "sun.h"
 
+/* Static Allocated orbital elements */
+static predict_orbital_elements_t elem;
+
 bool is_eclipsed(const double pos[3], const double sol[3], double *depth);
 bool predict_decayed(const predict_orbital_elements_t *orbital_elements, predict_julian_date_t time);
 
@@ -16,8 +19,7 @@ bool predict_decayed(const predict_orbital_elements_t *orbital_elements, predict
 predict_orbital_elements_t* predict_parse_tle(const char *tle_line_1, const char *tle_line_2)
 {
 	double tempnum;
-	predict_orbital_elements_t *m = (predict_orbital_elements_t*)malloc(sizeof(predict_orbital_elements_t));
-	if (m == NULL) return NULL;
+	predict_orbital_elements_t *m = &elem;
 
 	char substring_buffer[SUBSTRING_BUFFER_LENGTH];
 	m->satellite_number = atol(SubString(tle_line_1,SUBSTRING_BUFFER_LENGTH,substring_buffer,2,6));
@@ -57,8 +59,8 @@ predict_orbital_elements_t* predict_parse_tle(const char *tle_line_1, const char
 	if (TWO_PI/xnodp/MINUTES_PER_DAY >= 0.15625) {
 		m->ephemeris = EPHEMERIS_SDP4;
 		
-		// Allocate memory for ephemeris data
-		m->ephemeris_data = malloc(sizeof(struct _sdp4));
+		// Get ptr to static allocated _sdp4
+		m->ephemeris_data = sdp4_static_alloc();
 
 		if (m->ephemeris_data == NULL) {
 			predict_destroy_orbital_elements(m);
@@ -70,8 +72,8 @@ predict_orbital_elements_t* predict_parse_tle(const char *tle_line_1, const char
 	} else {
 		m->ephemeris = EPHEMERIS_SGP4;
 		
-		// Allocate memory for ephemeris data
-		m->ephemeris_data = malloc(sizeof(struct _sgp4));
+		// Get ptr to static allocated _sgp4
+		m->ephemeris_data = sgp4_static_alloc();
 
 		if (m->ephemeris_data == NULL) {
 			predict_destroy_orbital_elements(m);
@@ -88,11 +90,22 @@ void predict_destroy_orbital_elements(predict_orbital_elements_t *m)
 {
 	if (m == NULL) return;
 
-	if (m->ephemeris_data != NULL) {
-		free(m->ephemeris_data);
+	if (m->ephemeris_data != NULL) 
+    {
+        switch (m->ephemeris)
+        {
+            case EPHEMERIS_SDP4:   
+                memset(m->ephemeris_data, 0, sizeof(struct _sdp4));
+                break;
+            case EPHEMERIS_SGP4:   
+                memset(m->ephemeris_data, 0, sizeof(struct _sgp4));
+                break;
+            default:
+                break;
+        }
 	}
 
-	free(m);
+	memset((void*)m, 0, sizeof(predict_orbital_elements_t));
 }
 
 bool predict_is_geosynchronous(const predict_orbital_elements_t *m)

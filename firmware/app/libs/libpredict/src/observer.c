@@ -5,13 +5,14 @@
 #include "defs.h"
 #include "sun.h"
 
+/* Static Allocated observer */
+static predict_observer_t observer;
+
 void observer_calculate(const predict_observer_t *observer, double time, const double pos[3], const double vel[3], struct predict_observation *result);
 
 predict_observer_t *predict_create_observer(const char *name, double lat, double lon, double alt)
 {
-	// Allocate memory
-	predict_observer_t *obs = (predict_observer_t*)malloc(sizeof(predict_observer_t));
-	if (obs == NULL) return NULL;
+	predict_observer_t *obs = &observer;
 
 	strncpy(obs->name, name, 128);
 	obs->name[127] = '\0';
@@ -24,8 +25,8 @@ predict_observer_t *predict_create_observer(const char *name, double lat, double
 
 void predict_destroy_observer(predict_observer_t *obs)
 {
-	if (obs != NULL) {
-		free(obs);
+	if (obs == &observer) {
+		memset((void*)obs, 0, sizeof(predict_observer_t));
 	}
 }
 

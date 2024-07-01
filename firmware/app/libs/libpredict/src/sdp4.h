@@ -14,7 +14,6 @@ struct model_output {
 	double phase;
 };
 
-
 /**
  * Parameters for deep space perturbations
  **/
@@ -110,6 +109,11 @@ void sdp4_predict(const struct _sdp4 *m, double tsince, struct model_output *out
  * \copyright GPLv2+
  **/
 void sdp4_deep(const struct _sdp4 *m, int ientry, const deep_arg_fixed_t * deep_arg, deep_arg_dynamic_t *deep_dyn);
+
+/**
+ * Returns ptr to static allocated _sdp4 struct
+ **/
+struct _sdp4 *sdp4_static_alloc(void);
 
 
 #endif // ifndef _SDP4_H_

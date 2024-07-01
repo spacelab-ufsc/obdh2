@@ -6,6 +6,9 @@
 #include "defs.h"
 #include "unsorted.h"
 
+/* Static Allocated sdp4 struct */
+static struct _sdp4 sdp4_;
+
 /// Entry points of deep()
 #define DPSecular	1
 #define DPPeriodic	2
@@ -28,6 +31,11 @@ void sdp4_deep_initialize(const predict_orbital_elements_t *tle, struct _sdp4 *m
  * \copyright GPLv2+
  **/
 void deep_arg_dynamic_init(const struct _sdp4 *m, deep_arg_dynamic_t *deep_dyn);
+
+struct _sdp4 *sdp4_static_alloc(void)
+{
+    return &sdp4_;
+}
 
 void sdp4_init(const predict_orbital_elements_t *tle, struct _sdp4 *m)
 {

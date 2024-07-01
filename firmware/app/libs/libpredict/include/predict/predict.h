@@ -132,8 +132,8 @@ typedef struct {
 predict_orbital_elements_t* predict_parse_tle(const char *tle_line_1, const char *tle_line_2);
 
 /**
- * Free memory allocated in orbital elements structure.
- * \param orbital_elements Orbit to free
+ * Reset memory allocated in orbital elements structure.
+ * \param orbital_elements Orbit to reset
  **/
 void predict_destroy_orbital_elements(predict_orbital_elements_t *orbital_elements);
 
@@ -290,7 +290,7 @@ struct predict_observation {
 predict_observer_t *predict_create_observer(const char *name, double lat, double lon, double alt);
 
 /** 
- * Free observer.
+ * Reset observer.
  *
  * \param obs Observer to be freed.
  **/
