@@ -41,6 +41,8 @@
 
 #include <app/structs/satellite.h>
 
+#define MEM_MNG_NAME "Memory Management"
+
 /**
  * \brief Checks if the FRAM memory is initialized or not.
  *

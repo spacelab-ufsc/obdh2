@@ -37,6 +37,7 @@
 #include <string.h>
 
 #include <config/config.h>
+#include <system/sys_log/sys_log.h>
 
 #include "mem_mng.h"
 
@@ -51,6 +52,9 @@ int mem_mng_check_fram(void)
     {
         if (memcmp(&mem_word_ref[0], &mem_word[0], 8U) == 0)
         {
+            sys_log_print_event_from_module(SYS_LOG_INFO, MEM_MNG_NAME, "FRAM was already initalized");
+            sys_log_new_line();
+
             err = 0;
         }
     }
