@@ -56,44 +56,7 @@
 #include "pos_det.h"
 #include "read_px.h"
 #include "housekeeping.h"
-
-void vTaskParamLogging(void *param)
-{
-    uint16_t buf;
-
-    vTaskDelay(pdMS_TO_TICKS(10000U));
-
-    TickType_t last_cycle = xTaskGetTickCount();
-
-    while (1)
-    {
-        if (temp_sensor_read_k(&buf) == 0)
-        {
-            sys_log_print_event_from_module(SYS_LOG_INFO, "OBDH Data", "Current uC temperature: ");
-            sys_log_print_uint((uint32_t)buf);
-            sys_log_print_msg(" K");
-            sys_log_new_line();
-        }
-
-        if (voltage_sensor_read_mv(&buf) == 0)
-        {
-            sys_log_print_event_from_module(SYS_LOG_INFO, "OBDH Data", "Current input voltage: ");
-            sys_log_print_uint((uint32_t)buf);
-            sys_log_print_msg(" mV");
-            sys_log_new_line();
-        }
-
-        if (current_sensor_read_ma(&buf) == 0)
-        {
-            sys_log_print_event_from_module(SYS_LOG_INFO, "OBDH Data", "Current input current: ");
-            sys_log_print_uint((uint32_t)buf);
-            sys_log_print_msg(" mA");
-            sys_log_new_line();
-        }
-
-        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(120000UL));
-    }
-}
+#include "mem_dump.h"
 
 void create_tasks(void)
 {
@@ -253,7 +216,7 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_HOUSEKEEPING_ENABLED */
 
-    xTaskCreate(vTaskParamLogging, "OBDH DATA", 150U, NULL, 2U, NULL);
+    xTaskCreate(vTaskMemDump, "Mem Dump", 300U, NULL, 1U, NULL);
 
     create_event_groups();
 }
