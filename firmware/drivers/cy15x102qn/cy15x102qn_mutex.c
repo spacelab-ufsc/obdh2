@@ -25,7 +25,7 @@
  *
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  *
- * \version 0.10.15
+ * \version 0.10.17
  *
  * \date 2024/02/26
  *
