@@ -38,6 +38,7 @@
 #include <devices/temp_sensor/temp_sensor.h>
 
 #include <structs/satellite.h>
+#include <system/sys_log/sys_log.h>
 
 #include "read_sensors.h"
 #include "startup.h"
@@ -59,18 +60,33 @@ void vTaskReadSensors(void)
         if (current_sensor_read_ma(&buf) == 0)
         {
             sat_data_buf.obdh.data.current = buf;
+
+            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_SENSORS_NAME, "Current input current: ");
+            sys_log_print_uint((uint32_t)buf);
+            sys_log_print_msg(" mA");
+            sys_log_new_line();
         }
 
         /* OBDH voltage */
         if (voltage_sensor_read_mv(&buf) == 0)
         {
             sat_data_buf.obdh.data.voltage = buf;
+
+            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_SENSORS_NAME, "Current input voltage: ");
+            sys_log_print_uint((uint32_t)buf);
+            sys_log_print_msg(" mV");
+            sys_log_new_line();
         }
 
         /* OBDH temperature */
         if (temp_sensor_read_k(&buf) == 0)
         {
             sat_data_buf.obdh.data.temperature = buf;
+
+            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_SENSORS_NAME, "Current uC temperature: ");
+            sys_log_print_uint((uint32_t)buf);
+            sys_log_print_msg(" K");
+            sys_log_new_line();
         }
 
         /* Data timestamp */
