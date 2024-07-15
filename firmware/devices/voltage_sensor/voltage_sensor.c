@@ -37,7 +37,8 @@
 
 #include "voltage_sensor.h"
 
-#define ALPHA_ (0.05)
+#define ALPHA_          (0.01)
+#define VOLTAGE_INIT    (3300U)
 
 static uint16_t voltage;
 
@@ -59,20 +60,17 @@ int voltage_sensor_init(void)
 
     if (adc_init() == 0)
     {
-        uint16_t volt = 0;
+        uint16_t volt = 0U;
 
-        if (voltage_sensor_read_raw(&volt) == 0)
+        voltage = VOLTAGE_INIT;
+
+        if (voltage_sensor_read_mv(&volt) == 0)
         {
-            volt = voltage_sensor_raw_to_mv(volt);
-             
             sys_log_print_event_from_module(SYS_LOG_INFO, VOLTAGE_SENSOR_MODULE_NAME, "Current input voltage: ");
             sys_log_print_uint(volt);
             sys_log_print_msg(" mV");
             sys_log_new_line();
-
-            /* First sample for the filter */
-            voltage = volt;
-
+            
             err = 0;
         }
         else
