@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.33
+ * \version 0.10.17
  * 
  * \date 2019/12/07
  * 
@@ -41,6 +41,8 @@
 #include <stdbool.h>
 
 #define SPI_MODULE_NAME         "SPI"
+
+#define SPI_MUTEX_WAIT_TIME_MS    10000U
 
 /**
  * \brief SPI ports.
@@ -249,6 +251,27 @@ int spi_read(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len);
  * \return The status/error code.
  */
 int spi_transfer(spi_port_t port, spi_cs_t cs, uint8_t *wd, uint8_t *rd, uint16_t len);
+
+/**
+ * \brief Creates the SPI mutex.
+ *
+ * \return The status/error code.
+ */
+int spi_mutex_create(void);
+
+/**
+ * \brief Attempts to take the SPI mutex.
+ *
+ * \return The status/error code.
+ */
+int spi_mutex_take(void);
+
+/**
+ * \brief Gives the SPI mutex.
+ *
+ * \return The status/error code.
+ */
+int spi_mutex_give(void);
 
 #endif /* SPI_H_ */
 

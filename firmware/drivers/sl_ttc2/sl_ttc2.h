@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.14
+ * \version 0.10.17
  * 
  * \date 2021/05/12
  * 
@@ -590,13 +590,6 @@ int sl_ttc2_spi_transfer(sl_ttc2_config_t config, uint8_t *wdata, uint8_t *rdata
  * \return None.
  */
 void sl_ttc2_delay_ms(uint32_t ms);
-
-/**
- * \brief Creates the sl_ttc2 create.
- *
- * \return The status/error code.
- */
-int sl_ttc2_mutex_create(void);
 
 /**
  * \brief Takes the sl_ttc2 mutex.

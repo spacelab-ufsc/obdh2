@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.14
+ * \version 0.10.17
  * 
  * \date 2021/05/12
  * 
@@ -70,38 +70,23 @@
 
 int sl_ttc2_init(sl_ttc2_config_t config)
 {
-    static bool mutex_is_initialized = false;
-
     int err = -1;
 
-    if (!mutex_is_initialized)
+    if (sl_ttc2_spi_init(config) == 0)
     {
-        err = sl_ttc2_mutex_create();
+        sl_ttc2_delay_ms(10);
 
-        if (err == 0)
+        if (sl_ttc2_check_device(config) == 0)
         {
-            mutex_is_initialized = true;
+            err = 0;
         }
     }
-
-    if (mutex_is_initialized)
+    else
     {
-        if (sl_ttc2_spi_init(config) == 0)
-        {
-            sl_ttc2_delay_ms(10);
-
-            if (sl_ttc2_check_device(config) == 0)
-            {
-                err = 0;
-            }
-        }
-        else
-        {
-        #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
-            sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error initializing the SPI port!");
-            sys_log_new_line();
-        #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
-        }
+    #if defined(CONFIG_DRIVERS_DEBUG_ENABLED) && (CONFIG_DRIVERS_DEBUG_ENABLED == 1)
+        sys_log_print_event_from_module(SYS_LOG_ERROR, SL_TTC2_MODULE_NAME, "Error initializing the SPI port!");
+        sys_log_new_line();
+    #endif /* CONFIG_DRIVERS_DEBUG_ENABLED */
     }
 
     return err;

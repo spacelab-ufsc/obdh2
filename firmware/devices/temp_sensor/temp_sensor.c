@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.28
+ * \version 0.10.17
  * 
  * \date 2020/03/17
  * 
@@ -95,9 +95,9 @@ uint16_t temp_sensor_raw_to_k(uint16_t raw)
 {
     int16_t temp_c = temp_sensor_raw_to_c(raw);
 
-    if (temp_c < 273)
+    if (temp_c < -273)
     {
-        temp_c = 273;
+        temp_c = -273;
     }
 
     uint16_t res = temp_c + 273;

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.9
+ * \version 0.10.17
  * 
  * \date 2024/02/24
  * 
@@ -40,6 +40,8 @@
 #include <system/system.h>
 
 #include <app/structs/satellite.h>
+
+#define MEM_MNG_NAME "Memory Management"
 
 /**
  * \brief Checks if the FRAM memory is initialized or not.
@@ -78,7 +80,7 @@ void mem_mng_load_obdh_data_from_default_values(obdh_telemetry_t *tel);
  *
  * \return The status/error code.
  */
-int mem_mng_save_obdh_data_to_fram(obdh_telemetry_t tel);
+int mem_mng_save_obdh_data_to_fram(obdh_telemetry_t *tel);
 
 /**
  * \brief Loads the last saved OBDH data from the FRAM memory.

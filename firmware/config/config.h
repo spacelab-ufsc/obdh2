@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.15
+ * \version 0.10.17
  * 
  * \date 2019/10/26
  * 
@@ -53,6 +53,7 @@
 #define CONFIG_TASK_ANTENNA_DEPLOYMENT_ENABLED          0
 #define CONFIG_TASK_POSITION_DETERMINATION_ENABLED      1
 #define CONFIG_TASK_PAYLOAD_X_ENABLED                   1
+#define CONFIG_TASK_HOUSEKEEPING_ENABLED                1
 
 /* Devices */
 #define CONFIG_DEV_MEDIA_INT_ENABLED                    1

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.11
+ * \version 0.10.17
  * 
  * \date 2021/08/29
  * 
@@ -149,6 +149,8 @@ static void cy15x102qn_write_status_reg_test(void **state)
 
 static void cy15x102qn_write_test(void **state)
 {
+    will_return(__wrap_spi_mutex_take, 0);
+
     /* Select device */
     expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
     expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
@@ -206,11 +208,15 @@ static void cy15x102qn_write_test(void **state)
 
     will_return(__wrap_spi_select_slave, 0);
 
+    will_return(__wrap_spi_mutex_give, 0);
+
     assert_return_code(cy15x102qn_write(&conf, adr, data, data_len), 0);
 }
 
 static void cy15x102qn_read_test(void **state)
 {
+    will_return(__wrap_spi_mutex_take, 0);
+
     /* Select device */
     expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
     expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
@@ -267,6 +273,8 @@ static void cy15x102qn_read_test(void **state)
     expect_value(__wrap_spi_select_slave, active, false);
 
     will_return(__wrap_spi_select_slave, 0);
+
+    will_return(__wrap_spi_mutex_give, 0);
 
     uint8_t data_res[256] = {0xFF};
 

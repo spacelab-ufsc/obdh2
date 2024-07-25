@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.9
+ * \version 0.10.17
  * 
  * \date 2021/05/24
  * 
@@ -170,7 +170,7 @@ int write_data_to_flash_page(uint8_t *data, uint32_t *page, uint32_t page_size, 
 
     if (media_write(MEDIA_NOR, (*page) * page_size, data, page_size) == 0)
     {
-        *page++;    // cppcheck-suppress misra-c2012-17.8
+        (*page)++;    // cppcheck-suppress misra-c2012-17.8
 
         if (*page > end_page)
         {

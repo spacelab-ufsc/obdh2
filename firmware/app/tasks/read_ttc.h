@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.14
+ * \version 0.10.17
  * 
  * \date 2021/05/14
  * 
@@ -45,7 +45,7 @@
 #define TASK_READ_TTC_STACK_SIZE                384                 /**< Stack size in bytes. */
 #define TASK_READ_TTC_PRIORITY                  3                   /**< Task priority. */
 #define TASK_READ_TTC_PERIOD_MS                 (60000)             /**< Task period in milliseconds. */
-#define TASK_READ_TTC_INITIAL_DELAY_MS          1000                /**< Delay, in milliseconds, before the first execution. */
+#define TASK_READ_TTC_INITIAL_DELAY_MS          5500                /**< Delay, in milliseconds, before the first execution. */
 #define TASK_READ_TTC_INIT_TIMEOUT_MS           2000                /**< Wait time to initialize the task in milliseconds. */
 
 /**

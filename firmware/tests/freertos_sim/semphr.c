@@ -25,7 +25,7 @@
  * \author Miguel Boing <miguelboing13@gmail.com>
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.14
+ * \version 0.10.17
  * 
  * \date 2024/04/25
  * 
@@ -46,6 +46,21 @@ BaseType_t xSemaphoreTake(SemaphoreHandle_t xSemaphore, TickType_t xBlockTime)
 BaseType_t xSemaphoreGive(SemaphoreHandle_t xSemaphore)
 {
 	return pdTRUE;
+}
+
+SemaphoreHandle_t xSemaphoreCreateRecursiveMutex(void)
+{
+    return (SemaphoreHandle_t) 0x01;
+}
+
+BaseType_t xSemaphoreTakeRecursive(SemaphoreHandle_t xSemaphore, TickType_t xBlockTime)
+{
+    return pdTRUE;
+}
+
+BaseType_t xSemaphoreGiveRecursive(SemaphoreHandle_t xSemaphore)
+{
+    return pdTRUE;
 }
 
 /** \} End of semphr_sim group */

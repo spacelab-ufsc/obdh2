@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.10.9
+ * \version 0.10.17
  * 
  * \date 2019/12/04
  * 
@@ -114,14 +114,20 @@ void vTaskStartup(void)
             }
             else
             {
+                sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "FRAM was not initialized in previous cycles");
+                sys_log_new_line();
+
                 /* Initialize FRAM */
                 if (mem_mng_init_fram() == 0)
                 {
                     /* Load default values to the OBDH data buffer */
                     mem_mng_load_obdh_data_from_default_values(&sat_data_buf.obdh);
 
+                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Loading default values to FRAM...");
+                    sys_log_new_line();
+
                     /* Write the OBDH data to the FRAM memory */
-                    if (mem_mng_save_obdh_data_to_fram(sat_data_buf.obdh) != 0)
+                    if (mem_mng_save_obdh_data_to_fram(&sat_data_buf.obdh) != 0)
                     {
                         error_counter++;
                     }

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.33
+ * \version 0.10.17
  * 
  * \date 2021/04/27
  * 
@@ -41,7 +41,7 @@
 #include <task.h>
 
 #define TASK_HOUSEKEEPING_NAME                  "Housekeeping"      /**< Task name. */
-#define TASK_HOUSEKEEPING_STACK_SIZE            160                 /**< Stack size in bytes. */
+#define TASK_HOUSEKEEPING_STACK_SIZE            225                 /**< Stack size in bytes. */
 #define TASK_HOUSEKEEPING_PRIORITY              3                   /**< Task priority. */
 #define TASK_HOUSEKEEPING_PERIOD_MS             (10000)             /**< Task period in milliseconds. */
 #define TASK_HOUSEKEEPING_INIT_TIMEOUT_MS       2000                /**< Wait time to initialize the task in milliseconds. */
