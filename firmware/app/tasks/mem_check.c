@@ -41,6 +41,7 @@
 #include <system/sys_log/sys_log.h>
 #include <devices/media/media.h>
 
+#include <utils/mem_mng.h>
 #include <structs/satellite.h>
 
 #include "mem_check.h"
@@ -53,10 +54,8 @@
 #define ADDR_TO_PAGE(addr)  ((uint32_t)(addr) / PAGE_SIZE)
 
 TaskHandle_t xTaskHealthCheckMemHandle;
-TaskHandle_t xTaskHealthCheckMemCfgLoadHandle;
 
 static void prepare_obdh_s(obdh_telemetry_t *tel);
-static void sys_log_test_result(bool result, const char *check_msg);
 static void nor_sector_check(const char *msg, const uint8_t *data, uint32_t first_page);
 static void fram_sector_check(const char *msg, const uint8_t *data, uint32_t addr);
 static void intflash_sector_check(const char *msg, const uint8_t *data, uint32_t addr);
@@ -133,16 +132,39 @@ void vTaskHealthCheckMem(void)
             sys_log_new_line();
         }
 
-        /* TODO */
-        // Unblock the next Health Check Task
-       
-       vTaskSuspend(NULL);
-    }
-}
+        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_HEALTH_CHECK_MEM_NAME, "Preparing load config test...");
+        sys_log_new_line();
 
-void vTaskHealthCheckMemCfgLoad(void) 
-{
-    /* TODO */
+        obdh_telemetry_t test_params;
+        obdh_telemetry_t loaded_params;
+
+        prepare_obdh_s(&test_params);
+
+        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_HEALTH_CHECK_MEM_NAME, "Starting load config test...");
+        sys_log_new_line();
+
+        if (mem_mng_save_obdh_data_to_fram(&test_params) != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MEM_NAME, "Could not save params to FRAM");
+            sys_log_new_line();
+        }
+        
+        if (mem_mng_load_obdh_data_from_fram(&loaded_params) != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MEM_NAME, "Could not read params from FRAM");
+            sys_log_new_line();
+        }
+
+        bool param_test_result = (memcmp(&test_params, &loaded_params, sizeof(obdh_telemetry_t)) == 0);
+
+        sys_log_print_test_result(param_test_result, "System param loading from FRAM");
+        sys_log_new_line();
+
+        /* TODO */
+        /* Test Redundancy from internal FLASH */
+
+        vTaskSuspend(NULL);
+    }
 }
 
 static void intflash_sector_check(const char *msg, const uint8_t *data, uint32_t addr)
@@ -155,7 +177,7 @@ static void intflash_sector_check(const char *msg, const uint8_t *data, uint32_t
     do {
         test_result = mem_check_pages(MEDIA_INT_FLASH, data, page, last_page, &pages_left);
 
-        sys_log_test_result(test_result, msg);
+        sys_log_print_test_result(test_result, msg);
         sys_log_print_msg(" Sector Test");
         sys_log_new_line();
 
@@ -173,7 +195,7 @@ static void fram_sector_check(const char *msg, const uint8_t *data, uint32_t add
     do {
         test_result = mem_check_pages(MEDIA_FRAM, data, page, last_page, &pages_left);
 
-        sys_log_test_result(test_result, msg);
+        sys_log_print_test_result(test_result, msg);
         sys_log_print_msg(" Sector Test");
         sys_log_new_line();
 
@@ -194,7 +216,7 @@ static void nor_sector_check(const char *msg, const uint8_t *data, uint32_t firs
     do {
         test_result = mem_check_pages(MEDIA_NOR, data, page, last_page, &pages_left);
 
-        sys_log_test_result(test_result, msg);
+        sys_log_print_test_result(test_result, msg);
         sys_log_print_msg(" Sector, Page: ");
         sys_log_print_uint(page);
         sys_log_print_msg(" Test");
@@ -204,28 +226,6 @@ static void nor_sector_check(const char *msg, const uint8_t *data, uint32_t firs
     } while (pages_left > 0ULL);
 }
 
-static void sys_log_test_result(bool result, const char *check_msg)
-{
-    (void)sys_log_mutex_take();
-
-    sys_log_print_msg("[  ");
-
-    if (result)
-    {
-        sys_log_set_color(SYS_LOG_COLOR_GREEN);
-        sys_log_print_msg("OK");
-        sys_log_reset_color();
-    }
-    else
-    {
-        sys_log_set_color(SYS_LOG_COLOR_RED);
-        sys_log_print_msg("FAILED");
-        sys_log_reset_color();
-    }
-
-    sys_log_print_msg("  ] ");
-    sys_log_print_msg(check_msg);
-}
 static bool mem_check_pages(media_t media, const uint8_t *page_data, uint32_t first_page, uint32_t last_page, uint32_t *pages_left)
 {
     uint8_t buf[PAGE_SIZE];
@@ -264,6 +264,7 @@ static bool mem_check_pages(media_t media, const uint8_t *page_data, uint32_t fi
 
     return test_result;
 }
+
 static int32_t mem_full_clean(void) 
 {
     int32_t err = 0;
@@ -285,7 +286,6 @@ static int32_t mem_full_clean(void)
     }
 
 #if 0 /* TODO */
-
     for (uint16_t i = 0U; i < PAGE_SIZE; i += 8U) 
     {
         if (media_erase(MEDIA_INT_FLASH, MEDIA_ERASE_SECTOR, i) != 0)
@@ -296,7 +296,6 @@ static int32_t mem_full_clean(void)
             err--;
         }
     }
-
 #endif
 
     const uint32_t addrs[] = {CONFIG_MEM_ADR_INIT_WORD, CONFIG_MEM_ADR_SYS_PARAM, CONFIG_MEM_ADR_SYS_TIME};

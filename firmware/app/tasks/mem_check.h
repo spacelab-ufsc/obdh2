@@ -40,15 +40,10 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
-#define TASK_HEALTH_CHECK_MEM_NAME                       "HealthCheck Mem"       /**< Task name. */
-#define TASK_HEALTH_CHECK_MEM_STACK_SIZE                 512                     /**< Stack size in bytes. */
-#define TASK_HEALTH_CHECK_MEM_PRIORITY                   4                       /**< Task priority. */
-#define TASK_HEALTH_CHECK_MEM_INIT_TIMEOUT_MS            5000UL                  /**< Task priority. */
-
-#define TASK_HEALTH_CHECK_MEM_LOAD_CFG_NAME              "HealthCheck MemCfg"    /**< Task name. */
-#define TASK_HEALTH_CHECK_MEM_LOAD_CFG_STACK_SIZE        512                     /**< Stack size in bytes. */
-#define TASK_HEALTH_CHECK_MEM_LOAD_CFG_PRIORITY          4                       /**< Task priority. */
-#define TASK_HEALTH_CHECK_MEM_LOAD_CFGINIT_TIMEOUT_MS    120000UL                /**< Task priority. */
+#define TASK_HEALTH_CHECK_MEM_NAME                       "HealthCheck Mem"      /**< Task name. */
+#define TASK_HEALTH_CHECK_MEM_STACK_SIZE                 1024U                  /**< Stack size in bytes. */
+#define TASK_HEALTH_CHECK_MEM_PRIORITY                   4U                     /**< Task priority. */
+#define TASK_HEALTH_CHECK_MEM_INIT_TIMEOUT_MS            5000U                  /**< Task priority. */
 
 /**
  * \brief Health Check Memory Task Handle
@@ -56,23 +51,11 @@
 extern TaskHandle_t xTaskHealthCheckMemHandle;
 
 /**
- * \brief Health Check Memory Config Load Task Handle
- */
-extern TaskHandle_t xTaskHealthCheckMemCfgLoadHandle;
-
-/**
  * \brief Health Check Memory Task 
  *
  * \return None.
  */
 void vTaskHealthCheckMem(void);
-
-/**
- * \brief Health Check Memory Config Load Task 
- *
- * \return None.
- */
-void vTaskHealthCheckMemCfgLoad(void);
 
 #endif 
 
