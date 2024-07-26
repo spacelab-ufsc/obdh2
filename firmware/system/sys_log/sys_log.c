@@ -34,6 +34,7 @@
  */
 
 #include <math.h>
+#include <stdbool.h>
 
 #include <FreeRTOS.h>
 #include <task.h>
@@ -389,6 +390,29 @@ void sys_log_print_firmware_version(void)
 {
     sys_log_print_msg("v");
     sys_log_print_msg(FIRMWARE_VERSION);
+}
+
+void sys_log_print_test_result(bool result, const char *check_msg)
+{
+    (void)sys_log_mutex_take();
+
+    sys_log_print_msg("[  ");
+
+    if (result)
+    {
+        sys_log_set_color(SYS_LOG_COLOR_GREEN);
+        sys_log_print_msg("OK");
+        sys_log_reset_color();
+    }
+    else
+    {
+        sys_log_set_color(SYS_LOG_COLOR_RED);
+        sys_log_print_msg("FAILED");
+        sys_log_reset_color();
+    }
+
+    sys_log_print_msg("  ] ");
+    sys_log_print_msg(check_msg);
 }
 
 /** \} End of sys_log group */
