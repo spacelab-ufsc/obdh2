@@ -396,12 +396,12 @@ void sys_log_print_test_result(bool result, const char *check_msg)
 {
     (void)sys_log_mutex_take();
 
-    sys_log_print_msg("[  ");
+    sys_log_print_msg("[");
 
     if (result)
     {
         sys_log_set_color(SYS_LOG_COLOR_GREEN);
-        sys_log_print_msg("OK");
+        sys_log_print_msg("  OK  ");
         sys_log_reset_color();
     }
     else
@@ -411,7 +411,7 @@ void sys_log_print_test_result(bool result, const char *check_msg)
         sys_log_reset_color();
     }
 
-    sys_log_print_msg("  ] ");
+    sys_log_print_msg("] ");
     sys_log_print_msg(check_msg);
 }
 
