@@ -158,6 +158,8 @@
 #define CONFIG_MEM_PX_DATA_END_PAGE                     398999U
 #define CONFIG_MEM_SBCD_PKTS_START_PAGE                 399000U
 #define CONFIG_MEM_SBCD_PKTS_END_PAGE                   499999U
+#define CONFIG_MEM_ADR_SYS_TIME_BAK                     0x1980U
+#define CONFIG_MEM_ADR_SYS_PARAM_BAK                    0x1900U
 
 /* Health Check Config Parameters */
 #if defined(CONFIG_HEALTH_CHECK_ENABLED) && (CONFIG_HEALTH_CHECK_ENABLED == 1)

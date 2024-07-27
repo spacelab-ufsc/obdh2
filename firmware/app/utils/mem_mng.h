@@ -91,6 +91,24 @@ int mem_mng_save_obdh_data_to_fram(obdh_telemetry_t *tel);
  */
 int mem_mng_load_obdh_data_from_fram(obdh_telemetry_t *tel);
 
+/**
+ * \brief Saves media pages params to internal flash as backup.
+ *
+ * \param[in] tel is a pointer to store the read data.
+ *
+ * \return None.
+ */
+void mem_mng_save_media_info_bak(obdh_telemetry_t *tel);
+
+/**
+ * \brief Loads backup media pages params from internal flash. 
+ *
+ * \param[in] media is a pointer to store the read data.
+ *
+ * \return None.
+ */
+int mem_mng_load_media_info_bak(media_data_t *media);
+
 #endif /* MEM_MNG_H_ */
 
 /** \} End of mem_mng group */

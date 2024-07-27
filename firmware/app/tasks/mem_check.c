@@ -157,11 +157,29 @@ void vTaskHealthCheckMem(void)
 
         bool param_test_result = (memcmp(&test_params, &loaded_params, sizeof(obdh_telemetry_t)) == 0);
 
-        sys_log_print_test_result(param_test_result, "System param loading from FRAM");
+        sys_log_print_test_result(param_test_result, "System param loading from FRAM Test");
         sys_log_new_line();
 
         /* TODO */
-        /* Test Redundancy from internal FLASH */
+        /* Test Redundancy from internal FLASH **COMPLETELY** */
+
+        media_data_t media;
+
+        mem_mng_save_media_info_bak(&test_params);
+
+        if (mem_mng_load_media_info_bak(&media) != 0) 
+        {
+            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_HEALTH_CHECK_MEM_NAME, "Could not load media info from INT FLASH Correctly");
+            sys_log_new_line();
+        }
+
+        bool int_flash_res = (memcmp(&test_params.data.media, &media, sizeof(media_data_t)) == 0);
+
+        sys_log_print_test_result(int_flash_res, "Media info backup Test");
+        sys_log_new_line();
+
+        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_HEALTH_CHECK_MEM_NAME, "Health Check finished!!");
+        sys_log_new_line();
 
         vTaskSuspend(NULL);
     }
@@ -285,18 +303,7 @@ static int32_t mem_full_clean(void)
         err--;
     }
 
-#if 0 /* TODO */
-    for (uint16_t i = 0U; i < PAGE_SIZE; i += 8U) 
-    {
-        if (media_erase(MEDIA_INT_FLASH, MEDIA_ERASE_SECTOR, i) != 0)
-        {
-            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MEM_NAME, "Failed to erase INT sector ");
-            sys_log_print_uint((uint32_t) i);
-            sys_log_new_line();
-            err--;
-        }
-    }
-#endif
+    flash_erase(CONFIG_MEM_ADR_SYS_PARAM_BAK);
 
     const uint32_t addrs[] = {CONFIG_MEM_ADR_INIT_WORD, CONFIG_MEM_ADR_SYS_PARAM, CONFIG_MEM_ADR_SYS_TIME};
     uint8_t buf[PAGE_SIZE];
