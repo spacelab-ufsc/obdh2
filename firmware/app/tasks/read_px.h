@@ -52,7 +52,7 @@
 typedef struct
 {
     uint8_t buffer[4];
-    uint32_t length;
+    int32_t length;
 } pl_px_buf_t;
 
 /**

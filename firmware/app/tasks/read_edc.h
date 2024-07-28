@@ -52,7 +52,7 @@
 typedef struct
 {
     uint8_t buffer[30];
-    uint32_t length;
+    int32_t length;
 } pl_edc_hk_raw_t;
 
 /**

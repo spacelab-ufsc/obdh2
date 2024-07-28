@@ -160,7 +160,7 @@ int payload_write_cmd(payload_t pl, payload_cmd_t cmd);
  *
  * \return The status/error code.
  */
-int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t *len);
+int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, int32_t *len);
 
 #endif /* PAYLOAD_H_ */
 

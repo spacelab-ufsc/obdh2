@@ -71,11 +71,11 @@ void vTaskReadEDC(void)
 
         /* Read packets */
         uint8_t state_arr[10] = {0};
-        uint32_t state_len = 0;
+        int32_t state_len = 0;
 
         if (payload_get_data(pl_edc_active, PAYLOAD_EDC_STATE, state_arr, &state_len) == 0)
         {
-            if (state_len >= sizeof(edc_state_t))
+            if (state_len >= (int32_t)sizeof(edc_state_t))
             {
                 edc_state_t state = *(edc_state_t*)&state_arr[0];
 
@@ -90,7 +90,7 @@ void vTaskReadEDC(void)
                     for(i = 0; i < state.ptt_available; i++)
                     {
                         uint8_t ptt_arr[50] = {0};
-                        uint32_t ptt_len = 0;
+                        int32_t ptt_len = 0;
 
                         if (payload_get_data(pl_edc_active, PAYLOAD_EDC_PTT, ptt_arr, &ptt_len) == 0)
                         {

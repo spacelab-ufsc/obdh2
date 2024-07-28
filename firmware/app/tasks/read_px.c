@@ -33,6 +33,8 @@
  * \{
  */
 
+#include <stdint.h>
+
 #include <system/sys_log/sys_log.h>
 #include <devices/payload/payload.h>
 #include <drivers/px/px.h>
@@ -61,8 +63,8 @@ void vTaskReadPX(void)
         {
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_PX_NAME, "Error reading the ping-pong data!");
 
-            uint8_t i = 0;
-            for(i=0;i<px_buf.length;i++){
+            int32_t i = 0;
+            for(i = 0; i < px_buf.length; i++){
                 sys_log_print_uint(px_buf.buffer[i]);
             }
 
