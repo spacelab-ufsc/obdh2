@@ -49,6 +49,7 @@
 #include <devices/media/media.h>
 #include <devices/payload/payload.h>
 #include <app/structs/satellite.h>
+#include <utils/mem_mng.h>
 
 #include "startup.h"
 

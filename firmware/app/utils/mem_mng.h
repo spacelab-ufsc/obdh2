@@ -109,6 +109,23 @@ void mem_mng_save_media_info_bak(obdh_telemetry_t *tel);
  */
 int mem_mng_load_media_info_bak(media_data_t *media);
 
+/**
+ * \brief Writes data to a given flash memory page.
+ *
+ * \param[in] is the array of bytes to write.
+ *
+ * \param[in,out] page is a pointer to the current page to write.
+ *
+ * \param[in] page_size is the page size, in bytes, of the flash memory.
+ *
+ * \param[in] start_page is the possible start page to write.
+ *
+ * \param[in] end_page is the possible end page to write.
+ *
+ * \return The status/error code.
+ */
+int mem_mng_write_data_to_flash_page(uint8_t *data, uint32_t *page, uint32_t page_size, uint32_t start_page, uint32_t end_page);
+
 #endif /* MEM_MNG_H_ */
 
 /** \} End of mem_mng group */
