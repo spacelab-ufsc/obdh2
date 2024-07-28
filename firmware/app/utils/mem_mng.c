@@ -136,7 +136,7 @@ void mem_mng_load_obdh_data_from_default_values(obdh_telemetry_t *tel)
     tel->data.media.last_page_sbcd_pkts     = OBDH_PARAM_MEDIA_LAST_SBCD_PKTS_DEFAULT_VAL;
 }
 
-int mem_mng_save_obdh_data_to_fram(obdh_telemetry_t* tel)
+int mem_mng_save_obdh_data_to_fram(obdh_telemetry_t *tel)
 {
     int err = -1;
 
