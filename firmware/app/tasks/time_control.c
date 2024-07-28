@@ -120,6 +120,13 @@ void vTaskTimeControl(void)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_TIME_CONTROL_NAME, "Error saving the system time!");
                 sys_log_new_line();
             }
+            else 
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_TIME_CONTROL_NAME, "Saving system time (epoch): ");
+                sys_log_print_uint(sys_tm);
+                sys_log_print_msg(" sec");
+                sys_log_new_line();
+            }
         }
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_TIME_CONTROL_PERIOD_MS));
