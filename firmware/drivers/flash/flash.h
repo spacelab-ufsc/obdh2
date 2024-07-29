@@ -65,6 +65,8 @@
 /* Last adress that can write a data(beyond this will enter the overflow) */
 #define FLASH_LAST_WRITE_ADDR       0x00087FFF
 
+#define INFO_SEG_SIZE               128U
+
 /**
  * \brief Flash memory initialization.
  *
