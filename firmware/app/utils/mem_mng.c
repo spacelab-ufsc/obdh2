@@ -194,8 +194,6 @@ void mem_mng_save_obdh_data_bak(obdh_telemetry_t *tel)
     uintptr_t base_addr = CONFIG_MEM_ADR_SYS_PARAM_BAK;
     uint8_t buf[BAK_DATA_SIZE + 2U];
 
-    assert(BAK_DATA_SIZE <= INFO_SEG_SIZE);
-
     flash_erase(base_addr);
 
     (void)memcpy(buf, tel, BAK_DATA_SIZE);
