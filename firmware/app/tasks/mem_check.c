@@ -48,6 +48,7 @@
 #include "startup.h"
 
 #define PAGE_SIZE           ((uint32_t)256UL)
+#define SEG_SIZE            ((uint32_t)128UL)
 #define PAGE_TO_ADDR(page)  ((page) * PAGE_SIZE)
 #define PAGE_CHECK_DEPTH    ((uint32_t)10UL)
 #define ARR_SIZE(arr)       (sizeof((arr))/sizeof((arr)[0]))
@@ -58,7 +59,7 @@ TaskHandle_t xTaskHealthCheckMemHandle;
 static void prepare_obdh_s(obdh_telemetry_t *tel);
 static void nor_sector_check(const char *msg, const uint8_t *data, uint32_t first_page);
 static void fram_sector_check(const char *msg, const uint8_t *data, uint32_t addr);
-static void intflash_sector_check(const char *msg, const uint8_t *data, uint32_t addr);
+static void int_flash_sector_check(const char *msg, const uint8_t *data, uint32_t addr);
 static bool mem_check_pages(media_t media, const uint8_t *page_data, uint32_t first_page, uint32_t last_page, uint32_t *pages_left);
 static int32_t mem_full_clean(void);
 
@@ -119,7 +120,7 @@ void vTaskHealthCheckMem(void)
 
         vTaskDelay(pdMS_TO_TICKS(10U));
 
-        intflash_sector_check("SYS_PARAM Backup", test_data, 0ULL);
+        int_flash_sector_check("Internal Flash Seg A Test", test_data, 0ULL);
 
         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_HEALTH_CHECK_MEM_NAME, "Health Check finished. Cleaning up...");
         sys_log_new_line();
@@ -178,6 +179,17 @@ void vTaskHealthCheckMem(void)
         sys_log_print_test_result(int_flash_res, "Media info backup Test");
         sys_log_new_line();
 
+        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_HEALTH_CHECK_MEM_NAME, "Cleaning up...");
+        sys_log_new_line();
+
+        vTaskDelay(pdMS_TO_TICKS(10U));
+        
+        if (mem_full_clean() < 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MEM_NAME, "Failed to clean memories after test");
+            sys_log_new_line();
+        }
+
         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_HEALTH_CHECK_MEM_NAME, "Health Check finished!!");
         sys_log_new_line();
 
@@ -185,22 +197,47 @@ void vTaskHealthCheckMem(void)
     }
 }
 
-static void intflash_sector_check(const char *msg, const uint8_t *data, uint32_t addr)
+static void int_flash_sector_check(const char *msg, const uint8_t *data, uint32_t addr)
 {
-    uint32_t page = ADDR_TO_PAGE(addr);
-    uint32_t last_page = page + (uint32_t)1ULL;
-    uint32_t pages_left;
+    uint8_t buf[SEG_SIZE];
     bool test_result;
 
-    do {
-        test_result = mem_check_pages(MEDIA_INT_FLASH, data, page, last_page, &pages_left);
+    (void)memcpy(buf, data, SEG_SIZE);
 
-        sys_log_print_test_result(test_result, msg);
-        sys_log_print_msg(" Sector Test");
+    if (media_write(MEDIA_INT_FLASH, addr, buf, SEG_SIZE) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MEM_NAME, "Failed to write to Int Flash segment: ");
+        sys_log_print_hex(addr);
         sys_log_new_line();
 
-        page++;
-    } while (pages_left > 0ULL);
+        sys_log_print_test_result(false, msg);
+        sys_log_new_line();
+
+        return; // cppcheck-suppress misra-c2012-15.5
+    }
+
+    vTaskDelay(pdMS_TO_TICKS(10U));
+
+    (void)memset(buf, 0U, SEG_SIZE);
+
+    if (media_read(MEDIA_INT_FLASH, addr, buf, SEG_SIZE) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MEM_NAME, "Failed to read from Int Flash segment: ");
+        sys_log_print_hex(addr);
+        sys_log_new_line();
+
+        sys_log_print_test_result(false, msg);
+        sys_log_new_line();
+
+        return; // cppcheck-suppress misra-c2012-15.5
+    }
+    
+    vTaskDelay(pdMS_TO_TICKS(10U));
+
+    test_result = (memcmp(page_data, buf, SEG_SIZE) == 0);
+
+    sys_log_print_test_result(test_result, msg);
+    sys_log_new_line();
 }
 
 static void fram_sector_check(const char *msg, const uint8_t *data, uint32_t addr)
@@ -303,7 +340,19 @@ static int32_t mem_full_clean(void)
         err--;
     }
 
-    flash_erase(CONFIG_MEM_ADR_SYS_PARAM_BAK);
+    if (media_erase(MEDIA_INT_FLASH, MEDIA_ERASE_SECTOR, FLASH_SEG_A_ADR) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MEM_NAME, "Failed to erase Int Flash Segment A");
+        sys_log_new_line();
+        err--;
+    }
+
+    if (media_erase(MEDIA_INT_FLASH, MEDIA_ERASE_SECTOR, FLASH_SEG_B_ADR) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MEM_NAME, "Failed to erase Int Flash Segment B");
+        sys_log_new_line();
+        err--;
+    }
 
     const uint32_t addrs[] = {CONFIG_MEM_ADR_INIT_WORD, CONFIG_MEM_ADR_SYS_PARAM, CONFIG_MEM_ADR_SYS_TIME};
     uint8_t buf[PAGE_SIZE];
