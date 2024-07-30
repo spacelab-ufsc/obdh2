@@ -94,16 +94,7 @@ void vTaskReadEDC(void)
 
                         if (payload_get_data(pl_edc_active, PAYLOAD_EDC_PTT, ptt_arr, &ptt_len) == 0)
                         {
-                            if (media_write(MEDIA_NOR, sat_data_buf.obdh.data.media.last_page_sbcd_pkts * nor_info.page_size, ptt_arr, nor_info.page_size) == 0)
-                            {
-                                sat_data_buf.obdh.data.media.last_page_sbcd_pkts++;
-
-                                if (sat_data_buf.obdh.data.media.last_page_sbcd_pkts > CONFIG_MEM_SBCD_PKTS_END_PAGE)
-                                {
-                                    sat_data_buf.obdh.data.media.last_page_sbcd_pkts = CONFIG_MEM_SBCD_PKTS_START_PAGE;
-                                }
-                            }
-                            else
+                            if (mem_mng_write_data_to_flash_page(ptt_arr, &sat_data_buf.obdh.data.media.last_page_sbcd_pkts, nor_info.page_size, CONFIG_MEM_SBCD_PKTS_START_PAGE, CONFIG_MEM_SBCD_PKTS_END_PAGE) != 0)
                             {
                                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_EDC_NAME, "Error writing the PTT packet to the flash memory!");
                                 sys_log_new_line();
