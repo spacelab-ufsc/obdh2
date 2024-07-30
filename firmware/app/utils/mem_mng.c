@@ -41,6 +41,7 @@
 #include <system/sys_log/sys_log.h>
 #include <drivers/flash/flash.h>
 #include <devices/media/media.h>
+#include <structs/obdh_data.h>
 
 #include "mem_mng.h"
 
@@ -168,46 +169,6 @@ int mem_mng_load_obdh_data_from_fram(obdh_telemetry_t *tel)
     return err;
 }
 
-void mem_mng_save_media_info_bak(obdh_telemetry_t *tel)
-{
-    uintptr_t base_addr = CONFIG_MEM_ADR_SYS_PARAM_BAK;
-    uint8_t buf[sizeof(media_data_t) + 1U];
-
-    flash_erase(base_addr);
-
-    (void)memcpy(buf, &tel->data.media, sizeof(media_data_t));
-
-    buf[sizeof(media_data_t)] = crc8(buf, sizeof(media_data_t));
-
-    for (uint8_t i = 0U; i < sizeof(media_data_t) + 1U; ++i)
-    {
-        uintptr_t addr = base_addr + i;
-        flash_write_single(buf[i], addr);
-    }
-}
-
-int mem_mng_load_media_info_bak(media_data_t *media)
-{
-    int err = -1;
-
-    uintptr_t base_addr = CONFIG_MEM_ADR_SYS_PARAM_BAK;
-    uint8_t buf[sizeof(media_data_t) + 1U];
-
-    for (uint8_t i = 0U; i < sizeof(media_data_t) + 1U; ++i)
-    {
-        uintptr_t addr = base_addr + i;
-        buf[i] = flash_read_single(addr);
-    }
-
-    if (buf[sizeof(media_data_t)] == crc8(buf, sizeof(media_data_t)))
-    {
-        (void)memcpy(media, buf, sizeof(media_data_t));
-        err = 0;
-    }
-
-    return err;
-}
-
 int mem_mng_write_data_to_flash_page(uint8_t *data, uint32_t *page, uint32_t page_size, uint32_t start_page, uint32_t end_page)
 {
     int err = -1;
@@ -221,6 +182,48 @@ int mem_mng_write_data_to_flash_page(uint8_t *data, uint32_t *page, uint32_t pag
             *page = start_page;
         }
 
+        err = 0;
+    }
+
+    return err;
+}
+
+void mem_mng_save_obdh_data_bak(obdh_telemetry_t *tel)
+{
+    uintptr_t base_addr = CONFIG_MEM_ADR_SYS_PARAM_BAK;
+    uint8_t buf[BAK_DATA_SIZE + 1U];
+
+    assert(BAK_DATA_SIZE <= INFO_SEG_SIZE);
+
+    flash_erase(base_addr);
+
+    (void)memcpy(buf, tel, BAK_DATA_SIZE);
+
+    buf[BAK_DATA_SIZE] = crc8(buf, BAK_DATA_SIZE);
+
+    for (uint8_t i = 0U; i < BAK_DATA_SIZE + 1U; ++i)
+    {
+        uintptr_t addr = base_addr + i;
+        flash_write_single(buf[i], addr);
+    }
+}
+
+int mem_mng_load_obdh_data_bak(obdh_telemetry_t *tel)
+{
+    int err = -1;
+
+    uintptr_t base_addr = CONFIG_MEM_ADR_SYS_PARAM_BAK;
+    uint8_t buf[BAK_DATA_SIZE + 1U];
+
+    for (uint8_t i = 0U; i < BAK_DATA_SIZE + 1U; ++i)
+    {
+        uintptr_t addr = base_addr + i;
+        buf[i] = flash_read_single(addr);
+    }
+
+    if (buf[BAK_DATA_SIZE] == crc8(buf, BAK_DATA_SIZE))
+    {
+        (void)memcpy(tel, buf, BAK_DATA_SIZE);
         err = 0;
     }
 
