@@ -40,6 +40,7 @@
 #include <config/config.h>
 #include <system/sys_log/sys_log.h>
 #include <devices/media/media.h>
+#include <drivers/flash/flash.h>
 
 #include <utils/mem_mng.h>
 #include <structs/satellite.h>
@@ -164,19 +165,32 @@ void vTaskHealthCheckMem(void)
         /* TODO */
         /* Test Redundancy from internal FLASH **COMPLETELY** */
 
-        media_data_t media;
+        (void)memset(&loaded_params, 0, sizeof(obdh_telemetry_t));
 
-        mem_mng_save_media_info_bak(&test_params);
+        mem_mng_save_obdh_data_bak(&test_params);
 
-        if (mem_mng_load_media_info_bak(&media) != 0) 
+        vTaskDelay(pdMS_TO_TICKS(10U));
+
+        if (mem_mng_load_obdh_data_bak(&loaded_params) != 0) 
         {
             sys_log_print_event_from_module(SYS_LOG_INFO, TASK_HEALTH_CHECK_MEM_NAME, "Could not load media info from INT FLASH Correctly");
             sys_log_new_line();
         }
 
-        bool int_flash_res = (memcmp(&test_params.data.media, &media, sizeof(media_data_t)) == 0);
+        vTaskDelay(pdMS_TO_TICKS(10U));
+
+        bool int_flash_res = (memcmp(&test_params, &loaded_params, BAK_DATA_SIZE) == 0);
 
         sys_log_print_test_result(int_flash_res, "Media info backup Test");
+        sys_log_new_line();
+
+        vTaskDelay(pdMS_TO_TICKS(10U));
+
+        uint8_t *test_ptr = (uint8_t*)&test_params;
+        uint8_t *pos_ptr = (uint8_t*)&test_params.data.position;
+        bool offset_test = (pos_ptr == &test_ptr[BAK_DATA_SIZE]);
+
+        sys_log_print_test_result(offset_test, "Struct Offset Test");
         sys_log_new_line();
 
         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_HEALTH_CHECK_MEM_NAME, "Cleaning up...");
@@ -234,7 +248,7 @@ static void int_flash_sector_check(const char *msg, const uint8_t *data, uint32_
     
     vTaskDelay(pdMS_TO_TICKS(10U));
 
-    test_result = (memcmp(page_data, buf, SEG_SIZE) == 0);
+    test_result = (memcmp(data, buf, SEG_SIZE) == 0);
 
     sys_log_print_test_result(test_result, msg);
     sys_log_new_line();
