@@ -47,6 +47,7 @@
 
 #define CRC8_POLYNOMIAL  0x07U     
 #define CRC8_INITIAL_VAL 0x00U     
+#define BAK_INIT_VAL     0xAAU   
 
 static uint8_t crc8(uint8_t *data, uint8_t len);
 
@@ -191,7 +192,7 @@ int mem_mng_write_data_to_flash_page(uint8_t *data, uint32_t *page, uint32_t pag
 void mem_mng_save_obdh_data_bak(obdh_telemetry_t *tel)
 {
     uintptr_t base_addr = CONFIG_MEM_ADR_SYS_PARAM_BAK;
-    uint8_t buf[BAK_DATA_SIZE + 1U];
+    uint8_t buf[BAK_DATA_SIZE + 2U];
 
     assert(BAK_DATA_SIZE <= INFO_SEG_SIZE);
 
@@ -200,8 +201,9 @@ void mem_mng_save_obdh_data_bak(obdh_telemetry_t *tel)
     (void)memcpy(buf, tel, BAK_DATA_SIZE);
 
     buf[BAK_DATA_SIZE] = crc8(buf, BAK_DATA_SIZE);
+    buf[BAK_DATA_SIZE + 1U] = BAK_INIT_VAL;
 
-    for (uint8_t i = 0U; i < BAK_DATA_SIZE + 1U; ++i)
+    for (uint8_t i = 0U; i < BAK_DATA_SIZE + 2U; ++i)
     {
         uintptr_t addr = base_addr + i;
         flash_write_single(buf[i], addr);
@@ -213,15 +215,15 @@ int mem_mng_load_obdh_data_bak(obdh_telemetry_t *tel)
     int err = -1;
 
     uintptr_t base_addr = CONFIG_MEM_ADR_SYS_PARAM_BAK;
-    uint8_t buf[BAK_DATA_SIZE + 1U];
+    uint8_t buf[BAK_DATA_SIZE + 2U];
 
-    for (uint8_t i = 0U; i < BAK_DATA_SIZE + 1U; ++i)
+    for (uint8_t i = 0U; i < BAK_DATA_SIZE + 2U; ++i)
     {
         uintptr_t addr = base_addr + i;
         buf[i] = flash_read_single(addr);
     }
 
-    if (buf[BAK_DATA_SIZE] == crc8(buf, BAK_DATA_SIZE))
+    if ((buf[BAK_DATA_SIZE] == crc8(buf, BAK_DATA_SIZE)) && (buf[BAK_DATA_SIZE + 1U] == BAK_INIT_VAL))
     {
         (void)memcpy(tel, buf, BAK_DATA_SIZE);
         err = 0;
