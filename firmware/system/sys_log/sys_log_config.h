@@ -48,7 +48,7 @@
 #define SYS_LOG_UART_BAUDRATE_BPS       115200
 
 /* Mutex config. */
-#define SYS_LOG_MUTEX_WAIT_TIME_MS      100
+#define SYS_LOG_MUTEX_WAIT_TIME_MS      200
 
 /* Log messages colors */
 #define SYS_LOG_SYSTEM_TIME_COLOR       SYS_LOG_COLOR_GREEN
