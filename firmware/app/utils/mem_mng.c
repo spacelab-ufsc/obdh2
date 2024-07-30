@@ -208,6 +208,25 @@ int mem_mng_load_media_info_bak(media_data_t *media)
     return err;
 }
 
+int mem_mng_write_data_to_flash_page(uint8_t *data, uint32_t *page, uint32_t page_size, uint32_t start_page, uint32_t end_page)
+{
+    int err = -1;
+
+    if (media_write(MEDIA_NOR, (*page) * page_size, data, page_size) == 0)
+    {
+        (*page)++;    // cppcheck-suppress misra-c2012-17.8
+
+        if (*page > end_page)
+        {
+            *page = start_page;
+        }
+
+        err = 0;
+    }
+
+    return err;
+}
+
 static uint8_t crc8(uint8_t *data, uint8_t len)
 {
     uint8_t crc = CRC8_INITIAL_VAL;
@@ -228,25 +247,5 @@ static uint8_t crc8(uint8_t *data, uint8_t len)
 
     return crc;
 }
-
-int mem_mng_write_data_to_flash_page(uint8_t *data, uint32_t *page, uint32_t page_size, uint32_t start_page, uint32_t end_page)
-{
-    int err = -1;
-
-    if (media_write(MEDIA_NOR, (*page) * page_size, data, page_size) == 0)
-    {
-        (*page)++;    // cppcheck-suppress misra-c2012-17.8
-
-        if (*page > end_page)
-        {
-            *page = start_page;
-        }
-
-        err = 0;
-    }
-
-    return err;
-}
-
 
 /** \} End of mem_mng group */
