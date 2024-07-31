@@ -24,8 +24,9 @@
  * \brief Media device implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.8.10
+ * \version 0.10.18
  * 
  * \date 2020/07/21
  * 
@@ -65,7 +66,13 @@ int media_init(media_t med)
 
             if (cy15x102qn_init(&fram_conf) == 0)
             {
-                err = 0;
+                /* BP0 = 0, BP1 = 0, WPEN = 0 */
+                cy15x102qn_status_t status = 0x00U;
+
+                if (cy15x102qn_write_status_reg(&fram_conf, status) == 0)
+                {
+                    err = 0;
+                }
             }
             else
             {
