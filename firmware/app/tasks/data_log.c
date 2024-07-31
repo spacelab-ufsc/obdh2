@@ -59,6 +59,9 @@ void vTaskDataLog(void)
     {
         TickType_t last_cycle = xTaskGetTickCount();
 
+        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_DATA_LOG_NAME, "Saving data to flash memory...");
+        sys_log_new_line();
+
         /* OBDH data */
         (void)memcpy(&page_buf[0], &sat_data_buf.obdh, sizeof(obdh_telemetry_t));
         if (mem_mng_write_data_to_flash_page(page_buf, &sat_data_buf.obdh.data.media.last_page_obdh_data, nor_info.page_size, CONFIG_MEM_OBDH_DATA_START_PAGE, CONFIG_MEM_OBDH_DATA_END_PAGE) != 0)
