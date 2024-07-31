@@ -371,16 +371,14 @@ static int32_t mem_full_clean(void)
     const uint32_t addrs[] = {CONFIG_MEM_ADR_INIT_WORD, CONFIG_MEM_ADR_SYS_PARAM, CONFIG_MEM_ADR_SYS_TIME};
     uint8_t buf[PAGE_SIZE];
 
-    (void)memset(buf, 0xff, PAGE_SIZE);
+    (void)memset(buf, 0xFFU, PAGE_SIZE);
 
-    for (uint8_t i = 0U; i < 3U; ++i)
+    for (uint8_t i = 0U; i < ARR_SIZE(addrs); ++i)
     {
-        uint32_t addr = addrs[i];
-
-        if (media_write(MEDIA_FRAM, addr, buf, PAGE_SIZE) != 0)
+        if (media_write(MEDIA_FRAM, addrs[i], buf, PAGE_SIZE) != 0)
         {
-            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MEM_NAME, "Failed to erase FRAM addr");
-            sys_log_print_uint((uint32_t) addr);
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MEM_NAME, "Failed to erase FRAM on addr: ");
+            sys_log_print_hex(addrs[i]);
             sys_log_new_line();
             err--;
         }
