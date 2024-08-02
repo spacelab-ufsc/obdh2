@@ -24,8 +24,9 @@
  * \brief Housekeeping task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.17
+ * \version 0.10.18
  * 
  * \date 2021/04/27
  * 

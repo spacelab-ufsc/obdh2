@@ -24,8 +24,9 @@
  * \brief Read PX task implementation.
  *
  * \author Augusto Cezar Boldori Vassoler <augustovassoler@gmail.com>
- *
- * \version 0.0.1
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
+ * 
+ * \version 0.10.18
  *
  * \date 2023/08/28
  *
