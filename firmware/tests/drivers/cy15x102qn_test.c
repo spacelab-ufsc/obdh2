@@ -149,7 +149,16 @@ static void cy15x102qn_write_status_reg_test(void **state)
 
 static void cy15x102qn_write_test(void **state)
 {
+    uint8_t cmd = CY15X102QN_OPCODE_WREN;
+
     will_return(__wrap_spi_mutex_take, 0);
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, CY15X102QN_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
 
     /* Select device */
     expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
@@ -159,7 +168,7 @@ static void cy15x102qn_write_test(void **state)
     will_return(__wrap_spi_select_slave, 0);
 
     /* Write opcode */
-    uint8_t cmd = CY15X102QN_OPCODE_WRITE;
+    cmd = CY15X102QN_OPCODE_WRITE;
 
     expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
     expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
@@ -367,6 +376,15 @@ static void cy15x102qn_fast_read_test(void **state)
 
 static void cy15x102qn_special_sector_write_test(void **state)
 {
+    uint8_t cmd = CY15X102QN_OPCODE_WREN;
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, CY15X102QN_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
     /* Select device */
     expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
     expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
@@ -375,7 +393,7 @@ static void cy15x102qn_special_sector_write_test(void **state)
     will_return(__wrap_spi_select_slave, 0);
 
     /* Write opcode */
-    uint8_t cmd = CY15X102QN_OPCODE_SSWR;
+    cmd = CY15X102QN_OPCODE_SSWR;
 
     expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
     expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
@@ -616,6 +634,15 @@ static void cy15x102qn_read_unique_id_test(void **state)
 
 static void cy15x102qn_write_serial_number_test(void **state)
 {
+    uint8_t cmd = CY15X102QN_OPCODE_WREN;
+
+    expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, CY15X102QN_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)&cmd, 1);
+    expect_value(__wrap_spi_write, len, 1);
+
+    will_return(__wrap_spi_write, 0);
+
     /* Select device */
     expect_value(__wrap_spi_select_slave, port, CY15X102QN_SPI_PORT);
     expect_value(__wrap_spi_select_slave, cs, CY15X102QN_SPI_CS);
@@ -624,7 +651,7 @@ static void cy15x102qn_write_serial_number_test(void **state)
     will_return(__wrap_spi_select_slave, 0);
 
     /* Write opcode */
-    uint8_t cmd = CY15X102QN_OPCODE_WRSN;
+    cmd = CY15X102QN_OPCODE_WRSN;
 
     expect_value(__wrap_spi_write, port, CY15X102QN_SPI_PORT);
     expect_value(__wrap_spi_write, cs, SPI_CS_NONE);
