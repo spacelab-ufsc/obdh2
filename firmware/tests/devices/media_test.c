@@ -34,6 +34,7 @@
  * \{
  */
 
+#include <math.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -65,6 +66,16 @@ static void media_init_test(void **state)
 
     will_return(__wrap_cy15x102qn_init, 0);
 
+    uint8_t status = 0x00U;
+
+    expect_value(__wrap_cy15x102qn_write_status_reg, conf->port, MEDIA_FRAM_SPI_PORT);
+    expect_value(__wrap_cy15x102qn_write_status_reg, conf->cs_pin, MEDIA_FRAM_SPI_CS_PIN);
+    expect_value(__wrap_cy15x102qn_write_status_reg, conf->clock_hz, MEDIA_FRAM_SPI_CLOCK_HZ);
+    expect_value(__wrap_cy15x102qn_write_status_reg, conf->wp_pin, MEDIA_FRAM_WP_PIN);
+    expect_value(__wrap_cy15x102qn_write_status_reg, status, status);
+
+    will_return(__wrap_cy15x102qn_write_status_reg, 0);
+    
     assert_return_code(media_init(MEDIA_FRAM), 0);
 
     /* NOR memory */
