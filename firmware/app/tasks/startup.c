@@ -24,8 +24,9 @@
  * \brief Startup task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.17
+ * \version 0.10.18
  * 
  * \date 2019/12/04
  * 
@@ -144,10 +145,10 @@ void vTaskStartup(void)
                 }
                 else
                 {
-                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "FRAM was not initialized in previous cycles");
+                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "FRAM was not initialized in previous cycles!");
                     sys_log_new_line();
 
-                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Trying to clean NOR memory");
+                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Trying to clean NOR memory!");
                     sys_log_new_line();
 
                     (void)media_nor_clean();
@@ -158,7 +159,7 @@ void vTaskStartup(void)
                         /* Load default values to the OBDH data buffer */
                         mem_mng_load_obdh_data_from_default_values(&sat_data_buf.obdh);
 
-                        sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Loading default values to FRAM...");
+                        sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Loading default values to FRAM!");
                         sys_log_new_line();
 
                         /* Write the OBDH data to the FRAM memory */

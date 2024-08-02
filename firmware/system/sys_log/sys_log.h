@@ -24,8 +24,9 @@
  * \brief Functions for printing messages and variables over an UART port.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.7.25
+ * \version 0.10.18
  * 
  * \date 2019/11/03
  * 

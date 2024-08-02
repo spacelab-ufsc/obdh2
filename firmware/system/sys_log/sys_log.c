@@ -24,8 +24,9 @@
  * \brief System log implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.7
+ * \version 0.10.18
  * 
  * \date 2019/11/03
  * 

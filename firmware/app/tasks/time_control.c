@@ -24,8 +24,9 @@
  * \brief Time control task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
- * 
- * \version 0.10.9
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
+ *
+ * \version 0.10.18
  * 
  * \date 2020/08/09
  * 
