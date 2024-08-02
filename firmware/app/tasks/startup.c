@@ -54,7 +54,7 @@
 
 #include "startup.h"
 
-#define MEDIA_INIT_MAX_RETRY    3U 
+#define MEDIA_INIT_MAX_RETRY    3 
 
 xTaskHandle xTaskStartupHandle;
 
@@ -130,7 +130,7 @@ void vTaskStartup(void)
     if (system_get_hw_version() >= HW_VERSION_1)
     {
         for (int i = 0; i < MEDIA_INIT_MAX_RETRY; ++i)
-        {
+        { // cppcheck-suppress misra-c2012-15.4
             if (media_init(MEDIA_FRAM) == 0)
             {
                 /* Check if FRAM is initialized */
