@@ -115,6 +115,7 @@
 /* Operation modes */
 #define OBDH_MODE_NORMAL            0
 #define OBDH_MODE_HIBERNATION       1
+#define OBDH_MODE_STAND_BY          2
 
 /**
  * \brief Position data.
