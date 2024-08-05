@@ -49,7 +49,8 @@ typedef enum
 {
     PAYLOAD_EDC_0=0,            /**< Payload EDC 0. */
     PAYLOAD_EDC_1,              /**< Payload EDC 1. */
-    PAYLOAD_X                   /**< Payload-X. */
+    PAYLOAD_X,                  /**< Payload-X. */
+    PAYLOAD_NONE,               /**< Means there's no payload active */
 } payload_t;
 
 /**

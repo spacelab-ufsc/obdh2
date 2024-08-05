@@ -137,25 +137,8 @@ void vTaskBeacon(void)
         beacon_pl.payload[63] = sat_data_buf.eps.data.battery_monitor_temperature & 0xFF;
         beacon_pl.payload[64] = sat_data_buf.eps.data.battery_heater_1_duty_cycle;
         beacon_pl.payload[65] = sat_data_buf.eps.data.battery_heater_2_duty_cycle;
-
-        if (!sat_data_buf.edc_0.enabled && !sat_data_buf.edc_0.enabled)
-        {
-            beacon_pl.payload[66] = 0x00U;
-        }
-        else if (sat_data_buf.edc_0.enabled && !sat_data_buf.edc_0.enabled)
-        {
-            beacon_pl.payload[66] = 0x01U;
-        }
-        else if (!sat_data_buf.edc_0.enabled && sat_data_buf.edc_0.enabled)
-        {
-            beacon_pl.payload[66] = 0x02U;
-        }
-        else
-        {
-            beacon_pl.payload[66] = 0x03U;
-        }
-
-        beacon_pl.payload[67] = sat_data_buf.payload_x.enabled ? 0x01U : 0x00U;
+        beacon_pl.payload[66] = sat_data_buf.state.main_edc;
+        beacon_pl.payload[67] = sat_data_buf.state.active_payload;
 
         beacon_pl.length = 68U;
 

@@ -222,6 +222,10 @@ void vTaskStartup(void)
 
 #if defined(CONFIG_DEV_PAYLOAD_EDC_ENABLED) && (CONFIG_DEV_PAYLOAD_EDC_ENABLED == 1)
     /* Payload EDC device initialization */
+    sat_data_buf.edc_0.id = PAYLOAD_EDC_0;
+    sat_data_buf.edc_1.id = PAYLOAD_EDC_1;
+    sat_data_buf.state.main_edc = PAYLOAD_EDC_0;
+
     if (payload_init(PAYLOAD_EDC_1) != 0)
     {
         error_counter++;
