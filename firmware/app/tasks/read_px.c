@@ -35,21 +35,25 @@
  */
 
 #include <stdint.h>
+#include <string.h>
 
+#include <string.h>
 #include <system/sys_log/sys_log.h>
+#include <system/system.h>
 #include <devices/payload/payload.h>
 #include <drivers/px/px.h>
+#include <structs/satellite.h>
 
 #include "read_px.h"
 #include "startup.h"
 
 xTaskHandle xTaskReadPXHandle;
 
-pl_px_buf_t px_buf = {0};
-
 void vTaskReadPX(void)
 {
-    static payload_t pl_px_active = PAYLOAD_X;
+    payload_telemetry_t *const px = &sat_data_buf.payload_x;
+
+    pl_px_buf_t px_buf = {0};
     px_buf.length = PX_PONG_BUF_SIZE;
 
     /* Wait startup task to finish */
@@ -59,31 +63,39 @@ void vTaskReadPX(void)
     {
         TickType_t last_cycle = xTaskGetTickCount();
 
-        /* Read data */
-        if (payload_get_data(pl_px_active, PAYLOAD_X_PONG, px_buf.buffer, &px_buf.length) != 0)
+        payload_t pl_px_active = sat_data_buf.state.active_payload;
+
+        if (pl_px_active == PAYLOAD_X) 
         {
-            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_PX_NAME, "Error reading the ping-pong data!");
+            /* Read data */
+            if (payload_get_data(pl_px_active, PAYLOAD_X_PONG, px_buf.buffer, &px_buf.length) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_PX_NAME, "Error reading the ping-pong data!");
 
-            int32_t i = 0;
-            for(i = 0; i < px_buf.length; i++){
-                sys_log_print_uint(px_buf.buffer[i]);
+                int32_t i = 0;
+                for(i = 0; i < px_buf.length; i++){
+                    sys_log_print_uint(px_buf.buffer[i]);
+                }
+
+                sys_log_new_line();
             }
+            else
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_PX_NAME, "Received Payload X packet:");
+                sys_log_new_line();
 
-            sys_log_new_line();
-        }
-        else
-        {
-            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_PX_NAME, "Received Payload X packet:");
-            sys_log_new_line();
+                (void)memcpy(px->data, px_buf.buffer, PX_PONG_BUF_SIZE);
 
-            /*
-            uint8_t i = 0;
-            for(i=0;i<px_buf.length;i++){
-                sys_log_print_uint(px_buf.buffer[i]);
+                px->timestamp = system_get_time();
+
+                /*
+                uint8_t i = 0;
+                for(i=0;i<px_buf.length;i++){
+                    sys_log_print_uint(px_buf.buffer[i]);
+                }
+                */
             }
-            */
         }
-
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_PX_PERIOD_MS));
     }
 }

@@ -46,7 +46,7 @@
 #define TASK_READ_PX_PERIOD_MS             (60000)             /**< Task period in milliseconds. */
 #define TASK_READ_PX_INIT_TIMEOUT_MS       2000                /**< Wait time to initialize the task in milliseconds. */
 
-#define PX_PONG_BUF_SIZE                   4;                 /**< Size of pong response message. */
+#define PX_PONG_BUF_SIZE                   4                   /**< Size of pong response message. */
 /**
  * \brief PX data type.
  */
