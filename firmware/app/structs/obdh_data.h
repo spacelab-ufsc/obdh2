@@ -24,8 +24,9 @@
  * \brief OBDH data structure definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.17
+ * \version 0.10.18
  * 
  * \date 2020/07/16
  * 
@@ -151,20 +152,20 @@ typedef struct
     uint16_t temperature;           /**< Temperature of the uC in Kelvin. */
     uint16_t current;               /**< Input current in mA. */
     uint16_t voltage;               /**< Input voltage in mV. */
-    uint8_t last_reset_cause;       /**< Last reset cause code. */
     uint16_t reset_counter;         /**< Reset counter. */
+    uint8_t last_reset_cause;       /**< Last reset cause code. */
     uint8_t last_valid_tc;          /**< Last valid telecommand ID. */
+    uint8_t mode;                   /**< Satellite mode. */
+    uint8_t ant_deployment_counter; /**< Antenna deployment counter. */
+    uint8_t initial_hib_time_count; /**< Initial hibernation time counter in minutes. */
     uint8_t hw_version;             /**< Hardware version. */
     uint32_t fw_version;            /**< Firmware version (ex.: "v1.2.3" = 0x00010203). */
-    uint8_t mode;                   /**< Satellite mode. */
     sys_time_t ts_last_mode_change; /**< Timestamp of the last change in the operation mode. */
     sys_time_t mode_duration;       /**< Mode duration (valid only in hibernation mode). */
     bool initial_hib_executed;      /**< Initial hibernation executed flag. */
-    uint8_t initial_hib_time_count; /**< Initial hibernation time counter in minutes. */
     bool ant_deployment_executed;   /**< Antenna deployment executed flag. */
-    uint8_t ant_deployment_counter; /**< Antenna deployment counter. */
-    position_data_t position;       /**< Current position of the satellite. */
     media_data_t media;             /**< Memories data. */
+    position_data_t position;       /**< Current position of the satellite. */
 } obdh_data_t;
 
 #endif /* OBDH_DATA_H_ */

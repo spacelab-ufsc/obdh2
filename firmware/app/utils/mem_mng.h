@@ -24,8 +24,9 @@
  * \brief Memory management routines.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
- * 
- * \version 0.10.17
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
+ *
+ * \version 0.10.18
  * 
  * \date 2024/02/24
  * 
@@ -42,6 +43,8 @@
 #include <app/structs/satellite.h>
 
 #define MEM_MNG_NAME "Memory Management"
+
+#define BAK_DATA_SIZE (sizeof(obdh_telemetry_t) - sizeof(position_data_t))
 
 /**
  * \brief Checks if the FRAM memory is initialized or not.
@@ -90,6 +93,41 @@ int mem_mng_save_obdh_data_to_fram(obdh_telemetry_t *tel);
  * \return The status/error code.
  */
 int mem_mng_load_obdh_data_from_fram(obdh_telemetry_t *tel);
+
+/**
+ * \brief Saves the OBDH data to internal flash as backup.
+ *
+ * \param[in] tel is the OBDH telemetry data to be saved.
+ *
+ * \return None.
+ */
+void mem_mng_save_obdh_data_bak(obdh_telemetry_t *tel);
+
+/**
+ * \brief Loads the last saved OBDH data from the backup on internal flash.
+ *
+ * \param[in] tel is a pointer to store the read data.
+ *
+ * \return None.
+ */
+int mem_mng_load_obdh_data_bak(obdh_telemetry_t *tel);
+
+/**
+ * \brief Writes data to a given flash memory page.
+ *
+ * \param[in] is the array of bytes to write.
+ *
+ * \param[in,out] page is a pointer to the current page to write.
+ *
+ * \param[in] page_size is the page size, in bytes, of the flash memory.
+ *
+ * \param[in] start_page is the possible start page to write.
+ *
+ * \param[in] end_page is the possible end page to write.
+ *
+ * \return The status/error code.
+ */
+int mem_mng_write_data_to_flash_page(uint8_t *data, uint32_t *page, uint32_t page_size, uint32_t start_page, uint32_t end_page);
 
 #endif /* MEM_MNG_H_ */
 

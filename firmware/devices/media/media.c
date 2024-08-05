@@ -24,8 +24,9 @@
  * \brief Media device implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.8.10
+ * \version 0.10.18
  * 
  * \date 2020/07/21
  * 
@@ -65,7 +66,13 @@ int media_init(media_t med)
 
             if (cy15x102qn_init(&fram_conf) == 0)
             {
-                err = 0;
+                /* BP0 = 0, BP1 = 0, WPEN = 0 */
+                cy15x102qn_status_t status = 0x00U;
+
+                if (cy15x102qn_write_status_reg(&fram_conf, status) == 0)
+                {
+                    err = 0;
+                }
             }
             else
             {
@@ -146,15 +153,22 @@ int media_write(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
     {
         case MEDIA_INT_FLASH:
         {
+            if ((adr + len) > INFO_SEG_SIZE)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error writing to Int Flash!! Segment would overflow!");
+                sys_log_new_line();
+                break;
+            }
+
             /* Address index */
-            uint32_t adr_idx = adr + FLASH_SEG_A_ADR;
+            uintptr_t adr_idx = adr + FLASH_SEG_A_ADR;
 
             uint16_t i = 0;
-            for(i=0; i<len; i+=4U)
+            for(i = 0; i < len; ++i)
             {
-                uint32_t adr_counter = adr_idx + i;
+                uintptr_t adr_counter = adr_idx + i;
 
-                flash_write_long((uint32_t)data[i], &adr_counter);
+                flash_write_single(data[i], adr_counter);
             }
 
             err = 0;
@@ -168,7 +182,7 @@ int media_write(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
             }
             else
             {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error wriring data to the FRAM memory!");
+                sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error writing data to the FRAM memory!");
                 sys_log_new_line();
             }
 
@@ -205,15 +219,22 @@ int media_read(media_t med, uint32_t adr, uint8_t *data, uint16_t len)
     {
         case MEDIA_INT_FLASH:
         {
+            if ((adr + len) > INFO_SEG_SIZE)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error reading from Int Flash!! Segment would overflow!");
+                sys_log_new_line();
+                break;
+            }
+
             /* Address index */
-            uint32_t adr_idx = adr + FLASH_SEG_A_ADR;
+            uintptr_t adr_idx = adr + FLASH_SEG_A_ADR;
 
             uint16_t i = 0;
-            for(i=0; i<len; i+=4U)
+            for(i = 0; i < len; ++i)
             {
-                uint32_t adr_counter = adr_idx + i;
+                uintptr_t adr_counter = adr_idx + i;
 
-                data[i] = (uint8_t)flash_read_long(&adr_counter);
+                data[i] = flash_read_single(adr_counter);
             }
 
             err = 0;
@@ -262,20 +283,16 @@ int media_erase(media_t med, media_erase_t type, uint32_t sector)
     {
         case MEDIA_INT_FLASH:
         {
-            uint8_t sector_conv = UINT8_MAX;
-            if (sector > UINT8_MAX)
+            if ((sector == FLASH_SEG_A_ADR) || (sector == FLASH_SEG_B_ADR))
             {
-                sector_conv = UINT8_MAX;
+                flash_erase((uintptr_t)sector);
+                err = 0;
             }
-            else
+            else 
             {
-                sector_conv = (uint8_t)sector;
+                sys_log_print_event_from_module(SYS_LOG_ERROR, MEDIA_MODULE_NAME, "Error erasing the Int Flash, invalid sector!");
+                sys_log_new_line();
             }
-
-            flash_write_single(0xFF, &sector_conv);
-
-            err = 0;
-
             break;
         }
         case MEDIA_FRAM:

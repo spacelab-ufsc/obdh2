@@ -24,8 +24,9 @@
  * \brief Read EDC task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
- * 
- * \version 0.10.9
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
+ *
+ * \version 0.10.18
  * 
  * \date 2020/08/16
  * 
@@ -71,11 +72,11 @@ void vTaskReadEDC(void)
 
         /* Read packets */
         uint8_t state_arr[10] = {0};
-        uint32_t state_len = 0;
+        int32_t state_len = 0;
 
         if (payload_get_data(pl_edc_active, PAYLOAD_EDC_STATE, state_arr, &state_len) == 0)
         {
-            if (state_len >= sizeof(edc_state_t))
+            if (state_len >= (int32_t)sizeof(edc_state_t))
             {
                 edc_state_t state = *(edc_state_t*)&state_arr[0];
 
@@ -90,20 +91,11 @@ void vTaskReadEDC(void)
                     for(i = 0; i < state.ptt_available; i++)
                     {
                         uint8_t ptt_arr[50] = {0};
-                        uint32_t ptt_len = 0;
+                        int32_t ptt_len = 0;
 
                         if (payload_get_data(pl_edc_active, PAYLOAD_EDC_PTT, ptt_arr, &ptt_len) == 0)
                         {
-                            if (media_write(MEDIA_NOR, sat_data_buf.obdh.data.media.last_page_sbcd_pkts * nor_info.page_size, ptt_arr, nor_info.page_size) == 0)
-                            {
-                                sat_data_buf.obdh.data.media.last_page_sbcd_pkts++;
-
-                                if (sat_data_buf.obdh.data.media.last_page_sbcd_pkts > CONFIG_MEM_SBCD_PKTS_END_PAGE)
-                                {
-                                    sat_data_buf.obdh.data.media.last_page_sbcd_pkts = CONFIG_MEM_SBCD_PKTS_START_PAGE;
-                                }
-                            }
-                            else
+                            if (mem_mng_write_data_to_flash_page(ptt_arr, &sat_data_buf.obdh.data.media.last_page_sbcd_pkts, nor_info.page_size, CONFIG_MEM_SBCD_PKTS_START_PAGE, CONFIG_MEM_SBCD_PKTS_END_PAGE) != 0)
                             {
                                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_EDC_NAME, "Error writing the PTT packet to the flash memory!");
                                 sys_log_new_line();

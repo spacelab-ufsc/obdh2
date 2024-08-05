@@ -24,8 +24,9 @@
  * \brief Flash driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
- * 
- * \version 0.8.8
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
+ *
+ * \version 0.10.18
  * 
  * \date 2020/03/17
  * 
@@ -133,6 +134,7 @@ uint32_t flash_read_long(uint32_t *addr)
 void flash_erase(uint32_t *region)
 {
     uint32_t *erase_ptr = region;
+    uintptr_t seg = region;
 
     if ((FCTL3 & LOCKA) > 0)
     {
@@ -143,7 +145,7 @@ void flash_erase(uint32_t *region)
         FCTL3 = FWKEY;                      /* Clear Lock bit */
     }
 
-    switch(*region)
+    switch(seg)
     {
         case FLASH_BANK_0_ADR:  FCTL1 = FWKEY | MERAS;          break;
         case FLASH_BANK_1_ADR:  FCTL1 = FWKEY | MERAS;          break;

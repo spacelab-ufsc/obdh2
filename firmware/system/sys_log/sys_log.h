@@ -24,8 +24,9 @@
  * \brief Functions for printing messages and variables over an UART port.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.7.25
+ * \version 0.10.18
  * 
  * \date 2019/11/03
  * 
@@ -38,6 +39,7 @@
 #define SYS_LOG_H_
 
 #include <stdint.h>
+#include <stdbool.h>
 
 /**
  * \brief Event types.
@@ -261,6 +263,20 @@ void sys_log_print_splash_screen(void);
  * \return None.
  */
 void sys_log_print_firmware_version(void);
+
+/**
+ * \brief Prints a systemd like check message for a test.
+ *
+ * The function takes the xSysLogMutex, but it does not give the mutex back, very much like
+ * the sys_log_print_event_from_module function.
+ *
+ * \param[in] result is the result of the test, True for "OK" and False for "FAILED".
+ *
+ * \param[in] check_msg is the message explaining the test.
+ *
+ * \return None.
+ */
+void sys_log_print_test_result(bool result, const char *check_msg);
 
 /**
  * \brief Initialization of the system log UART port.

@@ -24,8 +24,9 @@
  * \brief System log implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.7
+ * \version 0.10.18
  * 
  * \date 2019/11/03
  * 
@@ -34,6 +35,7 @@
  */
 
 #include <math.h>
+#include <stdbool.h>
 
 #include <FreeRTOS.h>
 #include <task.h>
@@ -117,7 +119,7 @@ void sys_log_print_event(uint8_t type, const char *event)
 
     switch(type)
     {
-        case SYS_LOG_INFO:                                                  break;
+        case SYS_LOG_INFO:      sys_log_set_color(SYS_LOG_INFO_COLOR);      break;
         case SYS_LOG_WARNING:   sys_log_set_color(SYS_LOG_WARNING_COLOR);   break;
         case SYS_LOG_ERROR:     sys_log_set_color(SYS_LOG_ERROR_COLOR);     break;
         default:                                                            break;
@@ -140,7 +142,7 @@ void sys_log_print_event_from_module(uint8_t type, const char *module, const cha
 
     switch(type)
     {
-        case SYS_LOG_INFO:                                                  break;
+        case SYS_LOG_INFO:      sys_log_set_color(SYS_LOG_INFO_COLOR);      break;
         case SYS_LOG_WARNING:   sys_log_set_color(SYS_LOG_WARNING_COLOR);   break;
         case SYS_LOG_ERROR:     sys_log_set_color(SYS_LOG_ERROR_COLOR);     break;
         default:                                                            break;
@@ -389,6 +391,29 @@ void sys_log_print_firmware_version(void)
 {
     sys_log_print_msg("v");
     sys_log_print_msg(FIRMWARE_VERSION);
+}
+
+void sys_log_print_test_result(bool result, const char *check_msg)
+{
+    (void)sys_log_mutex_take();
+
+    sys_log_print_msg("[");
+
+    if (result)
+    {
+        sys_log_set_color(SYS_LOG_COLOR_GREEN);
+        sys_log_print_msg("  OK  ");
+        sys_log_reset_color();
+    }
+    else
+    {
+        sys_log_set_color(SYS_LOG_COLOR_RED);
+        sys_log_print_msg("FAILED");
+        sys_log_reset_color();
+    }
+
+    sys_log_print_msg("] ");
+    sys_log_print_msg(check_msg);
 }
 
 /** \} End of sys_log group */

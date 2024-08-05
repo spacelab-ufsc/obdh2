@@ -24,8 +24,9 @@
  * \brief Housekeeping task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.17
+ * \version 0.10.18
  * 
  * \date 2021/04/27
  * 
@@ -68,9 +69,14 @@ void vTaskHousekeeping(void)
         /* Save the last available OBDH data at every minute */
         if ((system_get_time() % 60U) == 0U)
         {
-            if (mem_mng_save_obdh_data_to_fram(sat_data_buf.obdh) != 0)
+            if (mem_mng_save_obdh_data_to_fram(&sat_data_buf.obdh) != 0)
             {
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HOUSEKEEPING_NAME, "Error writing data to the FRAM memory!");
+                sys_log_new_line();
+            }
+            else 
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_HOUSEKEEPING_NAME, "Saving obdh data to fram...");
                 sys_log_new_line();
             }
         }

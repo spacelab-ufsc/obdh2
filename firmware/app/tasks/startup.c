@@ -24,8 +24,9 @@
  * \brief Startup task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.17
+ * \version 0.10.18
  * 
  * \date 2019/12/04
  * 
@@ -49,16 +50,22 @@
 #include <devices/media/media.h>
 #include <devices/payload/payload.h>
 #include <app/structs/satellite.h>
+#include <utils/mem_mng.h>
 
 #include "startup.h"
+
+#define MEDIA_INIT_MAX_RETRY    3 
 
 xTaskHandle xTaskStartupHandle;
 
 EventGroupHandle_t task_startup_status;
 
+static int media_nor_clean(void);
+
 void vTaskStartup(void)
 {
     unsigned int error_counter = 0;
+    int err = -1;
 
     /* Logger device initialization */
     sys_log_init();
@@ -97,61 +104,81 @@ void vTaskStartup(void)
     }
 #endif /* CONFIG_DEV_MEDIA_INT_ENABLED */
 
+#if defined(CONFIG_DEV_MEDIA_NOR_ENABLED) && (CONFIG_DEV_MEDIA_NOR_ENABLED == 1)
+    /* NOR memory initialization */
+    for (int i = 0; i < MEDIA_INIT_MAX_RETRY; ++i)
+    {
+        if (media_init(MEDIA_NOR) == 0)
+        {
+            err = 0;
+            break;
+        }
+    }
+
+    if (err != 0) 
+    {
+        error_counter++;
+    }
+    else 
+    {
+        err = -1;
+    }
+#endif /* CONFIG_DEV_MEDIA_NOR_ENABLED */
+
 #if defined(CONFIG_DEV_MEDIA_FRAM_ENABLED) && (CONFIG_DEV_MEDIA_FRAM_ENABLED == 1)
     /* FRAM memory initialization */
     if (system_get_hw_version() >= HW_VERSION_1)
     {
-        if (media_init(MEDIA_FRAM) == 0)
-        {
-            /* Check if FRAM is initialized */
-            if (mem_mng_check_fram() == 0)
+        for (int i = 0; i < MEDIA_INIT_MAX_RETRY; ++i)
+        { // cppcheck-suppress misra-c2012-15.4
+            if (media_init(MEDIA_FRAM) == 0)
             {
-                /* Load last saved OBDH data from FRAM */
-                if (mem_mng_load_obdh_data_from_fram(&sat_data_buf.obdh) != 0)
+                /* Check if FRAM is initialized */
+                if (mem_mng_check_fram() == 0)
                 {
-                    error_counter++;
-                }
-            }
-            else
-            {
-                sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "FRAM was not initialized in previous cycles");
-                sys_log_new_line();
-
-                /* Initialize FRAM */
-                if (mem_mng_init_fram() == 0)
-                {
-                    /* Load default values to the OBDH data buffer */
-                    mem_mng_load_obdh_data_from_default_values(&sat_data_buf.obdh);
-
-                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Loading default values to FRAM...");
-                    sys_log_new_line();
-
-                    /* Write the OBDH data to the FRAM memory */
-                    if (mem_mng_save_obdh_data_to_fram(&sat_data_buf.obdh) != 0)
+                    /* Load last saved OBDH data from FRAM */
+                    if (mem_mng_load_obdh_data_from_fram(&sat_data_buf.obdh) == 0)
                     {
-                        error_counter++;
+                        err = 0;
+                        break;
                     }
                 }
                 else
                 {
-                    error_counter++;
+                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "FRAM was not initialized in previous cycles!");
+                    sys_log_new_line();
+
+                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Trying to clean NOR memory!");
+                    sys_log_new_line();
+
+                    (void)media_nor_clean();
+
+                    /* Initialize FRAM */
+                    if (mem_mng_init_fram() == 0)
+                    {
+                        /* Load default values to the OBDH data buffer */
+                        mem_mng_load_obdh_data_from_default_values(&sat_data_buf.obdh);
+
+                        sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Loading default values to FRAM!");
+                        sys_log_new_line();
+
+                        /* Write the OBDH data to the FRAM memory */
+                        if (mem_mng_save_obdh_data_to_fram(&sat_data_buf.obdh) == 0)
+                        {
+                            err = 0;
+                            break;
+                        }
+                    }
                 }
             }
         }
-        else
+
+        if (err != 0) 
         {
             error_counter++;
         }
     }
 #endif /* CONFIG_DEV_MEDIA_FRAM_ENABLED */
-
-#if defined(CONFIG_DEV_MEDIA_NOR_ENABLED) && (CONFIG_DEV_MEDIA_NOR_ENABLED == 1)
-    /* NOR memory initialization */
-    if (media_init(MEDIA_NOR) != 0)
-    {
-        error_counter++;
-    }
-#endif /* CONFIG_DEV_MEDIA_NOR_ENABLED */
 
 #if defined(CONFIG_DEV_LEDS_ENABLED) && (CONFIG_DEV_LEDS_ENABLED == 1)
     /* LEDs device initialization */
@@ -248,6 +275,23 @@ void vTaskStartup(void)
     xEventGroupSetBits(task_startup_status, TASK_STARTUP_DONE);
 
     vTaskSuspend(xTaskStartupHandle);
+}
+
+static int media_nor_clean(void)
+{
+    int err = 0;
+
+    if (media_erase(MEDIA_NOR, MEDIA_ERASE_DIE, 0U) != 0)
+    {
+        err--;
+    }
+
+    if (media_erase(MEDIA_NOR, MEDIA_ERASE_DIE, 1U) != 0)
+    {
+        err--;
+    }
+
+    return err;
 }
 
 /** \} End of startup group */

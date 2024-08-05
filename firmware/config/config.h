@@ -24,8 +24,9 @@
  * \brief Configuration parameters definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.17
+ * \version 0.10.18
  * 
  * \date 2019/10/26
  * 
@@ -54,6 +55,7 @@
 #define CONFIG_TASK_POSITION_DETERMINATION_ENABLED      1
 #define CONFIG_TASK_PAYLOAD_X_ENABLED                   1
 #define CONFIG_TASK_HOUSEKEEPING_ENABLED                1
+#define CONFIG_TASK_HEALTH_CHECK_MEM_ENABLED            0
 
 /* Devices */
 #define CONFIG_DEV_MEDIA_INT_ENABLED                    1
@@ -71,6 +73,9 @@
 /* Drivers */
 #define CONFIG_DRV_ISIS_ANTENNA_ENABLED                 1
 #define CONFIG_DRV_SL_ANTENNA_ENABLED                   0
+
+/* Health Check */
+#define CONFIG_HEALTH_CHECK_ENABLED                     0
 
 /* Debug and log messages */
 #define CONFIG_DRIVERS_DEBUG_ENABLED                    0
@@ -154,6 +159,55 @@
 #define CONFIG_MEM_PX_DATA_END_PAGE                     398999U
 #define CONFIG_MEM_SBCD_PKTS_START_PAGE                 399000U
 #define CONFIG_MEM_SBCD_PKTS_END_PAGE                   499999U
+#define CONFIG_MEM_ADR_SYS_TIME_BAK                     0x1980U
+#define CONFIG_MEM_ADR_SYS_PARAM_BAK                    0x1900U
+
+/* Health Check Config Parameters */
+#if defined(CONFIG_HEALTH_CHECK_ENABLED) && (CONFIG_HEALTH_CHECK_ENABLED == 1)
+
+/* Tasks */
+#define CONFIG_TASK_STARTUP_ENABLED                     1
+#define CONFIG_TASK_WATCHDOG_RESET_ENABLED              1
+#define CONFIG_TASK_HEARTBEAT_ENABLED                   0
+#define CONFIG_TASK_SYSTEM_RESET_ENABLED                0
+#define CONFIG_TASK_READ_SENSORS_ENABLED                0
+#define CONFIG_TASK_BEACON_ENABLED                      0
+#define CONFIG_TASK_TIME_CONTROL_ENABLED                0
+#define CONFIG_TASK_READ_EDC_ENABLED                    0
+#define CONFIG_TASK_READ_EPS_ENABLED                    0
+#define CONFIG_TASK_READ_TTC_ENABLED                    0
+#define CONFIG_TASK_READ_ANTENNA_ENABLED                0
+#define CONFIG_TASK_DATA_LOG_ENABLED                    0
+#define CONFIG_TASK_PROCESS_TC_ENABLED                  0
+#define CONFIG_TASK_ANTENNA_DEPLOYMENT_ENABLED          0
+#define CONFIG_TASK_POSITION_DETERMINATION_ENABLED      0
+#define CONFIG_TASK_PAYLOAD_X_ENABLED                   0
+#define CONFIG_TASK_HOUSEKEEPING_ENABLED                0
+#define CONFIG_TASK_HEALTH_CHECK_MEM_ENABLED            1
+
+/* Devices */
+#define CONFIG_DEV_MEDIA_INT_ENABLED                    1
+#define CONFIG_DEV_MEDIA_FRAM_ENABLED                   1
+#define CONFIG_DEV_MEDIA_NOR_ENABLED                    1
+#define CONFIG_DEV_LEDS_ENABLED                         0
+#define CONFIG_DEV_CURRENT_SENSOR_ENABLED               0
+#define CONFIG_DEV_VOLTAGE_SENSOR_ENABLED               0
+#define CONFIG_DEV_TEMP_SENSOR_ENABLED                  0
+#define CONFIG_DEV_EPS_ENABLED                          0
+#define CONFIG_DEV_PAYLOAD_EDC_ENABLED                  0
+#define CONFIG_DEV_ANTENNA_ENABLED                      0
+#define CONFIG_DEV_PAYLOAD_X_ENABLED                    0
+
+/* Drivers */
+#define CONFIG_DRV_ISIS_ANTENNA_ENABLED                 0
+#define CONFIG_DRV_SL_ANTENNA_ENABLED                   0
+
+#endif
+
+#if defined (CONFIG_TASK_HEALTH_CHECK_MEM_ENABLED) && defined (CONFIG_HEALTH_CHECK_ENABLED) && \
+    (CONFIG_TASK_HEALTH_CHECK_MEM_ENABLED == 1) && (CONFIG_HEALTH_CHECK_ENABLED == 0)
+#error To enable memory Health Check please set the CONFIG_HEALTH_CHECK_ENABLED flag on config.h
+#endif
 
 #endif /* CONFIG_H_ */
 

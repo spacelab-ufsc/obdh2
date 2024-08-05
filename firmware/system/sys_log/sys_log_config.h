@@ -24,8 +24,9 @@
  * \brief System log configuration parameters.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.3.11
+ * \version 0.10.18
  * 
  * \date 22/02/2019
  * 
@@ -48,11 +49,12 @@
 #define SYS_LOG_UART_BAUDRATE_BPS       115200
 
 /* Mutex config. */
-#define SYS_LOG_MUTEX_WAIT_TIME_MS      100
+#define SYS_LOG_MUTEX_WAIT_TIME_MS      200
 
 /* Log messages colors */
 #define SYS_LOG_SYSTEM_TIME_COLOR       SYS_LOG_COLOR_GREEN
 #define SYS_LOG_MODULE_NAME_COLOR       SYS_LOG_COLOR_MAGENTA
+#define SYS_LOG_INFO_COLOR              SYS_LOG_COLOR_WHITE
 #define SYS_LOG_WARNING_COLOR           SYS_LOG_COLOR_YELLOW
 #define SYS_LOG_ERROR_COLOR             SYS_LOG_COLOR_RED
 

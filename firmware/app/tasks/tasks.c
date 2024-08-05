@@ -24,8 +24,9 @@
  * \brief Tasks implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.17
+ * \version 0.10.18
  * 
  * \date 2019/11/02
  * 
@@ -55,6 +56,7 @@
 #include "pos_det.h"
 #include "read_px.h"
 #include "housekeeping.h"
+#include "mem_check.h"
 
 void create_tasks(void)
 {
@@ -213,6 +215,16 @@ void create_tasks(void)
         /* Error creating the Housekeeping task */
     }
 #endif /* CONFIG_TASK_HOUSEKEEPING_ENABLED */
+
+#if defined(CONFIG_TASK_HEALTH_CHECK_MEM_ENABLED) && (CONFIG_TASK_HEALTH_CHECK_MEM_ENABLED == 1)
+    xTaskCreate(vTaskHealthCheckMem, TASK_HEALTH_CHECK_MEM_NAME, TASK_HEALTH_CHECK_MEM_STACK_SIZE, NULL, TASK_HEALTH_CHECK_MEM_PRIORITY, &xTaskHealthCheckMemHandle);
+
+    if (xTaskHealthCheckMemHandle == NULL)
+    {
+        /* Error creating the Housekeeping task */
+    }
+#endif /* CONFIG_TASK_HOUSEKEEPING_ENABLED */
+
 
     create_event_groups();
 }

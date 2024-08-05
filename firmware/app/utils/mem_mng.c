@@ -24,8 +24,9 @@
  * \brief Memory management routines implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.17
+ * \version 0.10.18
  * 
  * \date 2024/02/24
  * 
@@ -38,8 +39,17 @@
 
 #include <config/config.h>
 #include <system/sys_log/sys_log.h>
+#include <drivers/flash/flash.h>
+#include <devices/media/media.h>
+#include <structs/obdh_data.h>
 
 #include "mem_mng.h"
+
+#define CRC8_POLYNOMIAL  0x07U     
+#define CRC8_INITIAL_VAL 0x00U     
+#define BAK_INIT_VAL     0xAAU   
+
+static uint8_t crc8(uint8_t *data, uint8_t len);
 
 int mem_mng_check_fram(void)
 {
@@ -129,7 +139,7 @@ void mem_mng_load_obdh_data_from_default_values(obdh_telemetry_t *tel)
     tel->data.media.last_page_sbcd_pkts     = OBDH_PARAM_MEDIA_LAST_SBCD_PKTS_DEFAULT_VAL;
 }
 
-int mem_mng_save_obdh_data_to_fram(obdh_telemetry_t* tel)
+int mem_mng_save_obdh_data_to_fram(obdh_telemetry_t *tel)
 {
     int err = -1;
 
@@ -158,6 +168,87 @@ int mem_mng_load_obdh_data_from_fram(obdh_telemetry_t *tel)
     }
 
     return err;
+}
+
+int mem_mng_write_data_to_flash_page(uint8_t *data, uint32_t *page, uint32_t page_size, uint32_t start_page, uint32_t end_page)
+{
+    int err = -1;
+
+    if (media_write(MEDIA_NOR, (*page) * page_size, data, page_size) == 0)
+    {
+        (*page)++;    // cppcheck-suppress misra-c2012-17.8
+
+        if (*page > end_page)
+        {
+            *page = start_page;
+        }
+
+        err = 0;
+    }
+
+    return err;
+}
+
+void mem_mng_save_obdh_data_bak(obdh_telemetry_t *tel)
+{
+    uintptr_t base_addr = CONFIG_MEM_ADR_SYS_PARAM_BAK;
+    uint8_t buf[BAK_DATA_SIZE + 2U];
+
+    flash_erase(base_addr);
+
+    (void)memcpy(buf, tel, BAK_DATA_SIZE);
+
+    buf[BAK_DATA_SIZE] = crc8(buf, BAK_DATA_SIZE);
+    buf[BAK_DATA_SIZE + 1U] = BAK_INIT_VAL;
+
+    for (uint8_t i = 0U; i < BAK_DATA_SIZE + 2U; ++i)
+    {
+        uintptr_t addr = base_addr + i;
+        flash_write_single(buf[i], addr);
+    }
+}
+
+int mem_mng_load_obdh_data_bak(obdh_telemetry_t *tel)
+{
+    int err = -1;
+
+    uintptr_t base_addr = CONFIG_MEM_ADR_SYS_PARAM_BAK;
+    uint8_t buf[BAK_DATA_SIZE + 2U];
+
+    for (uint8_t i = 0U; i < BAK_DATA_SIZE + 2U; ++i)
+    {
+        uintptr_t addr = base_addr + i;
+        buf[i] = flash_read_single(addr);
+    }
+
+    if ((buf[BAK_DATA_SIZE] == crc8(buf, BAK_DATA_SIZE)) && (buf[BAK_DATA_SIZE + 1U] == BAK_INIT_VAL))
+    {
+        (void)memcpy(tel, buf, BAK_DATA_SIZE);
+        err = 0;
+    }
+
+    return err;
+}
+
+static uint8_t crc8(uint8_t *data, uint8_t len)
+{
+    uint8_t crc = CRC8_INITIAL_VAL;
+
+    uint8_t i = 0U;
+    for(i = 0; i < len; i++)
+    {
+        crc ^= data[i];
+
+        uint8_t j = 0U;
+        for (j = 0U; j < 8U; j++)
+        {
+            crc = (crc << 1) ^ ((crc & 0x80U) ? CRC8_POLYNOMIAL : 0U);
+        }
+
+        crc &= 0xFFU;
+    }
+
+    return crc;
 }
 
 /** \} End of mem_mng group */

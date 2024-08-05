@@ -24,8 +24,9 @@
  * \brief Time control task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
- * 
- * \version 0.10.9
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
+ *
+ * \version 0.10.18
  * 
  * \date 2020/08/09
  * 
@@ -118,6 +119,13 @@ void vTaskTimeControl(void)
             if (time_control_save_sys_time(sys_tm) != 0)
             {
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_TIME_CONTROL_NAME, "Error saving the system time!");
+                sys_log_new_line();
+            }
+            else 
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_TIME_CONTROL_NAME, "Saving system time (epoch): ");
+                sys_log_print_uint(sys_tm);
+                sys_log_print_msg(" sec");
                 sys_log_new_line();
             }
         }
