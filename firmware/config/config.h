@@ -55,6 +55,7 @@
 #define CONFIG_TASK_POSITION_DETERMINATION_ENABLED      1
 #define CONFIG_TASK_PAYLOAD_X_ENABLED                   1
 #define CONFIG_TASK_HOUSEKEEPING_ENABLED                1
+#define CONFIG_TASK_OP_CTRL_ENABLED                     1
 #define CONFIG_TASK_HEALTH_CHECK_MEM_ENABLED            0
 
 /* Devices */
@@ -183,6 +184,7 @@
 #define CONFIG_TASK_POSITION_DETERMINATION_ENABLED      0
 #define CONFIG_TASK_PAYLOAD_X_ENABLED                   0
 #define CONFIG_TASK_HOUSEKEEPING_ENABLED                0
+#define CONFIG_TASK_OP_CTRL_ENABLED                     0
 #define CONFIG_TASK_HEALTH_CHECK_MEM_ENABLED            1
 
 /* Devices */
