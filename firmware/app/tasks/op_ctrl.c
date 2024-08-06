@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
  * 
  */
 
@@ -53,7 +53,6 @@ static int enable_main_edc(void);
 static int enable_px(void);
 static int disable_curr_payload(void);
 
-static uint32_t px_active_time_ms = PAYLOAD_X_EXPERIMENT_PERIOD_MS;
 static bool in_brazil = false;
 static bool edc_active = false;
 
@@ -92,7 +91,9 @@ void notify_op_ctrl(uint32_t notification_flag)
 
 static inline void handle_notification(uint32_t notify_value)
 {
-    if (notify_value & SAT_NOTIFY_IN_BRAZIL)
+    uint32_t px_active_time_ms = (uint32_t)PAYLOAD_X_EXPERIMENT_PERIOD_MS;
+
+    if ((notify_value & SAT_NOTIFY_IN_BRAZIL) != 0U)
     {
         sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_OP_CTRL_NAME, "Changing Satellite Mode to NOMINAL!");
         sys_log_new_line();
@@ -113,7 +114,7 @@ static inline void handle_notification(uint32_t notify_value)
         }
     }
 
-    if (notify_value & SAT_NOTIFY_OUTSIDE_BRAZIL)
+    if ((notify_value & SAT_NOTIFY_OUTSIDE_BRAZIL) != 0U)
     {
         in_brazil = false;
         edc_active = false;
@@ -136,7 +137,7 @@ static inline void handle_notification(uint32_t notify_value)
         xTaskNotify(xTaskReadPXHandle, px_active_time_ms, eSetValueWithOverwrite);
     }
 
-    if (notify_value & SAT_NOTIFY_PX_FINISHED)
+    if ((notify_value & SAT_NOTIFY_PX_FINISHED) != 0U)
     {
         sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_OP_CTRL_NAME, "Changing Satellite Mode to STAND BY!");
         sys_log_new_line();

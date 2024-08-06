@@ -71,14 +71,14 @@ void vTaskReadPX(void)
 
         if ((pl_px_active == PAYLOAD_X) && (result == pdTRUE)) 
         {
-            while (active_period_ms > 0UL) 
+            while (active_period_ms > 0U) 
             {
                 /* Check notifications to break out of the loop if requested */
                 if (xTaskNotifyWait(0UL, PAYLOAD_X_CANCEL_EXPERIMENT_FLAG, &cancel_flag, 0U) == pdTRUE)
                 {
-                    if (cancel_flag & PAYLOAD_X_CANCEL_EXPERIMENT_FLAG)
+                    if ((cancel_flag & PAYLOAD_X_CANCEL_EXPERIMENT_FLAG) != 0U)
                     {
-                        active_period_ms = 0UL;
+                        active_period_ms = 0U;
                         break;
                     }
                 }
