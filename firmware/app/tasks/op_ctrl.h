@@ -43,6 +43,7 @@
 #include <task.h>
 
 #include <structs/satellite.h>
+#include <system/system.h>
 
 #define TASK_OP_CTRL_NAME                      "Operation Control"    /**< Task name. */
 #define TASK_OP_CTRL_STACK_SIZE                256U                   /**< Stack size in bytes. */
@@ -60,9 +61,15 @@
 /**
  * \brief Changes satellite's operation mode.
  *
- * \param[in] op_mode is the satellite mode to enter.
+ * \param[in] mode is the satellite mode to enter.
+ *
+ * \return None.
  */
-#define satellite_change_mode(op_mode) (sat_data_buf.obdh.data.mode = (op_mode))
+static inline void satellite_change_mode(uint8_t mode) 
+{
+    sat_data_buf.obdh.data.mode = mode;
+    sat_data_buf.obdh.data.ts_last_mode_change = system_get_time();
+}
 
 /**
  * \brief Operation Control Task Handle
