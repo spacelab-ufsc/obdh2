@@ -45,6 +45,7 @@
 #include <structs/satellite.h>
 
 #include "read_px.h"
+#include "op_ctrl.h"
 #include "startup.h"
 
 xTaskHandle xTaskReadPXHandle;
@@ -61,42 +62,63 @@ void vTaskReadPX(void)
 
     while(1)
     {
-        TickType_t last_cycle = xTaskGetTickCount();
+        uint32_t cancel_flag;
+        uint32_t active_period_ms;
+
+        BaseType_t result = xTaskNotifyWait(0UL, UINT32_MAX, &active_period_ms, pdMS_TO_TICKS(TASK_READ_PX_MAX_WAIT_TIME_MS));
 
         payload_t pl_px_active = sat_data_buf.state.active_payload;
 
-        if (pl_px_active == PAYLOAD_X) 
+        if ((pl_px_active == PAYLOAD_X) && (result == pdTRUE)) 
         {
-            /* Read data */
-            if (payload_get_data(pl_px_active, PAYLOAD_X_PONG, px_buf.buffer, &px_buf.length) != 0)
+            while (active_period_ms > 0UL) 
             {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_PX_NAME, "Error reading the ping-pong data!");
-
-                int32_t i = 0;
-                for(i = 0; i < px_buf.length; i++){
-                    sys_log_print_uint(px_buf.buffer[i]);
+                /* Check notifications to break out of the loop if requested */
+                if (xTaskNotifyWait(0UL, PAYLOAD_X_CANCEL_EXPERIMENT_FLAG, &cancel_flag, 0U) == pdTRUE)
+                {
+                    if (cancel_flag & PAYLOAD_X_CANCEL_EXPERIMENT_FLAG)
+                    {
+                        active_period_ms = 0UL;
+                        break;
+                    }
                 }
 
-                sys_log_new_line();
-            }
-            else
-            {
-                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_PX_NAME, "Received Payload X packet:");
-                sys_log_new_line();
+                /* Read data */
+                if (payload_get_data(pl_px_active, PAYLOAD_X_PONG, px_buf.buffer, &px_buf.length) != 0)
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_PX_NAME, "Error reading the ping-pong data!");
 
-                (void)memcpy(px->data, px_buf.buffer, PX_PONG_BUF_SIZE);
+                    int32_t i = 0;
+                    for(i = 0; i < px_buf.length; i++){
+                        sys_log_print_uint(px_buf.buffer[i]);
+                    }
 
-                px->timestamp = system_get_time();
-
-                /*
-                uint8_t i = 0;
-                for(i=0;i<px_buf.length;i++){
-                    sys_log_print_uint(px_buf.buffer[i]);
+                    sys_log_new_line();
                 }
-                */
+                else
+                {
+                    sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_PX_NAME, "Received Payload X packet:");
+                    sys_log_new_line();
+
+                    (void)memcpy(px->data, px_buf.buffer, PX_PONG_BUF_SIZE);
+
+                    px->timestamp = system_get_time();
+
+                    /*
+                    uint8_t i = 0;
+                    for(i=0;i<px_buf.length;i++){
+                        sys_log_print_uint(px_buf.buffer[i]);
+                    }
+                    */
+                }
+
+                active_period_ms -= (uint32_t)TASK_READ_PX_PERIOD_MS;
+
+                vTaskDelay(pdMS_TO_TICKS(TASK_READ_PX_PERIOD_MS));
             }
+
+            notify_op_ctrl(SAT_NOTIFY_PX_FINISHED);
         }
-        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_PX_PERIOD_MS));
     }
 }
 

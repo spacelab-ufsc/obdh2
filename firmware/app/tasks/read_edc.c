@@ -34,6 +34,8 @@
  * \{
  */
 
+#include <FreeRTOS.h>
+#include <task.h>
 #include <system/sys_log/sys_log.h>
 #include <devices/payload/payload.h>
 #include <devices/media/media.h>
@@ -54,7 +56,7 @@ static void print_edc_hk(uint8_t *hk);
 
 void vTaskReadEDC(void)
 {
-    payload_telemetry_t **const edc = &sat_data_buf.state.current_edc;
+    payload_telemetry_t **const edc = &sat_data_buf.state.c_edc;
 
     /* Wait startup task to finish */
     xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_EDC_INIT_TIMEOUT_MS));
@@ -63,11 +65,13 @@ void vTaskReadEDC(void)
 
     while(1)
     {
+        uint32_t notification = ulTaskNotifyTake(pdFALSE, pdMS_TO_TICKS(TASK_READ_EDC_MAX_WAIT_TIME_MS));
+
         TickType_t last_cycle = xTaskGetTickCount();
 
         payload_t pl_edc_active = sat_data_buf.state.active_payload;
 
-        if ((pl_edc_active == PAYLOAD_EDC_0) || (pl_edc_active == PAYLOAD_EDC_1))
+        if (((pl_edc_active == PAYLOAD_EDC_0) || (pl_edc_active == PAYLOAD_EDC_1)) && (notification > 0UL))
         {
             /* Read housekeeping data */
             if (payload_get_data(pl_edc_active, PAYLOAD_EDC_RAW_HK, edc_hk_buf.buffer, &edc_hk_buf.length) != 0)
@@ -162,6 +166,7 @@ void vTaskReadEDC(void)
                 sys_log_new_line();
             }
         }
+
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_EDC_PERIOD_MS));
     }
 }
