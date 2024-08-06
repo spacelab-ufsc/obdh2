@@ -43,7 +43,7 @@
 #define TASK_HOUSEKEEPING_NAME                  "Housekeeping"      /**< Task name. */
 #define TASK_HOUSEKEEPING_STACK_SIZE            225                 /**< Stack size in bytes. */
 #define TASK_HOUSEKEEPING_PRIORITY              3                   /**< Task priority. */
-#define TASK_HOUSEKEEPING_PERIOD_MS             (10000)             /**< Task period in milliseconds. */
+#define TASK_HOUSEKEEPING_PERIOD_MS             (60000)             /**< Task period in milliseconds. */
 #define TASK_HOUSEKEEPING_INIT_TIMEOUT_MS       2000                /**< Wait time to initialize the task in milliseconds. */
 
 /**
