@@ -71,6 +71,8 @@ void vTaskReadPX(void)
 
         if ((pl_px_active == PAYLOAD_X) && (result == pdTRUE)) 
         {
+            TickType_t last_cycle = xTaskGetTickCount();
+
             while (active_period_ms > 0U) 
             {
                 /* Check notifications to break out of the loop if requested */
@@ -114,7 +116,7 @@ void vTaskReadPX(void)
 
                 active_period_ms -= (uint32_t)TASK_READ_PX_PERIOD_MS;
 
-                vTaskDelay(pdMS_TO_TICKS(TASK_READ_PX_PERIOD_MS));
+                vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_PX_PERIOD_MS));
             }
 
             notify_op_ctrl(SAT_NOTIFY_PX_FINISHED);
