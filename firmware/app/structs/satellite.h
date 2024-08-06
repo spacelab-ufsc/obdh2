@@ -91,7 +91,7 @@ typedef struct
 typedef struct
 {
     sys_time_t timestamp;           /**< Timestamp of the Payload data. */
-    uint8_t id;                     /**< Payload id [Ex: PAYLOAD_EDC_0] */
+    uint8_t id;                     /**< Payload id [Ex: PAYLOAD_EDC_0_ID] */
     uint8_t data[220];              /**< Payload data. */
 } payload_telemetry_t;
 
@@ -100,9 +100,9 @@ typedef struct
  */
 typedef struct
 {
-    payload_t active_payload;
-    payload_t main_edc;
-    payload_telemetry_t *current_edc;
+    payload_t active_payload;       /**< Active payload. */
+    payload_t main_edc;             /**< Main EDC. */
+    payload_telemetry_t *c_edc;     /**< Pointer to the active EDC telemetry data. */
 } payload_state_t;
 
 /**
