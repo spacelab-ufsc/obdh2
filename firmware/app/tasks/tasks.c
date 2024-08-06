@@ -57,6 +57,7 @@
 #include "read_px.h"
 #include "housekeeping.h"
 #include "mem_check.h"
+#include "op_ctrl.h"
 
 void create_tasks(void)
 {
@@ -225,6 +226,14 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_HOUSEKEEPING_ENABLED */
 
+#if defined(CONFIG_TASK_OP_CTRL_ENABLED) && (CONFIG_TASK_OP_CTRL_ENABLED == 1)
+    xTaskCreate(vTaskOpCtrl, TASK_OP_CTRL_NAME, TASK_OP_CTRL_STACK_SIZE, NULL, TASK_OP_CTRL_PRIORITY, &xTaskOpCtrlHandle);
+
+    if (xTaskOpCtrlHandle == NULL)
+    {
+        /* Error creating the Operation Control task */
+    }
+#endif /* CONFIG_TASK_HOUSEKEEPING_ENABLED */
 
     create_event_groups();
 }
