@@ -37,6 +37,8 @@
 #ifndef OP_CTRL_H_
 #define OP_CTRL_H_
 
+#include <stdint.h>
+
 #include <FreeRTOS.h>
 #include <task.h>
 
@@ -48,7 +50,12 @@
 #define TASK_OP_CTRL_PERIOD_MS                 30000UL                /**< Task period in milliseconds. */
 #define TASK_OP_CTRL_INIT_TIMEOUT_MS           2000U                  /**< Task priority. */
 
-#define PAYLOAD_X_EXPERIMENT_PERIOD_S          600UL
+#define PAYLOAD_X_EXPERIMENT_PERIOD_MS         (600000UL)             /**< Payload X default experiment time in milliseconds. */
+#define PAYLOAD_X_CANCEL_EXPERIMENT_FLAG       (1UL << 31UL)          /**< Flag used as a notification to cancel running experiment */
+
+#define SAT_NOTIFY_IN_BRAZIL                   (1UL << 0UL)           /**< In Brazil notification flag */   
+#define SAT_NOTIFY_OUTSIDE_BRAZIL              (1UL << 1UL)           /**< Outside Brazil notification flag */   
+#define SAT_NOTIFY_PX_FINISHED                 (1UL << 2UL)           /**< Payload X experiment period finished */ 
 
 /**
  * \brief Changes satellite's operation mode.
@@ -56,11 +63,6 @@
  * \param[in] op_mode is the satellite mode to enter.
  */
 #define satellite_change_mode(op_mode) (sat_data_buf.obdh.data.mode = (op_mode))
-
-/**
- * \brief Get active payload.
- */
-#define satellite_active_payload       (sat_data_buf.state.active_payload)
 
 /**
  * \brief Operation Control Task Handle
@@ -73,6 +75,17 @@ extern TaskHandle_t xTaskOpCtrlHandle;
  * \return None.
  */
 void vTaskOpCtrl(void);
+
+/**
+ * \brief Sends a notification to the Operation Control Task.
+ *
+ * \param[in] notification_flag is the notification flag to send 
+ * to the Operation Control Task. A example of a flag would be 
+ * SAT_NOTIFY_IN_BRAZIL.
+ *
+ * \return None.
+ */
+void notify_op_ctrl(uint32_t notification_flag);
 
 #endif 
 

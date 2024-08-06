@@ -37,89 +37,123 @@
 #include <stdbool.h>
 
 #include <structs/satellite.h>
+#include <structs/obdh_data.h>
+#include <devices/payload/payload.h>
 #include <system/sys_log/sys_log.h>
 #include <FreeRTOS.h>
 #include <task.h>
 
+#include "read_px.h"
+#include "read_edc.h"
 #include "op_ctrl.h"
 
-#define POS_BRAZIL_LIM_N    (6L)
-#define POS_BRAZIL_LIM_S    (-34L)
-#define POS_BRAZIL_LIM_E    (-35L)
-#define POS_BRAZIL_LIM_W    (-74L)
+static inline void handle_notification(uint32_t notify_value);
 
-#define POS_LATITUDE        ((int16_t)sat_data_buf.obdh.data.position.latitude)
-#define POS_LONGITUDE       ((int16_t)sat_data_buf.obdh.data.position.longitude)
+static int enable_main_edc(void);
+static int enable_px(void);
+static int disable_curr_payload(void);
 
-static inline bool satellite_is_in_brazil(void);
+static uint32_t px_active_time_ms = PAYLOAD_X_EXPERIMENT_PERIOD_MS;
+static bool in_brazil = false;
+static bool edc_active = false;
 
-static int activate_main_edc(void);
-static int activate_px(void);
+TaskHandle_t xTaskOpCtrlHandle;
 
 void vTaskOpCtrl(void)
 {
-    sys_time_t px_time_s = 0UL;
+    uint32_t notify_value;
+    sat_data_buf.state.c_edc = &sat_data_buf.edc_0;
 
-    sat_data_buf.state.current_edc = &sat_data_buf.edc_0;
+    TickType_t last_cycle = xTaskGetTickCount();
 
     while (1) 
     {
-        TickType_t last_cycle = xTaskGetTickCount();
-
-        bool in_brazil = satellite_is_in_brazil();
-
-        if (in_brazil && (sat_data_buf.obdh.data.mode != OBDH_MODE_NORMAL)) 
+        if (xTaskNotifyWait(0UL, UINT32_MAX, &notify_value, 0UL) == pdTRUE) 
         {
-            sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_OP_CTRL_NAME, "Changing mode to Nominal Mode...");
-            sys_log_new_line();
-
-            satellite_change_mode(OBDH_MODE_NORMAL);
-
-            if (activate_main_edc() != 0)
-            {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to enable main EDC");
-                sys_log_new_line();
-            }
+            handle_notification(notify_value);
         }
 
-        if (!in_brazil && ((sat_data_buf.obdh.data.mode == OBDH_MODE_NORMAL) || (satellite_active_payload == PAYLOAD_X)))
+        if (in_brazil && edc_active)
         {
-            if (px_time_s >= PAYLOAD_X_EXPERIMENT_PERIOD_S)
-            {
-                px_time_s = 0UL;
-
-                if (payload_disable(PAYLOAD_X) != 0)
-                {
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to disable Payload X");
-                    sys_log_new_line();
-                }
-
-                sat_data_buf.state.active_payload = PAYLOAD_NONE;
-                satellite_change_mode(OBDH_MODE_STAND_BY);
-            }
-            else 
-            {
-                /* If Payload X was not active */
-                if (px_time_s == 0UL)
-                {
-                    if (activate_px() != 0)
-                    {
-                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to enable Payload X");
-                        sys_log_new_line();
-                    }
-                }
-                else 
-                {
-                    ++px_time_s;
-                }
-            }
+            /* Notifies to Read EDC task that the EDC is active.
+             * Must happen because the task depends on the notification
+             * to be pending for it to read EDC data. */
+            xTaskNotifyGive(xTaskReadEDCHandle);
         }
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_OP_CTRL_PERIOD_MS));
     }
 }
 
-static int activate_main_edc(void)
+void notify_op_ctrl(uint32_t notification_flag)
+{
+    xTaskNotify(xTaskOpCtrlHandle, notification_flag, eSetBits);
+}
+
+static inline void handle_notification(uint32_t notify_value)
+{
+    if (notify_value & SAT_NOTIFY_IN_BRAZIL)
+    {
+        sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_OP_CTRL_NAME, "Changing Satellite Mode to NOMINAL!");
+        sys_log_new_line();
+
+        satellite_change_mode(OBDH_MODE_NORMAL);
+
+        /* It means the satellite just entered Brazilian territory*/
+        if (!in_brazil) 
+        {
+            in_brazil = true;
+            edc_active = true;
+
+            if (enable_main_edc() != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to enable main EDC");
+                sys_log_new_line();
+            }
+        }
+    }
+
+    if (notify_value & SAT_NOTIFY_OUTSIDE_BRAZIL)
+    {
+        in_brazil = false;
+        edc_active = false;
+
+        /* Stop the Read EDC task */
+        xTaskNotify(xTaskReadEDCHandle, 0UL, eSetValueWithOverwrite);
+
+        if (disable_curr_payload() != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to disable active payload");
+            sys_log_new_line();
+        }
+
+        if (enable_px() != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to enable Payload X");
+            sys_log_new_line();
+        }
+
+        xTaskNotify(xTaskReadPXHandle, px_active_time_ms, eSetValueWithOverwrite);
+    }
+
+    if (notify_value & SAT_NOTIFY_PX_FINISHED)
+    {
+        sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_OP_CTRL_NAME, "Changing Satellite Mode to STAND BY!");
+        sys_log_new_line();
+
+        satellite_change_mode(OBDH_MODE_STAND_BY);
+
+        if (disable_curr_payload() != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to disable active payload");
+            sys_log_new_line();
+        }
+
+        sat_data_buf.state.active_payload = PAYLOAD_NONE;
+    }
+}
+
+static int enable_main_edc(void)
 {
     int err = -1;
 
@@ -127,26 +161,21 @@ static int activate_main_edc(void)
 
     if (sat_data_buf.state.main_edc == PAYLOAD_EDC_0) 
     {
-        if (payload_enable(PAYLOAD_EDC_0) == 0)
-        {
-            sat_data_buf.state.current_edc = &sat_data_buf.edc_0;
-            err = 0;
-        }
+        payload_enable(PAYLOAD_EDC_0);
+        sat_data_buf.state.c_edc = &sat_data_buf.edc_0;
+        err = 0;
     }
     else 
     {
-        if (payload_enable(PAYLOAD_EDC_1) == 0)
-        {
-            sat_data_buf.state.current_edc = &sat_data_buf.edc_1;
-            err = 0;
-        }
-
+        payload_enable(PAYLOAD_EDC_1);
+        sat_data_buf.state.c_edc = &sat_data_buf.edc_1;
+        err = 0;
     }
 
     return err;
 }
 
-static int activate_px(void)
+static int enable_px(void)
 {
     int err = -1;
 
@@ -160,9 +189,18 @@ static int activate_px(void)
     return err;
 }
 
-static inline bool satellite_is_in_brazil(void)
+static int disable_curr_payload(void)
 {
-    return ((POS_LATITUDE >= POS_BRAZIL_LIM_S) && (POS_LATITUDE <= POS_BRAZIL_LIM_N) && (POS_LONGITUDE >= POS_BRAZIL_LIM_W) && (POS_LONGITUDE <= POS_BRAZIL_LIM_E));
+    int err = -1;
+
+    payload_t active_payload = sat_data_buf.state.active_payload;
+
+    if (payload_disable(active_payload) == 0)
+    {
+        err = 0;
+    }
+
+    return err;
 }
 
 /** \} End of op_ctrl group */
