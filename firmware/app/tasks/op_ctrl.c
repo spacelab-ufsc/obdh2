@@ -104,19 +104,21 @@ static inline void handle_notification(uint32_t notify_value)
         if (!in_brazil) 
         {
             in_brazil = true;
-            edc_active = true;
 
             if (enable_main_edc() != 0)
             {
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to enable main EDC");
                 sys_log_new_line();
             }
+            else 
+            {
+                edc_active = true;
+            }
         }
     }
 
-    if ((notify_value & SAT_NOTIFY_OUTSIDE_BRAZIL) != 0U)
+    if ((notify_value & SAT_NOTIFY_OUT_OF_BRAZIL) != 0U)
     {
-        in_brazil = false;
         edc_active = false;
 
         /* Stop the Read EDC task */
@@ -128,13 +130,23 @@ static inline void handle_notification(uint32_t notify_value)
             sys_log_new_line();
         }
 
-        if (enable_px() != 0)
+        if (in_brazil)
         {
-            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to enable Payload X");
-            sys_log_new_line();
-        }
+            in_brazil = false;
 
-        xTaskNotify(xTaskReadPXHandle, px_active_time_ms, eSetValueWithOverwrite);
+            sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_OP_CTRL_NAME, "Satellite is out of Brazil territory");
+            sys_log_new_line();
+
+            if (enable_px() != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to enable Payload X");
+                sys_log_new_line();
+            }
+            else 
+            {
+                xTaskNotify(xTaskReadPXHandle, px_active_time_ms, eSetValueWithOverwrite);
+            }
+        }
     }
 
     if ((notify_value & SAT_NOTIFY_PX_FINISHED) != 0U)

@@ -41,6 +41,7 @@
 
 #include "pos_det.h"
 #include "startup.h"
+#include "op_ctrl.h"
 
 #ifndef M_PI
     #define M_PI 3.14159265358979323846
@@ -50,6 +51,9 @@ xTaskHandle xTaskPosDetHandle;
 
 void vTaskPosDet(void)
 {
+    /* Flag used to control notification sending */
+    bool sat_is_inside_brazil = false;
+
     /* Wait startup task to finish */
     xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_POS_DET_INIT_TIMEOUT_MS));
 
@@ -100,6 +104,20 @@ void vTaskPosDet(void)
         }
 
         predict_destroy_orbital_elements(satellite);
+
+        bool current_position = is_satellite_in_brazil(sat_data_buf.obdh.data.position.latitude, sat_data_buf.obdh.data.position.longitude);
+
+        if (current_position && !sat_is_inside_brazil)
+        {
+            sat_is_inside_brazil = true;
+            notify_op_ctrl(SAT_NOTIFY_IN_BRAZIL);
+        }
+
+        if (!current_position && sat_is_inside_brazil)
+        {
+            sat_is_inside_brazil = false;
+            notify_op_ctrl(SAT_NOTIFY_OUT_OF_BRAZIL);
+        }
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_POS_DET_PERIOD_MS));
     }

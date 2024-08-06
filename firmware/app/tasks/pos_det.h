@@ -37,14 +37,37 @@
 #ifndef POS_DET_H_
 #define POS_DET_H_
 
+#include <stdint.h>
+#include <stdbool.h>
+
 #include <FreeRTOS.h>
 #include <task.h>
+#include <structs/satellite.h>
 
 #define TASK_POS_DET_NAME                       "Position"          /**< Task name. */
 #define TASK_POS_DET_STACK_SIZE                 1024                /**< Stack size in bytes. */
 #define TASK_POS_DET_PRIORITY                   2                   /**< Task priority. */
 #define TASK_POS_DET_PERIOD_MS                  60000               /**< Task period in milliseconds. */
 #define TASK_POS_DET_INIT_TIMEOUT_MS            1000                /**< Wait time to initialize the task in milliseconds. */
+
+#define POS_BRAZIL_LIM_N                        (6L)                /**< Brazil territory North limit (Rounded up) */
+#define POS_BRAZIL_LIM_S                        (-34L)              /**< Brazil territory South limit (Rounded up) */
+#define POS_BRAZIL_LIM_E                        (-35L)              /**< Brazil territory East limit (Rounded up) */
+#define POS_BRAZIL_LIM_W                        (-74L)              /**< Brazil territory West limit (Rounded up) */
+
+/**
+ * \brief Checks if the satellite is orbiting over Brazil, based on the last available position determined.
+ *
+ * \param[in] latitude is the latitude of the satellite as a int16_t.
+ *
+ * \param[in] longitude is the longitude of the satellite as a int16_t.
+ *
+ * \return True if the satellite is over Brazil, false if it is not.
+ */
+static inline bool is_satellite_in_brazil(int16_t latitude, int16_t longitude)
+{
+    return ((latitude >= POS_BRAZIL_LIM_S) && (latitude <= POS_BRAZIL_LIM_N) && (longitude >= POS_BRAZIL_LIM_W) && (longitude <= POS_BRAZIL_LIM_E));
+}
 
 /**
  * \brief Position determination task handle.

@@ -54,7 +54,7 @@
 #define PAYLOAD_X_CANCEL_EXPERIMENT_FLAG       (1UL << 31UL)          /**< Flag used as a notification to cancel running experiment */
 
 #define SAT_NOTIFY_IN_BRAZIL                   (1UL << 0UL)           /**< In Brazil notification flag */   
-#define SAT_NOTIFY_OUTSIDE_BRAZIL              (1UL << 1UL)           /**< Outside Brazil notification flag */   
+#define SAT_NOTIFY_OUT_OF_BRAZIL               (1UL << 1UL)           /**< Outside Brazil notification flag */
 #define SAT_NOTIFY_PX_FINISHED                 (1UL << 2UL)           /**< Payload X experiment period finished */ 
 
 /**
