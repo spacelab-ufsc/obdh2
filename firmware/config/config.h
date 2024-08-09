@@ -57,6 +57,7 @@
 #define CONFIG_TASK_HOUSEKEEPING_ENABLED                1
 #define CONFIG_TASK_OP_CTRL_ENABLED                     1
 #define CONFIG_TASK_HEALTH_CHECK_MEM_ENABLED            0
+#define CONFIG_TASK_HEALTH_CHECK_MODE_ENABLED           0
 
 /* Devices */
 #define CONFIG_DEV_MEDIA_INT_ENABLED                    1
@@ -77,6 +78,7 @@
 
 /* Health Check */
 #define CONFIG_HEALTH_CHECK_ENABLED                     0
+#define CONFIG_HEALTH_CHECK_PAGES_TO_VALIDATE           10
 
 /* Debug and log messages */
 #define CONFIG_DRIVERS_DEBUG_ENABLED                    0
@@ -184,8 +186,9 @@
 #define CONFIG_TASK_POSITION_DETERMINATION_ENABLED      0
 #define CONFIG_TASK_PAYLOAD_X_ENABLED                   0
 #define CONFIG_TASK_HOUSEKEEPING_ENABLED                0
-#define CONFIG_TASK_OP_CTRL_ENABLED                     0
+#define CONFIG_TASK_OP_CTRL_ENABLED                     1
 #define CONFIG_TASK_HEALTH_CHECK_MEM_ENABLED            1
+#define CONFIG_TASK_HEALTH_CHECK_MODE_ENABLED           1
 
 /* Devices */
 #define CONFIG_DEV_MEDIA_INT_ENABLED                    1
@@ -209,6 +212,11 @@
 #if defined (CONFIG_TASK_HEALTH_CHECK_MEM_ENABLED) && defined (CONFIG_HEALTH_CHECK_ENABLED) && \
     (CONFIG_TASK_HEALTH_CHECK_MEM_ENABLED == 1) && (CONFIG_HEALTH_CHECK_ENABLED == 0)
 #error To enable memory Health Check please set the CONFIG_HEALTH_CHECK_ENABLED flag on config.h
+#endif
+
+#if defined (CONFIG_TASK_HEALTH_CHECK_MODE_ENABLED) && defined (CONFIG_HEALTH_CHECK_ENABLED) && \
+    (CONFIG_TASK_HEALTH_CHECK_MODE_ENABLED == 1) && (CONFIG_HEALTH_CHECK_ENABLED == 0)
+#error To enable mode Health Check please set the CONFIG_HEALTH_CHECK_ENABLED flag on config.h
 #endif
 
 #endif /* CONFIG_H_ */

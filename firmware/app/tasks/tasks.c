@@ -58,6 +58,7 @@
 #include "housekeeping.h"
 #include "mem_check.h"
 #include "op_ctrl.h"
+#include "mode_check.h"
 
 void create_tasks(void)
 {
@@ -222,9 +223,9 @@ void create_tasks(void)
 
     if (xTaskHealthCheckMemHandle == NULL)
     {
-        /* Error creating the Housekeeping task */
+        /* Error creating the Health Check Memory task */
     }
-#endif /* CONFIG_TASK_HOUSEKEEPING_ENABLED */
+#endif /* CONFIG_TASK_HEALTH_CHECK_MEM_ENABLED */
 
 #if defined(CONFIG_TASK_OP_CTRL_ENABLED) && (CONFIG_TASK_OP_CTRL_ENABLED == 1)
     xTaskCreate(vTaskOpCtrl, TASK_OP_CTRL_NAME, TASK_OP_CTRL_STACK_SIZE, NULL, TASK_OP_CTRL_PRIORITY, &xTaskOpCtrlHandle);
@@ -233,7 +234,16 @@ void create_tasks(void)
     {
         /* Error creating the Operation Control task */
     }
-#endif /* CONFIG_TASK_HOUSEKEEPING_ENABLED */
+#endif /* CONFIG_TASK_OP_CTRL_ENABLED */
+
+#if defined(CONFIG_TASK_HEALTH_CHECK_MODE_ENABLED) && (CONFIG_TASK_HEALTH_CHECK_MODE_ENABLED == 1)
+    xTaskCreate(vTaskHealthCheckMode, TASK_HEALTH_CHECK_MODE_NAME, TASK_HEALTH_CHECK_MODE_STACK_SIZE, NULL, TASK_HEALTH_CHECK_MODE_PRIORITY, &xTaskHealthCheckModeHandle);
+
+    if (xTaskHealthCheckModeHandle == NULL)
+    {
+        /* Error creating the Health Check Operation Mode task */
+    }
+#endif /* CONFIG_TASK_HEALTH_CHECK_MODE_ENABLED */
 
     create_event_groups();
 }
