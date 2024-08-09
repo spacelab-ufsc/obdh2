@@ -53,7 +53,7 @@ void vTaskAntennaDeployment(void)
 
         uint8_t i = 0;
 
-        for(i = initial_hib_time_counter; i < CONFIG_ANTENNA_DEPLOYMENT_HIBERNATION_MIN; i++)
+        for(i = initial_hib_time_counter; (i < CONFIG_ANTENNA_DEPLOYMENT_HIBERNATION_MIN) && (!sat_data_buf.obdh.data.initial_hib_executed); i++)
         {
             vTaskDelay(pdMS_TO_TICKS(60000U));
 
