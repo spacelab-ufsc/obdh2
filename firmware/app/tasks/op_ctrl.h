@@ -48,7 +48,7 @@
 #define TASK_OP_CTRL_NAME                      "Operation Control"    /**< Task name. */
 #define TASK_OP_CTRL_STACK_SIZE                256U                   /**< Stack size in bytes. */
 #define TASK_OP_CTRL_PRIORITY                  4U                     /**< Task priority. */
-#define TASK_OP_CTRL_PERIOD_MS                 30000UL                /**< Task period in milliseconds. */
+#define TASK_OP_CTRL_PERIOD_MS                 2000UL                 /**< Task period in milliseconds. */
 #define TASK_OP_CTRL_INIT_TIMEOUT_MS           2000U                  /**< Task priority. */
 
 #define PAYLOAD_X_EXPERIMENT_PERIOD_MS         (600000UL)             /**< Payload X default experiment time in milliseconds. */
@@ -56,7 +56,9 @@
 
 #define SAT_NOTIFY_IN_BRAZIL                   (1UL << 0UL)           /**< In Brazil notification flag */   
 #define SAT_NOTIFY_OUT_OF_BRAZIL               (1UL << 1UL)           /**< Outside Brazil notification flag */
-#define SAT_NOTIFY_PX_FINISHED                 (1UL << 2UL)           /**< Payload X experiment period finished */ 
+#define SAT_NOTIFY_PX_FINISHED                 (1UL << 2UL)           /**< Payload X experiment period finished flag */ 
+#define SAT_NOTIFY_ENTER_HIBERNATION           (1UL << 3UL)           /**< A request to enter hibernation was made through TC */ 
+#define SAT_NOTIFY_LEAVE_HIBERNATION           (1UL << 4UL)           /**< A request to leave hibernation was made through TC */ 
 
 /**
  * \brief Changes satellite's operation mode.
@@ -65,11 +67,7 @@
  *
  * \return None.
  */
-static inline void satellite_change_mode(uint8_t mode) 
-{
-    sat_data_buf.obdh.data.mode = mode;
-    sat_data_buf.obdh.data.ts_last_mode_change = system_get_time();
-}
+void satellite_change_mode(const uint8_t mode);
 
 /**
  * \brief Operation Control Task Handle

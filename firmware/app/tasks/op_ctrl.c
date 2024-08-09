@@ -55,6 +55,7 @@ static int disable_curr_payload(void);
 
 static bool in_brazil = false;
 static bool edc_active = false;
+static bool in_hibernation = false;
 
 TaskHandle_t xTaskOpCtrlHandle;
 
@@ -72,6 +73,25 @@ void vTaskOpCtrl(void)
             handle_notification(notify_value);
         }
 
+        /* Hibernation mode check */
+        if (sat_data_buf.obdh.data.mode == OBDH_MODE_HIBERNATION)
+        {
+            if ((sat_data_buf.obdh.data.ts_last_mode_change + sat_data_buf.obdh.data.mode_duration) >= system_get_time())
+            {
+                if (in_brazil || (sat_data_buf.state.active_payload == PAYLOAD_X))
+                {
+                    satellite_change_mode(OBDH_MODE_NORMAL);
+                }
+                else 
+                {
+                    satellite_change_mode(OBDH_MODE_STAND_BY);
+                }
+
+                in_hibernation = false;
+            }
+        }
+
+        /* Nominal mode notification */
         if (in_brazil && edc_active)
         {
             /* Notifies to Read EDC task that the EDC is active.
@@ -89,16 +109,48 @@ void notify_op_ctrl(uint32_t notification_flag)
     xTaskNotify(xTaskOpCtrlHandle, notification_flag, eSetBits);
 }
 
+void satellite_change_mode(uint8_t mode)
+{
+    /* This ensures the mode change is done atomically */
+    taskENTER_CRITICAL();
+    sat_data_buf.obdh.data.mode = mode;
+    sat_data_buf.obdh.data.ts_last_mode_change = system_get_time();
+    taskEXIT_CRITICAL();
+}
+
 static inline void handle_notification(uint32_t notify_value)
 {
     uint32_t px_active_time_ms = (uint32_t)PAYLOAD_X_EXPERIMENT_PERIOD_MS;
+
+    if ((notify_value & SAT_NOTIFY_ENTER_HIBERNATION) != 0U)
+    {
+        in_hibernation = true;
+        satellite_change_mode(OBDH_MODE_HIBERNATION);
+    }
+
+    if ((notify_value & SAT_NOTIFY_LEAVE_HIBERNATION) != 0U)
+    {
+        in_hibernation = false;
+
+        if (in_brazil || (sat_data_buf.state.active_payload == PAYLOAD_X))
+        {
+            satellite_change_mode(OBDH_MODE_NORMAL);
+        }
+        else 
+        {
+            satellite_change_mode(OBDH_MODE_STAND_BY);
+        }
+    }
 
     if ((notify_value & SAT_NOTIFY_IN_BRAZIL) != 0U)
     {
         sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_OP_CTRL_NAME, "Changing Satellite Mode to NOMINAL!");
         sys_log_new_line();
 
-        satellite_change_mode(OBDH_MODE_NORMAL);
+        if (!in_hibernation)
+        {
+            satellite_change_mode(OBDH_MODE_NORMAL);
+        }
 
         /* It means the satellite just entered Brazilian territory*/
         if (!in_brazil) 
@@ -154,7 +206,10 @@ static inline void handle_notification(uint32_t notify_value)
         sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_OP_CTRL_NAME, "Changing Satellite Mode to STAND BY!");
         sys_log_new_line();
 
-        satellite_change_mode(OBDH_MODE_STAND_BY);
+        if (!in_hibernation)
+        {
+            satellite_change_mode(OBDH_MODE_STAND_BY);
+        }
 
         if (disable_curr_payload() != 0)
         {

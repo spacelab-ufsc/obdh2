@@ -51,6 +51,7 @@
 #include <fsat_pkt/fsat_pkt.h>
 
 #include "process_tc.h"
+#include "op_ctrl.h"
 #include "startup.h"
 
 xTaskHandle xTaskProcessTCHandle;
@@ -532,9 +533,8 @@ void process_tc_enter_hibernation(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U + 2U, &pkt[10], 20U, tc_key, sizeof(CONFIG_TC_KEY_ENTER_HIBERNATION)-1U))
         {
-            sat_data_buf.obdh.data.mode = OBDH_MODE_HIBERNATION;
-            sat_data_buf.obdh.data.ts_last_mode_change = system_get_time();
             sat_data_buf.obdh.data.mode_duration = (((sys_time_t)pkt[8] << 8) | (sys_time_t)pkt[9]) * 60UL * 60UL;
+            notify_op_ctrl(SAT_NOTIFY_ENTER_HIBERNATION);
         }
         else
         {
@@ -552,8 +552,7 @@ void process_tc_leave_hibernation(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U, &pkt[8], 20U, tc_key, sizeof(CONFIG_TC_KEY_LEAVE_HIBERNATION)-1U))
         {
-            sat_data_buf.obdh.data.mode = OBDH_MODE_NORMAL;
-            sat_data_buf.obdh.data.ts_last_mode_change = system_get_time();
+            notify_op_ctrl(SAT_NOTIFY_LEAVE_HIBERNATION);
         }
         else
         {
@@ -1026,20 +1025,20 @@ void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
                 case CONFIG_SUBSYSTEM_ID_OBDH:
                     switch(pkt[9])
                     {
-                        case OBDH_PARAM_ID_TIME_COUNTER:        buf = system_get_time();                                break;
-                        case OBDH_PARAM_ID_TEMPERATURE_UC:      buf = sat_data_buf.obdh.data.temperature;               break;
-                        case OBDH_PARAM_ID_INPUT_CURRENT:       buf = sat_data_buf.obdh.data.current;                   break;
-                        case OBDH_PARAM_ID_INPUT_VOLTAGE:       buf = sat_data_buf.obdh.data.voltage;                   break;
-                        case OBDH_PARAM_ID_LAST_RESET_CAUSE:    buf = sat_data_buf.obdh.data.last_reset_cause;          break;
-                        case OBDH_PARAM_ID_RESET_COUNTER:       buf = sat_data_buf.obdh.data.reset_counter;             break;
-                        case OBDH_PARAM_ID_LAST_VALID_TC:       buf = sat_data_buf.obdh.data.last_valid_tc;             break;
-                        case OBDH_PARAM_ID_TEMPERATURE_ANTENNA: buf = sat_data_buf.antenna.data.temperature;            break;
-                        case OBDH_PARAM_ID_ANTENNA_STATUS:      buf = sat_data_buf.antenna.data.status.code;            break;
-                        case OBDH_PARAM_ID_HARDWARE_VERSION:    buf = sat_data_buf.obdh.data.hw_version;                break;
-                        case OBDH_PARAM_ID_FIRMWARE_VERSION:    buf = sat_data_buf.obdh.data.fw_version;                break;
-                        case OBDH_PARAM_ID_MODE:                buf = sat_data_buf.obdh.data.mode;                      break;
-                        case OBDH_PARAM_ID_TIMESTAMP_LAST_MODE: buf = sat_data_buf.obdh.data.ts_last_mode_change;       break;
-                        case OBDH_PARAM_ID_MODE_DURATION:       buf = sat_data_buf.obdh.data.mode_duration;             break;
+                        case OBDH_PARAM_ID_TIME_COUNTER:        buf = system_get_time();                                                break;
+                        case OBDH_PARAM_ID_TEMPERATURE_UC:      buf = sat_data_buf.obdh.data.temperature;                               break;
+                        case OBDH_PARAM_ID_INPUT_CURRENT:       buf = sat_data_buf.obdh.data.current;                                   break;
+                        case OBDH_PARAM_ID_INPUT_VOLTAGE:       buf = sat_data_buf.obdh.data.voltage;                                   break;
+                        case OBDH_PARAM_ID_LAST_RESET_CAUSE:    buf = sat_data_buf.obdh.data.last_reset_cause;                          break;
+                        case OBDH_PARAM_ID_RESET_COUNTER:       buf = sat_data_buf.obdh.data.reset_counter;                             break;
+                        case OBDH_PARAM_ID_LAST_VALID_TC:       buf = sat_data_buf.obdh.data.last_valid_tc;                             break;
+                        case OBDH_PARAM_ID_TEMPERATURE_ANTENNA: buf = sat_data_buf.antenna.data.temperature;                            break;
+                        case OBDH_PARAM_ID_ANTENNA_STATUS:      buf = sat_data_buf.antenna.data.status.code;                            break;
+                        case OBDH_PARAM_ID_HARDWARE_VERSION:    buf = sat_data_buf.obdh.data.hw_version;                                break;
+                        case OBDH_PARAM_ID_FIRMWARE_VERSION:    buf = sat_data_buf.obdh.data.fw_version;                                break;
+                        case OBDH_PARAM_ID_MODE:                buf = sat_data_buf.obdh.data.mode;                                      break;
+                        case OBDH_PARAM_ID_TIMESTAMP_LAST_MODE: buf = sat_data_buf.obdh.data.ts_last_mode_change;                       break;
+                        case OBDH_PARAM_ID_MODE_DURATION:       buf = system_get_time() - sat_data_buf.obdh.data.ts_last_mode_change;   break;
                         default:
                             error = -1;
 
