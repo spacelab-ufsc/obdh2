@@ -57,16 +57,6 @@ void vTaskHousekeeping(void)
     {
         TickType_t last_cycle = xTaskGetTickCount();
 
-        /* Hibernation mode check */
-        if (sat_data_buf.obdh.data.mode == OBDH_MODE_HIBERNATION)
-        {
-            if ((sat_data_buf.obdh.data.ts_last_mode_change + sat_data_buf.obdh.data.mode_duration) >= system_get_time())
-            {
-                sat_data_buf.obdh.data.mode = OBDH_MODE_NORMAL;
-                sat_data_buf.obdh.data.ts_last_mode_change = system_get_time();
-            }
-        }
-
         /* Save the last available OBDH data at every minute */
         if (mem_mng_save_obdh_data_to_fram(&sat_data_buf.obdh) != 0)
         {
