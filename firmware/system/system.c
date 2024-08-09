@@ -35,6 +35,7 @@
 
 #include <msp430.h>
 #include <drivers/gpio/gpio.h>
+#include <portmacro.h>
 
 #include "system.h"
 
@@ -59,7 +60,10 @@ void system_set_time(sys_time_t tm)
 
 void system_increment_time(void)
 {
+    /* This ensures the sys_time increment is done atomically */
+    portENTER_CRITICAL();
     sys_time++;
+    portEXIT_CRITICAL();
 }
 
 sys_time_t system_get_time(void)
