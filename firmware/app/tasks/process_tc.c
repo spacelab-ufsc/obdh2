@@ -914,7 +914,13 @@ void process_tc_erase_memory(uint8_t *pkt, uint16_t pkt_len)
 
             if (media_erase(MEDIA_NOR, MEDIA_ERASE_DIE, 0U) != 0)
             {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error erasing the NOR memory!");
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error erasing NOR's memory die 0!");
+                sys_log_new_line();
+            }
+
+            if (media_erase(MEDIA_NOR, MEDIA_ERASE_DIE, 1U) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error erasing NOR's memory die 1!");
                 sys_log_new_line();
             }
         }
