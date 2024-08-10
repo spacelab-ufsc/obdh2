@@ -384,10 +384,13 @@ void process_tc_ping_request(uint8_t *pkt, uint16_t pkt_len)
 
             fsat_pkt_encode(pong_pl, pong_pl_raw, &pong_pl_raw_len);
 
-            if (ttc_send(TTC_1, pong_pl_raw, pong_pl_raw_len) != 0)
+            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
             {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a ping answer!");
-                sys_log_new_line();
+                if (ttc_send(TTC_1, pong_pl_raw, pong_pl_raw_len) != 0)
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a ping answer!");
+                    sys_log_new_line();
+                }
             }
         }
     }
@@ -444,12 +447,15 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                                     fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
-                                    if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                    if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                                     {
-                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the OBDH data log of memory page ");
-                                        sys_log_print_uint(i);
-                                        sys_log_print_msg("!");
-                                        sys_log_new_line();
+                                        if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                        {
+                                            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the OBDH data log of memory page ");
+                                            sys_log_print_uint(i);
+                                            sys_log_print_msg("!");
+                                            sys_log_new_line();
+                                        }
                                     }
                                 }
                             }
@@ -516,10 +522,13 @@ void process_tc_broadcast_message(uint8_t *pkt, uint16_t pkt_len)
 
             fsat_pkt_encode(broadcast_pl, broadcast_pl_raw, &broadcast_pl_raw_len);
 
-            if (ttc_send(TTC_1, broadcast_pl_raw, broadcast_pl_raw_len) != 0)
+            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
             {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a message broadcast!");
-                sys_log_new_line();
+                if (ttc_send(TTC_1, broadcast_pl_raw, broadcast_pl_raw_len) != 0)
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a message broadcast!");
+                    sys_log_new_line();
+                }
             }
         }
     }
@@ -1114,9 +1123,12 @@ void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
 
                     fsat_pkt_encode(param_pl, param_pl_raw, &param_pl_raw_len);
 
-                    if (ttc_send(TTC_1, param_pl_raw, param_pl_raw_len) != 0)
+                    if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                     {
-                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a \"get parameter\" answer!");
+                        if (ttc_send(TTC_1, param_pl_raw, param_pl_raw_len) != 0)
+                        {
+                            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a \"get parameter\" answer!");
+                        }
                     }
                 }
             }
