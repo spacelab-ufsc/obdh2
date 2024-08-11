@@ -42,6 +42,7 @@
 #include <drivers/flash/flash.h>
 #include <devices/media/media.h>
 #include <structs/obdh_data.h>
+#include <portmacro.h>
 
 #include "mem_mng.h"
 
@@ -176,12 +177,16 @@ int mem_mng_write_data_to_flash_page(uint8_t *data, uint32_t *page, uint32_t pag
 
     if (media_write(MEDIA_NOR, (*page) * page_size, data, page_size) == 0)
     {
+        portENTER_CRITICAL();
+
         (*page)++;    // cppcheck-suppress misra-c2012-17.8
 
         if (*page > end_page)
         {
             *page = start_page;
         }
+
+        portEXIT_CRITICAL();
 
         err = 0;
     }
@@ -225,6 +230,45 @@ int mem_mng_load_obdh_data_bak(obdh_telemetry_t *tel)
     {
         (void)memcpy(tel, buf, BAK_DATA_SIZE);
         err = 0;
+    }
+
+    return err;
+}
+
+void mem_mng_reset_page_count(media_data_t *media)
+{
+    portENTER_CRITICAL();
+    media->last_page_obdh_data    = CONFIG_MEM_OBDH_DATA_START_PAGE;
+    media->last_page_eps_data     = CONFIG_MEM_EPS_DATA_START_PAGE;
+    media->last_page_ttc_0_data   = CONFIG_MEM_TTC_0_DATA_START_PAGE;
+    media->last_page_ant_data     = CONFIG_MEM_ANT_DATA_START_PAGE;
+    media->last_page_edc_data     = CONFIG_MEM_EDC_DATA_START_PAGE;
+    media->last_page_px_data      = CONFIG_MEM_PX_DATA_START_PAGE;
+    media->last_page_sbcd_pkts    = CONFIG_MEM_SBCD_PKTS_START_PAGE;
+    portEXIT_CRITICAL();
+}
+
+int mem_mng_erase_flash(obdh_telemetry_t *tel)
+{
+    int err = 0;
+
+    if (media_erase(MEDIA_NOR, MEDIA_ERASE_DIE, 0U) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, MEM_MNG_NAME, "Failed to erase flash die 0");
+        sys_log_new_line();
+        err--;
+    }
+
+    if (media_erase(MEDIA_NOR, MEDIA_ERASE_DIE, 1U) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, MEM_MNG_NAME, "Failed to erase flash die 1");
+        sys_log_new_line();
+        err--;
+    }
+
+    if (err == 0)
+    {
+        mem_mng_reset_page_count(&tel->data.media);
     }
 
     return err;
