@@ -58,46 +58,38 @@ void vTaskPosDet(void)
         TickType_t last_cycle = xTaskGetTickCount();
 
         /* Load TLE lines */
-        const char *tle_line_1 = "1 25544U 98067A   15129.86961041  .00015753  00000-0  23097-3 0  9998";
-        const char *tle_line_2 = "2 25544  51.6464 275.3867 0006524 289.1638 208.5861 15.55704207942078";
-
+        const char *tle_line_1 = "1 25544U 98067A   24223.83784911  .00020194  00000+0  36238-3 0  9994";
+        const char *tle_line_2 = "2 25544  51.6408  44.5872 0005770 185.1957 306.5656 15.49872002467029";
+        
         /* Create orbit object */
         predict_orbital_elements_t *satellite = predict_parse_tle(tle_line_1, tle_line_2);
 
-        if (satellite != NULL)
-        {
-            /* Predict satellite position */
-            struct predict_position my_orbit;
+        /* Predict satellite position */
+        struct predict_position my_orbit;
 
-            sys_time_t now = system_get_time();
+        sys_time_t now = system_get_time();
 
-            predict_julian_date_t curr_time = predict_to_julian(now - 631065600UL);   /* Unix timestamp in 1989/12/31 00:00:00 UTC */
+        predict_julian_date_t curr_time = predict_to_julian(now + 1723341922ULL);   /* 1723341922ULL Corresponds to ISO Time Stamp: 2024-08-11T02:05:22Z */
 
-            predict_orbit(satellite, &my_orbit, curr_time);
+        predict_orbit(satellite, &my_orbit, curr_time);
 
-            float lat = my_orbit.latitude * 180.0 / M_PI;
-            float lon = my_orbit.longitude * 180.0 / M_PI;
-            float alt = my_orbit.altitude;
+        float lat = my_orbit.latitude * 180.0 / M_PI;
+        float lon = my_orbit.longitude * 180.0 / M_PI;
+        float alt = my_orbit.altitude;
 
-            sat_data_buf.obdh.data.position.latitude    = (int16_t)lat;
-            sat_data_buf.obdh.data.position.longitude   = (int16_t)lon;
-            sat_data_buf.obdh.data.position.altitude    = (int16_t)alt;
-            sat_data_buf.obdh.data.position.timestamp   = now;
+        sat_data_buf.obdh.data.position.latitude    = (int16_t)lat;
+        sat_data_buf.obdh.data.position.longitude   = (int16_t)lon;
+        sat_data_buf.obdh.data.position.altitude    = (int16_t)alt;
+        sat_data_buf.obdh.data.position.timestamp   = now;
 
-            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_POS_DET_NAME, "Current position (lat/lon/alt): ");
-            sys_log_print_float(lat, 2);
-            sys_log_print_msg(" deg/");
-            sys_log_print_float(lon, 2);
-            sys_log_print_msg(" deg/");
-            sys_log_print_float(alt, 2);
-            sys_log_print_msg(" km");
-            sys_log_new_line();
-        }
-        else
-        {
-            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_POS_DET_NAME, "Failed to initialize orbit from TLE!");
-            sys_log_new_line();
-        }
+        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_POS_DET_NAME, "Current position (lat/lon/alt): ");
+        sys_log_print_float(lat, 2);
+        sys_log_print_msg(" deg/");
+        sys_log_print_float(lon, 2);
+        sys_log_print_msg(" deg/");
+        sys_log_print_float(alt, 2);
+        sys_log_print_msg(" km");
+        sys_log_new_line();
 
         predict_destroy_orbital_elements(satellite);
 
