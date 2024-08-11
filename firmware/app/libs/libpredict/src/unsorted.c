@@ -204,6 +204,9 @@ void Calculate_LatLonAlt(double time, const double pos[3],  geodetic_t *geodetic
 
 	if (geodetic->lat>PI_HALF)
 		geodetic->lat-= 2*M_PI;
+
+	if (geodetic->lon>M_PI)
+		geodetic->lat-= 2*M_PI;
 }
 
 void Calculate_Obs(double time, const double pos[3], const double vel[3], geodetic_t *geodetic, vector_t *obs_set)
