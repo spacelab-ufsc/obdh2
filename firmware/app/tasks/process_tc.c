@@ -399,7 +399,8 @@ void process_tc_ping_request(uint8_t *pkt, uint16_t pkt_len)
 
 void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 {
-    if (pkt_len >= (1U + 7U + 1U + 4U + 4U))
+    /* If the satellite is in hibernation mode there is no point in processing this telecommand */
+    if ((pkt_len >= (1U + 7U + 1U + 4U + 4U)) && (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION))
     {
         fsat_pkt_pl_t data_req_ans_pkt = {0};
         uint8_t data_req_ans_pl[220] = {0};
