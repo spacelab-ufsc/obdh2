@@ -42,8 +42,10 @@
 #include <system/sys_log/sys_log.h>
 #include <system/system.h>
 #include <devices/ttc/ttc.h>
+#include <devices/eps/eps.h>
 #include <devices/media/media.h>
 #include <devices/payload/payload.h>
+#include <utils/mem_mng.h>
 #include <hmac/sha.h>
 
 #include <structs/satellite.h>
@@ -903,24 +905,9 @@ void process_tc_erase_memory(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U, &pkt[8], 20U, tc_key, sizeof(CONFIG_TC_KEY_ERASE_MEMORY)-1U))
         {
-            sat_data_buf.obdh.data.media.last_page_obdh_data    = CONFIG_MEM_OBDH_DATA_START_PAGE;
-            sat_data_buf.obdh.data.media.last_page_eps_data     = CONFIG_MEM_EPS_DATA_START_PAGE;
-            sat_data_buf.obdh.data.media.last_page_ttc_0_data   = CONFIG_MEM_TTC_0_DATA_START_PAGE;
-            sat_data_buf.obdh.data.media.last_page_ttc_1_data   = CONFIG_MEM_TTC_1_DATA_END_PAGE;
-            sat_data_buf.obdh.data.media.last_page_ant_data     = CONFIG_MEM_ANT_DATA_START_PAGE;
-            sat_data_buf.obdh.data.media.last_page_edc_data     = CONFIG_MEM_EDC_DATA_START_PAGE;
-            sat_data_buf.obdh.data.media.last_page_px_data      = CONFIG_MEM_PX_DATA_START_PAGE;
-            sat_data_buf.obdh.data.media.last_page_sbcd_pkts    = CONFIG_MEM_SBCD_PKTS_START_PAGE;
-
-            if (media_erase(MEDIA_NOR, MEDIA_ERASE_DIE, 0U) != 0)
+            if (mem_mng_erase_flash(&sat_data_buf.obdh) < 0)
             {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error erasing NOR's memory die 0!");
-                sys_log_new_line();
-            }
-
-            if (media_erase(MEDIA_NOR, MEDIA_ERASE_DIE, 1U) != 0)
-            {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error erasing NOR's memory die 1!");
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error erasing flash memory!");
                 sys_log_new_line();
             }
         }
