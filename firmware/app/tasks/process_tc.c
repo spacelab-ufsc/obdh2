@@ -437,55 +437,208 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                         if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(obdh_telemetry_t)) == 0)
                         {
                             /* Requester callsign */
-                            if (memcpy(&data_req_ans_pl[0], &pkt[1], 7) == &data_req_ans_pl[0])
+                            (void)memcpy(&data_req_ans_pl[0], &pkt[1], 7);
+
+                            /* Data ID */
+                            data_req_ans_pl[7] = CONFIG_DATA_ID_OBDH;
+
+                            /* Timestamp and Data */
+                            (void)memcpy(&data_req_ans_pl[7 + 1], &page_buf[0], sizeof(obdh_telemetry_t));
+
+                            vTaskDelay(pdMS_TO_TICKS(10U));
+
+                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, 7U + 1U + sizeof(obdh_telemetry_t));
+
+                            fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                             {
-                                /* Data ID */
-                                data_req_ans_pl[7] = CONFIG_DATA_ID_OBDH;
-
-                                /* Timestamp and Data */
-                                if (memcpy(&data_req_ans_pl[7 + 1], &page_buf[0], sizeof(obdh_telemetry_t)) == &data_req_ans_pl[7 + 1])
+                                if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
                                 {
-                                    fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, 7U + 1U + sizeof(obdh_telemetry_t));
-
-                                    fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
-
-                                    if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
-                                    {
-                                        if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
-                                        {
-                                            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the OBDH data log of memory page ");
-                                            sys_log_print_uint(i);
-                                            sys_log_print_msg("!");
-                                            sys_log_new_line();
-                                        }
-                                    }
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the OBDH data log of memory page ");
+                                    sys_log_print_uint(i);
+                                    sys_log_print_msg("!");
+                                    sys_log_new_line();
                                 }
                             }
                         }
+                        vTaskDelay(pdMS_TO_TICKS(25U));
                     }
 
                     break;
                 }
                 case CONFIG_DATA_ID_EPS:
-                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_PROCESS_TC_NAME, "EPS data request not implemented!");
-                    sys_log_new_line();
+                {
+                    uint32_t start_page = sat_data_buf.obdh.data.media.last_page_eps_data - (uint32_t)end_idx;
+                    uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_eps_data - (uint32_t)start_idx;
+
+                    uint8_t page_buf[256] = {0};
+
+                    uint32_t i = 0;
+                    for(i = start_page; i < end_page; i++)
+                    {
+                        if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(eps_telemetry_t)) == 0)
+                        {
+                            /* Requester callsign */
+                            (void)memcpy(&data_req_ans_pl[0], &pkt[1], 7);
+
+                            /* Data ID */
+                            data_req_ans_pl[7] = CONFIG_DATA_ID_EPS;
+
+                            /* Timestamp and Data */
+                            (void)memcpy(&data_req_ans_pl[7 + 1], &page_buf[0], sizeof(eps_telemetry_t));
+
+                            vTaskDelay(pdMS_TO_TICKS(10U));
+
+                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, 7U + 1U + sizeof(eps_telemetry_t));
+
+                            fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                            {
+                                if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                {
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the EPS data log of memory page ");
+                                    sys_log_print_uint(i);
+                                    sys_log_print_msg("!");
+                                    sys_log_new_line();
+                                }
+                            }
+                        }
+                        vTaskDelay(pdMS_TO_TICKS(25U));
+                    }
 
                     break;
+                }
                 case CONFIG_DATA_ID_TTC_0:
-                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_PROCESS_TC_NAME, "TTC 0 data request not implemented!");
-                    sys_log_new_line();
+                {
+                    uint32_t start_page = sat_data_buf.obdh.data.media.last_page_ttc_0_data - (uint32_t)end_idx;
+                    uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_ttc_0_data - (uint32_t)start_idx;
+
+                    uint8_t page_buf[256] = {0};
+
+                    uint32_t i = 0;
+                    for(i = start_page; i < end_page; i++)
+                    {
+                        if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(ttc_telemetry_t)) == 0)
+                        {
+                            /* Requester callsign */
+                            (void)memcpy(&data_req_ans_pl[0], &pkt[1], 7);
+
+                            /* Data ID */
+                            data_req_ans_pl[7] = CONFIG_DATA_ID_TTC_0;
+
+                            /* Timestamp and Data */
+                            (void)memcpy(&data_req_ans_pl[7 + 1], &page_buf[0], sizeof(ttc_telemetry_t));
+
+                            vTaskDelay(pdMS_TO_TICKS(10U));
+
+                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, 7U + 1U + sizeof(ttc_telemetry_t));
+
+                            fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                            {
+                                if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                {
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the TTC 0 data log of memory page ");
+                                    sys_log_print_uint(i);
+                                    sys_log_print_msg("!");
+                                    sys_log_new_line();
+                                }
+                            }
+                        }
+                        vTaskDelay(pdMS_TO_TICKS(25U));
+                    }
 
                     break;
+                }
                 case CONFIG_DATA_ID_TTC_1:
-                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_PROCESS_TC_NAME, "TTC 1 data request not implemented!");
-                    sys_log_new_line();
+                {
+                    uint32_t start_page = sat_data_buf.obdh.data.media.last_page_ttc_1_data - (uint32_t)end_idx;
+                    uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_ttc_1_data - (uint32_t)start_idx;
+
+                    uint8_t page_buf[256] = {0};
+
+                    uint32_t i = 0;
+                    for(i = start_page; i < end_page; i++)
+                    {
+                        if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(ttc_telemetry_t)) == 0)
+                        {
+                            /* Requester callsign */
+                            (void)memcpy(&data_req_ans_pl[0], &pkt[1], 7);
+
+                            /* Data ID */
+                            data_req_ans_pl[7] = CONFIG_DATA_ID_TTC_1;
+
+                            /* Timestamp and Data */
+                            (void)memcpy(&data_req_ans_pl[7 + 1], &page_buf[0], sizeof(ttc_telemetry_t));
+
+                            vTaskDelay(pdMS_TO_TICKS(10U));
+
+                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, 7U + 1U + sizeof(ttc_telemetry_t));
+
+                            fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                            {
+                                if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                {
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the TTC 1 data log of memory page ");
+                                    sys_log_print_uint(i);
+                                    sys_log_print_msg("!");
+                                    sys_log_new_line();
+                                }
+                            }
+                        }
+                        vTaskDelay(pdMS_TO_TICKS(25U));
+                    }
 
                     break;
+                }
                 case CONFIG_DATA_ID_ANT:
-                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_PROCESS_TC_NAME, "Antenna data request not implemented!");
-                    sys_log_new_line();
+                {
+                    uint32_t start_page = sat_data_buf.obdh.data.media.last_page_ant_data - (uint32_t)end_idx;
+                    uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_ant_data - (uint32_t)start_idx;
+
+                    uint8_t page_buf[256] = {0};
+
+                    uint32_t i = 0;
+                    for(i = start_page; i < end_page; i++)
+                    {
+                        if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(antenna_telemetry_t)) == 0)
+                        {
+                            /* Requester callsign */
+                            (void)memcpy(&data_req_ans_pl[0], &pkt[1], 7);
+
+                            /* Data ID */
+                            data_req_ans_pl[7] = CONFIG_DATA_ID_TTC_1;
+
+                            /* Timestamp and Data */
+                            (void)memcpy(&data_req_ans_pl[7 + 1], &page_buf[0], sizeof(antenna_telemetry_t));
+
+                            vTaskDelay(pdMS_TO_TICKS(10U));
+
+                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, 7U + 1U + sizeof(antenna_telemetry_t));
+
+                            fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                            {
+                                if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                {
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the Antenna data log of memory page ");
+                                    sys_log_print_uint(i);
+                                    sys_log_print_msg("!");
+                                    sys_log_new_line();
+                                }
+                            }
+                        }
+                        vTaskDelay(pdMS_TO_TICKS(25U));
+                    }
 
                     break;
+                }
                 default:
                     sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Data Request\" TC! Unknown data ID!");
                     sys_log_new_line();
