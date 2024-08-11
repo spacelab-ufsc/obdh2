@@ -377,22 +377,21 @@ void process_tc_ping_request(uint8_t *pkt, uint16_t pkt_len)
         /* Source callsign */
         fsat_pkt_add_callsign(&pong_pl, CONFIG_SATELLITE_CALLSIGN);
 
-        if (memcpy(&pong_pl.payload[0], &pkt[1], 7) == &pong_pl.payload[0])
+        (void)memcpy(&pong_pl.payload[0], &pkt[1], 7);
+
+        pong_pl.length = 7U;
+
+        uint8_t pong_pl_raw[16] = {0};
+        uint16_t pong_pl_raw_len = 0;
+
+        fsat_pkt_encode(pong_pl, pong_pl_raw, &pong_pl_raw_len);
+
+        if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
         {
-            pong_pl.length = 7U;
-
-            uint8_t pong_pl_raw[16] = {0};
-            uint16_t pong_pl_raw_len = 0;
-
-            fsat_pkt_encode(pong_pl, pong_pl_raw, &pong_pl_raw_len);
-
-            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+            if (ttc_send(TTC_1, pong_pl_raw, pong_pl_raw_len) != 0)
             {
-                if (ttc_send(TTC_1, pong_pl_raw, pong_pl_raw_len) != 0)
-                {
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a ping answer!");
-                    sys_log_new_line();
-                }
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a ping answer!");
+                sys_log_new_line();
             }
         }
     }
@@ -668,22 +667,21 @@ void process_tc_broadcast_message(uint8_t *pkt, uint16_t pkt_len)
 
         uint16_t msg_len = pkt_len - 7U - 7U - 1U;
 
-        if (memcpy(&broadcast_pl.payload[0], &pkt[1], 14U + msg_len) == &broadcast_pl.payload[0])
+        (void)memcpy(&broadcast_pl.payload[0], &pkt[1], 14U + msg_len);
+    
+        broadcast_pl.length = 14U + msg_len;
+
+        uint8_t broadcast_pl_raw[55] = {0};
+        uint16_t broadcast_pl_raw_len = 0;
+
+        fsat_pkt_encode(broadcast_pl, broadcast_pl_raw, &broadcast_pl_raw_len);
+
+        if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
         {
-            broadcast_pl.length = 14U + msg_len;
-
-            uint8_t broadcast_pl_raw[55] = {0};
-            uint16_t broadcast_pl_raw_len = 0;
-
-            fsat_pkt_encode(broadcast_pl, broadcast_pl_raw, &broadcast_pl_raw_len);
-
-            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+            if (ttc_send(TTC_1, broadcast_pl_raw, broadcast_pl_raw_len) != 0)
             {
-                if (ttc_send(TTC_1, broadcast_pl_raw, broadcast_pl_raw_len) != 0)
-                {
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a message broadcast!");
-                    sys_log_new_line();
-                }
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a message broadcast!");
+                sys_log_new_line();
             }
         }
     }
@@ -1253,28 +1251,27 @@ void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
                 /* Source callsign */
                 fsat_pkt_add_callsign(&param_pl, CONFIG_SATELLITE_CALLSIGN);
 
-                if (memcpy(&param_pl.payload[0], &pkt[1], 7) == &param_pl.payload[0])
+                (void)memcpy(&param_pl.payload[0], &pkt[1], 7);
+
+                param_pl.payload[8] = pkt[8];
+                param_pl.payload[9] = pkt[9];
+                param_pl.payload[10] = (uint8_t)((buf >> 24) & 0xFFU);
+                param_pl.payload[11] = (uint8_t)((buf >> 16) & 0xFFU);
+                param_pl.payload[12] = (uint8_t)((buf >> 8) & 0xFFU);
+                param_pl.payload[13] = (uint8_t)(buf & 0xFFU);
+
+                param_pl.length = 6U;
+
+                uint8_t param_pl_raw[16] = {0};
+                uint16_t param_pl_raw_len = 0;
+
+                fsat_pkt_encode(param_pl, param_pl_raw, &param_pl_raw_len);
+
+                if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                 {
-                    param_pl.payload[8] = pkt[8];
-                    param_pl.payload[9] = pkt[9];
-                    param_pl.payload[10] = (uint8_t)((buf >> 24) & 0xFFU);
-                    param_pl.payload[11] = (uint8_t)((buf >> 16) & 0xFFU);
-                    param_pl.payload[12] = (uint8_t)((buf >> 8) & 0xFFU);
-                    param_pl.payload[13] = (uint8_t)(buf & 0xFFU);
-
-                    param_pl.length = 6U;
-
-                    uint8_t param_pl_raw[16] = {0};
-                    uint16_t param_pl_raw_len = 0;
-
-                    fsat_pkt_encode(param_pl, param_pl_raw, &param_pl_raw_len);
-
-                    if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                    if (ttc_send(TTC_1, param_pl_raw, param_pl_raw_len) != 0)
                     {
-                        if (ttc_send(TTC_1, param_pl_raw, param_pl_raw_len) != 0)
-                        {
-                            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a \"get parameter\" answer!");
-                        }
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a \"get parameter\" answer!");
                     }
                 }
             }
