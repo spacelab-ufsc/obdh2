@@ -76,7 +76,7 @@ void vTaskOpCtrl(void)
         /* Hibernation mode check */
         if (sat_data_buf.obdh.data.mode == OBDH_MODE_HIBERNATION)
         {
-            if ((sat_data_buf.obdh.data.ts_last_mode_change + sat_data_buf.obdh.data.mode_duration) >= system_get_time())
+            if ((sat_data_buf.obdh.data.ts_last_mode_change + sat_data_buf.obdh.data.mode_duration) <= system_get_time())
             {
                 if (in_brazil || (sat_data_buf.state.active_payload == PAYLOAD_X))
                 {
