@@ -176,7 +176,7 @@
 #define CONFIG_TASK_READ_SENSORS_ENABLED                0
 #define CONFIG_TASK_BEACON_ENABLED                      0
 #define CONFIG_TASK_TIME_CONTROL_ENABLED                0
-#define CONFIG_TASK_READ_EDC_ENABLED                    0
+#define CONFIG_TASK_READ_EDC_ENABLED                    1
 #define CONFIG_TASK_READ_EPS_ENABLED                    0
 #define CONFIG_TASK_READ_TTC_ENABLED                    0
 #define CONFIG_TASK_READ_ANTENNA_ENABLED                0
@@ -184,7 +184,7 @@
 #define CONFIG_TASK_PROCESS_TC_ENABLED                  0
 #define CONFIG_TASK_ANTENNA_DEPLOYMENT_ENABLED          0
 #define CONFIG_TASK_POSITION_DETERMINATION_ENABLED      0
-#define CONFIG_TASK_PAYLOAD_X_ENABLED                   0
+#define CONFIG_TASK_PAYLOAD_X_ENABLED                   1
 #define CONFIG_TASK_HOUSEKEEPING_ENABLED                0
 #define CONFIG_TASK_OP_CTRL_ENABLED                     1
 #define CONFIG_TASK_HEALTH_CHECK_MEM_ENABLED            1
@@ -199,9 +199,9 @@
 #define CONFIG_DEV_VOLTAGE_SENSOR_ENABLED               0
 #define CONFIG_DEV_TEMP_SENSOR_ENABLED                  0
 #define CONFIG_DEV_EPS_ENABLED                          0
-#define CONFIG_DEV_PAYLOAD_EDC_ENABLED                  0
+#define CONFIG_DEV_PAYLOAD_EDC_ENABLED                  1
 #define CONFIG_DEV_ANTENNA_ENABLED                      0
-#define CONFIG_DEV_PAYLOAD_X_ENABLED                    0
+#define CONFIG_DEV_PAYLOAD_X_ENABLED                    1
 
 /* Drivers */
 #define CONFIG_DRV_ISIS_ANTENNA_ENABLED                 0
