@@ -73,9 +73,9 @@ void vTaskHealthCheckMode(void)
             
             notify_op_ctrl(SAT_NOTIFY_IN_BRAZIL);
 
-            taskYIELD();
+            vTaskDelay(pdMS_TO_TICKS(2000U));
 
-            test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_NORMAL) && (sat_data_buf.state.active_payload == PAYLOAD_EDC_0) && (sat_data_buf.state.active_payload == PAYLOAD_EDC_1);
+            test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_NORMAL) && ((sat_data_buf.state.active_payload == PAYLOAD_EDC_0) || (sat_data_buf.state.active_payload == PAYLOAD_EDC_1));
 
             sys_log_print_test_result(test_result, "In Brazil Notify Test");
             sys_log_new_line();
