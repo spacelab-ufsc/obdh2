@@ -439,17 +439,17 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, int32_t 
                 }
                 case PAYLOAD_EDC_RAW_HK:
                 {
-                    int bytes = edc_get_hk_pkg(edc_0_conf, data);
+                    *len = edc_get_hk_pkg(edc_0_conf, data);
 
-                    if (bytes < 0)
+                    if (*len < 0)
                     {
                         sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Error reading housekeeping data!");
                         sys_log_new_line();
                     }
-
-                    *len = bytes;
-
-                    err = 0;
+                    else
+                    {
+                        err = 0;
+                    }
 
                     break;
                 }
