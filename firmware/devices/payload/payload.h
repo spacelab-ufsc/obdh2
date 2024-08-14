@@ -42,9 +42,9 @@
 
 #define PAYLOAD_MODULE_NAME         "Payload"
 
-#define PAYLOAD_EDC_0_ID            (0xE0U)
-#define PAYLOAD_EDC_1_ID            (0xE1U)
-#define PAYLOAD_X_ID                (0xE8U)
+#define PAYLOAD_EDC_0_ID            (0x01U)
+#define PAYLOAD_EDC_1_ID            (0x02U)
+#define PAYLOAD_X_ID                (0x03U)
 
 /**
  * \brief Payload type.
