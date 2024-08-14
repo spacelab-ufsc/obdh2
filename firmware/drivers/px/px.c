@@ -33,25 +33,38 @@
  * \{
  */
 
+#include <stdbool.h>
+
 #include "px.h"
 
-int px_init(px_config_t conf)
+int px_init(const px_config_t *conf)
 {
-    i2c_config_t i2c_conf = {0};
+    const gpio_config_t gpio_conf = { .mode = GPIO_MODE_OUTPUT };
+    const i2c_config_t i2c_conf = { .speed_hz = conf->bitrate };
 
-    i2c_conf.speed_hz = conf.bitrate;
+    (void)gpio_init(conf->en_pin, gpio_conf);
 
-    return i2c_init(conf.port, i2c_conf);
+    return i2c_init(conf->port, i2c_conf);
 }
 
-int px_write(px_config_t conf, uint8_t *data, uint16_t len)
+int px_write(const px_config_t *conf, uint8_t *data, uint16_t len)
 {
-    return i2c_write(conf.port, PX_SLAVE_ADDRESS, data, len);
+    return i2c_write(conf->port, PX_SLAVE_ADDRESS, data, len);
 }
 
-int px_read(px_config_t conf, uint8_t *data, uint16_t len)
+int px_read(const px_config_t *conf, uint8_t *data, uint16_t len)
 {
-    return i2c_read(conf.port, PX_SLAVE_ADDRESS, data, len);
+    return i2c_read(conf->port, PX_SLAVE_ADDRESS, data, len);
+}
+
+int px_enable(const px_config_t *conf)
+{
+    return gpio_set_state(conf->en_pin, true);
+}
+
+int px_disable(const px_config_t *conf)
+{
+    return gpio_set_state(conf->en_pin, false);
 }
 
 /** \} End of px group */
