@@ -43,18 +43,19 @@
 
 #include "px_wrap.h"
 
-int __wrap_px_init(px_config_t conf)
+int __wrap_px_init(px_config_t *conf)
 {
-    check_expected(conf.port);
-    check_expected(conf.bitrate);
+    check_expected(conf->port);
+    check_expected(conf->bitrate);
+    check_expected(conf->en_pin);
 
     return mock_type(int);
 }
 
-int __wrap_px_write(px_config_t conf, uint8_t *data, uint16_t len)
+int __wrap_px_write(px_config_t *conf, uint8_t *data, uint16_t len)
 {
-    check_expected(conf.port);
-    check_expected(conf.bitrate);
+    check_expected(conf->port);
+    check_expected(conf->bitrate);
 
     check_expected_ptr(data);
     check_expected(len);
@@ -62,10 +63,10 @@ int __wrap_px_write(px_config_t conf, uint8_t *data, uint16_t len)
     return mock_type(int);
 }
 
-int __wrap_px_read(px_config_t conf, uint8_t *data, uint16_t len)
+int __wrap_px_read(px_config_t *conf, uint8_t *data, uint16_t len)
 {
-    check_expected(conf.port);
-    check_expected(conf.bitrate);
+    check_expected(conf->port);
+    check_expected(conf->bitrate);
 
     uint16_t i = 0U;
     for(i = 0U; i < len; i++)
@@ -74,6 +75,20 @@ int __wrap_px_read(px_config_t conf, uint8_t *data, uint16_t len)
     }
 
     check_expected(len);
+
+    return mock_type(int);
+}
+
+int __wrap_px_enable(px_config_t *conf)
+{
+    check_expected(conf->en_pin);
+
+    return mock_type(int);
+}
+
+int __wrap_px_disable(px_config_t *conf)
+{
+    check_expected(conf->en_pin);
 
     return mock_type(int);
 }

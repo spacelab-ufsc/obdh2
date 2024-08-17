@@ -41,11 +41,15 @@
 
 #include <drivers/px/px.h>
 
-int __wrap_px_init(px_config_t conf);
+int __wrap_px_init(px_config_t *conf);
 
-int __wrap_px_write(px_config_t conf, uint8_t *data, uint16_t len);
+int __wrap_px_write(px_config_t *conf, uint8_t *data, uint16_t len);
 
-int __wrap_px_read(px_config_t conf, uint8_t *data, uint16_t len);
+int __wrap_px_read(px_config_t *conf, uint8_t *data, uint16_t len);
+
+int __wrap_px_enable(px_config_t *conf);
+
+int __wrap_px_disable(px_config_t *conf);
 
 #endif /* PX_WRAP_H_ */
 
