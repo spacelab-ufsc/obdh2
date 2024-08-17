@@ -24,8 +24,9 @@
  * \brief Position determination task definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.7
+ * \version 0.10.19
  * 
  * \date 2023/07/19
  * 

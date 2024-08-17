@@ -25,8 +25,8 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
- *
- * \version 0.10.18
+ * 
+ * \version 0.10.19
  * 
  * \date 2021/05/24
  * 

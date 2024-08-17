@@ -24,8 +24,9 @@
  * \brief Payload X driver definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.8
+ * \version 0.10.19
  * 
  * \date 2020/10/31
  * 

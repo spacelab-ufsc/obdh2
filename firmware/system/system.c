@@ -24,8 +24,9 @@
  * \brief System management routines implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.8.7
+ * \version 0.10.19
  * 
  * \date 2020/01/29
  * 
