@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.18
+ * \version 0.10.19
  * 
  * \date 2020/07/16
  * 
@@ -115,6 +115,7 @@
 /* Operation modes */
 #define OBDH_MODE_NORMAL            0
 #define OBDH_MODE_HIBERNATION       1
+#define OBDH_MODE_STAND_BY          2
 
 /**
  * \brief Position data.

@@ -25,8 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Bruno Benedetti <brunobenedetti45@gmail.com> 
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.11
+ * \version 0.10.19
  * 
  * \date 2021/08/16
  * 
@@ -147,8 +148,9 @@ static void payload_init_test(void **state)
     assert_return_code(payload_init(PAYLOAD_EDC_1), 0);
 
     /* Payload-X */
-    expect_value(__wrap_px_init, conf.port, PX_I2C_PORT);
-    expect_value(__wrap_px_init, conf.bitrate, PX_I2C_BITRATE);
+    expect_value(__wrap_px_init, conf->port, PX_I2C_PORT);
+    expect_value(__wrap_px_init, conf->bitrate, PX_I2C_BITRATE);
+    expect_value(__wrap_px_init, conf->en_pin, GPIO_PIN_37);
 
     will_return(__wrap_px_init, 0);
 
@@ -175,7 +177,11 @@ static void payload_enable_test(void **state)
 
     assert_return_code(payload_enable(PAYLOAD_EDC_1), 0);
 
-//    assert_return_code(payload_enable(PAYLOAD_X), 0);
+    expect_value(__wrap_px_enable, conf->en_pin, GPIO_PIN_37);
+
+    will_return(__wrap_px_enable, 0);
+
+    assert_return_code(payload_enable(PAYLOAD_X), 0);
 //    assert_return_code(payload_enable(PAYLOAD_PHJ), 0);
 }
 
@@ -198,7 +204,12 @@ static void payload_disable_test(void **state)
     will_return(__wrap_edc_disable, 0);
 
     assert_return_code(payload_disable(PAYLOAD_EDC_1), 0);
-//    assert_return_code(payload_disable(PAYLOAD_X), 0);
+
+    expect_value(__wrap_px_disable, conf->en_pin, GPIO_PIN_37);
+
+    will_return(__wrap_px_disable, 0);
+
+    assert_return_code(payload_disable(PAYLOAD_X), 0);
 //    assert_return_code(payload_disable(PAYLOAD_PHJ), 0);
 }
 

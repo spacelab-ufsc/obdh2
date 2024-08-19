@@ -24,8 +24,9 @@
  * \brief Satellite data structure definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.9
+ * \version 0.10.19
  * 
  * \date 2020/07/16
  * 
@@ -45,6 +46,7 @@
 #include <devices/eps/eps_data.h>
 #include <devices/ttc/ttc_data.h>
 #include <devices/antenna/antenna_data.h>
+#include <devices/payload/payload.h>
 
 #include "obdh_data.h"
 
@@ -90,9 +92,19 @@ typedef struct
 typedef struct
 {
     sys_time_t timestamp;           /**< Timestamp of the Payload data. */
-    bool enabled;                   /**< Payload enable flag. */
+    uint8_t id;                     /**< Payload id [Ex: PAYLOAD_EDC_0_ID] */
     uint8_t data[220];              /**< Payload data. */
 } payload_telemetry_t;
+
+/**
+ * \brief Payloads state type.
+ */
+typedef struct
+{
+    payload_t active_payload;       /**< Active payload. */
+    payload_t main_edc;             /**< Main EDC. */
+    payload_telemetry_t *c_edc;     /**< Pointer to the active EDC telemetry data. */
+} payload_state_t;
 
 /**
  * \brief Satellite data.
@@ -107,6 +119,7 @@ typedef struct
     payload_telemetry_t edc_0;      /**< EDC 0 telemetry. */
     payload_telemetry_t edc_1;      /**< EDC 1 telemetry. */
     payload_telemetry_t payload_x;  /**< Payload-X telemetry. */
+    payload_state_t state;          /**< Payload state. */
 } sat_data_t;
 
 /**

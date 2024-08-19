@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.18
+ * \version 0.10.19
  * 
  * \date 2021/04/27
  * 
@@ -39,6 +39,7 @@
 #include <devices/current_sensor/current_sensor.h>
 #include <devices/voltage_sensor/voltage_sensor.h>
 #include <devices/temp_sensor/temp_sensor.h>
+#include <utils/mem_mng.h>
 
 #include <structs/satellite.h>
 
@@ -56,29 +57,16 @@ void vTaskHousekeeping(void)
     {
         TickType_t last_cycle = xTaskGetTickCount();
 
-        /* Hibernation mode check */
-        if (sat_data_buf.obdh.data.mode == OBDH_MODE_HIBERNATION)
-        {
-            if ((sat_data_buf.obdh.data.ts_last_mode_change + sat_data_buf.obdh.data.mode_duration) >= system_get_time())
-            {
-                sat_data_buf.obdh.data.mode = OBDH_MODE_NORMAL;
-                sat_data_buf.obdh.data.ts_last_mode_change = system_get_time();
-            }
-        }
-
         /* Save the last available OBDH data at every minute */
-        if ((system_get_time() % 60U) == 0U)
+        if (mem_mng_save_obdh_data_to_fram(&sat_data_buf.obdh) != 0)
         {
-            if (mem_mng_save_obdh_data_to_fram(&sat_data_buf.obdh) != 0)
-            {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HOUSEKEEPING_NAME, "Error writing data to the FRAM memory!");
-                sys_log_new_line();
-            }
-            else 
-            {
-                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_HOUSEKEEPING_NAME, "Saving obdh data to fram...");
-                sys_log_new_line();
-            }
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HOUSEKEEPING_NAME, "Error writing data to the FRAM memory!");
+            sys_log_new_line();
+        }
+        else 
+        {
+            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_HOUSEKEEPING_NAME, "Saving obdh data to fram...");
+            sys_log_new_line();
         }
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_HOUSEKEEPING_PERIOD_MS));

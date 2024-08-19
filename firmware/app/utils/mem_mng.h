@@ -25,8 +25,8 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
- *
- * \version 0.10.18
+ * 
+ * \version 0.10.19
  * 
  * \date 2024/02/24
  * 
@@ -128,6 +128,25 @@ int mem_mng_load_obdh_data_bak(obdh_telemetry_t *tel);
  * \return The status/error code.
  */
 int mem_mng_write_data_to_flash_page(uint8_t *data, uint32_t *page, uint32_t page_size, uint32_t start_page, uint32_t end_page);
+
+/**
+ * \brief Resets NOR memory page count state.
+ *
+ * \param[in] media is the media struct where the page count is stored.
+ *
+ * \return None.
+ */
+void mem_mng_reset_page_count(media_data_t *media);
+
+/**
+ * \brief Completely erases NOR memory and, if the erase operation succeeded,
+ * resets the page count state.
+ *
+ * \param[in] tel is the OBDH telemetry data where page count state is stored.
+ *
+ * \return The status/error code.
+ */
+int mem_mng_erase_flash(obdh_telemetry_t *tel);
 
 #endif /* MEM_MNG_H_ */
 

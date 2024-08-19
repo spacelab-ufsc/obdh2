@@ -25,8 +25,8 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
- *
- * \version 0.10.18
+ * 
+ * \version 0.10.19
  * 
  * \date 2021/05/24
  * 
@@ -114,7 +114,7 @@ void vTaskDataLog(void)
         (void)memset(&page_buf[0], 0, 256);
 
         /* EDC data */
-        (void)memcpy(&page_buf[0], &sat_data_buf.edc_0, sizeof(payload_telemetry_t));
+        (void)memcpy(&page_buf[0], sat_data_buf.state.c_edc, sizeof(payload_telemetry_t));
         if (mem_mng_write_data_to_flash_page(page_buf, &sat_data_buf.obdh.data.media.last_page_edc_data, nor_info.page_size, CONFIG_MEM_EDC_DATA_START_PAGE, CONFIG_MEM_EDC_DATA_END_PAGE) != 0)
         {
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_DATA_LOG_NAME, "Error writing the EDC data to the flash memory!");

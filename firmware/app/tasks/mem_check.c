@@ -25,7 +25,7 @@
  * 
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.18
+ * \version 0.10.19
  * 
  * \date 2024/07/24
  * 
@@ -47,11 +47,12 @@
 
 #include "mem_check.h"
 #include "startup.h"
+#include "mode_check.h"
 
 #define PAGE_SIZE           ((uint32_t)256UL)
 #define SEG_SIZE            ((uint32_t)128UL)
 #define PAGE_TO_ADDR(page)  ((page) * PAGE_SIZE)
-#define PAGE_CHECK_DEPTH    ((uint32_t)10UL)
+#define PAGE_CHECK_DEPTH    ((uint32_t)CONFIG_HEALTH_CHECK_PAGES_TO_VALIDATE)
 #define ARR_SIZE(arr)       (sizeof((arr))/sizeof((arr)[0]))
 #define ADDR_TO_PAGE(addr)  ((uint32_t)(addr) / PAGE_SIZE)
 
@@ -206,6 +207,9 @@ void vTaskHealthCheckMem(void)
 
         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_HEALTH_CHECK_MEM_NAME, "Health Check finished!!");
         sys_log_new_line();
+
+        /* Notify Next Health Check */
+        xTaskNotify(xTaskHealthCheckModeHandle, 0U, eNoAction);
 
         vTaskSuspend(NULL);
     }

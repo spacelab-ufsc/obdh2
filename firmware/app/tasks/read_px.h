@@ -26,7 +26,7 @@
  * \author Augusto Cezar Boldori Vassoler <augustovassoler@gmail.com>
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.18
+ * \version 0.10.19
  *
  * \date 2023/08/28
  *
@@ -43,10 +43,11 @@
 #define TASK_READ_PX_NAME                  "PX Task"           /**< Task name. */
 #define TASK_READ_PX_STACK_SIZE            300                 /**< Stack size in bytes. */
 #define TASK_READ_PX_PRIORITY              3                   /**< Task priority. */
-#define TASK_READ_PX_PERIOD_MS             (60000)             /**< Task period in milliseconds. */
+#define TASK_READ_PX_PERIOD_MS             (60000UL)           /**< Task period in milliseconds. */
 #define TASK_READ_PX_INIT_TIMEOUT_MS       2000                /**< Wait time to initialize the task in milliseconds. */
+#define TASK_READ_PX_MAX_WAIT_TIME_MS      (60000UL * 60UL)    /**< Max time to wait for notifications. (1 hour)*/
 
-#define PX_PONG_BUF_SIZE                   4;                 /**< Size of pong response message. */
+#define PX_PONG_BUF_SIZE                   4                   /**< Size of pong response message. */
 /**
  * \brief PX data type.
  */
