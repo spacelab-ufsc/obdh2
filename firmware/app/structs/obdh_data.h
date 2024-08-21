@@ -97,6 +97,7 @@
 #define OBDH_PARAM_INITIAL_HIB_TIME_COUNT_DEFAULT_VAL   0U
 #define OBDH_PARAM_ANT_DEPLOYMENT_EXECUTED_DEFAULT_VAL  0U
 #define OBDH_PARAM_ANT_DEPLOYMENT_COUNTER_DEFAULT_VAL   0U
+#define OBDH_PARAM_MANUAL_MODE_OP_DEFAULT_VAL           0U
 #define OBDH_PARAM_POSITION_TIMESTAMP_DEFAULT_VAL       0U
 #define OBDH_PARAM_POSITION_TLE_LINE1_DEFAULT_VAL       "1 44885U 19093G   24055.47450690  .00005228  00000-0  56684-3 0  9991"
 #define OBDH_PARAM_POSITION_TLE_LINE2_DEFAULT_VAL       "2 44885  97.8473 139.0522 0012434 335.2519  24.8100 14.88559378226444"
@@ -165,6 +166,7 @@ typedef struct
     sys_time_t mode_duration;       /**< Mode duration (valid only in hibernation mode). */
     bool initial_hib_executed;      /**< Initial hibernation executed flag. */
     bool ant_deployment_executed;   /**< Antenna deployment executed flag. */
+    bool manual_mode_op;		    /**< Manual operation mode selection flag. */
     media_data_t media;             /**< Memories data. */
     position_data_t position;       /**< Current position of the satellite. */
 } obdh_data_t;
