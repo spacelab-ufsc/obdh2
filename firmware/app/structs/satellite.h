@@ -92,7 +92,7 @@ typedef struct
 typedef struct
 {
     sys_time_t timestamp;           /**< Timestamp of the Payload data. */
-    uint8_t id;                     /**< Payload id [Ex: PAYLOAD_EDC_0_ID] */
+    uint8_t id;                     /**< Payload id [Ex: CONFIG_PL_ID_EDC_1] */
     uint8_t data[220];              /**< Payload data. */
 } payload_telemetry_t;
 
