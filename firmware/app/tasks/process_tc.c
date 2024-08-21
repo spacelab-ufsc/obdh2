@@ -60,7 +60,7 @@
 xTaskHandle xTaskProcessTCHandle;
 
 /**
- * \brief Ping request telecommand.
+ * \brief Formats payload for data request telecommand.
  *
  * \param[in] pkt_pl is the buffer used to store the formatted data as a TC payload.
  *
@@ -73,6 +73,15 @@ xTaskHandle xTaskProcessTCHandle;
  * \return The status/error code.
  */
 static int8_t format_data_request(uint8_t *pkt_pl, uint16_t *pkt_pl_len, uint8_t data_id, void *data);
+
+/**
+ * \brief Sends telecommand feedback to ground station.
+ *
+ * \param[in] pkt is the received packet.
+ *
+ * \return The status/error code.
+ */
+static int8_t send_tc_feedback(uint8_t *pkt);
 
 /**
  * \brief Ping request telecommand.
@@ -400,7 +409,7 @@ void process_tc_ping_request(uint8_t *pkt, uint16_t pkt_len)
         uint8_t pong_pl_raw[16] = {0};
         uint16_t pong_pl_raw_len = 0;
 
-        fsat_pkt_encode(pong_pl, pong_pl_raw, &pong_pl_raw_len);
+        fsat_pkt_encode(&pong_pl, pong_pl_raw, &pong_pl_raw_len);
 
         if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
         {
@@ -466,7 +475,7 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                             fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_length);
 
-                            fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+                            fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
                             if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                             {
@@ -510,7 +519,7 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                             fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_length);
 
-                            fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+                            fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
                             if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                             {
@@ -554,7 +563,7 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                             fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_length);
 
-                            fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+                            fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
                             if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                             {
@@ -598,7 +607,7 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                             fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_length);
 
-                            fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+                            fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
                             if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                             {
@@ -642,7 +651,7 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                             fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_length);
 
-                            fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+                            fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
                             if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                             {
@@ -686,7 +695,7 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                             fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_length);
 
-                            fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+                            fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
                             if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                             {
@@ -730,7 +739,7 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                             fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_length);
 
-                            fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+                            fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
                             if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                             {
@@ -784,7 +793,7 @@ void process_tc_broadcast_message(uint8_t *pkt, uint16_t pkt_len)
         uint8_t broadcast_pl_raw[55] = {0};
         uint16_t broadcast_pl_raw_len = 0;
 
-        fsat_pkt_encode(broadcast_pl, broadcast_pl_raw, &broadcast_pl_raw_len);
+        fsat_pkt_encode(&broadcast_pl, broadcast_pl_raw, &broadcast_pl_raw_len);
 
         if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
         {
@@ -1375,13 +1384,14 @@ void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
                 uint8_t param_pl_raw[16] = {0};
                 uint16_t param_pl_raw_len = 0;
 
-                fsat_pkt_encode(param_pl, param_pl_raw, &param_pl_raw_len);
+                fsat_pkt_encode(&param_pl, param_pl_raw, &param_pl_raw_len);
 
                 if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                 {
                     if (ttc_send(TTC_1, param_pl_raw, param_pl_raw_len) != 0)
                     {
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a \"get parameter\" answer!");
+                        sys_log_new_line();
                     }
                 }
             }
@@ -1815,6 +1825,52 @@ static int8_t format_data_request(uint8_t *pkt_pl, uint16_t *pkt_pl_len, uint8_t
 			err = -1;
 			break;
 	}
+
+    return err;
+}
+
+static int8_t send_tc_feedback(uint8_t *pkt)
+{
+    int8_t err = 0;
+    fsat_pkt_pl_t feedback = {0};
+
+    uint8_t feedback_pkt[21] = {0};
+    uint16_t feedback_pkt_len = 0;
+
+    /* Packet ID */
+    fsat_pkt_add_id(&feedback, CONFIG_PKT_ID_DOWNLINK_TC_FEEDBACK);
+
+    /* Source callsign */
+    fsat_pkt_add_callsign(&feedback, CONFIG_SATELLITE_CALLSIGN);
+
+    /* Requester callsign */
+    (void)memcpy(feedback.payload, &pkt[1], 7U);
+
+    /* TC packet ID */
+    feedback.payload[8] = pkt[0];
+    
+    /* Current timestamp */
+    sys_time_t time = system_get_time();
+    feedback.payload[9] = (time >> 24U) & 0xFFU;
+    feedback.payload[10] = (time >> 16U) & 0xFFU;
+    feedback.payload[11] = (time >> 8U) & 0xFFU;
+    feedback.payload[12] = time & 0xFFU;
+
+    /* Payload lenght */
+    feedback.length = 13U;
+
+    fsat_pkt_encode(&feedback, feedback_pkt, &feedback_pkt_len);
+
+    if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+    {
+        if (ttc_send(TTC_1, feedback_pkt, feedback_pkt_len) != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a \"TC Feedback\"!");
+            sys_log_new_line();
+
+            err = -1;
+        }
+    }
 
     return err;
 }
