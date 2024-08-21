@@ -39,6 +39,7 @@
 #include <structs/satellite.h>
 #include <structs/obdh_data.h>
 #include <devices/payload/payload.h>
+#include <devices/ttc/ttc.h>
 #include <system/sys_log/sys_log.h>
 #include <FreeRTOS.h>
 #include <task.h>
@@ -52,6 +53,8 @@ static inline void handle_notification(uint32_t notify_value);
 static int enable_main_edc(void);
 static int enable_px(void);
 static int disable_curr_payload(void);
+static int enable_ttc_tx(void);
+static int disable_ttc_tx(void);
 
 static bool in_brazil = false;
 static bool edc_active = false;
@@ -126,6 +129,12 @@ static inline void handle_notification(uint32_t notify_value)
     {
         in_hibernation = true;
         satellite_change_mode(OBDH_MODE_HIBERNATION);
+
+        if (disable_ttc_tx() != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to disable TTC TX!!");
+            sys_log_new_line();
+        }
     }
 
     if ((notify_value & SAT_NOTIFY_LEAVE_HIBERNATION) != 0U)
@@ -139,6 +148,12 @@ static inline void handle_notification(uint32_t notify_value)
         else 
         {
             satellite_change_mode(OBDH_MODE_STAND_BY);
+        }
+
+        if (enable_ttc_tx() != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to enable TTC TX!!");
+            sys_log_new_line();
         }
     }
 
@@ -257,6 +272,27 @@ static int enable_px(void)
     return err;
 }
 
+static int enable_ttc_tx(void)
+{
+    int err = 0;
+
+    if (ttc_set_param(TTC_0, SL_TTC2_REG_TX_ENABLE, 1U) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to enable TTC 0 TX");
+        sys_log_new_line();
+        err--;
+    }
+
+    if (ttc_set_param(TTC_1, SL_TTC2_REG_TX_ENABLE, 1U) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to enable TTC 1 TX");
+        sys_log_new_line();
+        err--;
+    }
+
+    return err;
+}
+
 static int disable_curr_payload(void)
 {
     int err = -1;
@@ -266,6 +302,27 @@ static int disable_curr_payload(void)
     if (payload_disable(active_payload) == 0)
     {
         err = 0;
+    }
+
+    return err;
+}
+
+static int disable_ttc_tx(void)
+{
+    int err = 0;
+
+    if (ttc_set_param(TTC_0, SL_TTC2_REG_TX_ENABLE, 0U) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to disable TTC 0 TX");
+        sys_log_new_line();
+        err--;
+    }
+
+    if (ttc_set_param(TTC_1, SL_TTC2_REG_TX_ENABLE, 0U) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to disable TTC 1 TX");
+        sys_log_new_line();
+        err--;
     }
 
     return err;
