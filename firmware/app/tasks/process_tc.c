@@ -1469,7 +1469,7 @@ static int8_t format_data_request(uint8_t *pkt_pl, uint16_t *pkt_pl_len, uint8_t
 			pl[30] = mode_duration & 0xFFU;
 			pl[31] = tel->data.initial_hib_executed;
 			pl[32] = tel->data.ant_deployment_executed;
-			pl[33] = tel->data.manual_mode_op;
+			pl[33] = tel->data.manual_mode_on;
 			pl[34] = (tel->data.media.last_page_obdh_data >> 24U) & 0xFFU;
 			pl[35] = (tel->data.media.last_page_obdh_data >> 16U) & 0xFFU;
 			pl[36] = (tel->data.media.last_page_obdh_data >> 8U) & 0xFFU;
