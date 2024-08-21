@@ -56,7 +56,7 @@ static void print_edc_hk(uint8_t *hk);
 
 void vTaskReadEDC(void)
 {
-    payload_telemetry_t **const edc = &sat_data_buf.state.c_edc;
+    payload_telemetry_t ** const edc = &sat_data_buf.state.c_edc;
 
     /* Wait startup task to finish */
     xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_EDC_INIT_TIMEOUT_MS));
@@ -127,26 +127,26 @@ void vTaskReadEDC(void)
                                     sys_log_new_line();
                                 }
 
-                                edc_ptt_t ptt = *(edc_ptt_t*)&ptt_arr[0];
+                                edc_ptt_t *ptt = (edc_ptt_t*)&ptt_arr[0];
 
                                 sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_EDC_NAME, "Received PTT packet:");
                                 sys_log_new_line();
                                 sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_EDC_NAME, "\tTime: ");
-                                sys_log_print_uint(ptt.time_tag);
+                                sys_log_print_uint(ptt->time_tag);
                                 sys_log_print_msg(" sec");
                                 sys_log_new_line();
                                 sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_EDC_NAME, "\tError code: ");
-                                sys_log_print_uint(ptt.error_code);
+                                sys_log_print_uint(ptt->error_code);
                                 sys_log_new_line();
                                 sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_EDC_NAME, "\tCarrier frequency: ");
-                                sys_log_print_uint(ptt.carrier_freq);
+                                sys_log_print_uint(ptt->carrier_freq);
                                 sys_log_print_msg(" Hz");
                                 sys_log_new_line();
                                 sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_EDC_NAME, "\tCarrier amplitude: ");
-                                sys_log_print_uint(ptt.carrier_abs);
+                                sys_log_print_uint(ptt->carrier_abs);
                                 sys_log_new_line();
                                 sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_EDC_NAME, "\tUser message: ");
-                                sys_log_dump_hex(ptt.user_msg, ptt.msg_byte_length);
+                                sys_log_dump_hex(ptt->user_msg, ptt->msg_byte_length);
                                 sys_log_new_line();
                             }
                             else
