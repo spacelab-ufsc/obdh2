@@ -56,7 +56,9 @@ uint8_t system_get_reset_cause(void)
 
 void system_set_time(sys_time_t tm)
 {
+    portENTER_CRITICAL();
     sys_time = tm;
+    portEXIT_CRITICAL();
 }
 
 void system_increment_time(void)
