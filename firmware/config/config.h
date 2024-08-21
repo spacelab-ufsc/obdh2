@@ -131,6 +131,7 @@
 #define CONFIG_DATA_ID_TTC_0                            2
 #define CONFIG_DATA_ID_TTC_1                            3
 #define CONFIG_DATA_ID_ANT                              4
+#define CONFIG_DATA_ID_SBCD_PKTS                        5
 
 /* Ports */
 #define CONFIG_SPI_PORT_0_SPEED_BPS                     1000000UL
