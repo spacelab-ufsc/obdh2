@@ -45,6 +45,7 @@
 #include <devices/eps/eps.h>
 #include <devices/media/media.h>
 #include <devices/payload/payload.h>
+#include <drivers/edc/edc.h>
 #include <utils/mem_mng.h>
 #include <hmac/sha.h>
 
@@ -57,6 +58,21 @@
 #include "startup.h"
 
 xTaskHandle xTaskProcessTCHandle;
+
+/**
+ * \brief Ping request telecommand.
+ *
+ * \param[in] pkt_pl is the buffer used to store the formatted data as a TC payload.
+ *
+ * \param[in] pkt_pl_len is the number of bytes of the given packet payload.
+ *
+ * \param[in] data_id is the type of data requested.
+ *
+ * \param[in] data is the data from memory to be formatted.
+ *
+ * \return The status/error code.
+ */
+static int8_t format_data_request(uint8_t *pkt_pl, uint16_t *pkt_pl_len, uint8_t data_id, void *data);
 
 /**
  * \brief Ping request telecommand.
@@ -430,6 +446,7 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                     uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_obdh_data - (uint32_t)start_idx;
 
                     uint8_t page_buf[256] = {0};
+                    uint16_t pl_lenght = 0;
 
                     uint32_t i = 0;
                     for(i = start_page; i < end_page; i++)
@@ -442,12 +459,12 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                             /* Data ID */
                             data_req_ans_pl[7] = CONFIG_DATA_ID_OBDH;
 
-                            /* Timestamp and Data */
-                            (void)memcpy(&data_req_ans_pl[7 + 1], &page_buf[0], sizeof(obdh_telemetry_t));
+                            /* Format payload */
+                            (void)format_data_request(data_req_ans_pl, &pl_lenght, CONFIG_DATA_ID_OBDH, page_buf);
 
                             vTaskDelay(pdMS_TO_TICKS(10U));
 
-                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, 7U + 1U + sizeof(obdh_telemetry_t));
+                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_lenght);
 
                             fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
@@ -473,6 +490,7 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                     uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_eps_data - (uint32_t)start_idx;
 
                     uint8_t page_buf[256] = {0};
+                    uint16_t pl_lenght = 0;
 
                     uint32_t i = 0;
                     for(i = start_page; i < end_page; i++)
@@ -485,12 +503,12 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                             /* Data ID */
                             data_req_ans_pl[7] = CONFIG_DATA_ID_EPS;
 
-                            /* Timestamp and Data */
-                            (void)memcpy(&data_req_ans_pl[7 + 1], &page_buf[0], sizeof(eps_telemetry_t));
+                            /* Format payload */
+                            (void)format_data_request(data_req_ans_pl, &pl_lenght, CONFIG_DATA_ID_EPS, page_buf);
 
                             vTaskDelay(pdMS_TO_TICKS(10U));
 
-                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, 7U + 1U + sizeof(eps_telemetry_t));
+                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_lenght);
 
                             fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
@@ -516,6 +534,7 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                     uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_ttc_0_data - (uint32_t)start_idx;
 
                     uint8_t page_buf[256] = {0};
+                    uint16_t pl_lenght = 0;
 
                     uint32_t i = 0;
                     for(i = start_page; i < end_page; i++)
@@ -528,12 +547,12 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                             /* Data ID */
                             data_req_ans_pl[7] = CONFIG_DATA_ID_TTC_0;
 
-                            /* Timestamp and Data */
-                            (void)memcpy(&data_req_ans_pl[7 + 1], &page_buf[0], sizeof(ttc_telemetry_t));
+                            /* Format payload */
+                            (void)format_data_request(data_req_ans_pl, &pl_lenght, CONFIG_DATA_ID_TTC_0, page_buf);
 
                             vTaskDelay(pdMS_TO_TICKS(10U));
 
-                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, 7U + 1U + sizeof(ttc_telemetry_t));
+                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_lenght);
 
                             fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
@@ -559,6 +578,7 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                     uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_ttc_1_data - (uint32_t)start_idx;
 
                     uint8_t page_buf[256] = {0};
+                    uint16_t pl_lenght = 0;
 
                     uint32_t i = 0;
                     for(i = start_page; i < end_page; i++)
@@ -571,12 +591,12 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                             /* Data ID */
                             data_req_ans_pl[7] = CONFIG_DATA_ID_TTC_1;
 
-                            /* Timestamp and Data */
-                            (void)memcpy(&data_req_ans_pl[7 + 1], &page_buf[0], sizeof(ttc_telemetry_t));
+                            /* Format payload */
+                            (void)format_data_request(data_req_ans_pl, &pl_lenght, CONFIG_DATA_ID_TTC_1, page_buf);
 
                             vTaskDelay(pdMS_TO_TICKS(10U));
 
-                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, 7U + 1U + sizeof(ttc_telemetry_t));
+                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_lenght);
 
                             fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
@@ -602,6 +622,7 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                     uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_ant_data - (uint32_t)start_idx;
 
                     uint8_t page_buf[256] = {0};
+                    uint16_t pl_lenght = 0;
 
                     uint32_t i = 0;
                     for(i = start_page; i < end_page; i++)
@@ -612,14 +633,14 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                             (void)memcpy(&data_req_ans_pl[0], &pkt[1], 7);
 
                             /* Data ID */
-                            data_req_ans_pl[7] = CONFIG_DATA_ID_TTC_1;
+                            data_req_ans_pl[7] = CONFIG_DATA_ID_ANT;
 
-                            /* Timestamp and Data */
-                            (void)memcpy(&data_req_ans_pl[7 + 1], &page_buf[0], sizeof(antenna_telemetry_t));
+                            /* Format payload */
+                            (void)format_data_request(data_req_ans_pl, &pl_lenght, CONFIG_DATA_ID_ANT, page_buf);
 
                             vTaskDelay(pdMS_TO_TICKS(10U));
 
-                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, 7U + 1U + sizeof(antenna_telemetry_t));
+                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_lenght);
 
                             fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
@@ -628,6 +649,50 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                                 if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
                                 {
                                     sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the Antenna data log of memory page ");
+                                    sys_log_print_uint(i);
+                                    sys_log_print_msg("!");
+                                    sys_log_new_line();
+                                }
+                            }
+                        }
+                        vTaskDelay(pdMS_TO_TICKS(25U));
+                    }
+
+                    break;
+                }
+                case CONFIG_DATA_ID_SBCD_PKTS:
+                {
+                    uint32_t start_page = sat_data_buf.obdh.data.media.last_page_sbcd_pkts - (uint32_t)end_idx;
+                    uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_sbcd_pkts - (uint32_t)start_idx;
+
+                    uint8_t page_buf[256] = {0};
+                    uint16_t pl_lenght = 0;
+
+                    uint32_t i = 0;
+                    for(i = start_page; i < end_page; i++)
+                    {
+                        if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(edc_ptt_t)) == 0)
+                        {
+                            /* Requester callsign */
+                            (void)memcpy(&data_req_ans_pl[0], &pkt[1], 7);
+
+                            /* Data ID */
+                            data_req_ans_pl[7] = CONFIG_DATA_ID_SBCD_PKTS;
+
+                            /* Format payload */
+                            (void)format_data_request(data_req_ans_pl, &pl_lenght, CONFIG_DATA_ID_SBCD_PKTS, page_buf);
+
+                            vTaskDelay(pdMS_TO_TICKS(10U));
+
+                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_lenght);
+
+                            fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                            {
+                                if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                {
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the TTC 1 data log of memory page ");
                                     sys_log_print_uint(i);
                                     sys_log_print_msg("!");
                                     sys_log_new_line();
@@ -1300,6 +1365,363 @@ bool process_tc_validate_hmac(uint8_t *msg, uint16_t msg_len, uint8_t *msg_hash,
     }
 
     return res;
+}
+
+static int8_t format_data_request(uint8_t *pkt_pl, uint16_t *pkt_pl_len, uint8_t data_id, void *data)
+{
+	int8_t err = 0;
+
+	/* Response payload includes the TC ID and the Requester callsign, which have lenght of 1 and 7 bytes, respectively. 
+     * That is the reason for the `7U + 1U` offset */
+	uint8_t *pl = &pkt_pl[7U + 1U]; 
+
+	switch (data_id)
+	{
+		case CONFIG_DATA_ID_OBDH:
+		{
+			obdh_telemetry_t *tel = (obdh_telemetry_t *)data;
+			sys_time_t mode_duration = system_get_time() - sat_data_buf.obdh.data.ts_last_mode_change;
+
+			pl[0] = (tel->timestamp >> 24U) & 0xFFU;
+			pl[1] = (tel->timestamp >> 16U) & 0xFFU;
+			pl[2] = (tel->timestamp >> 8U) & 0xFFU;
+			pl[3] = tel->timestamp & 0xFFU;
+			pl[4] = (tel->data.temperature >> 8U) & 0xFFU;
+			pl[5] = tel->data.temperature & 0xFFU;
+			pl[6] = (tel->data.current >> 8U) & 0xFFU;
+			pl[7] = tel->data.current & 0xFFU;
+			pl[8] = (tel->data.voltage >> 8U) & 0xFFU;
+			pl[9] = tel->data.voltage & 0xFFU;
+			pl[10] = (tel->data.reset_counter >> 8U) & 0xFFU;
+			pl[11] = tel->data.reset_counter & 0xFFU;
+			pl[12] = tel->data.last_reset_cause;
+			pl[13] = tel->data.last_valid_tc;
+			pl[14] = tel->data.last_valid_tc;
+			pl[15] = tel->data.ant_deployment_counter;
+			pl[16] = tel->data.initial_hib_time_count;
+			pl[17] = tel->data.hw_version;
+			pl[18] = (tel->data.fw_version >> 24U) & 0xFFU;
+			pl[19] = (tel->data.fw_version >> 16U) & 0xFFU;
+			pl[20] = (tel->data.fw_version >> 8U) & 0xFFU;
+			pl[21] = tel->data.fw_version & 0xFFU;
+			pl[22] = tel->data.mode;
+			pl[23] = (tel->data.ts_last_mode_change >> 24U) & 0xFFU;
+			pl[24] = (tel->data.ts_last_mode_change >> 16U) & 0xFFU;
+			pl[25] = (tel->data.ts_last_mode_change >> 8U) & 0xFFU;
+			pl[26] = tel->data.ts_last_mode_change & 0xFFU;
+			pl[27] = (mode_duration >> 24U) & 0xFFU;
+			pl[28] = (mode_duration >> 16U) & 0xFFU;
+			pl[29] = (mode_duration >> 8U) & 0xFFU;
+			pl[30] = mode_duration & 0xFFU;
+			pl[31] = tel->data.initial_hib_executed;
+			pl[32] = tel->data.ant_deployment_executed;
+			pl[33] = tel->data.manual_mode_op;
+			pl[34] = (tel->data.media.last_page_obdh_data >> 24U) & 0xFFU;
+			pl[35] = (tel->data.media.last_page_obdh_data >> 16U) & 0xFFU;
+			pl[36] = (tel->data.media.last_page_obdh_data >> 8U) & 0xFFU;
+			pl[37] = tel->data.media.last_page_obdh_data & 0xFFU;
+			pl[38] = (tel->data.media.last_page_eps_data >> 24U) & 0xFFU;
+			pl[39] = (tel->data.media.last_page_eps_data >> 16U) & 0xFFU;
+			pl[40] = (tel->data.media.last_page_eps_data >> 8U) & 0xFFU;
+			pl[41] = tel->data.media.last_page_eps_data & 0xFFU;
+			pl[42] = (tel->data.media.last_page_ttc_0_data >> 24U) & 0xFFU;
+			pl[43] = (tel->data.media.last_page_ttc_0_data >> 16U) & 0xFFU;
+			pl[44] = (tel->data.media.last_page_ttc_0_data >> 8U) & 0xFFU;
+			pl[45] = tel->data.media.last_page_ttc_0_data & 0xFFU;
+			pl[46] = (tel->data.media.last_page_ttc_1_data >> 24U) & 0xFFU;
+			pl[47] = (tel->data.media.last_page_ttc_1_data >> 16U) & 0xFFU;
+			pl[48] = (tel->data.media.last_page_ttc_1_data >> 8U) & 0xFFU;
+			pl[49] = tel->data.media.last_page_ttc_1_data & 0xFFU;
+			pl[50] = (tel->data.media.last_page_ant_data >> 24U) & 0xFFU;
+			pl[51] = (tel->data.media.last_page_ant_data >> 16U) & 0xFFU;
+			pl[52] = (tel->data.media.last_page_ant_data >> 8U) & 0xFFU;
+			pl[53] = tel->data.media.last_page_ant_data & 0xFFU;
+			pl[54] = (tel->data.media.last_page_edc_data >> 24U) & 0xFFU;
+			pl[55] = (tel->data.media.last_page_edc_data >> 16U) & 0xFFU;
+			pl[56] = (tel->data.media.last_page_edc_data >> 8U) & 0xFFU;
+			pl[57] = tel->data.media.last_page_edc_data & 0xFFU;
+			pl[58] = (tel->data.media.last_page_px_data >> 24U) & 0xFFU;
+			pl[59] = (tel->data.media.last_page_px_data >> 16U) & 0xFFU;
+			pl[60] = (tel->data.media.last_page_px_data >> 8U) & 0xFFU;
+			pl[61] = tel->data.media.last_page_px_data & 0xFFU;
+			pl[62] = (tel->data.media.last_page_sbcd_pkts >> 24U) & 0xFFU;
+			pl[63] = (tel->data.media.last_page_sbcd_pkts >> 16U) & 0xFFU;
+			pl[64] = (tel->data.media.last_page_sbcd_pkts >> 8U) & 0xFFU;
+			pl[65] = tel->data.media.last_page_sbcd_pkts & 0xFFU;
+			pl[66] = (tel->data.position.timestamp >> 24U) & 0xFFU;
+			pl[67] = (tel->data.position.timestamp >> 16U) & 0xFFU;
+			pl[68] = (tel->data.position.timestamp >> 8U) & 0xFFU;
+			pl[69] = tel->data.position.timestamp & 0xFFU;
+			pl[70] = (((uint16_t)tel->data.position.latitude) >> 8U) & 0xFFU;
+			pl[71] = ((uint16_t)tel->data.position.latitude) & 0xFFU;
+			pl[72] = (((uint16_t)tel->data.position.longitude) >> 8U) & 0xFFU;
+			pl[73] = ((uint16_t)tel->data.position.longitude) & 0xFFU;
+			pl[74] = (((uint16_t)tel->data.position.altitude) >> 8U) & 0xFFU;
+			pl[75] = ((uint16_t)tel->data.position.altitude) & 0xFFU;
+
+			*pkt_pl_len = (uint16_t) 84U; /* 7b RQ CALLSIGN + 1b TC ID + 76b OBDH DATA */
+
+			break;
+		}
+
+		case CONFIG_DATA_ID_EPS:
+		{
+			eps_telemetry_t *tel = (eps_telemetry_t *)data;
+
+			pl[0] = (tel->timestamp >> 24U) & 0xFFU;
+			pl[1] = (tel->timestamp >> 16U) & 0xFFU;
+			pl[2] = (tel->timestamp >> 8U) & 0xFFU;
+			pl[3] = tel->timestamp & 0xFFU;
+			pl[4] = (tel->data.time_counter >> 24U) & 0xFFU;
+			pl[5] = (tel->data.time_counter >> 16U) & 0xFFU;
+			pl[6] = (tel->data.time_counter >> 8U) & 0xFFU;
+			pl[7] = tel->data.time_counter & 0xFFU;
+			pl[8] = (tel->data.temperature_uc >> 8U) & 0xFFU;
+			pl[9] = tel->data.temperature_uc & 0xFFU;
+			pl[10] = (tel->data.current >> 8U) & 0xFFU;
+			pl[11] = tel->data.current & 0xFFU;
+			pl[12] = tel->data.last_reset_cause & 0xFFU;
+			pl[13] = (tel->data.reset_counter >> 8U) & 0xFFU;
+			pl[14] = tel->data.reset_counter & 0xFFU;
+			pl[15] = (tel->data.solar_panel_voltage_my_px >> 8U) & 0xFFU;
+			pl[16] = tel->data.solar_panel_voltage_my_px & 0xFFU;
+			pl[17] = (tel->data.solar_panel_voltage_mx_pz >> 8U) & 0xFFU;
+			pl[18] = tel->data.solar_panel_voltage_mx_pz & 0xFFU;
+			pl[19] = (tel->data.solar_panel_voltage_mz_py >> 8U) & 0xFFU;
+			pl[20] = tel->data.solar_panel_voltage_mz_py & 0xFFU;
+			pl[21] = (tel->data.solar_panel_current_my >> 8U) & 0xFFU;
+			pl[22] = tel->data.solar_panel_current_my & 0xFFU;
+			pl[23] = (tel->data.solar_panel_current_py >> 8U) & 0xFFU;
+			pl[24] = tel->data.solar_panel_current_py & 0xFFU;
+			pl[25] = (tel->data.solar_panel_current_mx >> 8U) & 0xFFU;
+			pl[26] = tel->data.solar_panel_current_mx & 0xFFU;
+			pl[27] = (tel->data.solar_panel_current_px >> 8U) & 0xFFU;
+			pl[28] = tel->data.solar_panel_current_px & 0xFFU;
+			pl[29] = (tel->data.solar_panel_current_mz >> 8U) & 0xFFU;
+			pl[30] = tel->data.solar_panel_current_mz & 0xFFU;
+			pl[31] = (tel->data.solar_panel_current_pz >> 8U) & 0xFFU;
+			pl[32] = tel->data.solar_panel_current_pz & 0xFFU;
+			pl[33] = tel->data.mppt_1_duty_cycle & 0xFFU;
+			pl[34] = tel->data.mppt_2_duty_cycle & 0xFFU;
+			pl[35] = tel->data.mppt_3_duty_cycle & 0xFFU;
+			pl[36] = (tel->data.solar_panel_output_voltage >> 8U) & 0xFFU;
+			pl[37] = tel->data.solar_panel_output_voltage & 0xFFU;
+			pl[38] = (tel->data.main_power_bus_voltage >> 8U) & 0xFFU;
+			pl[39] = tel->data.main_power_bus_voltage & 0xFFU;
+			pl[40] = (tel->data.rtd_0_temperature >> 8U) & 0xFFU;
+			pl[41] = tel->data.rtd_0_temperature & 0xFFU;
+			pl[42] = (tel->data.rtd_1_temperature >> 8U) & 0xFFU;
+			pl[43] = tel->data.rtd_1_temperature & 0xFFU;
+			pl[44] = (tel->data.rtd_2_temperature >> 8U) & 0xFFU;
+			pl[45] = tel->data.rtd_2_temperature & 0xFFU;
+			pl[46] = (tel->data.rtd_3_temperature >> 8U) & 0xFFU;
+			pl[47] = tel->data.rtd_3_temperature & 0xFFU;
+			pl[48] = (tel->data.rtd_4_temperature >> 8U) & 0xFFU;
+			pl[49] = tel->data.rtd_4_temperature & 0xFFU;
+			pl[50] = (tel->data.rtd_5_temperature >> 8U) & 0xFFU;
+			pl[51] = tel->data.rtd_5_temperature & 0xFFU;
+			pl[52] = (tel->data.rtd_6_temperature >> 8U) & 0xFFU;
+			pl[53] = tel->data.rtd_6_temperature & 0xFFU;
+			pl[54] = (tel->data.battery_voltage >> 8U) & 0xFFU;
+			pl[55] = tel->data.battery_voltage & 0xFFU;
+			pl[56] = (tel->data.battery_current >> 8U) & 0xFFU;
+			pl[57] = tel->data.battery_current & 0xFFU;
+			pl[58] = (tel->data.battery_average_current >> 8U) & 0xFFU;
+			pl[59] = tel->data.battery_average_current & 0xFFU;
+			pl[60] = (tel->data.battery_acc_current >> 8U) & 0xFFU;
+			pl[61] = tel->data.battery_acc_current & 0xFFU;
+			pl[62] = (tel->data.battery_charge >> 8U) & 0xFFU;
+			pl[63] = tel->data.battery_charge & 0xFFU;
+			pl[64] = (tel->data.battery_monitor_temperature >> 8U) & 0xFFU;
+			pl[65] = tel->data.battery_monitor_temperature & 0xFFU;
+			pl[66] = tel->data.battery_monitor_status;
+			pl[67] = tel->data.battery_monitor_protection;
+			pl[68] = tel->data.battery_monitor_cycle_counter;
+			pl[69] = (tel->data.raac >> 8U) & 0xFFU;
+			pl[70] = tel->data.raac & 0xFFU;
+			pl[71] = (tel->data.rsac >> 8U) & 0xFFU;
+			pl[72] = tel->data.rsac & 0xFFU;
+			pl[73] = tel->data.rarc;
+			pl[74] = tel->data.rsrc;
+			pl[75] = (tel->data.battery_heater_1_duty_cycle >> 8U) & 0xFFU;
+			pl[76] = tel->data.battery_heater_1_duty_cycle & 0xFFU;
+			pl[77] = (tel->data.battery_heater_2_duty_cycle >> 8U) & 0xFFU;
+			pl[78] = tel->data.battery_heater_2_duty_cycle & 0xFFU;
+			pl[79] = tel->data.mppt_1_mode;
+			pl[80] = tel->data.mppt_2_mode;
+			pl[81] = tel->data.mppt_3_mode;
+			pl[82] = tel->data.battery_heater_1_mode;
+			pl[83] = tel->data.battery_heater_2_mode;
+
+			*pkt_pl_len = (uint16_t) 92U; /* 7b RQ CALLSIGN + 1b TC ID + 84b EPS DATA */
+
+			break;
+		}
+
+		case CONFIG_DATA_ID_TTC_0:
+		{
+			ttc_telemetry_t *tel = (ttc_telemetry_t *)data;
+
+			pl[0] = (tel->timestamp >> 24U) & 0xFFU;
+			pl[1] = (tel->timestamp >> 16U) & 0xFFU;
+			pl[2] = (tel->timestamp >> 8U) & 0xFFU;
+			pl[3] = tel->timestamp & 0xFFU;
+			pl[4] = (tel->data.time_counter >> 24U) & 0xFFU;
+			pl[5] = (tel->data.time_counter >> 16U) & 0xFFU;
+			pl[6] = (tel->data.time_counter >> 8U) & 0xFFU;
+			pl[7] = tel->data.time_counter & 0xFFU;
+			pl[8] = (tel->data.reset_counter >> 8U) & 0xFFU;
+			pl[9] = tel->data.reset_counter & 0xFFU;
+			pl[10] = tel->data.last_reset_cause;
+			pl[11] = (tel->data.voltage_mcu >> 8U) & 0xFFU;
+			pl[12] = tel->data.voltage_mcu & 0xFFU;
+			pl[13] = (tel->data.current_mcu >> 8U) & 0xFFU;
+			pl[14] = tel->data.current_mcu & 0xFFU;
+			pl[15] = (tel->data.temperature_mcu >> 8U) & 0xFFU;
+			pl[16] = tel->data.temperature_mcu & 0xFFU;
+			pl[17] = (tel->data.voltage_radio >> 8U) & 0xFFU;
+			pl[18] = tel->data.voltage_radio & 0xFFU;
+			pl[19] = (tel->data.current_radio >> 8U) & 0xFFU;
+			pl[20] = tel->data.current_radio & 0xFFU;
+			pl[21] = (tel->data.temperature_radio >> 8U) & 0xFFU;
+			pl[22] = tel->data.temperature_radio & 0xFFU;
+			pl[24] = tel->data.last_valid_tc;
+			pl[26] = (tel->data.rssi_last_valid_tc >> 8U) & 0xFFU;
+			pl[27] = tel->data.rssi_last_valid_tc & 0xFFU;
+			pl[28] = (tel->data.temperature_antenna >> 8U) & 0xFFU;
+			pl[29] = tel->data.temperature_antenna & 0xFFU;
+			pl[30] = (tel->data.antenna_status >> 8U) & 0xFFU;
+			pl[31] = tel->data.antenna_status & 0xFFU;
+			pl[32] = tel->data.deployment_status;
+			pl[33] = tel->data.hibernation_status;
+			pl[34] = (tel->data.tx_packet_counter >> 24U) & 0xFFU;
+			pl[35] = (tel->data.tx_packet_counter >> 16U) & 0xFFU;
+			pl[36] = (tel->data.tx_packet_counter >> 8U) & 0xFFU;
+			pl[37] = tel->data.tx_packet_counter & 0xFFU;
+			pl[38] = (tel->data.rx_packet_counter >> 24U) & 0xFFU;
+			pl[39] = (tel->data.rx_packet_counter >> 16U) & 0xFFU;
+			pl[40] = (tel->data.rx_packet_counter >> 8U) & 0xFFU;
+			pl[41] = tel->data.rx_packet_counter & 0xFFU;
+
+			*pkt_pl_len = (uint16_t) 50U; /* 7b RQ CALLSIGN + 1b TC ID + 42b TTC DATA */
+
+			break;
+		}
+
+		case CONFIG_DATA_ID_TTC_1:
+		{
+			ttc_telemetry_t *tel = (ttc_telemetry_t *)data;
+
+			pl[0] = (tel->timestamp >> 24U) & 0xFFU;
+			pl[1] = (tel->timestamp >> 16U) & 0xFFU;
+			pl[2] = (tel->timestamp >> 8U) & 0xFFU;
+			pl[3] = tel->timestamp & 0xFFU;
+			pl[4] = (tel->data.time_counter >> 24U) & 0xFFU;
+			pl[5] = (tel->data.time_counter >> 16U) & 0xFFU;
+			pl[6] = (tel->data.time_counter >> 8U) & 0xFFU;
+			pl[7] = tel->data.time_counter & 0xFFU;
+			pl[8] = (tel->data.reset_counter >> 8U) & 0xFFU;
+			pl[9] = tel->data.reset_counter & 0xFFU;
+			pl[10] = tel->data.last_reset_cause;
+			pl[11] = (tel->data.voltage_mcu >> 8U) & 0xFFU;
+			pl[12] = tel->data.voltage_mcu & 0xFFU;
+			pl[13] = (tel->data.current_mcu >> 8U) & 0xFFU;
+			pl[14] = tel->data.current_mcu & 0xFFU;
+			pl[15] = (tel->data.temperature_mcu >> 8U) & 0xFFU;
+			pl[16] = tel->data.temperature_mcu & 0xFFU;
+			pl[17] = (tel->data.voltage_radio >> 8U) & 0xFFU;
+			pl[18] = tel->data.voltage_radio & 0xFFU;
+			pl[19] = (tel->data.current_radio >> 8U) & 0xFFU;
+			pl[20] = tel->data.current_radio & 0xFFU;
+			pl[21] = (tel->data.temperature_radio >> 8U) & 0xFFU;
+			pl[22] = tel->data.temperature_radio & 0xFFU;
+			pl[24] = tel->data.last_valid_tc;
+			pl[26] = (tel->data.rssi_last_valid_tc >> 8U) & 0xFFU;
+			pl[27] = tel->data.rssi_last_valid_tc & 0xFFU;
+			pl[28] = (tel->data.temperature_antenna >> 8U) & 0xFFU;
+			pl[29] = tel->data.temperature_antenna & 0xFFU;
+			pl[30] = (tel->data.antenna_status >> 8U) & 0xFFU;
+			pl[31] = tel->data.antenna_status & 0xFFU;
+			pl[32] = tel->data.deployment_status;
+			pl[33] = tel->data.hibernation_status;
+			pl[34] = (tel->data.tx_packet_counter >> 24U) & 0xFFU;
+			pl[35] = (tel->data.tx_packet_counter >> 16U) & 0xFFU;
+			pl[36] = (tel->data.tx_packet_counter >> 8U) & 0xFFU;
+			pl[37] = tel->data.tx_packet_counter & 0xFFU;
+			pl[38] = (tel->data.rx_packet_counter >> 24U) & 0xFFU;
+			pl[39] = (tel->data.rx_packet_counter >> 16U) & 0xFFU;
+			pl[40] = (tel->data.rx_packet_counter >> 8U) & 0xFFU;
+			pl[41] = tel->data.rx_packet_counter & 0xFFU;
+
+			*pkt_pl_len = (uint16_t) 50U; /* 7b RQ CALLSIGN + 1b TC ID + 42b TTC DATA */
+
+			break;
+		}
+
+		case CONFIG_DATA_ID_ANT:
+		{
+			antenna_telemetry_t *tel = (antenna_telemetry_t *)data;
+
+			pl[0] = (tel->timestamp >> 24U) & 0xFFU;
+			pl[1] = (tel->timestamp >> 16U) & 0xFFU;
+			pl[2] = (tel->timestamp >> 8U) & 0xFFU;
+			pl[3] = tel->timestamp & 0xFFU;
+			pl[4] = (tel->data.status.code >> 8U) & 0xFFU;
+			pl[5] = tel->data.status.code & 0xFFU;
+			pl[6] = tel->data.status.antenna_1.status;
+			pl[7] = tel->data.status.antenna_1.timeout;
+			pl[8] = tel->data.status.antenna_1.burning;
+			pl[9] = tel->data.status.antenna_2.status;
+			pl[10] = tel->data.status.antenna_2.timeout;
+			pl[11] = tel->data.status.antenna_2.burning;
+			pl[12] = tel->data.status.antenna_3.status;
+			pl[13] = tel->data.status.antenna_3.timeout;
+			pl[14] = tel->data.status.antenna_3.burning;
+			pl[15] = tel->data.status.antenna_4.status;
+			pl[16] = tel->data.status.antenna_4.timeout;
+			pl[17] = tel->data.status.antenna_4.burning;
+            pl[18] = tel->data.status.ignoring_switches;
+            pl[19] = tel->data.status.independent_burn;
+            pl[20] = tel->data.status.armed;
+			pl[21] = (tel->data.temperature >> 8U) & 0xFFU;
+			pl[22] = tel->data.temperature & 0xFFU;
+
+			*pkt_pl_len = (uint16_t) 31U; /* 7b RQ CALLSIGN + 1b TC ID + 23b ANT DATA */
+
+			break;
+		}
+
+		case CONFIG_DATA_ID_SBCD_PKTS:
+		{
+			edc_ptt_t *tel = (edc_ptt_t *)data;
+
+			pl[0] = (tel->time_tag >> 24U) & 0xFFU;
+			pl[1] = (tel->time_tag >> 16U) & 0xFFU;
+			pl[2] = (tel->time_tag >> 8U) & 0xFFU;
+			pl[3] = tel->time_tag & 0xFFU;
+			pl[4] = tel->error_code;
+			pl[5] = (((uint32_t)tel->carrier_freq) >> 24U) & 0xFFU;
+			pl[6] = (((uint32_t)tel->carrier_freq) >> 16U) & 0xFFU;
+			pl[7] = (((uint32_t)tel->carrier_freq) >> 8U) & 0xFFU;
+			pl[8] = ((uint32_t)tel->carrier_freq) & 0xFFU;
+			pl[9] = (tel->carrier_abs >> 8U) & 0xFFU;
+			pl[10] = tel->carrier_abs & 0xFFU;
+			pl[11] = tel->msg_byte_length;
+
+            /* Copying PTT user message */
+            (void)memcpy(&pl[12], tel->user_msg, 36U);
+
+			*pkt_pl_len = (uint16_t) 56U; /* 7b RQ CALLSIGN + 1b TC ID + 48b SBCD PKT DATA */
+
+			break;
+		}
+
+		default: 
+			err = -1;
+			break;
+	}
+
+    return err;
 }
 
 /** \} End of process_tc group */
