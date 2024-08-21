@@ -146,7 +146,7 @@ void vTaskBeacon(void)
         uint8_t beacon_pl_raw[220] = {0};
         uint16_t beacon_pl_raw_len = 0;
 
-        fsat_pkt_encode(beacon_pl, beacon_pl_raw, &beacon_pl_raw_len);
+        fsat_pkt_encode(&beacon_pl, beacon_pl_raw, &beacon_pl_raw_len);
 
         if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
         {
