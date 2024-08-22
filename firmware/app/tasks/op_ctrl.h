@@ -59,6 +59,8 @@
 #define SAT_NOTIFY_PX_FINISHED                 (1UL << 2UL)           /**< Payload X experiment period finished flag */ 
 #define SAT_NOTIFY_ENTER_HIBERNATION           (1UL << 3UL)           /**< A request to enter hibernation was made through TC */ 
 #define SAT_NOTIFY_LEAVE_HIBERNATION           (1UL << 4UL)           /**< A request to leave hibernation was made through TC */ 
+#define SAT_NOTIFY_ENTER_MANUAL_MODE           (1UL << 5UL)           /**< A request to enter manual mode was made through TC */ 
+#define SAT_NOTIFY_LEAVE_MANUAL_MODE           (1UL << 6UL)           /**< A request to leave manual mode was made through TC */ 
 
 /**
  * \brief Changes satellite's operation mode.

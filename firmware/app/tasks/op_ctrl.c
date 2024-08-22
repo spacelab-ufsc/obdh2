@@ -157,82 +157,96 @@ static inline void handle_notification(uint32_t notify_value)
         }
     }
 
-    if ((notify_value & SAT_NOTIFY_IN_BRAZIL) != 0U)
+    if ((notify_value & SAT_NOTIFY_ENTER_MANUAL_MODE) != 0U)
     {
-        sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_OP_CTRL_NAME, "Changing Satellite Mode to NOMINAL!");
-        sys_log_new_line();
-
-        if (!in_hibernation)
-        {
-            satellite_change_mode(OBDH_MODE_NORMAL);
-        }
-
-        /* It means the satellite just entered Brazilian territory*/
-        if (!in_brazil) 
-        {
-            in_brazil = true;
-
-            if (enable_main_edc() != 0)
-            {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to enable main EDC");
-                sys_log_new_line();
-            }
-            else 
-            {
-                edc_active = true;
-            }
-        }
+        sat_data_buf.obdh.data.manual_mode_on = true;
     }
 
-    if ((notify_value & SAT_NOTIFY_OUT_OF_BRAZIL) != 0U)
+    if ((notify_value & SAT_NOTIFY_LEAVE_MANUAL_MODE) != 0U)
     {
-        edc_active = false;
-
-        /* Stop the Read EDC task */
-        xTaskNotify(xTaskReadEDCHandle, 0UL, eSetValueWithOverwrite);
-
-        if (disable_curr_payload() != 0)
-        {
-            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to disable active payload");
-            sys_log_new_line();
-        }
-
-        if (in_brazil)
-        {
-            in_brazil = false;
-
-            sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_OP_CTRL_NAME, "Satellite is out of Brazil territory");
-            sys_log_new_line();
-
-            if (enable_px() != 0)
-            {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to enable Payload X");
-                sys_log_new_line();
-            }
-            else 
-            {
-                xTaskNotify(xTaskReadPXHandle, px_active_time_ms, eSetValueWithOverwrite);
-            }
-        }
+        sat_data_buf.obdh.data.manual_mode_on = false;
     }
 
-    if ((notify_value & SAT_NOTIFY_PX_FINISHED) != 0U)
+    /* Automatic operation mode switch should only happen when manual mode is disable */
+    if (!sat_data_buf.obdh.data.manual_mode_on)
     {
-        sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_OP_CTRL_NAME, "Changing Satellite Mode to STAND BY!");
-        sys_log_new_line();
-
-        if (!in_hibernation)
+        if ((notify_value & SAT_NOTIFY_IN_BRAZIL) != 0U)
         {
-            satellite_change_mode(OBDH_MODE_STAND_BY);
-        }
-
-        if (disable_curr_payload() != 0)
-        {
-            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to disable active payload");
+            sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_OP_CTRL_NAME, "Changing Satellite Mode to NOMINAL!");
             sys_log_new_line();
+
+            if (!in_hibernation)
+            {
+                satellite_change_mode(OBDH_MODE_NORMAL);
+            }
+
+            /* It means the satellite just entered Brazilian territory*/
+            if (!in_brazil) 
+            {
+                in_brazil = true;
+
+                if (enable_main_edc() != 0)
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to enable main EDC");
+                    sys_log_new_line();
+                }
+                else 
+                {
+                    edc_active = true;
+                }
+            }
         }
 
-        sat_data_buf.state.active_payload = PAYLOAD_NONE;
+        if ((notify_value & SAT_NOTIFY_OUT_OF_BRAZIL) != 0U)
+        {
+            edc_active = false;
+
+            /* Stop the Read EDC task */
+            xTaskNotify(xTaskReadEDCHandle, 0UL, eSetValueWithOverwrite);
+
+            if (disable_curr_payload() != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to disable active payload");
+                sys_log_new_line();
+            }
+
+            if (in_brazil)
+            {
+                in_brazil = false;
+
+                sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_OP_CTRL_NAME, "Satellite is out of Brazil territory");
+                sys_log_new_line();
+
+                if (enable_px() != 0)
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to enable Payload X");
+                    sys_log_new_line();
+                }
+                else 
+                {
+                    xTaskNotify(xTaskReadPXHandle, px_active_time_ms, eSetValueWithOverwrite);
+                }
+            }
+        }
+
+        if ((notify_value & SAT_NOTIFY_PX_FINISHED) != 0U)
+        {
+            sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_OP_CTRL_NAME, "Changing Satellite Mode to STAND BY!");
+            sys_log_new_line();
+
+            if (!in_hibernation)
+            {
+                satellite_change_mode(OBDH_MODE_STAND_BY);
+            }
+
+            if (disable_curr_payload() != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to disable active payload");
+                sys_log_new_line();
+            }
+
+            sat_data_buf.state.active_payload = PAYLOAD_NONE;
+        }
     }
 }
 
