@@ -101,9 +101,10 @@ typedef struct
  */
 typedef struct
 {
+    payload_telemetry_t *c_edc;     /**< Pointer to the active EDC telemetry data. */
     payload_t active_payload;       /**< Active payload. */
     payload_t main_edc;             /**< Main EDC. */
-    payload_telemetry_t *c_edc;     /**< Pointer to the active EDC telemetry data. */
+    bool edc_active;                /**< EDC Active flag */
 } payload_state_t;
 
 /**
