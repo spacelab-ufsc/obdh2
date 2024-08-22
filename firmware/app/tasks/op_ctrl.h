@@ -48,8 +48,7 @@
 #define TASK_OP_CTRL_NAME                      "Operation Control"    /**< Task name. */
 #define TASK_OP_CTRL_STACK_SIZE                256U                   /**< Stack size in bytes. */
 #define TASK_OP_CTRL_PRIORITY                  4U                     /**< Task priority. */
-#define TASK_OP_CTRL_PERIOD_MS                 2000UL                 /**< Task period in milliseconds. */
-#define TASK_OP_CTRL_INIT_TIMEOUT_MS           2000U                  /**< Task priority. */
+#define TASK_OP_CTRL_NOTIFICATION_TIMEOUT      (3600000UL)            /**< Task maximum block time waiting for notifications */
 
 #define PAYLOAD_X_EXPERIMENT_PERIOD_MS         (600000UL)             /**< Payload X default experiment time in milliseconds. */
 #define PAYLOAD_X_CANCEL_EXPERIMENT_FLAG       (1UL << 31UL)          /**< Flag used as a notification to cancel running experiment */
@@ -58,7 +57,7 @@
 #define SAT_NOTIFY_OUT_OF_BRAZIL               (1UL << 1UL)           /**< Outside Brazil notification flag */
 #define SAT_NOTIFY_PX_FINISHED                 (1UL << 2UL)           /**< Payload X experiment period finished flag */ 
 #define SAT_NOTIFY_ENTER_HIBERNATION           (1UL << 3UL)           /**< A request to enter hibernation was made through TC */ 
-#define SAT_NOTIFY_LEAVE_HIBERNATION           (1UL << 4UL)           /**< A request to leave hibernation was made through TC */ 
+#define SAT_NOTIFY_LEAVE_HIBERNATION           (1UL << 4UL)           /**< A request to leave hibernation was made through TC or through HK */ 
 #define SAT_NOTIFY_ENTER_MANUAL_MODE           (1UL << 5UL)           /**< A request to enter manual mode was made through TC */ 
 #define SAT_NOTIFY_LEAVE_MANUAL_MODE           (1UL << 6UL)           /**< A request to leave manual mode was made through TC */ 
 

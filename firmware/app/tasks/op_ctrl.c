@@ -44,9 +44,9 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
-#include "read_px.h"
-#include "read_edc.h"
 #include "op_ctrl.h"
+#include "read_px.h"
+#include "system_reset.h"
 
 static inline void handle_notification(uint32_t notify_value);
 
@@ -56,8 +56,6 @@ static int disable_curr_payload(void);
 static int enable_ttc_tx(void);
 static int disable_ttc_tx(void);
 
-static bool in_brazil = false;
-static bool edc_active = false;
 static bool in_hibernation = false;
 
 TaskHandle_t xTaskOpCtrlHandle;
@@ -67,43 +65,17 @@ void vTaskOpCtrl(void)
     uint32_t notify_value;
     sat_data_buf.state.c_edc = &sat_data_buf.edc_0;
 
-    TickType_t last_cycle = xTaskGetTickCount();
-
     while (1) 
     {
-        if (xTaskNotifyWait(0UL, UINT32_MAX, &notify_value, 0UL) == pdTRUE) 
+        if (xTaskNotifyWait(0UL, UINT32_MAX, &notify_value, pdMS_TO_TICKS_64(TASK_OP_CTRL_NOTIFICATION_TIMEOUT)) == pdTRUE) 
         {
             handle_notification(notify_value);
         }
-
-        /* Hibernation mode check */
-        if (sat_data_buf.obdh.data.mode == OBDH_MODE_HIBERNATION)
+        else 
         {
-            if ((sat_data_buf.obdh.data.ts_last_mode_change + sat_data_buf.obdh.data.mode_duration) <= system_get_time())
-            {
-                if (in_brazil || (sat_data_buf.state.active_payload == PAYLOAD_X))
-                {
-                    satellite_change_mode(OBDH_MODE_NORMAL);
-                }
-                else 
-                {
-                    satellite_change_mode(OBDH_MODE_STAND_BY);
-                }
-
-                in_hibernation = false;
-            }
+            sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_OP_CTRL_NAME, "Notification waiting timedout!");
+            sys_log_new_line();
         }
-
-        /* Nominal mode notification */
-        if ((sat_data_buf.obdh.data.mode == OBDH_MODE_NORMAL) && edc_active)
-        {
-            /* Notifies to Read EDC task that the EDC is active.
-             * Must happen because the task depends on the notification
-             * to be pending for it to read EDC data. */
-            xTaskNotifyGive(xTaskReadEDCHandle);
-        }
-
-        vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_OP_CTRL_PERIOD_MS));
     }
 }
 
@@ -129,7 +101,7 @@ int8_t override_op_mode(const uint8_t mode)
     {
         case OBDH_MODE_NORMAL:
         {
-            edc_active = true;
+            sat_data_buf.state.edc_active = true;
             satellite_change_mode(mode);
 
             if (enable_main_edc() != 0)
@@ -154,7 +126,7 @@ int8_t override_op_mode(const uint8_t mode)
         }
         case OBDH_MODE_STAND_BY:
         {
-            edc_active = false;
+            sat_data_buf.state.edc_active = false;
             satellite_change_mode(mode);
 
             if (disable_curr_payload() != 0)
@@ -176,6 +148,7 @@ int8_t override_op_mode(const uint8_t mode)
 
 static inline void handle_notification(uint32_t notify_value)
 {
+    static bool in_brazil = false;
     uint32_t px_active_time_ms = (uint32_t)PAYLOAD_X_EXPERIMENT_PERIOD_MS;
 
     if ((notify_value & SAT_NOTIFY_ENTER_HIBERNATION) != 0U)
@@ -245,17 +218,14 @@ static inline void handle_notification(uint32_t notify_value)
                 }
                 else 
                 {
-                    edc_active = true;
+                    sat_data_buf.state.edc_active = true;
                 }
             }
         }
 
         if ((notify_value & SAT_NOTIFY_OUT_OF_BRAZIL) != 0U)
         {
-            edc_active = false;
-
-            /* Stop the Read EDC task */
-            xTaskNotify(xTaskReadEDCHandle, 0UL, eSetValueWithOverwrite);
+            sat_data_buf.state.edc_active = false;
 
             if (disable_curr_payload() != 0)
             {
