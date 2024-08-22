@@ -1236,7 +1236,12 @@ void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
                         }
                         case OBDH_PARAM_ID_MODE:
                         {
-                            sat_data_buf.obdh.data.mode = (uint8_t)buf;
+                            if (override_op_mode((uint8_t)buf) != 0)
+                            {
+                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid Mode requested!");
+                                sys_log_new_line();
+                            }
+
                             break;
                         }
                         case OBDH_PARAM_ID_TIMESTAMP_LAST_MODE:
