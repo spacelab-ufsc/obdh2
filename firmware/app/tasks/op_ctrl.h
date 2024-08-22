@@ -94,6 +94,15 @@ void vTaskOpCtrl(void);
  */
 void notify_op_ctrl(uint32_t notification_flag);
 
+/**
+ * \brief Overrides current operation mode.
+ *
+ * \param[in] mode is the operation mode to enter.
+ *
+ * \return The status/error code.
+ */
+int8_t override_op_mode(const uint8_t mode);
+
 #endif 
 
 /** \} End of op_ctrl group */

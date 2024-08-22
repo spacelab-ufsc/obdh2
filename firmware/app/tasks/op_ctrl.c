@@ -95,7 +95,7 @@ void vTaskOpCtrl(void)
         }
 
         /* Nominal mode notification */
-        if (in_brazil && edc_active)
+        if ((sat_data_buf.obdh.data.mode == OBDH_MODE_NORMAL) && edc_active)
         {
             /* Notifies to Read EDC task that the EDC is active.
              * Must happen because the task depends on the notification
@@ -112,13 +112,66 @@ void notify_op_ctrl(uint32_t notification_flag)
     xTaskNotify(xTaskOpCtrlHandle, notification_flag, eSetBits);
 }
 
-void satellite_change_mode(uint8_t mode)
+void satellite_change_mode(const uint8_t mode)
 {
     /* This ensures the mode change is done atomically */
     taskENTER_CRITICAL();
     sat_data_buf.obdh.data.mode = mode;
     sat_data_buf.obdh.data.ts_last_mode_change = system_get_time();
     taskEXIT_CRITICAL();
+}
+
+int8_t override_op_mode(const uint8_t mode)
+{
+    int8_t err = 0;
+
+    switch (mode) 
+    {
+        case OBDH_MODE_NORMAL:
+        {
+            edc_active = true;
+            satellite_change_mode(mode);
+
+            if (enable_main_edc() != 0)
+            {
+                err = -1;
+            }
+
+            break;
+        }
+        case OBDH_MODE_HIBERNATION:
+        {
+            in_hibernation = true;
+            satellite_change_mode(mode);
+
+            if (disable_ttc_tx() != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Failed to disable TTC TX!!");
+                sys_log_new_line();
+            }
+
+            break;
+        }
+        case OBDH_MODE_STAND_BY:
+        {
+            edc_active = false;
+            satellite_change_mode(mode);
+
+            if (disable_curr_payload() != 0)
+            {
+                err = -1;
+            }
+
+            break;
+        }
+        default:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_OP_CTRL_NAME, "Invalid Mode was given!");
+            sys_log_new_line();
+            err = -1;
+            break;
+    }
+
+    return err;
 }
 
 static inline void handle_notification(uint32_t notify_value)
@@ -315,6 +368,7 @@ static int disable_curr_payload(void)
 
     if (payload_disable(active_payload) == 0)
     {
+        sat_data_buf.state.active_payload = PAYLOAD_NONE;
         err = 0;
     }
 
