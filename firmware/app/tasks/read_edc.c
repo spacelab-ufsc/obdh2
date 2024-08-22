@@ -63,15 +63,13 @@ void vTaskReadEDC(void)
 
     media_info_t nor_info = media_get_info(MEDIA_NOR);
 
+    TickType_t last_cycle = xTaskGetTickCount();
+
     while(1)
     {
-        uint32_t notification = ulTaskNotifyTake(pdFALSE, pdMS_TO_TICKS(TASK_READ_EDC_MAX_WAIT_TIME_MS));
-
-        TickType_t last_cycle = xTaskGetTickCount();
-
         payload_t pl_edc_active = sat_data_buf.state.active_payload;
 
-        if (((pl_edc_active == PAYLOAD_EDC_0) || (pl_edc_active == PAYLOAD_EDC_1)) && (notification > 0UL))
+        if (((pl_edc_active == PAYLOAD_EDC_0) || (pl_edc_active == PAYLOAD_EDC_1)) && (sat_data_buf.state.edc_active))
         {
             /* Read housekeeping data */
             if (payload_get_data(pl_edc_active, PAYLOAD_EDC_RAW_HK, edc_hk_buf.buffer, &edc_hk_buf.length) != 0)
