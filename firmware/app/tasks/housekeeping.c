@@ -44,6 +44,7 @@
 #include <structs/satellite.h>
 
 #include "housekeeping.h"
+#include "op_ctrl.h"
 #include "startup.h"
 
 xTaskHandle xTaskHousekeepingHandle;
@@ -53,9 +54,18 @@ void vTaskHousekeeping(void)
     /* Wait startup task to finish */
     xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_HOUSEKEEPING_INIT_TIMEOUT_MS));
 
+    TickType_t last_cycle = xTaskGetTickCount();
+
     while(1)
     {
-        TickType_t last_cycle = xTaskGetTickCount();
+        /* Hibernation mode check */
+        if (sat_data_buf.obdh.data.mode == OBDH_MODE_HIBERNATION)
+        {
+            if ((sat_data_buf.obdh.data.ts_last_mode_change + sat_data_buf.obdh.data.mode_duration) <= system_get_time())
+            {
+                notify_op_ctrl(SAT_NOTIFY_LEAVE_MANUAL_MODE);
+            }
+        }
 
         /* Save the last available OBDH data at every minute */
         if (mem_mng_save_obdh_data_to_fram(&sat_data_buf.obdh) != 0)
@@ -68,7 +78,7 @@ void vTaskHousekeeping(void)
             sys_log_print_event_from_module(SYS_LOG_INFO, TASK_HOUSEKEEPING_NAME, "Saving obdh data to fram...");
             sys_log_new_line();
         }
-
+        
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_HOUSEKEEPING_PERIOD_MS));
     }
 }
