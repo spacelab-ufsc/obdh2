@@ -44,10 +44,10 @@ void vTaskWatchdogReset(void)
     /* Delay before the first cycle */
     vTaskDelay(pdMS_TO_TICKS(TASK_WATCHDOG_RESET_INITIAL_DELAY_MS));
 
+    TickType_t last_cycle = xTaskGetTickCount();
+
     while(1)
     {
-        TickType_t last_cycle = xTaskGetTickCount();
-
         watchdog_reset();
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_WATCHDOG_RESET_PERIOD_MS));

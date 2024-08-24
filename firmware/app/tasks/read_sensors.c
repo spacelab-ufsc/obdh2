@@ -50,10 +50,10 @@ void vTaskReadSensors(void)
     /* Wait startup task to finish */
     xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_SENSORS_INIT_TIMEOUT_MS));
 
+    TickType_t last_cycle = xTaskGetTickCount();
+
     while(1)
     {
-        TickType_t last_cycle = xTaskGetTickCount();
-
         uint16_t buf = 0;
 
         /* OBDH current */

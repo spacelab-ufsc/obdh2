@@ -56,10 +56,10 @@ void vTaskDataLog(void)
 
     uint8_t page_buf[256] = {0};
 
+    TickType_t last_cycle = xTaskGetTickCount();
+
     while(1)
     {
-        TickType_t last_cycle = xTaskGetTickCount();
-
         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_DATA_LOG_NAME, "Saving data to flash memory...");
         sys_log_new_line();
 

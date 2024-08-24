@@ -104,10 +104,10 @@ void vTaskTimeControl(void)
 
     vTaskDelay(pdMS_TO_TICKS(1000));
 
+    TickType_t last_cycle = xTaskGetTickCount();
+
     while(1)
     {
-        TickType_t last_cycle = xTaskGetTickCount();
-
         system_increment_time();
 
         /* Read the current system time */

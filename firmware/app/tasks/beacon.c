@@ -57,10 +57,10 @@ void vTaskBeacon(void)
     /* Delay before the first cycle */
     vTaskDelay(pdMS_TO_TICKS(TASK_BEACON_INITIAL_DELAY_MS));
 
+    TickType_t last_cycle = xTaskGetTickCount();
+
     while(1)
     {
-        TickType_t last_cycle = xTaskGetTickCount();
-
         fsat_pkt_pl_t beacon_pl = {0};
 
         /* Packet ID */

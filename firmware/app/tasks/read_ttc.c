@@ -52,10 +52,10 @@ void vTaskReadTTC(void)
     /* Delay before the first cycle */
     vTaskDelay(pdMS_TO_TICKS(TASK_READ_TTC_INITIAL_DELAY_MS));
 
+    TickType_t last_cycle = xTaskGetTickCount();
+
     while(1)
     {
-        TickType_t last_cycle = xTaskGetTickCount();
-
         if (ttc_init(TTC_0) != 0)
         {
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_TTC_NAME, "Error initializing the TTC device!");
