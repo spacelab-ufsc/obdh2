@@ -428,7 +428,6 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
     if ((pkt_len >= (1U + 7U + 1U + 4U + 4U)) && (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION))
     {
         fsat_pkt_pl_t data_req_ans_pkt = {0};
-        uint8_t data_req_ans_pl[220] = {0};
         uint8_t data_req_ans_raw[300] = {0};
         uint16_t data_req_ans_raw_len = UINT16_MAX;
 
@@ -455,7 +454,6 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                     uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_obdh_data - (uint32_t)start_idx;
 
                     uint8_t page_buf[256] = {0};
-                    uint16_t pl_length = 0;
 
                     uint32_t i = 0;
                     for(i = start_page; i < end_page; i++)
@@ -463,17 +461,15 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                         if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(obdh_telemetry_t)) == 0)
                         {
                             /* Requester callsign */
-                            (void)memcpy(&data_req_ans_pl[0], &pkt[1], 7);
+                            (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
 
                             /* Data ID */
-                            data_req_ans_pl[7] = CONFIG_DATA_ID_OBDH;
+                            data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_OBDH;
 
                             /* Format payload */
-                            (void)format_data_request(data_req_ans_pl, &pl_length, CONFIG_DATA_ID_OBDH, page_buf);
+                            (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_OBDH, page_buf);
 
                             vTaskDelay(pdMS_TO_TICKS(10U));
-
-                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_length);
 
                             fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
@@ -499,7 +495,6 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                     uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_eps_data - (uint32_t)start_idx;
 
                     uint8_t page_buf[256] = {0};
-                    uint16_t pl_length = 0;
 
                     uint32_t i = 0;
                     for(i = start_page; i < end_page; i++)
@@ -507,17 +502,15 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                         if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(eps_telemetry_t)) == 0)
                         {
                             /* Requester callsign */
-                            (void)memcpy(&data_req_ans_pl[0], &pkt[1], 7);
+                            (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
 
                             /* Data ID */
-                            data_req_ans_pl[7] = CONFIG_DATA_ID_EPS;
+                            data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_EPS;
 
                             /* Format payload */
-                            (void)format_data_request(data_req_ans_pl, &pl_length, CONFIG_DATA_ID_EPS, page_buf);
+                            (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_EPS, page_buf);
 
                             vTaskDelay(pdMS_TO_TICKS(10U));
-
-                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_length);
 
                             fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
@@ -543,7 +536,6 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                     uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_ttc_0_data - (uint32_t)start_idx;
 
                     uint8_t page_buf[256] = {0};
-                    uint16_t pl_length = 0;
 
                     uint32_t i = 0;
                     for(i = start_page; i < end_page; i++)
@@ -551,17 +543,15 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                         if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(ttc_telemetry_t)) == 0)
                         {
                             /* Requester callsign */
-                            (void)memcpy(&data_req_ans_pl[0], &pkt[1], 7);
+                            (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
 
                             /* Data ID */
-                            data_req_ans_pl[7] = CONFIG_DATA_ID_TTC_0;
+                            data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_TTC_0;
 
                             /* Format payload */
-                            (void)format_data_request(data_req_ans_pl, &pl_length, CONFIG_DATA_ID_TTC_0, page_buf);
+                            (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_TTC_0, page_buf);
 
                             vTaskDelay(pdMS_TO_TICKS(10U));
-
-                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_length);
 
                             fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
@@ -587,7 +577,6 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                     uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_ttc_1_data - (uint32_t)start_idx;
 
                     uint8_t page_buf[256] = {0};
-                    uint16_t pl_length = 0;
 
                     uint32_t i = 0;
                     for(i = start_page; i < end_page; i++)
@@ -595,17 +584,15 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                         if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(ttc_telemetry_t)) == 0)
                         {
                             /* Requester callsign */
-                            (void)memcpy(&data_req_ans_pl[0], &pkt[1], 7);
+                            (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
 
                             /* Data ID */
-                            data_req_ans_pl[7] = CONFIG_DATA_ID_TTC_1;
+                            data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_TTC_1;
 
                             /* Format payload */
-                            (void)format_data_request(data_req_ans_pl, &pl_length, CONFIG_DATA_ID_TTC_1, page_buf);
+                            (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_TTC_1, page_buf);
 
                             vTaskDelay(pdMS_TO_TICKS(10U));
-
-                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_length);
 
                             fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
@@ -631,7 +618,6 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                     uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_ant_data - (uint32_t)start_idx;
 
                     uint8_t page_buf[256] = {0};
-                    uint16_t pl_length = 0;
 
                     uint32_t i = 0;
                     for(i = start_page; i < end_page; i++)
@@ -639,17 +625,15 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                         if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(antenna_telemetry_t)) == 0)
                         {
                             /* Requester callsign */
-                            (void)memcpy(&data_req_ans_pl[0], &pkt[1], 7);
+                            (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
 
                             /* Data ID */
-                            data_req_ans_pl[7] = CONFIG_DATA_ID_ANT;
+                            data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_ANT;
 
                             /* Format payload */
-                            (void)format_data_request(data_req_ans_pl, &pl_length, CONFIG_DATA_ID_ANT, page_buf);
+                            (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_ANT, page_buf);
 
                             vTaskDelay(pdMS_TO_TICKS(10U));
-
-                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_length);
 
                             fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
@@ -675,7 +659,6 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                     uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_sbcd_pkts - (uint32_t)start_idx;
 
                     uint8_t page_buf[256] = {0};
-                    uint16_t pl_length = 0;
 
                     uint32_t i = 0;
                     for(i = start_page; i < end_page; i++)
@@ -683,17 +666,15 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                         if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(edc_ptt_t)) == 0)
                         {
                             /* Requester callsign */
-                            (void)memcpy(&data_req_ans_pl[0], &pkt[1], 7);
+                            (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
 
                             /* Data ID */
-                            data_req_ans_pl[7] = CONFIG_DATA_ID_SBCD_PKTS;
+                            data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_SBCD_PKTS;
 
                             /* Format payload */
-                            (void)format_data_request(data_req_ans_pl, &pl_length, CONFIG_DATA_ID_SBCD_PKTS, page_buf);
+                            (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_SBCD_PKTS, page_buf);
 
                             vTaskDelay(pdMS_TO_TICKS(10U));
-
-                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_length);
 
                             fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
@@ -719,7 +700,6 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                     uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_edc_data - (uint32_t)start_idx;
 
                     uint8_t page_buf[256] = {0};
-                    uint16_t pl_length = 0;
 
                     uint32_t i = 0;
                     for(i = start_page; i < end_page; i++)
@@ -727,17 +707,15 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                         if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(payload_telemetry_t)) == 0)
                         {
                             /* Requester callsign */
-                            (void)memcpy(&data_req_ans_pl[0], &pkt[1], 7);
+                            (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
 
                             /* Data ID */
-                            data_req_ans_pl[7] = CONFIG_DATA_ID_PAYLOAD_INFO;
+                            data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_PAYLOAD_INFO;
 
                             /* Format payload */
-                            (void)format_data_request(data_req_ans_pl, &pl_length, CONFIG_DATA_ID_PAYLOAD_INFO, page_buf);
+                            (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_PAYLOAD_INFO, page_buf);
 
                             vTaskDelay(pdMS_TO_TICKS(10U));
-
-                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, pl_length);
 
                             fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
 
