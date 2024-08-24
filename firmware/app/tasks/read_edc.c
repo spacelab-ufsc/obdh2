@@ -67,9 +67,9 @@ void vTaskReadEDC(void)
 
     while(1)
     {
-        payload_t pl_edc_active = sat_data_buf.state.active_payload;
+        payload_t pl_edc_active = sat_data_buf.state.active_payload[0];
 
-        if (((pl_edc_active == PAYLOAD_EDC_0) || (pl_edc_active == PAYLOAD_EDC_1)) && (sat_data_buf.state.edc_active))
+        if ((pl_edc_active != PAYLOAD_NONE) && (sat_data_buf.state.edc_active))
         {
             /* Read housekeeping data */
             if (payload_get_data(pl_edc_active, PAYLOAD_EDC_RAW_HK, edc_hk_buf.buffer, &edc_hk_buf.length) != 0)

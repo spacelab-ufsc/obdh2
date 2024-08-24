@@ -67,7 +67,7 @@ void vTaskReadPX(void)
 
         BaseType_t result = xTaskNotifyWait(0UL, UINT32_MAX, &active_period_ms, pdMS_TO_TICKS(TASK_READ_PX_MAX_WAIT_TIME_MS));
 
-        payload_t pl_px_active = sat_data_buf.state.active_payload;
+        payload_t pl_px_active = sat_data_buf.state.active_payload[1];
 
         if ((pl_px_active == PAYLOAD_X) && (result == pdTRUE)) 
         {
