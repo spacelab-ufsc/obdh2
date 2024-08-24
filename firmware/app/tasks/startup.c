@@ -224,7 +224,6 @@ void vTaskStartup(void)
     /* Payload EDC device initialization */
     sat_data_buf.edc_0.id = CONFIG_PL_ID_EDC_1;
     sat_data_buf.edc_1.id = CONFIG_PL_ID_EDC_2;
-    sat_data_buf.state.main_edc = PAYLOAD_EDC_0;
 
     if (payload_init(PAYLOAD_EDC_1) != 0)
     {
