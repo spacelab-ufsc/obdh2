@@ -36,6 +36,7 @@
 
 #include <FreeRTOS.h>
 #include <task.h>
+#include <queue.h>
 
 #include <config/config.h>
 
@@ -57,8 +58,10 @@
 #include "read_px.h"
 #include "housekeeping.h"
 #include "mem_check.h"
-#include "op_ctrl.h"
+#include "mission_manager.h"
 #include "mode_check.h"
+
+static void create_queues(void);
 
 void create_tasks(void)
 {
@@ -227,14 +230,14 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_HEALTH_CHECK_MEM_ENABLED */
 
-#if defined(CONFIG_TASK_OP_CTRL_ENABLED) && (CONFIG_TASK_OP_CTRL_ENABLED == 1)
-    xTaskCreate(vTaskOpCtrl, TASK_OP_CTRL_NAME, TASK_OP_CTRL_STACK_SIZE, NULL, TASK_OP_CTRL_PRIORITY, &xTaskOpCtrlHandle);
+#if defined(CONFIG_TASK_MISSION_MANAGER_ENABLED) && (CONFIG_TASK_MISSION_MANAGER_ENABLED == 1)
+    xTaskCreate(vTaskMissionManager, TASK_MISSION_MANAGER_NAME, TASK_MISSION_MANAGER_STACK_SIZE, NULL, TASK_MISSION_MANAGER_PRIORITY, &xTaskMissionManagerHandle);
 
-    if (xTaskOpCtrlHandle == NULL)
+    if (xTaskMissionManagerHandle == NULL)
     {
         /* Error creating the Operation Control task */
     }
-#endif /* CONFIG_TASK_OP_CTRL_ENABLED */
+#endif /* CONFIG_TASK_MISSION_MANAGER_ENABLED */
 
 #if defined(CONFIG_TASK_HEALTH_CHECK_MODE_ENABLED) && (CONFIG_TASK_HEALTH_CHECK_MODE_ENABLED == 1)
     xTaskCreate(vTaskHealthCheckMode, TASK_HEALTH_CHECK_MODE_NAME, TASK_HEALTH_CHECK_MODE_STACK_SIZE, NULL, TASK_HEALTH_CHECK_MODE_PRIORITY, &xTaskHealthCheckModeHandle);
@@ -245,6 +248,7 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_HEALTH_CHECK_MODE_ENABLED */
 
+    create_queues();
     create_event_groups();
 }
 
@@ -255,6 +259,16 @@ void create_event_groups(void)
     if (task_startup_status == NULL)
     {
         /* Error creating the startup status event group */
+    }
+}
+
+static void create_queues(void)
+{
+    event_queue = xQueueCreate(10U, sizeof(event_t));
+
+    if (event_queue == NULL)
+    {
+        /* Error creating the Event Queue */
     }
 }
 
