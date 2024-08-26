@@ -54,7 +54,7 @@
 #include <fsat_pkt/fsat_pkt.h>
 
 #include "process_tc.h"
-#include "op_ctrl.h"
+#include "mission_manager.h"
 #include "startup.h"
 
 xTaskHandle xTaskProcessTCHandle;
@@ -792,8 +792,8 @@ void process_tc_enter_hibernation(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U + 2U, &pkt[10], 20U, tc_key, sizeof(CONFIG_TC_KEY_ENTER_HIBERNATION)-1U))
         {
-            sat_data_buf.obdh.data.mode_duration = (((sys_time_t)pkt[8] << 8) | (sys_time_t)pkt[9]) * 60UL * 60UL;
-            notify_op_ctrl(SAT_NOTIFY_ENTER_HIBERNATION);
+            const event_t enter_hib = { .event = EV_NOTIFY_MODE_CHANGE_RQ, .args[0] = OBDH_MODE_HIBERNATION,  .args[1] = pkt[8], .args[2] = pkt[9] };
+            notify_event_to_mission_manager(&enter_hib);
         }
         else
         {
@@ -811,7 +811,8 @@ void process_tc_leave_hibernation(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U, &pkt[8], 20U, tc_key, sizeof(CONFIG_TC_KEY_LEAVE_HIBERNATION)-1U))
         {
-            notify_op_ctrl(SAT_NOTIFY_LEAVE_HIBERNATION);
+            const event_t leave_hib = { .event = EV_NOTIFY_MODE_CHANGE_RQ, .args[0] = OBDH_WAKE_UP,  .args[1] = 0U, .args[2] = 0U };
+            notify_event_to_mission_manager(&leave_hib);
         }
         else
         {
@@ -979,6 +980,8 @@ void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
 
 void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
 {
+    event_t pl_event = { 0 };
+
     if (pkt_len >= 29U)
     {
         switch(pkt[8])
@@ -992,11 +995,9 @@ void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
 
                 if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_PAYLOAD_EDC)-1U))
                 {
-                    if (payload_enable(PAYLOAD_EDC_0) != 0)
-                    {
-                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the EDC 1 payload!");
-                        sys_log_new_line();
-                    }
+                    pl_event.event = EV_NOTIFY_ACTIVATE_PAYLOAD_RQ;
+                    pl_event.args[0] = CONFIG_PL_ID_EDC_1;
+                    notify_event_to_mission_manager(&pl_event);
                 }
                 else
                 {
@@ -1015,11 +1016,9 @@ void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
 
                 if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_PAYLOAD_EDC)-1U))
                 {
-                    if (payload_enable(PAYLOAD_EDC_1) != 0)
-                    {
-                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the EDC 2 payload!");
-                        sys_log_new_line();
-                    }
+                    pl_event.event = EV_NOTIFY_ACTIVATE_PAYLOAD_RQ;
+                    pl_event.args[0] = CONFIG_PL_ID_EDC_2;
+                    notify_event_to_mission_manager(&pl_event);
                 }
                 else
                 {
@@ -1038,11 +1037,9 @@ void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
 
                 if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_PAYLOAD_PAYLOAD_X)-1U))
                 {
-                    if (payload_enable(PAYLOAD_X) != 0)
-                    {
-                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the Payload-X payload!");
-                        sys_log_new_line();
-                    }
+                    pl_event.event = EV_NOTIFY_ACTIVATE_PAYLOAD_RQ;
+                    pl_event.args[0] = CONFIG_PL_ID_PAYLOAD_X;
+                    notify_event_to_mission_manager(&pl_event);
                 }
                 else
                 {
@@ -1063,6 +1060,8 @@ void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
 
 void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
 {
+    event_t pl_event = { 0 };
+
     if (pkt_len >= 29U)
     {
         switch(pkt[8])
@@ -1076,11 +1075,9 @@ void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
 
                 if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_EDC)-1U))
                 {
-                    if (payload_disable(PAYLOAD_EDC_0) != 0)
-                    {
-                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the EDC 1 payload!");
-                        sys_log_new_line();
-                    }
+                    pl_event.event = EV_NOTIFY_DEACTIVATE_PAYLOAD_RQ;
+                    pl_event.args[0] = CONFIG_PL_ID_EDC_1;
+                    notify_event_to_mission_manager(&pl_event);
                 }
                 else
                 {
@@ -1099,11 +1096,9 @@ void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
 
                 if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_EDC)-1U))
                 {
-                    if (payload_disable(PAYLOAD_EDC_1) != 0)
-                    {
-                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the EDC 2 payload!");
-                        sys_log_new_line();
-                    }
+                    pl_event.event = EV_NOTIFY_DEACTIVATE_PAYLOAD_RQ;
+                    pl_event.args[0] = CONFIG_PL_ID_EDC_2;
+                    notify_event_to_mission_manager(&pl_event);
                 }
                 else
                 {
@@ -1122,11 +1117,9 @@ void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
 
                 if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_PAYLOAD_X)-1U))
                 {
-                    if (payload_disable(PAYLOAD_X) != 0)
-                    {
-                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the Payload-X payload!");
-                        sys_log_new_line();
-                    }
+                    pl_event.event = EV_NOTIFY_DEACTIVATE_PAYLOAD_RQ;
+                    pl_event.args[0] = CONFIG_PL_ID_PAYLOAD_X;
+                    notify_event_to_mission_manager(&pl_event);
                 }
                 else
                 {
@@ -1214,7 +1207,9 @@ void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
                         }
                         case OBDH_PARAM_ID_MODE:
                         {
-                            if (override_op_mode((uint8_t)buf) != 0)
+                            const event_t mode_change = { .event = EV_NOTIFY_MODE_CHANGE_RQ, .args[0] = (uint8_t)buf, .args[1] = 0U, .args[2] = 0U };
+
+                            if (notify_event_to_mission_manager(&mode_change) != 0)
                             {
                                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid Mode requested!");
                                 sys_log_new_line();
@@ -1236,11 +1231,15 @@ void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
                         {
                             if (buf == 0U)
                             {
-                                notify_op_ctrl(SAT_NOTIFY_LEAVE_MANUAL_MODE);
+                                taskENTER_CRITICAL();
+                                sat_data_buf.obdh.data.manual_mode_on = false;
+                                taskEXIT_CRITICAL();
                             }
                             else if (buf == 1U)
                             {
-                                notify_op_ctrl(SAT_NOTIFY_ENTER_MANUAL_MODE);
+                                taskENTER_CRITICAL();
+                                sat_data_buf.obdh.data.manual_mode_on = true;
+                                taskEXIT_CRITICAL();
                             }
                             else
                             {
