@@ -1198,62 +1198,14 @@ void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
             switch(pkt[8])
             {
                 case CONFIG_SUBSYSTEM_ID_OBDH:
-                    switch(pkt[9])
+                    if (obdh_set_param(pkt[9], &buf) == 0)
                     {
-                        case OBDH_PARAM_ID_TIME_COUNTER:
-                        {
-                            system_set_time(buf);
-                            break;
-                        }
-                        case OBDH_PARAM_ID_MODE:
-                        {
-                            const event_t mode_change = { .event = EV_NOTIFY_MODE_CHANGE_RQ, .args[0] = (uint8_t)buf, .args[1] = 0U, .args[2] = 0U };
-
-                            if (notify_event_to_mission_manager(&mode_change) != 0)
-                            {
-                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid Mode requested!");
-                                sys_log_new_line();
-                            }
-
-                            break;
-                        }
-                        case OBDH_PARAM_ID_TIMESTAMP_LAST_MODE:
-                        {
-                            sat_data_buf.obdh.data.ts_last_mode_change = buf;
-                            break;
-                        }
-                        case OBDH_PARAM_ID_MODE_DURATION:
-                        {
-                            sat_data_buf.obdh.data.mode_duration = buf;
-                            break;
-                        }
-                        case OBDH_PARAM_ID_MANUAL_MODE_ON:
-                        {
-                            if (buf == 0U)
-                            {
-                                taskENTER_CRITICAL();
-                                sat_data_buf.obdh.data.manual_mode_on = false;
-                                taskEXIT_CRITICAL();
-                            }
-                            else if (buf == 1U)
-                            {
-                                taskENTER_CRITICAL();
-                                sat_data_buf.obdh.data.manual_mode_on = true;
-                                taskEXIT_CRITICAL();
-                            }
-                            else
-                            {
-                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid value for Manual Mode ID");
-                                sys_log_new_line();
-                            }
-
-                            break;
-                        }
-                        default:
-                            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid parameter to set in OBDH!");
-                            sys_log_new_line();
-
-                            break;
+                        /* Check for notification from mission_manager */
+                    }
+                    else 
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error writing a OBDH parameter!");
+                        sys_log_new_line();
                     }
 
                     break;
@@ -1304,80 +1256,56 @@ void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U + 1U + 1U, &pkt[10], 20U, tc_key, sizeof(CONFIG_TC_KEY_GET_PARAMETER)-1U))
         {
-            int error = 0;
+            int err = 0;
 
             uint32_t buf = UINT32_MAX;
 
             switch(pkt[8])
             {
                 case CONFIG_SUBSYSTEM_ID_OBDH:
-                    switch(pkt[9])
+                    if (obdh_get_param(pkt[9], &buf) != 0)
                     {
-                        case OBDH_PARAM_ID_TIME_COUNTER:        buf = system_get_time();                                                break;
-                        case OBDH_PARAM_ID_TEMPERATURE_UC:      buf = sat_data_buf.obdh.data.temperature;                               break;
-                        case OBDH_PARAM_ID_INPUT_CURRENT:       buf = sat_data_buf.obdh.data.current;                                   break;
-                        case OBDH_PARAM_ID_INPUT_VOLTAGE:       buf = sat_data_buf.obdh.data.voltage;                                   break;
-                        case OBDH_PARAM_ID_LAST_RESET_CAUSE:    buf = sat_data_buf.obdh.data.last_reset_cause;                          break;
-                        case OBDH_PARAM_ID_RESET_COUNTER:       buf = sat_data_buf.obdh.data.reset_counter;                             break;
-                        case OBDH_PARAM_ID_LAST_VALID_TC:       buf = sat_data_buf.obdh.data.last_valid_tc;                             break;
-                        case OBDH_PARAM_ID_TEMPERATURE_ANTENNA: buf = sat_data_buf.antenna.data.temperature;                            break;
-                        case OBDH_PARAM_ID_ANTENNA_STATUS:      buf = sat_data_buf.antenna.data.status.code;                            break;
-                        case OBDH_PARAM_ID_HARDWARE_VERSION:    buf = sat_data_buf.obdh.data.hw_version;                                break;
-                        case OBDH_PARAM_ID_FIRMWARE_VERSION:    buf = sat_data_buf.obdh.data.fw_version;                                break;
-                        case OBDH_PARAM_ID_MODE:                buf = sat_data_buf.obdh.data.mode;                                      break;
-                        case OBDH_PARAM_ID_TIMESTAMP_LAST_MODE: buf = sat_data_buf.obdh.data.ts_last_mode_change;                       break;
-                        case OBDH_PARAM_ID_MODE_DURATION:       buf = system_get_time() - sat_data_buf.obdh.data.ts_last_mode_change;   break;
-                        case OBDH_PARAM_ID_MANUAL_MODE_ON:      buf = sat_data_buf.obdh.data.manual_mode_on;                            break;
-                        default:
-                            error = -1;
-
-                            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid parameter to get from OBDH!");
-                            sys_log_new_line();
-
-                            break;
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error reading a parameter from OBDH!");
+                        sys_log_new_line();
+                        err = -1;
                     }
 
                     break;
                 case CONFIG_SUBSYSTEM_ID_TTC_1:
                     if (ttc_get_param(TTC_0, pkt[9], &buf) != 0)
                     {
-                        error = -1;
-
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error reading a parameter from TTC 0!");
                         sys_log_new_line();
+                        err = -1;
                     }
 
                     break;
                 case CONFIG_SUBSYSTEM_ID_TTC_2:
                     if (ttc_get_param(TTC_1, pkt[9], &buf) != 0)
                     {
-                        error = -1;
-
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error reading a parameter from TTC 1!");
                         sys_log_new_line();
+                        err = -1;
                     }
 
                     break;
                 case CONFIG_SUBSYSTEM_ID_EPS:
                     if (eps_get_param(pkt[9], &buf) != 0)
                     {
-                        error = -1;
-
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error reading a EPS parameter!");
                         sys_log_new_line();
+                        err = -1;
                     }
 
                     break;
                 default:
-                    error = -1;
-
                     sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid subsystem to get a parameter!");
                     sys_log_new_line();
-
+                    err = -1;
                     break;
             }
 
-            if (error == 0)
+            if (err == 0)
             {
                 fsat_pkt_pl_t param_pl = {0};
 
