@@ -81,6 +81,7 @@
 #define OBDH_PARAM_ID_LAST_PAGE_SBCD_PKTS       32  /**< Last used memory page of the SBCD packets. */
 #define OBDH_PARAM_ID_MANUAL_MODE_ON            33  /**< Manual operation mode selection flag. */
 #define OBDH_PARAM_ID_MAIN_EDC                  34  /**< Main EDC ID. */
+#define OBDH_PARAM_ID_BEACON_ON                 35  /**< Beacon on flag. */
 
 /* Default values */
 #define OBDH_TIMESTAMP_DEFAULT_VAL                      0U
@@ -101,6 +102,7 @@
 #define OBDH_PARAM_ANT_DEPLOYMENT_COUNTER_DEFAULT_VAL   0U
 #define OBDH_PARAM_MANUAL_MODE_ON_DEFAULT_VAL           0U
 #define OBDH_PARAM_MAIN_EDC_DEFAULT_VAL                 CONFIG_PL_ID_EDC_1
+#define OBDH_PARAM_BEACON_ON_DEFAUL_VAL                 1U
 #define OBDH_PARAM_POSITION_TIMESTAMP_DEFAULT_VAL       0U
 #define OBDH_PARAM_POSITION_TLE_LINE1_DEFAULT_VAL       "1 44885U 19093G   24055.47450690  .00005228  00000-0  56684-3 0  9991"
 #define OBDH_PARAM_POSITION_TLE_LINE2_DEFAULT_VAL       "2 44885  97.8473 139.0522 0012434 335.2519  24.8100 14.88559378226444"
@@ -171,6 +173,7 @@ typedef struct
     bool initial_hib_executed;      /**< Initial hibernation executed flag. */
     bool ant_deployment_executed;   /**< Antenna deployment executed flag. */
     bool manual_mode_on;		    /**< Manual operation mode selection flag. */
+    bool beacon_on;                 /**< Beacon on flag. */
     uint8_t main_edc;               /**< Main EDC. */
     media_data_t media;             /**< Memories data. */
     position_data_t position;       /**< Current position of the satellite. */
