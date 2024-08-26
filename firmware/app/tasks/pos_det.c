@@ -42,7 +42,7 @@
 
 #include "pos_det.h"
 #include "startup.h"
-#include "op_ctrl.h"
+#include "mission_manager.h"
 
 #ifndef M_PI
     #define M_PI 3.14159265358979323846
@@ -58,10 +58,10 @@ void vTaskPosDet(void)
     /* Wait startup task to finish */
     xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_POS_DET_INIT_TIMEOUT_MS));
 
+    TickType_t last_cycle = xTaskGetTickCount();
+
     while(1)
     {
-        TickType_t last_cycle = xTaskGetTickCount();
-
         /* Load TLE lines */
         const char *tle_line_1 = "1 25544U 98067A   15129.86961041  .00015753  00000-0  23097-3 0  9998";
         const char *tle_line_2 = "2 25544  51.6464 275.3867 0006524 289.1638 208.5861 15.55704207942078";
@@ -111,13 +111,27 @@ void vTaskPosDet(void)
         if (current_position && !sat_is_inside_brazil)
         {
             sat_is_inside_brazil = true;
-            notify_op_ctrl(SAT_NOTIFY_IN_BRAZIL);
+
+            const event_t in_brazil_ev = { .event = EV_NOTIFY_IN_BRAZIL, .args[0] = 0U, .args[1] = 0U, .args[2] = 0U };
+
+            if (notify_event_to_mission_manager(&in_brazil_ev) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_POS_DET_NAME, "Failed to notify \"in brazil\" event");
+                sys_log_new_line();
+            }
         }
 
         if (!current_position && sat_is_inside_brazil)
         {
             sat_is_inside_brazil = false;
-            notify_op_ctrl(SAT_NOTIFY_OUT_OF_BRAZIL);
+
+            const event_t out_of_brazil_ev = { .event = EV_NOTIFY_OUT_OF_BRAZIL, .args[0] = 0U, .args[1] = 0U, .args[2] = 0U };
+
+            if (notify_event_to_mission_manager(&out_of_brazil_ev) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_POS_DET_NAME, "Failed to notify \"out of brazil\" event");
+                sys_log_new_line();
+            }
         }
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_POS_DET_PERIOD_MS));

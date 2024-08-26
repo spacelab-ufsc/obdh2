@@ -45,7 +45,7 @@
 #include <structs/satellite.h>
 
 #include "read_px.h"
-#include "op_ctrl.h"
+#include "mission_manager.h"
 #include "startup.h"
 
 xTaskHandle xTaskReadPXHandle;
@@ -119,7 +119,13 @@ void vTaskReadPX(void)
                 vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_PX_PERIOD_MS));
             }
 
-            notify_op_ctrl(SAT_NOTIFY_PX_FINISHED);
+            const event_t px_end = { .event = EV_NOTIFY_PX_FINISHED, .args[0] = 0U, .args[1] = 0U, .args[2] = 0U };
+
+            if (notify_event_to_mission_manager(&px_end) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_PX_NAME, "Failed to notify event!");
+                sys_log_new_line();
+            }
         }
     }
 }

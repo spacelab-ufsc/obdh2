@@ -44,7 +44,7 @@
 #include <structs/satellite.h>
 
 #include "housekeeping.h"
-#include "op_ctrl.h"
+#include "mission_manager.h"
 #include "startup.h"
 
 xTaskHandle xTaskHousekeepingHandle;
@@ -63,7 +63,13 @@ void vTaskHousekeeping(void)
         {
             if ((sat_data_buf.obdh.data.ts_last_mode_change + sat_data_buf.obdh.data.mode_duration) <= system_get_time())
             {
-                notify_op_ctrl(SAT_NOTIFY_LEAVE_MANUAL_MODE);
+                const event_t leave_hib = { .event = EV_NOTIFY_MODE_CHANGE_RQ, .args[0] = OBDH_WAKE_UP,  .args[1] = 0U, .args[2] = 0U };
+
+                if (notify_event_to_mission_manager(&leave_hib) != 0)
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HOUSEKEEPING_NAME, "Failed to notify WAKE UP event");
+                    sys_log_new_line();
+                }
             }
         }
 
