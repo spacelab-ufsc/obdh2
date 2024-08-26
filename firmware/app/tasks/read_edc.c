@@ -56,8 +56,6 @@ static void print_edc_hk(uint8_t *hk);
 
 void vTaskReadEDC(void)
 {
-    payload_telemetry_t ** const edc = &sat_data_buf.state.c_edc;
-
     /* Wait startup task to finish */
     xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_EDC_INIT_TIMEOUT_MS));
 
@@ -69,6 +67,8 @@ void vTaskReadEDC(void)
     {
         payload_t pl_edc_active = sat_data_buf.state.active_payload[0];
 
+        payload_telemetry_t * const edc = sat_data_buf.state.c_edc;
+
         if ((pl_edc_active != PAYLOAD_NONE) && (sat_data_buf.state.edc_active))
         {
             /* Read housekeeping data */
@@ -79,7 +79,7 @@ void vTaskReadEDC(void)
             }
             else 
             {
-                (void)memcpy((*edc)->data, edc_hk_buf.buffer, EDC_FRAME_HK_LEN);
+                (void)memcpy(edc->data, edc_hk_buf.buffer, EDC_FRAME_HK_LEN);
 
                 vTaskDelay(pdMS_TO_TICKS(50U));
 
@@ -96,9 +96,9 @@ void vTaskReadEDC(void)
             {
                 if (state_len >= (int32_t)sizeof(edc_state_t))
                 {
-                    (void)memcpy(&(*edc)->data[EDC_FRAME_HK_LEN], state_arr, EDC_FRAME_STATE_LEN);
+                    (void)memcpy(&edc->data[EDC_FRAME_HK_LEN], state_arr, EDC_FRAME_STATE_LEN);
 
-                    (*edc)->timestamp = system_get_time();
+                    edc->timestamp = system_get_time();
 
                     edc_state_t state = *(edc_state_t*)&state_arr[0];
 
