@@ -176,6 +176,29 @@ typedef struct
     position_data_t position;       /**< Current position of the satellite. */
 } obdh_data_t;
 
+/**
+ * \brief Reads a OBDH parameter.
+ *
+ * \param[in] param_id is the parameter id to read.
+ *
+ * \param[out] data is a pointer to a variable to store the OBDH parameter.
+ *
+ * \return The status/error code.
+ */
+int8_t obdh_get_param(uint8_t param_id, uint32_t *buf);
+
+/**
+ * \brief Changes a OBDH parameter.
+ *
+ * \param[in] param_id is the parameter id to set.
+ *
+ * \param[in] data is a pointer to a variable that contains the new value for the OBDH parameter.
+ *
+ * \return The status/error code.
+ */
+int8_t obdh_set_param(uint8_t param_id, uint32_t *buf);
+
+
 #endif /* OBDH_DATA_H_ */
 
 /** \} End of obdh_data group */
