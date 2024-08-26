@@ -455,36 +455,39 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                     uint8_t page_buf[256] = {0};
 
-                    uint32_t i = 0;
-                    for(i = start_page; i < end_page; i++)
+                    if (end_page <= CONFIG_MEM_OBDH_DATA_END_PAGE)
                     {
-                        if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(obdh_telemetry_t)) == 0)
+                        uint32_t i = 0;
+                        for(i = start_page; i < end_page; i++)
                         {
-                            /* Requester callsign */
-                            (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
-
-                            /* Data ID */
-                            data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_OBDH;
-
-                            /* Format payload */
-                            (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_OBDH, page_buf);
-
-                            vTaskDelay(pdMS_TO_TICKS(10U));
-
-                            fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
-
-                            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                            if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(obdh_telemetry_t)) == 0)
                             {
-                                if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                /* Requester callsign */
+                                (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
+
+                                /* Data ID */
+                                data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_OBDH;
+
+                                /* Format payload */
+                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_OBDH, page_buf);
+
+                                vTaskDelay(pdMS_TO_TICKS(10U));
+
+                                fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                                if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                                 {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the OBDH data log of memory page ");
-                                    sys_log_print_uint(i);
-                                    sys_log_print_msg("!");
-                                    sys_log_new_line();
+                                    if (ttc_send(TTC_0, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                    {
+                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the OBDH data log of memory page ");
+                                        sys_log_print_uint(i);
+                                        sys_log_print_msg("!");
+                                        sys_log_new_line();
+                                    }
                                 }
                             }
+                            vTaskDelay(pdMS_TO_TICKS(25U));
                         }
-                        vTaskDelay(pdMS_TO_TICKS(25U));
                     }
 
                     break;
@@ -496,36 +499,39 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                     uint8_t page_buf[256] = {0};
 
-                    uint32_t i = 0;
-                    for(i = start_page; i < end_page; i++)
+                    if ((start_page >= CONFIG_MEM_EPS_DATA_START_PAGE) && (end_page <= CONFIG_MEM_EPS_DATA_END_PAGE))
                     {
-                        if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(eps_telemetry_t)) == 0)
+                        uint32_t i = 0;
+                        for(i = start_page; i < end_page; i++)
                         {
-                            /* Requester callsign */
-                            (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
-
-                            /* Data ID */
-                            data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_EPS;
-
-                            /* Format payload */
-                            (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_EPS, page_buf);
-
-                            vTaskDelay(pdMS_TO_TICKS(10U));
-
-                            fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
-
-                            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                            if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(eps_telemetry_t)) == 0)
                             {
-                                if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                /* Requester callsign */
+                                (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
+
+                                /* Data ID */
+                                data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_EPS;
+
+                                /* Format payload */
+                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_EPS, page_buf);
+
+                                vTaskDelay(pdMS_TO_TICKS(10U));
+
+                                fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                                if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                                 {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the EPS data log of memory page ");
-                                    sys_log_print_uint(i);
-                                    sys_log_print_msg("!");
-                                    sys_log_new_line();
+                                    if (ttc_send(TTC_0, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                    {
+                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the EPS data log of memory page ");
+                                        sys_log_print_uint(i);
+                                        sys_log_print_msg("!");
+                                        sys_log_new_line();
+                                    }
                                 }
                             }
+                            vTaskDelay(pdMS_TO_TICKS(25U));
                         }
-                        vTaskDelay(pdMS_TO_TICKS(25U));
                     }
 
                     break;
@@ -537,36 +543,39 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                     uint8_t page_buf[256] = {0};
 
-                    uint32_t i = 0;
-                    for(i = start_page; i < end_page; i++)
+                    if ((start_page >= CONFIG_MEM_TTC_0_DATA_START_PAGE) && (end_page <= CONFIG_MEM_TTC_0_DATA_END_PAGE))
                     {
-                        if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(ttc_telemetry_t)) == 0)
+                        uint32_t i = 0;
+                        for(i = start_page; i < end_page; i++)
                         {
-                            /* Requester callsign */
-                            (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
-
-                            /* Data ID */
-                            data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_TTC_0;
-
-                            /* Format payload */
-                            (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_TTC_0, page_buf);
-
-                            vTaskDelay(pdMS_TO_TICKS(10U));
-
-                            fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
-
-                            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                            if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(ttc_telemetry_t)) == 0)
                             {
-                                if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                /* Requester callsign */
+                                (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
+
+                                /* Data ID */
+                                data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_TTC_0;
+
+                                /* Format payload */
+                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_TTC_0, page_buf);
+
+                                vTaskDelay(pdMS_TO_TICKS(10U));
+
+                                fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                                if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                                 {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the TTC 0 data log of memory page ");
-                                    sys_log_print_uint(i);
-                                    sys_log_print_msg("!");
-                                    sys_log_new_line();
+                                    if (ttc_send(TTC_0, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                    {
+                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the TTC 0 data log of memory page ");
+                                        sys_log_print_uint(i);
+                                        sys_log_print_msg("!");
+                                        sys_log_new_line();
+                                    }
                                 }
                             }
+                            vTaskDelay(pdMS_TO_TICKS(25U));
                         }
-                        vTaskDelay(pdMS_TO_TICKS(25U));
                     }
 
                     break;
@@ -578,36 +587,39 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                     uint8_t page_buf[256] = {0};
 
-                    uint32_t i = 0;
-                    for(i = start_page; i < end_page; i++)
+                    if ((start_page >= CONFIG_MEM_TTC_1_DATA_START_PAGE) && (end_page <= CONFIG_MEM_TTC_1_DATA_END_PAGE))
                     {
-                        if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(ttc_telemetry_t)) == 0)
+                        uint32_t i = 0;
+                        for(i = start_page; i < end_page; i++)
                         {
-                            /* Requester callsign */
-                            (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
-
-                            /* Data ID */
-                            data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_TTC_1;
-
-                            /* Format payload */
-                            (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_TTC_1, page_buf);
-
-                            vTaskDelay(pdMS_TO_TICKS(10U));
-
-                            fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
-
-                            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                            if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(ttc_telemetry_t)) == 0)
                             {
-                                if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                /* Requester callsign */
+                                (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
+
+                                /* Data ID */
+                                data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_TTC_1;
+
+                                /* Format payload */
+                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_TTC_1, page_buf);
+
+                                vTaskDelay(pdMS_TO_TICKS(10U));
+
+                                fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                                if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                                 {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the TTC 1 data log of memory page ");
-                                    sys_log_print_uint(i);
-                                    sys_log_print_msg("!");
-                                    sys_log_new_line();
+                                    if (ttc_send(TTC_0, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                    {
+                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the TTC 1 data log of memory page ");
+                                        sys_log_print_uint(i);
+                                        sys_log_print_msg("!");
+                                        sys_log_new_line();
+                                    }
                                 }
                             }
+                            vTaskDelay(pdMS_TO_TICKS(25U));
                         }
-                        vTaskDelay(pdMS_TO_TICKS(25U));
                     }
 
                     break;
@@ -619,36 +631,39 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                     uint8_t page_buf[256] = {0};
 
-                    uint32_t i = 0;
-                    for(i = start_page; i < end_page; i++)
+                    if ((start_page >= CONFIG_MEM_ANT_DATA_START_PAGE) && (end_page <= CONFIG_MEM_ANT_DATA_END_PAGE))
                     {
-                        if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(antenna_telemetry_t)) == 0)
+                        uint32_t i = 0;
+                        for(i = start_page; i < end_page; i++)
                         {
-                            /* Requester callsign */
-                            (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
-
-                            /* Data ID */
-                            data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_ANT;
-
-                            /* Format payload */
-                            (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_ANT, page_buf);
-
-                            vTaskDelay(pdMS_TO_TICKS(10U));
-
-                            fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
-
-                            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                            if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(antenna_telemetry_t)) == 0)
                             {
-                                if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                /* Requester callsign */
+                                (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
+
+                                /* Data ID */
+                                data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_ANT;
+
+                                /* Format payload */
+                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_ANT, page_buf);
+
+                                vTaskDelay(pdMS_TO_TICKS(10U));
+
+                                fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                                if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                                 {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the Antenna data log of memory page ");
-                                    sys_log_print_uint(i);
-                                    sys_log_print_msg("!");
-                                    sys_log_new_line();
+                                    if (ttc_send(TTC_0, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                    {
+                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the Antenna data log of memory page ");
+                                        sys_log_print_uint(i);
+                                        sys_log_print_msg("!");
+                                        sys_log_new_line();
+                                    }
                                 }
                             }
+                            vTaskDelay(pdMS_TO_TICKS(25U));
                         }
-                        vTaskDelay(pdMS_TO_TICKS(25U));
                     }
 
                     break;
@@ -660,36 +675,39 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                     uint8_t page_buf[256] = {0};
 
-                    uint32_t i = 0;
-                    for(i = start_page; i < end_page; i++)
+                    if ((start_page >= CONFIG_MEM_SBCD_PKTS_START_PAGE) && (end_page <= CONFIG_MEM_SBCD_PKTS_END_PAGE))
                     {
-                        if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(edc_ptt_t)) == 0)
+                        uint32_t i = 0;
+                        for(i = start_page; i < end_page; i++)
                         {
-                            /* Requester callsign */
-                            (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
-
-                            /* Data ID */
-                            data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_SBCD_PKTS;
-
-                            /* Format payload */
-                            (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_SBCD_PKTS, page_buf);
-
-                            vTaskDelay(pdMS_TO_TICKS(10U));
-
-                            fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
-
-                            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                            if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(edc_ptt_t)) == 0)
                             {
-                                if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                /* Requester callsign */
+                                (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
+
+                                /* Data ID */
+                                data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_SBCD_PKTS;
+
+                                /* Format payload */
+                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_SBCD_PKTS, page_buf);
+
+                                vTaskDelay(pdMS_TO_TICKS(10U));
+
+                                fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                                if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                                 {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the SBCD PKTS data log of memory page ");
-                                    sys_log_print_uint(i);
-                                    sys_log_print_msg("!");
-                                    sys_log_new_line();
+                                    if (ttc_send(TTC_0, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                    {
+                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the SBCD PKTS data log of memory page ");
+                                        sys_log_print_uint(i);
+                                        sys_log_print_msg("!");
+                                        sys_log_new_line();
+                                    }
                                 }
                             }
+                            vTaskDelay(pdMS_TO_TICKS(25U));
                         }
-                        vTaskDelay(pdMS_TO_TICKS(25U));
                     }
 
                     break;
@@ -701,36 +719,39 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                     uint8_t page_buf[256] = {0};
 
-                    uint32_t i = 0;
-                    for(i = start_page; i < end_page; i++)
+                    if ((start_page >= CONFIG_MEM_EDC_DATA_START_PAGE) && (end_page <= CONFIG_MEM_EDC_DATA_END_PAGE))
                     {
-                        if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(payload_telemetry_t)) == 0)
+                        uint32_t i = 0;
+                        for(i = start_page; i < end_page; i++)
                         {
-                            /* Requester callsign */
-                            (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
-
-                            /* Data ID */
-                            data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_PAYLOAD_INFO;
-
-                            /* Format payload */
-                            (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_PAYLOAD_INFO, page_buf);
-
-                            vTaskDelay(pdMS_TO_TICKS(10U));
-
-                            fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
-
-                            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                            if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(payload_telemetry_t)) == 0)
                             {
-                                if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                /* Requester callsign */
+                                (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
+
+                                /* Data ID */
+                                data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_PAYLOAD_INFO;
+
+                                /* Format payload */
+                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_PAYLOAD_INFO, page_buf);
+
+                                vTaskDelay(pdMS_TO_TICKS(10U));
+
+                                fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                                if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                                 {
-                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the EDC data log of memory page ");
-                                    sys_log_print_uint(i);
-                                    sys_log_print_msg("!");
-                                    sys_log_new_line();
+                                    if (ttc_send(TTC_0, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                    {
+                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the EDC data log of memory page ");
+                                        sys_log_print_uint(i);
+                                        sys_log_print_msg("!");
+                                        sys_log_new_line();
+                                    }
                                 }
                             }
+                            vTaskDelay(pdMS_TO_TICKS(25U));
                         }
-                        vTaskDelay(pdMS_TO_TICKS(25U));
                     }
 
                     break;
@@ -859,8 +880,7 @@ void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len)
                 if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_MODULE)-1U))
                 {
                     /* Enable the beacon */
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
-                    sys_log_new_line();
+                    sat_data_buf.obdh.data.beacon_on = true;
                 }
                 else
                 {
@@ -937,8 +957,7 @@ void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
                 if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_MODULE)-1U))
                 {
                     /* Enable the beacon */
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
-                    sys_log_new_line();
+                    sat_data_buf.obdh.data.beacon_on = false;
                 }
                 else
                 {
@@ -957,7 +976,6 @@ void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
 
                 if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_MODULE)-1U))
                 {
-                    /* Enable the periodic telemetry */
                     sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
                     sys_log_new_line();
                 }
@@ -1415,50 +1433,52 @@ static int8_t format_data_request(uint8_t *pkt_pl, uint16_t *pkt_pl_len, uint8_t
 			pl[31] = tel->data.initial_hib_executed;
 			pl[32] = tel->data.ant_deployment_executed;
 			pl[33] = tel->data.manual_mode_on;
-			pl[34] = (tel->data.media.last_page_obdh_data >> 24U) & 0xFFU;
-			pl[35] = (tel->data.media.last_page_obdh_data >> 16U) & 0xFFU;
-			pl[36] = (tel->data.media.last_page_obdh_data >> 8U) & 0xFFU;
-			pl[37] = tel->data.media.last_page_obdh_data & 0xFFU;
-			pl[38] = (tel->data.media.last_page_eps_data >> 24U) & 0xFFU;
-			pl[39] = (tel->data.media.last_page_eps_data >> 16U) & 0xFFU;
-			pl[40] = (tel->data.media.last_page_eps_data >> 8U) & 0xFFU;
-			pl[41] = tel->data.media.last_page_eps_data & 0xFFU;
-			pl[42] = (tel->data.media.last_page_ttc_0_data >> 24U) & 0xFFU;
-			pl[43] = (tel->data.media.last_page_ttc_0_data >> 16U) & 0xFFU;
-			pl[44] = (tel->data.media.last_page_ttc_0_data >> 8U) & 0xFFU;
-			pl[45] = tel->data.media.last_page_ttc_0_data & 0xFFU;
-			pl[46] = (tel->data.media.last_page_ttc_1_data >> 24U) & 0xFFU;
-			pl[47] = (tel->data.media.last_page_ttc_1_data >> 16U) & 0xFFU;
-			pl[48] = (tel->data.media.last_page_ttc_1_data >> 8U) & 0xFFU;
-			pl[49] = tel->data.media.last_page_ttc_1_data & 0xFFU;
-			pl[50] = (tel->data.media.last_page_ant_data >> 24U) & 0xFFU;
-			pl[51] = (tel->data.media.last_page_ant_data >> 16U) & 0xFFU;
-			pl[52] = (tel->data.media.last_page_ant_data >> 8U) & 0xFFU;
-			pl[53] = tel->data.media.last_page_ant_data & 0xFFU;
-			pl[54] = (tel->data.media.last_page_edc_data >> 24U) & 0xFFU;
-			pl[55] = (tel->data.media.last_page_edc_data >> 16U) & 0xFFU;
-			pl[56] = (tel->data.media.last_page_edc_data >> 8U) & 0xFFU;
-			pl[57] = tel->data.media.last_page_edc_data & 0xFFU;
-			pl[58] = (tel->data.media.last_page_px_data >> 24U) & 0xFFU;
-			pl[59] = (tel->data.media.last_page_px_data >> 16U) & 0xFFU;
-			pl[60] = (tel->data.media.last_page_px_data >> 8U) & 0xFFU;
-			pl[61] = tel->data.media.last_page_px_data & 0xFFU;
-			pl[62] = (tel->data.media.last_page_sbcd_pkts >> 24U) & 0xFFU;
-			pl[63] = (tel->data.media.last_page_sbcd_pkts >> 16U) & 0xFFU;
-			pl[64] = (tel->data.media.last_page_sbcd_pkts >> 8U) & 0xFFU;
-			pl[65] = tel->data.media.last_page_sbcd_pkts & 0xFFU;
-			pl[66] = (tel->data.position.timestamp >> 24U) & 0xFFU;
-			pl[67] = (tel->data.position.timestamp >> 16U) & 0xFFU;
-			pl[68] = (tel->data.position.timestamp >> 8U) & 0xFFU;
-			pl[69] = tel->data.position.timestamp & 0xFFU;
-			pl[70] = (((uint16_t)tel->data.position.latitude) >> 8U) & 0xFFU;
-			pl[71] = ((uint16_t)tel->data.position.latitude) & 0xFFU;
-			pl[72] = (((uint16_t)tel->data.position.longitude) >> 8U) & 0xFFU;
-			pl[73] = ((uint16_t)tel->data.position.longitude) & 0xFFU;
-			pl[74] = (((uint16_t)tel->data.position.altitude) >> 8U) & 0xFFU;
-			pl[75] = ((uint16_t)tel->data.position.altitude) & 0xFFU;
+			pl[34] = tel->data.main_edc;
+			pl[35] = tel->data.beacon_on;
+			pl[36] = (tel->data.media.last_page_obdh_data >> 24U) & 0xFFU;
+			pl[37] = (tel->data.media.last_page_obdh_data >> 16U) & 0xFFU;
+			pl[38] = (tel->data.media.last_page_obdh_data >> 8U) & 0xFFU;
+			pl[39] = tel->data.media.last_page_obdh_data & 0xFFU;
+			pl[40] = (tel->data.media.last_page_eps_data >> 24U) & 0xFFU;
+			pl[41] = (tel->data.media.last_page_eps_data >> 16U) & 0xFFU;
+			pl[42] = (tel->data.media.last_page_eps_data >> 8U) & 0xFFU;
+			pl[43] = tel->data.media.last_page_eps_data & 0xFFU;
+			pl[44] = (tel->data.media.last_page_ttc_0_data >> 24U) & 0xFFU;
+			pl[45] = (tel->data.media.last_page_ttc_0_data >> 16U) & 0xFFU;
+			pl[46] = (tel->data.media.last_page_ttc_0_data >> 8U) & 0xFFU;
+			pl[47] = tel->data.media.last_page_ttc_0_data & 0xFFU;
+			pl[48] = (tel->data.media.last_page_ttc_1_data >> 24U) & 0xFFU;
+			pl[49] = (tel->data.media.last_page_ttc_1_data >> 16U) & 0xFFU;
+			pl[50] = (tel->data.media.last_page_ttc_1_data >> 8U) & 0xFFU;
+			pl[51] = tel->data.media.last_page_ttc_1_data & 0xFFU;
+			pl[52] = (tel->data.media.last_page_ant_data >> 24U) & 0xFFU;
+			pl[53] = (tel->data.media.last_page_ant_data >> 16U) & 0xFFU;
+			pl[54] = (tel->data.media.last_page_ant_data >> 8U) & 0xFFU;
+			pl[55] = tel->data.media.last_page_ant_data & 0xFFU;
+			pl[56] = (tel->data.media.last_page_edc_data >> 24U) & 0xFFU;
+			pl[57] = (tel->data.media.last_page_edc_data >> 16U) & 0xFFU;
+			pl[58] = (tel->data.media.last_page_edc_data >> 8U) & 0xFFU;
+			pl[59] = tel->data.media.last_page_edc_data & 0xFFU;
+			pl[60] = (tel->data.media.last_page_px_data >> 24U) & 0xFFU;
+			pl[61] = (tel->data.media.last_page_px_data >> 16U) & 0xFFU;
+			pl[62] = (tel->data.media.last_page_px_data >> 8U) & 0xFFU;
+			pl[63] = tel->data.media.last_page_px_data & 0xFFU;
+			pl[64] = (tel->data.media.last_page_sbcd_pkts >> 24U) & 0xFFU;
+			pl[65] = (tel->data.media.last_page_sbcd_pkts >> 16U) & 0xFFU;
+			pl[66] = (tel->data.media.last_page_sbcd_pkts >> 8U) & 0xFFU;
+			pl[67] = tel->data.media.last_page_sbcd_pkts & 0xFFU;
+			pl[68] = (tel->data.position.timestamp >> 24U) & 0xFFU;
+			pl[69] = (tel->data.position.timestamp >> 16U) & 0xFFU;
+			pl[70] = (tel->data.position.timestamp >> 8U) & 0xFFU;
+			pl[71] = tel->data.position.timestamp & 0xFFU;
+			pl[72] = (((uint16_t)tel->data.position.latitude) >> 8U) & 0xFFU;
+			pl[73] = ((uint16_t)tel->data.position.latitude) & 0xFFU;
+			pl[74] = (((uint16_t)tel->data.position.longitude) >> 8U) & 0xFFU;
+			pl[75] = ((uint16_t)tel->data.position.longitude) & 0xFFU;
+			pl[76] = (((uint16_t)tel->data.position.altitude) >> 8U) & 0xFFU;
+			pl[77] = ((uint16_t)tel->data.position.altitude) & 0xFFU;
 
-			*pkt_pl_len = (uint16_t) 84U; /* 7b RQ CALLSIGN + 1b TC ID + 76b OBDH DATA */
+			*pkt_pl_len = (uint16_t) 86U; /* 7b RQ CALLSIGN + 1b TC ID + 78b OBDH DATA */
 
 			break;
 		}
