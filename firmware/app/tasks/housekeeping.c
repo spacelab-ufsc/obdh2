@@ -63,7 +63,7 @@ void vTaskHousekeeping(void)
         {
             if ((sat_data_buf.obdh.data.ts_last_mode_change + sat_data_buf.obdh.data.mode_duration) <= system_get_time())
             {
-                const event_t leave_hib = { .event = EV_NOTIFY_MODE_CHANGE_RQ, .args[0] = OBDH_WAKE_UP,  .args[1] = 0U, .args[2] = 0U };
+                const event_t leave_hib = { .event = EV_NOTIFY_MODE_CHANGE_RQ, .args[0] = OBDH_WAKE_UP,  .args[1] = HOUSEKEEPING_WAKE_UP_RQ, .args[2] = 0U };
 
                 if (notify_event_to_mission_manager(&leave_hib) != 0)
                 {
