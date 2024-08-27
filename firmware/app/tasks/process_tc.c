@@ -1936,7 +1936,7 @@ static int8_t send_tc_feedback(uint8_t *pkt)
 
     if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
     {
-        if (ttc_send(TTC_1, feedback_pkt, feedback_pkt_len) != 0)
+        if (ttc_send(TTC_0, feedback_pkt, feedback_pkt_len) != 0)
         {
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a \"TC Feedback\"!");
             sys_log_new_line();
