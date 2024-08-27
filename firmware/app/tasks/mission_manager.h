@@ -54,6 +54,8 @@
 #define PAYLOAD_X_EXPERIMENT_PERIOD_MS                 (600000UL)             /**< Payload X default experiment time in milliseconds. */
 #define PAYLOAD_X_CANCEL_EXPERIMENT_FLAG               (1UL << 31UL)          /**< Flag used as a notification to cancel running experiment */
 
+#define HOUSEKEEPING_WAKE_UP_RQ                        0xAE                   /**< Used to check which task sent a wake up request */  
+
 #define EV_NOTIFY_IN_BRAZIL                            0                      /**< In Brazil notification flag */   
 #define EV_NOTIFY_OUT_OF_BRAZIL                        1                      /**< Outside Brazil notification flag */
 #define EV_NOTIFY_PX_FINISHED                          2                      /**< Payload X experiment period finished flag */ 

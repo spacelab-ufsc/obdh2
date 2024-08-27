@@ -50,6 +50,7 @@
 #include "mission_manager.h"
 #include "read_px.h"
 #include "system_reset.h"
+#include "process_tc.h"
 
 static inline void handle_event(const event_t *ev);
 static inline int8_t handle_mode_change_rq(const uint8_t *args);
@@ -237,17 +238,48 @@ static inline void handle_event(const event_t *ev)
         #endif
         case EV_NOTIFY_MODE_CHANGE_RQ:
         {
-            handle_mode_change_rq(ev->args);
+            int8_t err = handle_mode_change_rq(ev->args);
+
+            if (err == 0) 
+            {
+                (void)xTaskNotify(xTaskProcessTCHandle, 0U, eNoAction);
+            }
+            else if (err == HOUSEKEEPING_WAKE_UP_RQ)
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_MISSION_MANAGER_NAME, "Housekeeping Wake Up!");
+                sys_log_new_line();
+            }
+            else 
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_MISSION_MANAGER_NAME, "Failed to handle mode change EV");
+                sys_log_new_line();
+            }
             break;
         }
         case EV_NOTIFY_ACTIVATE_PAYLOAD_RQ:
         {
-            activate_payload_rq(ev->args);
+            if (activate_payload_rq(ev->args) == 0)
+            {
+                (void)xTaskNotify(xTaskProcessTCHandle, 0U, eNoAction);
+            }
+            else 
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_MISSION_MANAGER_NAME, "Failed to handle activate payload EV");
+                sys_log_new_line();
+            }
             break;
         }
         case EV_NOTIFY_DEACTIVATE_PAYLOAD_RQ:
         {
-            deactivate_payload_rq(ev->args);
+            if (deactivate_payload_rq(ev->args) == 0)
+            {
+                (void)xTaskNotify(xTaskProcessTCHandle, 0U, eNoAction);
+            }
+            else 
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_MISSION_MANAGER_NAME, "Failed to handle activate payload EV");
+                sys_log_new_line();
+            }
             break;
         }
         default:
@@ -362,6 +394,12 @@ static inline int8_t handle_mode_change_rq(const uint8_t *args)
             }
 
             (void)enable_ttc_tx();
+
+            if (args[1] == (uint8_t)HOUSEKEEPING_WAKE_UP_RQ)
+            {
+                err = (int8_t)HOUSEKEEPING_WAKE_UP_RQ;
+            }
+
             break;
         }
         default:
@@ -423,7 +461,7 @@ static inline int8_t activate_payload_rq(const uint8_t *args)
 
             break;
         }
-        #if (CONFIG_DEV_PAYLOAD_X_ENABLED == 1) && (CONFIG_TASK_PAYLOAD_X_ENABLED == 1)
+        #if defined (CONFIG_DEV_PAYLOAD_X_ENABLED) && defined (CONFIG_TASK_PAYLOAD_X_ENABLED) && (CONFIG_DEV_PAYLOAD_X_ENABLED == 1) && (CONFIG_TASK_PAYLOAD_X_ENABLED == 1)
             case CONFIG_PL_ID_PAYLOAD_X: 
             {
                 if (sat_data_buf.state.active_payload[1] == PAYLOAD_NONE)
@@ -496,7 +534,7 @@ static inline int8_t deactivate_payload_rq(const uint8_t *args)
 
             break;
         }
-        #if (CONFIG_DEV_PAYLOAD_X_ENABLED == 1) && (CONFIG_TASK_PAYLOAD_X_ENABLED == 1)
+        #if defined (CONFIG_DEV_PAYLOAD_X_ENABLED) && defined (CONFIG_TASK_PAYLOAD_X_ENABLED) && (CONFIG_DEV_PAYLOAD_X_ENABLED == 1) && (CONFIG_TASK_PAYLOAD_X_ENABLED == 1)
             case CONFIG_PL_ID_PAYLOAD_X: 
             {
                 if (sat_data_buf.state.active_payload[1] == PAYLOAD_X)
