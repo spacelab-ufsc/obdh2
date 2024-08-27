@@ -48,6 +48,7 @@
 
 #include "mode_check.h"
 #include "mission_manager.h"
+#include "process_tc.h"
 
 TaskHandle_t xTaskHealthCheckModeHandle;
 
@@ -79,7 +80,7 @@ void vTaskHealthCheckMode(void)
                 sys_log_new_line();
             }
 
-            vTaskDelay(pdMS_TO_TICKS(150U));
+            vTaskDelay(pdMS_TO_TICKS(TASK_PROCESS_TC_MAX_WAIT_TIME_MS));
 
             test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_NORMAL) && ((sat_data_buf.state.active_payload[0] == PAYLOAD_EDC_0) || (sat_data_buf.state.active_payload[0] == PAYLOAD_EDC_1));
 
@@ -94,7 +95,7 @@ void vTaskHealthCheckMode(void)
                 sys_log_new_line();
             }
 
-            vTaskDelay(pdMS_TO_TICKS(150U));
+            vTaskDelay(pdMS_TO_TICKS(TASK_PROCESS_TC_MAX_WAIT_TIME_MS));
 
             test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_NORMAL) && (sat_data_buf.state.active_payload[1] == PAYLOAD_X) && (sat_data_buf.state.active_payload[0] == PAYLOAD_NONE); 
 
@@ -122,7 +123,7 @@ void vTaskHealthCheckMode(void)
             taskYIELD();
             (void)notify_event_to_mission_manager(&px_finished);
 
-            vTaskDelay(pdMS_TO_TICKS(150U));
+            vTaskDelay(pdMS_TO_TICKS(TASK_PROCESS_TC_MAX_WAIT_TIME_MS));
 
             test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_STAND_BY) && (sat_data_buf.state.active_payload[0] == PAYLOAD_NONE) && (sat_data_buf.state.active_payload[1] == PAYLOAD_NONE);
 
@@ -136,9 +137,9 @@ void vTaskHealthCheckMode(void)
                 sys_log_new_line();
             }
 
-            vTaskDelay(pdMS_TO_TICKS(150U));
+            vTaskDelay(pdMS_TO_TICKS(TASK_PROCESS_TC_MAX_WAIT_TIME_MS));
 
-            test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_HIBERNATION) && ((sat_data_buf.obdh.data.mode_duration & 0x1111U) == 0x1111U);
+            test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_HIBERNATION) && (sat_data_buf.obdh.data.mode_duration  == (0x1111UL * 60UL * 60UL));
 
             sys_log_print_test_result(test_result, "Enter hibernation Test");
             sys_log_new_line();
@@ -163,7 +164,7 @@ void vTaskHealthCheckMode(void)
                 sys_log_new_line();
             }
 
-            vTaskDelay(pdMS_TO_TICKS(150U));
+            vTaskDelay(pdMS_TO_TICKS(TASK_PROCESS_TC_MAX_WAIT_TIME_MS));
 
             taskYIELD();
 
@@ -173,7 +174,7 @@ void vTaskHealthCheckMode(void)
                 sys_log_new_line();
             }
 
-            vTaskDelay(pdMS_TO_TICKS(150U));
+            vTaskDelay(pdMS_TO_TICKS(TASK_PROCESS_TC_MAX_WAIT_TIME_MS));
 
             test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_HIBERNATION);
 
@@ -188,7 +189,7 @@ void vTaskHealthCheckMode(void)
                 sys_log_new_line();
             }
 
-            vTaskDelay(pdMS_TO_TICKS(150U));
+            vTaskDelay(pdMS_TO_TICKS(TASK_PROCESS_TC_MAX_WAIT_TIME_MS));
 
             test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_HIBERNATION);
 
@@ -203,6 +204,8 @@ void vTaskHealthCheckMode(void)
                 sys_log_new_line();
             }
 
+            vTaskDelay(pdMS_TO_TICKS(TASK_PROCESS_TC_MAX_WAIT_TIME_MS));
+
             test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_NORMAL) && ((sat_data_buf.state.active_payload[0] == PAYLOAD_EDC_0) || (sat_data_buf.state.active_payload[0] == PAYLOAD_EDC_1));
 
             sys_log_print_test_result(test_result, "TC change mode to NORMAL Test");
@@ -216,10 +219,14 @@ void vTaskHealthCheckMode(void)
                 sys_log_new_line();
             }
 
+            vTaskDelay(pdMS_TO_TICKS(TASK_PROCESS_TC_MAX_WAIT_TIME_MS));
+
             test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_STAND_BY) && (sat_data_buf.state.active_payload[0] == PAYLOAD_NONE) && (sat_data_buf.state.active_payload[1] == PAYLOAD_NONE);
 
             sys_log_print_test_result(test_result, "TC change mode to STAND_BY Test");
             sys_log_new_line();
+
+            vTaskDelay(pdMS_TO_TICKS(TASK_PROCESS_TC_MAX_WAIT_TIME_MS));
 
             sat_data_buf.obdh.data.manual_mode_on = true;
 
