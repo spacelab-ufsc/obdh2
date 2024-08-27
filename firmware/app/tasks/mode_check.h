@@ -41,7 +41,7 @@
 #include <task.h>
 
 #define TASK_HEALTH_CHECK_MODE_NAME                       "HealthCheck Mode"     /**< Task name. */
-#define TASK_HEALTH_CHECK_MODE_STACK_SIZE                 1024U                  /**< Stack size in bytes. */
+#define TASK_HEALTH_CHECK_MODE_STACK_SIZE                 2048U                  /**< Stack size in bytes. */
 #define TASK_HEALTH_CHECK_MODE_PRIORITY                   3U                     /**< Task priority. */
 
 /**

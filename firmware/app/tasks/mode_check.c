@@ -47,7 +47,7 @@
 #include <devices/payload/payload.h>
 
 #include "mode_check.h"
-#include "op_ctrl.h"
+#include "mission_manager.h"
 
 TaskHandle_t xTaskHealthCheckModeHandle;
 
@@ -60,7 +60,6 @@ static void vTimeControlMockup(TimerHandle_t timer)
 void vTaskHealthCheckMode(void)
 {
     TimerHandle_t sys_timer = xTimerCreate("System Timer", pdMS_TO_TICKS(1000U), pdTRUE, NULL, vTimeControlMockup);
-
     xTimerStart(sys_timer, pdMS_TO_TICKS(10U));
 
     while(1)
@@ -72,57 +71,84 @@ void vTaskHealthCheckMode(void)
             sys_log_print_event_from_module(SYS_LOG_INFO, TASK_HEALTH_CHECK_MODE_NAME, "Starting Operation Mode Health Check...");
             sys_log_new_line();
             
-            notify_op_ctrl(SAT_NOTIFY_IN_BRAZIL);
+            const event_t in_brazil_ev = { .event = EV_NOTIFY_IN_BRAZIL, .args[0] = 0U, .args[1] = 0U, .args[2] = 0U };
 
-            vTaskDelay(pdMS_TO_TICKS(2000U));
+            if (notify_event_to_mission_manager(&in_brazil_ev) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MODE_NAME, "Failed to enqueue `in brazil` event");
+                sys_log_new_line();
+            }
 
-            test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_NORMAL) && ((sat_data_buf.state.active_payload == PAYLOAD_EDC_0) || (sat_data_buf.state.active_payload == PAYLOAD_EDC_1));
+            vTaskDelay(pdMS_TO_TICKS(150U));
+
+            test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_NORMAL) && ((sat_data_buf.state.active_payload[0] == PAYLOAD_EDC_0) || (sat_data_buf.state.active_payload[0] == PAYLOAD_EDC_1));
 
             sys_log_print_test_result(test_result, "In Brazil Notify Test");
             sys_log_new_line();
 
-            notify_op_ctrl(SAT_NOTIFY_OUT_OF_BRAZIL);
+            const event_t out_of_brazil = { .event = EV_NOTIFY_OUT_OF_BRAZIL, .args[0] = 0U, .args[1] = 0U, .args[2] = 0U };
 
-            vTaskDelay(pdMS_TO_TICKS(2000U));
+            if (notify_event_to_mission_manager(&out_of_brazil) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MODE_NAME, "Failed to enqueue `out of brazil` event");
+                sys_log_new_line();
+            }
 
-            test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_NORMAL) && (sat_data_buf.state.active_payload == PAYLOAD_X);
+            vTaskDelay(pdMS_TO_TICKS(150U));
+
+            test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_NORMAL) && (sat_data_buf.state.active_payload[1] == PAYLOAD_X) && (sat_data_buf.state.active_payload[0] == PAYLOAD_NONE); 
 
             sys_log_print_test_result(test_result, "Out of Brazil Notify Test");
             sys_log_new_line();
 
-            notify_op_ctrl(SAT_NOTIFY_PX_FINISHED);
+            const event_t px_finished = { .event = EV_NOTIFY_PX_FINISHED, .args[0] = 0U, .args[1] = 0U, .args[2] = 0U };
 
-            vTaskDelay(pdMS_TO_TICKS(2000U));
+            if (notify_event_to_mission_manager(&px_finished) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MODE_NAME, "Failed to enqueue `px finished` event");
+                sys_log_new_line();
+            }
 
-            test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_STAND_BY) && (sat_data_buf.state.active_payload == PAYLOAD_NONE);
+            vTaskDelay(pdMS_TO_TICKS(150));
+
+            test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_STAND_BY) && (sat_data_buf.state.active_payload[0] == PAYLOAD_NONE) && (sat_data_buf.state.active_payload[1] == PAYLOAD_NONE);
 
             sys_log_print_test_result(test_result, "Payload X finished Notify Test");
             sys_log_new_line();
 
-            notify_op_ctrl(SAT_NOTIFY_IN_BRAZIL);
+            (void)notify_event_to_mission_manager(&in_brazil_ev);
             taskYIELD();
-            notify_op_ctrl(SAT_NOTIFY_OUT_OF_BRAZIL);
+            (void)notify_event_to_mission_manager(&out_of_brazil);
             taskYIELD();
-            notify_op_ctrl(SAT_NOTIFY_PX_FINISHED);
+            (void)notify_event_to_mission_manager(&px_finished);
 
-            vTaskDelay(pdMS_TO_TICKS(2000U));
+            vTaskDelay(pdMS_TO_TICKS(150U));
 
-            test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_STAND_BY) && (sat_data_buf.state.active_payload == PAYLOAD_NONE);
+            test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_STAND_BY) && (sat_data_buf.state.active_payload[0] == PAYLOAD_NONE) && (sat_data_buf.state.active_payload[1] == PAYLOAD_NONE);
 
             sys_log_print_test_result(test_result, "Position relative Notifications Test");
             sys_log_new_line();
 
-            sat_data_buf.obdh.data.mode_duration = 10;
-            notify_op_ctrl(SAT_NOTIFY_ENTER_HIBERNATION);
+            const event_t enter_hib = { .event = EV_NOTIFY_MODE_CHANGE_RQ, .args[0] = OBDH_MODE_HIBERNATION,  .args[1] = 0x11U, .args[2] = 0x11U };
+            if (notify_event_to_mission_manager(&enter_hib) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MODE_NAME, "Failed to enqueue `enter hibernation` event");
+                sys_log_new_line();
+            }
 
-            vTaskDelay(pdMS_TO_TICKS(2000U));
+            vTaskDelay(pdMS_TO_TICKS(150U));
 
-            test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_HIBERNATION);
+            test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_HIBERNATION) && ((sat_data_buf.obdh.data.mode_duration & 0x1111U) == 0x1111U);
 
             sys_log_print_test_result(test_result, "Enter hibernation Test");
             sys_log_new_line();
 
-            notify_op_ctrl(SAT_NOTIFY_LEAVE_HIBERNATION);
+            const event_t leave_hib = { .event = EV_NOTIFY_MODE_CHANGE_RQ, .args[0] = OBDH_WAKE_UP,  .args[1] = 0U, .args[2] = 0U };
+            if (notify_event_to_mission_manager(&leave_hib) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MODE_NAME, "Failed to enqueue `leave hibernation` event");
+                sys_log_new_line();
+            }
 
             vTaskDelay(pdMS_TO_TICKS(2000U));
 
@@ -131,28 +157,23 @@ void vTaskHealthCheckMode(void)
             sys_log_print_test_result(test_result, "Leave hibernation Test");
             sys_log_new_line();
 
-            sat_data_buf.obdh.data.mode_duration = 10;
-            notify_op_ctrl(SAT_NOTIFY_ENTER_HIBERNATION);
+            if (notify_event_to_mission_manager(&enter_hib) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MODE_NAME, "Failed to enqueue `enter hibernation` event");
+                sys_log_new_line();
+            }
 
-            vTaskDelay(pdMS_TO_TICKS(2000U));
-
-            TickType_t hib_time_init = xTaskGetTickCount();
-
-            vTaskDelayUntil(&hib_time_init, pdMS_TO_TICKS(11000U));
-
-            test_result = (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION);
-
-            sys_log_print_test_result(test_result, "Hibernation time Test");
-            sys_log_new_line();
-
-            sat_data_buf.obdh.data.mode_duration = 10;
-            notify_op_ctrl(SAT_NOTIFY_ENTER_HIBERNATION);
+            vTaskDelay(pdMS_TO_TICKS(150U));
 
             taskYIELD();
 
-            notify_op_ctrl(SAT_NOTIFY_IN_BRAZIL);
+            if (notify_event_to_mission_manager(&in_brazil_ev) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MODE_NAME, "Failed to enqueue `in brazil` event");
+                sys_log_new_line();
+            }
 
-            vTaskDelay(pdMS_TO_TICKS(2000U));
+            vTaskDelay(pdMS_TO_TICKS(150U));
 
             test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_HIBERNATION);
 
@@ -161,14 +182,58 @@ void vTaskHealthCheckMode(void)
 
             taskYIELD();
 
-            notify_op_ctrl(SAT_NOTIFY_OUT_OF_BRAZIL);
+            if (notify_event_to_mission_manager(&out_of_brazil) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MODE_NAME, "Failed to enqueue `out of brazil` event");
+                sys_log_new_line();
+            }
 
-            vTaskDelay(pdMS_TO_TICKS(2000U));
+            vTaskDelay(pdMS_TO_TICKS(150U));
 
             test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_HIBERNATION);
 
             sys_log_print_test_result(test_result, "Hibernation mode persistency Test [PX]");
             sys_log_new_line();
+
+            const event_t mode_normal = { .event = EV_NOTIFY_MODE_CHANGE_RQ, .args[0] = OBDH_MODE_NORMAL,  .args[1] = 0U, .args[2] = 0U };
+
+            if (notify_event_to_mission_manager(&mode_normal) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MODE_NAME, "Failed to enqueue `mode change to normal` event");
+                sys_log_new_line();
+            }
+
+            test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_NORMAL) && ((sat_data_buf.state.active_payload[0] == PAYLOAD_EDC_0) || (sat_data_buf.state.active_payload[0] == PAYLOAD_EDC_1));
+
+            sys_log_print_test_result(test_result, "TC change mode to NORMAL Test");
+            sys_log_new_line();
+
+            const event_t mode_stand_by = { .event = EV_NOTIFY_MODE_CHANGE_RQ, .args[0] = OBDH_MODE_STAND_BY,  .args[1] = 0U, .args[2] = 0U };
+
+            if (notify_event_to_mission_manager(&mode_stand_by) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MODE_NAME, "Failed to enqueue `mode change to stand by` event");
+                sys_log_new_line();
+            }
+
+            test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_STAND_BY) && (sat_data_buf.state.active_payload[0] == PAYLOAD_NONE) && (sat_data_buf.state.active_payload[1] == PAYLOAD_NONE);
+
+            sys_log_print_test_result(test_result, "TC change mode to STAND_BY Test");
+            sys_log_new_line();
+
+            sat_data_buf.obdh.data.manual_mode_on = true;
+
+            if (notify_event_to_mission_manager(&in_brazil_ev) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MODE_NAME, "Failed to enqueue `in brazil (manual)` event");
+                sys_log_new_line();
+            }
+
+            test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_STAND_BY) && (sat_data_buf.state.active_payload[0] == PAYLOAD_NONE) && (sat_data_buf.state.active_payload[1] == PAYLOAD_NONE);
+
+            sys_log_print_test_result(test_result, "Manual mode check");
+            sys_log_new_line();
+
         }
 
         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_HEALTH_CHECK_MODE_NAME, "Operation Mode Health Check Finished!!!");
