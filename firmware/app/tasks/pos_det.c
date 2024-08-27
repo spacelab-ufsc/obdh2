@@ -47,12 +47,12 @@
 
 xTaskHandle xTaskPosDetHandle;
 
-static predict_orbital_elements_t satellite;
-static struct predict_sgp4 sgp4_model;
-static struct predict_sdp4 sdp4_model;
-
 void vTaskPosDet(void)
 {
+    static predict_orbital_elements_t satellite;
+    static struct predict_sgp4 sgp4_model;
+    static struct predict_sdp4 sdp4_model;
+
     /* Flag used to control notification sending */
     bool sat_is_inside_brazil = false;
 
@@ -77,7 +77,7 @@ void vTaskPosDet(void)
 
             predict_julian_date_t curr_time = julian_from_timestamp(now + 1723341922ULL);   /* 1723341922ULL Corresponds to ISO Time Stamp: 2024-08-11T02:05:22Z */
 
-            predict_orbit(&satellite, &my_orbit, curr_time);
+            (void)predict_orbit(&satellite, &my_orbit, curr_time);
 
             float lat = predictRAD2DEG(my_orbit.latitude);
             float lon = predictRAD2DEG(my_orbit.longitude);
