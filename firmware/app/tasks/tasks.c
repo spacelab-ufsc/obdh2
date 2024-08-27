@@ -24,8 +24,9 @@
  * \brief Tasks implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.7
+ * \version 0.10.19
  * 
  * \date 2019/11/02
  * 
@@ -55,6 +56,9 @@
 #include "pos_det.h"
 #include "read_px.h"
 #include "housekeeping.h"
+#include "mem_check.h"
+#include "op_ctrl.h"
+#include "mode_check.h"
 
 void create_tasks(void)
 {
@@ -213,6 +217,33 @@ void create_tasks(void)
         /* Error creating the Housekeeping task */
     }
 #endif /* CONFIG_TASK_HOUSEKEEPING_ENABLED */
+
+#if defined(CONFIG_TASK_HEALTH_CHECK_MEM_ENABLED) && (CONFIG_TASK_HEALTH_CHECK_MEM_ENABLED == 1)
+    xTaskCreate(vTaskHealthCheckMem, TASK_HEALTH_CHECK_MEM_NAME, TASK_HEALTH_CHECK_MEM_STACK_SIZE, NULL, TASK_HEALTH_CHECK_MEM_PRIORITY, &xTaskHealthCheckMemHandle);
+
+    if (xTaskHealthCheckMemHandle == NULL)
+    {
+        /* Error creating the Health Check Memory task */
+    }
+#endif /* CONFIG_TASK_HEALTH_CHECK_MEM_ENABLED */
+
+#if defined(CONFIG_TASK_OP_CTRL_ENABLED) && (CONFIG_TASK_OP_CTRL_ENABLED == 1)
+    xTaskCreate(vTaskOpCtrl, TASK_OP_CTRL_NAME, TASK_OP_CTRL_STACK_SIZE, NULL, TASK_OP_CTRL_PRIORITY, &xTaskOpCtrlHandle);
+
+    if (xTaskOpCtrlHandle == NULL)
+    {
+        /* Error creating the Operation Control task */
+    }
+#endif /* CONFIG_TASK_OP_CTRL_ENABLED */
+
+#if defined(CONFIG_TASK_HEALTH_CHECK_MODE_ENABLED) && (CONFIG_TASK_HEALTH_CHECK_MODE_ENABLED == 1)
+    xTaskCreate(vTaskHealthCheckMode, TASK_HEALTH_CHECK_MODE_NAME, TASK_HEALTH_CHECK_MODE_STACK_SIZE, NULL, TASK_HEALTH_CHECK_MODE_PRIORITY, &xTaskHealthCheckModeHandle);
+
+    if (xTaskHealthCheckModeHandle == NULL)
+    {
+        /* Error creating the Health Check Operation Mode task */
+    }
+#endif /* CONFIG_TASK_HEALTH_CHECK_MODE_ENABLED */
 
     create_event_groups();
 }

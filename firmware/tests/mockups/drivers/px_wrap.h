@@ -24,8 +24,9 @@
  * \brief Payload-X driver wrap definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.8
+ * \version 0.10.19
  * 
  * \date 2023/09/18
  * 
@@ -41,11 +42,15 @@
 
 #include <drivers/px/px.h>
 
-int __wrap_px_init(px_config_t conf);
+int __wrap_px_init(px_config_t *conf);
 
-int __wrap_px_write(px_config_t conf, uint8_t *data, uint16_t len);
+int __wrap_px_write(px_config_t *conf, uint8_t *data, uint16_t len);
 
-int __wrap_px_read(px_config_t conf, uint8_t *data, uint16_t len);
+int __wrap_px_read(px_config_t *conf, uint8_t *data, uint16_t len);
+
+int __wrap_px_enable(px_config_t *conf);
+
+int __wrap_px_disable(px_config_t *conf);
 
 #endif /* PX_WRAP_H_ */
 

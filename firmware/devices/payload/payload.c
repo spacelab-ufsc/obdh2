@@ -25,8 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.10
+ * \version 0.10.19
  * 
  * \date 2021/08/15
  * 
@@ -46,10 +47,10 @@
 
 #define PAYLOAD_UNIX_TO_J2000_EPOCH(x)      ((x) - 946684800)   /* Unix to J2000 epoch conversion */
 
-static edc_config_t edc_0_conf = {0};
-static edc_config_t edc_1_conf = {0};
+static edc_config_t edc_0_conf;
+static edc_config_t edc_1_conf;
 
-static px_config_t px_conf = {0};
+static px_config_t px_conf;
 
 int payload_init(payload_t pl)
 {
@@ -159,8 +160,9 @@ int payload_init(payload_t pl)
         {
             px_conf.port = I2C_PORT_0;
             px_conf.bitrate = 400000UL;
+            px_conf.en_pin = GPIO_PIN_37;
 
-            if (px_init(px_conf) == 0)
+            if (px_init(&px_conf) == 0)
             {
                 err = 0;
 
@@ -216,8 +218,15 @@ int payload_enable(payload_t pl)
 
             break;
         case PAYLOAD_X:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: enable() routine not implemented yet!");
-            sys_log_new_line();
+            if (px_enable(&px_conf) == 0)
+            {
+                err = 0;
+            }
+            else
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload X: Error enabling!");
+                sys_log_new_line();
+            }
 
             break;
         default:
@@ -261,8 +270,15 @@ int payload_disable(payload_t pl)
 
             break;
         case PAYLOAD_X:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: disable() routine not implemented yet!");
-            sys_log_new_line();
+            if (px_disable(&px_conf) == 0)
+            {
+                err = 0;
+            }
+            else
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload X: Error enabling!");
+                sys_log_new_line();
+            }
 
             break;
         default:
@@ -302,7 +318,7 @@ int payload_write_cmd(payload_t pl, payload_cmd_t cmd)
 
             break;
         case PAYLOAD_X:
-            if (px_write(px_conf, &cmd, 1U) == 0)
+            if (px_write(&px_conf, &cmd, 1U) == 0)
             {
                 sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "Payload-X: ");
                 sys_log_print_hex(cmd);
@@ -326,7 +342,7 @@ int payload_write_cmd(payload_t pl, payload_cmd_t cmd)
     return err;
 }
 
-int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t *len)
+int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, int32_t *len)
 {
     int err = -1;
 
@@ -438,17 +454,17 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
                 }
                 case PAYLOAD_EDC_RAW_HK:
                 {
-                    int bytes = edc_get_hk_pkg(edc_0_conf, data);
+                    *len = edc_get_hk_pkg(edc_0_conf, data);
 
-                    if (bytes < 0)
+                    if (*len < 0)
                     {
                         sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Error reading housekeeping data!");
                         sys_log_new_line();
                     }
-
-                    *len = bytes;
-
-                    err = 0;
+                    else
+                    {
+                        err = 0;
+                    }
 
                     break;
                 }
@@ -643,7 +659,7 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
             break;
         }
         case PAYLOAD_X:
-            if (px_read(px_conf, data, *len) == 0)
+            if (px_read(&px_conf, data, *len) == 0)
             {
                 sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "Payload-X: ");
                 /*

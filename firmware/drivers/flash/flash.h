@@ -24,8 +24,9 @@
  * \brief Flash driver definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.7.4
+ * \version 0.10.18
  * 
  * \date 2020/03/17
  * 
@@ -64,6 +65,8 @@
 
 /* Last adress that can write a data(beyond this will enter the overflow) */
 #define FLASH_LAST_WRITE_ADDR       0x00087FFF
+
+#define INFO_SEG_SIZE               128U
 
 /**
  * \brief Flash memory initialization.

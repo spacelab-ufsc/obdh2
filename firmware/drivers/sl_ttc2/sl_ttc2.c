@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.14
+ * \version 0.10.19
  * 
  * \date 2021/05/12
  * 
@@ -836,7 +836,7 @@ int sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len)
 
     if (sl_ttc2_read_len_rx_pkt_in_fifo(config, len) == 0)
     {
-        if ((*len > 0) && (*len <= 220))
+        if ((*len > 0) && (*len <= 300))
         {
             if (sl_ttc2_mutex_take() == 0)
             {

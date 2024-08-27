@@ -24,8 +24,9 @@
  * \brief Payload device definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.10
+ * \version 0.10.19
  * 
  * \date 2021/08/15
  * 
@@ -41,6 +42,10 @@
 
 #define PAYLOAD_MODULE_NAME         "Payload"
 
+#define PAYLOAD_EDC_0_ID            (0x01U)
+#define PAYLOAD_EDC_1_ID            (0x02U)
+#define PAYLOAD_X_ID                (0x03U)
+
 /**
  * \brief Payload type.
  */
@@ -48,7 +53,8 @@ typedef enum
 {
     PAYLOAD_EDC_0=0,            /**< Payload EDC 0. */
     PAYLOAD_EDC_1,              /**< Payload EDC 1. */
-    PAYLOAD_X                   /**< Payload-X. */
+    PAYLOAD_X,                  /**< Payload-X. */
+    PAYLOAD_NONE,               /**< Means there's no payload active */
 } payload_t;
 
 /**
@@ -160,7 +166,7 @@ int payload_write_cmd(payload_t pl, payload_cmd_t cmd);
  *
  * \return The status/error code.
  */
-int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t *len);
+int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, int32_t *len);
 
 #endif /* PAYLOAD_H_ */
 

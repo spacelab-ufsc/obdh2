@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.14
+ * \version 0.10.19
  * 
  * \date 2021/07/06
  * 
@@ -42,8 +42,10 @@
 #include <system/sys_log/sys_log.h>
 #include <system/system.h>
 #include <devices/ttc/ttc.h>
+#include <devices/eps/eps.h>
 #include <devices/media/media.h>
 #include <devices/payload/payload.h>
+#include <utils/mem_mng.h>
 #include <hmac/sha.h>
 
 #include <structs/satellite.h>
@@ -51,6 +53,7 @@
 #include <fsat_pkt/fsat_pkt.h>
 
 #include "process_tc.h"
+#include "op_ctrl.h"
 #include "startup.h"
 
 xTaskHandle xTaskProcessTCHandle;
@@ -374,15 +377,17 @@ void process_tc_ping_request(uint8_t *pkt, uint16_t pkt_len)
         /* Source callsign */
         fsat_pkt_add_callsign(&pong_pl, CONFIG_SATELLITE_CALLSIGN);
 
-        if (memcpy(&pong_pl.payload[0], &pkt[1], 7) == &pong_pl.payload[0])
+        (void)memcpy(&pong_pl.payload[0], &pkt[1], 7);
+
+        pong_pl.length = 7U;
+
+        uint8_t pong_pl_raw[16] = {0};
+        uint16_t pong_pl_raw_len = 0;
+
+        fsat_pkt_encode(pong_pl, pong_pl_raw, &pong_pl_raw_len);
+
+        if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
         {
-            pong_pl.length = 7U;
-
-            uint8_t pong_pl_raw[16] = {0};
-            uint16_t pong_pl_raw_len = 0;
-
-            fsat_pkt_encode(pong_pl, pong_pl_raw, &pong_pl_raw_len);
-
             if (ttc_send(TTC_1, pong_pl_raw, pong_pl_raw_len) != 0)
             {
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a ping answer!");
@@ -394,7 +399,8 @@ void process_tc_ping_request(uint8_t *pkt, uint16_t pkt_len)
 
 void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 {
-    if (pkt_len >= (1U + 7U + 1U + 4U + 4U))
+    /* If the satellite is in hibernation mode there is no point in processing this telecommand */
+    if ((pkt_len >= (1U + 7U + 1U + 4U + 4U)) && (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION))
     {
         fsat_pkt_pl_t data_req_ans_pkt = {0};
         uint8_t data_req_ans_pl[220] = {0};
@@ -431,52 +437,208 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                         if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(obdh_telemetry_t)) == 0)
                         {
                             /* Requester callsign */
-                            if (memcpy(&data_req_ans_pl[0], &pkt[1], 7) == &data_req_ans_pl[0])
+                            (void)memcpy(&data_req_ans_pl[0], &pkt[1], 7);
+
+                            /* Data ID */
+                            data_req_ans_pl[7] = CONFIG_DATA_ID_OBDH;
+
+                            /* Timestamp and Data */
+                            (void)memcpy(&data_req_ans_pl[7 + 1], &page_buf[0], sizeof(obdh_telemetry_t));
+
+                            vTaskDelay(pdMS_TO_TICKS(10U));
+
+                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, 7U + 1U + sizeof(obdh_telemetry_t));
+
+                            fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                             {
-                                /* Data ID */
-                                data_req_ans_pl[7] = CONFIG_DATA_ID_OBDH;
-
-                                /* Timestamp and Data */
-                                if (memcpy(&data_req_ans_pl[7 + 1], &page_buf[0], sizeof(obdh_telemetry_t)) == &data_req_ans_pl[7 + 1])
+                                if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
                                 {
-                                    fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, 7U + 1U + sizeof(obdh_telemetry_t));
-
-                                    fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
-
-                                    if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
-                                    {
-                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the OBDH data log of memory page ");
-                                        sys_log_print_uint(i);
-                                        sys_log_print_msg("!");
-                                        sys_log_new_line();
-                                    }
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the OBDH data log of memory page ");
+                                    sys_log_print_uint(i);
+                                    sys_log_print_msg("!");
+                                    sys_log_new_line();
                                 }
                             }
                         }
+                        vTaskDelay(pdMS_TO_TICKS(25U));
                     }
 
                     break;
                 }
                 case CONFIG_DATA_ID_EPS:
-                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_PROCESS_TC_NAME, "EPS data request not implemented!");
-                    sys_log_new_line();
+                {
+                    uint32_t start_page = sat_data_buf.obdh.data.media.last_page_eps_data - (uint32_t)end_idx;
+                    uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_eps_data - (uint32_t)start_idx;
+
+                    uint8_t page_buf[256] = {0};
+
+                    uint32_t i = 0;
+                    for(i = start_page; i < end_page; i++)
+                    {
+                        if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(eps_telemetry_t)) == 0)
+                        {
+                            /* Requester callsign */
+                            (void)memcpy(&data_req_ans_pl[0], &pkt[1], 7);
+
+                            /* Data ID */
+                            data_req_ans_pl[7] = CONFIG_DATA_ID_EPS;
+
+                            /* Timestamp and Data */
+                            (void)memcpy(&data_req_ans_pl[7 + 1], &page_buf[0], sizeof(eps_telemetry_t));
+
+                            vTaskDelay(pdMS_TO_TICKS(10U));
+
+                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, 7U + 1U + sizeof(eps_telemetry_t));
+
+                            fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                            {
+                                if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                {
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the EPS data log of memory page ");
+                                    sys_log_print_uint(i);
+                                    sys_log_print_msg("!");
+                                    sys_log_new_line();
+                                }
+                            }
+                        }
+                        vTaskDelay(pdMS_TO_TICKS(25U));
+                    }
 
                     break;
+                }
                 case CONFIG_DATA_ID_TTC_0:
-                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_PROCESS_TC_NAME, "TTC 0 data request not implemented!");
-                    sys_log_new_line();
+                {
+                    uint32_t start_page = sat_data_buf.obdh.data.media.last_page_ttc_0_data - (uint32_t)end_idx;
+                    uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_ttc_0_data - (uint32_t)start_idx;
+
+                    uint8_t page_buf[256] = {0};
+
+                    uint32_t i = 0;
+                    for(i = start_page; i < end_page; i++)
+                    {
+                        if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(ttc_telemetry_t)) == 0)
+                        {
+                            /* Requester callsign */
+                            (void)memcpy(&data_req_ans_pl[0], &pkt[1], 7);
+
+                            /* Data ID */
+                            data_req_ans_pl[7] = CONFIG_DATA_ID_TTC_0;
+
+                            /* Timestamp and Data */
+                            (void)memcpy(&data_req_ans_pl[7 + 1], &page_buf[0], sizeof(ttc_telemetry_t));
+
+                            vTaskDelay(pdMS_TO_TICKS(10U));
+
+                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, 7U + 1U + sizeof(ttc_telemetry_t));
+
+                            fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                            {
+                                if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                {
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the TTC 0 data log of memory page ");
+                                    sys_log_print_uint(i);
+                                    sys_log_print_msg("!");
+                                    sys_log_new_line();
+                                }
+                            }
+                        }
+                        vTaskDelay(pdMS_TO_TICKS(25U));
+                    }
 
                     break;
+                }
                 case CONFIG_DATA_ID_TTC_1:
-                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_PROCESS_TC_NAME, "TTC 1 data request not implemented!");
-                    sys_log_new_line();
+                {
+                    uint32_t start_page = sat_data_buf.obdh.data.media.last_page_ttc_1_data - (uint32_t)end_idx;
+                    uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_ttc_1_data - (uint32_t)start_idx;
+
+                    uint8_t page_buf[256] = {0};
+
+                    uint32_t i = 0;
+                    for(i = start_page; i < end_page; i++)
+                    {
+                        if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(ttc_telemetry_t)) == 0)
+                        {
+                            /* Requester callsign */
+                            (void)memcpy(&data_req_ans_pl[0], &pkt[1], 7);
+
+                            /* Data ID */
+                            data_req_ans_pl[7] = CONFIG_DATA_ID_TTC_1;
+
+                            /* Timestamp and Data */
+                            (void)memcpy(&data_req_ans_pl[7 + 1], &page_buf[0], sizeof(ttc_telemetry_t));
+
+                            vTaskDelay(pdMS_TO_TICKS(10U));
+
+                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, 7U + 1U + sizeof(ttc_telemetry_t));
+
+                            fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                            {
+                                if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                {
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the TTC 1 data log of memory page ");
+                                    sys_log_print_uint(i);
+                                    sys_log_print_msg("!");
+                                    sys_log_new_line();
+                                }
+                            }
+                        }
+                        vTaskDelay(pdMS_TO_TICKS(25U));
+                    }
 
                     break;
+                }
                 case CONFIG_DATA_ID_ANT:
-                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_PROCESS_TC_NAME, "Antenna data request not implemented!");
-                    sys_log_new_line();
+                {
+                    uint32_t start_page = sat_data_buf.obdh.data.media.last_page_ant_data - (uint32_t)end_idx;
+                    uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_ant_data - (uint32_t)start_idx;
+
+                    uint8_t page_buf[256] = {0};
+
+                    uint32_t i = 0;
+                    for(i = start_page; i < end_page; i++)
+                    {
+                        if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(antenna_telemetry_t)) == 0)
+                        {
+                            /* Requester callsign */
+                            (void)memcpy(&data_req_ans_pl[0], &pkt[1], 7);
+
+                            /* Data ID */
+                            data_req_ans_pl[7] = CONFIG_DATA_ID_TTC_1;
+
+                            /* Timestamp and Data */
+                            (void)memcpy(&data_req_ans_pl[7 + 1], &page_buf[0], sizeof(antenna_telemetry_t));
+
+                            vTaskDelay(pdMS_TO_TICKS(10U));
+
+                            fsat_pkt_add_payload(&data_req_ans_pkt, data_req_ans_pl, 7U + 1U + sizeof(antenna_telemetry_t));
+
+                            fsat_pkt_encode(data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                            if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                            {
+                                if (ttc_send(TTC_1, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                {
+                                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the Antenna data log of memory page ");
+                                    sys_log_print_uint(i);
+                                    sys_log_print_msg("!");
+                                    sys_log_new_line();
+                                }
+                            }
+                        }
+                        vTaskDelay(pdMS_TO_TICKS(25U));
+                    }
 
                     break;
+                }
                 default:
                     sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Data Request\" TC! Unknown data ID!");
                     sys_log_new_line();
@@ -506,15 +668,17 @@ void process_tc_broadcast_message(uint8_t *pkt, uint16_t pkt_len)
 
         uint16_t msg_len = pkt_len - 7U - 7U - 1U;
 
-        if (memcpy(&broadcast_pl.payload[0], &pkt[1], 14U + msg_len) == &broadcast_pl.payload[0])
+        (void)memcpy(&broadcast_pl.payload[0], &pkt[1], 14U + msg_len);
+    
+        broadcast_pl.length = 14U + msg_len;
+
+        uint8_t broadcast_pl_raw[55] = {0};
+        uint16_t broadcast_pl_raw_len = 0;
+
+        fsat_pkt_encode(broadcast_pl, broadcast_pl_raw, &broadcast_pl_raw_len);
+
+        if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
         {
-            broadcast_pl.length = 14U + msg_len;
-
-            uint8_t broadcast_pl_raw[55] = {0};
-            uint16_t broadcast_pl_raw_len = 0;
-
-            fsat_pkt_encode(broadcast_pl, broadcast_pl_raw, &broadcast_pl_raw_len);
-
             if (ttc_send(TTC_1, broadcast_pl_raw, broadcast_pl_raw_len) != 0)
             {
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a message broadcast!");
@@ -532,9 +696,8 @@ void process_tc_enter_hibernation(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U + 2U, &pkt[10], 20U, tc_key, sizeof(CONFIG_TC_KEY_ENTER_HIBERNATION)-1U))
         {
-            sat_data_buf.obdh.data.mode = OBDH_MODE_HIBERNATION;
-            sat_data_buf.obdh.data.ts_last_mode_change = system_get_time();
             sat_data_buf.obdh.data.mode_duration = (((sys_time_t)pkt[8] << 8) | (sys_time_t)pkt[9]) * 60UL * 60UL;
+            notify_op_ctrl(SAT_NOTIFY_ENTER_HIBERNATION);
         }
         else
         {
@@ -552,8 +715,7 @@ void process_tc_leave_hibernation(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U, &pkt[8], 20U, tc_key, sizeof(CONFIG_TC_KEY_LEAVE_HIBERNATION)-1U))
         {
-            sat_data_buf.obdh.data.mode = OBDH_MODE_NORMAL;
-            sat_data_buf.obdh.data.ts_last_mode_change = system_get_time();
+            notify_op_ctrl(SAT_NOTIFY_LEAVE_HIBERNATION);
         }
         else
         {
@@ -895,18 +1057,9 @@ void process_tc_erase_memory(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U, &pkt[8], 20U, tc_key, sizeof(CONFIG_TC_KEY_ERASE_MEMORY)-1U))
         {
-            sat_data_buf.obdh.data.media.last_page_obdh_data    = CONFIG_MEM_OBDH_DATA_START_PAGE;
-            sat_data_buf.obdh.data.media.last_page_eps_data     = CONFIG_MEM_EPS_DATA_START_PAGE;
-            sat_data_buf.obdh.data.media.last_page_ttc_0_data   = CONFIG_MEM_TTC_0_DATA_START_PAGE;
-            sat_data_buf.obdh.data.media.last_page_ttc_1_data   = CONFIG_MEM_TTC_1_DATA_END_PAGE;
-            sat_data_buf.obdh.data.media.last_page_ant_data     = CONFIG_MEM_ANT_DATA_START_PAGE;
-            sat_data_buf.obdh.data.media.last_page_edc_data     = CONFIG_MEM_EDC_DATA_START_PAGE;
-            sat_data_buf.obdh.data.media.last_page_px_data      = CONFIG_MEM_PX_DATA_START_PAGE;
-            sat_data_buf.obdh.data.media.last_page_sbcd_pkts    = CONFIG_MEM_SBCD_PKTS_START_PAGE;
-
-            if (media_erase(MEDIA_NOR, MEDIA_ERASE_DIE, 0U) != 0)
+            if (mem_mng_erase_flash(&sat_data_buf.obdh) < 0)
             {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error erasing the NOR memory!");
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error erasing flash memory!");
                 sys_log_new_line();
             }
         }
@@ -1026,20 +1179,20 @@ void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
                 case CONFIG_SUBSYSTEM_ID_OBDH:
                     switch(pkt[9])
                     {
-                        case OBDH_PARAM_ID_TIME_COUNTER:        buf = system_get_time();                                break;
-                        case OBDH_PARAM_ID_TEMPERATURE_UC:      buf = sat_data_buf.obdh.data.temperature;               break;
-                        case OBDH_PARAM_ID_INPUT_CURRENT:       buf = sat_data_buf.obdh.data.current;                   break;
-                        case OBDH_PARAM_ID_INPUT_VOLTAGE:       buf = sat_data_buf.obdh.data.voltage;                   break;
-                        case OBDH_PARAM_ID_LAST_RESET_CAUSE:    buf = sat_data_buf.obdh.data.last_reset_cause;          break;
-                        case OBDH_PARAM_ID_RESET_COUNTER:       buf = sat_data_buf.obdh.data.reset_counter;             break;
-                        case OBDH_PARAM_ID_LAST_VALID_TC:       buf = sat_data_buf.obdh.data.last_valid_tc;             break;
-                        case OBDH_PARAM_ID_TEMPERATURE_ANTENNA: buf = sat_data_buf.antenna.data.temperature;            break;
-                        case OBDH_PARAM_ID_ANTENNA_STATUS:      buf = sat_data_buf.antenna.data.status.code;            break;
-                        case OBDH_PARAM_ID_HARDWARE_VERSION:    buf = sat_data_buf.obdh.data.hw_version;                break;
-                        case OBDH_PARAM_ID_FIRMWARE_VERSION:    buf = sat_data_buf.obdh.data.fw_version;                break;
-                        case OBDH_PARAM_ID_MODE:                buf = sat_data_buf.obdh.data.mode;                      break;
-                        case OBDH_PARAM_ID_TIMESTAMP_LAST_MODE: buf = sat_data_buf.obdh.data.ts_last_mode_change;       break;
-                        case OBDH_PARAM_ID_MODE_DURATION:       buf = sat_data_buf.obdh.data.mode_duration;             break;
+                        case OBDH_PARAM_ID_TIME_COUNTER:        buf = system_get_time();                                                break;
+                        case OBDH_PARAM_ID_TEMPERATURE_UC:      buf = sat_data_buf.obdh.data.temperature;                               break;
+                        case OBDH_PARAM_ID_INPUT_CURRENT:       buf = sat_data_buf.obdh.data.current;                                   break;
+                        case OBDH_PARAM_ID_INPUT_VOLTAGE:       buf = sat_data_buf.obdh.data.voltage;                                   break;
+                        case OBDH_PARAM_ID_LAST_RESET_CAUSE:    buf = sat_data_buf.obdh.data.last_reset_cause;                          break;
+                        case OBDH_PARAM_ID_RESET_COUNTER:       buf = sat_data_buf.obdh.data.reset_counter;                             break;
+                        case OBDH_PARAM_ID_LAST_VALID_TC:       buf = sat_data_buf.obdh.data.last_valid_tc;                             break;
+                        case OBDH_PARAM_ID_TEMPERATURE_ANTENNA: buf = sat_data_buf.antenna.data.temperature;                            break;
+                        case OBDH_PARAM_ID_ANTENNA_STATUS:      buf = sat_data_buf.antenna.data.status.code;                            break;
+                        case OBDH_PARAM_ID_HARDWARE_VERSION:    buf = sat_data_buf.obdh.data.hw_version;                                break;
+                        case OBDH_PARAM_ID_FIRMWARE_VERSION:    buf = sat_data_buf.obdh.data.fw_version;                                break;
+                        case OBDH_PARAM_ID_MODE:                buf = sat_data_buf.obdh.data.mode;                                      break;
+                        case OBDH_PARAM_ID_TIMESTAMP_LAST_MODE: buf = sat_data_buf.obdh.data.ts_last_mode_change;                       break;
+                        case OBDH_PARAM_ID_MODE_DURATION:       buf = system_get_time() - sat_data_buf.obdh.data.ts_last_mode_change;   break;
                         default:
                             error = -1;
 
@@ -1099,22 +1252,24 @@ void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
                 /* Source callsign */
                 fsat_pkt_add_callsign(&param_pl, CONFIG_SATELLITE_CALLSIGN);
 
-                if (memcpy(&param_pl.payload[0], &pkt[1], 7) == &param_pl.payload[0])
+                (void)memcpy(&param_pl.payload[0], &pkt[1], 7);
+
+                param_pl.payload[8] = pkt[8];
+                param_pl.payload[9] = pkt[9];
+                param_pl.payload[10] = (uint8_t)((buf >> 24) & 0xFFU);
+                param_pl.payload[11] = (uint8_t)((buf >> 16) & 0xFFU);
+                param_pl.payload[12] = (uint8_t)((buf >> 8) & 0xFFU);
+                param_pl.payload[13] = (uint8_t)(buf & 0xFFU);
+
+                param_pl.length = 6U;
+
+                uint8_t param_pl_raw[16] = {0};
+                uint16_t param_pl_raw_len = 0;
+
+                fsat_pkt_encode(param_pl, param_pl_raw, &param_pl_raw_len);
+
+                if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                 {
-                    param_pl.payload[8] = pkt[8];
-                    param_pl.payload[9] = pkt[9];
-                    param_pl.payload[10] = (uint8_t)((buf >> 24) & 0xFFU);
-                    param_pl.payload[11] = (uint8_t)((buf >> 16) & 0xFFU);
-                    param_pl.payload[12] = (uint8_t)((buf >> 8) & 0xFFU);
-                    param_pl.payload[13] = (uint8_t)(buf & 0xFFU);
-
-                    param_pl.length = 6U;
-
-                    uint8_t param_pl_raw[16] = {0};
-                    uint16_t param_pl_raw_len = 0;
-
-                    fsat_pkt_encode(param_pl, param_pl_raw, &param_pl_raw_len);
-
                     if (ttc_send(TTC_1, param_pl_raw, param_pl_raw_len) != 0)
                     {
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a \"get parameter\" answer!");

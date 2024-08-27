@@ -26,7 +26,7 @@
  * \author Miguel Boing <miguelboing13@gmail.com>
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.14
+ * \version 0.10.17
  * 
  * \date 2024/04/25
  * 

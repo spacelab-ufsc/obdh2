@@ -24,8 +24,9 @@
  * \brief Position determination task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.7
+ * \version 0.10.19
  * 
  * \date 2023/07/19
  * 
@@ -42,6 +43,7 @@
 
 #include "pos_det.h"
 #include "startup.h"
+#include "op_ctrl.h"
 
 xTaskHandle xTaskPosDetHandle;
 
@@ -51,6 +53,9 @@ static struct predict_sdp4 sdp4_model;
 
 void vTaskPosDet(void)
 {
+    /* Flag used to control notification sending */
+    bool sat_is_inside_brazil = false;
+
     /* Wait startup task to finish */
     xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_POS_DET_INIT_TIMEOUT_MS));
 
@@ -91,6 +96,21 @@ void vTaskPosDet(void)
             sys_log_print_float(alt, 2);
             sys_log_print_msg(" km");
             sys_log_new_line();
+
+            bool current_position = is_satellite_in_brazil(sat_data_buf.obdh.data.position.latitude, sat_data_buf.obdh.data.position.longitude);
+
+            if (current_position && !sat_is_inside_brazil)
+            {
+                sat_is_inside_brazil = true;
+                notify_op_ctrl(SAT_NOTIFY_IN_BRAZIL);
+            }
+
+            if (!current_position && sat_is_inside_brazil)
+            {
+                sat_is_inside_brazil = false;
+                notify_op_ctrl(SAT_NOTIFY_OUT_OF_BRAZIL);
+            }
+
         }
         else
         {

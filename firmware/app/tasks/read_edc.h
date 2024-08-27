@@ -24,8 +24,9 @@
  * \brief Read EDC data task definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.9.14
+ * \version 0.10.19
  * 
  * \date 2020/08/16
  * 
@@ -45,6 +46,7 @@
 #define TASK_READ_EDC_PRIORITY              3                   /**< Task priority. */
 #define TASK_READ_EDC_PERIOD_MS             (60000)             /**< Task period in milliseconds. */
 #define TASK_READ_EDC_INIT_TIMEOUT_MS       2000                /**< Wait time to initialize the task in milliseconds. */
+#define TASK_READ_EDC_MAX_WAIT_TIME_MS      (60000UL * 60UL)    /**< Max time to wait for notifications. (1 hour)*/
 
 /**
  * \brief EDC housekeeping raw data type.
@@ -52,7 +54,7 @@
 typedef struct
 {
     uint8_t buffer[30];
-    uint32_t length;
+    int32_t length;
 } pl_edc_hk_raw_t;
 
 /**
