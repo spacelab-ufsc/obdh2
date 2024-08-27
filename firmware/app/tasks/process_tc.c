@@ -34,6 +34,7 @@
  * \{
  */
 
+#include <stdint.h>
 #include <string.h>
 
 #include <config/config.h>
@@ -213,7 +214,7 @@ static void process_tc_force_reset(uint8_t *pkt, uint16_t pkt_len);
  *
  * \return None.
  */
-//static void process_tc_get_payload_data(uint8_t *pkt, uint16_t pkt_len);
+static void process_tc_get_payload_data(uint8_t *pkt, uint16_t pkt_len);
 
 /**
  * \brief Set parameter telecommand.
@@ -362,6 +363,10 @@ void vTaskProcessTC(void)
 
                         break;
                     case CONFIG_PKT_ID_UPLINK_GET_PAYLOAD_DATA:
+                        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Get Payload Data\"...");
+                        sys_log_new_line();
+
+                        process_tc_get_payload_data(pkt, pkt_len);
                         break;
                     case CONFIG_PKT_ID_UPLINK_SET_PARAM:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Set Parameter\"...");
@@ -1052,7 +1057,6 @@ void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
             default:
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid module to deactivate!");
                 sys_log_new_line();
-
                 break;
         }
     }
@@ -1136,7 +1140,7 @@ void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
             default:
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid payload to activate!");
                 sys_log_new_line();
-
+                err = -1;
                 break;
         }
 
@@ -1292,9 +1296,90 @@ void process_tc_force_reset(uint8_t *pkt, uint16_t pkt_len)
     }
 }
 
-//void process_tc_get_payload_data(uint8_t *pkt, uint16_t pkt_len)
-//{
-//}
+void process_tc_get_payload_data(uint8_t *pkt, uint16_t pkt_len)
+{
+    if (pkt_len >= (1U + 7U + 1U + 12U + 20U))
+    {
+        uint8_t tc_key[16] = CONFIG_TC_KEY_GET_PAYLOAD_DATA;
+
+        if (process_tc_validate_hmac(pkt, 1U + 7U + 1U + 12U, &pkt[21], 20U, tc_key, sizeof(CONFIG_TC_KEY_GET_PAYLOAD_DATA) - 1U))
+        {
+            switch (pkt[8]) 
+            {
+                case CONFIG_PL_ID_EDC_1:
+                {
+                    uint8_t data_id = pkt[9];
+
+                    fsat_pkt_pl_t pl_data;
+
+                    if (format_data_request(pl_data.payload, &pl_data.length, data_id, &sat_data_buf.edc_0) == 0)
+                    {
+                        uint8_t pkt_raw[60];
+                        uint16_t pkt_len;
+
+                        /* Prepare Packet */
+                        (void)memcpy(&pl_data.payload[0], &pkt[1], 7); /* Requester callsign */
+                        pl_data.payload[7] = pkt[9]; /* Payload Arg */
+                        fsat_pkt_add_id(&pl_data, CONFIG_PKT_ID_DOWNLINK_PAYLOAD_DATA);
+                        fsat_pkt_add_callsign(&pl_data, CONFIG_SATELLITE_CALLSIGN);
+                        fsat_pkt_encode(&pl_data, pkt_raw, &pkt_len);
+                        
+                        if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                        {
+                            if (ttc_send(TTC_0, pkt_raw, pkt_len) != 0)
+                            {
+                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a \"Get Payload Data\" answer!");
+                                sys_log_new_line();
+                            }
+                        }
+                        
+                    }
+
+                    break;
+                }
+                case CONFIG_PL_ID_EDC_2:
+                {
+                    uint8_t data_id = pkt[9];
+
+                    fsat_pkt_pl_t pl_data;
+
+                    if (format_data_request(pl_data.payload, &pl_data.length, data_id, &sat_data_buf.edc_1) == 0)
+                    {
+                        uint8_t pkt_raw[60];
+                        uint16_t pkt_len;
+
+                        /* Prepare Packet */
+                        (void)memcpy(&pl_data.payload[0], &pkt[1], 7); /* Requester callsign */
+                        pl_data.payload[7] = pkt[9]; /* Payload Arg */
+                        fsat_pkt_add_id(&pl_data, CONFIG_PKT_ID_DOWNLINK_PAYLOAD_DATA);
+                        fsat_pkt_add_callsign(&pl_data, CONFIG_SATELLITE_CALLSIGN);
+                        fsat_pkt_encode(&pl_data, pkt_raw, &pkt_len);
+                        
+                        if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                        {
+                            if (ttc_send(TTC_0, pkt_raw, pkt_len) != 0)
+                            {
+                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a \"Get Payload Data\" answer!");
+                                sys_log_new_line();
+                            }
+                        }
+                        
+                    }
+                    break;
+                }
+                default:
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid payload ID!");
+                    sys_log_new_line();
+                    break;
+            }
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Get Payload Data\" TC! Invalid key!");
+            sys_log_new_line();
+        }
+    }
+}
 
 void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
 {
