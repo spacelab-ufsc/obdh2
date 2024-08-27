@@ -845,6 +845,8 @@ void process_tc_leave_hibernation(uint8_t *pkt, uint16_t pkt_len)
 
 void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len)
 {
+    int8_t err = -2;
+
     if (pkt_len >= 29U)
     {
         switch(pkt[8])
@@ -859,8 +861,26 @@ void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len)
                 if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_MODULE)-1U))
                 {
                     /* Enable the EPS heater */
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
-                    sys_log_new_line();
+                    if (eps_set_param(SL_EPS2_REG_BAT_HEATER_1_MODE, SL_EPS2_HEATER_MODE_MANUAL) == 0)
+                    {
+                        if (eps_set_param(SL_EPS2_REG_BAT_HEATER_1_DUTY_CYCLE, 20U) == 0)
+                        {
+                            ++err;
+                        }
+                    }
+
+                    if (eps_set_param(SL_EPS2_REG_BAT_HEATER_2_MODE, SL_EPS2_HEATER_MODE_MANUAL) == 0)
+                    {
+                        if (eps_set_param(SL_EPS2_REG_BAT_HEATER_2_DUTY_CYCLE, 20U) == 0)
+                        {
+                            ++err;
+                        }
+                    }
+
+                    if (err == 0)
+                    {
+                        (void)send_tc_feedback(pkt);
+                    }
                 }
                 else
                 {
@@ -881,6 +901,7 @@ void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len)
                 {
                     /* Enable the beacon */
                     sat_data_buf.obdh.data.beacon_on = true;
+                    (void)send_tc_feedback(pkt);
                 }
                 else
                 {
@@ -922,6 +943,8 @@ void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len)
 
 void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
 {
+    int8_t err = -2;
+
     if (pkt_len >= 29U)
     {
         switch(pkt[8])
@@ -935,9 +958,27 @@ void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
 
                 if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_MODULE)-1U))
                 {
-                    /* Enable the EPS heater */
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
-                    sys_log_new_line();
+                    /* Disable the EPS heater */
+                    if (eps_set_param(SL_EPS2_REG_BAT_HEATER_1_MODE, SL_EPS2_HEATER_MODE_MANUAL) == 0)
+                    {
+                        if (eps_set_param(SL_EPS2_REG_BAT_HEATER_1_DUTY_CYCLE, 0U) == 0)
+                        {
+                            ++err;
+                        }
+                    }
+
+                    if (eps_set_param(SL_EPS2_REG_BAT_HEATER_2_MODE, SL_EPS2_HEATER_MODE_MANUAL) == 0)
+                    {
+                        if (eps_set_param(SL_EPS2_REG_BAT_HEATER_2_DUTY_CYCLE, 0U) == 0)
+                        {
+                            ++err;
+                        }
+                    }
+
+                    if (err == 0)
+                    {
+                        (void)send_tc_feedback(pkt);
+                    }
                 }
                 else
                 {
@@ -958,6 +999,7 @@ void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
                 {
                     /* Enable the beacon */
                     sat_data_buf.obdh.data.beacon_on = false;
+                    (void)send_tc_feedback(pkt);
                 }
                 else
                 {
