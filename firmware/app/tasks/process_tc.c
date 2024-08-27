@@ -814,7 +814,17 @@ void process_tc_enter_hibernation(uint8_t *pkt, uint16_t pkt_len)
         if (process_tc_validate_hmac(pkt, 1U + 7U + 2U, &pkt[10], 20U, tc_key, sizeof(CONFIG_TC_KEY_ENTER_HIBERNATION)-1U))
         {
             const event_t enter_hib = { .event = EV_NOTIFY_MODE_CHANGE_RQ, .args[0] = OBDH_MODE_HIBERNATION,  .args[1] = pkt[8], .args[2] = pkt[9] };
-            notify_event_to_mission_manager(&enter_hib);
+            (void)notify_event_to_mission_manager(&enter_hib);
+
+            if (xTaskNotifyWait(0U, UINT32_MAX, NULL, pdMS_TO_TICKS(TASK_PROCESS_TC_MAX_WAIT_TIME_MS)) == pdTRUE)
+            {
+                (void)send_tc_feedback(pkt);
+            }
+            else 
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Mission manager notify timed out for \"Enter hibernation\"");
+                sys_log_new_line();
+            }
         }
         else
         {
@@ -833,7 +843,17 @@ void process_tc_leave_hibernation(uint8_t *pkt, uint16_t pkt_len)
         if (process_tc_validate_hmac(pkt, 1U + 7U, &pkt[8], 20U, tc_key, sizeof(CONFIG_TC_KEY_LEAVE_HIBERNATION)-1U))
         {
             const event_t leave_hib = { .event = EV_NOTIFY_MODE_CHANGE_RQ, .args[0] = OBDH_WAKE_UP,  .args[1] = 0U, .args[2] = 0U };
-            notify_event_to_mission_manager(&leave_hib);
+            (void)notify_event_to_mission_manager(&leave_hib);
+
+            if (xTaskNotifyWait(0U, UINT32_MAX, NULL, pdMS_TO_TICKS(TASK_PROCESS_TC_MAX_WAIT_TIME_MS)) == pdTRUE)
+            {
+                (void)send_tc_feedback(pkt);
+            }
+            else 
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Mission manager notify timed out for \"Leave hibernation\"");
+                sys_log_new_line();
+            }
         }
         else
         {
@@ -1040,6 +1060,7 @@ void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
 
 void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
 {
+    int8_t err = 0;
     event_t pl_event = { 0 };
 
     if (pkt_len >= 29U)
@@ -1057,12 +1078,13 @@ void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
                 {
                     pl_event.event = EV_NOTIFY_ACTIVATE_PAYLOAD_RQ;
                     pl_event.args[0] = CONFIG_PL_ID_EDC_1;
-                    notify_event_to_mission_manager(&pl_event);
+                    (void)notify_event_to_mission_manager(&pl_event);
                 }
                 else
                 {
                     sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the EDC 1 payload! Invalid key!");
                     sys_log_new_line();
+                    err = -1;
                 }
 
                 break;
@@ -1078,12 +1100,13 @@ void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
                 {
                     pl_event.event = EV_NOTIFY_ACTIVATE_PAYLOAD_RQ;
                     pl_event.args[0] = CONFIG_PL_ID_EDC_2;
-                    notify_event_to_mission_manager(&pl_event);
+                    (void)notify_event_to_mission_manager(&pl_event);
                 }
                 else
                 {
                     sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the EDC 2 payload! Invalid key!");
                     sys_log_new_line();
+                    err = -1;
                 }
 
                 break;
@@ -1099,12 +1122,13 @@ void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
                 {
                     pl_event.event = EV_NOTIFY_ACTIVATE_PAYLOAD_RQ;
                     pl_event.args[0] = CONFIG_PL_ID_PAYLOAD_X;
-                    notify_event_to_mission_manager(&pl_event);
+                    (void)notify_event_to_mission_manager(&pl_event);
                 }
                 else
                 {
                     sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the Payload-X payload! Invalid key!");
                     sys_log_new_line();
+                    err = -1;
                 }
 
                 break;
@@ -1115,12 +1139,26 @@ void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
 
                 break;
         }
+
+        if (err == 0)
+        {
+            if (xTaskNotifyWait(0U, UINT32_MAX, NULL, pdMS_TO_TICKS(TASK_PROCESS_TC_MAX_WAIT_TIME_MS)) == pdTRUE)
+            {
+                (void)send_tc_feedback(pkt);
+            }
+            else 
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Mission manager notify timed out for \"Activate payload\"");
+                sys_log_new_line();
+            }
+        }
     }
 }
 
 void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
 {
     event_t pl_event = { 0 };
+    int8_t err = 0;
 
     if (pkt_len >= 29U)
     {
@@ -1137,12 +1175,13 @@ void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
                 {
                     pl_event.event = EV_NOTIFY_DEACTIVATE_PAYLOAD_RQ;
                     pl_event.args[0] = CONFIG_PL_ID_EDC_1;
-                    notify_event_to_mission_manager(&pl_event);
+                    (void)notify_event_to_mission_manager(&pl_event);
                 }
                 else
                 {
                     sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the EDC 1 payload! Invalid key!");
                     sys_log_new_line();
+                    err = -1;
                 }
 
                 break;
@@ -1158,12 +1197,13 @@ void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
                 {
                     pl_event.event = EV_NOTIFY_DEACTIVATE_PAYLOAD_RQ;
                     pl_event.args[0] = CONFIG_PL_ID_EDC_2;
-                    notify_event_to_mission_manager(&pl_event);
+                    (void)notify_event_to_mission_manager(&pl_event);
                 }
                 else
                 {
                     sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the EDC 2 payload! Invalid key!");
                     sys_log_new_line();
+                    err = -1;
                 }
 
                 break;
@@ -1179,12 +1219,13 @@ void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
                 {
                     pl_event.event = EV_NOTIFY_DEACTIVATE_PAYLOAD_RQ;
                     pl_event.args[0] = CONFIG_PL_ID_PAYLOAD_X;
-                    notify_event_to_mission_manager(&pl_event);
+                    (void)notify_event_to_mission_manager(&pl_event);
                 }
                 else
                 {
                     sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the Payload-X payload! Invalid key!");
                     sys_log_new_line();
+                    err = -1;
                 }
 
                 break;
@@ -1192,8 +1233,21 @@ void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
             default:
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid payload to deactivate!");
                 sys_log_new_line();
-
+                err = -1;
                 break;
+        }
+
+        if (err == 0)
+        {
+            if (xTaskNotifyWait(0U, UINT32_MAX, NULL, pdMS_TO_TICKS(TASK_PROCESS_TC_MAX_WAIT_TIME_MS)) == pdTRUE)
+            {
+                (void)send_tc_feedback(pkt);
+            }
+            else 
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Mission manager notify timed out for \"Deactivate payload\"");
+                sys_log_new_line();
+            }
         }
     }
 }
@@ -1260,7 +1314,19 @@ void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
                 case CONFIG_SUBSYSTEM_ID_OBDH:
                     if (obdh_set_param(pkt[9], &buf) == 0)
                     {
-                        /* Check for notification from mission_manager */
+                        if (pkt[9] == OBDH_PARAM_ID_MODE)
+                        {
+                            /* Check for notification from mission_manager */
+                            if (xTaskNotifyWait(0U, UINT32_MAX, NULL, pdMS_TO_TICKS(TASK_PROCESS_TC_MAX_WAIT_TIME_MS)) == pdTRUE)
+                            {
+                                (void)send_tc_feedback(pkt);
+                            }
+                            else 
+                            {
+                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Mission manager notify timed out for \"Set param MODE\"");
+                                sys_log_new_line();
+                            }
+                        }
                     }
                     else 
                     {
