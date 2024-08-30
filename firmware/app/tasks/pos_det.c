@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.10.19
+ * \version 0.10.20
  * 
  * \date 2023/07/19
  * 
@@ -38,20 +38,21 @@
 #include <system/sys_log/sys_log.h>
 #include <config/config.h>
 #include <predict/predict.h>
+#include <predict/unsorted.h>
 #include <structs/satellite.h>
 
 #include "pos_det.h"
 #include "startup.h"
 #include "op_ctrl.h"
 
-#ifndef M_PI
-    #define M_PI 3.14159265358979323846
-#endif /* M_PI */
-
 xTaskHandle xTaskPosDetHandle;
 
 void vTaskPosDet(void)
 {
+    static predict_orbital_elements_t satellite;
+    static struct predict_sgp4 sgp4_model;
+    static struct predict_sdp4 sdp4_model;
+
     /* Flag used to control notification sending */
     bool sat_is_inside_brazil = false;
 
@@ -63,25 +64,23 @@ void vTaskPosDet(void)
         TickType_t last_cycle = xTaskGetTickCount();
 
         /* Load TLE lines */
-        const char *tle_line_1 = "1 25544U 98067A   15129.86961041  .00015753  00000-0  23097-3 0  9998";
-        const char *tle_line_2 = "2 25544  51.6464 275.3867 0006524 289.1638 208.5861 15.55704207942078";
-
-        /* Create orbit object */
-        predict_orbital_elements_t *satellite = predict_parse_tle(tle_line_1, tle_line_2);
-
-        if (satellite != NULL)
+        const char *tle_line_1 = "1 25544U 98067A   24223.83784911  .00020194  00000+0  36238-3 0  9994";
+        const char *tle_line_2 = "2 25544  51.6408  44.5872 0005770 185.1957 306.5656 15.49872002467029";
+        
+        /* Populate orbit elements */
+        if (predict_parse_tle(&satellite, &sgp4_model, &sdp4_model, tle_line_1, tle_line_2) != NULL)
         {
             /* Predict satellite position */
             struct predict_position my_orbit;
 
             sys_time_t now = system_get_time();
 
-            predict_julian_date_t curr_time = predict_to_julian(now - 631065600UL);   /* Unix timestamp in 1989/12/31 00:00:00 UTC */
+            predict_julian_date_t curr_time = julian_from_timestamp(now + 1723341922ULL);   /* 1723341922ULL Corresponds to ISO Time Stamp: 2024-08-11T02:05:22Z */
 
-            predict_orbit(satellite, &my_orbit, curr_time);
+            (void)predict_orbit(&satellite, &my_orbit, curr_time);
 
-            float lat = my_orbit.latitude * 180.0 / M_PI;
-            float lon = my_orbit.longitude * 180.0 / M_PI;
+            float lat = predictRAD2DEG(my_orbit.latitude);
+            float lon = predictRAD2DEG(my_orbit.longitude);
             float alt = my_orbit.altitude;
 
             sat_data_buf.obdh.data.position.latitude    = (int16_t)lat;
@@ -97,27 +96,26 @@ void vTaskPosDet(void)
             sys_log_print_float(alt, 2);
             sys_log_print_msg(" km");
             sys_log_new_line();
+
+            bool current_position = is_satellite_in_brazil(sat_data_buf.obdh.data.position.latitude, sat_data_buf.obdh.data.position.longitude);
+
+            if (current_position && !sat_is_inside_brazil)
+            {
+                sat_is_inside_brazil = true;
+                notify_op_ctrl(SAT_NOTIFY_IN_BRAZIL);
+            }
+
+            if (!current_position && sat_is_inside_brazil)
+            {
+                sat_is_inside_brazil = false;
+                notify_op_ctrl(SAT_NOTIFY_OUT_OF_BRAZIL);
+            }
+
         }
         else
         {
-            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_POS_DET_NAME, "Failed to initialize orbit from TLE!");
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_POS_DET_NAME, "Failed to parse TLEs");
             sys_log_new_line();
-        }
-
-        predict_destroy_orbital_elements(satellite);
-
-        bool current_position = is_satellite_in_brazil(sat_data_buf.obdh.data.position.latitude, sat_data_buf.obdh.data.position.longitude);
-
-        if (current_position && !sat_is_inside_brazil)
-        {
-            sat_is_inside_brazil = true;
-            notify_op_ctrl(SAT_NOTIFY_IN_BRAZIL);
-        }
-
-        if (!current_position && sat_is_inside_brazil)
-        {
-            sat_is_inside_brazil = false;
-            notify_op_ctrl(SAT_NOTIFY_OUT_OF_BRAZIL);
         }
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_POS_DET_PERIOD_MS));
