@@ -46,7 +46,7 @@
 #include <structs/satellite.h>
 #include <system/system.h>
 
-#define TASK_MISSION_MANAGER_NAME                      "Mission Man"          /**< Task name. */
+#define TASK_MISSION_MANAGER_NAME                      "Mission Manager"      /**< Task name. */
 #define TASK_MISSION_MANAGER_STACK_SIZE                512U                   /**< Stack size in bytes. */
 #define TASK_MISSION_MANAGER_PRIORITY                  4U                     /**< Task priority. */
 #define TASK_MISSION_MANAGER_EV_NOTIFICATION_TIMEOUT   (3600000UL)            /**< Task maximum block time waiting for event notifications */
