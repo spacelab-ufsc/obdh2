@@ -100,19 +100,19 @@ void vTaskReadEDC(void)
 
                     edc->timestamp = system_get_time();
 
-                    edc_state_t state = *(edc_state_t*)&state_arr[0];
+                    edc_state_t *state = (edc_state_t*)&state_arr[0];
 
-                    if (state.ptt_available > 0)
+                    if (state->ptt_available > 0)
                     {
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_EDC_NAME, "");
-                        sys_log_print_uint(state.ptt_available);
+                        sys_log_print_uint(state->ptt_available);
                         sys_log_print_msg(" PTT packet(s) available to read!");
                         sys_log_new_line();
 
                         vTaskDelay(pdMS_TO_TICKS(50U));
 
                         uint8_t i = 0;
-                        for(i = 0; i < state.ptt_available; i++)
+                        for(i = 0; i < state->ptt_available; i++)
                         {
                             uint8_t ptt_arr[50] = {0};
                             int32_t ptt_len = 0;
