@@ -570,14 +570,14 @@ static int enable_ttc_tx(void)
 {
     int err = 0;
 
-    if (ttc_set_param(TTC_0, SL_TTC2_REG_TX_ENABLE, 1U) != 0)
+    if (ttc_leave_hibernation(TTC_0) != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_MISSION_MANAGER_NAME, "Failed to enable TTC 0 TX");
         sys_log_new_line();
         err--;
     }
 
-    if (ttc_set_param(TTC_1, SL_TTC2_REG_TX_ENABLE, 1U) != 0)
+    if (ttc_leave_hibernation(TTC_1) != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_MISSION_MANAGER_NAME, "Failed to enable TTC 1 TX");
         sys_log_new_line();
@@ -591,14 +591,14 @@ static int disable_ttc_tx(void)
 {
     int err = 0;
 
-    if (ttc_set_param(TTC_0, SL_TTC2_REG_TX_ENABLE, 0U) != 0)
+    if (ttc_enter_hibernation(TTC_0) != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_MISSION_MANAGER_NAME, "Failed to disable TTC 0 TX");
         sys_log_new_line();
         err--;
     }
 
-    if (ttc_set_param(TTC_1, SL_TTC2_REG_TX_ENABLE, 0U) != 0)
+    if (ttc_enter_hibernation(TTC_1) != 0)
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_MISSION_MANAGER_NAME, "Failed to disable TTC 1 TX");
         sys_log_new_line();
