@@ -107,6 +107,7 @@
 #define CONFIG_PKT_ID_UPLINK_GET_PAYLOAD_DATA           0x4B
 #define CONFIG_PKT_ID_UPLINK_SET_PARAM                  0x4C
 #define CONFIG_PKT_ID_UPLINK_GET_PARAM                  0x4D
+#define CONFIG_PKT_ID_UPLINK_UPDATE_TLE                 0x4E
 
 /* Subsystem IDs */
 #define CONFIG_SUBSYSTEM_ID_OBDH                        0

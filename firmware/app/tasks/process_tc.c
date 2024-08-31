@@ -56,6 +56,7 @@
 
 #include "process_tc.h"
 #include "mission_manager.h"
+#include "pos_det.h"
 #include "startup.h"
 
 xTaskHandle xTaskProcessTCHandle;
@@ -239,6 +240,17 @@ static void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len);
 static void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len);
 
 /**
+ * \brief Update TLE telecommand.
+ *
+ * \param[in] pkt is the packet to process.
+ *
+ * \param[in] pkt_len is the number of bytes of the given packet.
+ *
+ * \return None.
+ */
+static void process_tc_update_tle(uint8_t *pkt, uint16_t pkt_len);
+
+/**
  * \brief Checks if a given HMAC is valid or not.
  *
  * \param[in] msg is the message to compute the hash.
@@ -382,6 +394,13 @@ void vTaskProcessTC(void)
                         process_tc_get_parameter(pkt, pkt_len);
 
                         break;
+                    case CONFIG_PKT_ID_UPLINK_UPDATE_TLE:
+                        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Update TLE\"...");
+                        sys_log_new_line();
+
+                        process_tc_update_tle(pkt, pkt_len);
+
+                        break;
                     default:
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Unknown packet received!");
                         sys_log_new_line();
@@ -395,7 +414,7 @@ void vTaskProcessTC(void)
     }
 }
 
-void process_tc_ping_request(uint8_t *pkt, uint16_t pkt_len)
+static void process_tc_ping_request(uint8_t *pkt, uint16_t pkt_len)
 {
     if (pkt_len >= 8U)
     {
@@ -427,7 +446,7 @@ void process_tc_ping_request(uint8_t *pkt, uint16_t pkt_len)
     }
 }
 
-void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
+static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 {
     /* If the satellite is in hibernation mode there is no point in processing this telecommand */
     if ((pkt_len >= (1U + 7U + 1U + 4U + 4U)) && (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION))
@@ -776,7 +795,7 @@ void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
     }
 }
 
-void process_tc_broadcast_message(uint8_t *pkt, uint16_t pkt_len)
+static void process_tc_broadcast_message(uint8_t *pkt, uint16_t pkt_len)
 {
     if (pkt_len >= 15U)
     {
@@ -810,7 +829,7 @@ void process_tc_broadcast_message(uint8_t *pkt, uint16_t pkt_len)
     }
 }
 
-void process_tc_enter_hibernation(uint8_t *pkt, uint16_t pkt_len)
+static void process_tc_enter_hibernation(uint8_t *pkt, uint16_t pkt_len)
 {
     if (pkt_len >= 30U)
     {
@@ -839,7 +858,7 @@ void process_tc_enter_hibernation(uint8_t *pkt, uint16_t pkt_len)
     }
 }
 
-void process_tc_leave_hibernation(uint8_t *pkt, uint16_t pkt_len)
+static void process_tc_leave_hibernation(uint8_t *pkt, uint16_t pkt_len)
 {
     if (pkt_len >= 30U)
     {
@@ -868,7 +887,7 @@ void process_tc_leave_hibernation(uint8_t *pkt, uint16_t pkt_len)
     }
 }
 
-void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len)
+static void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len)
 {
     int8_t err = -2;
 
@@ -966,7 +985,7 @@ void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len)
     }
 }
 
-void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
+static void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
 {
     int8_t err = -2;
 
@@ -1062,7 +1081,7 @@ void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
     }
 }
 
-void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
+static void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
 {
     int8_t err = 0;
     event_t pl_event = { 0 };
@@ -1159,7 +1178,7 @@ void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
     }
 }
 
-void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
+static void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
 {
     event_t pl_event = { 0 };
     int8_t err = 0;
@@ -1256,7 +1275,7 @@ void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
     }
 }
 
-void process_tc_erase_memory(uint8_t *pkt, uint16_t pkt_len)
+static void process_tc_erase_memory(uint8_t *pkt, uint16_t pkt_len)
 {
     if (pkt_len >= 28U)
     {
@@ -1278,7 +1297,7 @@ void process_tc_erase_memory(uint8_t *pkt, uint16_t pkt_len)
     }
 }
 
-void process_tc_force_reset(uint8_t *pkt, uint16_t pkt_len)
+static void process_tc_force_reset(uint8_t *pkt, uint16_t pkt_len)
 {
     if (pkt_len >= 28U)
     {
@@ -1296,7 +1315,7 @@ void process_tc_force_reset(uint8_t *pkt, uint16_t pkt_len)
     }
 }
 
-void process_tc_get_payload_data(uint8_t *pkt, uint16_t pkt_len)
+static void process_tc_get_payload_data(uint8_t *pkt, uint16_t pkt_len)
 {
     if (pkt_len >= (1U + 7U + 1U + 12U + 20U))
     {
@@ -1381,7 +1400,7 @@ void process_tc_get_payload_data(uint8_t *pkt, uint16_t pkt_len)
     }
 }
 
-void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
+static void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
 {
     if (pkt_len >= (1U + 7U + 1U + 1U + 4U + 20U))
     {
@@ -1459,7 +1478,7 @@ void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
     }
 }
 
-void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
+static void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
 {
     if (pkt_len >= (1U + 7U + 1U + 1U + 20U))
     {
@@ -1560,7 +1579,30 @@ void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
     }
 }
 
-bool process_tc_validate_hmac(uint8_t *msg, uint16_t msg_len, uint8_t *msg_hash, uint16_t msg_hash_len, uint8_t *key, uint16_t key_len)
+static void process_tc_update_tle(uint8_t *pkt, uint16_t pkt_len)
+{
+    if (pkt_len >= (1U + 7U + 69U + 69U + 20U))
+    {
+        uint8_t tc_key[16] = CONFIG_TC_KEY_UPDATE_TLE;
+
+        if (process_tc_validate_hmac(pkt, 1U + 7U + 69U + 69U, &pkt[146], 20U, tc_key, sizeof(CONFIG_TC_KEY_UPDATE_TLE)-1U))
+        {
+            taskENTER_CRITICAL();
+            (void)memcpy(&sat_data_buf.obdh.data.position.tle_line1, &pkt[8], 69U);
+            (void)memcpy(&sat_data_buf.obdh.data.position.tle_line2, &pkt[77], 69U);
+            sat_data_buf.obdh.data.position.tle_line1[69] = '\0';
+            sat_data_buf.obdh.data.position.tle_line2[69] = '\0';
+            taskEXIT_CRITICAL();
+
+            /* Notify Position Determination Task of TLE update */
+            xTaskNotify(xTaskPosDetHandle, 0U, eNoAction);
+
+            (void)send_tc_feedback(pkt);
+        }
+    }
+}
+
+static bool process_tc_validate_hmac(uint8_t *msg, uint16_t msg_len, uint8_t *msg_hash, uint16_t msg_hash_len, uint8_t *key, uint16_t key_len)
 {
     bool res = false;
 
@@ -2021,7 +2063,7 @@ static int8_t send_tc_feedback(uint8_t *pkt)
 
     if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
     {
-        if (ttc_send(TTC_0, feedback_pkt, feedback_pkt_len) != 0)
+        if (ttc_send(TTC_1, feedback_pkt, feedback_pkt_len) != 0)
         {
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a \"TC Feedback\"!");
             sys_log_new_line();

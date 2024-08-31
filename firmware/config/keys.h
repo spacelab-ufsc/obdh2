@@ -54,6 +54,7 @@
 #define CONFIG_TC_KEY_GET_PAYLOAD_DATA                  "BkN&a):^fr(@(5x?"
 #define CONFIG_TC_KEY_SET_PARAMETER                     "x&veg;r[y{z{{T;7"
 #define CONFIG_TC_KEY_GET_PARAMETER                     "EB'YThpxu7,yla,m"
+#define CONFIG_TC_KEY_UPDATE_TLE                        "LJ(@y#xd7%@|#@;g"
 
 #endif /* KEYS_H_ */
 
