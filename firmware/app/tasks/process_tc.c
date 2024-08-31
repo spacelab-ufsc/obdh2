@@ -1597,7 +1597,15 @@ static void process_tc_update_tle(uint8_t *pkt, uint16_t pkt_len)
             /* Notify Position Determination Task of TLE update */
             xTaskNotify(xTaskPosDetHandle, 0U, eNoAction);
 
-            (void)send_tc_feedback(pkt);
+            if (mem_mng_save_obdh_data_to_fram(&sat_data_buf.obdh) == 0)
+            {
+                (void)send_tc_feedback(pkt);
+            }
+            else
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Failed to save OBDH data after TLE Update");
+                sys_log_new_line();
+            }
         }
     }
 }
