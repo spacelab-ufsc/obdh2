@@ -418,6 +418,9 @@ static void process_tc_ping_request(uint8_t *pkt, uint16_t pkt_len)
 {
     if (pkt_len >= 8U)
     {
+        /* Update last valid tc parameter */
+        sat_data_buf.obdh.data.last_valid_tc = pkt[0];
+
         fsat_pkt_pl_t pong_pl = {0};
 
         /* Packet ID */
@@ -465,6 +468,9 @@ static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U + 1U + 4U + 4U, &pkt[17], 20U, tc_key, sizeof(CONFIG_TC_KEY_DATA_REQUEST)-1U))
         {
+            /* Update last valid tc parameter */
+            sat_data_buf.obdh.data.last_valid_tc = pkt[0];
+
             uint32_t start_idx = ((uint32_t)pkt[9] << 24) | ((uint32_t)pkt[10] << 16) | ((uint32_t)pkt[11] << 8) | (uint32_t)pkt[12];
             uint32_t end_idx = ((uint32_t)pkt[13] << 24) | ((uint32_t)pkt[14] << 16) | ((uint32_t)pkt[15] << 8) | (uint32_t)pkt[16];
 
@@ -799,6 +805,9 @@ static void process_tc_broadcast_message(uint8_t *pkt, uint16_t pkt_len)
 {
     if (pkt_len >= 15U)
     {
+        /* Update last valid tc parameter */
+        sat_data_buf.obdh.data.last_valid_tc = pkt[0];
+
         fsat_pkt_pl_t broadcast_pl = {0};
 
         /* Packet ID */
@@ -837,6 +846,9 @@ static void process_tc_enter_hibernation(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U + 2U, &pkt[10], 20U, tc_key, sizeof(CONFIG_TC_KEY_ENTER_HIBERNATION)-1U))
         {
+            /* Update last valid tc parameter */
+            sat_data_buf.obdh.data.last_valid_tc = pkt[0];
+
             const event_t enter_hib = { .event = EV_NOTIFY_MODE_CHANGE_RQ, .args[0] = OBDH_MODE_HIBERNATION,  .args[1] = pkt[8], .args[2] = pkt[9] };
             (void)notify_event_to_mission_manager(&enter_hib);
 
@@ -866,6 +878,9 @@ static void process_tc_leave_hibernation(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U, &pkt[8], 20U, tc_key, sizeof(CONFIG_TC_KEY_LEAVE_HIBERNATION)-1U))
         {
+            /* Update last valid tc parameter */
+            sat_data_buf.obdh.data.last_valid_tc = pkt[0];
+
             const event_t leave_hib = { .event = EV_NOTIFY_MODE_CHANGE_RQ, .args[0] = OBDH_WAKE_UP,  .args[1] = 0U, .args[2] = 0U };
             (void)notify_event_to_mission_manager(&leave_hib);
 
@@ -893,17 +908,20 @@ static void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len)
 
     if (pkt_len >= 29U)
     {
-        switch(pkt[8])
+        uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_MODULE;
+
+        if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_MODULE)-1U))
         {
-            case CONFIG_MODULE_ID_BATTERY_HEATER:
+            /* Update last valid tc parameter */
+            sat_data_buf.obdh.data.last_valid_tc = pkt[0];
+
+            switch(pkt[8])
             {
-                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the battery heater...");
-                sys_log_new_line();
-
-                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_MODULE;
-
-                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_MODULE)-1U))
+                case CONFIG_MODULE_ID_BATTERY_HEATER:
                 {
+                    sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the battery heater...");
+                    sys_log_new_line();
+
                     /* Enable the EPS heater */
                     if (eps_set_param(SL_EPS2_REG_BAT_HEATER_1_MODE, SL_EPS2_HEATER_MODE_MANUAL) == 0)
                     {
@@ -925,62 +943,37 @@ static void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len)
                     {
                         (void)send_tc_feedback(pkt);
                     }
+
+                    break;
                 }
-                else
+                case CONFIG_MODULE_ID_BEACON:
                 {
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the battery heater module! Invalid key!");
+                    sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the beacon...");
                     sys_log_new_line();
-                }
 
-                break;
-            }
-            case CONFIG_MODULE_ID_BEACON:
-            {
-                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the beacon...");
-                sys_log_new_line();
-
-                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_MODULE;
-
-                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_MODULE)-1U))
-                {
                     /* Enable the beacon */
                     sat_data_buf.obdh.data.beacon_on = true;
                     (void)send_tc_feedback(pkt);
-                }
-                else
-                {
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the beacon module! Invalid key!");
-                    sys_log_new_line();
-                }
 
-                break;
+                    break;
+                }
+                case CONFIG_MODULE_ID_PERIODIC_TELEMETRY:
+                {
+                    sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the periodic telemetry...");
+                    sys_log_new_line();
+                    break;
+                }
+                default:
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid module to activate!");
+                    sys_log_new_line();
+
+                    break;
             }
-            case CONFIG_MODULE_ID_PERIODIC_TELEMETRY:
-            {
-                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the periodic telemetry...");
-                sys_log_new_line();
-
-                uint8_t tc_key[16] = CONFIG_TC_KEY_ACTIVATE_MODULE;
-
-                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_MODULE)-1U))
-                {
-                    /* Enable the periodic telemetry */
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
-                    sys_log_new_line();
-                }
-                else
-                {
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error activating the periodic telemetry module! Invalid key!");
-                    sys_log_new_line();
-                }
-
-                break;
-            }
-            default:
-                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid module to activate!");
-                sys_log_new_line();
-
-                break;
+        }
+        else 
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Activate module\" TC! Invalid key!");
+            sys_log_new_line();
         }
     }
 }
@@ -991,17 +984,20 @@ static void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
 
     if (pkt_len >= 29U)
     {
-        switch(pkt[8])
+        uint8_t tc_key[16] = CONFIG_TC_KEY_DEACTIVATE_MODULE;
+
+        if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_MODULE)-1U))
         {
-            case CONFIG_MODULE_ID_BATTERY_HEATER:
+            /* Update last valid tc parameter */
+            sat_data_buf.obdh.data.last_valid_tc = pkt[0];
+
+            switch(pkt[8])
             {
-                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the battery heater...");
-                sys_log_new_line();
-
-                uint8_t tc_key[16] = CONFIG_TC_KEY_DEACTIVATE_MODULE;
-
-                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_MODULE)-1U))
+                case CONFIG_MODULE_ID_BATTERY_HEATER:
                 {
+                    sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the battery heater...");
+                    sys_log_new_line();
+
                     /* Disable the EPS heater */
                     if (eps_set_param(SL_EPS2_REG_BAT_HEATER_1_MODE, SL_EPS2_HEATER_MODE_MANUAL) == 0)
                     {
@@ -1023,60 +1019,40 @@ static void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
                     {
                         (void)send_tc_feedback(pkt);
                     }
+
+                    break;
                 }
-                else
+                case CONFIG_MODULE_ID_BEACON:
                 {
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the battery heater module! Invalid key!");
+                    sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the beacon...");
                     sys_log_new_line();
-                }
 
-                break;
-            }
-            case CONFIG_MODULE_ID_BEACON:
-            {
-                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the beacon...");
-                sys_log_new_line();
-
-                uint8_t tc_key[16] = CONFIG_TC_KEY_DEACTIVATE_MODULE;
-
-                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_MODULE)-1U))
-                {
                     /* Enable the beacon */
                     sat_data_buf.obdh.data.beacon_on = false;
                     (void)send_tc_feedback(pkt);
+
+                    break;
                 }
-                else
+                case CONFIG_MODULE_ID_PERIODIC_TELEMETRY:
                 {
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the beacon module! Invalid key!");
+                    sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the periodic telemetry...");
                     sys_log_new_line();
-                }
 
-                break;
-            }
-            case CONFIG_MODULE_ID_PERIODIC_TELEMETRY:
-            {
-                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the periodic telemetry...");
-                sys_log_new_line();
-
-                uint8_t tc_key[16] = CONFIG_TC_KEY_DEACTIVATE_MODULE;
-
-                if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_MODULE)-1U))
-                {
                     sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
                     sys_log_new_line();
-                }
-                else
-                {
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error deactivating the periodic telemetry module! Invalid key!");
-                    sys_log_new_line();
-                }
 
-                break;
+                    break;
+                }
+                default:
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid module to deactivate!");
+                    sys_log_new_line();
+                    break;
             }
-            default:
-                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid module to deactivate!");
-                sys_log_new_line();
-                break;
+        }
+        else 
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Deactivate module\" TC! Invalid key!");
+            sys_log_new_line();
         }
     }
 }
@@ -1099,6 +1075,8 @@ static void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
 
                 if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_PAYLOAD_EDC)-1U))
                 {
+                    /* Update last valid tc parameter */
+                    sat_data_buf.obdh.data.last_valid_tc = pkt[0];
                     pl_event.event = EV_NOTIFY_ACTIVATE_PAYLOAD_RQ;
                     pl_event.args[0] = CONFIG_PL_ID_EDC_1;
                     (void)notify_event_to_mission_manager(&pl_event);
@@ -1121,6 +1099,8 @@ static void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
 
                 if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_PAYLOAD_EDC)-1U))
                 {
+                    /* Update last valid tc parameter */
+                    sat_data_buf.obdh.data.last_valid_tc = pkt[0];
                     pl_event.event = EV_NOTIFY_ACTIVATE_PAYLOAD_RQ;
                     pl_event.args[0] = CONFIG_PL_ID_EDC_2;
                     (void)notify_event_to_mission_manager(&pl_event);
@@ -1143,6 +1123,8 @@ static void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
 
                 if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_ACTIVATE_PAYLOAD_PAYLOAD_X)-1U))
                 {
+                    /* Update last valid tc parameter */
+                    sat_data_buf.obdh.data.last_valid_tc = pkt[0];
                     pl_event.event = EV_NOTIFY_ACTIVATE_PAYLOAD_RQ;
                     pl_event.args[0] = CONFIG_PL_ID_PAYLOAD_X;
                     (void)notify_event_to_mission_manager(&pl_event);
@@ -1196,6 +1178,8 @@ static void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
 
                 if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_EDC)-1U))
                 {
+                    /* Update last valid tc parameter */
+                    sat_data_buf.obdh.data.last_valid_tc = pkt[0];
                     pl_event.event = EV_NOTIFY_DEACTIVATE_PAYLOAD_RQ;
                     pl_event.args[0] = CONFIG_PL_ID_EDC_1;
                     (void)notify_event_to_mission_manager(&pl_event);
@@ -1218,6 +1202,8 @@ static void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
 
                 if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_EDC)-1U))
                 {
+                    /* Update last valid tc parameter */
+                    sat_data_buf.obdh.data.last_valid_tc = pkt[0];
                     pl_event.event = EV_NOTIFY_DEACTIVATE_PAYLOAD_RQ;
                     pl_event.args[0] = CONFIG_PL_ID_EDC_2;
                     (void)notify_event_to_mission_manager(&pl_event);
@@ -1240,6 +1226,8 @@ static void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
 
                 if (process_tc_validate_hmac(pkt, 1U + 7U + 1U, &pkt[9], 20U, tc_key, sizeof(CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_PAYLOAD_X)-1U))
                 {
+                    /* Update last valid tc parameter */
+                    sat_data_buf.obdh.data.last_valid_tc = pkt[0];
                     pl_event.event = EV_NOTIFY_DEACTIVATE_PAYLOAD_RQ;
                     pl_event.args[0] = CONFIG_PL_ID_PAYLOAD_X;
                     (void)notify_event_to_mission_manager(&pl_event);
@@ -1283,6 +1271,9 @@ static void process_tc_erase_memory(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U, &pkt[8], 20U, tc_key, sizeof(CONFIG_TC_KEY_ERASE_MEMORY)-1U))
         {
+            /* Update last valid tc parameter */
+            sat_data_buf.obdh.data.last_valid_tc = pkt[0];
+
             if (mem_mng_erase_flash(&sat_data_buf.obdh) < 0)
             {
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error erasing flash memory!");
@@ -1327,6 +1318,9 @@ static void process_tc_get_payload_data(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U + 1U + 12U, &pkt[21], 20U, tc_key, sizeof(CONFIG_TC_KEY_GET_PAYLOAD_DATA) - 1U))
         {
+            /* Update last valid tc parameter */
+            sat_data_buf.obdh.data.last_valid_tc = pkt[0];
+
             switch (pkt[8]) 
             {
                 case CONFIG_PL_ID_EDC_1:
@@ -1412,6 +1406,9 @@ static void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U + 1U + 1U + 4U, &pkt[14], 20U, tc_key, sizeof(CONFIG_TC_KEY_SET_PARAMETER)-1U))
         {
+            /* Update last valid tc parameter */
+            sat_data_buf.obdh.data.last_valid_tc = pkt[0];
+
             uint32_t buf = ((uint32_t)pkt[10] << 24) |
                            ((uint32_t)pkt[11] << 16) |
                            ((uint32_t)pkt[12] << 8) |
@@ -1574,6 +1571,11 @@ static void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
                     }
                 }
             }
+
+            /* Update last valid tc parameter, this is made after transmission 
+             * because the parameter requested could be last_valid_tc aswell */
+            sat_data_buf.obdh.data.last_valid_tc = pkt[0];
+
         }
         else
         {
@@ -1591,6 +1593,9 @@ static void process_tc_update_tle(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U + 69U + 69U, &pkt[146], 20U, tc_key, sizeof(CONFIG_TC_KEY_UPDATE_TLE)-1U))
         {
+            /* Update last valid tc parameter */
+            sat_data_buf.obdh.data.last_valid_tc = pkt[0];
+
             taskENTER_CRITICAL();
             (void)memcpy(&sat_data_buf.obdh.data.position.tle_line1, &pkt[8], 69U);
             (void)memcpy(&sat_data_buf.obdh.data.position.tle_line2, &pkt[77], 69U);
