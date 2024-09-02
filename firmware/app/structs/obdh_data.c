@@ -65,9 +65,16 @@ int8_t obdh_set_param(uint8_t param_id, uint32_t *buf)
 
             break;
         }
-        case OBDH_PARAM_ID_TIMESTAMP_LAST_MODE:
+        case OBDH_PARAM_ID_INITIAL_HIB_EXECUTED:    
         {
-            sat_data_buf.obdh.data.ts_last_mode_change = *buf;
+            if ((*buf == 0UL) || (*buf == 1UL))
+            {
+                sat_data_buf.obdh.data.initial_hib_executed = (bool)(*buf);
+            }
+            else 
+            {
+                err = -1;
+            }
             break;
         }
         case OBDH_PARAM_ID_MODE_DURATION:
@@ -142,23 +149,38 @@ int8_t obdh_get_param(uint8_t param_id, uint32_t *buf)
 
     switch(param_id)
     {
-        case OBDH_PARAM_ID_TIME_COUNTER:            *buf = system_get_time();                                                break;
-        case OBDH_PARAM_ID_TEMPERATURE_UC:          *buf = sat_data_buf.obdh.data.temperature;                               break;
-        case OBDH_PARAM_ID_INPUT_CURRENT:           *buf = sat_data_buf.obdh.data.current;                                   break;
-        case OBDH_PARAM_ID_INPUT_VOLTAGE:           *buf = sat_data_buf.obdh.data.voltage;                                   break;
-        case OBDH_PARAM_ID_LAST_RESET_CAUSE:        *buf = sat_data_buf.obdh.data.last_reset_cause;                          break;
-        case OBDH_PARAM_ID_RESET_COUNTER:           *buf = sat_data_buf.obdh.data.reset_counter;                             break;
-        case OBDH_PARAM_ID_LAST_VALID_TC:           *buf = sat_data_buf.obdh.data.last_valid_tc;                             break;
-        case OBDH_PARAM_ID_TEMPERATURE_ANTENNA:     *buf = sat_data_buf.antenna.data.temperature;                            break;
-        case OBDH_PARAM_ID_ANTENNA_STATUS:          *buf = sat_data_buf.antenna.data.status.code;                            break;
-        case OBDH_PARAM_ID_HARDWARE_VERSION:        *buf = sat_data_buf.obdh.data.hw_version;                                break;
-        case OBDH_PARAM_ID_FIRMWARE_VERSION:        *buf = sat_data_buf.obdh.data.fw_version;                                break;
-        case OBDH_PARAM_ID_MODE:                    *buf = sat_data_buf.obdh.data.mode;                                      break;
-        case OBDH_PARAM_ID_TIMESTAMP_LAST_MODE:     *buf = sat_data_buf.obdh.data.ts_last_mode_change;                       break;
-        case OBDH_PARAM_ID_MODE_DURATION:           *buf = system_get_time() - sat_data_buf.obdh.data.ts_last_mode_change;   break;
-        case OBDH_PARAM_ID_MANUAL_MODE_ON:          *buf = sat_data_buf.obdh.data.manual_mode_on;                            break;
-        case OBDH_PARAM_ID_MAIN_EDC:                *buf = sat_data_buf.obdh.data.main_edc;                                  break;
-        case OBDH_PARAM_ID_GENERAL_TELEMETRY_ON:    *buf = sat_data_buf.obdh.data.general_telemetry_on;                      break;
+        case OBDH_PARAM_ID_TIME_COUNTER:             *buf = system_get_time();                                                break;
+        case OBDH_PARAM_ID_TEMPERATURE_UC:           *buf = sat_data_buf.obdh.data.temperature;                               break;
+        case OBDH_PARAM_ID_INPUT_CURRENT:            *buf = sat_data_buf.obdh.data.current;                                   break;
+        case OBDH_PARAM_ID_INPUT_VOLTAGE:            *buf = sat_data_buf.obdh.data.voltage;                                   break;
+        case OBDH_PARAM_ID_LAST_RESET_CAUSE:         *buf = sat_data_buf.obdh.data.last_reset_cause;                          break;
+        case OBDH_PARAM_ID_RESET_COUNTER:            *buf = sat_data_buf.obdh.data.reset_counter;                             break;
+        case OBDH_PARAM_ID_LAST_VALID_TC:            *buf = sat_data_buf.obdh.data.last_valid_tc;                             break;
+        case OBDH_PARAM_ID_TEMPERATURE_ANTENNA:      *buf = sat_data_buf.antenna.data.temperature;                            break;
+        case OBDH_PARAM_ID_ANTENNA_STATUS:           *buf = sat_data_buf.antenna.data.status.code;                            break;
+        case OBDH_PARAM_ID_HARDWARE_VERSION:         *buf = sat_data_buf.obdh.data.hw_version;                                break;
+        case OBDH_PARAM_ID_FIRMWARE_VERSION:         *buf = sat_data_buf.obdh.data.fw_version;                                break;
+        case OBDH_PARAM_ID_MODE:                     *buf = sat_data_buf.obdh.data.mode;                                      break;
+        case OBDH_PARAM_ID_TIMESTAMP_LAST_MODE:      *buf = sat_data_buf.obdh.data.ts_last_mode_change;                       break;
+        case OBDH_PARAM_ID_MODE_DURATION:            *buf = system_get_time() - sat_data_buf.obdh.data.ts_last_mode_change;   break;
+        case OBDH_PARAM_ID_INITIAL_HIB_EXECUTED:     *buf = sat_data_buf.obdh.data.initial_hib_executed;                      break;
+        case OBDH_PARAM_ID_INITIAL_HIB_TIME_COUNTER: *buf = sat_data_buf.obdh.data.initial_hib_time_count;                    break;
+        case OBDH_PARAM_ID_ANT_DEPLOYMENT_EXECUTED:  *buf = sat_data_buf.obdh.data.ant_deployment_executed;                   break;
+        case OBDH_PARAM_ID_ANT_DEPLOYMENT_COUNTER:   *buf = sat_data_buf.obdh.data.ant_deployment_counter;                    break;
+        case OBDH_PARAM_ID_LATITUDE:                 *buf = sat_data_buf.obdh.data.position.latitude;                         break;
+        case OBDH_PARAM_ID_LONGITUDE:                *buf = sat_data_buf.obdh.data.position.longitude;                        break;
+        case OBDH_PARAM_ID_ALTITUDE:                 *buf = sat_data_buf.obdh.data.position.altitude;                         break;
+        case OBDH_PARAM_ID_LAST_PAGE_OBDH_DATA:      *buf = sat_data_buf.obdh.data.media.last_page_obdh_data;                 break;
+        case OBDH_PARAM_ID_LAST_PAGE_EPS_DATA:       *buf = sat_data_buf.obdh.data.media.last_page_eps_data;                  break;
+        case OBDH_PARAM_ID_LAST_PAGE_TTC_0_DATA:     *buf = sat_data_buf.obdh.data.media.last_page_ttc_0_data;                break;
+        case OBDH_PARAM_ID_LAST_PAGE_TTC_1_DATA:     *buf = sat_data_buf.obdh.data.media.last_page_ttc_1_data;                break;
+        case OBDH_PARAM_ID_LAST_PAGE_ANT_DATA:       *buf = sat_data_buf.obdh.data.media.last_page_ant_data;                  break;
+        case OBDH_PARAM_ID_LAST_PAGE_EDC_DATA:       *buf = sat_data_buf.obdh.data.media.last_page_edc_data;                  break;
+        case OBDH_PARAM_ID_LAST_PAGE_PX_DATA:        *buf = sat_data_buf.obdh.data.media.last_page_px_data;                   break;
+        case OBDH_PARAM_ID_LAST_PAGE_SBCD_PKTS:      *buf = sat_data_buf.obdh.data.media.last_page_sbcd_pkts;                 break;
+        case OBDH_PARAM_ID_MANUAL_MODE_ON:           *buf = sat_data_buf.obdh.data.manual_mode_on;                            break;
+        case OBDH_PARAM_ID_MAIN_EDC:                 *buf = sat_data_buf.obdh.data.main_edc;                                  break;
+        case OBDH_PARAM_ID_GENERAL_TELEMETRY_ON:     *buf = sat_data_buf.obdh.data.general_telemetry_on;                      break;
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, OBDH_DATA_LOG_NAME, "Invalid parameter to get from OBDH!");
             sys_log_new_line();
