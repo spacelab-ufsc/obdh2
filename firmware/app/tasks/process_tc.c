@@ -951,9 +951,8 @@ static void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len)
                     sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the beacon...");
                     sys_log_new_line();
 
-                    /* Enable the beacon */
-                    sat_data_buf.obdh.data.beacon_on = true;
-                    (void)send_tc_feedback(pkt);
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
+                    sys_log_new_line();
 
                     break;
                 }
@@ -961,6 +960,11 @@ static void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len)
                 {
                     sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the periodic telemetry...");
                     sys_log_new_line();
+
+                    /* Enable periodic general telemetry */
+                    sat_data_buf.obdh.data.general_telemetry_on = true;
+                    (void)send_tc_feedback(pkt);
+
                     break;
                 }
                 default:
@@ -1027,9 +1031,8 @@ static void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
                     sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the beacon...");
                     sys_log_new_line();
 
-                    /* Enable the beacon */
-                    sat_data_buf.obdh.data.beacon_on = false;
-                    (void)send_tc_feedback(pkt);
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
+                    sys_log_new_line();
 
                     break;
                 }
@@ -1038,8 +1041,9 @@ static void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
                     sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the periodic telemetry...");
                     sys_log_new_line();
 
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
-                    sys_log_new_line();
+                    /* Disable periodic general telemetry */
+                    sat_data_buf.obdh.data.general_telemetry_on = false;
+                    (void)send_tc_feedback(pkt);
 
                     break;
                 }
@@ -1687,7 +1691,7 @@ uint32_t timestamp = system_get_time();
 			pl[31] = tel->data.ant_deployment_executed;
 			pl[32] = tel->data.manual_mode_on;
 			pl[33] = tel->data.main_edc;
-			pl[34] = tel->data.beacon_on;
+			pl[34] = tel->data.general_telemetry_on;
 			pl[35] = (tel->data.media.last_page_obdh_data >> 24U) & 0xFFU;
 			pl[36] = (tel->data.media.last_page_obdh_data >> 16U) & 0xFFU;
 			pl[37] = (tel->data.media.last_page_obdh_data >> 8U) & 0xFFU;

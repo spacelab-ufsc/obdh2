@@ -113,11 +113,11 @@ int8_t obdh_set_param(uint8_t param_id, uint32_t *buf)
 
             break;
         }
-        case OBDH_PARAM_ID_BEACON_ON:
+        case OBDH_PARAM_ID_GENERAL_TELEMETRY_ON:
         {
             if ((*buf == 0UL) || (*buf == 1UL))
             {
-                sat_data_buf.obdh.data.beacon_on = (bool)(*buf);
+                sat_data_buf.obdh.data.general_telemetry_on = (bool)(*buf);
             }
             else 
             {
@@ -158,7 +158,7 @@ int8_t obdh_get_param(uint8_t param_id, uint32_t *buf)
         case OBDH_PARAM_ID_MODE_DURATION:           *buf = system_get_time() - sat_data_buf.obdh.data.ts_last_mode_change;   break;
         case OBDH_PARAM_ID_MANUAL_MODE_ON:          *buf = sat_data_buf.obdh.data.manual_mode_on;                            break;
         case OBDH_PARAM_ID_MAIN_EDC:                *buf = sat_data_buf.obdh.data.main_edc;                                  break;
-        case OBDH_PARAM_ID_BEACON_ON:               *buf = sat_data_buf.obdh.data.beacon_on;                                 break;
+        case OBDH_PARAM_ID_GENERAL_TELEMETRY_ON:    *buf = sat_data_buf.obdh.data.general_telemetry_on;                      break;
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, OBDH_DATA_LOG_NAME, "Invalid parameter to get from OBDH!");
             sys_log_new_line();

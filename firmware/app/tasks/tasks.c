@@ -46,7 +46,7 @@
 #include "heartbeat.h"
 #include "system_reset.h"
 #include "read_sensors.h"
-#include "beacon.h"
+#include "general_telemetry.h"
 #include "time_control.h"
 #include "read_edc.h"
 #include "read_eps.h"
@@ -113,14 +113,14 @@ void create_tasks(void)
     }
 #endif /* CONFIG_TASK_READ_TEMP_ENABLED */
 
-#if defined(CONFIG_TASK_BEACON_ENABLED) && (CONFIG_TASK_BEACON_ENABLED == 1)
-    xTaskCreate(vTaskBeacon, TASK_BEACON_NAME, TASK_BEACON_STACK_SIZE, NULL, TASK_BEACON_PRIORITY, &xTaskBeaconHandle);
+#if defined(CONFIG_TASK_GENERAL_TELEMETRY_ENABLED) && (CONFIG_TASK_GENERAL_TELEMETRY_ENABLED == 1)
+    xTaskCreate(vTaskGeneralTelemetry, TASK_GENERAL_TELEMETRY_NAME, TASK_GENERAL_TELEMETRY_STACK_SIZE, NULL, TASK_GENERAL_TELEMETRY_PRIORITY, &xTaskGeneralTelemetryHandle);
 
-    if (xTaskBeaconHandle == NULL)
+    if (xTaskGeneralTelemetryHandle == NULL)
     {
-        /* Error creating the beacon task */
+        /* Error creating the general telemetry task */
     }
-#endif /* CONFIG_TASK_BEACON_ENABLED */
+#endif /* CONFIG_TASK_GENERAL_TELEMETRY_ENABLED */
 
 #if defined(CONFIG_TASK_TIME_CONTROL_ENABLED) && (CONFIG_TASK_TIME_CONTROL_ENABLED == 1)
     xTaskCreate(vTaskTimeControl, TASK_TIME_CONTROL_NAME, TASK_TIME_CONTROL_STACK_SIZE, NULL, TASK_TIME_CONTROL_PRIORITY, &xTaskTimeControlHandle);

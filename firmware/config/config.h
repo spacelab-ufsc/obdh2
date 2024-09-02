@@ -43,7 +43,7 @@
 #define CONFIG_TASK_HEARTBEAT_ENABLED                   1
 #define CONFIG_TASK_SYSTEM_RESET_ENABLED                1
 #define CONFIG_TASK_READ_SENSORS_ENABLED                1
-#define CONFIG_TASK_BEACON_ENABLED                      0
+#define CONFIG_TASK_GENERAL_TELEMETRY_ENABLED           0
 #define CONFIG_TASK_TIME_CONTROL_ENABLED                1
 #define CONFIG_TASK_READ_EDC_ENABLED                    1
 #define CONFIG_TASK_READ_EPS_ENABLED                    1
@@ -177,7 +177,7 @@
 #define CONFIG_TASK_HEARTBEAT_ENABLED                   0
 #define CONFIG_TASK_SYSTEM_RESET_ENABLED                0
 #define CONFIG_TASK_READ_SENSORS_ENABLED                0
-#define CONFIG_TASK_BEACON_ENABLED                      0
+#define CONFIG_TASK_GENERAL_TELEMETRY_ENABLED           0
 #define CONFIG_TASK_TIME_CONTROL_ENABLED                0
 #define CONFIG_TASK_READ_EDC_ENABLED                    1
 #define CONFIG_TASK_READ_EPS_ENABLED                    0
