@@ -2028,8 +2028,9 @@ uint32_t timestamp = system_get_time();
 			pl[32] = st->ptt_available;
 			pl[33] = st->ptt_is_paused;
 			pl[34] = st->sampler_state;
+            pl[35] = tel->id;
 
-			*pkt_pl_len = (uint16_t) 43U; /* 7b RQ CALLSIGN + 1b TC ID + 35b EDC STATE + HK DATA */
+			*pkt_pl_len = (uint16_t) 44U; /* 7b RQ CALLSIGN + 1b TC ID + 36b EDC STATE + HK DATA + EDC ID */
 
 			break;
 		}
