@@ -1288,6 +1288,10 @@ static void process_tc_erase_memory(uint8_t *pkt, uint16_t pkt_len)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error erasing flash memory!");
                 sys_log_new_line();
             }
+            else 
+            {
+                (void)send_tc_feedback(pkt);
+            }
         }
         else
         {
