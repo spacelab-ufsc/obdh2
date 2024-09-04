@@ -1861,25 +1861,25 @@ uint32_t timestamp = system_get_time();
 			pl[20] = tel->data.current_radio & 0xFFU;
 			pl[21] = (tel->data.temperature_radio >> 8U) & 0xFFU;
 			pl[22] = tel->data.temperature_radio & 0xFFU;
-			pl[24] = tel->data.last_valid_tc;
-			pl[26] = (tel->data.rssi_last_valid_tc >> 8U) & 0xFFU;
-			pl[27] = tel->data.rssi_last_valid_tc & 0xFFU;
-			pl[28] = (tel->data.temperature_antenna >> 8U) & 0xFFU;
-			pl[29] = tel->data.temperature_antenna & 0xFFU;
-			pl[30] = (tel->data.antenna_status >> 8U) & 0xFFU;
-			pl[31] = tel->data.antenna_status & 0xFFU;
-			pl[32] = tel->data.deployment_status;
-			pl[33] = tel->data.hibernation_status;
-			pl[34] = (tel->data.tx_packet_counter >> 24U) & 0xFFU;
-			pl[35] = (tel->data.tx_packet_counter >> 16U) & 0xFFU;
-			pl[36] = (tel->data.tx_packet_counter >> 8U) & 0xFFU;
-			pl[37] = tel->data.tx_packet_counter & 0xFFU;
-			pl[38] = (tel->data.rx_packet_counter >> 24U) & 0xFFU;
-			pl[39] = (tel->data.rx_packet_counter >> 16U) & 0xFFU;
-			pl[40] = (tel->data.rx_packet_counter >> 8U) & 0xFFU;
-			pl[41] = tel->data.rx_packet_counter & 0xFFU;
+			pl[23] = tel->data.last_valid_tc;
+			pl[24] = (tel->data.rssi_last_valid_tc >> 8U) & 0xFFU;
+			pl[25] = tel->data.rssi_last_valid_tc & 0xFFU;
+			pl[26] = (tel->data.temperature_antenna >> 8U) & 0xFFU;
+			pl[27] = tel->data.temperature_antenna & 0xFFU;
+			pl[28] = (tel->data.antenna_status >> 8U) & 0xFFU;
+			pl[29] = tel->data.antenna_status & 0xFFU;
+			pl[30] = tel->data.deployment_status;
+			pl[31] = tel->data.hibernation_status;
+			pl[32] = (tel->data.tx_packet_counter >> 24U) & 0xFFU;
+			pl[33] = (tel->data.tx_packet_counter >> 16U) & 0xFFU;
+			pl[34] = (tel->data.tx_packet_counter >> 8U) & 0xFFU;
+			pl[35] = tel->data.tx_packet_counter & 0xFFU;
+			pl[36] = (tel->data.rx_packet_counter >> 24U) & 0xFFU;
+			pl[37] = (tel->data.rx_packet_counter >> 16U) & 0xFFU;
+			pl[38] = (tel->data.rx_packet_counter >> 8U) & 0xFFU;
+			pl[39] = tel->data.rx_packet_counter & 0xFFU;
 
-			*pkt_pl_len = (uint16_t) 50U; /* 7b RQ CALLSIGN + 1b TC ID + 42b TTC DATA */
+			*pkt_pl_len = (uint16_t) 48U; /* 7b RQ CALLSIGN + 1b TC ID + 40b TTC DATA */
 
 			break;
 		}
@@ -1911,25 +1911,25 @@ uint32_t timestamp = system_get_time();
 			pl[20] = tel->data.current_radio & 0xFFU;
 			pl[21] = (tel->data.temperature_radio >> 8U) & 0xFFU;
 			pl[22] = tel->data.temperature_radio & 0xFFU;
-			pl[24] = tel->data.last_valid_tc;
-			pl[26] = (tel->data.rssi_last_valid_tc >> 8U) & 0xFFU;
-			pl[27] = tel->data.rssi_last_valid_tc & 0xFFU;
-			pl[28] = (tel->data.temperature_antenna >> 8U) & 0xFFU;
-			pl[29] = tel->data.temperature_antenna & 0xFFU;
-			pl[30] = (tel->data.antenna_status >> 8U) & 0xFFU;
-			pl[31] = tel->data.antenna_status & 0xFFU;
-			pl[32] = tel->data.deployment_status;
-			pl[33] = tel->data.hibernation_status;
-			pl[34] = (tel->data.tx_packet_counter >> 24U) & 0xFFU;
-			pl[35] = (tel->data.tx_packet_counter >> 16U) & 0xFFU;
-			pl[36] = (tel->data.tx_packet_counter >> 8U) & 0xFFU;
-			pl[37] = tel->data.tx_packet_counter & 0xFFU;
-			pl[38] = (tel->data.rx_packet_counter >> 24U) & 0xFFU;
-			pl[39] = (tel->data.rx_packet_counter >> 16U) & 0xFFU;
-			pl[40] = (tel->data.rx_packet_counter >> 8U) & 0xFFU;
-			pl[41] = tel->data.rx_packet_counter & 0xFFU;
+			pl[23] = tel->data.last_valid_tc;
+			pl[24] = (tel->data.rssi_last_valid_tc >> 8U) & 0xFFU;
+			pl[25] = tel->data.rssi_last_valid_tc & 0xFFU;
+			pl[26] = (tel->data.temperature_antenna >> 8U) & 0xFFU;
+			pl[27] = tel->data.temperature_antenna & 0xFFU;
+			pl[28] = (tel->data.antenna_status >> 8U) & 0xFFU;
+			pl[29] = tel->data.antenna_status & 0xFFU;
+			pl[30] = tel->data.deployment_status;
+			pl[31] = tel->data.hibernation_status;
+			pl[32] = (tel->data.tx_packet_counter >> 24U) & 0xFFU;
+			pl[33] = (tel->data.tx_packet_counter >> 16U) & 0xFFU;
+			pl[34] = (tel->data.tx_packet_counter >> 8U) & 0xFFU;
+			pl[35] = tel->data.tx_packet_counter & 0xFFU;
+			pl[36] = (tel->data.rx_packet_counter >> 24U) & 0xFFU;
+			pl[37] = (tel->data.rx_packet_counter >> 16U) & 0xFFU;
+			pl[38] = (tel->data.rx_packet_counter >> 8U) & 0xFFU;
+			pl[39] = tel->data.rx_packet_counter & 0xFFU;
 
-			*pkt_pl_len = (uint16_t) 50U; /* 7b RQ CALLSIGN + 1b TC ID + 42b TTC DATA */
+			*pkt_pl_len = (uint16_t) 48U; /* 7b RQ CALLSIGN + 1b TC ID + 40b TTC DATA */
 
 			break;
 		}
@@ -2086,7 +2086,7 @@ static int8_t send_tc_feedback(uint8_t *pkt)
 
     if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
     {
-        if (ttc_send(TTC_1, feedback_pkt, feedback_pkt_len) != 0)
+        if (ttc_send(TTC_0, feedback_pkt, feedback_pkt_len) != 0)
         {
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a \"TC Feedback\"!");
             sys_log_new_line();
