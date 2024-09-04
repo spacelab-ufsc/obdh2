@@ -1,0 +1,243 @@
+%
+% packets.tex
+%
+% Copyright (C) 2021 by SpaceLab.
+%
+% FloripaSat-2 Documentation
+%
+% This work is licensed under the Creative Commons Attribution-ShareAlike 4.0
+% International License. To view a copy of this license,
+% visit http://creativecommons.org/licenses/by-sa/4.0/.
+%
+
+%
+% \brief Telecommunication packets appendix.
+%
+% \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+% \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
+%
+% \institution Universidade Federal de Santa Catarina (UFSC)
+%
+% \version 0.11.0
+%
+% \date 2021/06/03
+%
+
+\chapter{Telecommunication Packets} \label{anx:packets}
+
+This appendix lists all the packets that OBDH expects to be received by the RF links: downlink and uplink. The fields and length of each type of packet is also presented.
+
+\section{Downlink}
+
+In \autoref{tab:downlink-packets} the content of the downlink packets is available.
+
+\begin{longtable}[c]{lcL{0.4\textwidth}c}
+	\toprule[1.5pt]
+	\textbf{Packet}                      & \textbf{Position} & \textbf{Content}                           & \textbf{Length [bytes]} \\
+	\midrule
+	\multirow{42}{*}{General telemetry}  & 0                 & Packet ID (20h)                            & 1                       \\
+	                                     & 1                 & Source callsign (`` PY0EFS'')              & 7                       \\
+	                                     & 8                 & Time counter in seconds                    & 4                       \\
+	                                     & 12                & Temperature of the OBDH $\mu$C in Kelvin   & 2                       \\
+	                                     & 14                & Input current of the OBDH in mA            & 2                       \\
+	                                     & 16                & Input voltage of the OBDH in mV            & 2                       \\
+	                                     & 18                & Last reset cause of the OBDH               & 1                       \\
+	                                     & 19                & Reset counter of the OBDH                  & 2                       \\
+	                                     & 21                & Last valid telecommand (uplink packet ID)  & 1                       \\
+	                                     & 22                & Temperature of the radio in Kelvin         & 2                       \\
+	                                     & 24                & RSSI of the last valid telecommand         & 2                       \\
+	                                     & 26                & Temperature of the antenna in Kelvin       & 2                       \\
+	                                     & 28                & Antenna status                             & 2                       \\
+	                                     & 30                & Temperature of the EPS $\mu$C in K         & 2                       \\
+	                                     & 32                & EPS circuitry and Beacon MCU current in mA & 2                       \\
+	                                     & 34                & Last reset cause of the EPS                & 1                       \\
+	                                     & 35                & Reset counter (EPS)                        & 2                       \\
+	                                     & 37                & -Y and +X sides solar panel voltage in mV  & 2                       \\
+	                                     & 39                & -X and +Z sides solar panel voltage in mV  & 2                       \\
+	                                     & 41                & -Z and +Y sides solar panel voltage in mV  & 2                       \\
+	                                     & 43                & -Y side solar panel current in mA          & 2                       \\
+	                                     & 45                & +Y side solar panel current in mA          & 2                       \\
+	                                     & 47                & -X side solar panel current in mA          & 2                       \\
+	                                     & 49                & +X side solar panel current in mA          & 2                       \\
+	                                     & 51                & -Z side solar panel current in mA          & 2                       \\
+	                                     & 53                & +Z side solar panel current in mA          & 2                       \\
+	                                     & 54                & MPPT 1 duty cycle in \%                    & 1                       \\
+	                                     & 55                & MPPT 2 duty cycle in \%                    & 1                       \\
+	                                     & 56                & MPPT 3 duty cycle in \%                    & 1                       \\
+	                                     & 58                & Main power bus voltage in mV               & 2                       \\
+	                                     & 60                & Batteries voltage in mV                    & 2                       \\
+	                                     & 62                & Batteries current in mA                    & 2                       \\
+	                                     & 64                & Batteries average current in mA            & 2                       \\
+	                                     & 66                & Batteries accumulated current in mA        & 2                       \\
+	                                     & 68                & Batteries charge in mAh                    & 2                       \\
+	                                     & 70                & Battery monitor IC temperature in K        & 2                       \\
+	                                     & 72                & Battery heater 1 duty cycle in \%          & 1                       \\
+	                                     & 74                & Battery heater 2 duty cycle in \%          & 1                       \\
+	                                     & 75                & Main EDC (01h = EDC\_1, 02h = EDC\_2)      & 1                       \\
+	                                     & 76                & Active payload 1 (Payload ID)              & 1                       \\
+	                                     & 77                & Active payload 2 (Payload ID)              & 1                       \\
+	\cmidrule{4-4}
+	                                     &                   &                                            & 78                      \\
+	\multirow{3}{*}{Ping answer}         & 0                 & Packet ID (21h)                            & 1                       \\
+	                                     & 1                 & Source callsign (`` PY0EFS'')              & 7                       \\
+	                                     & 8                 & Requester callsign                         & 7                       \\
+	\cmidrule{4-4}
+	                                     &                   &                                            & 15                      \\
+	\multirow{6}{*}{Data request answer} & 0                 & Packet ID (22h)                            & 1                       \\
+	                                     & 1                 & Source callsign (`` PY0EFS'')              & 7                       \\
+	                                     & 8                 & Requester callsign                         & 7                       \\
+	                                     & 15                & Data type ID                               & 1                       \\
+	                                     & 16                & Timestamp                                  & 4                       \\
+	                                     & 20                & Data                                       & Var.                    \\
+	\cmidrule{4-4}
+	                                     &                   &                                            & 20 (min.)               \\
+	\multirow{5}{*}{Message broadcast}   & 0                 & Packet ID (23h)                            & 1                       \\
+	                                     & 1                 & Source callsign (`` PY0EFS'')              & 7                       \\
+	                                     & 8                 & Requester callsign                         & 7                       \\
+	                                     & 15                & Destination callsign                       & 7                       \\
+	                                     & 22                & Message                                    & up to 38                \\
+	\cmidrule{4-4}
+	                                     &                   &                                            & 218                     \\
+	\multirow{5}{*}{TC feedback}         & 0                 & Packet ID (25h)                            & 1                       \\
+	                                     & 1                 & Source callsign (`` PY0EFS'')              & 7                       \\
+	                                     & 8                 & Requester callsign                         & 7                       \\
+	                                     & 15                & TC packet ID                               & 1                       \\
+	                                     & 16                & Timestamp                                  & 4                       \\
+	\cmidrule{4-4}
+	                                     &                   &                                            & 20                      \\
+	\multirow{6}{*}{Parameter value}     & 0                 & Packet ID (26h)                            & 1                       \\
+	                                     & 1                 & Source callsign (`` PY0EFS'')              & 7                       \\
+	                                     & 8                 & Requester callsign                         & 7                       \\
+	                                     & 15                & Subsystem ID                               & 1                       \\
+	                                     & 16                & Parameter ID                               & 1                       \\
+	                                     & 17                & Parameter value                            & 4                       \\
+	\cmidrule{4-4}
+	                                     &                   &                                            & 21                      \\
+	\bottomrule[1.5pt]
+	\caption{Downlink packets.}
+	\label{tab:downlink-packets}
+\end{longtable}
+
+\section{Uplink}
+
+As shown in \autoref{tab:packets-struct}, there are 15 supported telecommands. Below there is a description of each one.
+
+\begin{itemize}
+	\item \textbf{Ping Request:} It is a simple command to test the communication with the satellite. When the satellite receives a ping packet, it will respond with another ping packet (with another packet ID, as defined in the downlink packets list). There are no additional parameters in the ping packet, just the packet ID and the source callsign (or address). It is also a public telecommand, anyone can send a ping request telecommand to a satellite.
+	\item \textbf{Data Request:} It is a command to download data from the satellite. This command allows a ground station to get specific parameters from a given period (stored in the non-volatile memory of the onboard computer of the satellite). The list of possible parameters varies according to the satellite. The required fields of this telecommand are the parameter ID (1 byte), the start period in milliseconds (epoch, 4 bytes), and the end period in milliseconds (epoch, 4 bytes). This is a private telecommand, and a key is required to send it.
+	\item \textbf{Broadcast Message: } The "broadcast message" is another public telecommand, no authentication or key is required to send this telecommand to a satellite. This command has the purpose of making a satellite transmit a custom message back to Earth. This can be useful for communication tasks, like a station sending data to another. There are two parameters in this telecommand: the destination callsign (or address), and the content of the message, which can be any sequence of ASCII characters or any byte value. There is a limit of 38 characters in the message field.
+	\item \textbf{Enter Hibernation:} This telecommand activates the hibernation mode in a satellite. During the hibernation mode, no transmissions are made by the satellite; it keeps just listening for new incoming packets (reception). The satellite will stay in hibernation mode for a custom period (1 to 65536 minutes), or until a "Leave Hibernation" mode is received. This is a private telecommand, a key is required to send it. Beyond the packet ID and the source callsign (or address), the number o minutes (2 bytes long) is also transmitted.
+	\item \textbf{Leave Hibernation:} This telecommand complements the "enter hibernation" telecommand by deactivating the hibernation mode in the satellite. When a satellite receives this telecommand, it enables the transmission again immediately. This is also a private telecommand; a specific key is required to send it. There is no additional content to this telecommand packet, just the packet ID and the source callsign (or address).
+	\item \textbf{Activate Module: } It activates an internal module of the satellite. Each module has a unique ID that is passed as an argument of this telecommand's packet. The module Battery heater's ID is 1, Beacon's ID is 2 and Periodic telemetry has ID number 3.
+	\item \textbf{Activate Payload:} This one is similar to the telecommand "Activate Module", but in this case is used for activating payloads of the satellite. Each satellite will have a list of IDs of the set of payloads. This is also a private telecommand, and a key is required to transmit it.
+	\item \textbf{Deactivate Payload:} It is the same as the "Deactivate Module" telecommand, but for payloads.
+	\item \textbf{Erase Memory:} It erases all the content presented in the non-volatile memories of the onboard computer of a satellite. This is a private command, and a key is required to send it. No additional content is required in a erase memory telecommand packet, just the packet ID and the source callsign (or address).
+	\item \textbf{Force Reset:} It performs a general reset of the OBDH. When received, the satellite reset the OBDH subsystem. This is a private telecommand, and a key is required to send this command to a satellite. There is no additional content in this packet, just the packet ID and the source callsign (or address).
+	\item \textbf{Get Payload Data:} It allows a ground station to download data from a specific payload of the satellite. The required fields are the payload ID, and optionally, arguments to be passed to the payload. The IDs and arguments vary according to the satellite. This is a private telecommand, and a key is required to send it.
+	\item \textbf{Get Parameter:} It allows the configuration of specific parameters of a given subsystem of the satellite. The required fields are the ID of the subsystem to set (1 byte), the ID of the parameter to set (1 byte), and the new value of the parameter (4 bytes long). The possible IDs (subsystem and parameter) vary according to the satellite. This is a private telecommand, and a key is required to send it.
+	\item \textbf{Set Parameter:} This telecommand complements the "Set Parameter" telecommand. It has the purpose of reading specific parameters of a given subsystem. The required fields are the subsystem's ID (1 byte) and the parameter ID (1 byte). The possible IDs (subsystem and parameter) vary according to the satellite. This is a private telecommand, and a key is required to send it.
+	\item \textbf{Update TLE} This telecommand provides a way to update the satellite TLE lines, which are used for position determination. This is a private telecommand, and a key is required to send it.
+\end{itemize}
+
+The \autoref{tab:uplink-packets} presents the content of the uplink packets.
+
+\begin{longtable}[c]{lcL{0.4\textwidth}c}
+	\toprule[1.5pt]
+	\textbf{Packet}                     & \textbf{Position} & \textbf{Content}        & \textbf{Length [bytes]} \\
+	\midrule
+	\multirow{2}{*}{Ping request}       & 0                 & Packet ID (40h)         & 1                       \\
+	                                    & 1                 & Ground station callsign & 7                       \\
+	\cmidrule{4-4}
+	                                    &                   &                         & 8                       \\
+	\multirow{6}{*}{Data request}       & 0                 & Packet ID (41h)         & 1                       \\
+	                                    & 1                 & Ground station callsign & 7                       \\
+	                                    & 8                 & Data type ID            & 1                       \\
+	                                    & 9                 & Start timestamp         & 4                       \\
+	                                    & 13                & End timestamp           & 4                       \\
+	                                    & 17                & HMAC hash               & 20                      \\
+	\cmidrule{4-4}
+	                                    &                   &                         & 37                      \\
+	\multirow{4}{*}{Broadcast message}  & 0                 & Packet ID (42h)         & 1                       \\
+	                                    & 1                 & Ground station callsign & 7                       \\
+	                                    & 8                 & Destination callsign    & 7                       \\
+	                                    & 15                & Message                 & up to 38                \\
+	\cmidrule{4-4}
+	                                    &                   &                         & up to 53                \\
+	\multirow{4}{*}{Enter hibernation}  & 0                 & Packet ID (43h)         & 1                       \\
+	                                    & 1                 & Ground station callsign & 7                       \\
+	                                    & 8                 & Hibernation in hours    & 2                       \\
+	                                    & 10                & HMAC hash               & 20                      \\
+	\cmidrule{4-4}
+	                                    &                   &                         & 30                      \\
+	\multirow{3}{*}{Leave hibernation}  & 0                 & Packet ID (44h)         & 1                       \\
+	                                    & 1                 & Ground station callsign & 7                       \\
+	                                    & 8                 & HMAC hash               & 20                      \\
+	\cmidrule{4-4}
+	                                    &                   &                         & 28                      \\
+	\multirow{4}{*}{Activate module}    & 0                 & Packet ID (45h)         & 1                       \\
+	                                    & 1                 & Ground station callsign & 7                       \\
+	                                    & 8                 & Module ID               & 1                       \\
+	                                    & 9                 & HMAC hash               & 20                      \\
+	\cmidrule{4-4}
+	                                    &                   &                         & 29                      \\
+	\multirow{4}{*}{Deactivate module}  & 0                 & Packet ID (46h)         & 1                       \\
+	                                    & 1                 & Ground station callsign & 7                       \\
+	                                    & 8                 & Module ID               & 1                       \\
+	                                    & 9                 & HMAC hash               & 20                      \\
+	\cmidrule{4-4}
+	                                    &                   &                         & 29                      \\
+	\multirow{4}{*}{Activate payload}   & 0                 & Packet ID (47h)         & 1                       \\
+	                                    & 1                 & Ground station callsign & 7                       \\
+	                                    & 8                 & Payload ID              & 1                       \\
+	                                    & 9                 & HMAC hash               & 20                      \\
+	\cmidrule{4-4}
+	                                    &                   &                         & 29                      \\
+	\multirow{4}{*}{Deactivate payload} & 0                 & Packet ID (48h)         & 1                       \\
+	                                    & 1                 & Ground station callsign & 7                       \\
+	                                    & 8                 & Payload ID              & 1                       \\
+	                                    & 9                 & HMAC hash               & 20                      \\
+	\cmidrule{4-4}
+	                                    &                   &                         & 29                      \\
+	\multirow{3}{*}{Erase memory}       & 0                 & Packet ID (49h)         & 1                       \\
+	                                    & 1                 & Ground station callsign & 7                       \\
+	                                    & 8                 & HMAC hash               & 20                      \\
+	\cmidrule{4-4}
+	                                    &                   &                         & 28                      \\
+	\multirow{3}{*}{Force reset}        & 0                 & Packet ID (4Ah)         & 1                       \\
+	                                    & 1                 & Ground station callsign & 7                       \\
+	                                    & 8                 & HMAC hash               & 20                      \\
+	\cmidrule{4-4}
+	                                    &                   &                         & 28                      \\
+	\multirow{5}{*}{Get payload data}   & 0                 & Packet ID (4Bh)         & 1                       \\
+	                                    & 1                 & Ground station callsign & 7                       \\
+	                                    & 8                 & Payload ID              & 1                       \\
+	                                    & 9                 & Payload arguments       & 12                      \\
+	                                    & 21                & HMAC hash               & 20                      \\
+	\cmidrule{4-4}
+	                                    &                   &                         & 41                      \\
+	\multirow{6}{*}{Set parameter}      & 0                 & Packet ID (4Ch)         & 1                       \\
+	                                    & 1                 & Ground station callsign & 7                       \\
+	                                    & 8                 & Subsystem ID            & 1                       \\
+	                                    & 9                 & Parameter ID            & 1                       \\
+	                                    & 10                & Parameter value         & 4                       \\
+	                                    & 14                & HMAC hash               & 20                      \\
+	\cmidrule{4-4}
+	                                    &                   &                         & 34                      \\
+	\multirow{5}{*}{Get parameter}      & 0                 & Packet ID (4Dh)         & 1                       \\
+	                                    & 1                 & Ground station callsign & 7                       \\
+	                                    & 8                 & Subsystem ID            & 1                       \\
+	                                    & 9                 & Parameter ID            & 1                       \\
+	                                    & 10                & HMAC hash               & 20                      \\
+	\cmidrule{4-4}
+	\multirow{5}{*}{Update TLE}         & 0                 & Packet ID (4Eh)         & 1                       \\
+	                                    & 1                 & Ground station callsign & 7                       \\
+	                                    & 8                 & TLE line 1              & 69                      \\
+	                                    & 77                & TLE line 2              & 69                      \\
+	                                    & 146               & HMAC hash               & 20                      \\
+	\cmidrule{4-4}
+	                                    &                   &                         & 166                     \\
+	\bottomrule[1.5pt]
+	\caption{Uplink packets.}
+	\label{tab:uplink-packets}
+\end{longtable}
+
