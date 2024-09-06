@@ -97,6 +97,8 @@
 #define SL_EPS2_REG_BAT_HEATER_1_MODE           46      /**< Battery heater 1 mode (0x00 = automatic, 0x01 = manual). */
 #define SL_EPS2_REG_BAT_HEATER_2_MODE           47      /**< Battery heater 2 mode (0x00 = automatic, 0x01 = manual). */
 #define SL_EPS2_REG_DEVICE_ID                   48      /**< Device ID (0xEEE2). */
+#define SL_EPS2_REG_RESET_EPS                   49      /**< Used to reset EPS device */
+#define SL_EPS2_REG_PAYLOAD_ENABLE              50      /**< Enables payload power source */
 
 /**
  * \brief Solar panels.
