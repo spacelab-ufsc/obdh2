@@ -41,33 +41,6 @@
 
 #include "sl_ttc2.h"
 
-
-/* TTC 2.0 registers lenght in bytes */
-#define SL_TTC2_REG_DEVICE_ID_NUM_BYTES                     2
-#define SL_TTC2_REG_HARDWARE_VERSION_NUM_BYTES              1
-#define SL_TTC2_REG_FIRMWARE_VERSION_NUM_BYTES              4
-#define SL_TTC2_REG_TIME_COUNTER_NUM_BYTES                  4
-#define SL_TTC2_REG_RESET_COUNTER_NUM_BYTES                 2
-#define SL_TTC2_REG_LAST_RESET_CAUSE_NUM_BYTES              1
-#define SL_TTC2_REG_INPUT_VOLTAGE_MCU_NUM_BYTES             2
-#define SL_TTC2_REG_INPUT_CURRENT_MCU_NUM_BYTES             2
-#define SL_TTC2_REG_TEMPERATURE_MCU_NUM_BYTES               2
-#define SL_TTC2_REG_INPUT_VOLTAGE_RADIO_NUM_BYTES           2
-#define SL_TTC2_REG_INPUT_CURRENT_RADIO_NUM_BYTES           2
-#define SL_TTC2_REG_TEMPERATURE_RADIO_NUM_BYTES             2
-#define SL_TTC2_REG_LAST_VALID_TC_NUM_BYTES                 1
-#define SL_TTC2_REG_RSSI_LAST_VALID_TC_NUM_BYTES            2
-#define SL_TTC2_REG_TEMPERATURE_ANTENNA_NUM_BYTES           2
-#define SL_TTC2_REG_ANTENNA_STATUS_NUM_BYTES                2
-#define SL_TTC2_REG_ANTENNA_DEPLOYMENT_STATUS_NUM_BYTES     1
-#define SL_TTC2_REG_ANTENNA_DEP_HIB_STATUS_NUM_BYTES        1
-#define SL_TTC2_REG_TX_ENABLE_NUM_BYTES                     1
-#define SL_TTC2_REG_TX_PACKET_COUNTER_NUM_BYTES             4
-#define SL_TTC2_REG_RX_PACKET_COUNTER_NUM_BYTES             4
-#define SL_TTC2_REG_FIFO_TX_PACKET_NUM_BYTES                1
-#define SL_TTC2_REG_FIFO_RX_PACKET_NUM_BYTES                1
-#define SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO_NUM_BYTES   2
-
 int sl_ttc2_init(sl_ttc2_config_t config)
 {
     int err = -1;
@@ -228,6 +201,9 @@ int sl_ttc2_write_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t val)
         case SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO:
             buf[3] = (val >> 8) & 0xFFU;
             buf[4] = (val >> 0) & 0xFFU;
+            break;
+        case SL_TTC2_REG_RESET_DEVICE:
+            buf[3] = val & 0xFFU;
             break;
         default:
             buf[3] = (val >> 24) & 0xFFU;

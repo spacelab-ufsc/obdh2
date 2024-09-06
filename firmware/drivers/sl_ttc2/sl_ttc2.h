@@ -87,6 +87,7 @@
 #define SL_TTC2_REG_FIFO_TX_PACKET              21U     /**< Number of packets in the TX FIFO. */
 #define SL_TTC2_REG_FIFO_RX_PACKET              22U     /**< Number of packets in the RX FIFO. */
 #define SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO 23U     /**< Number of bytes of the first available packet in the RX buffer. */
+#define SL_TTC2_REG_RESET_DEVICE                24U     /**< Register to reset device */
 
 /**
  * \brief Temperature type.
