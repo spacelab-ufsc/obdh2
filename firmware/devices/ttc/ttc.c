@@ -41,8 +41,8 @@
 
 #include "ttc.h"
 
-static ttc_config_t ttc_0_config = {0};
-static ttc_config_t ttc_1_config = {0};
+static ttc_config_t ttc_0_config;
+static ttc_config_t ttc_1_config;
 
 int ttc_init(ttc_e dev)
 {
