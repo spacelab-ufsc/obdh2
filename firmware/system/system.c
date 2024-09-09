@@ -36,6 +36,8 @@
 
 #include <msp430.h>
 #include <drivers/gpio/gpio.h>
+#include <utils/mem_mng.h>
+#include <structs/satellite.h>
 #include <portmacro.h>
 
 #include "system.h"
@@ -102,6 +104,20 @@ sys_hw_version_t system_get_hw_version(void)
     }
 
     return res;
+}
+
+int8_t system_reset_count(void)
+{
+    int8_t err = -1;
+
+    ++sat_data_buf.obdh.data.reset_counter;
+
+    if (mem_mng_save_obdh_data_to_fram(&sat_data_buf.obdh) == 0)
+    {
+        err = 0;
+    }
+
+    return err;
 }
 
 /** \} End of system group */

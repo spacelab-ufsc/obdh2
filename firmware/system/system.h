@@ -141,6 +141,14 @@ sys_time_t system_get_time(void);
  */
 sys_hw_version_t system_get_hw_version(void);
 
+
+/**
+ * \brief System reset count. Update the reset count at the FRAM memory.
+ *
+ * \return The status/error code.
+ */
+int8_t system_reset_count(void);
+
 #endif /* SYSTEM_H_ */
 
 /** \} End of system group */
