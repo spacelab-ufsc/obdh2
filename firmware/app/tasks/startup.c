@@ -140,6 +140,19 @@ void vTaskStartup(void)
                     if (mem_mng_load_obdh_data_from_fram(&sat_data_buf.obdh) == 0)
                     {
                         err = 0;
+
+                        if (system_reset_count() == 0)
+                        {
+                            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_STARTUP_NAME, "Reset counter: ");
+                            sys_log_print_uint((uint32_t)(sat_data_buf.obdh.data.reset_counter));
+                            sys_log_new_line();
+                        }
+                        else 
+                        {
+                            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_STARTUP_NAME, "Failed to save the reset counter param");
+                            sys_log_new_line();
+                        }
+
                         break;
                     }
                 }

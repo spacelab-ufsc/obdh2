@@ -52,8 +52,6 @@ void vTaskSystemReset(void)
         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_SYSTEM_RESET_NAME, "Restarting the system...");
         sys_log_new_line();
 
-        ++sat_data_buf.obdh.data.reset_counter;
-
         system_reset();
     }
 }
