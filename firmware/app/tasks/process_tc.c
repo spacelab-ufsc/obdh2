@@ -1304,6 +1304,9 @@ static void process_tc_force_reset(uint8_t *pkt, uint16_t pkt_len)
 
         if (process_tc_validate_hmac(pkt, 1U + 7U, &pkt[8], 20U, tc_key, sizeof(CONFIG_TC_KEY_FORCE_RESET)-1U))
         {
+            (void)eps_set_param(SL_EPS2_REG_RESET_EPS, 0x01U);
+            (void)ttc_set_param(TTC_0, SL_TTC2_REG_RESET_DEVICE, 0x01U);
+            (void)ttc_set_param(TTC_1, SL_TTC2_REG_RESET_DEVICE, 0x01U);
             system_reset();
         }
         else
@@ -1577,7 +1580,7 @@ static void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
             }
 
             /* Update last valid tc parameter, this is made after transmission 
-             * because the parameter requested could be last_valid_tc aswell */
+             * because the requested parameter could be last_valid_tc aswell */
             sat_data_buf.obdh.data.last_valid_tc = pkt[0];
 
         }
