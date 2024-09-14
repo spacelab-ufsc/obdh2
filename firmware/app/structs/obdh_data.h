@@ -82,6 +82,7 @@
 #define OBDH_PARAM_ID_MANUAL_MODE_ON            33  /**< Manual operation mode selection flag. */
 #define OBDH_PARAM_ID_MAIN_EDC                  34  /**< Main EDC ID. */
 #define OBDH_PARAM_ID_GENERAL_TELEMETRY_ON      35  /**< General telemetry on flag. */
+#define OBDH_PARAM_ID_RESET_DEVICE              36  /**< Resets device (Only write param, writing "0x01" to it resets OBDH). */
 
 /* Default values */
 #define OBDH_TIMESTAMP_DEFAULT_VAL                      0U

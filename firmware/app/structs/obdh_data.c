@@ -34,6 +34,7 @@
  */
 
 #include <system/sys_log/sys_log.h>
+#include <system/system.h>
 #include <tasks/mission_manager.h>
 
 #include "obdh_data.h"
@@ -67,7 +68,7 @@ int8_t obdh_set_param(uint8_t param_id, uint32_t *buf)
         }
         case OBDH_PARAM_ID_INITIAL_HIB_EXECUTED:    
         {
-            if ((*buf == 0UL) || (*buf == 1UL))
+            if ((*buf == 0x00U) || (*buf == 0x01U))
             {
                 sat_data_buf.obdh.data.initial_hib_executed = (bool)(*buf);
             }
@@ -84,13 +85,13 @@ int8_t obdh_set_param(uint8_t param_id, uint32_t *buf)
         }
         case OBDH_PARAM_ID_MANUAL_MODE_ON:
         {
-            if (*buf == 0U)
+            if (*buf == 0x00U)
             {
                 taskENTER_CRITICAL();
                 sat_data_buf.obdh.data.manual_mode_on = false;
                 taskEXIT_CRITICAL();
             }
-            else if (*buf == 1U)
+            else if (*buf == 0x01U)
             {
                 taskENTER_CRITICAL();
                 sat_data_buf.obdh.data.manual_mode_on = true;
@@ -122,7 +123,7 @@ int8_t obdh_set_param(uint8_t param_id, uint32_t *buf)
         }
         case OBDH_PARAM_ID_GENERAL_TELEMETRY_ON:
         {
-            if ((*buf == 0UL) || (*buf == 1UL))
+            if ((*buf == 0x00U) || (*buf == 0x01U))
             {
                 sat_data_buf.obdh.data.general_telemetry_on = (bool)(*buf);
             }
@@ -132,6 +133,13 @@ int8_t obdh_set_param(uint8_t param_id, uint32_t *buf)
             }
 
             break;
+        }
+        case OBDH_PARAM_ID_RESET_DEVICE:
+        {
+            if (*buf == 0x01U)
+            {
+                system_reset();
+            }
         }
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, OBDH_DATA_LOG_NAME, "Invalid parameter to set in OBDH!");
