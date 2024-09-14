@@ -52,6 +52,8 @@
 
 static uint8_t crc8(uint8_t *data, uint8_t len);
 
+static inline bool crc_is_valid(uint8_t *data, uint8_t len, uint8_t crc_to_check);
+
 int mem_mng_check_fram(void)
 {
     int err = -1;
@@ -147,11 +149,13 @@ int mem_mng_save_obdh_data_to_fram(obdh_telemetry_t *tel)
 {
     int err = -1;
 
-    uint8_t buf[256];
+    uint8_t buf[sizeof(obdh_telemetry_t) + 1U];
 
     (void)memcpy(buf, tel, sizeof(obdh_telemetry_t));
 
-    if (media_write(MEDIA_FRAM, CONFIG_MEM_ADR_SYS_PARAM, buf, 256U) == 0)
+    buf[sizeof(obdh_telemetry_t)] = crc8(buf, sizeof(obdh_telemetry_t));
+
+    if (media_write(MEDIA_FRAM, CONFIG_MEM_ADR_SYS_PARAM, buf, (sizeof(obdh_telemetry_t) + 1U)) == 0)
     {
         err = 0;
     }
@@ -163,12 +167,20 @@ int mem_mng_load_obdh_data_from_fram(obdh_telemetry_t *tel)
 {
     int err = -1;
 
-    uint8_t sys_par[256];
+    uint8_t sys_par[sizeof(obdh_telemetry_t) + 1U];
 
-    if (media_read(MEDIA_FRAM, CONFIG_MEM_ADR_SYS_PARAM, sys_par, sizeof(obdh_telemetry_t)) == 0)
+    if (media_read(MEDIA_FRAM, CONFIG_MEM_ADR_SYS_PARAM, sys_par, (sizeof(obdh_telemetry_t) + 1U)) == 0)
     {
-        (void)memcpy(tel, sys_par, sizeof(obdh_telemetry_t));
-        err = 0;
+        if (crc_is_valid(sys_par, sizeof(obdh_telemetry_t), sys_par[sizeof(obdh_telemetry_t)]))
+        {
+            (void)memcpy(tel, sys_par, sizeof(obdh_telemetry_t));
+            err = 0;
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, MEM_MNG_NAME, "OBDH data CRC wasn't valid!");
+            sys_log_new_line();
+        }
     }
 
     return err;
@@ -296,6 +308,11 @@ static uint8_t crc8(uint8_t *data, uint8_t len)
     }
 
     return crc;
+}
+
+static inline bool crc_is_valid(uint8_t *data, uint8_t len, uint8_t crc_to_check)
+{
+    return (crc8(data, len) == crc_to_check) ? true : false;
 }
 
 /** \} End of mem_mng group */
