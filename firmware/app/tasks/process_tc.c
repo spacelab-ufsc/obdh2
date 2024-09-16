@@ -951,8 +951,10 @@ static void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len)
                     sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the beacon...");
                     sys_log_new_line();
 
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
-                    sys_log_new_line();
+                    if (eps_set_param(SL_EPS2_REG_BEACON_ENABLE, 0x01U) == 0)
+                    {
+                        (void)send_tc_feedback(pkt);
+                    }
 
                     break;
                 }
@@ -1031,8 +1033,10 @@ static void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
                     sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the beacon...");
                     sys_log_new_line();
 
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "TC not implemented yet");
-                    sys_log_new_line();
+                    if (eps_set_param(SL_EPS2_REG_BEACON_ENABLE, 0x00U) == 0)
+                    {
+                        (void)send_tc_feedback(pkt);
+                    }
 
                     break;
                 }
