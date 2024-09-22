@@ -1708,7 +1708,7 @@ static bool process_tc_validate_hmac(uint8_t *msg, uint16_t msg_len, uint8_t *ms
 
     if (hmac(SHA1, msg, msg_len, key, key_len, hash) == 0)
     {
-        if (memcmp(msg, msg_hash, (size_t)msg_hash_len) == 0)
+        if (memcmp(hash, msg_hash, (size_t)msg_hash_len) == 0)
         {
             res = true;
         }
