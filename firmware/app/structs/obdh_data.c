@@ -108,7 +108,7 @@ int8_t obdh_set_param(uint8_t param_id, uint32_t *buf)
         }
         case OBDH_PARAM_ID_MAIN_EDC:
         {
-            if ((*buf == CONFIG_PL_ID_EDC_1) || (*buf == CONFIG_PL_ID_EDC_2))
+            if ((*buf == PL_ID_EDC_1) || (*buf == PL_ID_EDC_2))
             {
                 taskENTER_CRITICAL();
                 sat_data_buf.obdh.data.main_edc = (uint8_t)(*buf);
@@ -140,6 +140,8 @@ int8_t obdh_set_param(uint8_t param_id, uint32_t *buf)
             {
                 system_reset();
             }
+
+            break;
         }
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, OBDH_DATA_LOG_NAME, "Invalid parameter to set in OBDH!");
