@@ -55,6 +55,7 @@
 #define CONFIG_TC_KEY_SET_PARAMETER                     "x&veg;r[y{z{{T;7"
 #define CONFIG_TC_KEY_GET_PARAMETER                     "EB'YThpxu7,yla,m"
 #define CONFIG_TC_KEY_UPDATE_TLE                        "LJ(@y#xd7%@|#@;g"
+#define CONFIG_TC_KEY_TRANSMIT_PACKET                   "($%87<#{E:?Gwd3*"
 
 #endif /* KEYS_H_ */
 

@@ -251,6 +251,17 @@ static void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len);
 static void process_tc_update_tle(uint8_t *pkt, uint16_t pkt_len);
 
 /**
+ * \brief Transmit packet telecommand.
+ *
+ * \param[in] pkt is the packet to process.
+ *
+ * \param[in] pkt_len is the number of bytes of the given packet.
+ *
+ * \return None.
+ */
+static void process_tc_transmit_packet(uint8_t *pkt, uint16_t pkt_len);
+
+/**
  * \brief Checks if a given HMAC is valid or not.
  *
  * \param[in] msg is the message to compute the hash.
@@ -392,6 +403,13 @@ void vTaskProcessTC(void)
                         sys_log_new_line();
 
                         process_tc_get_parameter(pkt, pkt_len);
+
+                        break;
+                    case PKT_ID_UPLINK_TRANSMIT_PACKET:
+                        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Transmit Packet\"...");
+                        sys_log_new_line();
+
+                        process_tc_transmit_packet(pkt, pkt_len);
 
                         break;
                     case PKT_ID_UPLINK_UPDATE_TLE:
@@ -1631,6 +1649,54 @@ static void process_tc_update_tle(uint8_t *pkt, uint16_t pkt_len)
                 sys_log_new_line();
             }
         }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Update TLE\" TC! Invalid key!");
+            sys_log_new_line();
+        }
+    }
+}
+
+static void process_tc_transmit_packet(uint8_t *pkt, uint16_t pkt_len)
+{
+    if (pkt_len >= (1U + 7U + 20U))
+    {
+        uint8_t tc_key[16] = CONFIG_TC_KEY_TRANSMIT_PACKET;
+
+        uint8_t msg_len = pkt_len - 1U - 7U - 20U;
+
+        if (process_tc_validate_hmac(pkt, pkt_len - 20U, &pkt[pkt_len - 21U], 20U, tc_key, 16U))
+        {
+            if (msg_len > 0)
+            {
+                fsat_pkt_pl_t pkt_broacast;
+                uint8_t raw_pkt[60];
+                uint16_t raw_pkt_len;
+
+                fsat_pkt_add_id(&pkt_broacast, PKT_ID_DOWNLINK_PACKET_BROADCAST);
+                fsat_pkt_add_callsign(&pkt_broacast, CONFIG_SATELLITE_CALLSIGN);
+
+                (void)memcpy(pkt_broacast.payload, &pkt[1U + 7U], msg_len);
+                pkt_broacast.length = msg_len;
+
+                fsat_pkt_encode(&pkt_broacast, raw_pkt, &raw_pkt_len);
+
+                if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
+                {
+                    if (ttc_send(TTC_0, raw_pkt, raw_pkt_len) != 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a \"Packet Broadcast\"!");
+                        sys_log_new_line();
+                    }
+                }
+            }
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Transmit Packet\" TC! Invalid key!");
+            sys_log_new_line();
+        }
+
     }
 }
 
