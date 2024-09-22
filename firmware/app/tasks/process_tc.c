@@ -297,104 +297,104 @@ void vTaskProcessTC(void)
             {
                 switch(pkt[0])
                 {
-                    case CONFIG_PKT_ID_UPLINK_PING_REQ:
+                    case PKT_ID_UPLINK_PING_REQ:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Ping TC received!");
                         sys_log_new_line();
 
                         process_tc_ping_request(pkt, pkt_len);
 
                         break;
-                    case CONFIG_PKT_ID_UPLINK_DATA_REQ:
+                    case PKT_ID_UPLINK_DATA_REQ:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Data request TC received!");
                         sys_log_new_line();
 
                         process_tc_data_request(pkt, pkt_len);
 
                         break;
-                    case CONFIG_PKT_ID_UPLINK_BROADCAST_MSG:
+                    case PKT_ID_UPLINK_BROADCAST_MSG:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Broadcast message TC received!");
                         sys_log_new_line();
 
                         process_tc_broadcast_message(pkt, pkt_len);
 
                         break;
-                    case CONFIG_PKT_ID_UPLINK_ENTER_HIBERNATION:
+                    case PKT_ID_UPLINK_ENTER_HIBERNATION:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Enter Hibernation\"...");
                         sys_log_new_line();
 
                         process_tc_enter_hibernation(pkt, pkt_len);
 
                         break;
-                    case CONFIG_PKT_ID_UPLINK_LEAVE_HIBERNATION:
+                    case PKT_ID_UPLINK_LEAVE_HIBERNATION:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Leave Hibernation\"...");
                         sys_log_new_line();
 
                         process_tc_leave_hibernation(pkt, pkt_len);
 
                         break;
-                    case CONFIG_PKT_ID_UPLINK_ACTIVATE_MODULE:
+                    case PKT_ID_UPLINK_ACTIVATE_MODULE:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Activate Module\"...");
                         sys_log_new_line();
 
                         process_tc_activate_module(pkt, pkt_len);
 
                         break;
-                    case CONFIG_PKT_ID_UPLINK_DEACTIVATE_MODULE:
+                    case PKT_ID_UPLINK_DEACTIVATE_MODULE:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Deactivate Module\"...");
                         sys_log_new_line();
 
                         process_tc_deactivate_module(pkt, pkt_len);
 
                         break;
-                    case CONFIG_PKT_ID_UPLINK_ACTIVATE_PAYLOAD:
+                    case PKT_ID_UPLINK_ACTIVATE_PAYLOAD:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Activate Payload\"...");
                         sys_log_new_line();
 
                         process_tc_activate_payload(pkt, pkt_len);
 
                         break;
-                    case CONFIG_PKT_ID_UPLINK_DEACTIVATE_PAYLOAD:
+                    case PKT_ID_UPLINK_DEACTIVATE_PAYLOAD:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Deactivate Payload\"...");
                         sys_log_new_line();
 
                         process_tc_deactivate_payload(pkt, pkt_len);
 
                         break;
-                    case CONFIG_PKT_ID_UPLINK_ERASE_MEMORY:
+                    case PKT_ID_UPLINK_ERASE_MEMORY:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Erase Memory\"...");
                         sys_log_new_line();
 
                         process_tc_erase_memory(pkt, pkt_len);
 
                         break;
-                    case CONFIG_PKT_ID_UPLINK_FORCE_RESET:
+                    case PKT_ID_UPLINK_FORCE_RESET:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Force Reset\"...");
                         sys_log_new_line();
 
                         process_tc_force_reset(pkt, pkt_len);
 
                         break;
-                    case CONFIG_PKT_ID_UPLINK_GET_PAYLOAD_DATA:
+                    case PKT_ID_UPLINK_GET_PAYLOAD_DATA:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Get Payload Data\"...");
                         sys_log_new_line();
 
                         process_tc_get_payload_data(pkt, pkt_len);
                         break;
-                    case CONFIG_PKT_ID_UPLINK_SET_PARAM:
+                    case PKT_ID_UPLINK_SET_PARAM:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Set Parameter\"...");
                         sys_log_new_line();
 
                         process_tc_set_parameter(pkt, pkt_len);
 
                         break;
-                    case CONFIG_PKT_ID_UPLINK_GET_PARAM:
+                    case PKT_ID_UPLINK_GET_PARAM:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Get Parameter\"...");
                         sys_log_new_line();
 
                         process_tc_get_parameter(pkt, pkt_len);
 
                         break;
-                    case CONFIG_PKT_ID_UPLINK_UPDATE_TLE:
+                    case PKT_ID_UPLINK_UPDATE_TLE:
                         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Executing the TC \"Update TLE\"...");
                         sys_log_new_line();
 
@@ -424,7 +424,7 @@ static void process_tc_ping_request(uint8_t *pkt, uint16_t pkt_len)
         fsat_pkt_pl_t pong_pl = {0};
 
         /* Packet ID */
-        fsat_pkt_add_id(&pong_pl, CONFIG_PKT_ID_DOWNLINK_PING_ANS);
+        fsat_pkt_add_id(&pong_pl, PKT_ID_DOWNLINK_PING_ANS);
 
         /* Source callsign */
         fsat_pkt_add_callsign(&pong_pl, CONFIG_SATELLITE_CALLSIGN);
@@ -459,7 +459,7 @@ static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
         uint16_t data_req_ans_raw_len = UINT16_MAX;
 
         /* Packet ID */
-        fsat_pkt_add_id(&data_req_ans_pkt, CONFIG_PKT_ID_DOWNLINK_DATA_REQUEST_ANS);
+        fsat_pkt_add_id(&data_req_ans_pkt, PKT_ID_DOWNLINK_DATA_REQUEST_ANS);
 
         /* Source callsign */
         fsat_pkt_add_callsign(&data_req_ans_pkt, CONFIG_SATELLITE_CALLSIGN);
@@ -478,7 +478,7 @@ static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
             switch(pkt[8])
             {
-                case CONFIG_DATA_ID_OBDH:
+                case DATA_ID_OBDH:
                 {
                     uint32_t start_page = sat_data_buf.obdh.data.media.last_page_obdh_data - (uint32_t)end_idx;
                     uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_obdh_data - (uint32_t)start_idx;
@@ -496,10 +496,10 @@ static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                                 (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
 
                                 /* Data ID */
-                                data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_OBDH;
+                                data_req_ans_pkt.payload[7] = DATA_ID_OBDH;
 
                                 /* Format payload */
-                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_OBDH, page_buf);
+                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, DATA_ID_OBDH, page_buf);
 
                                 vTaskDelay(pdMS_TO_TICKS(10U));
 
@@ -522,7 +522,7 @@ static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                     break;
                 }
-                case CONFIG_DATA_ID_EPS:
+                case DATA_ID_EPS:
                 {
                     uint32_t start_page = sat_data_buf.obdh.data.media.last_page_eps_data - (uint32_t)end_idx;
                     uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_eps_data - (uint32_t)start_idx;
@@ -540,10 +540,10 @@ static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                                 (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
 
                                 /* Data ID */
-                                data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_EPS;
+                                data_req_ans_pkt.payload[7] = DATA_ID_EPS;
 
                                 /* Format payload */
-                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_EPS, page_buf);
+                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, DATA_ID_EPS, page_buf);
 
                                 vTaskDelay(pdMS_TO_TICKS(10U));
 
@@ -566,7 +566,7 @@ static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                     break;
                 }
-                case CONFIG_DATA_ID_TTC_0:
+                case DATA_ID_TTC_0:
                 {
                     uint32_t start_page = sat_data_buf.obdh.data.media.last_page_ttc_0_data - (uint32_t)end_idx;
                     uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_ttc_0_data - (uint32_t)start_idx;
@@ -584,10 +584,10 @@ static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                                 (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
 
                                 /* Data ID */
-                                data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_TTC_0;
+                                data_req_ans_pkt.payload[7] = DATA_ID_TTC_0;
 
                                 /* Format payload */
-                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_TTC_0, page_buf);
+                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, DATA_ID_TTC_0, page_buf);
 
                                 vTaskDelay(pdMS_TO_TICKS(10U));
 
@@ -610,7 +610,7 @@ static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                     break;
                 }
-                case CONFIG_DATA_ID_TTC_1:
+                case DATA_ID_TTC_1:
                 {
                     uint32_t start_page = sat_data_buf.obdh.data.media.last_page_ttc_1_data - (uint32_t)end_idx;
                     uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_ttc_1_data - (uint32_t)start_idx;
@@ -628,10 +628,10 @@ static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                                 (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
 
                                 /* Data ID */
-                                data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_TTC_1;
+                                data_req_ans_pkt.payload[7] = DATA_ID_TTC_1;
 
                                 /* Format payload */
-                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_TTC_1, page_buf);
+                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, DATA_ID_TTC_1, page_buf);
 
                                 vTaskDelay(pdMS_TO_TICKS(10U));
 
@@ -654,7 +654,7 @@ static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                     break;
                 }
-                case CONFIG_DATA_ID_ANT:
+                case DATA_ID_ANT:
                 {
                     uint32_t start_page = sat_data_buf.obdh.data.media.last_page_ant_data - (uint32_t)end_idx;
                     uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_ant_data - (uint32_t)start_idx;
@@ -672,10 +672,10 @@ static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                                 (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
 
                                 /* Data ID */
-                                data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_ANT;
+                                data_req_ans_pkt.payload[7] = DATA_ID_ANT;
 
                                 /* Format payload */
-                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_ANT, page_buf);
+                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, DATA_ID_ANT, page_buf);
 
                                 vTaskDelay(pdMS_TO_TICKS(10U));
 
@@ -698,7 +698,7 @@ static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                     break;
                 }
-                case CONFIG_DATA_ID_SBCD_PKTS:
+                case DATA_ID_SBCD_PKTS:
                 {
                     uint32_t start_page = sat_data_buf.obdh.data.media.last_page_sbcd_pkts - (uint32_t)end_idx;
                     uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_sbcd_pkts - (uint32_t)start_idx;
@@ -716,10 +716,10 @@ static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                                 (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
 
                                 /* Data ID */
-                                data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_SBCD_PKTS;
+                                data_req_ans_pkt.payload[7] = DATA_ID_SBCD_PKTS;
 
                                 /* Format payload */
-                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_SBCD_PKTS, page_buf);
+                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, DATA_ID_SBCD_PKTS, page_buf);
 
                                 vTaskDelay(pdMS_TO_TICKS(10U));
 
@@ -742,7 +742,7 @@ static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
 
                     break;
                 }
-                case CONFIG_DATA_ID_PAYLOAD_INFO:
+                case DATA_ID_PAYLOAD_INFO:
                 {
                     uint32_t start_page = sat_data_buf.obdh.data.media.last_page_edc_data - (uint32_t)end_idx;
                     uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_edc_data - (uint32_t)start_idx;
@@ -760,10 +760,10 @@ static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len)
                                 (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
 
                                 /* Data ID */
-                                data_req_ans_pkt.payload[7] = CONFIG_DATA_ID_PAYLOAD_INFO;
+                                data_req_ans_pkt.payload[7] = DATA_ID_PAYLOAD_INFO;
 
                                 /* Format payload */
-                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, CONFIG_DATA_ID_PAYLOAD_INFO, page_buf);
+                                (void)format_data_request(data_req_ans_pkt.payload, &data_req_ans_pkt.length, DATA_ID_PAYLOAD_INFO, page_buf);
 
                                 vTaskDelay(pdMS_TO_TICKS(10U));
 
@@ -811,7 +811,7 @@ static void process_tc_broadcast_message(uint8_t *pkt, uint16_t pkt_len)
         fsat_pkt_pl_t broadcast_pl = {0};
 
         /* Packet ID */
-        fsat_pkt_add_id(&broadcast_pl, CONFIG_PKT_ID_DOWNLINK_MESSAGE_BROADCAST);
+        fsat_pkt_add_id(&broadcast_pl, PKT_ID_DOWNLINK_MESSAGE_BROADCAST);
 
         /* Source callsign */
         fsat_pkt_add_callsign(&broadcast_pl, CONFIG_SATELLITE_CALLSIGN);
@@ -917,7 +917,7 @@ static void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len)
 
             switch(pkt[8])
             {
-                case CONFIG_MODULE_ID_BATTERY_HEATER:
+                case MODULE_ID_BATTERY_HEATER:
                 {
                     sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the battery heater...");
                     sys_log_new_line();
@@ -946,7 +946,7 @@ static void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len)
 
                     break;
                 }
-                case CONFIG_MODULE_ID_BEACON:
+                case MODULE_ID_BEACON:
                 {
                     sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the beacon...");
                     sys_log_new_line();
@@ -958,7 +958,7 @@ static void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len)
 
                     break;
                 }
-                case CONFIG_MODULE_ID_PERIODIC_TELEMETRY:
+                case MODULE_ID_PERIODIC_TELEMETRY:
                 {
                     sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the periodic telemetry...");
                     sys_log_new_line();
@@ -999,7 +999,7 @@ static void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
 
             switch(pkt[8])
             {
-                case CONFIG_MODULE_ID_BATTERY_HEATER:
+                case MODULE_ID_BATTERY_HEATER:
                 {
                     sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the battery heater...");
                     sys_log_new_line();
@@ -1028,7 +1028,7 @@ static void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
 
                     break;
                 }
-                case CONFIG_MODULE_ID_BEACON:
+                case MODULE_ID_BEACON:
                 {
                     sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the beacon...");
                     sys_log_new_line();
@@ -1040,7 +1040,7 @@ static void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len)
 
                     break;
                 }
-                case CONFIG_MODULE_ID_PERIODIC_TELEMETRY:
+                case MODULE_ID_PERIODIC_TELEMETRY:
                 {
                     sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the periodic telemetry...");
                     sys_log_new_line();
@@ -1074,7 +1074,7 @@ static void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
     {
         switch(pkt[8])
         {
-            case CONFIG_PL_ID_EDC_1:
+            case PL_ID_EDC_1:
             {
                 sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the EDC 1 payload...");
                 sys_log_new_line();
@@ -1086,7 +1086,7 @@ static void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
                     /* Update last valid tc parameter */
                     sat_data_buf.obdh.data.last_valid_tc = pkt[0];
                     pl_event.event = EV_NOTIFY_ACTIVATE_PAYLOAD_RQ;
-                    pl_event.args[0] = CONFIG_PL_ID_EDC_1;
+                    pl_event.args[0] = PL_ID_EDC_1;
                     (void)notify_event_to_mission_manager(&pl_event);
                 }
                 else
@@ -1098,7 +1098,7 @@ static void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
 
                 break;
             }
-            case CONFIG_PL_ID_EDC_2:
+            case PL_ID_EDC_2:
             {
                 sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the EDC 2 payload...");
                 sys_log_new_line();
@@ -1110,7 +1110,7 @@ static void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
                     /* Update last valid tc parameter */
                     sat_data_buf.obdh.data.last_valid_tc = pkt[0];
                     pl_event.event = EV_NOTIFY_ACTIVATE_PAYLOAD_RQ;
-                    pl_event.args[0] = CONFIG_PL_ID_EDC_2;
+                    pl_event.args[0] = PL_ID_EDC_2;
                     (void)notify_event_to_mission_manager(&pl_event);
                 }
                 else
@@ -1122,7 +1122,7 @@ static void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
 
                 break;
             }
-            case CONFIG_PL_ID_PAYLOAD_X:
+            case PL_ID_PAYLOAD_X:
             {
                 sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Activating the Payload-X payload...");
                 sys_log_new_line();
@@ -1134,7 +1134,7 @@ static void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len)
                     /* Update last valid tc parameter */
                     sat_data_buf.obdh.data.last_valid_tc = pkt[0];
                     pl_event.event = EV_NOTIFY_ACTIVATE_PAYLOAD_RQ;
-                    pl_event.args[0] = CONFIG_PL_ID_PAYLOAD_X;
+                    pl_event.args[0] = PL_ID_PAYLOAD_X;
                     (void)notify_event_to_mission_manager(&pl_event);
                 }
                 else
@@ -1177,7 +1177,7 @@ static void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
     {
         switch(pkt[8])
         {
-            case CONFIG_PL_ID_EDC_1:
+            case PL_ID_EDC_1:
             {
                 sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the EDC 1 payload...");
                 sys_log_new_line();
@@ -1189,7 +1189,7 @@ static void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
                     /* Update last valid tc parameter */
                     sat_data_buf.obdh.data.last_valid_tc = pkt[0];
                     pl_event.event = EV_NOTIFY_DEACTIVATE_PAYLOAD_RQ;
-                    pl_event.args[0] = CONFIG_PL_ID_EDC_1;
+                    pl_event.args[0] = PL_ID_EDC_1;
                     (void)notify_event_to_mission_manager(&pl_event);
                 }
                 else
@@ -1201,7 +1201,7 @@ static void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
 
                 break;
             }
-            case CONFIG_PL_ID_EDC_2:
+            case PL_ID_EDC_2:
             {
                 sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the EDC 2 payload...");
                 sys_log_new_line();
@@ -1213,7 +1213,7 @@ static void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
                     /* Update last valid tc parameter */
                     sat_data_buf.obdh.data.last_valid_tc = pkt[0];
                     pl_event.event = EV_NOTIFY_DEACTIVATE_PAYLOAD_RQ;
-                    pl_event.args[0] = CONFIG_PL_ID_EDC_2;
+                    pl_event.args[0] = PL_ID_EDC_2;
                     (void)notify_event_to_mission_manager(&pl_event);
                 }
                 else
@@ -1225,7 +1225,7 @@ static void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
 
                 break;
             }
-            case CONFIG_PL_ID_PAYLOAD_X:
+            case PL_ID_PAYLOAD_X:
             {
                 sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Deactivating the Payload-X payload...");
                 sys_log_new_line();
@@ -1237,7 +1237,7 @@ static void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len)
                     /* Update last valid tc parameter */
                     sat_data_buf.obdh.data.last_valid_tc = pkt[0];
                     pl_event.event = EV_NOTIFY_DEACTIVATE_PAYLOAD_RQ;
-                    pl_event.args[0] = CONFIG_PL_ID_PAYLOAD_X;
+                    pl_event.args[0] = PL_ID_PAYLOAD_X;
                     (void)notify_event_to_mission_manager(&pl_event);
                 }
                 else
@@ -1334,7 +1334,7 @@ static void process_tc_get_payload_data(uint8_t *pkt, uint16_t pkt_len)
 
             switch (pkt[8]) 
             {
-                case CONFIG_PL_ID_EDC_1:
+                case PL_ID_EDC_1:
                 {
                     uint8_t data_id = pkt[9];
 
@@ -1348,7 +1348,7 @@ static void process_tc_get_payload_data(uint8_t *pkt, uint16_t pkt_len)
                         /* Prepare Packet */
                         (void)memcpy(&pl_data.payload[0], &pkt[1], 7); /* Requester callsign */
                         pl_data.payload[7] = pkt[9]; /* Payload Arg */
-                        fsat_pkt_add_id(&pl_data, CONFIG_PKT_ID_DOWNLINK_PAYLOAD_DATA);
+                        fsat_pkt_add_id(&pl_data, PKT_ID_DOWNLINK_PAYLOAD_DATA);
                         fsat_pkt_add_callsign(&pl_data, CONFIG_SATELLITE_CALLSIGN);
                         fsat_pkt_encode(&pl_data, pkt_raw, &pkt_len);
                         
@@ -1365,7 +1365,7 @@ static void process_tc_get_payload_data(uint8_t *pkt, uint16_t pkt_len)
 
                     break;
                 }
-                case CONFIG_PL_ID_EDC_2:
+                case PL_ID_EDC_2:
                 {
                     uint8_t data_id = pkt[9];
 
@@ -1379,7 +1379,7 @@ static void process_tc_get_payload_data(uint8_t *pkt, uint16_t pkt_len)
                         /* Prepare Packet */
                         (void)memcpy(&pl_data.payload[0], &pkt[1], 7); /* Requester callsign */
                         pl_data.payload[7] = pkt[9]; /* Payload Arg */
-                        fsat_pkt_add_id(&pl_data, CONFIG_PKT_ID_DOWNLINK_PAYLOAD_DATA);
+                        fsat_pkt_add_id(&pl_data, PKT_ID_DOWNLINK_PAYLOAD_DATA);
                         fsat_pkt_add_callsign(&pl_data, CONFIG_SATELLITE_CALLSIGN);
                         fsat_pkt_encode(&pl_data, pkt_raw, &pkt_len);
                         
@@ -1427,7 +1427,7 @@ static void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
 
             switch(pkt[8])
             {
-                case CONFIG_SUBSYSTEM_ID_OBDH:
+                case SUBSYSTEM_ID_OBDH:
                     if (obdh_set_param(pkt[9], &buf) == 0)
                     {
                         if (pkt[9] == OBDH_PARAM_ID_MODE)
@@ -1443,6 +1443,10 @@ static void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
                                 sys_log_new_line();
                             }
                         }
+                        else 
+                        {
+                            (void)send_tc_feedback(pkt);
+                        }
                     }
                     else 
                     {
@@ -1451,7 +1455,7 @@ static void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
                     }
 
                     break;
-                case CONFIG_SUBSYSTEM_ID_TTC_1:
+                case SUBSYSTEM_ID_TTC_1:
                     if (ttc_set_param(TTC_0, pkt[9], buf) != 0)
                     {
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error writing a TTC 0 parameter!");
@@ -1459,7 +1463,7 @@ static void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
                     }
 
                     break;
-                case CONFIG_SUBSYSTEM_ID_TTC_2:
+                case SUBSYSTEM_ID_TTC_2:
                     if (ttc_set_param(TTC_1, pkt[9], buf) != 0)
                     {
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error writing a TTC 1 parameter!");
@@ -1467,7 +1471,7 @@ static void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
                     }
 
                     break;
-                case CONFIG_SUBSYSTEM_ID_EPS:
+                case SUBSYSTEM_ID_EPS:
                     if (eps_set_param(pkt[9], buf) != 0)
                     {
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error writing a EPS parameter!");
@@ -1504,7 +1508,7 @@ static void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
 
             switch(pkt[8])
             {
-                case CONFIG_SUBSYSTEM_ID_OBDH:
+                case SUBSYSTEM_ID_OBDH:
                     if (obdh_get_param(pkt[9], &buf) != 0)
                     {
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error reading a parameter from OBDH!");
@@ -1513,7 +1517,7 @@ static void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
                     }
 
                     break;
-                case CONFIG_SUBSYSTEM_ID_TTC_1:
+                case SUBSYSTEM_ID_TTC_1:
                     if (ttc_get_param(TTC_0, pkt[9], &buf) != 0)
                     {
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error reading a parameter from TTC 0!");
@@ -1522,7 +1526,7 @@ static void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
                     }
 
                     break;
-                case CONFIG_SUBSYSTEM_ID_TTC_2:
+                case SUBSYSTEM_ID_TTC_2:
                     if (ttc_get_param(TTC_1, pkt[9], &buf) != 0)
                     {
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error reading a parameter from TTC 1!");
@@ -1531,7 +1535,7 @@ static void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
                     }
 
                     break;
-                case CONFIG_SUBSYSTEM_ID_EPS:
+                case SUBSYSTEM_ID_EPS:
                     if (eps_get_param(pkt[9], &buf) != 0)
                     {
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error reading a EPS parameter!");
@@ -1552,7 +1556,7 @@ static void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
                 fsat_pkt_pl_t param_pl = {0};
 
                 /* Packet ID */
-                fsat_pkt_add_id(&param_pl, CONFIG_PKT_ID_DOWNLINK_PARAM_VALUE);
+                fsat_pkt_add_id(&param_pl, PKT_ID_DOWNLINK_PARAM_VALUE);
 
                 /* Source callsign */
                 fsat_pkt_add_callsign(&param_pl, CONFIG_SATELLITE_CALLSIGN);
@@ -1659,7 +1663,7 @@ uint32_t timestamp = system_get_time();
 
 	switch (data_id)
 	{
-		case CONFIG_DATA_ID_OBDH:
+		case DATA_ID_OBDH:
 		{
 			obdh_telemetry_t *tel = (obdh_telemetry_t *)data;
 			sys_time_t mode_duration = system_get_time() - sat_data_buf.obdh.data.ts_last_mode_change;
@@ -1747,7 +1751,7 @@ uint32_t timestamp = system_get_time();
 			break;
 		}
 
-		case CONFIG_DATA_ID_EPS:
+		case DATA_ID_EPS:
 		{
 			eps_telemetry_t *tel = (eps_telemetry_t *)data;
 
@@ -1841,7 +1845,7 @@ uint32_t timestamp = system_get_time();
 			break;
 		}
 
-		case CONFIG_DATA_ID_TTC_0:
+		case DATA_ID_TTC_0:
 		{
 			ttc_telemetry_t *tel = (ttc_telemetry_t *)data;
 
@@ -1891,7 +1895,7 @@ uint32_t timestamp = system_get_time();
 			break;
 		}
 
-		case CONFIG_DATA_ID_TTC_1:
+		case DATA_ID_TTC_1:
 		{
 			ttc_telemetry_t *tel = (ttc_telemetry_t *)data;
 
@@ -1941,7 +1945,7 @@ uint32_t timestamp = system_get_time();
 			break;
 		}
 
-		case CONFIG_DATA_ID_ANT:
+		case DATA_ID_ANT:
 		{
 			antenna_telemetry_t *tel = (antenna_telemetry_t *)data;
 
@@ -1974,7 +1978,7 @@ uint32_t timestamp = system_get_time();
 			break;
 		}
 
-		case CONFIG_DATA_ID_SBCD_PKTS:
+		case DATA_ID_SBCD_PKTS:
 		{
 			edc_ptt_t *tel = (edc_ptt_t *)data;
 
@@ -1999,7 +2003,7 @@ uint32_t timestamp = system_get_time();
 			break;
 		}
 
-		case CONFIG_DATA_ID_PAYLOAD_INFO:
+		case DATA_ID_PAYLOAD_INFO:
 		{
             payload_telemetry_t *tel = (payload_telemetry_t *)data;
             edc_hk_t *hk = (edc_hk_t*)&tel->data[0];
@@ -2068,7 +2072,7 @@ static int8_t send_tc_feedback(uint8_t *pkt)
     uint16_t feedback_pkt_len = 0;
 
     /* Packet ID */
-    fsat_pkt_add_id(&feedback, CONFIG_PKT_ID_DOWNLINK_TC_FEEDBACK);
+    fsat_pkt_add_id(&feedback, PKT_ID_DOWNLINK_TC_FEEDBACK);
 
     /* Source callsign */
     fsat_pkt_add_callsign(&feedback, CONFIG_SATELLITE_CALLSIGN);

@@ -66,7 +66,7 @@ void vTaskGeneralTelemetry(void)
         if (sat_data_buf.obdh.data.general_telemetry_on)
         {
             /* Packet ID */
-            fsat_pkt_add_id(&gen_tel_pl, CONFIG_PKT_ID_DOWNLINK_GENERAL_TELEMETRY);
+            fsat_pkt_add_id(&gen_tel_pl, PKT_ID_DOWNLINK_GENERAL_TELEMETRY);
 
             /* Source callsign */
             fsat_pkt_add_callsign(&gen_tel_pl, CONFIG_SATELLITE_CALLSIGN);
