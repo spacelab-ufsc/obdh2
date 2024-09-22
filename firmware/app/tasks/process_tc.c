@@ -1630,8 +1630,8 @@ static void process_tc_update_tle(uint8_t *pkt, uint16_t pkt_len)
             sat_data_buf.obdh.data.last_valid_tc = pkt[0];
 
             taskENTER_CRITICAL();
-            (void)memcpy(&sat_data_buf.obdh.data.position.tle_line1, &pkt[8], 69U);
-            (void)memcpy(&sat_data_buf.obdh.data.position.tle_line2, &pkt[77], 69U);
+            (void)memcpy(&sat_data_buf.obdh.data.position.tle_line1[0], &pkt[8], 69U);
+            (void)memcpy(&sat_data_buf.obdh.data.position.tle_line2[0], &pkt[77], 69U);
             sat_data_buf.obdh.data.position.tle_line1[69] = '\0';
             sat_data_buf.obdh.data.position.tle_line2[69] = '\0';
             taskEXIT_CRITICAL();
