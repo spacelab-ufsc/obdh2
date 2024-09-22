@@ -127,20 +127,7 @@ static inline void handle_event(const event_t *ev)
             if (!sat_data_buf.obdh.data.manual_mode_on)
             {
                 /* Enable Main EDC and update state */
-                payload_t main;
-
-                switch (sat_data_buf.obdh.data.main_edc) 
-                {
-                    case CONFIG_PL_ID_EDC_1:
-                        main = PAYLOAD_EDC_0;
-                        break;
-                    case CONFIG_PL_ID_EDC_2:
-                        main = PAYLOAD_EDC_1;
-                        break;
-                    default:
-                        main = PAYLOAD_NONE;
-                        break;
-                }
+                payload_t main = sat_data_buf.obdh.data.main_edc;
 
                 if (main != PAYLOAD_NONE)
                 {
@@ -310,20 +297,7 @@ static inline int8_t handle_mode_change_rq(const uint8_t *args)
 
             if ((sat_data_buf.state.active_payload[0] == PAYLOAD_NONE) && (err == 0))
             {
-                payload_t main;
-
-                switch (sat_data_buf.obdh.data.main_edc) 
-                {
-                    case CONFIG_PL_ID_EDC_1:
-                        main = PAYLOAD_EDC_0;
-                        break;
-                    case CONFIG_PL_ID_EDC_2:
-                        main = PAYLOAD_EDC_1;
-                        break;
-                    default:
-                        main = PAYLOAD_NONE;
-                        break;
-                }
+                payload_t main = sat_data_buf.obdh.data.main_edc;
 
                 if (main != PAYLOAD_NONE)
                 {
@@ -419,7 +393,7 @@ static inline int8_t activate_payload_rq(const uint8_t *args)
 
     switch (pl) 
     {
-        case CONFIG_PL_ID_EDC_1: 
+        case PL_ID_EDC_1: 
         {
             if (sat_data_buf.state.active_payload[0] == PAYLOAD_EDC_1)
             {
@@ -440,7 +414,7 @@ static inline int8_t activate_payload_rq(const uint8_t *args)
 
             break;
         }
-        case CONFIG_PL_ID_EDC_2: 
+        case PL_ID_EDC_2: 
         {
             if (sat_data_buf.state.active_payload[0] == PAYLOAD_EDC_0)
             {
@@ -462,7 +436,7 @@ static inline int8_t activate_payload_rq(const uint8_t *args)
             break;
         }
         #if defined (CONFIG_DEV_PAYLOAD_X_ENABLED) && defined (CONFIG_TASK_PAYLOAD_X_ENABLED) && (CONFIG_DEV_PAYLOAD_X_ENABLED == 1) && (CONFIG_TASK_PAYLOAD_X_ENABLED == 1)
-            case CONFIG_PL_ID_PAYLOAD_X: 
+            case PL_ID_PAYLOAD_X: 
             {
                 if (sat_data_buf.state.active_payload[1] == PAYLOAD_NONE)
                 {
@@ -500,7 +474,7 @@ static inline int8_t deactivate_payload_rq(const uint8_t *args)
 
     switch (pl) 
     {
-        case CONFIG_PL_ID_EDC_1: 
+        case PL_ID_EDC_1: 
         {
             if (sat_data_buf.state.active_payload[0] == PAYLOAD_EDC_0)
             {
@@ -517,7 +491,7 @@ static inline int8_t deactivate_payload_rq(const uint8_t *args)
 
             break;
         }
-        case CONFIG_PL_ID_EDC_2: 
+        case PL_ID_EDC_2: 
         {
             if (sat_data_buf.state.active_payload[0] == PAYLOAD_EDC_1)
             {
@@ -535,7 +509,7 @@ static inline int8_t deactivate_payload_rq(const uint8_t *args)
             break;
         }
         #if defined (CONFIG_DEV_PAYLOAD_X_ENABLED) && defined (CONFIG_TASK_PAYLOAD_X_ENABLED) && (CONFIG_DEV_PAYLOAD_X_ENABLED == 1) && (CONFIG_TASK_PAYLOAD_X_ENABLED == 1)
-            case CONFIG_PL_ID_PAYLOAD_X: 
+            case PL_ID_PAYLOAD_X: 
             {
                 if (sat_data_buf.state.active_payload[1] == PAYLOAD_X)
                 {

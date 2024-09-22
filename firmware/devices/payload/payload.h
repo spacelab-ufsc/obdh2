@@ -40,21 +40,19 @@
 
 #include <stdint.h>
 
-#define PAYLOAD_MODULE_NAME         "Payload"
+#include <structs/satellite.h>
 
-#define PAYLOAD_EDC_0_ID            (0x01U)
-#define PAYLOAD_EDC_1_ID            (0x02U)
-#define PAYLOAD_X_ID                (0x03U)
+#define PAYLOAD_MODULE_NAME         "Payload"
 
 /**
  * \brief Payload type.
  */
 typedef enum
 {
-    PAYLOAD_EDC_0=0,            /**< Payload EDC 0. */
-    PAYLOAD_EDC_1,              /**< Payload EDC 1. */
-    PAYLOAD_X,                  /**< Payload-X. */
-    PAYLOAD_NONE,               /**< Means there's no payload active */
+    PAYLOAD_NONE = 0,               /**< Means there's no payload active */
+    PAYLOAD_EDC_0 = PL_ID_EDC_1,    /**< Payload EDC 0. */
+    PAYLOAD_EDC_1 = PL_ID_EDC_2,    /**< Payload EDC 1. */
+    PAYLOAD_X = PL_ID_PAYLOAD_X,    /**< Payload-X. */
 } payload_t;
 
 /**
@@ -67,7 +65,7 @@ typedef enum
     PAYLOAD_EDC_RAW_PTT,        /**< EDC raw PTT packet. */
     PAYLOAD_EDC_PTT,            /**< EDC PTT packet. */
     PAYLOAD_EDC_RAW_HK,         /**< EDC raw housekeeping. */
-    PAYLOAD_EDC_HK,              /**< EDC housekeeping. */
+    PAYLOAD_EDC_HK,             /**< EDC housekeeping. */
     PAYLOAD_X_PONG              /**< PX ping pong. */
 } payload_data_id_t;
 
