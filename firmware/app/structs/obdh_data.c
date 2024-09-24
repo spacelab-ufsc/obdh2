@@ -40,7 +40,7 @@
 #include "obdh_data.h"
 #include "satellite.h"
 
-#define OBDH_DATA_LOG_NAME  "OBDH DATA"
+#define OBDH_DATA_LOG_NAME  "OBDH Data"
 
 int8_t obdh_set_param(uint8_t param_id, uint32_t *buf)
 {
@@ -90,12 +90,18 @@ int8_t obdh_set_param(uint8_t param_id, uint32_t *buf)
                 taskENTER_CRITICAL();
                 sat_data_buf.obdh.data.manual_mode_on = false;
                 taskEXIT_CRITICAL();
+
+                sys_log_print_event_from_module(SYS_LOG_INFO, OBDH_DATA_LOG_NAME, "Manual mode is now Off!");
+                sys_log_new_line();
             }
             else if (*buf == 0x01U)
             {
                 taskENTER_CRITICAL();
                 sat_data_buf.obdh.data.manual_mode_on = true;
                 taskEXIT_CRITICAL();
+
+                sys_log_print_event_from_module(SYS_LOG_INFO, OBDH_DATA_LOG_NAME, "Manual mode is now On!");
+                sys_log_new_line();
             }
             else
             {
