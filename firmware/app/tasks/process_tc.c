@@ -890,7 +890,7 @@ static void process_tc_enter_hibernation(uint8_t *pkt, uint16_t pkt_len)
 
 static void process_tc_leave_hibernation(uint8_t *pkt, uint16_t pkt_len)
 {
-    if (pkt_len >= 30U)
+    if (pkt_len >= 28U)
     {
         uint8_t tc_key[16] = CONFIG_TC_KEY_LEAVE_HIBERNATION;
 
