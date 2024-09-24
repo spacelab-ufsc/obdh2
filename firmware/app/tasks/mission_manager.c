@@ -356,9 +356,8 @@ static inline int8_t handle_mode_change_rq(const uint8_t *args)
         case OBDH_WAKE_UP:
         {
             in_hibernation = false;
-            satellite_change_mode(OBDH_MODE_HIBERNATION);
 
-            if (in_brazil || (sat_data_buf.state.active_payload[1] != PAYLOAD_NONE))
+            if (in_brazil || (sat_data_buf.state.active_payload[1] != PAYLOAD_NONE) || (sat_data_buf.state.active_payload[0] != PAYLOAD_NONE))
             {
                 satellite_change_mode(OBDH_MODE_NORMAL);
             }
