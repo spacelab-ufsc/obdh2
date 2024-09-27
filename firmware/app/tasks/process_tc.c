@@ -1429,6 +1429,8 @@ static void process_tc_get_payload_data(uint8_t *pkt, uint16_t pkt_len)
 
 static void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
 {
+    int8_t err = 0;
+
     if (pkt_len >= (1U + 7U + 1U + 1U + 4U + 20U))
     {
         uint8_t tc_key[16] = CONFIG_TC_KEY_SET_PARAMETER;
@@ -1451,25 +1453,19 @@ static void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
                         if (pkt[9] == OBDH_PARAM_ID_MODE)
                         {
                             /* Check for notification from mission_manager */
-                            if (xTaskNotifyWait(0U, UINT32_MAX, NULL, pdMS_TO_TICKS(TASK_PROCESS_TC_MAX_WAIT_TIME_MS)) == pdTRUE)
-                            {
-                                (void)send_tc_feedback(pkt);
-                            }
-                            else 
+                            if (xTaskNotifyWait(0U, UINT32_MAX, NULL, pdMS_TO_TICKS(TASK_PROCESS_TC_MAX_WAIT_TIME_MS)) != pdTRUE)
                             {
                                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Mission manager notify timed out for \"Set param MODE\"");
                                 sys_log_new_line();
+                                err = -1;
                             }
-                        }
-                        else 
-                        {
-                            (void)send_tc_feedback(pkt);
                         }
                     }
                     else 
                     {
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error writing a OBDH parameter!");
                         sys_log_new_line();
+                        err = -1;
                     }
 
                     break;
@@ -1478,6 +1474,7 @@ static void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
                     {
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error writing a TTC 0 parameter!");
                         sys_log_new_line();
+                        err = -1;
                     }
 
                     break;
@@ -1486,6 +1483,7 @@ static void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
                     {
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error writing a TTC 1 parameter!");
                         sys_log_new_line();
+                        err = -1;
                     }
 
                     break;
@@ -1494,6 +1492,7 @@ static void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
                     {
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error writing a EPS parameter!");
                         sys_log_new_line();
+                        err = -1;
                     }
 
                     break;
@@ -1502,6 +1501,11 @@ static void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
                     sys_log_new_line();
 
                     break;
+            }
+
+            if (err == 0)
+            {
+                (void)send_tc_feedback(pkt);
             }
         }
         else
