@@ -57,6 +57,11 @@
 #define POS_BRAZIL_LIM_W                        (-74L)              /**< Brazil territory West limit (Rounded up) */
 
 /**
+ * \brief Position determination task handle.
+ */
+extern xTaskHandle xTaskPosDetHandle;
+
+/**
  * \brief Checks if the satellite is orbiting over Brazil, based on the last available position determined.
  *
  * \param[in] latitude is the latitude of the satellite as a int16_t.
@@ -71,9 +76,16 @@ static inline bool is_satellite_in_brazil(int16_t latitude, int16_t longitude)
 }
 
 /**
- * \brief Position determination task handle.
+ * \brief Updates TLE line buffers.
+ *
+ * \param[in] line_number is the TLE line number, either 1 or 2.
+ *
+ * \param[in] tle_line is the raw bytes from the TLE line received through 
+ * telecommands.
+ *
+ * \return True if both TLE lines were updated, False otherwise.
  */
-extern xTaskHandle xTaskPosDetHandle;
+bool update_tle_line(uint8_t line_number, const uint8_t *tle_line);
 
 /**
  * \brief Position determination task.
