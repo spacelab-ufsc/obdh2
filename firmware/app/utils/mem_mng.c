@@ -129,8 +129,8 @@ void mem_mng_load_obdh_data_from_default_values(obdh_telemetry_t *tel)
     uint8_t tle_line1[70] = OBDH_PARAM_POSITION_TLE_LINE1_DEFAULT_VAL;
     uint8_t tle_line2[70] = OBDH_PARAM_POSITION_TLE_LINE2_DEFAULT_VAL;
 
-    (void)memcpy(&tel->data.position.tle_line1, &tle_line1[0], 70U);
-    (void)memcpy(&tel->data.position.tle_line2, &tle_line2[0], 70U);
+    (void)memcpy(tel->data.position.tle_line1, &tle_line1[0], 70U);
+    (void)memcpy(tel->data.position.tle_line2, &tle_line2[0], 70U);
 
     tel->data.position.latitude             = OBDH_PARAM_POSITION_LATITUDE_DEFAULT_VAL;
     tel->data.position.longitude            = OBDH_PARAM_POSITION_LONGITUDE_DEFAULT_VAL;
