@@ -83,6 +83,7 @@
 #define OBDH_PARAM_ID_MAIN_EDC                  34  /**< Main EDC ID. */
 #define OBDH_PARAM_ID_GENERAL_TELEMETRY_ON      35  /**< General telemetry on flag. */
 #define OBDH_PARAM_ID_RESET_DEVICE              36  /**< Resets device (Only write param, writing "0x01" to it resets OBDH). */
+#define OBDH_PARAM_ID_TS_LAST_TLE_UPDATE        37  /**< Timestamp of the last TLE update. */
 
 /* Default values */
 #define OBDH_TIMESTAMP_DEFAULT_VAL                      0U
@@ -105,6 +106,7 @@
 #define OBDH_PARAM_MAIN_EDC_DEFAULT_VAL                 1U
 #define OBDH_PARAM_GENERAL_TELEMETRY_ON_DEFAUL_VAL      1U
 #define OBDH_PARAM_POSITION_TIMESTAMP_DEFAULT_VAL       0U
+#define OBDH_PARAM_POSITION_TS_LAST_TLE_UPT_DEFAULT_VAL 0U
 #define OBDH_PARAM_POSITION_TLE_LINE1_DEFAULT_VAL       "1 44885U 19093G   24055.47450690  .00005228  00000-0  56684-3 0  9991"
 #define OBDH_PARAM_POSITION_TLE_LINE2_DEFAULT_VAL       "2 44885  97.8473 139.0522 0012434 335.2519  24.8100 14.88559378226444"
 #define OBDH_PARAM_POSITION_LATITUDE_DEFAULT_VAL        0U
@@ -131,6 +133,7 @@
 typedef struct
 {
     sys_time_t timestamp;           /**< Timestamp of the position data. */
+    sys_time_t ts_last_tle_update;  /**< Timestamp of the last TLE update. */
     uint8_t tle_line1[70];          /**< TLE line 1 in ASCII. */
     uint8_t tle_line2[70];          /**< TLE line 2 in ASCII. */
     int16_t latitude;               /**< Latitude in degrees. */
