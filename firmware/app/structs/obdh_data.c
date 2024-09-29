@@ -48,7 +48,7 @@ int8_t obdh_set_param(uint8_t param_id, uint32_t *buf)
 
     switch(param_id)
     {
-        case OBDH_PARAM_ID_TIME_COUNTER:
+        case OBDH_PARAM_ID_SYSTEM_TIME:
         {
             system_set_time(*buf);
             break;
@@ -166,7 +166,7 @@ int8_t obdh_get_param(uint8_t param_id, uint32_t *buf)
 
     switch(param_id)
     {
-        case OBDH_PARAM_ID_TIME_COUNTER:             *buf = system_get_time();                                                break;
+        case OBDH_PARAM_ID_SYSTEM_TIME:              *buf = system_get_time();                                                break;
         case OBDH_PARAM_ID_TEMPERATURE_UC:           *buf = sat_data_buf.obdh.data.temperature;                               break;
         case OBDH_PARAM_ID_INPUT_CURRENT:            *buf = sat_data_buf.obdh.data.current;                                   break;
         case OBDH_PARAM_ID_INPUT_VOLTAGE:            *buf = sat_data_buf.obdh.data.voltage;                                   break;

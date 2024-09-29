@@ -46,7 +46,7 @@
 #include <devices/media/media.h>
 
 /* OBDH parameter ID */
-#define OBDH_PARAM_ID_TIME_COUNTER              0   /**< Time counter in milliseconds. */
+#define OBDH_PARAM_ID_SYSTEM_TIME               0   /**< System time in seconds. */
 #define OBDH_PARAM_ID_TEMPERATURE_UC            1   /**< Temperature of the uC in Kelvin. */
 #define OBDH_PARAM_ID_INPUT_CURRENT             2   /**< Input current in mA. */
 #define OBDH_PARAM_ID_INPUT_VOLTAGE             3   /**< Input voltage in mV. */
