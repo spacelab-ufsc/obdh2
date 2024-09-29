@@ -1460,6 +1460,30 @@ static void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len)
                                 err = -1;
                             }
                         }
+
+                        if (pkt[9] == OBDH_PARAM_ID_SYSTEM_TIME)
+                        {
+                            if (eps_set_param(SL_EPS2_REG_TIME_COUNTER, buf) != 0)
+                            {
+                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Failed to synchronize system time with EPS!");
+                                sys_log_new_line();
+                                err = -1;
+                            }
+
+                            if (ttc_set_param(TTC_0, SL_TTC2_REG_TIME_COUNTER, buf) != 0)
+                            {
+                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Failed to synchronize system time with TTC 0!");
+                                sys_log_new_line();
+                                err = -1;
+                            }
+
+                            if (ttc_set_param(TTC_1, SL_TTC2_REG_TIME_COUNTER, buf) != 0)
+                            {
+                                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Failed to synchronize system time with TTC 1!");
+                                sys_log_new_line();
+                                err = -1;
+                            }
+                        }
                     }
                     else 
                     {
