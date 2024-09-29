@@ -48,7 +48,7 @@
 #define SL_EPS2_DEVICE_ID                       0xEEE2U /**< EPS 2.0 device ID. */
 
 /* EPS 2.0 registers */
-#define SL_EPS2_REG_TIME_COUNTER_MS             0       /**< Time counter in millseconds. */
+#define SL_EPS2_REG_TIME_COUNTER                0       /**< Time counter in seconds. */
 #define SL_EPS2_REG_UC_TEMPERATURE_K            1       /**< Temperature of the uC in K. */
 #define SL_EPS2_REG_CURRENT_MA                  2       /**< EPS circuitry and Beacon MCU current in mA. */
 #define SL_EPS2_REG_LAST_RESET_CAUSE            3       /**< Last reset cause. */

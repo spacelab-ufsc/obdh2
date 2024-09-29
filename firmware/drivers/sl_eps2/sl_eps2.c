@@ -438,7 +438,7 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
 
 int sl_eps2_read_time_counter(sl_eps2_config_t config, uint32_t *val)
 {
-    return sl_eps2_read_reg(config, SL_EPS2_REG_TIME_COUNTER_MS, val);
+    return sl_eps2_read_reg(config, SL_EPS2_REG_TIME_COUNTER, val);
 }
 
 int sl_eps2_read_temp(sl_eps2_config_t config, sl_eps2_temp_t *val)
