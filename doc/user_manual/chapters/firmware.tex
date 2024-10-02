@@ -66,18 +66,21 @@ A list of the firmware tasks can be seen in the \autoref{tab:firmware-tasks}.
 		\midrule
 		Antenna deployment     & Highest           & 0                           & Aperiodic            & 150                    \\
 		Antenna reading        & Medium            & 2000                        & 60000                & 150                    \\
-		Beacon                 & High              & 10000                       & 60000                & 1000                   \\
 		Data log               & Medium            & 2000                        & 600000               & 225                    \\
+		General Telemetry      & High              & 10000                       & 60000                & 225                    \\
 		EDC reading            & Medium            & 2000                        & 60000                & 300                    \\
 		EPS reading            & Medium            & 2000                        & 60000                & 384                    \\
 		Heartbeat              & Lowest            & 2000                        & 500                  & 160                    \\
-		Housekeeping           & Medium            & 2000                        & 10000                & 160                    \\
+		Housekeeping           & Medium            & 2000                        & 60000                & 225                    \\
+		Mission Manager        & High              & 0                           & Aperiodic            & 512                    \\
+		Payload X reading      & Medium            & 2000                        & 60000                & 300                    \\
+		Position Determination & Low               & 1000                        & 60000                & 1024                   \\
 		Read sensors           & Medium            & 2000                        & 60000                & 140                    \\
 		Startup (boot)         & Highest           & 0                           & Aperiodic            & 350                    \\
 		System reset           & Medium            & 0                           & 36000000             & 128                    \\
-		Telecommand processing & High              & 10000                       & 5000                 & 500                    \\
+		Telecommand processing & High              & 16500                       & 1000                 & 1024                   \\
 		Time control           & Medium            & 1000                        & 1000                 & 128                    \\
-		TTC reading            & Medium            & 2000                        & 60000                & 384                    \\
+		TTC reading            & Medium            & 7500                        & 60000                & 384                    \\
 		Watchdog reset         & Lowest            & 0                           & 100                  & 150                    \\
 		\bottomrule[1.5pt]
 	\end{tabular}
@@ -95,13 +98,13 @@ This task deploys the Antenna module at the start of the mission.
 
 Reads the Antenna module status.
 
-\subsection{Beacon}
-
-The Beacon task transmits a data package containing the satellite's basic telemetry data every 60 seconds.
-
 \subsection{Data log}
 
 This task saves the housekeeping data of the satellite in flash memory every 10 minutes.
+
+\subsection{General Telemetry}
+
+The General Telemetry task transmits a data package containing the satellite's basic telemetry data every 60 seconds.
 
 \subsection{EDC reading}
 
@@ -117,7 +120,19 @@ The heartbeat task keeps blinking a LED (``\textit{System LED}'' in \autoref{fig
 
 \subsection{Housekeeping}
 
-This task reads all the important OBDH data and status.
+This task saves the OBDH data to FRAM. It also checks for hibernation mode duration.
+
+\subsection{Mission Manager}
+
+This task controls all mission specific behavior, specially payload control.
+
+\subsection{Payload X reading}
+
+This task reads all Payload X data and status.
+
+\subsection{Position Determination}
+
+This task determines the satellite position based on TLE lines provided via telecommands. 
 
 \subsection{Read sensors}
 
