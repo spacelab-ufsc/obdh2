@@ -1625,7 +1625,7 @@ static void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
 
                 if (sat_data_buf.obdh.data.mode != OBDH_MODE_HIBERNATION)
                 {
-                    if (ttc_send(TTC_1, param_pl_raw, param_pl_raw_len) != 0)
+                    if (ttc_send(TTC_0, param_pl_raw, param_pl_raw_len) != 0)
                     {
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a \"get parameter\" answer!");
                         sys_log_new_line();
