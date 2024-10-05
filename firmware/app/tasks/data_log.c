@@ -52,6 +52,9 @@ void vTaskDataLog(void)
     /* Wait startup task to finish */
     xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_DATA_LOG_INIT_TIMEOUT_MS));
 
+    /* Wait 5 minutes before saving data for the first time */
+    vTaskDelay(pdMS_TO_TICKS(TASK_DATA_LOG_INITIAL_DELAY_MS));
+
     media_info_t nor_info = media_get_info(MEDIA_NOR);
 
     uint8_t page_buf[256] = {0};

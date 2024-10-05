@@ -44,6 +44,7 @@
 #define TASK_DATA_LOG_STACK_SIZE                225                 /**< Stack size in bytes. */
 #define TASK_DATA_LOG_PRIORITY                  3                   /**< Task priority. */
 #define TASK_DATA_LOG_PERIOD_MS                 (600000UL)          /**< Task period in milliseconds. */
+#define TASK_DATA_LOG_INITIAL_DELAY_MS          (300000UL)          /**< Delay, in milliseconds, before the first execution. */
 #define TASK_DATA_LOG_INIT_TIMEOUT_MS           2000                /**< Wait time to initialize the task in milliseconds. */
 
 /**
