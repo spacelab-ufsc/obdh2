@@ -2171,17 +2171,17 @@ static int8_t send_tc_feedback(uint8_t *pkt)
     (void)memcpy(feedback.payload, &pkt[1], 7U);
 
     /* TC packet ID */
-    feedback.payload[8] = pkt[0];
+    feedback.payload[7] = pkt[0];
     
     /* Current timestamp */
     sys_time_t time = system_get_time();
-    feedback.payload[9] = (time >> 24U) & 0xFFU;
-    feedback.payload[10] = (time >> 16U) & 0xFFU;
-    feedback.payload[11] = (time >> 8U) & 0xFFU;
-    feedback.payload[12] = time & 0xFFU;
+    feedback.payload[8] = (time >> 24U) & 0xFFU;
+    feedback.payload[9] = (time >> 16U) & 0xFFU;
+    feedback.payload[10] = (time >> 8U) & 0xFFU;
+    feedback.payload[11] = time & 0xFFU;
 
     /* Payload lenght */
-    feedback.length = 13U;
+    feedback.length = 12U;
 
     fsat_pkt_encode(&feedback, feedback_pkt, &feedback_pkt_len);
 
