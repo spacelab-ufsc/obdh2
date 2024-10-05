@@ -325,9 +325,15 @@ static inline int8_t handle_mode_change_rq(const uint8_t *args)
             taskENTER_CRITICAL();
 
             in_hibernation = true;
-            sat_data_buf.obdh.data.mode_duration = (((sys_time_t)args[1] << 8) | (sys_time_t)args[2]) * 60UL * 60UL;
+            sys_time_t hib_duration_hours = (((sys_time_t)args[1] << 8) | (sys_time_t)args[2]);
+            sat_data_buf.obdh.data.mode_duration = hib_duration_hours * 60UL * 60UL;
 
             taskEXIT_CRITICAL();
+
+            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_MISSION_MANAGER_NAME, "Hibernating for ");
+            sys_log_print_uint(hib_duration_hours);
+            sys_log_print_msg(" hours!");
+            sys_log_new_line();
 
             satellite_change_mode(OBDH_MODE_HIBERNATION);
 
