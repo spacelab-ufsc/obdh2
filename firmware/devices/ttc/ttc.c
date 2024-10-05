@@ -400,4 +400,33 @@ int ttc_leave_hibernation(ttc_e dev)
     return err;
 }
 
+int ttc_check_decode_errors(ttc_e dev)
+{
+    int err = 0;
+
+    uint32_t decode_errors;
+
+    if (ttc_get_param(dev, SL_TTC2_REG_CONSECUTIVE_DECODE_ERR, &decode_errors) == 0)
+    {
+        if (decode_errors >= TTC_MAX_DECODING_ERRORS)
+        {
+            /* Try to reset TTC */
+            if (ttc_set_param(dev, SL_TTC2_REG_RESET_DEVICE, 0x01U) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Failed to reset TTC device after too many decode errors!");
+                sys_log_new_line();
+                err = -1;
+            }
+        }
+    }
+    else 
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Failed to read decode errors from TTC device!");
+        sys_log_new_line();
+        err = -1;
+    }
+
+    return err;
+}
+
 /** \} End of ttc group */
