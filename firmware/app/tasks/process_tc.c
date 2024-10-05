@@ -1609,14 +1609,14 @@ static void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
 
                 (void)memcpy(&param_pl.payload[0], &pkt[1], 7);
 
-                param_pl.payload[8] = pkt[8];
-                param_pl.payload[9] = pkt[9];
-                param_pl.payload[10] = (uint8_t)((buf >> 24) & 0xFFU);
-                param_pl.payload[11] = (uint8_t)((buf >> 16) & 0xFFU);
-                param_pl.payload[12] = (uint8_t)((buf >> 8) & 0xFFU);
-                param_pl.payload[13] = (uint8_t)(buf & 0xFFU);
+                param_pl.payload[7] = pkt[8];
+                param_pl.payload[8] = pkt[9];
+                param_pl.payload[9] = (uint8_t)((buf >> 24) & 0xFFU);
+                param_pl.payload[10] = (uint8_t)((buf >> 16) & 0xFFU);
+                param_pl.payload[11] = (uint8_t)((buf >> 8) & 0xFFU);
+                param_pl.payload[12] = (uint8_t)(buf & 0xFFU);
 
-                param_pl.length = 14U;
+                param_pl.length = 13U;
 
                 uint8_t param_pl_raw[21] = {0};
                 uint16_t param_pl_raw_len = 0;
