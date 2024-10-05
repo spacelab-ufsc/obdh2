@@ -88,6 +88,19 @@ void vTaskReadTTC(void)
             sys_log_new_line();
         }
 
+        /* Checks if there was too many decoding errors on TTC */
+        if (ttc_check_decode_errors(TTC_0) != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_TTC_NAME, "Error checking for decode errors from TTC 0 device!");
+            sys_log_new_line();
+        }
+
+        if (ttc_check_decode_errors(TTC_1) != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_TTC_NAME, "Error checking for decode errors from TTC 1 device!");
+            sys_log_new_line();
+        }
+
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_TTC_PERIOD_MS));
     }
 }
