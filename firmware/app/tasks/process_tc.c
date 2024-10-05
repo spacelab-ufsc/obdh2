@@ -1616,9 +1616,9 @@ static void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len)
                 param_pl.payload[12] = (uint8_t)((buf >> 8) & 0xFFU);
                 param_pl.payload[13] = (uint8_t)(buf & 0xFFU);
 
-                param_pl.length = 6U;
+                param_pl.length = 14U;
 
-                uint8_t param_pl_raw[16] = {0};
+                uint8_t param_pl_raw[21] = {0};
                 uint16_t param_pl_raw_len = 0;
 
                 fsat_pkt_encode(&param_pl, param_pl_raw, &param_pl_raw_len);
