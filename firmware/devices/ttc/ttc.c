@@ -400,20 +400,20 @@ int ttc_leave_hibernation(ttc_e dev)
     return err;
 }
 
-int ttc_check_decode_errors(ttc_e dev)
+int ttc_check_failed_pkts(ttc_e dev)
 {
     int err = 0;
 
-    uint32_t decode_errors;
+    uint32_t n_conseq_failed_packets;
 
-    if (ttc_get_param(dev, SL_TTC2_REG_CONSECUTIVE_DECODE_ERR, &decode_errors) == 0)
+    if (ttc_get_param(dev, SL_TTC2_REG_CONSEQ_FAILED_PACKETS, &n_conseq_failed_packets) == 0)
     {
-        if (decode_errors >= TTC_MAX_DECODING_ERRORS)
+        if (n_conseq_failed_packets >= TTC_MAX_FAILED_PACKETS)
         {
             /* Try to reset TTC */
             if (ttc_set_param(dev, SL_TTC2_REG_RESET_DEVICE, 0x01U) != 0)
             {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Failed to reset TTC device after too many decode errors!");
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Failed to reset TTC device after too many failed packets!");
                 sys_log_new_line();
                 err = -1;
             }
@@ -421,7 +421,7 @@ int ttc_check_decode_errors(ttc_e dev)
     }
     else 
     {
-        sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Failed to read decode errors from TTC device!");
+        sys_log_print_event_from_module(SYS_LOG_ERROR, TTC_MODULE_NAME, "Failed to read number of failed packets from TTC device!");
         sys_log_new_line();
         err = -1;
     }

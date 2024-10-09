@@ -88,7 +88,7 @@
 #define SL_TTC2_REG_FIFO_RX_PACKET              22U     /**< Number of packets in the RX FIFO. */
 #define SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO 23U     /**< Number of bytes of the first available packet in the RX buffer. */
 #define SL_TTC2_REG_RESET_DEVICE                24U     /**< Register to reset device */
-#define SL_TTC2_REG_CONSECUTIVE_DECODE_ERR      25U     /**< Number of consecutive radio decoding errors */
+#define SL_TTC2_REG_CONSEQ_FAILED_PACKETS       25U     /**< Number of consecutive radio decoding errors */
 
 /**
  * \brief Temperature type.

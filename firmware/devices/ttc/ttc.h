@@ -43,9 +43,9 @@
 
 #include "ttc_data.h"
 
-#define TTC_MODULE_NAME             "TTC"
+#define TTC_MODULE_NAME            "TTC"
 
-#define TTC_MAX_DECODING_ERRORS     5U
+#define TTC_MAX_FAILED_PACKETS     5U
 
 /**
  * \brief TTC configuration parameters.
@@ -211,7 +211,7 @@ int ttc_enter_hibernation(ttc_e dev);
 int ttc_leave_hibernation(ttc_e dev);
 
 /**
- * \brief Check consecutive decoding errors, if greater than 
+ * \brief Check number of consecutive failed packets, if greater than 
  * max allowed, resets TTC device.
  *
  * \param[in] dev is the TTC device to be checked. It can be:
@@ -223,7 +223,7 @@ int ttc_leave_hibernation(ttc_e dev);
  *
  * \return The status/error code.
  */
-int ttc_check_decode_errors(ttc_e dev);
+int ttc_check_failed_pkts(ttc_e dev);
 
 #endif /* TTC_H_ */
 
