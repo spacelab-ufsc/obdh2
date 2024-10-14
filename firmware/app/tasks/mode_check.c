@@ -139,7 +139,8 @@ void vTaskHealthCheckMode(void)
 
             vTaskDelay(pdMS_TO_TICKS(TASK_PROCESS_TC_MAX_WAIT_TIME_MS));
 
-            test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_HIBERNATION) && (sat_data_buf.obdh.data.mode_duration  == (0x1111UL * 60UL * 60UL));
+            uint32_t hib_time = ((uint32_t)0x1111UL * (uint32_t)60UL * (uint32_t)60UL);
+            test_result = (sat_data_buf.obdh.data.mode == OBDH_MODE_HIBERNATION) && (sat_data_buf.obdh.data.mode_duration  == hib_time);
 
             sys_log_print_test_result(test_result, "Enter hibernation Test");
             sys_log_new_line();

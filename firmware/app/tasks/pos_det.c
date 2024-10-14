@@ -175,7 +175,7 @@ bool update_tle_line(uint8_t line_number, const uint8_t *tle_line)
             break;
     }
 
-    if (((update_status & 0x01) != 0U) && ((update_status & 0x02) != 0U))
+    if (((update_status & 0x01U) != 0U) && ((update_status & 0x02U) != 0U))
     {
         both_lines_updated = true;
         update_status = 0U;

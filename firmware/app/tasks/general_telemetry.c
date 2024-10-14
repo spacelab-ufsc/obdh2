@@ -63,7 +63,7 @@ void vTaskGeneralTelemetry(void)
     {
         fsat_pkt_pl_t gen_tel_pl = {0};
 
-        if (sat_data_buf.obdh.data.general_telemetry_on)
+        if (sat_data_buf.obdh.data.general_telemetry_on) // cppcheck-suppress misra-c2012-14.4
         {
             /* Packet ID */
             fsat_pkt_add_id(&gen_tel_pl, PKT_ID_DOWNLINK_GENERAL_TELEMETRY);

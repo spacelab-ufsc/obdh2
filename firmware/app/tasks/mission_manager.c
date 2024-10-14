@@ -133,7 +133,7 @@ static inline void handle_event(const event_t *ev)
                 {
                     if (sat_data_buf.state.active_payload[0] != main)
                     {
-                        if (sat_data_buf.state.edc_active)
+                        if (sat_data_buf.state.edc_active) // cppcheck-suppress misra-c2012-14.4
                         {
                             (void)payload_disable(sat_data_buf.state.active_payload[0]);
                         }
@@ -272,6 +272,7 @@ static inline void handle_event(const event_t *ev)
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_MISSION_MANAGER_NAME, "Invalid event notifcation was made!");
             sys_log_new_line();
+            break;
     }
 }
 

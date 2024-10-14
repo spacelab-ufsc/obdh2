@@ -1687,11 +1687,11 @@ static void process_tc_transmit_packet(uint8_t *pkt, uint16_t pkt_len)
     {
         uint8_t tc_key[16] = CONFIG_TC_KEY_TRANSMIT_PACKET;
 
-        uint8_t msg_len = pkt_len - 1U - 7U - 20U;
+        uint16_t msg_len = pkt_len - 1U - 7U - 20U;
 
         if (process_tc_validate_hmac(pkt, pkt_len - 20U, &pkt[pkt_len - 21U], 20U, tc_key, 16U))
         {
-            if (msg_len > 0)
+            if (msg_len > 0U)
             {
                 fsat_pkt_pl_t pkt_broacast;
                 uint8_t raw_pkt[60];
