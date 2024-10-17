@@ -33,6 +33,7 @@
  * \{
  */
 
+#include <stdint.h>
 #include <system/sys_log/sys_log.h>
 #include <devices/eps/eps.h>
 
@@ -40,6 +41,9 @@
 
 #include "read_eps.h"
 #include "startup.h"
+
+#define READ_EPS_MAX_RETRIES        (3U)
+#define READ_EPS_RETRY_DELAY_MS     (500U)
 
 xTaskHandle xTaskReadEPSHandle;
 
@@ -52,20 +56,45 @@ void vTaskReadEPS(void)
 
     while(1)
     {
+        int8_t err = 0;
+        uint8_t retry_count = READ_EPS_MAX_RETRIES;
 
-        if (eps_init() != 0)
+        do {
+            err = eps_init();
+
+            if (err != 0)
+            {
+                retry_count--;
+                vTaskDelay(pdMS_TO_TICKS(READ_EPS_RETRY_DELAY_MS));
+            }
+        } while ((err != 0) && (retry_count >= 0U));
+
+        if (retry_count == 0U)
         {
-            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_EPS_NAME, "Error initializing the EPS device!");
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_EPS_NAME, "Max retries reached trying to initialize EPS!!!");
             sys_log_new_line();
         }
 
-        if (eps_get_data(&sat_data_buf.eps.data) == 0)
+        err = 0;
+        retry_count = READ_EPS_MAX_RETRIES;
+
+        do {
+            err = eps_get_data(&sat_data_buf.eps.data);
+
+            if (err == 0)
+            {
+                sat_data_buf.eps.timestamp = system_get_time();
+            }
+            else 
+            {
+                retry_count--;
+                vTaskDelay(pdMS_TO_TICKS(READ_EPS_RETRY_DELAY_MS));
+            }
+        } while ((err != 0) && (retry_count >= 0U));
+
+        if (retry_count == 0U)
         {
-            sat_data_buf.eps.timestamp = system_get_time();
-        }
-        else
-        {
-            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_EPS_NAME, "Error reading data from the EPS device!");
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_EPS_NAME, "Max retries reached trying to read data from EPS!!!");
             sys_log_new_line();
         }
 
