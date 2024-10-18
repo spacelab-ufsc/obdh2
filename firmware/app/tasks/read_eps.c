@@ -67,7 +67,7 @@ void vTaskReadEPS(void)
                 retry_count--;
                 vTaskDelay(pdMS_TO_TICKS(READ_EPS_RETRY_DELAY_MS));
             }
-        } while ((err != 0) && (retry_count >= 0U));
+        } while ((err != 0) && (retry_count > 0U));
 
         if (retry_count == 0U)
         {
@@ -90,7 +90,7 @@ void vTaskReadEPS(void)
                 retry_count--;
                 vTaskDelay(pdMS_TO_TICKS(READ_EPS_RETRY_DELAY_MS));
             }
-        } while ((err != 0) && (retry_count >= 0U));
+        } while ((err != 0) && (retry_count > 0U));
 
         if (retry_count == 0U)
         {
