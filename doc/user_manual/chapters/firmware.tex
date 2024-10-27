@@ -497,44 +497,46 @@ Telemetry packages from the SBCD can be seen in \autoref{tab:telemetry-sbcd}. Th
 The \autoref{tab:packets-struct} summarizes all types of packets transmitted or received by satellite that the OBDH can handle, with the ID number, structure and length, and access type of each packet.
 
 \begin{landscape}
-	\begin{table}[ht]
-		\centering
-		\begin{tabular}{llccccc}
-			\toprule[1.5pt]
-			\multirow{2}{*}{\textbf{Link}} & \multirow{2}{*}{\textbf{Packet Name}} & \multicolumn{4}{c}{\textbf{Payload}} & \multirow{2}{*}{\textbf{Access}}                                                                                          \\
-			\cmidrule{3-6}
-			                               &                                       & \textbf{ID}                          & \textbf{Source Callsign}            & \textbf{Data (up to 220 bytes)}                   & \textbf{Size (bytes)} &         \\
-			\midrule
-			\multirow{1}{*}{Beacon}        & EPS data                              & 00h                                  & \multirow{1}{*}{`` '' + ``PY0EFS''} & EPS data                                          & 46                    & Public  \\
-			\midrule
-			\multirow{7}{*}{Downlink}      & General telemetry                     & 20h                                  & \multirow{7}{*}{`` '' + ``PY0EFS''} & OBDH/EPS data                                     & 78                    & Public  \\
-			                               & Ping answer                           & 21h                                  &                                     & Requester callsign                                & 15                    & Public  \\
-			                               & Data request answer                   & 22h                                  &                                     & Requester callsign + data ID + ts. + data         & 20 to 220             & Public  \\
-			                               & Message broadcast                     & 23h                                  &                                     & Requester + dst. callsign + message               & 22 to 60              & Public  \\
-			                               & Payload data                          & 24h                                  &                                     & Payload ID + payload data                         & 9 to 220              & Public  \\
-			                               & TC feedback                           & 25h                                  &                                     & Req. callsign + TC packet ID + timestamp          & 20                    & Public  \\
-			                               & Parameter value                       & 26h                                  &                                     & Req. callsign + Sub. ID + Param. ID + Param. Val. & 21                    & Public  \\
-			\midrule
-			\multirow{14}{*}{Uplink}       & Ping request                          & 40h                                  & \multirow{14}{*}{Any Callsign}      & None                                              & 8                     & Public  \\
-			                               & Data request                          & 41h                                  &                                     & Data ID + Start ts. + End ts. + Hash              & 37                    & Private \\
-			                               & Broadcast Message                     & 42h                                  &                                     & Dst. callsign + message                           & 15 to 53              & Public  \\
-			                               & Enter hibernation                     & 43h                                  &                                     & Hibernation in hours + Hash                       & 30                    & Private \\
-			                               & Leave hibernation                     & 44h                                  &                                     & Hash                                              & 28                    & Private \\
-			                               & Activate module                       & 45h                                  &                                     & Module ID + Hash                                  & 29                    & Private \\
-			                               & Deactivate module                     & 46h                                  &                                     & Module ID + Hash                                  & 29                    & Private \\
-			                               & Activate payload                      & 47h                                  &                                     & Payload ID + Hash                                 & 29                    & Private \\
-			                               & Deactivate payload                    & 48h                                  &                                     & Payload ID + Hash                                 & 29                    & Private \\
-			                               & Erase memory                          & 49h                                  &                                     & Hash                                              & 28                    & Private \\
-			                               & Force reset                           & 4Ah                                  &                                     & Hash                                              & 28                    & Private \\
-			                               & Get payload data                      & 4Bh                                  &                                     & Payload ID + Args. + Hash                         & 41                    & Private \\
-			                               & Set parameter                         & 4Ch                                  &                                     & Subsystem ID + Param. ID + Param. value + Hash    & 34                    & Private \\
-			                               & Get parameter                         & 4Dh                                  &                                     & Subsystem ID + Parameter ID + Hash                & 30                    & Private \\
-			                               & Update TLE                            & 4Dh                                  &                                     & TLE line 1 + TLE line 2 + Hash                    & 166                   & Private \\
-			\bottomrule[1.5pt]
-		\end{tabular}
-		\caption{Telecommunication packets and their content.}
-		\label{tab:packets-struct}
-	\end{table}
+    \begin{table}[ht]
+        \centering
+        \begin{tabular}{L{1.8cm}lcllcc}
+            \toprule[1.5pt]
+            \multirow{2}{*}{\textbf{Link}} & \multirow{2}{*}{\textbf{Packet Name}} & \multicolumn{4}{c}{\textbf{Payload}} & \multirow{2}{*}{\textbf{Access}} \\
+            \cmidrule{3-6}
+                                     &                     & \textbf{ID} & \textbf{Source Callsign} & \textbf{Data (up to 212 bytes)} & \textbf{Size (bytes)} & \\
+            \midrule
+            Downlink                 & EPS data            & 00h & \multirow{3}{*}{`` '' + ``PY0EFS''} & EPS data                                          & 46        & Public \\
+            (VHF)                    & Message broadcast   & 01h &                                     & Requester + dst. callsign + message               & 22 to 60  & Public \\
+                                     & Ping answer         & 02h &                                     & Requester callsign                                & 15        & Public \\
+            \midrule
+                                     & General telemetry   & 10h & \multirow{6}{*}{`` '' + ``PY0EFS''} & OBDH/EPS data                                     & 78        & Public \\
+                                     & Data request answer & 11h &                                     & Requester callsign + data ID + ts. + data         & 20 to 220 & Public \\
+            Downlink                 & Payload data        & 12h &                                     & Payload ID + payload data                         & 9 to 220  & Public \\
+            (UHF)                    & TC feedback         & 13h &                                     & Req. callsign + TC packet ID + timestamp          & 20        & Public \\
+                                     & Parameter value     & 14h &                                     & Req. callsign + Sub. ID + Param. ID + Param. Val. & 21        & Public \\
+                                     & Packet broadcast    & 15h &                                     & Data of ``Transmit packet'' TC                    & 8 to 60   & Public \\
+            \midrule
+            \multirow{16}{*}{Uplink} & Ping request        & 40h & \multirow{15}{*}{Any Callsign}      & None                                              & 8         & Public \\
+                                     & Data request        & 41h &                                     & Data ID + Start ts. + End ts. + Hash              & 37        & Private \\
+                                     & Broadcast Message   & 42h &                                     & Dst. callsign + message                           & 15 to 53  & Public \\
+                                     & Enter hibernation   & 43h &                                     & Hibernation in hours + Hash                       & 30        & Private \\
+                                     & Leave hibernation   & 44h &                                     & Hash                                              & 28        & Private \\
+                                     & Activate module     & 45h &                                     & Module ID + Hash                                  & 29        & Private \\
+                                     & Deactivate module   & 46h &                                     & Module ID + Hash                                  & 29        & Private \\
+                                     & Activate payload    & 47h &                                     & Payload ID + Hash                                 & 29        & Private \\
+                                     & Deactivate payload  & 48h &                                     & Payload ID + Hash                                 & 29        & Private \\
+                                     & Erase memory        & 49h &                                     & Hash                                              & 28        & Private \\
+                                     & Force reset         & 4Ah &                                     & Hash                                              & 28        & Private \\
+                                     & Get payload data    & 4Bh &                                     & Payload ID + Args. + Hash                         & 41        & Private \\
+                                     & Set parameter       & 4Ch &                                     & Subsystem ID + Param. ID + Param. value + Hash    & 34        & Private \\
+                                     & Get parameter       & 4Dh &                                     & Subsystem ID + Parameter ID + Hash                & 30        & Private \\
+                                     & Transmit packet     & 4Eh &                                     & Any sequence of bytes + Hash                      & 8 to 60   & Private \\
+                                     & Update TLE          & 4Fh &                                     & Line + TLE line + Hash                            & 98        & Private \\
+            \bottomrule[1.5pt]
+        \end{tabular}
+        \caption{Telecommunication packets and their content.}
+        \label{tab:packets-struct}
+    \end{table}
 \end{landscape}
 
 The ID of the subsystems, modules, and payloads are available in \autoref{tab:system-ids}.
@@ -586,7 +588,7 @@ All the telecommands classified as private use an HMAC\nomenclature{\textbf{HMAC
 
 \subsection{Enter hibernation}
 
-This telecommand activates the hibernation mode in a satellite. During the hibernation mode, no transmissions are made by the satellite, it keeps just listening for new incoming packets (reception). The satellite will stay in hibernation mode for a custom period (1 to 65536 minutes), or until a ``Leave Hibernation'' mode is received. This is a private telecommand, a key is required to send it. Beyond the packet ID and the source callsign (or address), the number o minutes (2 bytes long) is also transmitted.
+This telecommand activates the hibernation mode in a satellite. During the hibernation mode, no transmissions are made by the satellite, it keeps just listening for new incoming packets (reception). The satellite will stay in hibernation mode for a custom period (1 to 65536 hours), or until a ``Leave Hibernation'' mode is received. This is a private telecommand, a key is required to send it. Beyond the packet ID and the source callsign (or address), the number o hours (2 bytes long) is also transmitted.
 
 \begin{table}[!ht]
 	\centering
@@ -627,26 +629,6 @@ This telecommand complements the ``enter hibernation'' telecommand by deactivati
 	\label{tab:leave-hibernation-tc}
 \end{table}
 
-\subsection{Activate beacon}
-
-This telecommand activates the beacon transmissions.
-
-\subsection{Deactivate beacon}
-
-This telecommand deactivates the beacon transmissions.
-
-\subsection{Activate EDC}
-
-This telecommand activates the EDC payload.
-
-\subsection{Deactivate EDC}
-
-This telecommand deactivates the EDC payload.
-
-\subsection{Get EDC info}
-
-This telecommand request information from the EDC payload. When received, the OBDH transmits the housekeeping and state frames of the EDC module (28 bytes). This telecommand does not require a key.
-
 \subsection{Activate Module}
 
 The ``Activate Module'' telecommand is a command to activate an internal module of the satellite. Each module has a unique ID that is passed as an argument of this telecommand's packet. The \autoref{tab:activate-module-table} shows the current used IDs.
@@ -670,14 +652,6 @@ This is also a private telecommand, and a key is required to transmit it.
 \subsection{Deactivate Module}
 
 The ``Deactivate Module'' telecommand complements the telecommand above. It works the same way and with the same parameters, but in this case, it has the purpose of deactivating a given module of the satellite.
-
-\subsection{Activate Radiation Instrument}
-
-This telecommand activates the Radiation Instrument.
-
-\subsection{Deactivate Radiation Instrument}
-
-This telecommand deactivates the Radiation Instrument.
 
 \subsection{Activate Payload}
 
@@ -708,10 +682,6 @@ This telecommand allows the configuration of specific parameters of a given sate
 \subsection{Get Parameter}
 
 The telecommand ``Get Parameter'' complements the ``Set Parameter'' telecommand. It has the purpose of reading specific parameters of a given subsystem. The required fields are the subsystem's ID (1 byte) and the parameter ID (1 byte). The possible IDs (subsystem and parameter) vary according to the satellite. This is a private telecommand, and a key is required to send it.
-
-\subsection{Set system time}
-
-This telecommand sets the internal system time. This is useful for synchronizing the satellite time with a ground station installed on Earth.
 
 \subsection{Ping}
 
@@ -750,7 +720,7 @@ The ping request telecommand is a simple command to test the communication with 
 	\label{tab:ping-tc-ans}
 \end{table}
 
-\subsection{Message broadcast}
+\subsection{Broadcast message}
 
 The ``broadcast message'' is another public telecommand; no authentication or key is required to send this telecommand to a satellite. This command has the purpose of making a satellite transmit a custom message back to Earth. This can be useful for communication tasks, like a station sending data to another. There are two parameters in this telecommand: the destination callsign (or address), and the content of the message, which can be any sequence of ASCII characters or any byte value. There is a limit of 38 characters in the message field. The \autoref{tab:msg-broadcast-tc} shows the Telecommand parameters.
 
@@ -771,9 +741,17 @@ The ``broadcast message'' is another public telecommand; no authentication or ke
 	\label{tab:msg-broadcast-tc}
 \end{table}
 
-\subsection{Request data}
+\subsection{Data request}
 
 The data request telecommand is a command to download data from the satellite. This command allows a ground station to get specific parameters from a given period (stored in the satellite's non-volatile memory of the onboard computer). The list of possible parameters varies according to the satellite. The required fields of this telecommand are the parameter ID (1 byte), the start period in milliseconds (epoch, 4 bytes), and the end period in milliseconds (epoch, 4 bytes). This is a private telecommand, and a key is required to send it.
+
+\subsection{Update TLE}
+
+The Update TLE telecommand is a command to update the Two Line Elements (TLE) lines of the satellite, it sends one line at a time and only updates the lines used for position determination when both lines are updated. This is a private telecommand, and a key is required to send it.
+
+\subsection{Transmit packet}
+
+This telecomand is similar to the broadcast message, but it only transmits the package received from the telecommand, without any requester or destinations callsigns. This is a private telecommand, and a key is required to send it. 
 
 \section{Operating System}
 
