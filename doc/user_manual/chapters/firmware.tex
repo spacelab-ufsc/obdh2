@@ -172,7 +172,7 @@ The internal variables and parameters of the OBDH firmware can be seen in \autor
 	\toprule[1.5pt]
 	\textbf{ID}          & \textbf{Name/Description}                                               & \textbf{Type}            \\
 	\midrule
-	0                    & Time counter in milliseconds                                            & uint32                   \\
+    0                    & System time in seconds (Unix epoch)                                     & uint32                   \\
 	1                    & Temperature of the $\mu$C in Kelvin                                     & uint16                   \\
 	2                    & Input current in mA                                                     & uint16                   \\
 	3                    & Input voltage in mV                                                     & uint16                   \\
@@ -197,8 +197,6 @@ The internal variables and parameters of the OBDH firmware can be seen in \autor
 	                     & - 0x22 to 0x3E = Reserved                                               &                          \\
 	5                    & Reset counter                                                           & uint16                   \\
 	6                    & Last valid telecommand (uplink packet ID)                               & uint8                    \\
-	7                    & Temperature of the radio in Kelvin                                      & uint16                   \\
-	8                    & RSSI of the last valid telecommand                                      & uint16                   \\
 	9                    & Temperature of the antenna in Kelvin                                    & uint16                   \\
 	\multirow{17}{*}{10} & Antenna status bits:                                                    & \multirow{17}{*}{uint16} \\
 	                     & - Bit 15: The antenna 1 is deployed (0) or not (1)                      &                          \\
@@ -218,9 +216,9 @@ The internal variables and parameters of the OBDH firmware can be seen in \autor
 	                     & - Bit 0: The antenna system is armed (1) or not (0)                     &                          \\
 	11                   & Hardware version                                                        & uint8                    \\
 	12                   & Firmware version (ex.: ``v1.2.3'' = 0x00010203)                         & uint32                   \\
-	13                   & Mode (``Normal'' = 0, ``Hibernation'' = 1)                              & uint8                    \\
+	13                   & Mode (``Normal'' = 0, ``Hibernation'' = 1, ``Stand-by'' = 2)            & uint8                    \\
 	14                   & Timestamp of the last mode change                                       & uint32                   \\
-	15                   & Mode duration in sec. (valid only in hibernation mode)                  & uint32                   \\
+	15                   & Mode duration in sec.                                                   & uint32                   \\
 	16                   & Initial hibernation executed                                            & boolean                  \\
 	17                   & Initial hibernation time counter (minutes)                              & uint8                    \\
 	18                   & Antenna deployment executed                                             & boolean                  \\
@@ -251,21 +249,21 @@ PTT packets from the Sistema Brasileiro de Coleta de Dados (SBCD) are seen in \a
 		\midrule                                                                                                         
 		\multicolumn{4}{c}{\textbf{HK Info}}                                                                              \\
 		\midrule                                                                                                         
-		4                 & Current time since J2000 epoch                   & uint32            & 4                      \\
-		8                 & Elapsed time since last reset                    & uint32            & 4                      \\
-		12                & Digital circuitry current supply in mA           & uint16            & 2                      \\
-		12                & Analog circuitry supply in mA                    & uint16            & 2                      \\
-		16                & System voltage supply in mV                      & uint16            & 2                      \\
-		18                & EDC board temperature                            & int8              & 1                      \\
-		19                & RF front end LO...                               & uint8             & 1                      \\
-		20                & RMS level at front-end output                    & uint16            & 2                      \\
-		22                & Generated PTT packages since                     & uint32            & 4                      \\
-		26                & Maximum number of active PTT decoder channels    & uint8             & 1                      \\
-		27                & Number of double bit errors detected             & uint8             & 1                      \\
+		4                 & Time of EDC housekeeping reading since J2000 epoch  & uint32            & 4                      \\
+		8                 & Elapsed time since last reset                       & uint32            & 4                      \\
+		12                & Digital circuitry current supply in mA              & uint16            & 2                      \\
+		12                & Analog circuitry supply in mA                       & uint16            & 2                      \\
+		16                & System voltage supply in mV                         & uint16            & 2                      \\
+		18                & EDC board temperature + $40$ in Celsius               & uint8             & 1                      \\
+		19                & RF front end LO...                                  & uint8             & 1                      \\
+		20                & RMS level at front-end output                       & uint16            & 2                      \\
+		22                & Generated PTT packages since                        & uint32            & 4                      \\
+		26                & Maximum number of active PTT decoder channels       & uint8             & 1                      \\
+		27                & Number of double bit errors detected                & uint8             & 1                      \\
 		\midrule                                                                                                         
 		\multicolumn{4}{c}{\textbf{System State}}                                                                         \\
 		\midrule                                                                                                         
-		28                & Current time since J2000 epoch                   & uint16            & 4                      \\
+		28                & Time of EDC state reading since J2000 epoch      & uint32            & 4                      \\
 		32                & Number of PTT Package available for reading      & uint8             & 1                      \\
 		33                & PTT decoder task status                          & uint8             & 1                      \\
 		34                & ADC sampler state                                & uint8             & 1                      \\
@@ -319,8 +317,10 @@ Telemetry packages from OBDH can be seen in \autoref{tab:telemetry-obdh}. This d
 		71                  & Satellite's latitude                     & int16              & 2                     \\   
 		73                  & Satellite's longitude                    & int16              & 2                     \\   
 		75                  & Satellite's altitude                     & int16              & 2                     \\   
+		77                  & Last TLE update timestamp                & uint32             & 4                     \\   
+		81                  & Last sensor readings timestamp           & uint32             & 4                     \\   
 		\midrule                                                                                                    
-        Total               & -                                        & -                  & 77                    \\
+        Total               & -                                        & -                  & 93                    \\
 		\bottomrule[1.5pt]
 	\end{tabular}
 	\caption{OBDH data packet.}
@@ -516,21 +516,21 @@ The \autoref{tab:packets-struct} summarizes all types of packets transmitted or 
                                      & Parameter value     & 14h &                                     & Req. callsign + Sub. ID + Param. ID + Param. Val. & 21        & Public \\
                                      & Packet broadcast    & 15h &                                     & Data of ``Transmit packet'' TC                    & 8 to 60   & Public \\
             \midrule
-            \multirow{16}{*}{Uplink} & Ping request        & 40h & \multirow{15}{*}{Any Callsign}      & None                                              & 8         & Public \\
+            \multirow{16}{*}{Uplink} & Ping request        & 40h & \multirow{15}{*}{Any Callsign}      & None                                              & 8         & Public  \\
                                      & Data request        & 41h &                                     & Data ID + Start ts. + End ts. + Hash              & 37        & Private \\
-                                     & Broadcast Message   & 42h &                                     & Dst. callsign + message                           & 15 to 53  & Public \\
+                                     & Broadcast Message   & 42h &                                     & Dst. callsign + message                           & 15 to 53  & Public  \\
                                      & Enter hibernation   & 43h &                                     & Hibernation in hours + Hash                       & 30        & Private \\
                                      & Leave hibernation   & 44h &                                     & Hash                                              & 28        & Private \\
                                      & Activate module     & 45h &                                     & Module ID + Hash                                  & 29        & Private \\
                                      & Deactivate module   & 46h &                                     & Module ID + Hash                                  & 29        & Private \\
                                      & Activate payload    & 47h &                                     & Payload ID + Hash                                 & 29        & Private \\
                                      & Deactivate payload  & 48h &                                     & Payload ID + Hash                                 & 29        & Private \\
-                                     & Erase memory        & 49h &                                     & Hash                                              & 28        & Private \\
+                                     & Erase memory        & 49h &                                     & Memory ID + Hash                                  & 29        & Private \\
                                      & Force reset         & 4Ah &                                     & Hash                                              & 28        & Private \\
                                      & Get payload data    & 4Bh &                                     & Payload ID + Args. + Hash                         & 41        & Private \\
                                      & Set parameter       & 4Ch &                                     & Subsystem ID + Param. ID + Param. value + Hash    & 34        & Private \\
                                      & Get parameter       & 4Dh &                                     & Subsystem ID + Parameter ID + Hash                & 30        & Private \\
-                                     & Transmit packet     & 4Eh &                                     & Any sequence of bytes + Hash                      & 8 to 60   & Private \\
+                                     & Transmit packet     & 4Eh &                                     & Req. callsign + Any sequence of bytes + Hash      & 29 to 73  & Private \\
                                      & Update TLE          & 4Fh &                                     & Line + TLE line + Hash                            & 98        & Private \\
             \bottomrule[1.5pt]
         \end{tabular}
@@ -539,7 +539,7 @@ The \autoref{tab:packets-struct} summarizes all types of packets transmitted or 
     \end{table}
 \end{landscape}
 
-The ID of the subsystems, modules, and payloads are available in \autoref{tab:system-ids}.
+The ID of the subsystems, modules, memories and  payloads are available in \autoref{tab:system-ids}.
 
 \begin{table}[ht]
 	\centering
@@ -568,6 +568,9 @@ The ID of the subsystems, modules, and payloads are available in \autoref{tab:sy
 		                           & 4                  & Antenna data         \\
 		                           & 5                  & SBCD packets         \\
 		                           & 6                  & Payload Info         \\
+		\midrule
+		\multirow{2}{*}{Memory}    & 0                  & NOR memory            \\
+		                           & 1                  & FRAM memory           \\
 		\bottomrule[1.5pt]
 	\end{tabular}
 	\caption{IDs of the satellite.}
