@@ -49,58 +49,6 @@ In \autoref{tab:downlink-packets} the content of the downlink packets is availab
 	\cmidrule{4-4}
 	                                     &                   &                                            & 15                      \\
     \midrule
-	\multirow{49}{*}{General telemetry}  & 0                 & Packet ID (10h)                                      & 1                       \\
-	                                     & 1                 & Source callsign (`` PY0EFS'')                        & 7                       \\
-                                         & 8                 & System time in seconds (Unix epoch)                  & 4                       \\
-	                                     & 12                & Temperature of the OBDH $\mu$C in Kelvin             & 2                       \\
-	                                     & 14                & Input current of the OBDH in mA                      & 2                       \\
-	                                     & 16                & Input voltage of the OBDH in mV                      & 2                       \\
-	                                     & 18                & Last reset cause of the OBDH                         & 1                       \\
-	                                     & 19                & Reset counter of the OBDH                            & 2                       \\
-	                                     & 21                & Last valid telecommand (uplink packet ID)            & 1                       \\
-	                                     & 22                & Temperature of the radio 1 in Kelvin                 & 2                       \\
-	                                     & 24                & RSSI of the last valid TC from radio 1               & 2                       \\
-	                                     & 26                & Temperature of the antenna in Kelvin                 & 2                       \\
-	                                     & 28                & Antenna status                                       & 2                       \\
-	                                     & 30                & Temperature of the EPS $\mu$C in K                   & 2                       \\
-	                                     & 32                & EPS circuitry and Beacon MCU current in mA           & 2                       \\
-	                                     & 34                & Last reset cause of the EPS                          & 1                       \\
-	                                     & 35                & Reset counter (EPS)                                  & 2                       \\
-	                                     & 37                & -Y and +X sides solar panel voltage in mV            & 2                       \\
-	                                     & 39                & -X and +Z sides solar panel voltage in mV            & 2                       \\
-	                                     & 41                & -Z and +Y sides solar panel voltage in mV            & 2                       \\
-	                                     & 43                & -Y side solar panel current in mA                    & 2                       \\
-	                                     & 45                & +Y side solar panel current in mA                    & 2                       \\
-	                                     & 47                & -X side solar panel current in mA                    & 2                       \\
-	                                     & 49                & +X side solar panel current in mA                    & 2                       \\
-	                                     & 51                & -Z side solar panel current in mA                    & 2                       \\
-	                                     & 53                & +Z side solar panel current in mA                    & 2                       \\
-	                                     & 55                & MPPT 1 duty cycle in \%                              & 1                       \\
-	                                     & 56                & MPPT 2 duty cycle in \%                              & 1                       \\
-	                                     & 57                & MPPT 3 duty cycle in \%                              & 1                       \\
-	                                     & 58                & Main power bus voltage in mV                         & 2                       \\
-	                                     & 60                & Batteries voltage in mV                              & 2                       \\
-	                                     & 62                & Batteries current in mA                              & 2                       \\
-	                                     & 64                & Batteries average current in mA                      & 2                       \\
-	                                     & 66                & Batteries accumulated current in mA                  & 2                       \\
-	                                     & 68                & Batteries charge in mAh                              & 2                       \\
-	                                     & 70                & Battery monitor IC temperature in K                  & 2                       \\
-	                                     & 72                & Battery heater 1 duty cycle in \%                    & 1                       \\
-	                                     & 73                & Battery heater 2 duty cycle in \%                    & 1                       \\
-	                                     & 74                & Main EDC (01h = EDC\_1, 02h = EDC\_2)                & 1                       \\
-	                                     & 75                & Active payload 1 (Payload ID)                        & 1                       \\
-	                                     & 76                & Active payload 2 (Payload ID)                        & 1                       \\
-                                         & 77                & Number of used flash pages in OBDH sector            & 4                       \\
-                                         & 81                & Number of used flash pages in EPS sector             & 4                       \\
-                                         & 85                & Number of used flash pages in TTC 0 sector           & 4                       \\
-                                         & 89                & Number of used flash pages in TTC 1 sector           & 4                       \\
-                                         & 93                & Number of used flash pages in Antenna sector         & 4                       \\
-                                         & 97                & Number of used flash pages in EDC sector             & 4                       \\
-                                         & 101               & Number of used flash pages in Payload X sector       & 4                       \\
-                                         & 105               & Number of used flash pages in SBCD packets sector    & 4                       \\
-	\cmidrule{4-4}
-	                                     &                   &                                                      & 109                       \\
-    \midrule
 	\multirow{6}{*}{Data request answer} & 0                 & Packet ID (11h)                            & 1                       \\
 	                                     & 1                 & Source callsign (`` PY0EFS'')              & 7                       \\
 	                                     & 8                 & Requester callsign                         & 7                       \\
@@ -142,6 +90,59 @@ In \autoref{tab:downlink-packets} the content of the downlink packets is availab
 	                                     & 15                & Message                                    & up to 45                \\
 	\cmidrule{4-4}
 	                                     &                   &                                            & up to 60                      \\
+    \midrule
+	\multirow{49}{*}{General telemetry}  & 0                 & Packet ID (10h)                                      & 1                       \\
+	                                     & 1                 & Source callsign (`` PY0EFS'')                        & 7                       \\
+                                         & 8                 & System time in seconds (Unix epoch)                  & 4                       \\
+	                                     & 12                & Temperature of the OBDH $\mu$C in Kelvin             & 2                       \\
+	                                     & 14                & Input current of the OBDH in mA                      & 2                       \\
+	                                     & 16                & Input voltage of the OBDH in mV                      & 2                       \\
+	                                     & 18                & Last reset cause of the OBDH                         & 1                       \\
+	                                     & 19                & Reset counter of the OBDH                            & 2                       \\
+	                                     & 21                & Last valid telecommand (uplink packet ID)            & 1                       \\
+	                                     & 22                & Temperature of the radio 1 in Kelvin                 & 2                       \\
+	                                     & 24                & RSSI of the last valid TC from radio 1               & 2                       \\
+	                                     & 26                & Temperature of the antenna in Kelvin                 & 2                       \\
+	                                     & 28                & Antenna status                                       & 2                       \\
+	                                     & 30                & Temperature of the EPS $\mu$C in K                   & 2                       \\
+	                                     & 32                & EPS circuitry and Beacon MCU current in mA           & 2                       \\
+	                                     & 34                & Last reset cause of the EPS                          & 1                       \\
+	                                     & 35                & Reset counter (EPS)                                  & 2                       \\
+	                                     & 37                & -Y and +X sides solar panel voltage in mV            & 2                       \\
+	                                     & 39                & -X and +Z sides solar panel voltage in mV            & 2                       \\
+	                                     & 41                & -Z and +Y sides solar panel voltage in mV            & 2                       \\
+	                                     & 43                & -Y side solar panel current in mA                    & 2                       \\
+	                                     & 45                & +Y side solar panel current in mA                    & 2                       \\
+	                                     & 47                & -X side solar panel current in mA                    & 2                       \\
+	                                     & 49                & +X side solar panel current in mA                    & 2                       \\
+	                                     & 51                & -Z side solar panel current in mA                    & 2                       \\
+	                                     & 53                & +Z side solar panel current in mA                    & 2                       \\
+	                                     & 55                & MPPT 1 duty cycle in \%                              & 1                       \\
+	                                     & 56                & MPPT 2 duty cycle in \%                              & 1                       \\
+	                                     & 57                & MPPT 3 duty cycle in \%                              & 1                       \\
+	                                     & 58                & Main power bus voltage in mV                         & 2                       \\
+	                                     & 60                & Batteries voltage in mV                              & 2                       \\
+	                                     & 62                & Batteries current in mA                              & 2                       \\
+	                                     & 64                & Batteries average current in mA                      & 2                       \\
+	                                     & 66                & Batteries accumulated current in mA                  & 2                       \\
+	                                     & 68                & Batteries charge in mAh                              & 2                       \\
+	                                     & 70                & Battery monitor IC temperature in K                  & 2                       \\
+	                                     & 72                & Battery heater 1 duty cycle in \%                    & 1                       \\
+	                                     & 73                & Battery heater 2 duty cycle in \%                    & 1                       \\
+	                                     & 74                & Main EDC (01h = EDC\_1, 02h = EDC\_2)                & 1                       \\
+	                                     & 75                & Main payload state (Payload ID or 0)                 & 1                       \\
+	                                     & 76                & Secondary payload state (Payload ID or 0)            & 1                       \\
+                                         & 77                & Number of used flash pages in OBDH sector            & 4                       \\
+                                         & 81                & Number of used flash pages in EPS sector             & 4                       \\
+                                         & 85                & Number of used flash pages in TTC 0 sector           & 4                       \\
+                                         & 89                & Number of used flash pages in TTC 1 sector           & 4                       \\
+                                         & 93                & Number of used flash pages in Antenna sector         & 4                       \\
+                                         & 97                & Number of used flash pages in EDC sector             & 4                       \\
+                                         & 101               & Number of used flash pages in Payload X sector       & 4                       \\
+                                         & 105               & Number of used flash pages in SBCD packets sector    & 4                       \\
+	\cmidrule{4-4}
+	                                     &                   &                                                      & 109                       \\
+    \midrule
 	\bottomrule[1.5pt]
 	\caption{Downlink packets.}
 	\label{tab:downlink-packets}

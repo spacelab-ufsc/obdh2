@@ -65,22 +65,22 @@ A list of the firmware tasks can be seen in the \autoref{tab:firmware-tasks}.
 		\textbf{Name}          & \textbf{Priority} & \textbf{Initial delay [ms]} & \textbf{Period [ms]} & \textbf{Stack [bytes]} \\
 		\midrule
 		Antenna deployment     & Highest           & 0                           & Aperiodic            & 150                    \\
-		Antenna reading        & Medium            & 2000                        & 60000                & 150                    \\
-		Data log               & Medium            & 2000                        & 600000               & 225                    \\
-		General Telemetry      & High              & 10000                       & 60000                & 225                    \\
-		EDC reading            & Medium            & 2000                        & 60000                & 300                    \\
-		EPS reading            & Medium            & 2000                        & 60000                & 384                    \\
+		Antenna reading        & Medium            & 5000                        & 60000                & 150                    \\
+		Data log               & Medium            & 3005000                     & 600000               & 225                    \\
+		General Telemetry      & High              & 15000                       & 60000                & 225                    \\
+		EDC reading            & Medium            & 5000                        & 60000                & 300                    \\
+		EPS reading            & Medium            & 5000                        & 60000                & 384                    \\
 		Heartbeat              & Lowest            & 2000                        & 500                  & 160                    \\
-		Housekeeping           & Medium            & 2000                        & 60000                & 225                    \\
-		Mission Manager        & High              & 0                           & Aperiodic            & 512                    \\
-		Payload X reading      & Medium            & 2000                        & 60000                & 300                    \\
-		Position Determination & Low               & 1000                        & 60000                & 1024                   \\
-		Read sensors           & Medium            & 2000                        & 60000                & 140                    \\
+		Housekeeping           & Medium            & 5000                        & 60000                & 225                    \\
+		Mission Manager        & High              & 5000                        & Aperiodic            & 512                    \\
+		Payload X reading      & Medium            & 5000                        & 60000                & 300                    \\
+		Position Determination & Low               & 3000                        & 60000                & 1024                   \\
+		Read sensors           & Medium            & 5000                        & 60000                & 140                    \\
 		Startup (boot)         & Highest           & 0                           & Aperiodic            & 350                    \\
 		System reset           & Medium            & 0                           & 36000000             & 128                    \\
 		Telecommand processing & High              & 16500                       & 1000                 & 1024                   \\
 		Time control           & Medium            & 1000                        & 1000                 & 128                    \\
-		TTC reading            & Medium            & 7500                        & 60000                & 384                    \\
+		TTC reading            & Medium            & 15500                       & 60000                & 384                    \\
 		Watchdog reset         & Lowest            & 0                           & 100                  & 150                    \\
 		\bottomrule[1.5pt]
 	\end{tabular}
@@ -168,61 +168,66 @@ To prevent the system to not reset during an anomaly on some task (like an execu
 
 The internal variables and parameters of the OBDH firmware can be seen in \autoref{tab:vars-and-pars}.
 
-\begin{longtable}[c]{cL{0.82\textwidth}l}
+\begin{longtable}[c]{cL{0.70\textwidth}lc}
 	\toprule[1.5pt]
-	\textbf{ID}          & \textbf{Name/Description}                                               & \textbf{Type}            \\
+    \textbf{ID}          & \textbf{Name/Description}                                               & \textbf{Type}            & \textbf{Access}     \\
 	\midrule
-    0                    & System time in seconds (Unix epoch)                                     & uint32                   \\
-	1                    & Temperature of the $\mu$C in Kelvin                                     & uint16                   \\
-	2                    & Input current in mA                                                     & uint16                   \\
-	3                    & Input voltage in mV                                                     & uint16                   \\
-	\multirow{18}{*}{4}  & Last reset cause:                                                       & \multirow{18}{*}{uint8}  \\
-	                     & - 0x00 = No interrupt pending                                           &                          \\
-	                     & - 0x02 = Brownout (BOR)                                                 &                          \\
-	                     & - 0x04 = RST/NMI (BOR)                                                  &                          \\
-	                     & - 0x06 = PMMSWBOR (BOR)                                                 &                          \\
-	                     & - 0x08 = Wakeup from LPMx.5 (BOR)                                       &                          \\
-	                     & - 0x0A = Security violation (BOR)                                       &                          \\
-	                     & - 0x0C = SVSL (POR)                                                     &                          \\
-	                     & - 0x0E = SVSH (POR)                                                     &                          \\
-	                     & - 0x10 = SVML\_OVP (POR)                                                &                          \\
-	                     & - 0x12 = SVMH\_OVP (POR)                                                &                          \\
-	                     & - 0x14 = PMMSWPOR (POR)                                                 &                          \\
-	                     & - 0x16 = WDT time out (PUC)                                             &                          \\
-	                     & - 0x18 = WDT password violation (PUC)                                   &                          \\
-	                     & - 0x1A = Flash password violation (PUC)                                 &                          \\
-	                     & - 0x1C = Reserved                                                       &                          \\
-	                     & - 0x1E = PERF peripheral/configuration area fetch (PUC)                 &                          \\
-	                     & - 0x20 = PMM password violation (PUC)                                   &                          \\
-	                     & - 0x22 to 0x3E = Reserved                                               &                          \\
-	5                    & Reset counter                                                           & uint16                   \\
-	6                    & Last valid telecommand (uplink packet ID)                               & uint8                    \\
-	9                    & Temperature of the antenna in Kelvin                                    & uint16                   \\
-	\multirow{17}{*}{10} & Antenna status bits:                                                    & \multirow{17}{*}{uint16} \\
-	                     & - Bit 15: The antenna 1 is deployed (0) or not (1)                      &                          \\
-	                     & - Bit 14: Cause of the latest activation stop for antenna 1             &                          \\
-	                     & - Bit 13: The antenna 1 deployment is active (1) or not (0)             &                          \\
-	                     & - Bit 11: The antenna 2 is deployed (0) or not (1)                      &                          \\
-	                     & - Bit 10: Cause of the latest activation stop for antenna 2             &                          \\
-	                     & - Bit 9: The antenna 2 deployment is active (1) or not (0)              &                          \\
-	                     & - Bit 8: The antenna is ignoring the deployment switches (1) or not (0) &                          \\
-	                     & - Bit 7: The antenna 3 is deployed (0) or not (1)                       &                          \\
-	                     & - Bit 6: Cause of the latest activation stop for antenna 3              &                          \\
-	                     & - Bit 5: The antenna 3 deployment is active (1) or not (0)              &                          \\
-	                     & - Bit 4: The antenna system independent burn is active (1) or not (0)   &                          \\
-	                     & - Bit 3: The antenna 4 is deployed (0) or not (1)                       &                          \\
-	                     & - Bit 2: Cause of the latest activation stop for antenna 4              &                          \\
-	                     & - Bit 1: The antenna 4 deployment is active (1) or not (0)              &                          \\
-	                     & - Bit 0: The antenna system is armed (1) or not (0)                     &                          \\
-	11                   & Hardware version                                                        & uint8                    \\
-	12                   & Firmware version (ex.: ``v1.2.3'' = 0x00010203)                         & uint32                   \\
-	13                   & Mode (``Normal'' = 0, ``Hibernation'' = 1, ``Stand-by'' = 2)            & uint8                    \\
-	14                   & Timestamp of the last mode change                                       & uint32                   \\
-	15                   & Mode duration in sec.                                                   & uint32                   \\
-	16                   & Initial hibernation executed                                            & boolean                  \\
-	17                   & Initial hibernation time counter (minutes)                              & uint8                    \\
-	18                   & Antenna deployment executed                                             & boolean                  \\
-	19                   & Antenna deployment counter                                              & uint8                    \\
+    0                    & System time in sec. (Unix epoch)                                                 & uint32                   & R/W                 \\
+	1                    & Temperature of the $\mu$C in Kelvin                                              & uint16                   & R                   \\
+	2                    & Input current in mA                                                              & uint16                   & R                   \\
+	3                    & Input voltage in mV                                                              & uint16                   & R                   \\
+    \multirow{18}{*}{4}  & Last reset cause:                                                                & \multirow{18}{*}{uint8}  & \multirow{18}{*}{R} \\
+	                     & - 0x00 = No interrupt pending                                                    &                          &                     \\
+	                     & - 0x02 = Brownout (BOR)                                                          &                          &                     \\
+	                     & - 0x04 = RST/NMI (BOR)                                                           &                          &                     \\
+	                     & - 0x06 = PMMSWBOR (BOR)                                                          &                          &                     \\
+	                     & - 0x08 = Wakeup from LPMx.5 (BOR)                                                &                          &                     \\
+	                     & - 0x0A = Security violation (BOR)                                                &                          &                     \\
+	                     & - 0x0C = SVSL (POR)                                                              &                          &                     \\
+	                     & - 0x0E = SVSH (POR)                                                              &                          &                     \\
+	                     & - 0x10 = SVML\_OVP (POR)                                                         &                          &                     \\
+	                     & - 0x12 = SVMH\_OVP (POR)                                                         &                          &                     \\
+	                     & - 0x14 = PMMSWPOR (POR)                                                          &                          &                     \\
+	                     & - 0x16 = WDT time out (PUC)                                                      &                          &                     \\
+	                     & - 0x18 = WDT password violation (PUC)                                            &                          &                     \\
+	                     & - 0x1A = Flash password violation (PUC)                                          &                          &                     \\
+	                     & - 0x1C = Reserved                                                                &                          &                     \\
+	                     & - 0x1E = PERF peripheral/configuration area fetch (PUC)                          &                          &                     \\
+	                     & - 0x20 = PMM password violation (PUC)                                            &                          &                     \\
+	                     & - 0x22 to 0x3E = Reserved                                                        &                          &                     \\
+	5                    & Reset counter                                                                    & uint16                   & R                   \\
+	6                    & Last valid telecommand (uplink packet ID)                                        & uint8                    & R                   \\
+	7                    & Hardware version                                                                 & uint8                    & R                   \\
+	8                    & Firmware version (ex.: ``v1.2.3'' = 0x00010203)                                  & uint32                   & R                   \\
+	9                    & Mode (``Normal'' = 0, ``Hibernation'' = 1, ``Stand-by'' = 2)                     & uint8                    & R/W                 \\
+	10                   & Timestamp of the last mode change                                                & uint32                   & R                   \\
+	11                   & Mode duration in sec.                                                            & uint32                   & R                   \\
+	12                   & Initial hibernation executed                                                     & boolean                  & R                   \\
+	13                   & Initial hibernation time counter (minutes)                                       & uint8                    & R                   \\
+	14                   & Antenna deployment executed                                                      & boolean                  & R                   \\
+	15                   & Antenna deployment counter                                                       & uint8                    & R                   \\
+    16                   & First TLE line                                                                   & string                   & W                   \\
+    17                   & Second TLE line                                                                  & string                   & W                   \\
+    18                   & Satellite's latitude in degress                                                  & int16                    & R                   \\
+    19                   & Satellite's longitude in degress                                                 & int16                    & R                   \\
+    20                   & Satellite's altitude in kilometers                                               & int16                    & R                   \\
+    21                   & Last written flash page in OBDH sector                                           & uint32                   & R                   \\
+    22                   & Last written flash page in EPS sector                                            & uint32                   & R                   \\
+    23                   & Last written flash page in TTC 0 sector                                          & uint32                   & R                   \\
+    24                   & Last written flash page in TTC 1 sector                                          & uint32                   & R                   \\
+    25                   & Last written flash page in Antenna sector                                        & uint32                   & R                   \\
+    26                   & Last written flash page in EDC sector                                            & uint32                   & R                   \\
+    27                   & Last written flash page in Payload X sector                                      & uint32                   & R                   \\
+    28                   & Last written flash page in SBCD packets sector                                   & uint32                   & R                   \\
+    29                   & Manual mode enabled                                                              & boolean                  & R/W                 \\
+    30                   & Main EDC ID (See \autoref{tab:system-ids} for ID values)                         & uint8                    & R/W                 \\
+    31                   & General telemetry enabled                                                        & boolean                  & R/W                 \\
+    32                   & Reset device (Resets OBDH when ``01h'' is written into it)                       & boolean                  & W                   \\
+    33                   & Timestamp of the last TLE line set update in sec.                                & uint32                   & R                   \\
+    34                   & Timestamp of the last OBDH sensor's reading in sec.                              & uint32                   & R                   \\
+    35                   & Main payload state (Active payload ID or 0 if disabled)                          & uint32                   & R/W                 \\
+    36                   & Secondary payload state (Active payload ID or 0 if disabled)                     & uint32                   & R/W                 \\
+    37                   & Remaining hibernation time in sec.                                               & uint32                   & R/W                 \\
 	\bottomrule[1.5pt]
 	\caption{Variables and parameters of the OBDH 2.0.}
 	\label{tab:vars-and-pars}
@@ -230,267 +235,9 @@ The internal variables and parameters of the OBDH firmware can be seen in \autor
 
 \section{Telemetry}
 
-All telemetry data available to read from OBDH is expected to be serialized in big endian ordering, so a data field named ``param'' with the type uint16, is serialized as the first byte being the 8 most significant bits of param and the second byte is the 8 least significant bits of it. This happens to all data types with length bigger than 1 byte.
+All telemetry data available to read from OBDH is expected to be serialized in big endian ordering, meaning that a data field named ``param'' with type uint16, is serialized as the first byte being the 8 most significant bits of param and the second byte is the 8 least significant bits of it. This behavior happens to all data types with length bigger than 1 byte.
 
-The following subsections will present the available telemetry information for each subsystem, keep in mind that this is only the data field of the complete downlink packet, there is still the IDs, callsigns, etc. To see a complete representation of the packet look at the \autoref{tab:downlink-packets}.
-
-\subsection{EDC Information}
-
-Telemetry packages from EDC can be seen in \autoref{tab:telemetry-edc}. This data can be requested through the ``Get Payload Data'' and ``Data Request'' telecommands, for more information about them see \autoref{sec:telecommands}.
-PTT packets from the Sistema Brasileiro de Coleta de Dados (SBCD) are seen in \autoref{tab:telemetry-sbcd}.
-
-\begin{table}[!ht]
-	\centering
-	\begin{tabular}{clcc}
-		\toprule[1.5pt]
-		\textbf{Position} & \textbf{Content}                                 & \textbf{Data type}& \textbf{Len. [bytes]}  \\
-		\midrule                                                                                                         
-		0                 & System time on which EDC data was last read      & uint32            & 4                      \\
-		\midrule                                                                                                         
-		\multicolumn{4}{c}{\textbf{HK Info}}                                                                              \\
-		\midrule                                                                                                         
-		4                 & Time of EDC housekeeping reading since J2000 epoch  & uint32            & 4                      \\
-		8                 & Elapsed time since last reset                       & uint32            & 4                      \\
-		12                & Digital circuitry current supply in mA              & uint16            & 2                      \\
-		12                & Analog circuitry supply in mA                       & uint16            & 2                      \\
-		16                & System voltage supply in mV                         & uint16            & 2                      \\
-		18                & EDC board temperature + $40$ in Celsius               & uint8             & 1                      \\
-		19                & RF front end LO...                                  & uint8             & 1                      \\
-		20                & RMS level at front-end output                       & uint16            & 2                      \\
-		22                & Generated PTT packages since                        & uint32            & 4                      \\
-		26                & Maximum number of active PTT decoder channels       & uint8             & 1                      \\
-		27                & Number of double bit errors detected                & uint8             & 1                      \\
-		\midrule                                                                                                         
-		\multicolumn{4}{c}{\textbf{System State}}                                                                         \\
-		\midrule                                                                                                         
-		28                & Time of EDC state reading since J2000 epoch      & uint32            & 4                      \\
-		32                & Number of PTT Package available for reading      & uint8             & 1                      \\
-		33                & PTT decoder task status                          & uint8             & 1                      \\
-		34                & ADC sampler state                                & uint8             & 1                      \\
-		35                & Payload ID (EDC\_1 or EDC\_2)                    & uint8             & 1                      \\
-		\midrule                                                                                                         
-        Total             & -                                                & -                 & 36                     \\
-		\bottomrule[1.5pt]
-	\end{tabular}
-	\caption{EDC information packet.}
-	\label{tab:telemetry-edc}
-\end{table}
-
-\subsection{OBDH Information}
-
-Telemetry packages from OBDH can be seen in \autoref{tab:telemetry-obdh}. This data can be requested through the ``Data Request'' telecommands, for more information about it, see \autoref{sec:telecommands}.
-
-\begin{table}[!ht]
-	\centering
-	\begin{tabular}{clcc}
-		\toprule[1.5pt]
-		\textbf{Position}   & \textbf{Content}                         & \textbf{Data type} & \textbf{Len. [bytes]} \\
-		\midrule                                                                                                          
-		0                   & System time                              & uint32             & 4                     \\
-		4                   & $\mu$C temperature in Kelvin             & uint16             & 2                     \\
-		6                   & $\mu$C current supply in mA              & uint16             & 2                     \\
-		8                   & $\mu$C voltage supply in mV              & uint16             & 2                     \\
-		10                  & Reset counter                            & uint16             & 2                     \\
-		12                  & Last reset cause ID                      & uint8              & 1                     \\
-		13                  & Last valid TC ID                         & uint8              & 1                     \\
-		14                  & Antenna deployment attempts counter      & uint8              & 1                     \\
-		15                  & Initial hibernation time count (minutes) & uint8              & 1                     \\
-        16                  & Hardware version                         & uint8              & 1                     \\
-        17                  & Firmware version                         & uint32             & 4                     \\
-		21                  & Operation mode                           & uint8              & 1                     \\
-		22                  & System time of last mode change          & uint32             & 4                     \\
-		26                  & Current operation mode duration          & uint32             & 4                     \\
-		30                  & Initial hibernation executed             & uint8              & 1                     \\
-		32                  & Manual operation mode selection state    & uint8              & 1                     \\
-		31                  & Antenna deployment executed              & uint8              & 1                     \\
-		33                  & Current main EDC                         & uint8              & 1                     \\
-		34                  & General telemetry state                  & uint8              & 1                     \\   
-		35                  & OBDH data last written flash page        & uint32             & 4                     \\   
-		39                  & EPS data last written flash page         & uint32             & 4                     \\   
-		43                  & TTC 0 data last written flash page       & uint32             & 4                     \\   
-		47                  & TTC 1 data last written flash page       & uint32             & 4                     \\   
-		51                  & Antenna data last written flash page     & uint32             & 4                     \\   
-		55                  & EDC data last written flash page         & uint32             & 4                     \\   
-		59                  & Payload X data last written flash page   & uint32             & 4                     \\   
-		63                  & SBCD packets last written flash page     & uint32             & 4                     \\   
-		67                  & Last position determination timestamp    & uint32             & 4                     \\   
-		71                  & Satellite's latitude                     & int16              & 2                     \\   
-		73                  & Satellite's longitude                    & int16              & 2                     \\   
-		75                  & Satellite's altitude                     & int16              & 2                     \\   
-		77                  & Last TLE update timestamp                & uint32             & 4                     \\   
-		81                  & Last sensor readings timestamp           & uint32             & 4                     \\   
-		\midrule                                                                                                    
-        Total               & -                                        & -                  & 93                    \\
-		\bottomrule[1.5pt]
-	\end{tabular}
-	\caption{OBDH data packet.}
-	\label{tab:telemetry-obdh}
-\end{table}
-
-\subsection{EPS Information}
-
-Telemetry packages from EPS can be seen in \autoref{tab:telemetry-eps}. This data can be requested through the ``Data Request'' telecommands, for more information about it, see \autoref{sec:telecommands}.
-
-\begin{table}[!ht]
-	\centering
-    \small
-	\begin{tabular}{clcc}
-		\toprule[1.5pt]
-		\textbf{Position}   & \textbf{Content}                                  & \textbf{Data type} & \textbf{Len. [bytes]} \\
-		\midrule                                                                                                          
-		0                   & System time on which EPS was last read            & uint32             & 4                     \\
-		4                   & EPS system time                                   & uint32             & 4                     \\
-		8                   & EPS $\mu$C temperature in Kelvin                  & uint16             & 2                     \\
-		10                  & EPS Circ. and Beacon $\mu$ current in mA          & uint16             & 2                     \\
-		12                  & Last reset cause ID                               & uint8              & 1                     \\
-		13                  & Reset counter                                     & uint16             & 2                     \\
-		15                  & Solar panel -Y +X voltage in mV                   & uint16             & 2                     \\
-		17                  & Solar panel -X +Z voltage in mV                   & uint16             & 2                     \\
-		19                  & Solar panel -Z +Y voltage in mV                   & uint16             & 2                     \\
-		21                  & Solar panel +X current in mA                      & uint16             & 2                     \\
-		23                  & Solar panel -X current in mA                      & uint16             & 2                     \\
-        25                  & Solar panel +Y current in mA                      & uint16             & 2                     \\
-        27                  & Solar panel -Y current in mA                      & uint16             & 2                     \\
-		29                  & Solar panel +Z current in mA                      & uint16             & 2                     \\
-		31                  & Solar panel -Z current in mA                      & uint16             & 2                     \\
-		33                  & MPPT 1 duty cycle in \%                           & uint8              & 1                     \\
-		34                  & MPPT 2 duty cycle in \%                           & uint8              & 1                     \\
-		35                  & MPPT 3 duty cycle in \%                           & uint8              & 1                     \\
-		36                  & Total solar panels output voltage after MPPT in mV& uint16             & 2                     \\
-		38                  & Main power bus voltage in mV                      & uint16             & 2                     \\
-		40                  & RTD0 temperature in K                             & uint16             & 2                     \\   
-		42                  & RTD1 temperature in K                             & uint16             & 2                     \\   
-		44                  & RTD2 temperature in K                             & uint16             & 2                     \\   
-		46                  & RTD3 temperature in K                             & uint16             & 2                     \\   
-		48                  & RTD4 temperature in K                             & uint16             & 2                     \\   
-		50                  & RTD5 temperature in K                             & uint16             & 2                     \\   
-		52                  & RTD6 temperature in K                             & uint16             & 2                     \\   
-		54                  & Battery voltage in mV                             & uint16             & 2                     \\   
-		56                  & Battery current in mA                             & int16              & 2                     \\   
-		58                  & Battery average current in mA                     & int16              & 2                     \\   
-		60                  & Battery accumulated current in mA                 & uint16             & 2                     \\   
-		62                  & Battery charge in mAh                             & uint16             & 2                     \\   
-		64                  & Battery monitor temperatura in Ke                 & uint16             & 2                     \\   
-		66                  & Battery monitor status register                   & uint8              & 1                     \\   
-		67                  & Battery monitor protection register               & uint8              & 1                     \\   
-		68                  & Battery monitor cycle counter                     & uint8              & 1                     \\   
-		69                  & Battery monitor RAAC in mAh                       & uint16             & 2                     \\   
-		71                  & Battery monitor RSAC in mAh                       & uint16             & 2                     \\   
-		73                  & Battery monitor RARC in \%                        & uint8              & 1                     \\   
-		74                  & Battery monitor RSRC in \%                        & uint8              & 1                     \\   
-		75                  & Battery heater 1 duty cycle in \%                 & uint16             & 2                     \\   
-		77                  & Battery heater 2 duty cycle in \%                 & uint16             & 2                     \\   
-		79                  & MPPT 1 mode                                       & uint8              & 1                     \\   
-		80                  & MPPT 2 mode                                       & uint8              & 1                     \\   
-		81                  & MPPT 3 mode                                       & uint8              & 1                     \\   
-		82                  & Battery heater 1 mode                             & uint8              & 1                     \\   
-		83                  & Battery heater 2 mode                             & uint8              & 1                     \\   
-		\midrule                                                                                                    
-        Total               & -                                                 & -                  & 84                    \\
-		\bottomrule[1.5pt]
-	\end{tabular}
-	\caption{EPS data packet.}
-	\label{tab:telemetry-eps}
-\end{table}
-
-\subsection{TTC Information}
-
-Telemetry packages from TTC can be seen in \autoref{tab:telemetry-ttc}. This data can be requested through the ``Data Request'' telecommands, for more information about it, see \autoref{sec:telecommands}.
-
-\begin{table}[!ht]
-	\centering
-    \small
-	\begin{tabular}{clcc}
-		\toprule[1.5pt]
-		\textbf{Position}   & \textbf{Content}                          & \textbf{Data type} & \textbf{Len. [bytes]} \\
-		\midrule                                                                                                          
-		0                   & System time on which TTC was last read    & uint32             & 4                     \\
-		4                   & TTC system time                           & uint32             & 4                     \\
-		8                   & Reset counter                             & uint16             & 2                     \\
-		10                  & Last reset cause ID                       & uint8              & 1                     \\
-		11                  & $\mu$C voltage supply in mV               & uint16             & 2                     \\
-		13                  & $\mu$C current supply in mA               & uint16             & 2                     \\
-		15                  & $\mu$C temperature in Kelvin              & uint16             & 2                     \\
-		17                  & Input voltage of the radio in mV          & uint16             & 2                     \\
-		19                  & Input current of the radio in mA          & uint16             & 2                     \\
-		21                  & Temperature of the radio in K             & uint16             & 2                     \\
-		23                  & Last valid telecommand (uplink packet ID) & uint8              & 1                     \\
-		24                  & RSSI of the last valid telecommand.       & uint16             & 2                     \\
-        26                  & Temperature of the antenna module in K    & uint16             & 2                     \\
-        28                  & Antenna status                            & uint16             & 2                     \\
-		30                  & Antenna deployment status                 & uint8              & 1                     \\
-		31                  & Antenna deploymaent hibernation status    & uint8              & 1                     \\
-		32                  & TX packet counter                         & uint32             & 4                     \\
-		36                  & RX packet counter                         & uint32             & 4                     \\
-		\midrule                                                                                                    
-        Total               & -                                         & -                  & 40                    \\
-		\bottomrule[1.5pt]
-	\end{tabular}
-	\caption{TTC data packet.}
-	\label{tab:telemetry-ttc}
-\end{table}
-
-\subsection{Antenna Information}
-
-Telemetry packages from Antenna can be seen in \autoref{tab:telemetry-antenna}. This data can be requested through the ``Data Request'' telecommands, for more information about it, see \autoref{sec:telecommands}.
-
-\begin{table}[!ht]
-	\centering
-    \small
-	\begin{tabular}{clcc}
-		\toprule[1.5pt]
-		\textbf{Position}   & \textbf{Content}                          & \textbf{Data type} & \textbf{Len. [bytes]} \\
-		\midrule                                                                                                         
-        0                   & System time on which TTC was last read    & uint32             & 4                     \\
-		4                   & Antenna status code                       & uint16             & 2                     \\
-		6                   & Antenna 1 status                          & uint8              & 1                     \\
-		7                   & Antenna 1 timeout                         & uint8              & 1                     \\
-		8                   & Antenna 1 burning                         & uint8              & 1                     \\
-		9                   & Antenna 2 status                          & uint8              & 1                     \\
-		10                  & Antenna 2 timeout                         & uint8              & 1                     \\
-		11                  & Antenna 2 burning                         & uint8              & 1                     \\
-		12                  & Antenna 3 status                          & uint8              & 1                     \\
-		13                  & Antenna 3 timeout                         & uint8              & 1                     \\
-		14                  & Antenna 3 burning                         & uint8              & 1                     \\
-		15                  & Antenna 4 status                          & uint8              & 1                     \\
-		16                  & Antenna 4 timeout                         & uint8              & 1                     \\
-		17                  & Antenna 4 burning                         & uint8              & 1                     \\
-		18                  & Antenna ignoring switches                 & uint8              & 1                     \\
-		19                  & Antenna independent burn                  & uint8              & 1                     \\
-		20                  & Antenna armed                             & uint8              & 1                     \\
-		21                  & Antenna temperature                       & uint16             & 2                     \\
-		\midrule                                                                                                    
-        Total               & -                                         & -                  & 23                    \\
-		\bottomrule[1.5pt]
-	\end{tabular}
-	\caption{Antenna data packet.}
-	\label{tab:telemetry-antenna}
-\end{table}
-
-\subsection{SBCD Packets}
-
-Telemetry packages from the SBCD can be seen in \autoref{tab:telemetry-sbcd}. This data can be requested through the ``Data Request'' telecommands, for more information about it, see \autoref{sec:telecommands}.
-
-\begin{table}[!ht]
-	\centering
-    \small
-	\begin{tabular}{clcc}
-		\toprule[1.5pt]
-		\textbf{Position}   & \textbf{Content}                          & \textbf{Data type} & \textbf{Len. [bytes]} \\
-		\midrule                                                                                                         
-        0                   & PTT signal receiving time (J2000 epoch)   & uint32             & 4                     \\
-		4                   & PTT Error code                            & uint8              & 1                     \\
-		5                   & Carrier frequency                         & int32              & 4                     \\
-		9                   & Carrier amplitude at ADC interface output & uint16             & 2                     \\
-		11                  & User messsage length in bytes             & uint8              & 1                     \\
-        12                  & User message                              & uint8[ ]           & 1 to 36               \\
-		\midrule                                                                                                    
-        Total               & -                                         & -                  & 12 to 48              \\
-		\bottomrule[1.5pt]
-	\end{tabular}
-	\caption{SBCD PTT data packet.}
-	\label{tab:telemetry-sbcd}
-\end{table}
+The \autoref{anx:telemetry-apx} presents the available telemetry information for each subsystem, keep in mind that this is only the timestamp and data fields of the complete downlink packet, there is still the IDs, callsigns, etc. To see a complete representation of the packet look at the \autoref{tab:downlink-packets}.
 
 \section{Telecommands} \label{sec:telecommands}
 
@@ -634,23 +381,8 @@ This telecommand complements the ``enter hibernation'' telecommand by deactivati
 
 \subsection{Activate Module}
 
-The ``Activate Module'' telecommand is a command to activate an internal module of the satellite. Each module has a unique ID that is passed as an argument of this telecommand's packet. The \autoref{tab:activate-module-table} shows the current used IDs.
+The ``Activate Module'' telecommand is a command to activate an internal module of the satellite. Each module has a unique ID that is passed as an argument of this telecommand's packet. The \autoref{tab:system-ids} shows the current used IDs.
 This is also a private telecommand, and a key is required to transmit it.
-
-\begin{table}[!ht]
-	\centering
-	\begin{tabular}{lll}
-		\toprule[1.5pt]
-		\textbf{Module}    & \textbf{ID number} \\
-		\midrule
-		Battery heater     & 1                  \\
-		Beacon             & 2                  \\
-		Periodic telemetry & 3                  \\
-		\bottomrule[1.5pt]
-	\end{tabular}
-	\caption{Leave hibernation telecommand.}
-	\label{tab:activate-module-table}
-\end{table}
 
 \subsection{Deactivate Module}
 
