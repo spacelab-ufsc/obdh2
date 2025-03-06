@@ -285,11 +285,10 @@ The \autoref{tab:uplink-packets} presents the content of the uplink packets.
     \midrule
 	\multirow{5}{*}{Update TLE}         & 0                 & Packet ID (4Fh)         & 1                       \\
 	                                    & 1                 & Ground station callsign & 7                       \\
-	                                    & 8                 & Line                    & 1                       \\
-	                                    & 9                 & TLE line                & 69                      \\
-	                                    & 78                & HMAC hash               & 20                      \\
+	                                    & 8                 & Binary TLE line         & 50                      \\
+	                                    & 58                & HMAC hash               & 20                      \\
 	\cmidrule{4-4}
-	                                    &                   &                         & 98                      \\
+	                                    &                   &                         & 78                      \\
 	\bottomrule[1.5pt]
 	\caption{Uplink packets.}
 	\label{tab:uplink-packets}

@@ -28,9 +28,9 @@
 
 The product tree of the firmware part of the OBDH 2.0 module is available in \autoref{fig:product-tree-fw}.
 
-\begin{figure}[!ht]
+\begin{figure}[!t]
 	\begin{center}
-		\includegraphics[width=\textwidth]{figures/product-tree-fw.pdf}
+		\includegraphics[width=\textwidth]{figures/product-tree-fw.drawio.png}
 		\caption{Product tree of the firmware of the OBDH 2.0 module.}
 		\label{fig:product-tree-fw}
 	\end{center}
@@ -206,28 +206,27 @@ The internal variables and parameters of the OBDH firmware can be seen in \autor
 	13                   & Initial hibernation time counter (minutes)                                       & uint8                    & R                   \\
 	14                   & Antenna deployment executed                                                      & boolean                  & R                   \\
 	15                   & Antenna deployment counter                                                       & uint8                    & R                   \\
-    16                   & First TLE line                                                                   & string                   & W                   \\
-    17                   & Second TLE line                                                                  & string                   & W                   \\
-    18                   & Satellite's latitude in degress                                                  & int16                    & R                   \\
-    19                   & Satellite's longitude in degress                                                 & int16                    & R                   \\
-    20                   & Satellite's altitude in kilometers                                               & int16                    & R                   \\
-    21                   & Last written flash page in OBDH sector                                           & uint32                   & R                   \\
-    22                   & Last written flash page in EPS sector                                            & uint32                   & R                   \\
-    23                   & Last written flash page in TTC 0 sector                                          & uint32                   & R                   \\
-    24                   & Last written flash page in TTC 1 sector                                          & uint32                   & R                   \\
-    25                   & Last written flash page in Antenna sector                                        & uint32                   & R                   \\
-    26                   & Last written flash page in EDC sector                                            & uint32                   & R                   \\
-    27                   & Last written flash page in Payload X sector                                      & uint32                   & R                   \\
-    28                   & Last written flash page in SBCD packets sector                                   & uint32                   & R                   \\
-    29                   & Manual mode enabled                                                              & boolean                  & R/W                 \\
-    30                   & Main EDC ID (See \autoref{tab:system-ids} for ID values)                         & uint8                    & R/W                 \\
-    31                   & General telemetry enabled                                                        & boolean                  & R/W                 \\
-    32                   & Reset device (Resets OBDH when ``01h'' is written into it)                       & boolean                  & W                   \\
-    33                   & Timestamp of the last TLE line set update in sec.                                & uint32                   & R                   \\
-    34                   & Timestamp of the last OBDH sensor's reading in sec.                              & uint32                   & R                   \\
-    35                   & Main payload state (Active payload ID or 0 if disabled)                          & uint32                   & R/W                 \\
-    36                   & Secondary payload state (Active payload ID or 0 if disabled)                     & uint32                   & R/W                 \\
-    37                   & Remaining hibernation time in sec.                                               & uint32                   & R/W                 \\
+    16                   & Satellite's latitude in degress                                                  & int16                    & R                   \\
+    17                   & Satellite's longitude in degress                                                 & int16                    & R                   \\
+    18                   & Satellite's altitude in kilometers                                               & int16                    & R                   \\
+    19                   & Last written flash page in OBDH sector                                           & uint32                   & R                   \\
+    20                   & Last written flash page in EPS sector                                            & uint32                   & R                   \\
+    21                   & Last written flash page in TTC 0 sector                                          & uint32                   & R                   \\
+    22                   & Last written flash page in TTC 1 sector                                          & uint32                   & R                   \\
+    23                   & Last written flash page in Antenna sector                                        & uint32                   & R                   \\
+    24                   & Last written flash page in EDC sector                                            & uint32                   & R                   \\
+    25                   & Last written flash page in Payload X sector                                      & uint32                   & R                   \\
+    26                   & Last written flash page in SBCD packets sector                                   & uint32                   & R                   \\
+    27                   & Manual mode enabled                                                              & boolean                  & R/W                 \\
+    28                   & Main EDC ID (See \autoref{tab:system-ids} for ID values)                         & uint8                    & R/W                 \\
+    29                   & General telemetry enabled                                                        & boolean                  & R/W                 \\
+    30                   & Reset device (Resets OBDH when ``01h'' is written into it)                       & boolean                  & W                   \\
+    31                   & Timestamp of the last TLE line set update in sec.                                & uint32                   & R                   \\
+    32                   & Timestamp of the last OBDH sensor's reading in sec.                              & uint32                   & R                   \\
+    33                   & Main payload state (Active payload ID or 0 if disabled)                          & uint32                   & R/W                 \\
+    34                   & Secondary payload state (Active payload ID or 0 if disabled)                     & uint32                   & R/W                 \\
+    35                   & Remaining hibernation time in sec.                                               & uint32                   & R/W                 \\
+    36                   & Binary format TLE line                                                           & uint8[50]                & W                   \\
 	\bottomrule[1.5pt]
 	\caption{Variables and parameters of the OBDH 2.0.}
 	\label{tab:vars-and-pars}
@@ -278,7 +277,7 @@ The \autoref{tab:packets-struct} summarizes all types of packets transmitted or 
                                      & Set parameter       & 4Ch &                                     & Subsystem ID + Param. ID + Param. value + Hash    & 34        & Private \\
                                      & Get parameter       & 4Dh &                                     & Subsystem ID + Parameter ID + Hash                & 30        & Private \\
                                      & Transmit packet     & 4Eh &                                     & Req. callsign + Any sequence of bytes + Hash      & 29 to 73  & Private \\
-                                     & Update TLE          & 4Fh &                                     & Line + TLE line + Hash                            & 98        & Private \\
+                                     & Update TLE          & 4Fh &                                     & Binary TLE line + Hash                            & 78        & Private \\
             \bottomrule[1.5pt]
         \end{tabular}
         \caption{Telecommunication packets and their content.}
@@ -482,7 +481,7 @@ The data request telecommand is a command to download data from the satellite. T
 
 \subsection{Update TLE}
 
-The Update TLE telecommand is a command to update the Two Line Elements (TLE) lines of the satellite, it sends one line at a time and only updates the lines used for position determination when both lines are updated. This is a private telecommand, and a key is required to send it.
+The Update TLE telecommand is a command to update the Two Line Elements (TLE) lines of the satellite, it sends a custom binary format that contains the only the necessary information of the TLE lines. This is a private telecommand, and a key is required to send it.
 
 \subsection{Transmit packet}
 
