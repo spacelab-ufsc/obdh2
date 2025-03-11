@@ -30,7 +30,7 @@ The product tree of the firmware part of the OBDH 2.0 module is available in \au
 
 \begin{figure}[!t]
 	\begin{center}
-		\includegraphics[width=\textwidth]{figures/product-tree-fw.drawio.png}
+		\includegraphics[width=\textwidth, height=\textheight-75pt]{figures/product-tree-fw.drawio.pdf}
 		\caption{Product tree of the firmware of the OBDH 2.0 module.}
 		\label{fig:product-tree-fw}
 	\end{center}
@@ -56,9 +56,9 @@ The firmware depends on external libraries to access the embedded hardware or to
 
 \section{Tasks}
 
-A list of the firmware tasks can be seen in the \autoref{tab:firmware-tasks}.
+A list of the firmware tasks can be seen in the \autoref{tab:firmware-tasks}. A complete description of them is provided below.
 
-\begin{table}[!ht]
+\begin{table}[!t]
 	\centering
 	\begin{tabular}{lccccc}
 		\toprule[1.5pt]
@@ -79,7 +79,7 @@ A list of the firmware tasks can be seen in the \autoref{tab:firmware-tasks}.
 		Startup (boot)         & Highest           & 0                           & Aperiodic            & 350                    \\
 		System reset           & Medium            & 0                           & 36000000             & 128                    \\
 		Telecommand processing & High              & 16500                       & 1000                 & 1024                   \\
-		Time control           & Medium            & 1000                        & 1000                 & 128                    \\
+		Time control           & High              & 1000                        & 1000                 & 128                    \\
 		TTC reading            & Medium            & 15500                       & 60000                & 384                    \\
 		Watchdog reset         & Lowest            & 0                           & 100                  & 150                    \\
 		\bottomrule[1.5pt]
@@ -88,31 +88,37 @@ A list of the firmware tasks can be seen in the \autoref{tab:firmware-tasks}.
 	\label{tab:firmware-tasks}
 \end{table}
 
-All these tasks are better described below.
-
 \subsection{Antenna deployment}
 
-This task deploys the Antenna module at the start of the mission.
+This task deploys the Antenna module at the start of the mission. It basically implements the previously shown antenna deploy routine flowchart in \autoref{fig:flowchart_antenna_deploy_routine}.
 
 \subsection{Antenna reading}
 
-Reads the Antenna module status.
+This task initializes the antenna device and reads the antenna housekeeping data, which includes deployment status. It also stores the reading timestamp together with housekeeping data.
 
-\subsection{Data log}
+\subsection{Data log} \label{sec:data-log-task}
 
-This task saves the housekeeping data of the satellite in flash memory every 10 minutes.
+This task saves the all subsystems last read housekeeping data to flash memory. Since there is no proper file system to manage the memories each subsystem got a predetermined number of flash pages to write in a ring buffer fashion. The address and page numbers for each subsystem can be seen in \textit{\href{https://github.com/spacelab-ufsc/obdh2/blob/master/firmware/config/config.h}{firmware/config/config.h}} from \cite{obdh2-repo}.
 
 \subsection{General Telemetry}
 
-The General Telemetry task transmits a data package containing the satellite's basic telemetry data every 60 seconds.
+The General Telemetry task transmits a data package containing the satellite's basic telemetry data every 60 seconds. The complete content of the packet can be seen at \autoref{tab:downlink-packets}. The transmission is controlled through a flag on the OBDH parameters (see \autoref{tab:vars-and-pars}), accessible through telecommands.
 
 \subsection{EDC reading}
 
-This task reads all the EDC packages and data.
+This task reads the state and housekeeping EDC frames, if there are available PTT packets on EDC's FIFO, it also attempts to read them. After every sucessfull PTT packet read the data is stored in flash memory, following the same scheme described in \autoref{sec:data-log-task}. A flowchart of how the data collection procedure works can be seen in \autoref{fig:edc-reading-flowchart}.
+
+\begin{figure}[!ht]
+	\begin{center}
+		\includegraphics[width=\textwidth]{figures/edc_reading_flowchart.drawio.pdf}
+		\caption{EDC reading procedure flowchart.}
+		\label{fig:edc-reading-flowchart}
+	\end{center}
+\end{figure}
 
 \subsection{EPS reading}
 
-This task reads all the EPS data and status.
+This task initializes the EPS device and reads the EPS housekeeping data. The communication with EPS has a simple retry scheme, basically the task will attempt to resend the command five times, after five consecutive errors it goes to the next operation.
 
 \subsection{Heartbeat}
 
@@ -120,23 +126,41 @@ The heartbeat task keeps blinking a LED (``\textit{System LED}'' in \autoref{fig
 
 \subsection{Housekeeping}
 
-This task saves the OBDH data to FRAM. It also checks for hibernation mode duration.
+This task saves the OBDH data parameters to FRAM every 60 seconds. It also keep track of hibernation duration and timeouts, notifying the Mission Manager task in case of a timeout.
 
 \subsection{Mission Manager}
 
-This task controls all mission specific behavior, specially payload control.
+This task controls all mission specific behavior, specially payload control. After task creation Mission Manager will attempt to restore the satellite state from the previous boot through the OBDH parameters, making sure the operation is consistent through boots. The task has an Event Queue implemented using the FreeRTOS Queue, in which the task blocks waiting for event notifications, this way the task does not waste any compute time while idle. The implemented events can be seen in \autoref{tab:mission-man-events}.
+
+\begin{table}[!h]
+	\centering
+	\begin{tabular}{llc}
+		\toprule[1.5pt]
+		\textbf{Name}               & \textbf{Description}      & \textbf{ID}                                   \\
+		\midrule
+		In Brazil                   & Satellite's position is inside brazilian territory     & 0                 \\
+		Out of Brazil               & Satellite got out of brazilian territory               & 1                 \\
+		PX Finished                 & Payload X finished its experiment                      & 2                 \\
+		Mode Change Req.            & Received a mode change request via telecommand         & 3                 \\
+		Activate Payload Req.       & Received an activate payload request via telecommand   & 4                 \\
+		Deactivate Payload Req.     & Received a deactivate payload request via telecommand  & 5                 \\
+		\bottomrule[1.5pt]
+	\end{tabular}
+	\caption{Mission Manager events.}
+	\label{tab:mission-man-events}
+\end{table}
 
 \subsection{Payload X reading}
 
-This task reads all Payload X data and status.
+This task reads Payload X experiment data and status. It only attempts to read data from Payload X if it is active and set as the secondary payload (see \autoref{tab:vars-and-pars}).
 
 \subsection{Position Determination}
 
-This task determines the satellite position based on TLE lines provided via telecommands. 
+This task determines the satellite position based on the satellite's TLE lines using a library that implements a SGP4 propagator. The TLE lines are provided through telecommands and are expected to by update quite regularly. The task also deals with TLE updates, repopulating the orbital elements and SGP4 variables whenever there is an update.
 
 \subsection{Read sensors}
 
-This task reads the internal sensors of the OBDH every 60 seconds.
+This task reads the internal sensors of the OBDH. The available readings are: $\mu$C temperature, $\mu$C current supply and $\mu$C voltage supply. The task also updates the sensor reading timestamp parameter.
 
 \subsection{Startup (boot)}
 
@@ -148,7 +172,7 @@ This task resets the microcontroller by software every 10 hours. This can be use
 
 \subsection{Telecommand processing}
 
-This task processes all the telecommands; it needs to have a really short period for a more responsive operation.
+This task processes all the telecommand packets received by the TTC device. The supported telemetry and telecommand packets, for both uplink and downlink, can be seen in \autoref{tab:packets-struct}. Also, a description of each telecommand is provided in \autoref{anx:packets}.
 
 \subsection{Time control}
 
@@ -156,7 +180,7 @@ This task is responsible for the time management of the system. At every second,
 
 \subsection{TTC reading}
 
-This task reads all the TTC data and status.
+This task initializes the TTC device and reads the TTC housekeeping data. Also, it checks for the number of consecutive decoding errors on TTC, if there are more than 5 consecutive errors the task tries to reset the TTC device. This is done to avoid potential issues, such as the radio being stuck in TX mode or memory corruption.
 
 \subsection{Watchdog reset}
 
@@ -227,6 +251,9 @@ The internal variables and parameters of the OBDH firmware can be seen in \autor
     34                   & Secondary payload state (Active payload ID or 0 if disabled)                     & uint32                   & R/W                 \\
     35                   & Remaining hibernation time in sec.                                               & uint32                   & R/W                 \\
     36                   & Binary format TLE line                                                           & uint8[50]                & W                   \\
+    37                   & Timestamp used in the last position determination in sec.                        & uint32                   & R                   \\
+    38                   & Timestamp from the last telecommand reception in sec.                            & uint32                   & R                   \\
+
 	\bottomrule[1.5pt]
 	\caption{Variables and parameters of the OBDH 2.0.}
 	\label{tab:vars-and-pars}
@@ -234,13 +261,13 @@ The internal variables and parameters of the OBDH firmware can be seen in \autor
 
 \section{Telemetry}
 
-All telemetry data available to read from OBDH is expected to be serialized in big endian ordering, meaning that a data field named ``param'' with type uint16, is serialized as the first byte being the 8 most significant bits of param and the second byte is the 8 least significant bits of it. This behavior happens to all data types with length bigger than 1 byte.
+All telemetry data available to downloaded from OBDH is expected to be serialized in big endian ordering, meaning that a data field named ``param'' with type \textit{uint16}, is serialized as the first byte being the 8 most significant bits of ``param'' and the second byte is the 8 least significant bits of it. This behavior happens to all data types with length bigger than 1 byte.
 
-The \autoref{anx:telemetry-apx} presents the available telemetry information for each subsystem, keep in mind that this is only the timestamp and data fields of the complete downlink packet, there is still the IDs, callsigns, etc. To see a complete representation of the packet look at the \autoref{tab:downlink-packets}.
+The \autoref{anx:telemetry-apx} presents the available telemetry information for each subsystem, keep in mind that this only illustrates the timestamp and data fields of the complete downlink packet, there are still IDs, callsigns, etc. To see a complete representation of the packets look at the \autoref{tab:downlink-packets}.
 
 \section{Telecommands} \label{sec:telecommands}
 
-The \autoref{tab:packets-struct} summarizes all types of packets transmitted or received by satellite that the OBDH can handle, with the ID number, structure and length, and access type of each packet.
+The \autoref{tab:packets-struct} summarizes all types of telemetry and telecommand packets received by TTC device that OBDH can handle, with the ID number, structure, length, and access type of each packet.
 
 \begin{landscape}
     \begin{table}[ht]
@@ -285,7 +312,7 @@ The \autoref{tab:packets-struct} summarizes all types of packets transmitted or 
     \end{table}
 \end{landscape}
 
-The ID of the subsystems, modules, memories and  payloads are available in \autoref{tab:system-ids}.
+The ID of the subsystems, modules, memories and payloads used in the packets are highlighted in \autoref{tab:system-ids}.
 
 \begin{table}[ht]
 	\centering
@@ -323,7 +350,7 @@ The ID of the subsystems, modules, memories and  payloads are available in \auto
 	\label{tab:system-ids}
 \end{table}
 
-\subsection{Authentication}
+\subsection{Authentication} \label{sec:hmac}
 
 All the telecommands classified as private use an HMAC\nomenclature{\textbf{HMAC}}{\textit{Hash-based Message Authenticaion Code.}} authentication scheme. Every type of private telecommand has a unique 16-digit ASCII character key that with the telecommand sequence (or message) generates an 160-bits (20-bytes) hash sequence to be transmitted together with the packet payload. The used hash algorithm is the SHA-1\nomenclature{\textbf{SHA-1}}{\textit{Secure Hash Algorithm 1.}}. The \autoref{fig:hmac-diagram} illustrates this authentication method.
 
@@ -335,157 +362,9 @@ All the telecommands classified as private use an HMAC\nomenclature{\textbf{HMAC
 	\end{center}
 \end{figure}
 
-\subsection{Enter hibernation}
+\subsection{Telecommand Descriptions}
 
-This telecommand activates the hibernation mode in a satellite. During the hibernation mode, no transmissions are made by the satellite, it keeps just listening for new incoming packets (reception). The satellite will stay in hibernation mode for a custom period (1 to 65536 hours), or until a ``Leave Hibernation'' mode is received. This is a private telecommand, a key is required to send it. Beyond the packet ID and the source callsign (or address), the number o hours (2 bytes long) is also transmitted.
-
-\begin{table}[!ht]
-	\centering
-	\begin{tabular}{lll}
-		\toprule[1.5pt]
-		\textbf{Parameter}      & \textbf{Content}                         & \textbf{Length [bytes]} \\
-		\midrule
-		Packet ID               & 20h                                      & 1                       \\
-		Ground station callsign & Any callsign (ASCII, filled with ``0''s) & 7                       \\
-		Hibernation period      & Period in minutes (1 to 65535)           & 2                       \\
-		Key                     & Telecommand key (ASCII)                  & 10                      \\
-		\midrule
-		Total                   & -                                        & 20                      \\
-		\bottomrule[1.5pt]
-	\end{tabular}
-	\caption{Enter hibernation telecommand.}
-	\label{tab:enter-hibernation-tc}
-\end{table}
-
-\subsection{Leave hibernation}
-
-This telecommand complements the ``enter hibernation'' telecommand by deactivating the hibernation mode in the satellite. When a satellite receives this telecommand it enables the transmission again immediately. This is also a private telecommand; a specific key is required to send it. There is no additional content to this telecommand packet, just the packet ID and the source callsign (or address).
-
-\begin{table}[!ht]
-	\centering
-	\begin{tabular}{lll}
-		\toprule[1.5pt]
-		\textbf{Parameter}      & \textbf{Content}                         & \textbf{Length [bytes]} \\
-		\midrule
-		Packet ID               & 21h                                      & 1                       \\
-		Ground station callsign & Any callsign (ASCII, filled with ``0''s) & 7                       \\
-		Key                     & Telecommand key (ASCII)                  & 10                      \\
-		\midrule
-		Total                   & -                                        & 18                      \\
-		\bottomrule[1.5pt]
-	\end{tabular}
-	\caption{Leave hibernation telecommand.}
-	\label{tab:leave-hibernation-tc}
-\end{table}
-
-\subsection{Activate Module}
-
-The ``Activate Module'' telecommand is a command to activate an internal module of the satellite. Each module has a unique ID that is passed as an argument of this telecommand's packet. The \autoref{tab:system-ids} shows the current used IDs.
-This is also a private telecommand, and a key is required to transmit it.
-
-\subsection{Deactivate Module}
-
-The ``Deactivate Module'' telecommand complements the telecommand above. It works the same way and with the same parameters, but in this case, it has the purpose of deactivating a given module of the satellite.
-
-\subsection{Activate Payload}
-
-This telecommand is similar to the telecommand ``Activate Module'', but in this case is used for the activate payloads of the satellite. Each satellite will have a list of IDs of the set of payloads.
-
-This is also a private telecommand, and a key is required to transmit it.
-
-\subsection{Deactivate Payload}
-
-Same as the ``Deactivate Module'' telecommand, but for payloads.
-
-\subsection{Erase Memory}
-
-The telecommand ``erase memory'' erases all the content presented in the non-volatile memories of the onboard computer of a satellite. This is a private command, and a key is required to send it. No additional content is required in a erase memory telecommand packet, just the packet ID and the source callsign (or address).
-
-\subsection{Force Reset}
-
-This telecommand performs a general reset of the satellite. When received, the satellite reset all subsystems. This is a private telecommand, and a key is required to send this command to a satellite. There is no additional content in this packet, just the packet ID and the source callsign (or address).
-
-\subsection{Get Payload Data}
-
-This telecommand allows a ground station to download data from a specific satellite payload. The required fields are the payload ID, and, optionally, arguments to be passed to the payload. The IDs and arguments vary according to the satellite. This is a private telecommand, and a key is required to send it.
-
-\subsection{Set Parameter}
-
-This telecommand allows the configuration of specific parameters of a given satellite subsystem. The required fields are the ID of the subsystem to set (1 byte), the ID of the parameter to set (1 byte), and the new value of the parameter (4 bytes long). The possible IDs (subsystem and parameter) vary according to the satellite. This is a private telecommand, and a key is required to send it.
-
-\subsection{Get Parameter}
-
-The telecommand ``Get Parameter'' complements the ``Set Parameter'' telecommand. It has the purpose of reading specific parameters of a given subsystem. The required fields are the subsystem's ID (1 byte) and the parameter ID (1 byte). The possible IDs (subsystem and parameter) vary according to the satellite. This is a private telecommand, and a key is required to send it.
-
-\subsection{Ping}
-
-The ping request telecommand is a simple command to test the communication with the satellite. When the satellite receives a ping packet, it will respond with another ping packet (with another packet ID, as defined in the downlink packets list). There are no additional parameters in the ping packet, just the packet ID and the source callsign (or address). It is also a public telecommand; anyone can send a ping request telecommand to a satellite.
-
-\begin{table}[!ht]
-	\centering
-	\begin{tabular}{lll}
-		\toprule[1.5pt]
-		\textbf{Parameter}      & \textbf{Content}                         & \textbf{Length [bytes]} \\
-		\midrule
-		Packet ID               & 22h                                      & 1                       \\
-		Ground station callsign & Any callsign (ASCII, filled with ``0''s) & 7                       \\
-		\midrule
-		Total                   & -                                        & 8                       \\
-		\bottomrule[1.5pt]
-	\end{tabular}
-	\caption{Ping telecommand.}
-	\label{tab:ping-tc}
-\end{table}
-
-\begin{table}[!ht]
-	\centering
-	\begin{tabular}{lll}
-		\toprule[1.5pt]
-		\textbf{Parameter}   & \textbf{Content}                               & \textbf{Length [bytes]} \\
-		\midrule
-		Packet ID            & 12h                                            & 1                       \\
-		Satellite callsign   & ``PY0EGU''                                     & 7                       \\
-		Destination callsign & Requester callsign (ASCII, filled with ``0''s) & 7                       \\
-		\midrule
-		Total                & -                                              & 15                      \\
-		\bottomrule[1.5pt]
-	\end{tabular}
-	\caption{Ping telecommand answer.}
-	\label{tab:ping-tc-ans}
-\end{table}
-
-\subsection{Broadcast message}
-
-The ``broadcast message'' is another public telecommand; no authentication or key is required to send this telecommand to a satellite. This command has the purpose of making a satellite transmit a custom message back to Earth. This can be useful for communication tasks, like a station sending data to another. There are two parameters in this telecommand: the destination callsign (or address), and the content of the message, which can be any sequence of ASCII characters or any byte value. There is a limit of 38 characters in the message field. The \autoref{tab:msg-broadcast-tc} shows the Telecommand parameters.
-
-\begin{table}[!ht]
-	\centering
-	\begin{tabular}{lll}
-		\toprule[1.5pt]
-		\textbf{Parameter}      & \textbf{Content}                         & \textbf{Length [bytes]} \\
-		\midrule
-		Packet ID               & 23h                                      & 1                       \\
-		Ground station callsign & Any callsign (ASCII, filled with ``0''s) & 7                       \\
-		Message                 & Message to broadcast (ASCII)             & up to                   \\
-		\midrule
-		Total                   & -                                        & 8                       \\
-		\bottomrule[1.5pt]
-	\end{tabular}
-	\caption{Message broadcast telecommand.}
-	\label{tab:msg-broadcast-tc}
-\end{table}
-
-\subsection{Data request}
-
-The data request telecommand is a command to download data from the satellite. This command allows a ground station to get specific parameters from a given period (stored in the satellite's non-volatile memory of the onboard computer). The list of possible parameters varies according to the satellite. The required fields of this telecommand are the parameter ID (1 byte), the start period in milliseconds (epoch, 4 bytes), and the end period in milliseconds (epoch, 4 bytes). This is a private telecommand, and a key is required to send it.
-
-\subsection{Update TLE}
-
-The Update TLE telecommand is a command to update the Two Line Elements (TLE) lines of the satellite, it sends a custom binary format that contains the only the necessary information of the TLE lines. This is a private telecommand, and a key is required to send it.
-
-\subsection{Transmit packet}
-
-This telecomand is similar to the broadcast message, but it only transmits the package received from the telecommand, without any requester or destinations callsigns. This is a private telecommand, and a key is required to send it. 
+A detailed description of each telecommand, including packet structure, execution and feedback is highlighted on \autoref{anx:packets}.
 
 \section{Operating System}
 

@@ -44,3 +44,9 @@ The OBDH 2.0 has a UART interface dedicated to debugging, described in \autoref{
 \section{Daughterboards Installation}
 
 The daughterboard requirements might change for each application board attached. Then, it is important to check at least a minimal set of mandatory characteristics. First, it is important to verify mechanical parameters that concern size (recommended $63.5 \times 43.5\ mm$), maximum height (no higher than $7\ mm$), screw attachment (refer to mechanical sheet \cite{obdh2-draftsman}), and contact connector positioning. After this, the electrical interface must be checked (refer to \autoref{sec:daughterboard-interface}). There are 3 different power supply options, a $3.3\ V$ source shared with the OBDH board itself, another $3.3\ V$ source shared with the antenna deployer, and the main battery bus that ranges from $5.4$ to $8.4\ V$. Lastly, depending on the application board design, it is necessary to check communication interface protocols and parameters, control inputs and outputs, and external interfaces with other modules.
+
+\section{Flight Preparation}
+
+Before flight an exhaustive inspection should be done, carefully make sure all hardware components are working as expected, including power consumption, memory access, communication busses, etc. After making sure the board hardware is working correctly, the flight firmware should be tested.
+
+Then, the firmware healthcheck flag should be enabled in config and the MSP430 should be reprogrammed, this is done to check memory operations and the mission manager functionality, all the checks should pass. These healthcheck routines also erase the memories, which should be done anyway before launch. Finally, the tested firmware should be reprogrammed to the $\mu$C and the board is ready for flight.

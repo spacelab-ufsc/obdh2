@@ -23,13 +23,13 @@
 % \date 2021/06/03
 %
 
-\chapter{Telecommunication Packets} \label{anx:packets}
+\chapter{Telecommunication Description} \label{anx:packets}
 
-This appendix lists all the packets that OBDH expects to be received by the RF links: downlink and uplink. The fields and length of each type of packet is also presented.
+This appendix describes the telecommands supported by OBDH, including the packet format, responses, etc.
 
 \section{Downlink}
 
-In \autoref{tab:downlink-packets} the content of the downlink packets is available.
+In \autoref{tab:downlink-packets} the content of the downlink packets are available. These can be downloaded through telecommands, see \autoref{sec:uplink-descr} for more information on how to do so. The format for the ``data'' field of \textit{Get Payload Data} and \textit{Data Request} are shown in \autoref{anx:telemetry-apx}.
 
 \begin{longtable}[c]{lcL{0.4\textwidth}c}
 	\toprule[1.5pt]
@@ -125,49 +125,50 @@ In \autoref{tab:downlink-packets} the content of the downlink packets is availab
 	                                     & 62                & Batteries current in mA                              & 2                       \\
 	                                     & 64                & Batteries average current in mA                      & 2                       \\
 	                                     & 66                & Batteries accumulated current in mA                  & 2                       \\
-	                                     & 68                & Batteries charge in mAh                              & 2                       \\
-	                                     & 70                & Battery monitor IC temperature in K                  & 2                       \\
-	                                     & 72                & Battery heater 1 duty cycle in \%                    & 1                       \\
-	                                     & 73                & Battery heater 2 duty cycle in \%                    & 1                       \\
-	                                     & 74                & Main EDC (01h = EDC\_1, 02h = EDC\_2)                & 1                       \\
-	                                     & 75                & Main payload state (Payload ID or 0)                 & 1                       \\
-	                                     & 76                & Secondary payload state (Payload ID or 0)            & 1                       \\
-                                         & 77                & Number of used flash pages in OBDH sector            & 4                       \\
-                                         & 81                & Number of used flash pages in EPS sector             & 4                       \\
-                                         & 85                & Number of used flash pages in TTC 0 sector           & 4                       \\
-                                         & 89                & Number of used flash pages in TTC 1 sector           & 4                       \\
-                                         & 93                & Number of used flash pages in Antenna sector         & 4                       \\
-                                         & 97                & Number of used flash pages in EDC sector             & 4                       \\
-                                         & 101               & Number of used flash pages in Payload X sector       & 4                       \\
-                                         & 105               & Number of used flash pages in SBCD packets sector    & 4                       \\
+	                                     & 68                & Battery monitor IC temperature in K                  & 2                       \\
+	                                     & 70                & Battery heater 1 duty cycle in \%                    & 1                       \\
+	                                     & 71                & Battery heater 2 duty cycle in \%                    & 1                       \\
+	                                     & 72                & Main EDC (01h = EDC\_1, 02h = EDC\_2)                & 1                       \\
+	                                     & 73                & Main payload state (Payload ID or 0)                 & 1                       \\
+	                                     & 74                & Secondary payload state (Payload ID or 0)            & 1                       \\
+                                         & 75                & Number of used Data Log flash pages                  & 4                       \\
+                                         & 79                & Number of used flash pages in SBCD packets sector    & 4                       \\
+                                         & 83                & Timestamp of the last OBDH sensor's reading in sec.  & 4                       \\
+                                         & 87                & Timestamp of the last position determination in sec. & 4                       \\
+                                         & 91                & Satellite's latitude in degrees                      & 2                       \\
+                                         & 93                & Satellite's longitude in degrees                     & 2                       \\
+                                         & 95                & Satellite's altitude in km                           & 2                       \\
+                                         & 97                & Timestamp of the last TLE line update in sec.        & 4                       \\
+                                         & 101               & Timestamp of the last TC reception in sec.           & 4                       \\   
 	\cmidrule{4-4}
-	                                     &                   &                                                      & 109                       \\
+	                                     &                   &                                                      & 105                     \\
     \midrule
 	\bottomrule[1.5pt]
 	\caption{Downlink packets.}
 	\label{tab:downlink-packets}
 \end{longtable}
 
-\section{Uplink}
+\section{Uplink} \label{sec:uplink-descr}
 
 As shown in \autoref{tab:packets-struct}, there are 15 supported telecommands. Below there is a description of each one.
 
 \begin{itemize}
 	\item \textbf{Ping Request:} It is a simple command to test the communication with the satellite. When the satellite receives a ping packet, it will respond with another ping packet (with another packet ID, as defined in the downlink packets list). There are no additional parameters in the ping packet, just the packet ID and the source callsign (or address). It is also a public telecommand, anyone can send a ping request telecommand to a satellite.
-	\item \textbf{Data Request:} It is a command to download data from the satellite. This command allows a ground station to get specific parameters from a given period (stored in the non-volatile memory of the onboard computer of the satellite). The list of possible parameters varies according to the satellite. The required fields of this telecommand are the parameter ID (1 byte), the start memory page and the end memory page.
+    \item \textbf{Data Request:} It is a command to download data from the satellite. This command allows a ground station to get specific parameters from a given period (stored in the non-volatile memory of the onboard computer of the satellite). The list of possible data packets varies according to the satellite, see \autoref{tab:system-ids} for already implemented data IDs. The required fields of this telecommand are the data ID (1 byte), the start memory page and the end memory page. The memory pages are relative to the first page of module's sector, meaning that if there is 15 pages of data from EPS and the operator wants to download all available pages, the start page should be 0 and end page should be 14. This is a private telecommand and requires a key for authentication, see \autoref{sec:hmac} for more information about authentication.
 	\item \textbf{Broadcast Message:} The "broadcast message" is another public telecommand, no authentication or key is required to send this telecommand to a satellite. This command has the purpose of making a satellite transmit a custom message back to Earth. This can be useful for communication tasks, like a station sending data to another. There are two parameters in this telecommand: the destination callsign (or address), and the content of the message, which can be any sequence of ASCII characters or any byte value. There is a limit of 38 characters in the message field.
-	\item \textbf{Enter Hibernation:} This telecommand activates the hibernation mode in a satellite. During the hibernation mode, no transmissions are made by the satellite; it keeps just listening for new incoming packets (reception). The satellite will stay in hibernation mode for a custom period (1 to 65536 minutes), or until a "Leave Hibernation" mode is received. This is a private telecommand, a key is required to send it. Beyond the packet ID and the source callsign (or address), the number o minutes (2 bytes long) is also transmitted.
-	\item \textbf{Leave Hibernation:} This telecommand complements the "enter hibernation" telecommand by deactivating the hibernation mode in the satellite. When a satellite receives this telecommand, it enables the transmission again immediately. This is also a private telecommand; a specific key is required to send it. There is no additional content to this telecommand packet, just the packet ID and the source callsign (or address).
-	\item \textbf{Activate Module:} It activates an internal module of the satellite. Each module has a unique ID that is passed as an argument of this telecommand's packet.
-	\item \textbf{Activate Payload:} This one is similar to the telecommand "Activate Module", but in this case is used for activating payloads of the satellite. Each satellite will have a list of IDs of the set of payloads. This is also a private telecommand, and a key is required to transmit it.
-	\item \textbf{Deactivate Payload:} It is the same as the "Deactivate Module" telecommand, but for payloads.
-	\item \textbf{Erase Memory:} It erases all the content presented in the specified non-volatile memory of the onboard computer of a satellite. This is a private command, and a key is required to send it. No additional content is required in a erase memory telecommand packet, just the packet ID and the source callsign (or address).
-	\item \textbf{Force Reset:} It performs a general reset of the OBDH. When received, the satellite reset the OBDH subsystem. This is a private telecommand, and a key is required to send this command to a satellite. There is no additional content in this packet, just the packet ID and the source callsign (or address).
-	\item \textbf{Get Payload Data:} It allows a ground station to download data from a specific payload of the satellite. The required fields are the payload ID, and optionally, arguments to be passed to the payload. The IDs and arguments vary according to the satellite. This is a private telecommand, and a key is required to send it.
-	\item \textbf{Get Parameter:} It allows the configuration of specific parameters of a given subsystem of the satellite. The required fields are the ID of the subsystem to set (1 byte), the ID of the parameter to set (1 byte), and the new value of the parameter (4 bytes long). The possible IDs (subsystem and parameter) vary according to the satellite. This is a private telecommand, and a key is required to send it.
-	\item \textbf{Set Parameter:} This telecommand complements the "Set Parameter" telecommand. It has the purpose of reading specific parameters of a given subsystem. The required fields are the subsystem's ID (1 byte) and the parameter ID (1 byte). The possible IDs (subsystem and parameter) vary according to the satellite. This is a private telecommand, and a key is required to send it.
-	\item \textbf{Transmit Packet:} This command has the purpose of making a satellite transmit a custom message back to Earth. This can be useful for communication tasks, like a station sending data to another. It differs from "Broadcast Message" in frequency band and the removal of destination callsign. This is a private telecommand, and a key is required to send it.
-	\item \textbf{Update TLE:} This telecommand provides a way to update the satellite TLE lines, which are used for position determination. This is a private telecommand, and a key is required to send it.
+	\item \textbf{Enter Hibernation:} This telecommand activates the hibernation mode in a satellite. During the hibernation mode, no transmissions are made by the satellite; it keeps just listening for new incoming packets (reception). The satellite will stay in hibernation mode for a custom period (1 to 65536 hours), or until a "Leave Hibernation" mode is received. Beyond the packet ID and the source callsign (or address), the number of hours (2 bytes long) is also transmitted. This is a private telecommand and requires a key for authentication, see \autoref{sec:hmac} for more information about authentication.
+	\item \textbf{Leave Hibernation:} This telecommand complements the "enter hibernation" telecommand by deactivating the hibernation mode in the satellite. When a satellite receives this telecommand, it enables the transmission again immediately. This is also a private telecommand; a specific key is required to send it. There is no additional content to this telecommand packet, just the packet ID and the source callsign (or address). This is a private telecommand and requires a key for authentication, see \autoref{sec:hmac} for more information about authentication.
+    \item \textbf{Activate Module:} It activates an internal module of the satellite. Each module has a unique ID that is passed as an argument of this telecommand's packet, see \autoref{tab:system-ids}. This is a private telecommand and requires a key for authentication, see \autoref{sec:hmac} for more information about authentication.
+	\item \textbf{Deactivate Module:} It disables an internal module of the satellite. Each module has a unique ID that is passed as an argument of this telecommand's packet, see \autoref{tab:system-ids}. This is a private telecommand and requires a key for authentication, see \autoref{sec:hmac} for more information about authentication.
+	\item \textbf{Activate Payload:} This one is similar to the telecommand "Activate Module", but in this case is used for activating payloads of the satellite, see \autoref{tab:system-ids} for already implemented payloads. Each satellite should have a list of IDs of the set of payloads. This is a private telecommand and requires a key for authentication, see \autoref{sec:hmac} for more information about authentication.
+	\item \textbf{Deactivate Payload:} It is the same as the "Deactivate Module" telecommand, but for payloads. This is a private telecommand and requires a key for authentication, see \autoref{sec:hmac} for more information about authentication.
+    \item \textbf{Erase Memory:} It erases all the content presented in the specified non-volatile memory of the onboard computer of a satellite. No additional content is required in a erase memory telecommand packet, just the packet ID, the source callsign (or address) and the memory ID, see \autoref{tab:system-ids}. This is a private telecommand and requires a key for authentication, see \autoref{sec:hmac} for more information about authentication.
+	\item \textbf{Force Reset:} It performs a general reset of the satellite modules. When received, the OBDH resets other subsystem, then reset itself. There is no additional content in this packet, just the packet ID and the source callsign (or address). This is a private telecommand and requires a key for authentication, see \autoref{sec:hmac} for more information about authentication.
+	\item \textbf{Get Payload Data:} It allows a ground station to download data from a specific payload of the satellite. The required fields are the payload ID, and optionally, arguments to be passed to the payload. The IDs and arguments vary according to the satellite. This is a private telecommand and requires a key for authentication, see \autoref{sec:hmac} for more information about authentication.
+	\item \textbf{Set Parameter:} It allows the configuration of specific parameters of a given subsystem of the satellite. The required fields are the ID of the subsystem to set (1 byte), the ID of the parameter to set (1 byte), and the new value of the parameter (4 bytes long). The possible IDs (subsystem and parameter) vary according to the satellite. This is a private telecommand and requires a key for authentication, see \autoref{sec:hmac} for more information about authentication.
+	\item \textbf{Get Parameter:} This telecommand complements the "Set Parameter" telecommand. It has the purpose of reading specific parameters of a given subsystem. The required fields are the subsystem's ID (1 byte) and the parameter ID (1 byte). The possible IDs (subsystem and parameter) vary according to the satellite. This is a private telecommand and requires a key for authentication, see \autoref{sec:hmac} for more information about authentication.
+	\item \textbf{Transmit Packet:} This command has the purpose of making a satellite transmit a custom message back to Earth. This can be useful for communication tasks, like a station sending data to another. It differs from "Broadcast Message" in frequency band and the removal of destination callsign. This is a private telecommand and requires a key for authentication, see \autoref{sec:hmac} for more information about authentication.
+	\item \textbf{Update TLE:} This telecommand provides a way to update the satellite TLE lines, which are used for position determination, more about the format on the \textit{\href{https://github.com/c-porto/libpredict/blob/master/include/predict/predict.h}{libpredict implementation}} used for position determination. This is a private telecommand and requires a key for authentication, see \autoref{sec:hmac} for more information about authentication.
 \end{itemize}
 
 The \autoref{tab:uplink-packets} presents the content of the uplink packets.
