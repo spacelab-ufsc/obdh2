@@ -1,35 +1,35 @@
 /*
  * process_tc.c
- * 
+ *
  * Copyright The OBDH 2.0 Contributors.
- * 
+ *
  * This file is part of OBDH 2.0.
- * 
+ *
  * OBDH 2.0 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * OBDH 2.0 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
- * 
+ *
  */
 
 /**
  * \brief Process TC task implementation.
- * 
+ *
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
- * 
+ *
  * \version 1.0.0
- * 
+ *
  * \date 2021/07/06
- * 
+ *
  * \addtogroup process_tc
  * \{
  */
@@ -83,7 +83,7 @@ static int8_t format_data_request(uint8_t *pkt_pl, uint16_t *pkt_pl_len, uint8_t
  *
  * \param[in] pkt is the received packet.
  *
- * \param[in] error_code is the status/error_code of the action performed 
+ * \param[in] error_code is the status/error_code of the action performed
  * through telecommand request.
  *
  * \return The status/error code.
@@ -110,7 +110,7 @@ static void process_tc_ping_request(uint8_t *pkt, uint16_t pkt_len, bool is_sche
  *
  * \param[in] is_scheduled is a flag to mark if a telecommand packet
  * was scheduled instead of just received. This is needed because in a
- * scheduled TC there is no need to authenticate it, since it was 
+ * scheduled TC there is no need to authenticate it, since it was
  * authenticated on queue insertion.
  *
  * \return None.
@@ -137,7 +137,7 @@ static void process_tc_broadcast_message(uint8_t *pkt, uint16_t pkt_len, bool is
  *
  * \param[in] is_scheduled is a flag to mark if a telecommand packet
  * was scheduled instead of just received. This is needed because in a
- * scheduled TC there is no need to authenticate it, since it was 
+ * scheduled TC there is no need to authenticate it, since it was
  * authenticated on queue insertion.
  *
  * \return None.
@@ -153,7 +153,7 @@ static void process_tc_enter_hibernation(uint8_t *pkt, uint16_t pkt_len, bool is
  *
  * \param[in] is_scheduled is a flag to mark if a telecommand packet
  * was scheduled instead of just received. This is needed because in a
- * scheduled TC there is no need to authenticate it, since it was 
+ * scheduled TC there is no need to authenticate it, since it was
  * authenticated on queue insertion.
  *
  * \return None.
@@ -169,7 +169,7 @@ static void process_tc_leave_hibernation(uint8_t *pkt, uint16_t pkt_len, bool is
  *
  * \param[in] is_scheduled is a flag to mark if a telecommand packet
  * was scheduled instead of just received. This is needed because in a
- * scheduled TC there is no need to authenticate it, since it was 
+ * scheduled TC there is no need to authenticate it, since it was
  * authenticated on queue insertion.
  *
  * \return None.
@@ -185,7 +185,7 @@ static void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len, bool is_s
  *
  * \param[in] is_scheduled is a flag to mark if a telecommand packet
  * was scheduled instead of just received. This is needed because in a
- * scheduled TC there is no need to authenticate it, since it was 
+ * scheduled TC there is no need to authenticate it, since it was
  * authenticated on queue insertion.
  *
  * \return None.
@@ -201,7 +201,7 @@ static void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len, bool is
  *
  * \param[in] is_scheduled is a flag to mark if a telecommand packet
  * was scheduled instead of just received. This is needed because in a
- * scheduled TC there is no need to authenticate it, since it was 
+ * scheduled TC there is no need to authenticate it, since it was
  * authenticated on queue insertion.
  *
  * \return None.
@@ -217,7 +217,7 @@ static void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len, bool is_
  *
  * \param[in] is_scheduled is a flag to mark if a telecommand packet
  * was scheduled instead of just received. This is needed because in a
- * scheduled TC there is no need to authenticate it, since it was 
+ * scheduled TC there is no need to authenticate it, since it was
  * authenticated on queue insertion.
  *
  * \return None.
@@ -233,7 +233,7 @@ static void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len, bool i
  *
  * \param[in] is_scheduled is a flag to mark if a telecommand packet
  * was scheduled instead of just received. This is needed because in a
- * scheduled TC there is no need to authenticate it, since it was 
+ * scheduled TC there is no need to authenticate it, since it was
  * authenticated on queue insertion.
  *
  * \return None.
@@ -249,7 +249,7 @@ static void process_tc_erase_memory(uint8_t *pkt, uint16_t pkt_len, bool is_sche
  *
  * \param[in] is_scheduled is a flag to mark if a telecommand packet
  * was scheduled instead of just received. This is needed because in a
- * scheduled TC there is no need to authenticate it, since it was 
+ * scheduled TC there is no need to authenticate it, since it was
  * authenticated on queue insertion.
  *
  * \return None.
@@ -265,7 +265,7 @@ static void process_tc_force_reset(uint8_t *pkt, uint16_t pkt_len, bool is_sched
  *
  * \param[in] is_scheduled is a flag to mark if a telecommand packet
  * was scheduled instead of just received. This is needed because in a
- * scheduled TC there is no need to authenticate it, since it was 
+ * scheduled TC there is no need to authenticate it, since it was
  * authenticated on queue insertion.
  *
  * \return None.
@@ -281,7 +281,7 @@ static void process_tc_get_subsystem_table(uint8_t *pkt, uint16_t pkt_len, bool 
  *
  * \param[in] is_scheduled is a flag to mark if a telecommand packet
  * was scheduled instead of just received. This is needed because in a
- * scheduled TC there is no need to authenticate it, since it was 
+ * scheduled TC there is no need to authenticate it, since it was
  * authenticated on queue insertion.
  *
  * \return None.
@@ -297,7 +297,7 @@ static void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len, bool is_sch
  *
  * \param[in] is_scheduled is a flag to mark if a telecommand packet
  * was scheduled instead of just received. This is needed because in a
- * scheduled TC there is no need to authenticate it, since it was 
+ * scheduled TC there is no need to authenticate it, since it was
  * authenticated on queue insertion.
  *
  * \return None.
@@ -313,7 +313,7 @@ static void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len, bool is_sch
  *
  * \param[in] is_scheduled is a flag to mark if a telecommand packet
  * was scheduled instead of just received. This is needed because in a
- * scheduled TC there is no need to authenticate it, since it was 
+ * scheduled TC there is no need to authenticate it, since it was
  * authenticated on queue insertion.
  *
  * \return None.
@@ -329,7 +329,7 @@ static void process_tc_update_tle(uint8_t *pkt, uint16_t pkt_len, bool is_schedu
  *
  * \param[in] is_scheduled is a flag to mark if a telecommand packet
  * was scheduled instead of just received. This is needed because in a
- * scheduled TC there is no need to authenticate it, since it was 
+ * scheduled TC there is no need to authenticate it, since it was
  * authenticated on queue insertion.
  *
  * \return None.
@@ -345,7 +345,7 @@ static void process_tc_transmit_packet(uint8_t *pkt, uint16_t pkt_len, bool is_s
  *
  * \param[in] is_scheduled is a flag to mark if a telecommand packet
  * was scheduled instead of just received. This is needed because in a
- * scheduled TC there is no need to authenticate it, since it was 
+ * scheduled TC there is no need to authenticate it, since it was
  * authenticated on queue insertion.
  *
  * \return None.
@@ -548,7 +548,7 @@ void vTaskProcessTC(void *p)
     {
         TickType_t last_cycle = xTaskGetTickCount();
 
-        int pkts = ttc_avail(TTC_1);
+        int pkts = ttc_avail(TTC_0);
 
         if (pkts > 0)
         {
@@ -560,7 +560,7 @@ void vTaskProcessTC(void *p)
             uint8_t pkt[300] = {0};
             uint16_t pkt_len = 0;
 
-            if (ttc_recv(TTC_1, pkt, &pkt_len) == 0)
+            if (ttc_recv(TTC_0, pkt, &pkt_len) == 0)
             {
                 if (execute_tc(pkt, pkt_len, false) != 0)
                 {
@@ -603,7 +603,7 @@ static void process_tc_ping_request(uint8_t *pkt, uint16_t pkt_len, bool is_sche
 
         if (!sat_data_buf.obdh.data.hibernation_on)
         {
-            if (ttc_send(TTC_1, pong_pl_raw, pong_pl_raw_len) != 0)
+            if (ttc_send(TTC_0, pong_pl_raw, pong_pl_raw_len) != 0)
             {
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a ping answer!");
                 sys_log_new_line();
@@ -996,7 +996,7 @@ static void process_tc_broadcast_message(uint8_t *pkt, uint16_t pkt_len, bool is
         uint16_t msg_len = pkt_len - 7U - 7U - 1U;
 
         (void)memcpy(&broadcast_pl.payload[0], &pkt[1], 14U + msg_len);
-    
+
         broadcast_pl.length = 14U + msg_len;
 
         uint8_t broadcast_pl_raw[55] = {0};
@@ -1006,7 +1006,7 @@ static void process_tc_broadcast_message(uint8_t *pkt, uint16_t pkt_len, bool is
 
         if (!sat_data_buf.obdh.data.hibernation_on)
         {
-            if (ttc_send(TTC_1, broadcast_pl_raw, broadcast_pl_raw_len) != 0)
+            if (ttc_send(TTC_0, broadcast_pl_raw, broadcast_pl_raw_len) != 0)
             {
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting a message broadcast!");
                 sys_log_new_line();
@@ -1051,7 +1051,7 @@ static void process_tc_enter_hibernation(uint8_t *pkt, uint16_t pkt_len, bool is
             {
                 (void)send_tc_feedback(pkt, ERRNO_FB_SUCESSFULL_EXEC);
             }
-            else 
+            else
             {
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Mission manager notify timed out for \"Enter hibernation\"");
                 sys_log_new_line();
@@ -1102,7 +1102,7 @@ static void process_tc_leave_hibernation(uint8_t *pkt, uint16_t pkt_len, bool is
             {
                 (void)send_tc_feedback(pkt, ERRNO_FB_SUCESSFULL_EXEC);
             }
-            else 
+            else
             {
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Mission manager notify timed out for \"Leave hibernation\"");
                 sys_log_new_line();
@@ -1221,7 +1221,7 @@ static void process_tc_activate_module(uint8_t *pkt, uint16_t pkt_len, bool is_s
                     break;
             }
         }
-        else 
+        else
         {
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Activate module\" TC! Invalid key!");
             sys_log_new_line();
@@ -1332,7 +1332,7 @@ static void process_tc_deactivate_module(uint8_t *pkt, uint16_t pkt_len, bool is
                     break;
             }
         }
-        else 
+        else
         {
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error executing the \"Deactivate module\" TC! Invalid key!");
             sys_log_new_line();
@@ -1467,7 +1467,7 @@ static void process_tc_activate_payload(uint8_t *pkt, uint16_t pkt_len, bool is_
             {
                 (void)send_tc_feedback(pkt, ERRNO_FB_SUCESSFULL_EXEC);
             }
-            else 
+            else
             {
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Mission manager notify timed out for \"Activate payload\"");
                 sys_log_new_line();
@@ -1604,7 +1604,7 @@ static void process_tc_deactivate_payload(uint8_t *pkt, uint16_t pkt_len, bool i
             {
                 (void)send_tc_feedback(pkt, ERRNO_FB_SUCESSFULL_EXEC);
             }
-            else 
+            else
             {
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Mission manager notify timed out for \"Deactivate payload\"");
                 sys_log_new_line();
@@ -1618,8 +1618,8 @@ static void process_tc_erase_memory(uint8_t *pkt, uint16_t pkt_len, bool is_sche
 {
     int8_t err = 0;
     bool authed = false;
-    
-    if (pkt_len >= (1U + 7U + 1U)) 
+
+    if (pkt_len >= (1U + 7U + 1U))
     {
         if (!is_scheduled)
         {
@@ -1637,7 +1637,7 @@ static void process_tc_erase_memory(uint8_t *pkt, uint16_t pkt_len, bool is_sche
             sat_data_buf.obdh.data.last_valid_tc = pkt[0];
             sat_data_buf.obdh.data.ts_last_contact = system_get_time();
 
-            switch (pkt[8]) 
+            switch (pkt[8])
             {
                 case MEMORY_ID_NOR:
                 {
@@ -1744,10 +1744,10 @@ static void process_tc_get_subsystem_table(uint8_t *pkt, uint16_t pkt_len, bool 
             sat_data_buf.obdh.data.last_valid_tc = pkt[0];
             sat_data_buf.obdh.data.ts_last_contact = system_get_time();
 
-            /* The table request just responds with the current RAM stored tables/structs so it makes sense to 
+            /* The table request just responds with the current RAM stored tables/structs so it makes sense to
              * reuse the format_data_request function used to download the flash stored tables/structs. However,
              * that means IDs must match or be adapted like the EDC ids that use payload info. */
-            switch (pkt[8]) 
+            switch (pkt[8])
             {
                 case TABLE_ID_OBDH:
                 {
@@ -1764,7 +1764,7 @@ static void process_tc_get_subsystem_table(uint8_t *pkt, uint16_t pkt_len, bool 
                         fsat_pkt_add_id(&pl_data, PKT_ID_DOWNLINK_SUBSYSTEM_TABLE);
                         (void)fsat_pkt_add_callsign(&pl_data, CONFIG_SATELLITE_CALLSIGN);
                         fsat_pkt_encode(&pl_data, pkt_raw, &raw_pkt_len);
-                        
+
                         if (!sat_data_buf.obdh.data.hibernation_on)
                         {
                             if (ttc_send(TTC_0, pkt_raw, raw_pkt_len) != 0)
@@ -1773,7 +1773,7 @@ static void process_tc_get_subsystem_table(uint8_t *pkt, uint16_t pkt_len, bool 
                                 sys_log_new_line();
                             }
                         }
-                        
+
                     }
 
                     break;
@@ -1793,7 +1793,7 @@ static void process_tc_get_subsystem_table(uint8_t *pkt, uint16_t pkt_len, bool 
                         fsat_pkt_add_id(&pl_data, PKT_ID_DOWNLINK_SUBSYSTEM_TABLE);
                         (void)fsat_pkt_add_callsign(&pl_data, CONFIG_SATELLITE_CALLSIGN);
                         fsat_pkt_encode(&pl_data, pkt_raw, &raw_pkt_len);
-                        
+
                         if (!sat_data_buf.obdh.data.hibernation_on)
                         {
                             if (ttc_send(TTC_0, pkt_raw, raw_pkt_len) != 0)
@@ -1802,7 +1802,7 @@ static void process_tc_get_subsystem_table(uint8_t *pkt, uint16_t pkt_len, bool 
                                 sys_log_new_line();
                             }
                         }
-                        
+
                     }
 
                     break;
@@ -1822,7 +1822,7 @@ static void process_tc_get_subsystem_table(uint8_t *pkt, uint16_t pkt_len, bool 
                         fsat_pkt_add_id(&pl_data, PKT_ID_DOWNLINK_SUBSYSTEM_TABLE);
                         (void)fsat_pkt_add_callsign(&pl_data, CONFIG_SATELLITE_CALLSIGN);
                         fsat_pkt_encode(&pl_data, pkt_raw, &raw_pkt_len);
-                        
+
                         if (!sat_data_buf.obdh.data.hibernation_on)
                         {
                             if (ttc_send(TTC_0, pkt_raw, raw_pkt_len) != 0)
@@ -1831,7 +1831,7 @@ static void process_tc_get_subsystem_table(uint8_t *pkt, uint16_t pkt_len, bool 
                                 sys_log_new_line();
                             }
                         }
-                        
+
                     }
 
                     break;
@@ -1851,7 +1851,7 @@ static void process_tc_get_subsystem_table(uint8_t *pkt, uint16_t pkt_len, bool 
                         fsat_pkt_add_id(&pl_data, PKT_ID_DOWNLINK_SUBSYSTEM_TABLE);
                         (void)fsat_pkt_add_callsign(&pl_data, CONFIG_SATELLITE_CALLSIGN);
                         fsat_pkt_encode(&pl_data, pkt_raw, &raw_pkt_len);
-                        
+
                         if (!sat_data_buf.obdh.data.hibernation_on)
                         {
                             if (ttc_send(TTC_0, pkt_raw, raw_pkt_len) != 0)
@@ -1860,7 +1860,7 @@ static void process_tc_get_subsystem_table(uint8_t *pkt, uint16_t pkt_len, bool 
                                 sys_log_new_line();
                             }
                         }
-                        
+
                     }
 
                     break;
@@ -1880,7 +1880,7 @@ static void process_tc_get_subsystem_table(uint8_t *pkt, uint16_t pkt_len, bool 
                         fsat_pkt_add_id(&pl_data, PKT_ID_DOWNLINK_SUBSYSTEM_TABLE);
                         (void)fsat_pkt_add_callsign(&pl_data, CONFIG_SATELLITE_CALLSIGN);
                         fsat_pkt_encode(&pl_data, pkt_raw, &raw_pkt_len);
-                        
+
                         if (!sat_data_buf.obdh.data.hibernation_on)
                         {
                             if (ttc_send(TTC_0, pkt_raw, raw_pkt_len) != 0)
@@ -1889,7 +1889,7 @@ static void process_tc_get_subsystem_table(uint8_t *pkt, uint16_t pkt_len, bool 
                                 sys_log_new_line();
                             }
                         }
-                        
+
                     }
 
                     break;
@@ -1911,7 +1911,7 @@ static void process_tc_get_subsystem_table(uint8_t *pkt, uint16_t pkt_len, bool 
                         fsat_pkt_add_id(&pl_data, PKT_ID_DOWNLINK_SUBSYSTEM_TABLE);
                         (void)fsat_pkt_add_callsign(&pl_data, CONFIG_SATELLITE_CALLSIGN);
                         fsat_pkt_encode(&pl_data, pkt_raw, &raw_pkt_len);
-                        
+
                         if (!sat_data_buf.obdh.data.hibernation_on)
                         {
                             if (ttc_send(TTC_0, pkt_raw, raw_pkt_len) != 0)
@@ -1920,7 +1920,7 @@ static void process_tc_get_subsystem_table(uint8_t *pkt, uint16_t pkt_len, bool 
                                 sys_log_new_line();
                             }
                         }
-                        
+
                     }
 
                     break;
@@ -1940,7 +1940,7 @@ static void process_tc_get_subsystem_table(uint8_t *pkt, uint16_t pkt_len, bool 
                         fsat_pkt_add_id(&pl_data, PKT_ID_DOWNLINK_SUBSYSTEM_TABLE);
                         (void)fsat_pkt_add_callsign(&pl_data, CONFIG_SATELLITE_CALLSIGN);
                         fsat_pkt_encode(&pl_data, pkt_raw, &raw_pkt_len);
-                        
+
                         if (!sat_data_buf.obdh.data.hibernation_on)
                         {
                             if (ttc_send(TTC_0, pkt_raw, raw_pkt_len) != 0)
@@ -1949,7 +1949,7 @@ static void process_tc_get_subsystem_table(uint8_t *pkt, uint16_t pkt_len, bool 
                                 sys_log_new_line();
                             }
                         }
-                        
+
                     }
 
                     break;
@@ -1969,7 +1969,7 @@ static void process_tc_get_subsystem_table(uint8_t *pkt, uint16_t pkt_len, bool 
                         fsat_pkt_add_id(&pl_data, PKT_ID_DOWNLINK_SUBSYSTEM_TABLE);
                         (void)fsat_pkt_add_callsign(&pl_data, CONFIG_SATELLITE_CALLSIGN);
                         fsat_pkt_encode(&pl_data, pkt_raw, &raw_pkt_len);
-                        
+
                         if (!sat_data_buf.obdh.data.hibernation_on)
                         {
                             if (ttc_send(TTC_0, pkt_raw, raw_pkt_len) != 0)
@@ -1978,7 +1978,7 @@ static void process_tc_get_subsystem_table(uint8_t *pkt, uint16_t pkt_len, bool 
                                 sys_log_new_line();
                             }
                         }
-                        
+
                     }
                     break;
                 }
@@ -2065,13 +2065,13 @@ static void process_tc_set_parameter(uint8_t *pkt, uint16_t pkt_len, bool is_sch
                                     sys_log_new_line();
                                     err = -1;
                                 }
-                            
+
                                 vTaskDelay(pdMS_TO_TICKS(50U));
                                 --retry_count;
                             } while ((err < 0) && (retry_count > 0U));
                         }
                     }
-                    else 
+                    else
                     {
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error writing a OBDH parameter!");
                         sys_log_new_line();
@@ -2254,7 +2254,7 @@ static void process_tc_get_parameter(uint8_t *pkt, uint16_t pkt_len, bool is_sch
                 }
             }
 
-            /* Update last valid tc parameter, this is made after transmission 
+            /* Update last valid tc parameter, this is made after transmission
              * because the requested parameter could be last_valid_tc aswell */
             sat_data_buf.obdh.data.last_valid_tc = pkt[0];
             sat_data_buf.obdh.data.ts_last_contact = system_get_time();
@@ -2282,7 +2282,7 @@ static void process_tc_update_tle(uint8_t *pkt, uint16_t pkt_len, bool is_schedu
             sat_data_buf.obdh.data.last_valid_tc = pkt[0];
             sat_data_buf.obdh.data.ts_last_contact = system_get_time();
 
-            if (update_tle_line(&sat_data_buf.obdh, &pkt[8]) == 0) 
+            if (update_tle_line(&sat_data_buf.obdh, &pkt[8]) == 0)
             {
                 (void)send_tc_feedback(pkt, ERRNO_FB_SUCESSFULL_EXEC);
             }
@@ -2358,7 +2358,7 @@ static void process_tc_schedule(uint8_t *pkt, uint16_t pkt_len, bool is_schedule
             sat_data_buf.obdh.data.last_valid_tc = pkt[0];
             sat_data_buf.obdh.data.ts_last_contact = system_get_time();
 
-            if (schedule_tc(pkt, pkt_len) == 0) 
+            if (schedule_tc(pkt, pkt_len) == 0)
             {
                 (void)send_tc_feedback(pkt, ERRNO_FB_SUCESSFULL_EXEC);
             }
@@ -2397,9 +2397,9 @@ static int8_t format_data_request(uint8_t *pkt_pl, uint16_t *pkt_pl_len, uint8_t
 {
 	int8_t err = 0;
 
-	/* Response payload includes the TC ID and the Requester callsign, which have lenght of 1 and 7 bytes, respectively. 
+	/* Response payload includes the TC ID and the Requester callsign, which have lenght of 1 and 7 bytes, respectively.
      * That is the reason for the `7U + 1U` offset */
-	uint8_t *pl = &pkt_pl[7U + 1U]; 
+	uint8_t *pl = &pkt_pl[7U + 1U];
 
 	switch (data_id)
 	{
@@ -2804,7 +2804,7 @@ static int8_t format_data_request(uint8_t *pkt_pl, uint16_t *pkt_pl_len, uint8_t
 
 			break;
 		}
-		default: 
+		default:
 			err = -1;
 			break;
 	}
@@ -2831,7 +2831,7 @@ static int8_t send_tc_feedback(uint8_t *pkt, int16_t error_code)
 
     /* TC packet ID */
     feedback.payload[7] = pkt[0];
-    
+
     /* Current timestamp */
     sys_time_t time = system_get_time();
     feedback.payload[8] = (time >> 24U) & 0xFFU;
