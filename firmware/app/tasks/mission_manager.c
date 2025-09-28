@@ -551,51 +551,6 @@ static int goto_standby_mode(struct conops_fsm *ctx, const struct conops_event *
     sys_log_print_msg(")...");
     sys_log_new_line();
 
-    if (sat->obdh.data.main_payload_state != (uint8_t)PAYLOAD_NONE)
-    {
-        do
-        {
-            err = payload_disable((payload_t)sat->obdh.data.main_payload_state);
-            vTaskDelay(100U);
-            --retry_count;
-        } while ((err < 0) && (retry_count > 0U));
-
-        if (retry_count != 0U)
-        {
-            sat->obdh.data.main_payload_state = (uint8_t)PAYLOAD_NONE;
-        }
-        else
-        {
-            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_MISSION_MANAGER_NAME, "Failed to disable Main payload!");
-            sys_log_new_line();
-            retval = -1;
-        }
-
-        err = 0;
-        retry_count = 5U;
-    }
-
-    if (sat->obdh.data.sec_payload_state != (uint8_t)PAYLOAD_NONE)
-    {
-        do
-        {
-            err = payload_disable((payload_t)sat->obdh.data.sec_payload_state);
-            vTaskDelay(100U);
-            --retry_count;
-        } while ((err < 0) && (retry_count > 0U));
-
-        if (retry_count != 0U)
-        {
-            sat->obdh.data.sec_payload_state = (uint8_t)PAYLOAD_NONE;
-        }
-        else
-        {
-            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_MISSION_MANAGER_NAME, "Failed to disable Secondary payload!");
-            sys_log_new_line();
-            retval = -1;
-        }
-    }
-
     if ((ev->ev_id != EV_PERSIST_STATE_ON_INIT) && (retval == 0))
     {
         satellite_change_mode(OBDH_MODE_STAND_BY);
@@ -767,54 +722,6 @@ static int goto_fdir_mode(struct conops_fsm *ctx, const struct conops_event *ev,
     sys_log_print_msg(")...");
     sys_log_new_line();
 
-    if (sat->obdh.data.main_payload_state != (uint8_t)PAYLOAD_NONE)
-    {
-        do
-        {
-            err = payload_disable((payload_t)sat->obdh.data.main_payload_state);
-            vTaskDelay(100U);
-            --retry_count;
-        } while ((err < 0) && (retry_count > 0U));
-
-        if (retry_count != 0U)
-        {
-            sat->obdh.data.main_payload_state = (uint8_t)PAYLOAD_NONE;
-        }
-        else
-        {
-            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_MISSION_MANAGER_NAME, "Failed to disable Main payload!");
-            sys_log_new_line();
-            retval = -1;
-        }
-
-        err = 0;
-        retry_count = 5U;
-    }
-
-    if (sat->obdh.data.sec_payload_state != (uint8_t)PAYLOAD_NONE)
-    {
-        do
-        {
-            err = payload_disable((payload_t)sat->obdh.data.sec_payload_state);
-            vTaskDelay(100U);
-            --retry_count;
-        } while ((err < 0) && (retry_count > 0U));
-
-        if (retry_count != 0U)
-        {
-            sat->obdh.data.sec_payload_state = (uint8_t)PAYLOAD_NONE;
-        }
-        else
-        {
-            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_MISSION_MANAGER_NAME, "Failed to disable Secondary payload!");
-            sys_log_new_line();
-            retval = -1;
-        }
-
-        err = 0;
-        retry_count = 5U;
-    }
-
     do
     {
         err = eps_set_param(SL_EPS2_REG_BEACON_ENABLE, 0U);
@@ -974,13 +881,13 @@ static int32_t event_mapper(const struct conops_fsm *ctx, const struct conops_ev
 
 static conops_transition_handler_t mode_transition_table[MISSION_OPERATION_MODES][MISSION_OPERATION_MODES] = {  // cppcheck-suppress misra-c2012-8.9
             /* Deployment (DM) | Commission (CM) | Normal (NM) | Stand-by (SBM) | Experiment (EXM) | FDIR (FDM) | Manual (MNM) */
-/* DM */   {NULL, goto_commission_mode, goto_nominal_mode, goto_standby_mode, goto_experiment_mode, goto_fdir_mode, goto_manual_mode},
-/* CM */   {NULL, goto_commission_mode, goto_nominal_mode, goto_standby_mode, goto_experiment_mode, goto_fdir_mode, goto_manual_mode},
-/* NM */   {NULL, goto_commission_mode, NULL, goto_standby_mode, goto_experiment_mode, goto_fdir_mode, goto_manual_mode},
-/* SBM */  {NULL, goto_commission_mode, goto_nominal_mode, NULL, goto_experiment_mode, goto_fdir_mode, goto_manual_mode},
-/* EXM */  {NULL, goto_commission_mode, goto_nominal_mode, goto_standby_mode, NULL, goto_fdir_mode, goto_manual_mode},
-/* FDM */  {NULL, goto_commission_mode, goto_nominal_mode, goto_standby_mode, NULL, NULL, goto_manual_mode},
-/* MNM */  {NULL, goto_commission_mode, goto_nominal_mode, goto_standby_mode, goto_experiment_mode, goto_fdir_mode, NULL},
+/* DM */   {NULL, goto_commission_mode, NULL, goto_standby_mode, NULL, goto_fdir_mode, goto_manual_mode},
+/* CM */   {NULL, goto_commission_mode, NULL, goto_standby_mode, NULL, goto_fdir_mode, goto_manual_mode},
+/* NM */   {NULL, goto_commission_mode, NULL, goto_standby_mode, NULL, goto_fdir_mode, goto_manual_mode},
+/* SBM */  {NULL, goto_commission_mode, NULL, NULL, NULL, goto_fdir_mode, goto_manual_mode},
+/* EXM */  {NULL, goto_commission_mode, NULL, goto_standby_mode, NULL, goto_fdir_mode, goto_manual_mode},
+/* FDM */  {NULL, goto_commission_mode, NULL, goto_standby_mode, NULL, NULL, goto_manual_mode},
+/* MNM */  {NULL, goto_commission_mode, NULL, goto_standby_mode, NULL, goto_fdir_mode, NULL},
 };
 
 #endif
@@ -989,7 +896,7 @@ static int satellite_persist_op_mode(struct conops_fsm *ctx)
 {
     int retval = 0;
 
-    const conops_transition_handler_t handlers[] = {NULL, NULL, goto_nominal_mode, goto_standby_mode, goto_experiment_mode, goto_fdir_mode, goto_manual_mode};
+    const conops_transition_handler_t handlers[] = {NULL, NULL, NULL, goto_standby_mode, NULL, goto_fdir_mode, goto_manual_mode};
 
     conops_transition_handler_t handler = goto_fdir_mode;
 
