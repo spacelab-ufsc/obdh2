@@ -48,18 +48,19 @@
 #define CONFIG_TASK_READ_SENSORS_ENABLED                1
 #define CONFIG_TASK_GENERAL_TELEMETRY_ENABLED           1
 #define CONFIG_TASK_TIME_CONTROL_ENABLED                1
-#define CONFIG_TASK_READ_EDC_ENABLED                    1
+#define CONFIG_TASK_READ_EDC_ENABLED                    0
 #define CONFIG_TASK_READ_EPS_ENABLED                    1
 #define CONFIG_TASK_READ_TTC_ENABLED                    1
-#define CONFIG_TASK_READ_ANTENNA_ENABLED                1
+#define CONFIG_TASK_READ_ANTENNA_ENABLED                0
 #define CONFIG_TASK_DATA_LOG_ENABLED                    1
 #define CONFIG_TASK_PROCESS_TC_ENABLED                  1
-#define CONFIG_TASK_ANTENNA_DEPLOYMENT_ENABLED          0
+#define CONFIG_TASK_ANTENNA_DEPLOYMENT_ENABLED          1
 #define CONFIG_TASK_POSITION_DETERMINATION_ENABLED      0
-#define CONFIG_TASK_PAYLOAD_X_ENABLED                   1
+#define CONFIG_TASK_PAYLOAD_X_ENABLED                   0
 #define CONFIG_TASK_HOUSEKEEPING_ENABLED                1
 #define CONFIG_TASK_MISSION_MANAGER_ENABLED             1
 #define CONFIG_TASK_SCHED_TC_ENABLED                    1
+#define CONFIG_TASK_READ_LPL_ENABLED                    1
 #define CONFIG_TASK_HEALTH_CHECK_MEM_ENABLED            0
 #define CONFIG_TASK_HEALTH_CHECK_MODE_ENABLED           0
 
@@ -72,13 +73,13 @@
 #define CONFIG_DEV_VOLTAGE_SENSOR_ENABLED               1
 #define CONFIG_DEV_TEMP_SENSOR_ENABLED                  1
 #define CONFIG_DEV_EPS_ENABLED                          1
-#define CONFIG_DEV_PAYLOAD_EDC_ENABLED                  1
+#define CONFIG_DEV_PAYLOAD_EDC_ENABLED                  0
 #define CONFIG_DEV_ANTENNA_ENABLED                      1
-#define CONFIG_DEV_PAYLOAD_X_ENABLED                    1
+#define CONFIG_DEV_PAYLOAD_X_ENABLED                    0
 
 /* Drivers */
-#define CONFIG_DRV_ISIS_ANTENNA_ENABLED                 1
-#define CONFIG_DRV_SL_ANTENNA_ENABLED                   0
+#define CONFIG_DRV_ISIS_ANTENNA_ENABLED                 0
+#define CONFIG_DRV_SL_ANTENNA_ENABLED                   1
 
 /* Health Check */
 #define CONFIG_HEALTH_CHECK_ENABLED                     0
@@ -88,7 +89,7 @@
 #define CONFIG_DRIVERS_DEBUG_ENABLED                    0
 #define CONFIG_PRINT_OBDH_PARAMS                        1
 
-#define CONFIG_SATELLITE_CALLSIGN                       "PY0EFS"
+#define CONFIG_SATELLITE_CALLSIGN                       "FSAT2"
 
 /* Ports */
 #define CONFIG_SPI_PORT_0_SPEED_BPS                     1000000UL

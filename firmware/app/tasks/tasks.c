@@ -63,6 +63,7 @@
 #include "mode_check.h"
 #include "antenna_deployment.h"
 #include "sched_tc.h"
+#include "read_lpl.h"
 
 static void create_queues(void);
 
@@ -259,6 +260,15 @@ void create_tasks(void)
         /* Error creating the Scheduled TC task */
     }
 #endif /* CONFIG_TASK_MISSION_MANAGER_ENABLED */
+
+#if defined(CONFIG_TASK_READ_LPL_ENABLED) && (CONFIG_TASK_READ_LPL_ENABLED == 1)
+    (void)xTaskCreate(vTaskReadLPL, TASK_READ_LPL_NAME, TASK_READ_LPL_STACK_SIZE, NULL, TASK_READ_LPL_PRIORITY, &xTaskReadLPLHandle);
+
+    if (xTaskReadLPLHandle == NULL)
+    {
+        /* Error creating the Read LPL task */
+    }
+#endif /* CONFIG_TASK_READ_LPL_ENABLED */
 
     create_queues();
     create_event_groups();
