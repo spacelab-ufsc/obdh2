@@ -12,7 +12,6 @@ int conops_fsm_init(struct conops_fsm *fsm, const void *transition_table, const 
 		return -ERRNO_CONOPS_INVALID_STATE;
 
 	fsm->ev_mapper_fn = NULL;
-	fsm->user_data = NULL;
 	fsm->transition_table = transition_table;
 	fsm->conf.n_states = n_states;
 	fsm->conf.max_ev_id = (max_ev_id != 0) ? max_ev_id : CONOPS_DEFAULT_MAX_EV_ID;
