@@ -34,7 +34,6 @@
  * \{
  */
 
-#include "tasks/mission_manager.h"
 #include <config/config.h>
 #include <conops/conops.h>
 #include <system/sys_log/sys_log.h>
@@ -43,13 +42,18 @@
 
 #include <structs/satellite.h>
 
+#include "mission_manager.h"
 #include "antenna_deployment.h"
+#include "startup.h"
 
 xTaskHandle xTaskAntennaDeploymentHandle;
 
 void vTaskAntennaDeployment(void *p)
 {
     (void)p;
+
+    /* Wait startup task to finish */
+    (void)xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(2000U));
 
     /* Initial hibernation */
     if (!sat_data_buf.obdh.data.initial_hib_executed)
