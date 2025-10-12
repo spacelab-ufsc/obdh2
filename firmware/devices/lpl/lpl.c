@@ -34,31 +34,55 @@
  */
 
 #include <stdint.h>
+#include <stdbool.h>
+
 #include <system/sys_log/sys_log.h>
 
 #include <drivers/uart/uart.h>
+#include <drivers/gpio/gpio.h>
 
 #include "lpl.h"
 
 int lpl_init(lpl_t *dev) 
 {
+    gpio_config_t conf = {0};
+
+    conf.mode = GPIO_MODE_OUTPUT;
+
     dev->uart_conf.baudrate  = 115200;
     dev->uart_conf.data_bits = 8;
     dev->uart_conf.parity    = UART_NO_PARITY;
     dev->uart_conf.stop_bits = UART_ONE_STOP_BIT;
     dev->uart_port = UART_PORT_1;
+    dev->en_pin = GPIO_PIN_29;
 
     int err = -1;
 
     if (uart_init(dev->uart_port, dev->uart_conf) == 0)
     {
         err = uart_rx_enable(dev->uart_port);
+
+        if (err == 0)
+        {
+            err = gpio_init(dev->en_pin, conf);
+        }
     }
 
     return err;
 }
 
-int lpl_available(lpl_t *dev)
+ 
+int lpl_enable(const lpl_t *dev)
+{
+    return gpio_set_state(dev->en_pin, true);
+}
+
+int lpl_disable(const lpl_t *dev)
+{
+    return gpio_set_state(dev->en_pin, false);
+}
+
+int lpl_available(const lpl_t *dev)
 {
     return uart_read_available(dev->uart_port);
 }

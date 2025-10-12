@@ -40,12 +40,14 @@
 #include <stdint.h>
 
 #include <drivers/uart/uart.h>
+#include <drivers/gpio/gpio.h>
 
 #define PAYLOAD_MODULE_NAME "LPL"
 
 typedef struct {
     uart_config_t uart_conf;
     uart_port_t uart_port;
+    gpio_pin_t en_pin;
 } lpl_t;
 
 /**
@@ -58,13 +60,31 @@ typedef struct {
 int lpl_init(lpl_t *dev);
 
 /**
+ * \brief Enables LPL device through GPIO pin.
+ *
+ * \param[in] dev is the LPL device.
+ *
+ * \return The status/error code.
+ */
+int lpl_enable(const lpl_t *dev);
+
+/**
+ * \brief Disables LPL device through GPIO pin.
+ *
+ * \param[in] dev is the LPL device.
+ *
+ * \return The status/error code.
+ */
+int lpl_disable(const lpl_t *dev);
+
+/**
  * \brief Checks if there is any data available from LPL device.
  *
  * \param[in] dev is the LPL device.
  *
  * \return The number of bytes available to read or an error code (if negative).
  */
-int lpl_available(lpl_t *dev);
+int lpl_available(const lpl_t *dev);
 
 /**
  * \brief Reads data from LPL device.
