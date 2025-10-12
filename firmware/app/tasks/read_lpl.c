@@ -59,7 +59,7 @@ void vTaskReadLPL(void *p)
 
     if (lpl_init(&dev) == 0)
     {
-        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_LPL_NAME, "LPL device initialized sucessfully!");
+        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_LPL_NAME, "LPL device initialized sucessfully!");
         sys_log_new_line();
     }
     else
