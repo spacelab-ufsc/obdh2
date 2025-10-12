@@ -230,40 +230,65 @@ int mem_mng_write_data_to_flash_page(uint8_t *data, uint32_t *page, uint32_t pag
 
 void mem_mng_save_obdh_data_bak(obdh_telemetry_t *tel)
 {
-    uintptr_t base_addr = CONFIG_MEM_ADR_SYS_PARAM_BAK;
-    uint8_t buf[BAK_DATA_SIZE + 2U];
+    const uintptr_t flash_addr[] = {FLASH_SEG_A_ADR, FLASH_SEG_B_ADR, FLASH_SEG_C_ADR, FLASH_SEG_D_ADR};
+    uint32_t to_write = sizeof(obdh_telemetry_t);
+    uint8_t seg = 0U;
+    uint8_t buf[INFO_SEG_SIZE];
 
-    flash_erase(base_addr);
-
-    (void)memcpy(buf, (void*)tel, BAK_DATA_SIZE);
-
-    buf[BAK_DATA_SIZE] = crc8(buf, BAK_DATA_SIZE);
-    buf[BAK_DATA_SIZE + 1U] = BAK_INIT_VAL;
-
-    for (uint8_t i = 0U; i < BAK_DATA_SIZE + 2U; ++i)
+    while (to_write > 0U)
     {
-        uintptr_t addr = base_addr + i;
-        flash_write_single(buf[i], addr);
+        const uintptr_t base_addr = flash_addr[seg];
+        const uint8_t bytes = (to_write <= INFO_SEG_SIZE) ? to_write : INFO_SEG_SIZE;
+
+        (void)memcpy(buf, tel, bytes - 1U);
+        buf[bytes - 1U] = crc8(buf, bytes - 1U);
+
+        flash_erase(base_addr);
+
+        for (uint8_t i = 0U; i < bytes; ++i)
+        {
+            uintptr_t addr = base_addr + i;
+            flash_write_single(buf[i], addr);
+        }
+
+        to_write -= bytes;
+        ++seg;
     }
 }
 
 int mem_mng_load_obdh_data_bak(obdh_telemetry_t *tel)
 {
-    int err = -1;
+    const uintptr_t flash_addr[] = {FLASH_SEG_A_ADR, FLASH_SEG_B_ADR, FLASH_SEG_C_ADR, FLASH_SEG_D_ADR};
+    uint32_t to_read = sizeof(obdh_telemetry_t);
+    uint8_t seg = 0U;
+    uint8_t buf[INFO_SEG_SIZE];
+    int err = 0;
 
-    const uintptr_t base_addr = CONFIG_MEM_ADR_SYS_PARAM_BAK;
-    uint8_t buf[BAK_DATA_SIZE + 2U];
-
-    for (uint8_t i = 0U; i < BAK_DATA_SIZE + 2U; ++i)
+    while ((to_read > 0U) && (err == 0))
     {
-        uintptr_t addr = base_addr + i;
-        buf[i] = flash_read_single(addr);
-    }
+        const uintptr_t base_addr = flash_addr[seg];
+        const uint8_t bytes = (to_read <= INFO_SEG_SIZE) ? to_read : INFO_SEG_SIZE;
 
-    if ((buf[BAK_DATA_SIZE] == crc8(buf, BAK_DATA_SIZE)) && (buf[BAK_DATA_SIZE + 1U] == BAK_INIT_VAL))
-    {
-        (void)memcpy((void*)tel, buf, BAK_DATA_SIZE);
-        err = 0;
+        for (uint8_t i = 0U; i < bytes; ++i)
+        {
+            uintptr_t addr = base_addr + i;
+            buf[i] = flash_read_single(addr);
+        }
+
+        if (buf[bytes - 1U] == crc8(buf, bytes - 1U)) 
+        {
+            uint8_t *data = (uint8_t *)tel;
+            (void)memcpy(&data[(INFO_SEG_SIZE - 1) * seg], buf, bytes);
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, MEM_MNG_NAME, "CRC for backup was invalid!");
+            sys_log_new_line();
+            err = -1;
+        }
+
+        to_read -= bytes;
+        ++seg;
     }
 
     return err;

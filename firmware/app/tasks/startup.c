@@ -250,19 +250,19 @@ void vTaskStartup(void *p)
                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_STARTUP_NAME, "Failed to load OBDH data correctly!");
                         sys_log_new_line();
 
-                        sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Cleaning NOR memory...");
-                        sys_log_new_line();
+                        if (mem_mng_load_obdh_data_bak(&sat_data_buf.obdh) != 0)
+                        {
+                            sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Cleaning NOR memory...");
+                            sys_log_new_line();
 
-                        (void)media_nor_clean();
+                            (void)media_nor_clean();
 
-                        sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Loading default values to memory...");
-                        sys_log_new_line();
+                            sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Loading default values to memory...");
+                            sys_log_new_line();
 
-                        /* Load default values to the OBDH data buffer */
-                        mem_mng_load_obdh_data_from_default_values(&sat_data_buf.obdh);
-
-                        sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Saving default values to FRAM...");
-                        sys_log_new_line();
+                            /* Load default values to the OBDH data buffer */
+                            mem_mng_load_obdh_data_from_default_values(&sat_data_buf.obdh);
+                        }
 
                         /* Write the OBDH data to the FRAM memory */
                         if (mem_mng_save_obdh_data_to_fram(&sat_data_buf.obdh) == 0)
@@ -277,28 +277,46 @@ void vTaskStartup(void *p)
                     sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "FRAM was not initialized in previous cycles!");
                     sys_log_new_line();
 
-                    sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Trying to clean NOR memory!");
-                    sys_log_new_line();
-
-                    (void)media_nor_clean();
-
-                    /* Initialize FRAM */
-                    if (mem_mng_init_fram() == 0)
+                    if (mem_mng_load_obdh_data_bak(&sat_data_buf.obdh) == 0)
                     {
-                        sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Loading default values to memory...");
-                        sys_log_new_line();
-
-                        /* Load default values to the OBDH data buffer */
-                        mem_mng_load_obdh_data_from_default_values(&sat_data_buf.obdh);
-
-                        sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Saving default values to FRAM...");
-                        sys_log_new_line();
-
-                        /* Write the OBDH data to the FRAM memory */
-                        if (mem_mng_save_obdh_data_to_fram(&sat_data_buf.obdh) == 0)
+                        /* Initialize FRAM */
+                        if (mem_mng_init_fram() == 0)
                         {
-                            err = 0;
-                            break;
+                            sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Loading default values to memory...");
+                            sys_log_new_line();
+                            /* Write the OBDH data to the FRAM memory */
+                            if (mem_mng_save_obdh_data_to_fram(&sat_data_buf.obdh) == 0)
+                            {
+                                err = 0;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Trying to clean NOR memory!");
+                        sys_log_new_line();
+
+                        (void)media_nor_clean();
+
+                        /* Initialize FRAM */
+                        if (mem_mng_init_fram() == 0)
+                        {
+                            sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Loading default values to memory...");
+                            sys_log_new_line();
+
+                            /* Load default values to the OBDH data buffer */
+                            mem_mng_load_obdh_data_from_default_values(&sat_data_buf.obdh);
+
+                            sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_STARTUP_NAME, "Saving default values to FRAM...");
+                            sys_log_new_line();
+
+                            /* Write the OBDH data to the FRAM memory */
+                            if (mem_mng_save_obdh_data_to_fram(&sat_data_buf.obdh) == 0)
+                            {
+                                err = 0;
+                                break;
+                            }
                         }
                     }
                 }
