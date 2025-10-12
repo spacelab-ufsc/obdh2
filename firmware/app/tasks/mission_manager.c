@@ -939,6 +939,8 @@ void vTaskMissionManager(void *p)
     sys_log_print_msg(")...");
     sys_log_new_line();
 
+    (void)conops_register_fsm_user_data(&op_mode_fsm, &sat_data_buf);
+
     err = conops_fsm_init(&op_mode_fsm, mode_transition_table, MISSION_OPERATION_MODES, EV_TC_LEAVE_HIBERNATION, sat_data_buf.obdh.data.mode, satellite_persist_op_mode);
 
     if (err < 0)
@@ -958,7 +960,6 @@ void vTaskMissionManager(void *p)
     }
 
     (void)conops_register_mapper(&op_mode_fsm, event_mapper);
-    (void)conops_register_fsm_user_data(&op_mode_fsm, &sat_data_buf);
 
     while (1)
     {
