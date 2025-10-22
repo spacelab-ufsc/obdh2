@@ -42,12 +42,18 @@
 #include <drivers/uart/uart.h>
 #include <drivers/gpio/gpio.h>
 
-#define PAYLOAD_MODULE_NAME "LPL"
+#define LPL_MODULE_NAME "LPL"
+
+#define LPL_FRAM_MEM_ADDR 8192U
+
+#define LPL_PACKET_SIZE 43U
+#define LPL_PACKET_PREAMBLE 0x7EU
 
 typedef struct {
-    uart_config_t uart_conf;
-    uart_port_t uart_port;
-    gpio_pin_t en_pin;
+	uart_config_t uart_conf;
+	uart_port_t uart_port;
+	gpio_pin_t en_pin;
+	uint8_t packet[LPL_PACKET_SIZE];
 } lpl_t;
 
 /**
@@ -78,6 +84,15 @@ int lpl_enable(const lpl_t *dev);
 int lpl_disable(const lpl_t *dev);
 
 /**
+ * \brief Resets the LPL device.
+ *
+ * \param[in] dev is the LPL device.
+ *
+ * \return The status/error code.
+ */
+int lpl_reset(const lpl_t *dev);
+
+/**
  * \brief Checks if there is any data available from LPL device.
  *
  * \param[in] dev is the LPL device.
@@ -98,6 +113,50 @@ int lpl_available(const lpl_t *dev);
  * \return The status/error code.
  */
 int lpl_read(lpl_t *dev, uint8_t *buf, const uint16_t size);
+
+/**
+ * \brief Tries to read a packet from LPL device, if read was sucessfull it
+ * will store the packet inside the struct.
+ *
+ * \param[in,out] dev is the LPL device.
+ *
+ * \param[in] timeout_ms is the communication timeout.
+ *
+ * \return The status/error code.
+ */
+int lpl_recv(lpl_t *dev, const uint32_t timeout_ms);
+
+/**
+ * \brief Stores the last packet received from LPL device to FRAM memory.
+ *
+ * \param[in] dev is the LPL device.
+ *
+ * \return The status/error code.
+ */
+int lpl_store_to_fram(lpl_t *dev);
+
+/**
+ * \brief Loads the last packet received from LPL device to FRAM memory.
+ *
+ * \param[in,out] dev is the LPL device.
+ *
+ * \return The status/error code.
+ */
+int lpl_load_from_fram(lpl_t *dev);
+
+/**
+ * \brief Registers LPL device handle.
+ *
+ * \param[in,out] dev is the LPL device.
+ */
+void lpl_register_handle(lpl_t *dev);
+
+/**
+ * \brief Gets LPL device handle.
+ *
+ * \return Registered LPL device handler or NULL. 
+ */
+lpl_t* lpl_get_handle(void);
 
 #endif /* PAYLOAD_H_ */
 
