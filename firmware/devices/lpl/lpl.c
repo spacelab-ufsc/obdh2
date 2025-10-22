@@ -33,14 +33,15 @@
  * \{
  */
 
-#include "projdefs.h"
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include <FreeRTOS.h>
 #include <task.h>
 
 #include <system/sys_log/sys_log.h>
+#include <system/system.h>
 
 #include <drivers/uart/uart.h>
 #include <drivers/gpio/gpio.h>
@@ -149,8 +150,11 @@ int lpl_recv(lpl_t *dev, const uint32_t timeout_ms)
 
             if (buf[0U] == LPL_PACKET_PREAMBLE)
             {
-                (void)memcpy(dev->packet, buf, LPL_PACKET_PREAMBLE);
+                (void)memcpy(dev->packet, buf, LPL_PACKET_SIZE);
                 err = 0;
+                
+                uint32_t now = system_get_time();
+                (void)memcpy(&dev->packet[LPL_PACKET_SIZE], (void*)&now, sizeof(now));
             }
             else
             {

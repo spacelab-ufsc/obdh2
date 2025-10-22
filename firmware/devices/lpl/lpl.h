@@ -46,14 +46,14 @@
 
 #define LPL_FRAM_MEM_ADDR 8192U
 
-#define LPL_PACKET_SIZE 43U
+#define LPL_PACKET_SIZE 41U
 #define LPL_PACKET_PREAMBLE 0x7EU
 
 typedef struct {
 	uart_config_t uart_conf;
 	uart_port_t uart_port;
 	gpio_pin_t en_pin;
-	uint8_t packet[LPL_PACKET_SIZE];
+	uint8_t packet[LPL_PACKET_SIZE+4U];
 } lpl_t;
 
 /**
