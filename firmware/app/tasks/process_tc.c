@@ -973,7 +973,7 @@ static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len, bool is_sche
                         uint32_t i = 0;
                         for(i = start_page; i <= end_page; i++)
                         {
-                            if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(LPL_PACKET_SIZE) + 4U) == 0)
+                            if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, (LPL_PACKET_SIZE + 8U)) == 0)
                             {
                                 /* Requester callsign */
                                 (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
@@ -982,8 +982,8 @@ static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len, bool is_sche
                                 data_req_ans_pkt.payload[7] = DATA_ID_LPL_INFO;
 
                                 /* Format payload */
-                                (void)memcpy(&data_req_ans_pkt.payload[8], page_buf, sizeof(LPL_PACKET_SIZE) + 4U);
-                                data_req_ans_pkt.length = 8U + sizeof(LPL_PACKET_SIZE) + 4U;
+                                (void)memcpy(&data_req_ans_pkt.payload[8], page_buf, LPL_PACKET_SIZE + 8U);
+                                data_req_ans_pkt.length = 8U + LPL_PACKET_SIZE + 8U;
 
                                 vTaskDelay(pdMS_TO_TICKS(10U));
 
