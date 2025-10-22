@@ -43,7 +43,7 @@
 #define TASK_READ_LPL_NAME                      "Read LPL"          /**< Task name. */
 #define TASK_READ_LPL_STACK_SIZE                500                 /**< Stack size in bytes. */
 #define TASK_READ_LPL_PRIORITY                  3                   /**< Task priority. */
-#define TASK_READ_LPL_PERIOD_MS                 (10000)             /**< Task period in milliseconds. */
+#define TASK_READ_LPL_PERIOD_MS                 (50000)             /**< Task period in milliseconds. */
 #define TASK_READ_LPL_INITIAL_DELAY_MS          5500                /**< Delay, in milliseconds, before the first execution. */
 #define TASK_READ_LPL_INIT_TIMEOUT_MS           5000                /**< Wait time to initialize the task in milliseconds. */
 

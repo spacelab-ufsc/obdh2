@@ -48,7 +48,6 @@ void vTaskReadLPL(void *p)
     (void)p;
 
     lpl_t dev = {0};
-    uint8_t raw[256];
     int retval = 0;
 
     /* Wait startup task to finish */
@@ -61,10 +60,18 @@ void vTaskReadLPL(void *p)
     {
         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_LPL_NAME, "LPL device initialized sucessfully!");
         sys_log_new_line();
+
+        lpl_register_handle(&dev);
     }
     else
     {
         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_LPL_NAME, "Failed to initialize LPL uart interface!");
+        sys_log_new_line();
+    }
+
+    if (lpl_load_from_fram(&dev) != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_LPL_NAME, "Failed to read last packet from FRAM!");
         sys_log_new_line();
     }
 
@@ -76,13 +83,19 @@ void vTaskReadLPL(void *p)
 
         if (retval > 0)
         {
-            if (lpl_read(&dev, raw, (uint16_t)retval) != 0)
+            if (lpl_recv(&dev, 500U) == 0)
+            {
+                if (lpl_store_to_fram(&dev) != 0)
+                {
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_LPL_NAME, "Failed to store LPL packet to FRAM!");
+                    sys_log_new_line();
+                }
+            }
+            else
             {
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_LPL_NAME, "Failed to read data from LPL!");
                 sys_log_new_line();
             }
-
-            /* Assembly Packet and store on FRAM */
         }
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_LPL_PERIOD_MS));
