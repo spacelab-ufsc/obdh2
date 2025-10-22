@@ -238,10 +238,12 @@ void mem_mng_save_obdh_data_bak(obdh_telemetry_t *tel)
     while (to_write > 0U)
     {
         const uintptr_t base_addr = flash_addr[seg];
-        const uint8_t bytes = (to_write <= INFO_SEG_SIZE) ? to_write : INFO_SEG_SIZE;
+        const uint8_t bytes = (to_write <= (INFO_SEG_SIZE - 1U)) ? to_write : (INFO_SEG_SIZE - 1U);
 
-        (void)memcpy(buf, tel, bytes - 1U);
-        buf[bytes - 1U] = crc8(buf, bytes - 1U);
+        uint8_t *data = (uint8_t *)tel;
+
+        (void)memcpy(buf, &data[(INFO_SEG_SIZE - 1U) * seg], bytes);
+        buf[bytes] = crc8(buf, bytes);
 
         flash_erase(base_addr);
 
@@ -267,15 +269,15 @@ int mem_mng_load_obdh_data_bak(obdh_telemetry_t *tel)
     while ((to_read > 0U) && (err == 0))
     {
         const uintptr_t base_addr = flash_addr[seg];
-        const uint8_t bytes = (to_read <= INFO_SEG_SIZE) ? to_read : INFO_SEG_SIZE;
+        const uint8_t bytes = (to_read <= (INFO_SEG_SIZE - 1U)) ? to_read : (INFO_SEG_SIZE - 1U);
 
-        for (uint8_t i = 0U; i < bytes; ++i)
+        for (uint8_t i = 0U; i < bytes + 1U; ++i)
         {
             uintptr_t addr = base_addr + i;
             buf[i] = flash_read_single(addr);
         }
 
-        if (buf[bytes - 1U] == crc8(buf, bytes - 1U)) 
+        if (buf[bytes] == crc8(buf, bytes)) 
         {
             uint8_t *data = (uint8_t *)tel;
             (void)memcpy(&data[(INFO_SEG_SIZE - 1) * seg], buf, bytes);
