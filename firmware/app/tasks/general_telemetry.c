@@ -43,6 +43,7 @@
 #include <structs/satellite.h>
 
 #include <devices/ttc/ttc.h>
+#include <devices/lpl/lpl.h>
 
 #include "general_telemetry.h"
 #include "startup.h"
@@ -64,6 +65,7 @@ void vTaskGeneralTelemetry(void *p)
     while(1)
     {
         fsat_pkt_pl_t gen_tel_pl = {0};
+        lpl_t *lpl = lpl_get_handle();
 
         if (sat_data_buf.obdh.data.general_telemetry_on) // cppcheck-suppress misra-c2012-14.4
         {
@@ -182,10 +184,11 @@ void vTaskGeneralTelemetry(void *p)
             gen_tel_pl.payload[100] = sat_data_buf.obdh.data.ts_next_sched_tc & 0xFFU;
             gen_tel_pl.payload[101] = sat_data_buf.obdh.data.tc_queue_size;
             gen_tel_pl.payload[102] = sat_data_buf.obdh.data.mode;
+            (void)memcpy(&gen_tel_pl.payload[103], lpl->packet, sizeof(lpl->packet));
 
-            gen_tel_pl.length = 103U;
+            gen_tel_pl.length = 146U;
 
-            uint8_t gen_tel_pl_raw[120] = {0};
+            uint8_t gen_tel_pl_raw[163] = {0};
             uint16_t gen_tel_pl_raw_len = 0;
 
             fsat_pkt_encode(&gen_tel_pl, gen_tel_pl_raw, &gen_tel_pl_raw_len);

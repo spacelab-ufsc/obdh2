@@ -54,6 +54,7 @@ void vTaskReadPX(void *p)
 {
     (void)p;
 
+#if defined(CONFIG_TASK_PAYLOAD_X_ENABLED) && (CONFIG_TASK_PAYLOAD_X_ENABLED == 1)
     payload_telemetry_t *const px = &sat_data_buf.payload_x;
 
     pl_px_buf_t px_buf = {0};
@@ -126,8 +127,7 @@ void vTaskReadPX(void *p)
             }
         }
     }
+#endif
 }
 
 /** \} End of read_px group */
-
-

@@ -99,6 +99,7 @@ typedef enum {
     PL_ID_EDC_2                        = 2,
     PL_ID_PAYLOAD_X                    = 3,
     PL_ID_RADIATION_MONITOR            = 4,
+    PL_ID_LPL                          = 5,
 } payload_id_e;
 
 /**
@@ -121,6 +122,7 @@ typedef enum {
     DATA_ID_ANT                        = 4,
     DATA_ID_SBCD_PKTS                  = 5,
     DATA_ID_PAYLOAD_INFO               = 6,
+    DATA_ID_LPL_INFO                   = 7,
 } data_id_e;
 
 /**
@@ -234,7 +236,6 @@ typedef struct
     antenna_telemetry_t antenna;    /**< Antenna telemetry. */
     edc_telemetry_t edc_0;          /**< EDC 0 telemetry. */
     edc_telemetry_t edc_1;          /**< EDC 1 telemetry. */
-    payload_telemetry_t payload_x;  /**< Payload-X telemetry. */
     payload_state_t state;          /**< Payload state. */
 } sat_data_t;
 

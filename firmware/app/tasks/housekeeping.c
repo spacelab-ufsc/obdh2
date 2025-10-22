@@ -1,35 +1,35 @@
 /*
  * housekeeping.c
- * 
+ *
  * Copyright The OBDH 2.0 Contributors.
- * 
+ *
  * This file is part of OBDH 2.0.
- * 
+ *
  * OBDH 2.0 is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * OBDH 2.0 is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with OBDH 2.0. If not, see <http:/\/www.gnu.org/licenses/>.
- * 
+ *
  */
 
 /**
  * \brief Housekeeping task implementation.
- * 
+ *
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
- * 
+ *
  * \version 1.0.0
- * 
+ *
  * \date 2021/04/27
- * 
+ *
  * \addtogroup housekeeping
  * \{
  */
@@ -69,7 +69,7 @@ void vTaskHousekeeping(void *p)
         {
             uint32_t hib = sat_data_buf.obdh.data.hib_duration;
 
-            if (hib > 0U) 
+            if (hib > 0U)
             {
                 if (hib <= 60U) {
                     taskENTER_CRITICAL();
@@ -130,7 +130,7 @@ void vTaskHousekeeping(void *p)
             sys_log_print_event_from_module(SYS_LOG_INFO, TASK_HOUSEKEEPING_NAME, "Saved OBDH data to FRAM!");
             sys_log_new_line();
         }
-        else 
+        else
         {
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HOUSEKEEPING_NAME, "Error writing data to FRAM!");
             sys_log_new_line();
@@ -147,7 +147,7 @@ void vTaskHousekeeping(void *p)
                 int err = 0;
                 uint8_t retry_count = 5U;
 
-                do 
+                do
                 {
                     err = eps_set_param(SL_EPS2_REG_BEACON_ENABLE, (uint32_t)sat_data_buf.obdh.data.eps_beacon_on);
                     vTaskDelay(100U);
@@ -161,7 +161,7 @@ void vTaskHousekeeping(void *p)
                 }
             }
         }
-         
+
         vTaskDelay(pdMS_TO_TICKS(50U));
 
         /* Save the last available TC Queue at every minute */
@@ -170,11 +170,16 @@ void vTaskHousekeeping(void *p)
             sys_log_print_event_from_module(SYS_LOG_INFO, TASK_HOUSEKEEPING_NAME, "Saved TC Queue to FRAM!");
             sys_log_new_line();
         }
-        else 
+        else
         {
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HOUSEKEEPING_NAME, "Error saving TC Queue to FRAM!");
             sys_log_new_line();
         }
+
+        vTaskDelay(pdMS_TO_TICKS(50U));
+
+        /* Save the last available OBDH data at every minute */
+        mem_mng_save_obdh_data_bak(&sat_data_buf.obdh);
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_HOUSEKEEPING_PERIOD_MS));
     }

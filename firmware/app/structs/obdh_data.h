@@ -93,6 +93,7 @@
 #define OBDH_PARAM_ID_RESET_TC_QUEUE            44U /**< Resets the TC Queue (Only write param, writing "0x01" to it resets the queue) */
 #define OBDH_PARAM_ID_TC_QUEUE_SIZE             45U /**< Current TC Queue size */
 #define OBDH_PARAM_ID_TS_NEXT_SCHED_TC          46U /**< Next scheduled telecommand execution timestamp. */
+#define OBDH_PARAM_ID_LAST_PAGE_LPL_DATA        OBDH_PARAM_ID_LAST_PAGE_PX_DATA /* Last used memory page of the LPL data. (Reuses sectors from Payload-X) */
 
 /* Default values */
 #define OBDH_TIMESTAMP_DEFAULT_VAL                      0U
@@ -139,6 +140,7 @@
 #define OBDH_PARAM_BATT_CRITICAL_LEVEL_MV_DEFAULT_VAL   6500U
 #define OBDH_PARAM_TC_QUEUE_SIZE_DEFAULT_VAL            0U             
 #define OBDH_PARAM_TS_NEXT_SCHED_TC_DEFAULT_VAL         0U
+#define OBDH_PARAM_MEDIA_LAST_LPL_DATA_DEFAULT_VAL      CONFIG_MEM_LPL_DATA_START_PAGE
 
 /**
  * \brief Position data.
@@ -164,7 +166,7 @@ typedef struct
     uint32_t last_page_ttc_1_data;  /**< Last used memory page of the TTC 1 data. */
     uint32_t last_page_ant_data;    /**< Last used memory page of the Antenna data. */
     uint32_t last_page_edc_data;    /**< Last used memory page of the EDC data. */
-    uint32_t last_page_px_data;     /**< Last used memory page of the Payload-X data. */
+    uint32_t last_page_lpl_data;    /**< Last used memory page of the LPL data. */
     uint32_t last_page_sbcd_pkts;   /**< Last used memory page of the SBCD packets. */
 } media_data_t;
 

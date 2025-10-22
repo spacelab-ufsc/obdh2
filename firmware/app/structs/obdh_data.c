@@ -169,7 +169,7 @@ int8_t obdh_set_param(uint8_t param_id, uint32_t *buf)
         }
         case OBDH_PARAM_ID_MAIN_PAYLOAD_STATE:
         {
-            if ((*buf == PL_ID_EDC_1) || (*buf == PL_ID_EDC_2))
+            if ((*buf == PL_ID_EDC_1) || (*buf == PL_ID_EDC_2) || (*buf == PL_ID_LPL))
             {
                 const struct conops_event payload_activate = {
                     .ev_id = EV_TC_ENABLE_PAYLOAD,
@@ -342,7 +342,7 @@ int8_t obdh_get_param(uint8_t param_id, uint32_t *buf)
         case OBDH_PARAM_ID_LAST_PAGE_TTC_1_DATA:     *buf = sat_data_buf.obdh.data.media.last_page_ttc_1_data;                break;
         case OBDH_PARAM_ID_LAST_PAGE_ANT_DATA:       *buf = sat_data_buf.obdh.data.media.last_page_ant_data;                  break;
         case OBDH_PARAM_ID_LAST_PAGE_EDC_DATA:       *buf = sat_data_buf.obdh.data.media.last_page_edc_data;                  break;
-        case OBDH_PARAM_ID_LAST_PAGE_PX_DATA:        *buf = sat_data_buf.obdh.data.media.last_page_px_data;                   break;
+        case OBDH_PARAM_ID_LAST_PAGE_LPL_DATA:       *buf = sat_data_buf.obdh.data.media.last_page_lpl_data;                   break;
         case OBDH_PARAM_ID_LAST_PAGE_SBCD_PKTS:      *buf = sat_data_buf.obdh.data.media.last_page_sbcd_pkts;                 break;
         case OBDH_PARAM_ID_MAIN_EDC:                 *buf = sat_data_buf.obdh.data.main_edc;                                  break;
         case OBDH_PARAM_ID_GENERAL_TELEMETRY_ON:     *buf = sat_data_buf.obdh.data.general_telemetry_on;                      break;

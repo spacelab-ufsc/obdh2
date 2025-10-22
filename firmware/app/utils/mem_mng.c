@@ -151,7 +151,7 @@ void mem_mng_load_obdh_data_from_default_values(obdh_telemetry_t *tel)
     tel->data.media.last_page_ttc_1_data    = OBDH_PARAM_MEDIA_LAST_TTC_1_DATA_DEFAULT_VAL;
     tel->data.media.last_page_ant_data      = OBDH_PARAM_MEDIA_LAST_ANT_DATA_DEFAULT_VAL;
     tel->data.media.last_page_edc_data      = OBDH_PARAM_MEDIA_LAST_EDC_DATA_DEFAULT_VAL;
-    tel->data.media.last_page_px_data       = OBDH_PARAM_MEDIA_LAST_PX_DATA_DEFAULT_VAL;
+    tel->data.media.last_page_lpl_data      = OBDH_PARAM_MEDIA_LAST_LPL_DATA_DEFAULT_VAL;
     tel->data.media.last_page_sbcd_pkts     = OBDH_PARAM_MEDIA_LAST_SBCD_PKTS_DEFAULT_VAL;
 }
 
@@ -304,7 +304,7 @@ void mem_mng_reset_page_count(media_data_t *media)
     media->last_page_ttc_0_data   = CONFIG_MEM_TTC_0_DATA_START_PAGE;
     media->last_page_ant_data     = CONFIG_MEM_ANT_DATA_START_PAGE;
     media->last_page_edc_data     = CONFIG_MEM_EDC_DATA_START_PAGE;
-    media->last_page_px_data      = CONFIG_MEM_PX_DATA_START_PAGE;
+    media->last_page_lpl_data     = CONFIG_MEM_LPL_DATA_START_PAGE;
     media->last_page_sbcd_pkts    = CONFIG_MEM_SBCD_PKTS_START_PAGE;
     portEXIT_CRITICAL();
 }

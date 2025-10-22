@@ -39,6 +39,7 @@
 
 #include <system/sys_log/sys_log.h>
 #include <devices/media/media.h>
+#include <devices/lpl/lpl.h>
 #include <structs/satellite.h>
 #include <utils/mem_mng.h>
 
@@ -132,6 +133,22 @@ void vTaskDataLog(void *p)
         else
         {
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_DATA_LOG_NAME, "Error writing the TTC 1 data to the flash emory!");
+            sys_log_new_line();
+        }
+
+        /* LPL data */
+        lpl_t *lpl = lpl_get_handle();
+        (void)memcpy(&page_buf[0], &sat_data_buf.obdh.timestamp, sizeof(uint32_t));
+        (void)memcpy(&page_buf[sizeof(uint32_t)], lpl->packet, sizeof(lpl->packet));
+        if (mem_mng_write_data_to_flash_page(page_buf, &sat_data_buf.obdh.data.media.last_page_lpl_data, nor_info.page_size, CONFIG_MEM_LPL_DATA_START_PAGE, CONFIG_MEM_LPL_DATA_END_PAGE) == 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_DATA_LOG_NAME, "Writing to LPL sector, flash page number: ");
+            sys_log_print_hex(sat_data_buf.obdh.data.media.last_page_ttc_1_data);
+            sys_log_new_line();
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_DATA_LOG_NAME, "Error writing the LPL data to the flash memory!");
             sys_log_new_line();
         }
 

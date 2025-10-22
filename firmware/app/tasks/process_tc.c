@@ -47,6 +47,7 @@
 #include <devices/eps/eps.h>
 #include <devices/media/media.h>
 #include <devices/payload/payload.h>
+#include <devices/lpl/lpl.h>
 #include <drivers/edc/edc.h>
 #include <utils/mem_mng.h>
 #include <hmac/sha.h> // cppcheck-suppress misra-c2012-19.2
@@ -948,6 +949,51 @@ static void process_tc_data_request(uint8_t *pkt, uint16_t pkt_len, bool is_sche
                                     if (ttc_send(TTC_0, data_req_ans_raw, data_req_ans_raw_len) != 0)
                                     {
                                         sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the EDC data log of memory page ");
+                                        sys_log_print_uint(i);
+                                        sys_log_print_msg("!");
+                                        sys_log_new_line();
+                                    }
+                                }
+                            }
+                            vTaskDelay(pdMS_TO_TICKS(25U));
+                        }
+                    }
+
+                    break;
+                }
+                case DATA_ID_LPL_INFO:
+                {
+                    uint32_t start_page = sat_data_buf.obdh.data.media.last_page_lpl_data - (uint32_t)end_idx;
+                    uint32_t end_page   = sat_data_buf.obdh.data.media.last_page_lpl_data - (uint32_t)start_idx;
+
+                    uint8_t page_buf[256] = {0};
+
+                    if ((start_page >= CONFIG_MEM_LPL_DATA_START_PAGE) && (end_page <= CONFIG_MEM_LPL_DATA_END_PAGE))
+                    {
+                        uint32_t i = 0;
+                        for(i = start_page; i <= end_page; i++)
+                        {
+                            if (media_read(MEDIA_NOR, i * nor_info.page_size, page_buf, sizeof(LPL_PACKET_SIZE) + 4U) == 0)
+                            {
+                                /* Requester callsign */
+                                (void)memcpy(&data_req_ans_pkt.payload[0], &pkt[1], 7);
+
+                                /* Data ID */
+                                data_req_ans_pkt.payload[7] = DATA_ID_LPL_INFO;
+
+                                /* Format payload */
+                                (void)memcpy(&data_req_ans_pkt.payload[8], page_buf, sizeof(LPL_PACKET_SIZE) + 4U);
+                                data_req_ans_pkt.length = 8U + sizeof(LPL_PACKET_SIZE) + 4U;
+
+                                vTaskDelay(pdMS_TO_TICKS(10U));
+
+                                fsat_pkt_encode(&data_req_ans_pkt, data_req_ans_raw, &data_req_ans_raw_len);
+
+                                if (!sat_data_buf.obdh.data.hibernation_on)
+                                {
+                                    if (ttc_send(TTC_0, data_req_ans_raw, data_req_ans_raw_len) != 0)
+                                    {
+                                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error transmitting the LPL data log of memory page ");
                                         sys_log_print_uint(i);
                                         sys_log_print_msg("!");
                                         sys_log_new_line();

@@ -141,6 +141,10 @@ static inline int32_t handle_commission_evs(const struct conops_fsm *ctx, const 
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_MISSION_MANAGER_NAME, "Failed to enable Payload!");
                 sys_log_new_line();
             }
+            else
+            {
+                sat->obdh.data.main_payload_state = (uint8_t)ev->src;
+            }
 
             break;
         }
@@ -157,6 +161,10 @@ static inline int32_t handle_commission_evs(const struct conops_fsm *ctx, const 
             {
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_MISSION_MANAGER_NAME, "Failed to disable Payload!");
                 sys_log_new_line();
+            }
+            else
+            {
+                sat->obdh.data.main_payload_state = 0U;
             }
 
             break;
@@ -356,7 +364,7 @@ static inline int32_t handle_fdir_evs(const struct conops_fsm *ctx, const struct
 
 static inline int32_t handle_manual_evs(const struct conops_fsm *ctx, const struct conops_event *ev)
 {
-    (void)ctx;
+    sat_data_t *sat = ctx->user_data;
     int transition_to = OBDH_MODE_MANUAL;
 
     switch (ev->ev_id)
@@ -390,6 +398,10 @@ static inline int32_t handle_manual_evs(const struct conops_fsm *ctx, const stru
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_MISSION_MANAGER_NAME, "Failed to enable Payload!");
                 sys_log_new_line();
             }
+            else
+            {
+                sat->obdh.data.main_payload_state = (uint8_t)ev->src;
+            }
 
             break;
         }
@@ -406,6 +418,10 @@ static inline int32_t handle_manual_evs(const struct conops_fsm *ctx, const stru
             {
                 sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_MISSION_MANAGER_NAME, "Failed to disable Payload!");
                 sys_log_new_line();
+            }
+            else
+            {
+                sat->obdh.data.main_payload_state = 0U;
             }
 
             break;

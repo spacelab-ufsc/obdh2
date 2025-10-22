@@ -39,6 +39,8 @@
 #include <system/system.h>
 #include <system/sys_log/sys_log.h>
 
+#include <devices/lpl/lpl.h>
+
 #include <drivers/gpio/gpio.h>
 #include <drivers/edc/edc.h>
 #include <drivers/phj/phj.h>
@@ -230,6 +232,22 @@ int payload_enable(payload_t pl)
             }
 
             break;
+        case PAYLOAD_LPL:
+        {
+            lpl_t *dev = lpl_get_handle();
+
+            if (lpl_enable(dev) == 0)
+            {
+                err = 0;
+            }
+            else
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload LPL: Error enabling!");
+                sys_log_new_line();
+            }
+
+            break;
+        }
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC: Invalid payload to enable!");
             sys_log_new_line();
@@ -282,6 +300,22 @@ int payload_disable(payload_t pl)
             }
 
             break;
+        case PAYLOAD_LPL:
+        {
+            lpl_t *dev = lpl_get_handle();
+
+            if (lpl_disable(dev) == 0)
+            {
+                err = 0;
+            }
+            else
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload LPL: Error disabling!");
+                sys_log_new_line();
+            }
+
+            break;
+        }
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Invalid payload to disable!");
             sys_log_new_line();

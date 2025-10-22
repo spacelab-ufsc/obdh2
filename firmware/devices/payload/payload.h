@@ -53,6 +53,7 @@ typedef enum
     PAYLOAD_EDC_0 = PL_ID_EDC_1,    /**< Payload EDC 0. */
     PAYLOAD_EDC_1 = PL_ID_EDC_2,    /**< Payload EDC 1. */
     PAYLOAD_X = PL_ID_PAYLOAD_X,    /**< Payload-X. */
+    PAYLOAD_LPL = PL_ID_LPL,        /**< Payload LPL. */
 } payload_t;
 
 /**

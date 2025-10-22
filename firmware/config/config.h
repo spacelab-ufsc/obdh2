@@ -54,7 +54,7 @@
 #define CONFIG_TASK_READ_ANTENNA_ENABLED                0
 #define CONFIG_TASK_DATA_LOG_ENABLED                    1
 #define CONFIG_TASK_PROCESS_TC_ENABLED                  1
-#define CONFIG_TASK_ANTENNA_DEPLOYMENT_ENABLED          1
+#define CONFIG_TASK_ANTENNA_DEPLOYMENT_ENABLED          0
 #define CONFIG_TASK_POSITION_DETERMINATION_ENABLED      0
 #define CONFIG_TASK_PAYLOAD_X_ENABLED                   0
 #define CONFIG_TASK_HOUSEKEEPING_ENABLED                1
@@ -124,6 +124,8 @@
 #define CONFIG_MEM_SBCD_PKTS_END_PAGE                   499999U
 #define CONFIG_MEM_ADR_SYS_TIME_BAK                     0x1980U
 #define CONFIG_MEM_ADR_SYS_PARAM_BAK                    0x1900U
+#define CONFIG_MEM_LPL_DATA_START_PAGE                  CONFIG_MEM_PX_DATA_START_PAGE /* Reuses sectors from Payload-X */
+#define CONFIG_MEM_LPL_DATA_END_PAGE                    CONFIG_MEM_PX_DATA_END_PAGE /* Reuses sectors from Payload-X */
 
 /* Health Check Config Parameters */
 #if defined(CONFIG_HEALTH_CHECK_ENABLED) && (CONFIG_HEALTH_CHECK_ENABLED == 1)
