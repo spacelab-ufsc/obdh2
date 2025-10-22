@@ -329,16 +329,9 @@ static int32_t mem_full_clean(void)
         err--;
     }
 
-    if (media_erase(MEDIA_INT_FLASH, MEDIA_ERASE_SECTOR, FLASH_SEG_A_ADR) != 0)
+    if (mem_mng_erase_flash_backup() < 0)
     {
-        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MEM_NAME, "Failed to erase Int Flash Segment A");
-        sys_log_new_line();
-        err--;
-    }
-
-    if (media_erase(MEDIA_INT_FLASH, MEDIA_ERASE_SECTOR, FLASH_SEG_B_ADR) != 0)
-    {
-        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MEM_NAME, "Failed to erase Int Flash Segment B");
+        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_HEALTH_CHECK_MEM_NAME, "Failed to erase Int Flash");
         sys_log_new_line();
         err--;
     }

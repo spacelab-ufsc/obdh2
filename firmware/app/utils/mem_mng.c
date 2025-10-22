@@ -380,6 +380,20 @@ int mem_mng_save_tc_queue_to_fram(struct conops_cmd_queue *queue)
     return err;
 }
 
+int mem_mng_erase_flash_backup(void)
+{
+    const uintptr_t flash_addr[] = {FLASH_SEG_A_ADR, FLASH_SEG_B_ADR, FLASH_SEG_C_ADR, FLASH_SEG_D_ADR};
+
+    for (uint8_t i = 0U; i < 4U; ++i)
+    {
+        const uintptr_t base_addr = flash_addr[i];
+
+        flash_erase(base_addr);
+    }
+
+    return 0;
+}
+
 static uint8_t crc8(uint8_t *data, uint8_t len)
 {
     uint8_t crc = CRC8_INITIAL_VAL;

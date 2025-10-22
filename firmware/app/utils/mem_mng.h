@@ -167,6 +167,13 @@ int mem_mng_load_tc_queue_from_fram(struct conops_cmd_queue *queue);
  */
 int mem_mng_save_tc_queue_to_fram(struct conops_cmd_queue *queue);
 
+/**
+ * \brief Erases OBDH parameters backup stored on FLASH memory.
+ *
+ * \return The status/error code.
+ */
+int mem_mng_erase_flash_backup(void);
+
 #endif /* MEM_MNG_H_ */
 
 /** \} End of mem_mng group */

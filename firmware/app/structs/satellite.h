@@ -146,6 +146,7 @@ typedef enum {
 typedef enum {
     MEMORY_ID_NOR                       = 0,
     MEMORY_ID_FRAM                      = 1,
+    MEMORY_ID_FLASH                     = 2,
 } memory_id_e;
 
 /**

@@ -1713,6 +1713,20 @@ static void process_tc_erase_memory(uint8_t *pkt, uint16_t pkt_len, bool is_sche
 
                     break;
                 }
+                case MEMORY_ID_FLASH:
+                {
+                    sys_log_print_event_from_module(SYS_LOG_INFO, TASK_PROCESS_TC_NAME, "Erasing FLASH memory...");
+                    sys_log_new_line();
+
+                    if (mem_mng_erase_flash_backup() < 0)
+                    {
+                        sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Error erasing FRAM memory!");
+                        sys_log_new_line();
+                        err = -1;
+                    }
+
+                    break;
+                }
                 default:
                     sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_PROCESS_TC_NAME, "Invalid memory ID received!!");
                     sys_log_new_line();
