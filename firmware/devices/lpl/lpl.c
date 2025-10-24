@@ -63,7 +63,7 @@ int lpl_init(lpl_t *dev)
     dev->uart_conf.parity    = UART_NO_PARITY;
     dev->uart_conf.stop_bits = UART_ONE_STOP_BIT;
     dev->uart_port = UART_PORT_1;
-    dev->en_pin = GPIO_PIN_29;
+    dev->en_pin = GPIO_PIN_30;
 
     (void)memset(dev->packet, LPL_PACKET_PREAMBLE, sizeof(dev->packet));
 
@@ -110,12 +110,17 @@ int lpl_read(lpl_t *dev, uint8_t *buf, const uint16_t size)
 
 int lpl_reset(const lpl_t *dev)
 {
-    int err = lpl_disable(dev);
+    int err = lpl_enable(dev);
 
     if (err == 0)
     {
-        vTaskDelay(pdMS_TO_TICKS(100U));
-        err = lpl_enable(dev);
+        err = lpl_disable(dev);
+
+        if (err == 0)
+        {
+            vTaskDelay(pdMS_TO_TICKS(500U));
+            err = lpl_enable(dev);
+        }
     }
 
     return err;
@@ -130,9 +135,8 @@ int lpl_recv(lpl_t *dev, const uint32_t timeout_ms)
 
     if (bytes == 0)
     {
-        sys_log_print_event_from_module(SYS_LOG_INFO, LPL_MODULE_NAME, "No data is available from LPL device");
+        sys_log_print_event_from_module(SYS_LOG_WARNING, LPL_MODULE_NAME, "No data is available from LPL device");
         sys_log_new_line();
-        err = 0;
     }
     else if (bytes > 0)
     {
@@ -151,7 +155,7 @@ int lpl_recv(lpl_t *dev, const uint32_t timeout_ms)
             if (buf[0U] == LPL_PACKET_PREAMBLE)
             {
                 (void)memcpy(dev->packet, buf, LPL_PACKET_SIZE);
-                err = 0;
+                err = LPL_PACKET_SIZE;
                 
                 uint32_t now = system_get_time();
                 (void)memcpy(&dev->packet[LPL_PACKET_SIZE], (void*)&now, sizeof(now));
