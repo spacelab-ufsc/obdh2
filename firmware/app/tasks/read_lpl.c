@@ -43,12 +43,34 @@
 
 xTaskHandle xTaskReadLPLHandle;
 
+static void lpl_duty_cycle_control(lpl_t *dev, uint16_t *period)
+{
+    uint16_t c = *period;
+
+    if (c < 5U)
+    {
+        (void)lpl_enable(dev);
+        (*period)++; 
+    }
+    else if ((c >= 5U) && (c < 10U))
+    {
+        (void)lpl_disable(dev);
+        (*period)++; 
+    }
+    else
+    {
+        (void)lpl_enable(dev);
+        *period = 0U;
+    }
+}
+
 void vTaskReadLPL(void *p)
 {
     (void)p;
 
     lpl_t dev = {0};
     int retval = 0;
+    uint16_t period = 0U;
 
     /* Wait startup task to finish */
     (void)xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_LPL_INIT_TIMEOUT_MS));
@@ -90,6 +112,10 @@ void vTaskReadLPL(void *p)
                     sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_LPL_NAME, "Failed to store LPL packet to FRAM!");
                     sys_log_new_line();
                 }
+
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_LPL_NAME, "Received packet: ");
+                sys_log_dump_hex(dev.packet, sizeof(dev.packet));
+                sys_log_new_line();
             }
             else
             {
@@ -97,6 +123,8 @@ void vTaskReadLPL(void *p)
                 sys_log_new_line();
             }
         }
+
+        lpl_duty_cycle_control(&dev, &period);
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_LPL_PERIOD_MS));
     }
