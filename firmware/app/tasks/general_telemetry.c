@@ -186,9 +186,9 @@ void vTaskGeneralTelemetry(void *p)
             gen_tel_pl.payload[102] = sat_data_buf.obdh.data.mode;
             (void)memcpy(&gen_tel_pl.payload[103], lpl->packet, sizeof(lpl->packet));
 
-            gen_tel_pl.length = 146U;
+            gen_tel_pl.length = 148U;
 
-            uint8_t gen_tel_pl_raw[163] = {0};
+            uint8_t gen_tel_pl_raw[165] = {0};
             uint16_t gen_tel_pl_raw_len = 0;
 
             fsat_pkt_encode(&gen_tel_pl, gen_tel_pl_raw, &gen_tel_pl_raw_len);
