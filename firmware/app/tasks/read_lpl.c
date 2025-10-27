@@ -103,9 +103,14 @@ void vTaskReadLPL(void *p)
     {
         retval = lpl_available(&dev);
 
+        sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_LPL_NAME, "LPL have ");
+        sys_log_print_int((int32_t)retval);
+        sys_log_print_msg(" bytes available to read!");
+        sys_log_new_line();
+
         if (retval > 0)
         {
-            if (lpl_recv(&dev, 500U) == 0)
+            if (lpl_recv(&dev, 500U) > 0)
             {
                 if (lpl_store_to_fram(&dev) != 0)
                 {
