@@ -90,11 +90,15 @@ int lpl_init(lpl_t *dev)
  
 int lpl_enable(const lpl_t *dev)
 {
+    sys_log_print_event_from_module(SYS_LOG_INFO, LPL_MODULE_NAME, "Enabling LPL...");
+    sys_log_new_line();
     return gpio_set_state(dev->en_pin, true);
 }
 
 int lpl_disable(const lpl_t *dev)
 {
+    sys_log_print_event_from_module(SYS_LOG_INFO, LPL_MODULE_NAME, "Disabling LPL...");
+    sys_log_new_line();
     return gpio_set_state(dev->en_pin, false);
 }
 
