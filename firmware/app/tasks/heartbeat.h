@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.47
+ * \version 1.0.0
  * 
  * \date 2020/01/20
  * 
@@ -56,7 +56,7 @@ extern xTaskHandle xTaskHeartbeatHandle;
  *
  * \return None.
  */
-void vTaskHeartbeat(void);
+void vTaskHeartbeat(void* p);
 
 #endif /* HEARTBEAT_H_ */
 

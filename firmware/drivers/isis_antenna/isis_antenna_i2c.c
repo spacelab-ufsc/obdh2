@@ -1,7 +1,7 @@
 /*
  * isis_antenna_i2c.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.8
+ * \version 1.0.0
  * 
  * \date 2021/10/10
  * 
@@ -60,7 +60,7 @@ int isis_antenna_i2c_init(void)
     ants_config.en_pin              = ISIS_ANTENNA_I2C_EN_PIN;
     ants_config.ready_pin           = ISIS_ANTENNA_I2C_RDY_PIN;
 
-    if (tca4311a_init(ants_config, false) == TCA4311A_NOT_READY)
+    if (tca4311a_init(ants_config, false) == (int)TCA4311A_READY)
     {
         err = 0;
     }
@@ -82,18 +82,18 @@ int isis_antenna_i2c_write(uint8_t *data, uint16_t len)
     uint8_t i = 0;
     for(i = 0; i < ISIS_ANTENNA_I2C_OP_ATTEMPTS; i++)
     {
-        if (tca4311a_enable(ants_config) == TCA4311A_READY)
+        if (tca4311a_enable(ants_config) == (int)TCA4311A_READY)
         {
             isis_antenna_delay_ms(1);
 
-            if (tca4311a_write(ants_config, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, data, len) == TCA4311A_READY)
+            if (tca4311a_write(ants_config, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, data, len) == (int)TCA4311A_READY)
             {
                 uint8_t j = 0;
                 for(j = 0; j < ISIS_ANTENNA_I2C_OP_ATTEMPTS; j++)
                 {
                     isis_antenna_delay_ms(1);
 
-                    if (tca4311a_disable(ants_config) == TCA4311A_NOT_READY)
+                    if (tca4311a_disable(ants_config) == (int)TCA4311A_READY)
                     {
                         err = 0;
 
@@ -137,18 +137,18 @@ int isis_antenna_i2c_read(uint8_t *data, uint16_t len)
     uint8_t i = 0;
     for(i = 0; i < ISIS_ANTENNA_I2C_OP_ATTEMPTS; i++)
     {
-        if (tca4311a_enable(ants_config) == TCA4311A_READY)
+        if (tca4311a_enable(ants_config) == (int)TCA4311A_READY)
         {
             isis_antenna_delay_ms(1);
 
-            if (tca4311a_read(ants_config, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, data, len) == TCA4311A_READY)
+            if (tca4311a_read(ants_config, ISIS_ANTENNA_I2C_SLAVE_ADDRESS, data, len) == (int)TCA4311A_READY)
             {
                 uint8_t j = 0;
                 for(j = 0; j < ISIS_ANTENNA_I2C_OP_ATTEMPTS; j++)
                 {
                     isis_antenna_delay_ms(1);
 
-                    if (tca4311a_disable(ants_config) == TCA4311A_NOT_READY)
+                    if (tca4311a_disable(ants_config) == (int)TCA4311A_READY)
                     {
                         err = 0;
 

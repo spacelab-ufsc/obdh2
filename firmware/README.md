@@ -57,10 +57,10 @@ The OBDH2 board has a MSP430 low-power microcontroller that runs the firmware ap
 The OBDH2 module has many tasks, such interfacing peripherals and other MCUs, over distinct protocols and time requirements. Then, it requires a Real Time Operating System (RTOS) to assure that it will deal with its deadlines, even under a fault in some task routine. The RTOS chosen is the FreeRTOS (v10.2.1), since it is designed for embedded systems applications and it was already validated in space applications. The software was made to have abstraction layers through the use of low-level register manipulation libraries, drivers to manage internal and external peripherals, devices to handle ICs and other modules, and over the top a application layer. Refer to the [documentation](https://github.com/spacelab-ufsc/obdh2/tree/master/doc) in the "Firmware" chapter.
 
 ## Dependencies
-	- MSP430 DriverLib v2.91.11.01
-	- FreeRTOS v10.2.1
-	- NGHam protocol
-	- libcsp v1.5.16
+
+- MSP430 DriverLib v2.91.11.01
+- FreeRTOS v10.2.1
+- libcsp v1.5.16
 
 ## Development
 

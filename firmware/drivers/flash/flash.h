@@ -24,8 +24,9 @@
  * \brief Flash driver definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.7.4
+ * \version 1.0.0
  * 
  * \date 2020/03/17
  * 
@@ -40,30 +41,32 @@
 #include <stdint.h>
 
 /* 128 kB banks */
-#define FLASH_BANK_0_ADR            0x00008000
-#define FLASH_BANK_1_ADR            0x00028000
-#define FLASH_BANK_2_ADR            0x00048000
-#define FLASH_BANK_3_ADR            0x00068000
+#define FLASH_BANK_0_ADR            0x00008000UL
+#define FLASH_BANK_1_ADR            0x00028000UL
+#define FLASH_BANK_2_ADR            0x00048000UL
+#define FLASH_BANK_3_ADR            0x00068000UL
 
 /* 128 B info segments */
-#define FLASH_SEG_A_ADR             0x00001980
-#define FLASH_SEG_B_ADR             0x00001900
-#define FLASH_SEG_C_ADR             0x00001880
-#define FLASH_SEG_D_ADR             0x00001800
+#define FLASH_SEG_A_ADR             0x00001980UL
+#define FLASH_SEG_B_ADR             0x00001900UL
+#define FLASH_SEG_C_ADR             0x00001880UL
+#define FLASH_SEG_D_ADR             0x00001800UL
 
 /* 512 B bootstrap segments */
-#define FLASH_BSL_0_ADR             0x00001600
-#define FLASH_BSL_1_ADR             0x00001400
-#define FLASH_BSL_2_ADR             0x00001200
-#define FLASH_BSL_3_ADR             0x00001000
+#define FLASH_BSL_0_ADR             0x00001600UL
+#define FLASH_BSL_1_ADR             0x00001400UL
+#define FLASH_BSL_2_ADR             0x00001200UL
+#define FLASH_BSL_3_ADR             0x00001000UL
 
-#define FLASH_MASS_ERASE            0X00FFFFFF
+#define FLASH_MASS_ERASE            0X00FFFFFFUL
 
 /* Overflow flag message adress */
-#define FLASH_OVERFLOW_FLAG_ADDR    0x00026000
+#define FLASH_OVERFLOW_FLAG_ADDR    0x00026000UL
 
 /* Last adress that can write a data(beyond this will enter the overflow) */
-#define FLASH_LAST_WRITE_ADDR       0x00087FFF
+#define FLASH_LAST_WRITE_ADDR       0x00087FFFUL
+
+#define INFO_SEG_SIZE               128U
 
 /**
  * \brief Flash memory initialization.

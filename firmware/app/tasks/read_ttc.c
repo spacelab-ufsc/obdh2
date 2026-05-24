@@ -1,7 +1,7 @@
 /*
  * read_ttc.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -24,8 +24,9 @@
  * \brief Read TTC data task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.8.5
+ * \version 1.0.0
  * 
  * \date 2021/05/14
  * 
@@ -43,15 +44,20 @@
 
 xTaskHandle xTaskReadTTCHandle;
 
-void vTaskReadTTC(void)
+void vTaskReadTTC(void *p)
 {
+    (void)p;
+
     /* Wait startup task to finish */
-    xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_TTC_INIT_TIMEOUT_MS));
+    (void)xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_TTC_INIT_TIMEOUT_MS));
+
+    /* Delay before the first cycle */
+    vTaskDelay(pdMS_TO_TICKS(TASK_READ_TTC_INITIAL_DELAY_MS));
+
+    TickType_t last_cycle = xTaskGetTickCount();
 
     while(1)
     {
-        TickType_t last_cycle = xTaskGetTickCount();
-
         if (ttc_init(TTC_0) != 0)
         {
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_TTC_NAME, "Error initializing the TTC device!");
@@ -81,6 +87,19 @@ void vTaskReadTTC(void)
         else
         {
             sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_TTC_NAME, "Error reading data from the TTC 1 device!");
+            sys_log_new_line();
+        }
+
+        /* Checks if there was too many decoding errors on TTC */
+        if (ttc_check_failed_pkts(TTC_0) != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_TTC_NAME, "Error checking for decode errors from TTC 0 device!");
+            sys_log_new_line();
+        }
+
+        if (ttc_check_failed_pkts(TTC_1) != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_READ_TTC_NAME, "Error checking for decode errors from TTC 1 device!");
             sys_log_new_line();
         }
 

@@ -24,8 +24,9 @@
  * \brief FloripaSat packet definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.8.21
+ * \version 1.0.0
  * 
  * \date 2020/03/14
  * 
@@ -89,7 +90,7 @@ void fsat_pkt_add_payload(fsat_pkt_pl_t *pkt, uint8_t *pl, uint16_t len);
 /**
  * \brief Encodes a raw packet.
  *
- * \param[in] pkt is the packet structure to encode.
+ * \param[in] pkt is a pointer to the packet structure to encode.
  *
  * \param[in,out] pl is a pointer to store the raw packet.
  *
@@ -97,7 +98,7 @@ void fsat_pkt_add_payload(fsat_pkt_pl_t *pkt, uint8_t *pl, uint16_t len);
  *
  * \return None.
  */
-void fsat_pkt_encode(fsat_pkt_pl_t pkt, uint8_t *pl, uint16_t *len);
+void fsat_pkt_encode(fsat_pkt_pl_t *pkt, uint8_t *pl, uint16_t *len);
 
 /**
  * \brief Decodes a raw packet.

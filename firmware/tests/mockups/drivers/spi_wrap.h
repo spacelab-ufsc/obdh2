@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.8
+ * \version 0.10.17
  * 
  * \date 2021/08/25
  * 
@@ -50,6 +50,12 @@ int __wrap_spi_write(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len);
 int __wrap_spi_read(spi_port_t port, spi_cs_t cs, uint8_t *data, uint16_t len);
 
 int __wrap_spi_transfer(spi_port_t port, spi_cs_t cs, uint8_t *wd, uint8_t *rd, uint16_t len);
+
+int __wrap_spi_mutex_create(void);
+
+int __wrap_spi_mutex_take(void);
+
+int __wrap_spi_mutex_give(void);
 
 #endif /* SPI_WRAP_H_ */
 

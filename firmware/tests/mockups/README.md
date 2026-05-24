@@ -9,6 +9,7 @@
 * I2C
 * ISIS Antenna
 * MT25Q
+* Payload-X
 * Si446x
 * SpaceLab EPS 2.0
 * SpaceLab TTC 2.0

@@ -4,3 +4,4 @@ Supported containers:
 
 * Buffer
 * Queue
+* List

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.5
+ * \version 1.0.0
  * 
  * \date 2020/03/03
  * 
@@ -60,7 +60,7 @@ int adc_init(void)
         /* Daughterboard, current and voltage sensor pins */
         GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P6, GPIO_PIN0 | GPIO_PIN1 | GPIO_PIN2 | GPIO_PIN3 | GPIO_PIN4);
 
-        ADC12_A_init(ADC12_A_BASE, ADC12_A_SAMPLEHOLDSOURCE_SC, ADC12_A_CLOCKSOURCE_ADC12OSC, ADC12_A_CLOCKDIVIDER_1);
+        (void)ADC12_A_init(ADC12_A_BASE, ADC12_A_SAMPLEHOLDSOURCE_SC, ADC12_A_CLOCKSOURCE_ADC12OSC, ADC12_A_CLOCKDIVIDER_1);
 
         ADC12_A_enable(ADC12_A_BASE);
 
@@ -146,8 +146,9 @@ int adc_init(void)
         /* Temperature sensor calibration data */
         TLV_getInfo(TLV_TAG_ADCCAL, 0, &adc_cal_bytes, &adc_cal_data);
 
-        adc_mref = ((float)(adc_cal_data->adc_ref15_85_temp - adc_cal_data->adc_ref15_30_temp)) / (85.0 - 30.0);
-        adc_nref = adc_cal_data->adc_ref15_85_temp - (adc_mref * 85.0);
+        uint16_t tmp = (adc_cal_data->adc_ref15_85_temp - adc_cal_data->adc_ref15_30_temp);
+        adc_mref = ((float)tmp) / (85.0 - 30.0);
+        adc_nref = (float)adc_cal_data->adc_ref15_85_temp - (adc_mref * 85.0);
 
         adc_is_ready = true;
     }
@@ -188,7 +189,7 @@ int adc_read(adc_port_t port, uint16_t *val)
 
                 for(i=0; i<ADC_TIMEOUT_MS; i++)
                 {
-                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG0) > 0)
+                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG0) > 0U)
                     {
                         break;
                     }
@@ -209,7 +210,7 @@ int adc_read(adc_port_t port, uint16_t *val)
 
                 for(i=0; i<ADC_TIMEOUT_MS; i++)
                 {
-                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG1) > 0)
+                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG1) > 0U)
                     {
                         break;
                     }
@@ -230,7 +231,7 @@ int adc_read(adc_port_t port, uint16_t *val)
 
                 for(i=0; i<ADC_TIMEOUT_MS; i++)
                 {
-                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG2) > 0)
+                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG2) > 0U)
                     {
                         break;
                     }
@@ -251,7 +252,7 @@ int adc_read(adc_port_t port, uint16_t *val)
 
                 for(i=0; i<ADC_TIMEOUT_MS; i++)
                 {
-                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG3) > 0)
+                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG3) > 0U)
                     {
                         break;
                     }
@@ -272,7 +273,7 @@ int adc_read(adc_port_t port, uint16_t *val)
 
                 for(i=0; i<ADC_TIMEOUT_MS; i++)
                 {
-                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG4) > 0)
+                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG4) > 0U)
                     {
                         break;
                     }
@@ -293,7 +294,7 @@ int adc_read(adc_port_t port, uint16_t *val)
 
                 for(i=0; i<ADC_TIMEOUT_MS; i++)
                 {
-                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG5) > 0)
+                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG5) > 0U)
                     {
                         break;
                     }
@@ -314,7 +315,7 @@ int adc_read(adc_port_t port, uint16_t *val)
 
                 for(i=0; i<ADC_TIMEOUT_MS; i++)
                 {
-                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG6) > 0)
+                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG6) > 0U)
                     {
                         break;
                     }
@@ -335,7 +336,7 @@ int adc_read(adc_port_t port, uint16_t *val)
 
                 for(i=0; i<ADC_TIMEOUT_MS; i++)
                 {
-                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG7) > 0)
+                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG7) > 0U)
                     {
                         break;
                     }
@@ -356,7 +357,7 @@ int adc_read(adc_port_t port, uint16_t *val)
 
                 for(i=0; i<ADC_TIMEOUT_MS; i++)
                 {
-                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG8) > 0)
+                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG8) > 0U)
                     {
                         break;
                     }
@@ -377,7 +378,7 @@ int adc_read(adc_port_t port, uint16_t *val)
 
                 for(i=0; i<ADC_TIMEOUT_MS; i++)
                 {
-                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG9) > 0)
+                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG9) > 0U)
                     {
                         break;
                     }
@@ -398,7 +399,7 @@ int adc_read(adc_port_t port, uint16_t *val)
 
                 for(i=0; i<ADC_TIMEOUT_MS; i++)
                 {
-                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG10) > 0)
+                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG10) > 0U)
                     {
                         break;
                     }
@@ -419,7 +420,7 @@ int adc_read(adc_port_t port, uint16_t *val)
 
                 for(i=0; i<ADC_TIMEOUT_MS; i++)
                 {
-                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG11) > 0)
+                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG11) > 0U)
                     {
                         break;
                     }
@@ -440,7 +441,7 @@ int adc_read(adc_port_t port, uint16_t *val)
 
                 for(i=0; i<ADC_TIMEOUT_MS; i++)
                 {
-                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG12) > 0)
+                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG12) > 0U)
                     {
                         break;
                     }
@@ -461,7 +462,7 @@ int adc_read(adc_port_t port, uint16_t *val)
 
                 for(i=0; i<ADC_TIMEOUT_MS; i++)
                 {
-                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG13) > 0)
+                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG13) > 0U)
                     {
                         break;
                     }
@@ -482,7 +483,7 @@ int adc_read(adc_port_t port, uint16_t *val)
 
                 for(i=0; i<ADC_TIMEOUT_MS; i++)
                 {
-                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG14) > 0)
+                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG14) > 0U)
                     {
                         break;
                     }
@@ -503,7 +504,7 @@ int adc_read(adc_port_t port, uint16_t *val)
 
                 for(i=0; i<ADC_TIMEOUT_MS; i++)
                 {
-                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG15) > 0)
+                    if (ADC12_A_getInterruptStatus(ADC12_A_BASE, ADC12_A_IFG15) > 0U)
                     {
                         break;
                     }

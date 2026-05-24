@@ -1,7 +1,7 @@
 /*
  * px.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -24,8 +24,9 @@
  * \brief Payload X driver definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.7.44
+ * \version 0.10.19
  * 
  * \date 2020/10/31
  * 
@@ -40,6 +41,7 @@
 #include <stdint.h>
 
 #include <drivers/i2c/i2c.h>
+#include <drivers/gpio/gpio.h>
 
 #define PX_SLAVE_ADDRESS            0x42    /**< 7-bit slave address. */
 
@@ -49,22 +51,23 @@
 typedef struct
 {
     i2c_port_t port;
+    gpio_pin_t en_pin;
     uint32_t bitrate;
 } px_config_t;
 
 /**
  * \brief Device initialization.
  *
- * \param[in] port is the I2C port which the Payload-X is connected.
- *
- * \param[in] bitrate is the bitrate in bps.
+ * \param[in] conf is a pointer to the configuration parameter of a Payload-X device.
  *
  * \return The status/error code.
  */
-int px_init(i2c_port_t port, uint32_t bitrate);
+int px_init(const px_config_t *conf);
 
 /**
  * \brief Writes data to the Payload X.
+ *
+ * \param[in] conf is a pointer to the configuration parameter of a Payload-X device.
  *
  * \param[in] data is an array of bytes to write.
  *
@@ -72,10 +75,12 @@ int px_init(i2c_port_t port, uint32_t bitrate);
  *
  * \return The status/error code.
  */
-int px_write(uint8_t *data, uint16_t len);
+int px_write(const px_config_t *conf, uint8_t *data, uint16_t len);
 
 /**
  * \brief Reads data from the Payload X.
+ *
+ * \param[in] conf is a pointer to the configuration parameter of a Payload-X device.
  *
  * \param[in,out] data is a pointer to store the read data.
  *
@@ -83,7 +88,25 @@ int px_write(uint8_t *data, uint16_t len);
  *
  * \return The status/error code.
  */
-int px_read(uint8_t *data, uint16_t len);
+int px_read(const px_config_t *conf, uint8_t *data, uint16_t len);
+
+/**
+ * \brief Enables the Payload X.
+ *
+ * \param[in] conf is a pointer to the configuration parameter of a Payload-X device.
+ *
+ * \return The status/error code.
+ */
+int px_enable(const px_config_t *conf);
+
+/**
+ * \brief Disables the Payload X.
+ *
+ * \param[in] conf is a pointer to the configuration parameter of a Payload-X device.
+ *
+ * \return The status/error code.
+ */
+int px_disable(const px_config_t *conf);
 
 #endif /* PX_H_ */
 

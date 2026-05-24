@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.47
+ * \version 1.0.0
  * 
  * \date 2020/01/11
  * 
@@ -56,7 +56,7 @@ extern xTaskHandle xTaskWatchdogResetHandle;
  *
  * \return None.
  */
-void vTaskWatchdogReset(void);
+void vTaskWatchdogReset(void *p);
 
 #endif /* WATCHDOG_RESET_H_ */
 

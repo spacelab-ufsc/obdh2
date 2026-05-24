@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.41
+ * \version 1.0.0
  * 
  * \date 2021/10/13
  * 
@@ -46,7 +46,7 @@ int sl_eps2_i2c_init(sl_eps2_config_t config)
 {
     int err = -1;
 
-    if (tca4311a_init(config, true) == TCA4311A_READY)
+    if (tca4311a_init(config, true) == (int)TCA4311A_READY)
     {
         err = 0;
     }
@@ -68,11 +68,11 @@ int sl_eps2_i2c_write(sl_eps2_config_t config, uint8_t *data, uint16_t len)
     uint8_t i = 0;
     for(i = 0; i < SL_EPS2_I2C_OP_ATTEMPTS; i++)
     {
-        if (tca4311a_enable(config) == TCA4311A_READY)
+        if (tca4311a_enable(config) == (int)TCA4311A_READY)
         {
             sl_eps2_delay_ms(1);
 
-            if (tca4311a_write(config, SL_EPS2_I2C_SLAVE_ADR, data, len) == TCA4311A_READY)
+            if (tca4311a_write(config, SL_EPS2_I2C_SLAVE_ADR, data, len) == (int)TCA4311A_READY)
             {
                 err = TCA4311A_READY;
 
@@ -105,11 +105,11 @@ int sl_eps2_i2c_read(sl_eps2_config_t config, uint8_t *data, uint16_t len)
     uint8_t i = 0;
     for(i = 0; i < SL_EPS2_I2C_OP_ATTEMPTS; i++)
     {
-        if (tca4311a_enable(config) == TCA4311A_READY)
+        if (tca4311a_enable(config) == (int)TCA4311A_READY)
         {
             sl_eps2_delay_ms(1);
 
-            if (tca4311a_read(config, SL_EPS2_I2C_SLAVE_ADR, data, len) == TCA4311A_READY)
+            if (tca4311a_read(config, SL_EPS2_I2C_SLAVE_ADR, data, len) == (int)TCA4311A_READY)
             {
                 err = TCA4311A_READY;
 

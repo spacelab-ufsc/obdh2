@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Miguel Boing <miguelboing13@gmail.com>
  *
- * \version 0.9.2
+ * \version 1.0.0
  * 
  * \date 2019/12/07
  * 
@@ -440,7 +440,7 @@ __interrupt void USCI_A0_ISR(void) // cppcheck-suppress misra-c2012-8.4
 {
     if (USCI_A_UART_getInterruptStatus(USCI_A0_BASE, USCI_A_UART_RECEIVE_INTERRUPT_FLAG) == USCI_A_UART_RECEIVE_INTERRUPT_FLAG)
     {
-        queue_push_back(&uart_port_0_rx_buffer, USCI_A_UART_receiveData(USCI_A0_BASE));
+        (void)queue_push_back(&uart_port_0_rx_buffer, USCI_A_UART_receiveData(USCI_A0_BASE));
         USCI_A_UART_clearInterrupt(USCI_A0_BASE, USCI_A_UART_RECEIVE_INTERRUPT_FLAG);
     }
 }
@@ -450,7 +450,7 @@ __interrupt void USCI_A1_ISR(void) // cppcheck-suppress misra-c2012-8.4
 {
     if (USCI_A_UART_getInterruptStatus(USCI_A1_BASE, USCI_A_UART_RECEIVE_INTERRUPT_FLAG) == USCI_A_UART_RECEIVE_INTERRUPT_FLAG)
     {
-        queue_push_back(&uart_port_1_rx_buffer, USCI_A_UART_receiveData(USCI_A1_BASE));
+        (void)queue_push_back(&uart_port_1_rx_buffer, USCI_A_UART_receiveData(USCI_A1_BASE));
         USCI_A_UART_clearInterrupt(USCI_A1_BASE, USCI_A_UART_RECEIVE_INTERRUPT_FLAG);
     }
 }
@@ -460,7 +460,7 @@ __interrupt void USCI_A2_ISR(void) // cppcheck-suppress misra-c2012-8.4
 {
     if (USCI_A_UART_getInterruptStatus(USCI_A2_BASE, USCI_A_UART_RECEIVE_INTERRUPT_FLAG) == USCI_A_UART_RECEIVE_INTERRUPT_FLAG)
     {
-        queue_push_back(&uart_port_2_rx_buffer, USCI_A_UART_receiveData(USCI_A2_BASE));
+        (void)queue_push_back(&uart_port_2_rx_buffer, USCI_A_UART_receiveData(USCI_A2_BASE));
         USCI_A_UART_clearInterrupt(USCI_A2_BASE, USCI_A_UART_RECEIVE_INTERRUPT_FLAG);
     }
 }

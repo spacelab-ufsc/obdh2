@@ -1160,12 +1160,12 @@ typedef struct xSTATIC_QUEUE
 {
 	void *pvDummy1[ 3 ];
 
-	union
+	union // cppcheck-suppress misra-c2012-19.2
 	{
 		void *pvDummy2;
 		UBaseType_t uxDummy2;
-	} u;
-
+	} u; // cppcheck-suppress misra-c2012-19.2
+         
 	StaticList_t xDummy3[ 2 ];
 	UBaseType_t uxDummy4[ 3 ];
 	uint8_t ucDummy5[ 2 ];

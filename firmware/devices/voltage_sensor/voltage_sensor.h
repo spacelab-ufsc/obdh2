@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.2
+ * \version 1.0.0
  * 
  * \date 2020/07/11
  * 
@@ -44,7 +44,7 @@
 #define VOLTAGE_SENSOR_MODULE_NAME     "Voltage Sensor"
 
 #define VOLTAGE_SENSOR_ADC_PORT         ADC_PORT_9      /**< Voltage sensor ADC port (channel). */
-#define VOLTAGE_SENSOR_DIV              2               /**< Voltage divisor factor. */
+#define VOLTAGE_SENSOR_DIV              2UL             /**< Voltage divisor factor. */
 
 /**
  * \brief Voltage sensor device initialization routine.

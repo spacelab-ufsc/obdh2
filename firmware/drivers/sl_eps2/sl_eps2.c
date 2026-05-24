@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.9.6
+ * \version 1.0.0
  * 
  * \date 2020/02/05
  * 
@@ -111,7 +111,7 @@ int sl_eps2_write_reg(sl_eps2_config_t config, uint8_t adr, uint32_t val)
     buf[4] = (val >> 0)  & 0xFFU;
     buf[5] = sl_eps2_crc8(buf, 5);
 
-    if (sl_eps2_i2c_write(config, buf, 6U) != TCA4311A_READY)
+    if (sl_eps2_i2c_write(config, buf, 6U) != (int)TCA4311A_READY)
     {
         err = -1;
     }
@@ -129,14 +129,14 @@ int sl_eps2_read_reg(sl_eps2_config_t config, uint8_t adr, uint32_t *val)
     buf[0] = adr;
     buf[1] = sl_eps2_crc8(buf, 1);
 
-    if (sl_eps2_i2c_write(config, buf, 2U) != TCA4311A_READY)
+    if (sl_eps2_i2c_write(config, buf, 2U) != (int)TCA4311A_READY)
     {
         err = -1;
     }
 
     sl_eps2_delay_ms(50);
 
-    if (sl_eps2_i2c_read(config, buf, 6U) != TCA4311A_READY)
+    if (sl_eps2_i2c_read(config, buf, 6U) != (int)TCA4311A_READY)
     {
         err = -1;
     }
@@ -438,7 +438,7 @@ int sl_eps2_read_data(sl_eps2_config_t config, sl_eps2_data_t *data)
 
 int sl_eps2_read_time_counter(sl_eps2_config_t config, uint32_t *val)
 {
-    return sl_eps2_read_reg(config, SL_EPS2_REG_TIME_COUNTER_MS, val);
+    return sl_eps2_read_reg(config, SL_EPS2_REG_TIME_COUNTER, val);
 }
 
 int sl_eps2_read_temp(sl_eps2_config_t config, sl_eps2_temp_t *val)

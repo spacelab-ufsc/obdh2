@@ -25,8 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Bruno Benedetti <brunobenedetti45@gmail.com> 
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.9.8
+ * \version 0.10.19
  * 
  * \date 2021/08/16
  * 
@@ -44,6 +45,7 @@
 
 #include <devices/payload/payload.h>
 #include <drivers/edc/edc.h>
+#include <drivers/px/px.h>
 #include <drivers/gpio/gpio.h>
 #include <drivers/uart/uart.h>
 #include <drivers/i2c/i2c.h>
@@ -53,6 +55,9 @@
 
 #define EDC_1_UART_PORT             UART_PORT_1
 #define EDC_1_GPIO_EN_PIN           GPIO_PIN_30
+
+#define PX_I2C_PORT                 I2C_PORT_0
+#define PX_I2C_BITRATE              400000UL
 
 static void payload_init_test(void **state)
 {
@@ -142,20 +147,14 @@ static void payload_init_test(void **state)
 
     assert_return_code(payload_init(PAYLOAD_EDC_1), 0);
 
-//    assert_return_code(payload_init(PAYLOAD_X), 0);
+    /* Payload-X */
+    expect_value(__wrap_px_init, conf->port, PX_I2C_PORT);
+    expect_value(__wrap_px_init, conf->bitrate, PX_I2C_BITRATE);
+    expect_value(__wrap_px_init, conf->en_pin, GPIO_PIN_37);
 
-    expect_value(__wrap_phj_init_i2c, config.port, I2C_PORT_0);
-    expect_value(__wrap_phj_init_i2c, config.bitrate, 400000);
+    will_return(__wrap_px_init, 0);
 
-    will_return(__wrap_phj_init_i2c, 0);
-
-    expect_value(__wrap_phj_init_gpio, config.pin, GPIO_PIN_0);
-    expect_value(__wrap_phj_init_gpio, config.mode, GPIO_MODE_INPUT);
-
-    will_return(__wrap_phj_init_gpio, 0);
-
-    assert_return_code(payload_init(PAYLOAD_PHJ), 0);
-//    assert_return_code(payload_init(PAYLOAD_HARSH), 0);
+    assert_return_code(payload_init(PAYLOAD_X), 0);
 }
 
 static void payload_enable_test(void **state)
@@ -178,9 +177,12 @@ static void payload_enable_test(void **state)
 
     assert_return_code(payload_enable(PAYLOAD_EDC_1), 0);
 
-//    assert_return_code(payload_enable(PAYLOAD_X), 0);
+    expect_value(__wrap_px_enable, conf->en_pin, GPIO_PIN_37);
+
+    will_return(__wrap_px_enable, 0);
+
+    assert_return_code(payload_enable(PAYLOAD_X), 0);
 //    assert_return_code(payload_enable(PAYLOAD_PHJ), 0);
-//    assert_return_code(payload_enable(PAYLOAD_HARSH), 0);
 }
 
 static void payload_disable_test(void **state)
@@ -202,10 +204,13 @@ static void payload_disable_test(void **state)
     will_return(__wrap_edc_disable, 0);
 
     assert_return_code(payload_disable(PAYLOAD_EDC_1), 0);
-//    assert_return_code(payload_disable(PAYLOAD_X), 0);
-//    assert_return_code(payload_disable(PAYLOAD_X), 0);
+
+    expect_value(__wrap_px_disable, conf->en_pin, GPIO_PIN_37);
+
+    will_return(__wrap_px_disable, 0);
+
+    assert_return_code(payload_disable(PAYLOAD_X), 0);
 //    assert_return_code(payload_disable(PAYLOAD_PHJ), 0);
-//    assert_return_code(payload_disable(PAYLOAD_HARSH), 0);
 }
 
 static void payload_write_cmd_test(void **state)
@@ -213,7 +218,6 @@ static void payload_write_cmd_test(void **state)
 //    assert_return_code(payload_write_cmd(PAYLOAD_EDC_0, ), 0);
 //    assert_return_code(payload_write_cmd(PAYLOAD_X, ), 0);
 //    assert_return_code(payload_write_cmd(PAYLOAD_PHJ, ), 0);
-//    assert_return_code(payload_write_cmd(PAYLOAD_HARSH, ), 0);
 }
 
 static void payload_get_data_test(void **state)
@@ -236,8 +240,6 @@ static void payload_get_data_test(void **state)
 
 //    assert_return_code(payload_get_data(PAYLOAD_EDC_0, PAYLOAD_EDC_RAW_HK, raw_hk_data, &raw_hk_len), 0);
 //    assert_return_code(payload_get_data(PAYLOAD_X, ), 0);
-//    assert_return_code(payload_get_data(PAYLOAD_PHJ, ), 0);
-//    assert_return_code(payload_get_data(PAYLOAD_HARSH, ), 0);
 }
 
 int main(void)

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.28
+ * \version 1.0.0
  * 
  * \date 2020/07/11
  * 
@@ -81,7 +81,7 @@ int current_sensor_read_raw(uint16_t *val)
 
 uint16_t current_sensor_raw_to_ma(uint16_t raw)
 {
-    return (uint16_t)((1000UL*(uint32_t)raw*ADC_VREF_MV)/(ADC_RANGE*CURRENT_SENSOR_RL_VALUE_KOHM*CURRENT_SENSOR_GAIN_MA_MV*CURRENT_SENSOR_RSENSE_VALUE_MOHM));
+    return (uint16_t)((1000UL*(uint32_t)raw*ADC_VREF_MV)/((uint32_t)ADC_RANGE*CURRENT_SENSOR_RL_VALUE_KOHM*CURRENT_SENSOR_GAIN_MA_MV*CURRENT_SENSOR_RSENSE_VALUE_MOHM));
 }
 
 int current_sensor_read_ma(uint16_t *cur)

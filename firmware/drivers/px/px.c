@@ -1,7 +1,7 @@
 /*
  * px.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -24,8 +24,9 @@
  * \brief Payload X driver implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.8.9
+ * \version 0.10.19
  * 
  * \date 2020/03/31
  * 
@@ -33,33 +34,38 @@
  * \{
  */
 
+#include <stdbool.h>
+
 #include "px.h"
 
-/**
- * \brief Payload X I2C port.
- */
-static px_config_t px_i2c_conf = {0};
-
-int px_init(i2c_port_t port, uint32_t bitrate)
+int px_init(const px_config_t *conf)
 {
-    px_i2c_conf.port    = port;
-    px_i2c_conf.bitrate = bitrate;
+    const gpio_config_t gpio_conf = { .mode = GPIO_MODE_OUTPUT };
+    const i2c_config_t i2c_conf = { .speed_hz = conf->bitrate };
 
-    i2c_config_t i2c_conf = {0};
+    (void)gpio_init(conf->en_pin, gpio_conf);
 
-    i2c_conf.speed_hz = bitrate;
-
-    return i2c_init(port, i2c_conf);
+    return i2c_init(conf->port, i2c_conf);
 }
 
-int px_write(uint8_t *data, uint16_t len)
+int px_write(const px_config_t *conf, uint8_t *data, uint16_t len)
 {
-    return i2c_read(px_i2c_conf.port, PX_SLAVE_ADDRESS, data, len);
+    return i2c_write(conf->port, PX_SLAVE_ADDRESS, data, len);
 }
 
-int px_read(uint8_t *data, uint16_t len)
+int px_read(const px_config_t *conf, uint8_t *data, uint16_t len)
 {
-    return i2c_read(px_i2c_conf.port, PX_SLAVE_ADDRESS, data, len);
+    return i2c_read(conf->port, PX_SLAVE_ADDRESS, data, len);
+}
+
+int px_enable(const px_config_t *conf)
+{
+    return gpio_set_state(conf->en_pin, true);
+}
+
+int px_disable(const px_config_t *conf)
+{
+    return gpio_set_state(conf->en_pin, false);
 }
 
 /** \} End of px group */

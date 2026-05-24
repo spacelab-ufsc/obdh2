@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.47
+ * \version 1.0.0
  * 
  * \date 2020/01/20
  * 
@@ -40,16 +40,18 @@
 
 xTaskHandle xTaskHeartbeatHandle;
 
-void vTaskHeartbeat(void)
+void vTaskHeartbeat(void *p)
 {
+    (void)p;
+
     /* Wait startup task to finish */
-    xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_HEARTBEAT_INIT_TIMEOUT_MS));
+    (void)xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_HEARTBEAT_INIT_TIMEOUT_MS));
+
+    TickType_t last_cycle = xTaskGetTickCount();
 
     while(1)
     {
-        TickType_t last_cycle = xTaskGetTickCount();
-
-        led_toggle(LED_SYSTEM);
+        (void)led_toggle(LED_SYSTEM);
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_HEARTBEAT_PERIOD_MS));
     }

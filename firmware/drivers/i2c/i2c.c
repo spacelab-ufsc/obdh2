@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.9.6
+ * \version 1.0.0
  * 
  * \date 2019/12/07
  * 
@@ -139,7 +139,7 @@ int i2c_write(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
                 if (USCI_B_I2C_masterSendSingleByteWithTimeout(base_address, data[0], I2C_SLAVE_TIMEOUT) == STATUS_SUCCESS)
                 {
                     /* Delay until transmission completes */
-                    while(USCI_B_I2C_isBusBusy(base_address) > 0)
+                    while(USCI_B_I2C_isBusBusy(base_address) > 0U)
                     {
                         ;
                     }
@@ -178,7 +178,7 @@ int i2c_write(i2c_port_t port, i2c_slave_adr_t adr, uint8_t *data, uint16_t len)
                         if (USCI_B_I2C_masterSendMultiByteStopWithTimeout(base_address, I2C_SLAVE_TIMEOUT) == STATUS_SUCCESS)
                         {
                             /* Delay until transmission completes */
-                            while(USCI_B_I2C_isBusBusy(base_address) > 0)
+                            while(USCI_B_I2C_isBusBusy(base_address) > 0U)
                             {
                                 ;
                             }

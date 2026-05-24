@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.28
+ * \version 0.10.17
  * 
  * \date 2020/07/11
  * 
@@ -37,6 +37,20 @@
 
 #include "voltage_sensor.h"
 
+#define ALPHA_          (0.01)
+#define VOLTAGE_INIT    (3300U)
+
+static uint16_t voltage;
+
+/**
+ * \brief Filters voltage sensor samples.
+ *
+ * \param[in] new_sample is the newest voltage sample.
+ *
+ * \return The filtered sample.
+ */
+static inline uint16_t filter_voltage_sample(uint16_t new_sample);
+
 int voltage_sensor_init(void)
 {
     sys_log_print_event_from_module(SYS_LOG_INFO, VOLTAGE_SENSOR_MODULE_NAME, "Initializing the voltage sensor...");
@@ -46,7 +60,9 @@ int voltage_sensor_init(void)
 
     if (adc_init() == 0)
     {
-        uint16_t volt = 0;
+        uint16_t volt = 0U;
+
+        voltage = VOLTAGE_INIT;
 
         if (voltage_sensor_read_mv(&volt) == 0)
         {
@@ -54,7 +70,7 @@ int voltage_sensor_init(void)
             sys_log_print_uint(volt);
             sys_log_print_msg(" mV");
             sys_log_new_line();
-
+            
             err = 0;
         }
         else
@@ -86,11 +102,13 @@ int voltage_sensor_read_mv(uint16_t *volt)
 {
     int err = -1;
 
-    uint16_t raw_volt = 0;
+    uint16_t sample;
 
-    if (voltage_sensor_read_raw(&raw_volt) == 0)
+    if (voltage_sensor_read_raw(&sample) == 0)
     {
-        *volt = voltage_sensor_raw_to_mv(raw_volt);
+        sample = voltage_sensor_raw_to_mv(sample);
+
+        *volt = filter_voltage_sample(sample);
 
         err = 0;
     }
@@ -101,6 +119,13 @@ int voltage_sensor_read_mv(uint16_t *volt)
     }
 
     return err;
+}
+
+static inline uint16_t filter_voltage_sample(uint16_t new_sample)
+{
+    voltage = (voltage * (1.0f - ALPHA_)) + (new_sample * ALPHA_); 
+
+    return voltage;
 }
 
 /** \} End of voltage_sensor group */

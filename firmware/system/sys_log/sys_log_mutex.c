@@ -25,7 +25,7 @@
  *
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  *
- * \version 0.8.7
+ * \version 1.0.0
  *
  * \date 2019/11/03
  *
@@ -83,7 +83,7 @@ int sys_log_mutex_give(void)
 
     if (xSysLogSemaphore != NULL)
     {
-        xSemaphoreGive(xSysLogSemaphore);
+        (void)xSemaphoreGive(xSysLogSemaphore);
 
         err = 0;
     }

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.9.4
+ * \version 1.0.0
  * 
  * \date 2019/12/04
  * 
@@ -47,6 +47,7 @@
 
 /* Status done bit position */
 #define TASK_STARTUP_DONE                   (1U << 0)
+#define FRAM_INIT_DONE                      (1U << 1)
 
 /**
  * \brief Startup task handle.
@@ -65,7 +66,7 @@ extern EventGroupHandle_t task_startup_status;
  *
  * \return None.
  */
-void vTaskStartup(void);
+void vTaskStartup(void *p);
 
 #endif /* STARTUP_H_ */
 

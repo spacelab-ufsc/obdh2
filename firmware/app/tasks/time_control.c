@@ -24,8 +24,9 @@
  * \brief Time control task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
- * 
- * \version 0.9.17
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
+ *
+ * \version 1.0.0
  * 
  * \date 2020/08/09
  * 
@@ -42,7 +43,7 @@
 #include "startup.h"
 
 #define TIME_CONTROL_MEDIA              MEDIA_FRAM
-#define TIME_CONTROL_SAVE_PERIOD_SEC    60
+#define TIME_CONTROL_SAVE_PERIOD_SEC    60UL
 #define TIME_CONTROL_MEM_ID             0x12U
 #define TIME_CONTROL_CRC8_INITIAL_VAL   0x00U       /* CRC8-CCITT initial value. */
 #define TIME_CONTROL_CRC8_POLYNOMIAL    0x07U       /* CRC8-CCITT polynomial. */
@@ -59,15 +60,6 @@ xTaskHandle xTaskTimeControlHandle;
 static int time_control_load_sys_time(sys_time_t *tm);
 
 /**
- * \brief Saves a given system time to the non-volatile memory.
- *
- * \param[in] tm is the system time value to save.
- *
- * \return The status/error code.
- */
-static int time_control_save_sys_time(sys_time_t tm);
-
-/**
  * \brief Computes the CRC-8 of a sequence of bytes.
  *
  * \param[in] data is an array of data to compute the CRC-8.
@@ -78,10 +70,12 @@ static int time_control_save_sys_time(sys_time_t tm);
  */
 static uint8_t time_control_crc8(uint8_t *data, uint8_t len);
 
-void vTaskTimeControl(void)
+void vTaskTimeControl(void *p)
 {
+    (void)p;
+
     /* Wait startup task to finish */
-    xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_TIME_CONTROL_INIT_TIMEOUT_MS));
+    (void)xEventGroupWaitBits(task_startup_status, FRAM_INIT_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_TIME_CONTROL_INIT_TIMEOUT_MS));
 
     /* Load the last saved system time */
     sys_time_t last_sys_time = 0;
@@ -103,23 +97,30 @@ void vTaskTimeControl(void)
 
     vTaskDelay(pdMS_TO_TICKS(1000));
 
+    TickType_t last_cycle = xTaskGetTickCount();
+
     while(1)
     {
-        TickType_t last_cycle = xTaskGetTickCount();
-
         system_increment_time();
 
         /* Read the current system time */
         sys_time_t sys_tm = system_get_time();
 
-        if ((sys_tm % TIME_CONTROL_SAVE_PERIOD_SEC) == 0)
+        if ((sys_tm % TIME_CONTROL_SAVE_PERIOD_SEC) == 0UL)
         {
             /* Save the current system time */
-//            if (time_control_save_sys_time(sys_tm) != 0)
-//            {
-//                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_TIME_CONTROL_NAME, "Error saving the system time!");
-//                sys_log_new_line();
-//            }
+            if (time_control_save_sys_time(sys_tm) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_TIME_CONTROL_NAME, "Error saving the system time!");
+                sys_log_new_line();
+            }
+            else 
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, TASK_TIME_CONTROL_NAME, "Saving system time (epoch): ");
+                sys_log_print_uint(sys_tm);
+                sys_log_print_msg(" sec");
+                sys_log_new_line();
+            }
         }
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_TIME_CONTROL_PERIOD_MS));
@@ -158,7 +159,7 @@ static int time_control_load_sys_time(sys_time_t *tm)
     return err;
 }
 
-static int time_control_save_sys_time(sys_time_t tm)
+int time_control_save_sys_time(sys_time_t tm)
 {
     int err = 0;
 

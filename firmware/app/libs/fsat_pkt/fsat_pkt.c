@@ -24,8 +24,9 @@
  * \brief FloripaSat packet implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.8.21
+ * \version 1.0.0
  * 
  * \date 2020/03/14
  * 
@@ -66,16 +67,16 @@ void fsat_pkt_add_payload(fsat_pkt_pl_t *pkt, uint8_t *pl, uint16_t len)
     pkt->length = len;
 }
 
-void fsat_pkt_encode(fsat_pkt_pl_t pkt, uint8_t *pl, uint16_t *len)
+void fsat_pkt_encode(fsat_pkt_pl_t *pkt, uint8_t *pl, uint16_t *len)
 {
     /* Packet ID */
-    pl[0] = pkt.id;
+    pl[0] = pkt->id;
 
     /* Callsign */
     uint8_t cs_len = 0;
     for(cs_len = 0U; cs_len < 7U; cs_len++)
     {
-        if (pkt.callsign[cs_len] == '\0')
+        if (pkt->callsign[cs_len] == '\0')
         {
             break;
         }
@@ -87,12 +88,12 @@ void fsat_pkt_encode(fsat_pkt_pl_t pkt, uint8_t *pl, uint16_t *len)
         pl[1U + i] = FSAT_PKT_CALLSIGN_PADDING_CHAR;
     }
 
-    memcpy(&pl[1U + i], pkt.callsign, 7U - i);
+    memcpy(&pl[1U + i], pkt->callsign, 7U - i);
 
     /* Packet data */
-    memcpy(&pl[1 + 7], &pkt.payload[0], pkt.length);
+    memcpy(&pl[1 + 7], &pkt->payload[0], pkt->length);
 
-    *len = 1U + 7U + pkt.length;
+    *len = 1U + 7U + pkt->length;
 }
 
 void fsat_pkt_decode(uint8_t *raw_pkt, uint16_t len, fsat_pkt_pl_t *pkt)
