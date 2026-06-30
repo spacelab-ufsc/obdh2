@@ -39,10 +39,10 @@
 #include "cmd_engine.h"
 
 /* Operational ID definitions matching the real repository configurations */
-#define PKT_ID_UPLINK_PING_REQ        0x01
-#define PKT_ID_UPLINK_DATA_REQ        0x02
-#define PKT_ID_UPLINK_BROADCAST_MSG   0x03
-#define PKT_ID_UPLINK_ENTER_HIBERNATE 0x04
+#define PKT_ID_UPLINK_PING_REQ            0x40
+#define PKT_ID_UPLINK_DATA_REQ            0x41
+#define PKT_ID_UPLINK_BROADCAST_MSG       0x42
+#define PKT_ID_UPLINK_ENTER_HIBERNATE     0x43
 
 /**
  * \brief Forwards binary telemetry packet requests to the native system ping handler.
