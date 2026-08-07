@@ -1,0 +1,148 @@
+{
+    'papersize': 'a4paper',
+    'pointsize': '12pt',
+    'babel': r'\usepackage[english]{babel}',
+    'fncychap': '',
+    'fontpkg': r'\usepackage[math]{iwona}',
+    'preamble': r'\usepackage{spacelab_book}',
+    'inputenc': r'\usepackage[utf8]{inputenc}',
+    'fontenc': r'\usepackage[T1]{fontenc}',
+    'geometry': r'\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}',
+    'extrapackages': r"""
+        \usepackage{titling}
+        \usepackage{fancyhdr}
+        """,
+    'hyperref': r"""
+        \usepackage[hidelinks]{hyperref}
+        \usepackage{hypcap}
+        \urlstyle{same}
+        """,
+    'sphinxsetup': 'TitleColor={rgb}{0.0,0.0,0.0}',
+    'tableofcontents': r"""
+\listoffigures
+\addcontentsline{toc}{chapter}{List of Figures}
+\cleardoublepage
+
+\listoftables
+\addcontentsline{toc}{chapter}{List of Tables}
+\cleardoublepage
+
+\begingroup
+\parskip 0pt
+\sphinxtableofcontentshook
+\tableofcontents
+\endgroup
+\cleardoublepage
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+    """,
+    'maketitle': r"""
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+\begin{titlepage}
+
+\thispagestyle{empty}
+
+\begin{flushleft}
+SLB-OBDH2-DOC-v1.0
+\end{flushleft}
+
+\vspace{1cm}
+
+\begin{figure}[!ht]
+    \begin{flushleft}
+        \includegraphics[width=7cm]{spacelab-logo-full-color-rgb-1000px@72ppi.png}
+    \end{flushleft}
+\end{figure}
+
+\begin{flushleft}
+\Huge{\textbf{\thetitle}}
+\rule[0pt]{\textwidth}{5pt}
+\end{flushleft}
+
+\vspace{0.2cm}
+
+\begin{flushleft}
+\textit{\thetitle} \\
+\textit{SpaceLab, Universidade Federal de Santa Catarina, Florianópolis - Brazil}
+\end{flushleft}
+
+\vfill
+\vfill
+
+\begin{flushright}
+August 2026
+\end{flushright}
+
+\end{titlepage}
+
+\cleardoublepage
+
+\thispagestyle{empty}
+
+\begin{center}
+
+\textbf{\thetitle}
+
+\textit{November, 2021}
+
+\vspace{1cm}
+
+\textbf{Project Chief:}
+
+Eduardo Augusto Bezerra
+
+\vspace{1cm}
+
+\textbf{Authors:}
+
+Gabriel Mariano Marcelino \\
+André Martins Pio de Mattos \\
+Yan Castro Azeredo \\
+Carlos Augusto Porto Freitas \\
+
+\vspace{1cm}
+
+\textbf{Contributing Authors:}
+
+\vspace{1cm}
+
+
+\textbf{Revision Control:}
+
+\end{center}
+
+\begin{table}[!ht]
+    \begin{center}
+        \begin{tabular}{cL{5cm}L{5.5cm}C{2cm}}
+            \toprule[1.5pt]
+            \textbf{Version} & \textbf{Author(s)} & \textbf{Changes} & \textbf{Date} \\
+            \midrule
+            0.1  & Gabriel M. Marcelino & Document creation & 10/2019 \\
+            0.5  & Gabriel M. Marcelino & First stable hardware & 08/2020 \\
+            0.6  & A. M. P. Mattos, G. M. Marcelino, Y. A. Azeredo & First hardware integration & 04/2021 \\
+            0.7  & A. M. P. Mattos, G. M. Marcelino, Y. A. Azeredo & General firmware and hardware improvements & 06/2021 \\
+            0.8  & Gabriel M. Marcelino & Adding the FRAM memory & 10/2021 \\
+            0.9  & Gabriel M. Marcelino & General improvements & 03/2022 \\
+            0.10 & Gabriel M. Marcelino, Bruno Benedetti, Rebecca Q. do Ó & General improvements & 11/2022 \\
+            1.0  & Carlos A. P. Freitas & General improvements & 08/2026 \\
+            \bottomrule[1.5pt]
+        \end{tabular}
+    \end{center}
+\end{table}
+
+\vfill
+
+\begin{figure}[!h]
+	\begin{center}
+		\includegraphics[width=0.25\textwidth]{by-sa.pdf}
+	\end{center}
+\end{figure}
+
+\textcopyright\ by The OBDH 2.0 Contributors. \thetitle. This work is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit \href{http://creativecommons.org/licenses/by-sa/4.0/}{http://creativecommons.org/licenses/by-sa/4.0/}.
+
+\cleardoublepage
+    """,
+}
