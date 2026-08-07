@@ -95,8 +95,8 @@ elif builder in ["latex", "latexpdf"]:
 
 # Options for HTML output
 html_theme = "sphinx_rtd_theme"
-html_static_path = ["_static"]
-html_css_files = ["custom.css"]
+html_static_path = ["assets"]
+html_css_files = ["css/custom.css"]
 html_title = "OBDH 2.0 Documentation"
 html_short_title = "OBDH 2.0 Documentation"
 
