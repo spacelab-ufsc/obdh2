@@ -18,7 +18,7 @@ Product tree
 
 The product tree of the firmware part of the OBDH 2.0 module is available in :numref:`fig:product-tree-fw`.
 
-.. figure:: img/product-tree-fw.*
+.. figure:: img/product-tree-fw.drawio.*
    :align: center
    :name: fig:product-tree-fw
 
@@ -81,6 +81,8 @@ A list of the firmware tasks can be seen in the :numref:`tab:firmware-tasks`. A 
       | Read sensors           | Medium       | 5000                   | 60000           | 140               |
       +------------------------+--------------+------------------------+-----------------+-------------------+
       | Startup (boot)         | Highest      | 0                      | Aperiodic       | 350               |
+      +------------------------+--------------+------------------------+-----------------+-------------------+
+      | Schedule TC            | Low          | 0                      | 1000            | 1024              |
       +------------------------+--------------+------------------------+-----------------+-------------------+
       | System reset           | Medium       | 0                      | 36000000        | 128               |
       +------------------------+--------------+------------------------+-----------------+-------------------+
@@ -155,17 +157,45 @@ This task controls all mission specific behavior, specially payload control. Aft
       +-------------------------+-------------------------------------------------------+--------+
       | **Name**                | **Description**                                       | **ID** |
       +=========================+=======================================================+========+
-      | In Brazil               | Satellite’s position is inside brazilian territory    | 0      |
+      | Persist State On Init   | Used for the state machine initialization             | 0x0000 |
       +-------------------------+-------------------------------------------------------+--------+
-      | Out of Brazil           | Satellite got out of brazilian territory              | 1      |
+      | In Brazil               | Satellite’s position is inside brazilian territory    | 0x0001 |
       +-------------------------+-------------------------------------------------------+--------+
-      | PX Finished             | Payload X finished its experiment                     | 2      |
+      | Out of Brazil           | Satellite got out of brazilian territory              | 0x0002 |
       +-------------------------+-------------------------------------------------------+--------+
-      | Mode Change Req.        | Received a mode change request via telecommand        | 3      |
+      | PX Finished             | Payload X finished its experiment                     | 0x0003 |
       +-------------------------+-------------------------------------------------------+--------+
-      | Activate Payload Req.   | Received an activate payload request via telecommand  | 4      |
+      | Hibernation Timeout     | Notifies that hibernation time has ended              | 0x0004 |
       +-------------------------+-------------------------------------------------------+--------+
-      | Deactivate Payload Req. | Received a deactivate payload request via telecommand | 5      |
+      | Battery Level Critical  | Satellite battery is on critical levels               | 0x0005 |
+      +-------------------------+-------------------------------------------------------+--------+
+      | FDIR Resolved           | FDIR condition was resolved                           | 0x0006 |
+      +-------------------------+-------------------------------------------------------+--------+
+      | Commission Timeout      | Commission Mode timedout                              | 0x0007 |
+      +-------------------------+-------------------------------------------------------+--------+
+      | Deployment Complete     | Antenna Deployment complete                           | 0x0008 |
+      +-------------------------+-------------------------------------------------------+--------+
+      | TC Goto Deployment Mode | Mode change to Deployment mode was requested by TC    | 0x8000 |
+      +-------------------------+-------------------------------------------------------+--------+
+      | TC Goto Commission Mode | Mode change to Commission mode was requested by TC    | 0x8001 |
+      +-------------------------+-------------------------------------------------------+--------+
+      | TC Goto Nominal Mode    | Mode change to Nominal mode was requested by TC       | 0x8002 |
+      +-------------------------+-------------------------------------------------------+--------+
+      | TC Goto Stand-by Mode   | Mode change to Stand-by mode was requested by TC      | 0x8003 |
+      +-------------------------+-------------------------------------------------------+--------+
+      | TC Goto Experiment Mode | Mode change to Experiment mode was requested by TC    | 0x8004 |
+      +-------------------------+-------------------------------------------------------+--------+
+      | TC Goto FDIR            | Mode change to FDIR was requested by TC               | 0x8005 |
+      +-------------------------+-------------------------------------------------------+--------+
+      | TC Goto Manual Mode     | Mode change to Manual mode was requested by TC        | 0x8006 |
+      +-------------------------+-------------------------------------------------------+--------+
+      | TC Enable Payload       | A request to enable a payload was made by TC          | 0x8010 |
+      +-------------------------+-------------------------------------------------------+--------+
+      | TC Disable Payload      | A request to disable a payload was made by TC         | 0x8020 |
+      +-------------------------+-------------------------------------------------------+--------+
+      | TC Enter hibernation    | A request to enter hibernation was made by TC         | 0x8030 |
+      +-------------------------+-------------------------------------------------------+--------+
+      | TC Leave hibernation    | A request to leave hibernation was made by TC         | 0x8040 |
       +-------------------------+-------------------------------------------------------+--------+
 
 Payload X reading
@@ -187,6 +217,13 @@ Startup (boot)
 ~~~~~~~~~~~~~~
 
 This task is the first executed task when the system starts. All devices, libraries, and data structures are initialized in this task. When the execution is done, the remaining tasks of the system are allowed to execute.
+
+Schedule TC
+~~~~~~~~~~~~
+
+This task implements the necessary functionality to allow for scheduled execution of telecommands. It manages a telecommand queue, implemented as a min-heap and persisted in the FRAM, that forces the command with the closest execution time (referenced by OBDH's clock) to be the first item of the queue, allowing the task to dequeue scheduled TCs in order of execution. The task run every second and starts by comparing the next command execution time with the current satellite time, running the telecommand whenever the execution time is reached or otherwise going back to sleep.
+
+Telecommands are enqueued for execution through a dedicated telecommand, see :ref:`anx:packets` for details on this procedure.
 
 System reset
 ~~~~~~~~~~~~
@@ -283,7 +320,21 @@ The internal variables and parameters of the OBDH firmware can be seen in :numre
       +--------+---------------------------------------------------------------------------+-----------+------------+
       | 8      | Firmware version (ex.: “v1.2.3” = 0x00010203)                             | uint32    | R          |
       +--------+---------------------------------------------------------------------------+-----------+------------+
-      | 9      | Mode (“Normal” = 0, “Hibernation” = 1, “Stand-by” = 2)                    | uint8     | R/W        |
+      | 9      | Operation Mode:                                                           | uint8     | R/W        |
+      +--------+---------------------------------------------------------------------------+-----------+------------+
+      |        | \- 0x00 = Deployment                                                      |           |            |
+      +--------+---------------------------------------------------------------------------+-----------+------------+
+      |        | \- 0x01 = Commission                                                      |           |            |
+      +--------+---------------------------------------------------------------------------+-----------+------------+
+      |        | \- 0x02 = Nominal/Normal                                                  |           |            |
+      +--------+---------------------------------------------------------------------------+-----------+------------+
+      |        | \- 0x03 = Stand-by                                                        |           |            |
+      +--------+---------------------------------------------------------------------------+-----------+------------+
+      |        | \- 0x04 = Experiment                                                      |           |            |
+      +--------+---------------------------------------------------------------------------+-----------+------------+
+      |        | \- 0x05 = FDIR                                                            |           |            |
+      +--------+---------------------------------------------------------------------------+-----------+------------+
+      |        | \- 0x06 = Manual                                                          |           |            |
       +--------+---------------------------------------------------------------------------+-----------+------------+
       | 10     | Timestamp of the last mode change                                         | uint32    | R          |
       +--------+---------------------------------------------------------------------------+-----------+------------+
@@ -319,7 +370,7 @@ The internal variables and parameters of the OBDH firmware can be seen in :numre
       +--------+---------------------------------------------------------------------------+-----------+------------+
       | 26     | Last written flash page in SBCD packets sector                            | uint32    | R          |
       +--------+---------------------------------------------------------------------------+-----------+------------+
-      | 27     | Manual mode enabled                                                       | boolean   | R/W        |
+      | 27     | Hibernation enabled                                                       | boolean   | R/W        |
       +--------+---------------------------------------------------------------------------+-----------+------------+
       | 28     | Main EDC ID (see the system IDs table)                                    | uint8     | R/W        |
       +--------+---------------------------------------------------------------------------+-----------+------------+
@@ -342,6 +393,22 @@ The internal variables and parameters of the OBDH firmware can be seen in :numre
       | 37     | Timestamp used in the last position determination in sec.                 | uint32    | R          |
       +--------+---------------------------------------------------------------------------+-----------+------------+
       | 38     | Timestamp from the last telecommand reception in sec.                     | uint32    | R          |
+      +--------+---------------------------------------------------------------------------+-----------+------------+
+      | 39     | Timestamp when commission mode will timeout.                              | uint32    | R          |
+      +--------+---------------------------------------------------------------------------+-----------+------------+
+      | 40     | Last valid event id that caused an mode transition                        | uint16    | R          |
+      +--------+---------------------------------------------------------------------------+-----------+------------+
+      | 41     | EPS beacon enabled                                                        | boolean   | R/W        |
+      +--------+---------------------------------------------------------------------------+-----------+------------+
+      | 42     | Battery critical level threshold in millivolts.                           | uint16    | R/W        |
+      +--------+---------------------------------------------------------------------------+-----------+------------+
+      | 43     | Experiment enable mode (Automatic = 0 or Manual = 1)                      | uint8     | R/W        |
+      +--------+---------------------------------------------------------------------------+-----------+------------+
+      | 44     | Reset TC Queue (Resets queue when "01h" is written into it)               | uint8     | W          |
+      +--------+---------------------------------------------------------------------------+-----------+------------+
+      | 44     | TC Queue size                                                             | uint8     | R          |
+      +--------+---------------------------------------------------------------------------+-----------+------------+
+      | 44     | Next scheduled telecommand execution timestamp                            | uint32    | R          |
       +--------+---------------------------------------------------------------------------+-----------+------------+
 
 Telemetry
@@ -375,13 +442,13 @@ The :numref:`tab:packets-struct` summarizes all types of telemetry and telecomma
          +----------+---------------------+-------------+---------------------+---------------------------------------------------+------------------+------------+
          |          | Ping answer         | 02h         |                     | Requester callsign                                | 15               | Public     |
          +----------+---------------------+-------------+---------------------+---------------------------------------------------+------------------+------------+
-         |          | General telemetry   | 10h         | “ ” + “PY0EFS”      | OBDH/EPS data                                     | 78               | Public     |
+         | Downlink | General telemetry   | 10h         | “ ” + “PY0EFS”      | OBDH/EPS data                                     | 78               | Public     |
          +----------+---------------------+-------------+---------------------+---------------------------------------------------+------------------+------------+
-         |          | Data request answer | 11h         |                     | Requester callsign + data ID + ts. + data         | 20 to 220        | Public     |
+         | (UHF)    | Data request answer | 11h         |                     | Requester callsign + data ID + ts. + data         | 20 to 220        | Public     |
          +----------+---------------------+-------------+---------------------+---------------------------------------------------+------------------+------------+
-         | Downlink | Payload data        | 12h         |                     | Payload ID + payload data                         | 9 to 220         | Public     |
+         |          | Subsystem table     | 12h         |                     | Table ID + table data                             | 9 to 220         | Public     |
          +----------+---------------------+-------------+---------------------+---------------------------------------------------+------------------+------------+
-         | (UHF)    | TC feedback         | 13h         |                     | Req. callsign + TC packet ID + timestamp          | 20               | Public     |
+         |          | TC feedback         | 13h         |                     | Req. callsign + TC ID + timestamp + error code    | 22               | Public     |
          +----------+---------------------+-------------+---------------------+---------------------------------------------------+------------------+------------+
          |          | Parameter value     | 14h         |                     | Req. callsign + Sub. ID + Param. ID + Param. Val. | 21               | Public     |
          +----------+---------------------+-------------+---------------------+---------------------------------------------------+------------------+------------+
@@ -409,7 +476,7 @@ The :numref:`tab:packets-struct` summarizes all types of telemetry and telecomma
          +----------+---------------------+-------------+---------------------+---------------------------------------------------+------------------+------------+
          |          | Force reset         | 4Ah         |                     | Hash                                              | 28               | Private    |
          +----------+---------------------+-------------+---------------------+---------------------------------------------------+------------------+------------+
-         |          | Get payload data    | 4Bh         |                     | Payload ID + Args. + Hash                         | 41               | Private    |
+         |          | Get subsystem table | 4Bh         |                     | Table ID + Hash                                   | 29               | Private    |
          +----------+---------------------+-------------+---------------------+---------------------------------------------------+------------------+------------+
          |          | Set parameter       | 4Ch         |                     | Subsystem ID + Param. ID + Param. value + Hash    | 34               | Private    |
          +----------+---------------------+-------------+---------------------+---------------------------------------------------+------------------+------------+
@@ -418,6 +485,8 @@ The :numref:`tab:packets-struct` summarizes all types of telemetry and telecomma
          |          | Transmit packet     | 4Eh         |                     | Req. callsign + Any sequence of bytes + Hash      | 29 to 73         | Private    |
          +----------+---------------------+-------------+---------------------+---------------------------------------------------+------------------+------------+
          |          | Update TLE          | 4Fh         |                     | Binary TLE line + Hash                            | 78               | Private    |
+         +----------+---------------------+-------------+---------------------+---------------------------------------------------+------------------+------------+
+         |          | Schedule TC         | 50h         |                     | Exec. TS + TC ID + Callsign + TC Args + Hash      | 40 to 52         | Private    |
          +----------+---------------------+-------------+---------------------+---------------------------------------------------+------------------+------------+
 
 The ID of the subsystems, modules, memories and payloads used in the packets are highlighted in :numref:`tab:system-ids`.
@@ -466,6 +535,24 @@ The ID of the subsystems, modules, memories and payloads used in the packets are
       |               | 5             | SBCD packets         |
       +---------------+---------------+----------------------+
       |               | 6             | Payload Info         |
+      +---------------+---------------+----------------------+
+      | Table         | 0             | OBDH table           |
+      +---------------+---------------+----------------------+
+      |               | 1             | EPS table            |
+      +---------------+---------------+----------------------+
+      |               | 2             | TTC 0 table          |
+      +---------------+---------------+----------------------+
+      |               | 3             | TTC 1 table          |
+      +---------------+---------------+----------------------+
+      |               | 4             | Antenna tabl         |
+      +---------------+---------------+----------------------+
+      |               | 5             | SBCD packets         |
+      +---------------+---------------+----------------------+
+      |               | 6             | EDC 0 table          |
+      +---------------+---------------+----------------------+
+      |               | 7             | EDC 1 table          |
+      +---------------+---------------+----------------------+
+      |               | 8             | Payload X table      |
       +---------------+---------------+----------------------+
       | Memory        | 0             | NOR memory           |
       +---------------+---------------+----------------------+

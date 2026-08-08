@@ -31,11 +31,12 @@
                                  & Deactivate payload  & 48h &                                     & Payload ID + Hash                                 & 29        & Private \\
                                  & Erase memory        & 49h &                                     & Memory ID + Hash                                  & 29        & Private \\
                                  & Force reset         & 4Ah &                                     & Hash                                              & 28        & Private \\
-                                 & Get payload data    & 4Bh &                                     & Payload ID + Args. + Hash                         & 41        & Private \\
+                                 & Get subsystem table & 4Bh &                                     & Subsystem ID + Hash                               & 29        & Private \\
                                  & Set parameter       & 4Ch &                                     & Subsystem ID + Param. ID + Param. value + Hash    & 34        & Private \\
                                  & Get parameter       & 4Dh &                                     & Subsystem ID + Parameter ID + Hash                & 30        & Private \\
                                  & Transmit packet     & 4Eh &                                     & Req. callsign + Any sequence of bytes + Hash      & 29 to 73  & Private \\
                                  & Update TLE          & 4Fh &                                     & Binary TLE line + Hash                            & 78        & Private \\
+                                 & Schedule TC         & 50h &                                     & Exec. TS + TC ID + Callsign + TC Args + Hash      & 40 to 52  & Private \\
         \bottomrule[1.5pt]
     \end{tabular}
     \caption{Telecommunication packets and their content.}
