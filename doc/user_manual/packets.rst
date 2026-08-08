@@ -63,19 +63,15 @@ In :numref:`tab:downlink-packets` the content of the downlink packets are availa
       +---------------------+--------------+------------------------------------------------------+--------------------+
       |                     |              |                                                      | 20 (min.)          |
       +---------------------+--------------+------------------------------------------------------+--------------------+
-      | Payload Data        | 0            | Packet ID (12h)                                      | 1                  |
+      | Subsystem Table     | 0            | Packet ID (12h)                                      | 1                  |
       +---------------------+--------------+------------------------------------------------------+--------------------+
       |                     | 1            | Source callsign (“ PY0EFS”)                          | 7                  |
       +---------------------+--------------+------------------------------------------------------+--------------------+
-      |                     | 8            | Requester callsign                                   | 7                  |
+      |                     | 8            | Table ID                                             | 1                  |
       +---------------------+--------------+------------------------------------------------------+--------------------+
-      |                     | 15           | Data type ID                                         | 1                  |
+      |                     | 9            | Data                                                 | Var.               |
       +---------------------+--------------+------------------------------------------------------+--------------------+
-      |                     | 16           | Timestamp                                            | 4                  |
-      +---------------------+--------------+------------------------------------------------------+--------------------+
-      |                     | 20           | Data                                                 | Var.               |
-      +---------------------+--------------+------------------------------------------------------+--------------------+
-      |                     |              |                                                      | 20 (min.)          |
+      |                     |              |                                                      | 9 (min.)           |
       +---------------------+--------------+------------------------------------------------------+--------------------+
       | TC feedback         | 0            | Packet ID (13h)                                      | 1                  |
       +---------------------+--------------+------------------------------------------------------+--------------------+
@@ -87,7 +83,9 @@ In :numref:`tab:downlink-packets` the content of the downlink packets are availa
       +---------------------+--------------+------------------------------------------------------+--------------------+
       |                     | 16           | Timestamp                                            | 4                  |
       +---------------------+--------------+------------------------------------------------------+--------------------+
-      |                     |              |                                                      | 20                 |
+      |                     | 20           | Error code                                           | 2                  |
+      +---------------------+--------------+------------------------------------------------------+--------------------+
+      |                     |              |                                                      | 22                 |
       +---------------------+--------------+------------------------------------------------------+--------------------+
       | Parameter value     | 0            | Packet ID (14h)                                      | 1                  |
       +---------------------+--------------+------------------------------------------------------+--------------------+
@@ -113,7 +111,7 @@ In :numref:`tab:downlink-packets` the content of the downlink packets are availa
       +---------------------+--------------+------------------------------------------------------+--------------------+
       |                     |              |                                                      | up to 60           |
       +---------------------+--------------+------------------------------------------------------+--------------------+
-      |                     | 0            | Packet ID (10h)                                      | 1                  |
+      | General Telemetry   | 0            | Packet ID (10h)                                      | 1                  |
       +---------------------+--------------+------------------------------------------------------+--------------------+
       |                     | 1            | Source callsign (“ PY0EFS”)                          | 7                  |
       +---------------------+--------------+------------------------------------------------------+--------------------+
@@ -211,7 +209,13 @@ In :numref:`tab:downlink-packets` the content of the downlink packets are availa
       +---------------------+--------------+------------------------------------------------------+--------------------+
       |                     | 101          | Timestamp of the last TC reception in sec.           | 4                  |
       +---------------------+--------------+------------------------------------------------------+--------------------+
-      |                     |              |                                                      | 105                |
+      |                     | 105          | Timestamp of next scheduled telecommand.             | 4                  |
+      +---------------------+--------------+------------------------------------------------------+--------------------+
+      |                     | 109          | TC queue size                                        | 1                  |
+      +---------------------+--------------+------------------------------------------------------+--------------------+
+      |                     | 110          | Operation mode                                       | 1                  |
+      +---------------------+--------------+------------------------------------------------------+--------------------+
+      |                     |              |                                                      | 111                |
       +---------------------+--------------+------------------------------------------------------+--------------------+
 
 .. _sec:uplink-descr:
@@ -243,7 +247,7 @@ As shown in :numref:`tab:packets-struct`, there are 15 supported telecommands. B
 
 - **Force Reset:** It performs a general reset of the satellite modules. When received, the OBDH resets other subsystem, then reset itself. There is no additional content in this packet, just the packet ID and the source callsign (or address). This is a private telecommand and requires a key for authentication, see :ref:`sec:hmac` for more information about authentication.
 
-- **Get Payload Data:** It allows a ground station to download data from a specific payload of the satellite. The required fields are the payload ID, and optionally, arguments to be passed to the payload. The IDs and arguments vary according to the satellite. This is a private telecommand and requires a key for authentication, see :ref:`sec:hmac` for more information about authentication.
+- **Get Subsystem Table:** It allows a ground station to download data from a specific subsystem of the satellite. The only required field is the table ID. The IDs can be seen at :numref:`tab:system-ids`. This is a private telecommand and requires a key for authentication, see :ref:`sec:hmac` for more information about authentication.
 
 - **Set Parameter:** It allows the configuration of specific parameters of a given subsystem of the satellite. The required fields are the ID of the subsystem to set (1 byte), the ID of the parameter to set (1 byte), and the new value of the parameter (4 bytes long). The possible IDs (subsystem and parameter) vary according to the satellite. This is a private telecommand and requires a key for authentication, see :ref:`sec:hmac` for more information about authentication.
 
@@ -252,6 +256,8 @@ As shown in :numref:`tab:packets-struct`, there are 15 supported telecommands. B
 - **Transmit Packet:** This command has the purpose of making a satellite transmit a custom message back to Earth. This can be useful for communication tasks, like a station sending data to another. It differs from "Broadcast Message" in frequency band and the removal of destination callsign. This is a private telecommand and requires a key for authentication, see :ref:`sec:hmac` for more information about authentication.
 
 - **Update TLE:** This telecommand provides a way to update the satellite TLE lines, which are used for position determination, more about the format on the `libpredict implementation <https://github.com/c-porto/libpredict/blob/master/include/predict/predict.h>`__ used for position determination. This is a private telecommand and requires a key for authentication, see :ref:`sec:hmac` for more information about authentication.
+
+- **Schedule TC:** This telecommand provides a way to schedule telecommands, which enable telecommand execution without ground station contact. This is a private telecommand and requires a key for authentication, see :ref:`sec:hmac` for more information about authentication.
 
 The :numref:`tab:uplink-packets` presents the content of the uplink packets.
 
@@ -370,17 +376,15 @@ The :numref:`tab:uplink-packets` presents the content of the uplink packets.
       +--------------------+--------------+-------------------------+--------------------+
       |                    |              |                         | 28                 |
       +--------------------+--------------+-------------------------+--------------------+
-      | Get payload data   | 0            | Packet ID (4Bh)         | 1                  |
+      | Get subsystem table| 0            | Packet ID (4Bh)         | 1                  |
       +--------------------+--------------+-------------------------+--------------------+
       |                    | 1            | Ground station callsign | 7                  |
       +--------------------+--------------+-------------------------+--------------------+
-      |                    | 8            | Payload ID              | 1                  |
+      |                    | 8            | Table ID                | 1                  |
       +--------------------+--------------+-------------------------+--------------------+
-      |                    | 9            | Payload arguments       | 12                 |
+      |                    | 9            | HMAC hash               | 20                 |
       +--------------------+--------------+-------------------------+--------------------+
-      |                    | 21           | HMAC hash               | 20                 |
-      +--------------------+--------------+-------------------------+--------------------+
-      |                    |              |                         | 41                 |
+      |                    |              |                         | 29                 |
       +--------------------+--------------+-------------------------+--------------------+
       | Set parameter      | 0            | Packet ID (4Ch)         | 1                  |
       +--------------------+--------------+-------------------------+--------------------+
@@ -427,4 +431,20 @@ The :numref:`tab:uplink-packets` presents the content of the uplink packets.
       |                    | 58           | HMAC hash               | 20                 |
       +--------------------+--------------+-------------------------+--------------------+
       |                    |              |                         | 78                 |
+      +--------------------+--------------+-------------------------+--------------------+
+      | Schedule TC        | 0            | Packet ID (50h)         | 1                  |
+      +--------------------+--------------+-------------------------+--------------------+
+      |                    | 1            | Ground station callsign | 7                  |
+      +--------------------+--------------+-------------------------+--------------------+
+      |                    | 8            | Execution timestamp     | 4                  |
+      +--------------------+--------------+-------------------------+--------------------+
+      |                    | 12           | TC ID                   | 1                  |
+      +--------------------+--------------+-------------------------+--------------------+
+      |                    | 13           | TC execution callsign   | 7                  |
+      +--------------------+--------------+-------------------------+--------------------+
+      |                    | 20           | TC arguments            | up to 12           |
+      +--------------------+--------------+-------------------------+--------------------+
+      |                    | Var.         | HMAC hash               | 20                 |
+      +--------------------+--------------+-------------------------+--------------------+
+      |                    |              |                         | up to 52           |
       +--------------------+--------------+-------------------------+--------------------+
