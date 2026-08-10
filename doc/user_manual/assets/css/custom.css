@@ -1,0 +1,39 @@
+/* Keep naturally small tables compact, as in the latex-based PDF manual. */
+.compacttable50 table.docutils {
+  width: 50%;
+}
+
+.compacttable55 table.docutils {
+  width: 55%;
+}
+
+.compacttable60 table.docutils {
+  width: 60%;
+}
+
+.compacttable65 table.docutils {
+  width: 65%;
+}
+
+.compacttable70 table.docutils {
+  width: 70%;
+}
+
+.compacttable50 table.docutils,
+.compacttable55 table.docutils,
+.compacttable60 table.docutils,
+.compacttable65 table.docutils,
+.compacttable70 table.docutils {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 700px) {
+  .compacttable50 table.docutils,
+  .compacttable55 table.docutils,
+  .compacttable60 table.docutils,
+  .compacttable65 table.docutils,
+  .compacttable70 table.docutils {
+    width: 100%;
+  }
+}
