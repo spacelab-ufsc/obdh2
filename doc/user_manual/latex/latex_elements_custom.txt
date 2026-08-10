@@ -86,7 +86,7 @@ August 2026
 
 \textbf{\thetitle}
 
-\textit{November, 2021}
+\textit{August, 2026}
 
 \vspace{1cm}
 
@@ -141,7 +141,7 @@ Carlos Augusto Porto Freitas \\
 	\end{center}
 \end{figure}
 
-\textcopyright\ by The OBDH 2.0 Contributors. \thetitle. This work is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit \href{http://creativecommons.org/licenses/by-sa/4.0/}{http://creativecommons.org/licenses/by-sa/4.0/}.
+Copyright\textcopyright\ by The OBDH 2.0 Contributors. \thetitle. This work is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit \href{http://creativecommons.org/licenses/by-sa/4.0/}{http://creativecommons.org/licenses/by-sa/4.0/}.
 
 \cleardoublepage
     """,
