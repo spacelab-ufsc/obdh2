@@ -13,28 +13,31 @@
 Hardware
 ========
 
-The OBDH 2.0 architecture focuses on the low-power operation and low-cost production, maintaining performance and proposing different approaches to increase overall reliability. Therefore, the board was developed using these criteria, and the changes from the original design were necessary to improve bottlenecks and achieve the requirements of the further space mission. The :numref:`fig:block-diagram` presents the module architecture from the hardware perspective, including the main PCB components and interfaces: microcontroller, buffers, transceivers, memory, watchdog and voltage monitor, and connectors. The following sections describe the hardware design, interfaces, and standards in detail. The Figures :numref:`fig:pcb-top`, :numref:`fig:pcb-bottom`, and :numref:`fig:pcb-side` present 3D-rendered images of the top, bottom, and side views of the board, respectively.
+The OBDH 2.0 architecture focuses on the low-power operation and low-cost production, maintaining performance and proposing different approaches to increase overall reliability. Therefore, the board was developed using these criteria, and the changes from the original design were necessary to improve bottlenecks and achieve the requirements of the further space mission. The :numref:`fig:block-diagram` presents the module architecture from the hardware perspective, including the main PCB components and interfaces: microcontroller, buffers, transceivers, memory, watchdog and voltage monitor, and connectors. The following sections describe the hardware design, interfaces, and standards in detail. The :numref:`fig:pcb-views` present 3D-rendered images of the top, bottom, and side views of the board, respectively.
 
-.. figure:: img/obdh2-pcb-top.png
+.. subfigure:: AB|CC
+   :gap: 8px
+   :subcaptions: below
+   :name: fig:pcb-views
+   :class-grid: outline
    :align: center
-   :name: fig:pcb-top
-   :width: 93mm
 
-   Top side of the PCB.
+   .. image:: img/obdh2-pcb-top.png
+      :width: 98%
+      :align: center
+      :alt: Top view.
 
-.. figure:: img/obdh2-pcb-bottom.png
-   :align: center
-   :name: fig:pcb-bottom
-   :width: 93mm
+   .. image:: img/obdh2-pcb-bottom.png
+      :width: 98%
+      :align: center
+      :alt: Bottom view.
 
-   Bottom side of the PCB.
+   .. image:: img/obdh2-pcb-side.png
+      :width: 50%
+      :align: center
+      :alt: Side view.
 
-.. figure:: img/obdh2-pcb-side.png
-   :align: center
-   :name: fig:pcb-side
-   :width: 93mm
-
-   Side view of the PCB.
+   Views of the PCB.
 
 Interfaces
 ----------
@@ -187,15 +190,15 @@ The interface with the microcontroller programmer is performed through external 
       :align: center
 
       ============= ========= =========
-      **Pin [A-B]** **Row A** **Row B**  
+      **Pin [A-B]** **Row A** **Row B**
       ============= ========= =========
-      1-2           TDO_TDI   VCC_3V3    
-      3-4           \-        \-         
-      5-6           \-        \-         
-      7-8           TCK       \-         
-      9-10          GND       \-         
-      11-12         \-        UART_TX    
-      13-14         \-        UART_RX    
+      1-2           TDO_TDI   VCC_3V3
+      3-4           \-        \-
+      5-6           \-        \-
+      7-8           TCK       \-
+      9-10          GND       \-
+      11-12         \-        UART_TX
+      13-14         \-        UART_RX
       ============= ========= =========
 
 .. table:: Programmer picoblade connector pinout.
@@ -252,18 +255,18 @@ The pinout of the daughterboard interface is available in the :numref:`tab:daugt
       :align: center
 
       ============= =========== =========
-      **Pin [A-B]** **Row A**   **Row B**  
+      **Pin [A-B]** **Row A**   **Row B**
       ============= =========== =========
-      1-2           VCC_3V3     GND        
-      3-4           VCC_3V3_ANT GND        
-      5-6           VCC_BAT     GND        
-      7-8           GPIO_0      GPIO_1     
-      9-10          GPIO_2      GPIO_3     
-      11-12         SPI_0_CLK   ADC_0      
-      13-14         SPI_0_MISO  ADC_1      
-      15-16         SPI_0_MOSI  ADC_2      
-      17-18         SPI_0_CS_0  I2C_2_SDA  
-      19-20         SPI_0_CS_1  I2C_2_SCL  
+      1-2           VCC_3V3     GND
+      3-4           VCC_3V3_ANT GND
+      5-6           VCC_BAT     GND
+      7-8           GPIO_0      GPIO_1
+      9-10          GPIO_2      GPIO_3
+      11-12         SPI_0_CLK   ADC_0
+      13-14         SPI_0_MISO  ADC_1
+      15-16         SPI_0_MOSI  ADC_2
+      17-18         SPI_0_CS_0  I2C_2_SDA
+      19-20         SPI_0_CS_1  I2C_2_SCL
       ============= =========== =========
 
 Guidelines
