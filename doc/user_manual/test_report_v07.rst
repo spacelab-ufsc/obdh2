@@ -221,13 +221,20 @@ FRAM Memory
 
 .. subfigure:: AB
    :layout-sm: A|B
+   :gap: 8px
    :subcaptions: below
    :name: fig:v07-fram-test
+   :class-grid: outline
+   :align: center
 
    .. image:: img/v07/obdh2-v07-fram-results1.png
+      :width: 100%
+      :align: center
       :alt: First FRAM memory test result.
 
    .. image:: img/v07/obdh2-v07-fram-results2.png
+      :width: 100%
+      :align: center
       :alt: Second FRAM memory test result.
 
    Test results of the FRAM memory.

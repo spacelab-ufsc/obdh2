@@ -18,9 +18,9 @@ Product tree
 
 The product tree of the firmware part of the OBDH 2.0 module is available in :numref:`fig:product-tree-fw`.
 
-.. figure:: img/product-tree-fw.drawio.*
-   :align: center
+.. figure:: img/product-tree-fw.*
    :name: fig:product-tree-fw
+   :align: center
 
    Product tree of the firmware of the OBDH 2.0 module.
 
@@ -34,6 +34,7 @@ The firmware depends on external libraries to access the embedded hardware or to
    .. table:: External libraries and dependencies of the firmware.
       :name: tab:fw-dependencies
       :widths: 70 30
+      :align: center
 
       ================ ===========
       **Library**      **Version**
@@ -52,6 +53,7 @@ A list of the firmware tasks can be seen in the :numref:`tab:firmware-tasks`. A 
    .. table:: Firmware tasks.
       :name: tab:firmware-tasks
       :widths: 30 14 18 18 20
+      :align: center
 
       +------------------------+--------------+------------------------+-----------------+-------------------+
       | **Name**               | **Priority** | **Initial delay [ms]** | **Period [ms]** | **Stack [bytes]** |
@@ -123,8 +125,9 @@ EDC reading
 This task reads the state and housekeeping EDC frames, if there are available PTT packets on EDC’s FIFO, it also attempts to read them. After every sucessfull PTT packet read the data is stored in flash memory, following the same scheme described in :ref:`sec:data-log-task`. A flowchart of how the data collection procedure works can be seen in :numref:`fig:edc-reading-flowchart`.
 
 .. figure:: img/edc_reading_flowchart.*
-   :align: center
    :name: fig:edc-reading-flowchart
+   :width: 70%
+   :align: center
 
    EDC reading procedure flowchart.
 
@@ -153,6 +156,7 @@ This task controls all mission specific behavior, specially payload control. Aft
    .. table:: Mission Manager events.
       :name: tab:mission-man-events
       :widths: 28 62 10
+      :align: center
 
       +-------------------------+-------------------------------------------------------+--------+
       | **Name**                | **Description**                                       | **ID** |
@@ -262,6 +266,7 @@ The internal variables and parameters of the OBDH firmware can be seen in :numre
    .. table:: Variables and parameters of the OBDH 2.0.
       :name: tab:vars-and-pars
       :widths: 8 70 12 10
+      :align: center
 
       +--------+---------------------------------------------------------------------------+-----------+------------+
       | **ID** | **Name/Description**                                                      | **Type**  | **Access** |
@@ -432,6 +437,7 @@ The :numref:`tab:packets-struct` summarizes all types of telemetry and telecomma
       .. table:: Telecommunication packets and their content.
          :name: tab:packets-struct
          :class: packet-summary
+         :align: center
 
          +----------+---------------------+-------------+---------------------+---------------------------------------------------+------------------+------------+
          | **Link** | **Packet Name**     | **ID**      | **Source Callsign** | **Data (up to 212 bytes)**                        | **Size (bytes)** | **Access** |
@@ -496,6 +502,7 @@ The ID of the subsystems, modules, memories and payloads used in the packets are
    .. table:: IDs of the satellite.
       :name: tab:system-ids
       :widths: 22 25 53
+      :align: center
 
       +---------------+---------------+----------------------+
       | **Type**      | **ID Number** | **Description**      |
@@ -589,6 +596,7 @@ The main configuration parameters of the operating system in this project are av
    .. table:: FreeRTOS main configuration parameters.
       :name: tab:freertos-config
       :widths: 55 25 20
+      :align: center
 
       ======================== ========= ========
       **Parameter**            **Value** **Unit**

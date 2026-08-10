@@ -100,39 +100,60 @@ Communication Busses
 
 .. subfigure:: AB
    :layout-sm: A|B
+   :gap: 8px
    :subcaptions: below
    :name: fig:test-i2c-0
+   :class-grid: outline
+   :align: center
 
    .. image:: img/v05/test-i2c-0.jpg
+      :width: 100%
+      :align: center
       :alt: Connections of the I2C port 0 test.
 
    .. image:: img/v05/waveform-i2c-0.png
+      :width: 100%
+      :align: center
       :alt: Waveforms of the I2C port 0 test.
 
    I2C port 0 test.
 
 .. subfigure:: AB
    :layout-sm: A|B
+   :gap: 8px
    :subcaptions: below
    :name: fig:test-i2c-1
+   :class-grid: outline
+   :align: center
 
    .. image:: img/v05/test-i2c-1.jpg
+      :width: 100%
+      :align: center
       :alt: Connections of the I2C port 1 test.
 
    .. image:: img/v05/waveform-i2c-1.png
+      :width: 100%
+      :align: center
       :alt: Waveforms of the I2C port 1 test.
 
    I2C port 1 test.
 
 .. subfigure:: AB
    :layout-sm: A|B
+   :gap: 8px
    :subcaptions: below
    :name: fig:test-i2c-2
+   :class-grid: outline
+   :align: center
 
    .. image:: img/v05/test-i2c-2.jpg
+      :width: 100%
+      :align: center
       :alt: Connections of the I2C port 2 test.
 
    .. image:: img/v05/waveform-i2c-2.png
+      :width: 100%
+      :align: center
       :alt: Waveforms of the I2C port 2 test.
 
    I2C port 2 test.
@@ -180,16 +201,25 @@ Input Current
 
 .. subfigure:: ABC
    :layout-sm: A|B|C
+   :gap: 8px
    :subcaptions: below
    :name: fig:current-sensing-error-v05
+   :class-grid: outline
+   :align: center
 
    .. image:: img/v05/current-sensor-circuit.png
+      :width: 100%
+      :align: center
       :alt: Current sensing circuit.
 
    .. image:: img/v05/max9934-top-view.png
+      :width: 100%
+      :align: center
       :alt: MAX9934 pinout.
 
    .. image:: img/v05/current-sensor-layout.png
+      :width: 100%
+      :align: center
       :alt: Current sensing layout on the bottom layer.
 
    Current sensing circuit, pinout, and PCB layout.
@@ -228,13 +258,20 @@ NOR Flash Memory
 
 .. subfigure:: AB
    :layout-sm: A|B
+   :gap: 8px
    :subcaptions: below
    :name: fig:test-nor-memory
+   :class-grid: outline
+   :align: center
 
    .. image:: img/v05/test-nor-memory.jpg
+      :width: 100%
+      :align: center
       :alt: Connections of the NOR flash memory test.
 
    .. image:: img/v05/waveform-spi-mem.png
+      :width: 100%
+      :align: center
       :alt: Waveforms of the NOR memory SPI.
 
    NOR memory SPI test.

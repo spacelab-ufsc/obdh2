@@ -38,27 +38,26 @@ Custom Configuration
 
 On the PC104 connector of OBDH2, there are some jumper resistors to enable extra I2C, SPI, and GPIO interfaces if desired. Note that the I2C0, I2C1, and SPI channels should not be used with shared devices. These components’ corresponding tables and locations on the PCB are shown on :numref:`tab:additional-pc104-inferfaces` and Figures :numref:`fig:add_gpio_i2c1_jumpers`, :numref:`fig:add_i2c0_jumpers` and :numref:`fig:add_spi_1gpio_jumpers`.
 
-.. container:: compacttable50
+.. table:: Additional PC104 inferfaces.
+   :name: tab:additional-pc104-inferfaces
+   :widths: 25 25
+   :align: center
 
-   .. table:: Additional PC104 inferfaces.
-      :name: tab:additional-pc104-inferfaces
-      :widths: 15 50
-
-      ========= =============
-      **Label** **Interface**   
-      ========= =============
-      J_PC1     I2C0_SDA        
-      J_PC2     I2C0_SCL        
-      J_PC3     I2C1_SDA        
-      J_PC4     I2C1_SCL        
-      J_PC5     SPI_MOSI        
-      J_PC6     SPI_MISO        
-      J_PC7     SPI_CLK         
-      J_PC8     GPI0            
-      J_PC9     GPIO1           
-      J_PC10    GPIO2           
-      J_PC11    GPIO3           
-      ========= =============
+   ========= =============
+   **Label** **Interface**
+   ========= =============
+   J_PC1     I2C0_SDA
+   J_PC2     I2C0_SCL
+   J_PC3     I2C1_SDA
+   J_PC4     I2C1_SCL
+   J_PC5     SPI_MOSI
+   J_PC6     SPI_MISO
+   J_PC7     SPI_CLK
+   J_PC8     GPI0
+   J_PC9     GPIO1
+   J_PC10    GPIO2
+   J_PC11    GPIO3
+   ========= =============
 
 .. figure:: img/add_gpio_i2c1_jumpers.png
    :align: center

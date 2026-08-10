@@ -44,6 +44,7 @@ The :numref:`fig:diagram-interfaces` presents the board interfaces, which consis
 .. figure:: img/diagram_interfaces.*
    :align: center
    :name: fig:diagram-interfaces
+   :width: 80%
 
    Interfaces diagram.
 
@@ -52,6 +53,7 @@ The :numref:`fig:diagram-interfaces` presents the board interfaces, which consis
    .. table:: Boards interfaces.
       :name: tab:interfaces
       :widths: 28 12 22 38
+      :align: center
 
       ===================== ======== ================== ===================
       **Peripheral**        **USCI** **Protocol**       **Comm. Protocol**
@@ -128,28 +130,28 @@ Antenna Module
 
 The communication with the Antenna module is performed through the external connectors presented in :numref:`fig:ant-connectors`. The P5 connector (6H header) is used for development, while P4 (6P PicoBlade) is used for the flight model. Both connectors provide the same dedicated I2C, power-supply, and GPIO interface described in :numref:`tab:antenna-connector-pins`.
 
-.. container:: compacttable55
+.. table:: Antenna module connectors pinout.
+   :name: tab:antenna-connector-pins
+   :widths: 20 35
+   :align: center
 
-   .. table:: Antenna module connectors pinout.
-      :name: tab:antenna-connector-pins
-      :widths: 20 80
-
-      ======= ===========
-      **Pin** **Row**       
-      ======= ===========
-      1       VCC_3V3_ANT   
-      2       VCC_3V3_ANT   
-      3       I2C_SDA       
-      4       I2C_SCL       
-      5       GPIO          
-      6       GND           
-      ======= ===========
+   ======= ===========
+   **Pin** **Row**
+   ======= ===========
+   1       VCC_3V3_ANT
+   2       VCC_3V3_ANT
+   3       I2C_SDA
+   4       I2C_SCL
+   5       GPIO
+   6       GND
+   ======= ===========
 
 .. subfigure:: AB
    :layout-sm: A|B
    :gap: 8px
    :subcaptions: below
    :name: fig:ant-connectors
+   :align: center
 
    .. image:: img/p5-connector.png
       :align: center
@@ -182,6 +184,7 @@ The interface with the microcontroller programmer is performed through external 
    .. table:: Programmer header connector pinout.
       :name: tab:jtag-header-connector-pins
       :widths: 30 35 35
+      :align: center
 
       ============= ========= =========
       **Pin [A-B]** **Row A** **Row B**  
@@ -195,22 +198,21 @@ The interface with the microcontroller programmer is performed through external 
       13-14         \-        UART_RX    
       ============= ========= =========
 
-.. container:: compacttable65
+.. table:: Programmer picoblade connector pinout.
+   :name: tab:jtag-picoblade-connector-pins
+   :widths: 20 40
+   :align: center
 
-   .. table:: Programmer picoblade connector pinout.
-      :name: tab:jtag-picoblade-connector-pins
-      :widths: 20 80
-
-      ======= =======
-      **Pin** **Row**   
-      ======= =======
-      1       VCC_3V3   
-      2       TDO_TDI   
-      3       TCK       
-      4       UART_TX   
-      5       UART_RX   
-      6       GND       
-      ======= =======
+   ======= =======
+   **Pin** **Row**
+   ======= =======
+   1       VCC_3V3
+   2       TDO_TDI
+   3       TCK
+   4       UART_TX
+   5       UART_RX
+   6       GND
+   ======= =======
 
 .. figure:: img/p7-connector.png
    :align: center
@@ -247,6 +249,7 @@ The pinout of the daughterboard interface is available in the :numref:`tab:daugt
    .. table:: Daughterboard connector pinout.
       :name: tab:daugtherboard-connector-pins
       :widths: 30 35 35
+      :align: center
 
       ============= =========== =========
       **Pin [A-B]** **Row A**   **Row B**  
@@ -292,6 +295,7 @@ The OBDH 2.0 uses a low-power and low-cost microcontroller family from Texas Ins
    .. table:: Microcontroller features summary.
       :name: tab:msp430-summary
       :widths: 12 12 12 28 12 12 12
+      :align: center
 
       +-----------+----------+------------+----------------------+---------+---------+----------+
       | **Flash** | **SRAM** | **Timers** | **USCI**             | **ADC** | **DAC** | **GPIO** |
@@ -315,6 +319,7 @@ The microcontroller has 6 Universal Serial Communication Interfaces (USCI) that 
    .. table:: USCI configuration.
       :name: tab:usci-config
       :widths: 14 20 12 18 16 20
+      :align: center
 
       +---------------+----------------------+----------+-----------------+---------------+-------------------+
       | **Interface** | **Protocol (Index)** | **Mode** | **Word Length** | **Data Rate** | **Configuration** |
@@ -359,7 +364,8 @@ An illustration of the microcontroller pinout positions can be seen in the :numr
 
    .. table:: Microcontroller pinout and assignments.
       :name: tab:mcu-pinout
-      :widths: 15 15 70
+      :widths: 15 15 35
+      :align: center
 
       ============ ============== =================
       **Pin Code** **Pin Number** **Signal**
