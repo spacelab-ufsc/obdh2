@@ -16,6 +16,7 @@ The OBDH 2.0 is an on-board computer module designed by SpaceLab for nanosatelli
 
 .. toctree::
    :maxdepth: 3
+   :caption: Documentation
 
    introduction
    system_overview
@@ -23,8 +24,13 @@ The OBDH 2.0 is an on-board computer module designed by SpaceLab for nanosatelli
    firmware
    assembly
    instructions
+   references
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Appendix
+
    telemetry
    packets
    test_report_v05
    test_report_v07
-   references

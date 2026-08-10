@@ -17,7 +17,6 @@ from docutils import nodes
 from sphinx.builders.latex.nodes import thebibliography
 from sphinx.transforms.post_transforms import SphinxPostTransform
 
-
 class PlaceBibliographyAtMarker(SphinxPostTransform):
     """Keep the PDF bibliography before the appendices.
 
@@ -40,7 +39,6 @@ class PlaceBibliographyAtMarker(SphinxPostTransform):
                 bibliography.parent.remove(bibliography)
                 marker.replace_self(bibliography)
                 return
-
 
 class UseCompactPacketSummary(SphinxPostTransform):
     """Use the original compact landscape layout for the PDF packet table."""
@@ -96,6 +94,10 @@ elif builder in ["latex", "latexpdf"]:
 # Options for HTML output
 html_theme = "sphinx_rtd_theme"
 html_static_path = ["assets"]
+html_logo = "_static/spacelab-logo-full-color-rgb-1000px@72ppi.png"
+html_theme_options = {
+    'logo_only': True,
+}
 html_css_files = ["css/custom.css"]
 html_title = "OBDH 2.0 Documentation"
 html_short_title = "OBDH 2.0 Documentation"
@@ -128,7 +130,6 @@ latex_additional_files = [
     "img/by-sa.pdf",
     "img/spacelab-logo-full-color-rgb-1000px@72ppi.png",
 ]
-
 
 def setup(app):
     app.add_post_transform(PlaceBibliographyAtMarker)
