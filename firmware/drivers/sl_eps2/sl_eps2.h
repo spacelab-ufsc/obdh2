@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.12
+ * \version 1.0.0
  * 
  * \date 2020/02/01
  * 
@@ -48,7 +48,7 @@
 #define SL_EPS2_DEVICE_ID                       0xEEE2U /**< EPS 2.0 device ID. */
 
 /* EPS 2.0 registers */
-#define SL_EPS2_REG_TIME_COUNTER_MS             0       /**< Time counter in millseconds. */
+#define SL_EPS2_REG_TIME_COUNTER                0       /**< Time counter in seconds. */
 #define SL_EPS2_REG_UC_TEMPERATURE_K            1       /**< Temperature of the uC in K. */
 #define SL_EPS2_REG_CURRENT_MA                  2       /**< EPS circuitry and Beacon MCU current in mA. */
 #define SL_EPS2_REG_LAST_RESET_CAUSE            3       /**< Last reset cause. */
@@ -97,6 +97,9 @@
 #define SL_EPS2_REG_BAT_HEATER_1_MODE           46      /**< Battery heater 1 mode (0x00 = automatic, 0x01 = manual). */
 #define SL_EPS2_REG_BAT_HEATER_2_MODE           47      /**< Battery heater 2 mode (0x00 = automatic, 0x01 = manual). */
 #define SL_EPS2_REG_DEVICE_ID                   48      /**< Device ID (0xEEE2). */
+#define SL_EPS2_REG_RESET_EPS                   49      /**< Used to reset EPS device */
+#define SL_EPS2_REG_PAYLOAD_ENABLE              50      /**< Enable/Disable payload power source (0x00 = disable, 0x01 = enable) */
+#define SL_EPS2_REG_BEACON_ENABLE               51      /**< Enable/Disable EPS beacon (0x00 = disable, 0x01 = enable) */
 
 /**
  * \brief Solar panels.

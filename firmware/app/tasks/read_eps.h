@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.47
+ * \version 1.0.0
  * 
  * \date 2021/05/08
  * 
@@ -44,7 +44,7 @@
 #define TASK_READ_EPS_STACK_SIZE                384                 /**< Stack size in bytes. */
 #define TASK_READ_EPS_PRIORITY                  3                   /**< Task priority. */
 #define TASK_READ_EPS_PERIOD_MS                 (60000)             /**< Task period in milliseconds. */
-#define TASK_READ_EPS_INIT_TIMEOUT_MS           2000                /**< Wait time to initialize the task in milliseconds. */
+#define TASK_READ_EPS_INIT_TIMEOUT_MS           5000                /**< Wait time to initialize the task in milliseconds. */
 
 /**
  * \brief Read EPS handle.
@@ -56,7 +56,7 @@ extern xTaskHandle xTaskReadEPSHandle;
  *
  * \return None.
  */
-void vTaskReadEPS(void);
+void vTaskReadEPS(void *p);
 
 #endif /* READ_EPS_H_ */
 

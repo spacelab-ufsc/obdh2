@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.35
+ * \version 1.0.0
  * 
  * \date 2021/10/20
  * 
@@ -41,21 +41,22 @@
 
 /* Telecommands keys */
 #define CONFIG_TC_KEY_DATA_REQUEST                      ":*gRc9h.Mhwzl1PW"
-#define CONFIG_TC_KEY_ENTER_HIBERNATION                 "#7@rsQVL$Pxf(5eU"
-#define CONFIG_TC_KEY_LEAVE_HIBERNATION                 "5d#QvdYzK59`Du>z"
+#define CONFIG_TC_KEY_ENTER_HIBERNATION                 "#7@rsQVL$Pxf(5eU" // cppcheck-suppress misra-c2012-20.10
+#define CONFIG_TC_KEY_LEAVE_HIBERNATION                 "5d#QvdYzK59`Du>z" // cppcheck-suppress misra-c2012-20.10
 #define CONFIG_TC_KEY_ACTIVATE_MODULE                   "6mP=VA33u/:m)b+z"
 #define CONFIG_TC_KEY_DEACTIVATE_MODULE                 ":jvDVD_)jR@HWT{_"
 #define CONFIG_TC_KEY_ACTIVATE_PAYLOAD_EDC              "`Uyp)]^n,3q[/zs["
 #define CONFIG_TC_KEY_ACTIVATE_PAYLOAD_PAYLOAD_X        "d0bG$pIpdPzuSVV^"
-#define CONFIG_TC_KEY_ACTIVATE_PAYLOAD_HARSH            "zhD)GQ7rxD;:U7s$"
 #define CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_EDC            "Bdks$V>JzK*3*A}2"
 #define CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_PAYLOAD_X      "fna%&wM|Y(wIF32J"
-#define CONFIG_TC_KEY_DEACTIVATE_PAYLOAD_HARSH          "=jG,3r:bxiN'I;cK"
 #define CONFIG_TC_KEY_ERASE_MEMORY                      "C:8RkJE${^>%wYVR"
 #define CONFIG_TC_KEY_FORCE_RESET                       "@A)Z-t(x+@nDHpKF"
-#define CONFIG_TC_KEY_GET_PAYLOAD_DATA                  "BkN&a):^fr(@(5x?"
+#define CONFIG_TC_KEY_GET_SUBSYSTEM_TABLE               "BkN&a):^fr(@(5x?"
 #define CONFIG_TC_KEY_SET_PARAMETER                     "x&veg;r[y{z{{T;7"
 #define CONFIG_TC_KEY_GET_PARAMETER                     "EB'YThpxu7,yla,m"
+#define CONFIG_TC_KEY_UPDATE_TLE                        "LJ(@y#xd7%@|#@;g" // cppcheck-suppress misra-c2012-20.10
+#define CONFIG_TC_KEY_TRANSMIT_PACKET                   "($%87<#{E:?Gwd3*" // cppcheck-suppress misra-c2012-20.10
+#define CONFIG_TC_KEY_SCHEDULE_TC                       "iT>&H);^f)(|1y?C"
 
 #endif /* KEYS_H_ */
 

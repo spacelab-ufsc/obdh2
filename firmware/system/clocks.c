@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.7
+ * \version 1.0.0
  * 
  * \date 2020/01/25
  * 
@@ -44,19 +44,19 @@ int clocks_setup(clocks_config_t clks)
     /* Set VCore */
     if (clks.mclk_hz >= 25000000UL)
     {
-        PMM_setVCore(PMM_CORE_LEVEL_3);
+        (void)PMM_setVCore(PMM_CORE_LEVEL_3);
     }
     else if (clks.mclk_hz >= 20000000UL)
     {
-        PMM_setVCore(PMM_CORE_LEVEL_2);
+        (void)PMM_setVCore(PMM_CORE_LEVEL_2);
     }
     else if (clks.mclk_hz >= 12000000UL)
     {
-        PMM_setVCore(PMM_CORE_LEVEL_1);
+        (void)PMM_setVCore(PMM_CORE_LEVEL_1);
     }
     else
     {
-        PMM_setVCore(PMM_CORE_LEVEL_0);
+        (void)PMM_setVCore(PMM_CORE_LEVEL_0);
     }
 
     /* Set DCO FLL reference = REFO */

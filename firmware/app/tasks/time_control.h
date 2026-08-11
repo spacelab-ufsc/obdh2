@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.48
+ * \version 1.0.0
  * 
  * \date 2020/08/09
  * 
@@ -39,10 +39,11 @@
 
 #include <FreeRTOS.h>
 #include <task.h>
+#include <system/system.h>
 
 #define TASK_TIME_CONTROL_NAME                  "Time Control"      /**< Task name. */
 #define TASK_TIME_CONTROL_STACK_SIZE            128                 /**< Stack size in bytes. */
-#define TASK_TIME_CONTROL_PRIORITY              3                   /**< Task priority. */
+#define TASK_TIME_CONTROL_PRIORITY              4                   /**< Task priority. */
 #define TASK_TIME_CONTROL_PERIOD_MS             1000                /**< Task period in milliseconds. */
 #define TASK_TIME_CONTROL_INIT_TIMEOUT_MS       1000                /**< Wait time to initialize the task in milliseconds. */
 
@@ -56,7 +57,16 @@ extern xTaskHandle xTaskTimeControlHandle;
  *
  * \return None.
  */
-void vTaskTimeControl(void);
+void vTaskTimeControl(void *p);
+
+/**
+ * \brief Saves a given system time to the non-volatile memory.
+ *
+ * \param[in] tm is the system time value to save.
+ *
+ * \return The status/error code.
+ */
+int time_control_save_sys_time(sys_time_t tm);
 
 #endif /* TIME_CONTROL_H_ */
 

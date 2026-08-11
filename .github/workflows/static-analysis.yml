@@ -1,7 +1,7 @@
 #
 # static-analysis-workflow.yml
 #
-# Copyright (C) 2021, SpaceLab.
+# Copyright The OBDH 2.0 Contributors.
 #
 # This file is part of OBDH 2.0.
 #
@@ -37,7 +37,7 @@ jobs:
 
   cppcheck-analysis:
     name: cppcheck-analysis
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       fail-fast: false
@@ -49,16 +49,22 @@ jobs:
         run: sudo apt install -y cppcheck
 
       - name: Execute CppCheck on tasks files
-        run: cppcheck --std=c99 --force --error-exitcode=-1 --addon=misra.py firmware/app/tasks/
+        run: cppcheck --std=c99 --force --error-exitcode=-1 --inline-suppr --addon=misra.py -Ifirmware -Ifirmware/app -Ifirmware/app -Ifirmware/app/libs -Ifirmware/freertos/include -Ifirmware/config -Ifirmware/freertos/portable/CCS/MSP430X -Ifirmware/app/libs/libpredict/include firmware/app/tasks/ --suppress=misra-c2012-20.7 --suppress=misra-c2012-21.1 --suppress=misra-c2012-20.2 --suppress=misra-c2012-20.9
+
+      - name: Execute CppCheck on utils files
+        run: cppcheck --std=c99 --force --error-exitcode=-1 --inline-suppr --addon=misra.py -Ifirmware -Ifirmware/app -Ifirmware/app -Ifirmware/app/libs -Ifirmware/freertos/include -Ifirmware/config -Ifirmware/freertos/portable/CCS/MSP430X -Ifirmware/app/libs/libpredict/include firmware/app/utils/ --suppress=misra-c2012-20.7 --suppress=misra-c2012-21.1 --suppress=misra-c2012-20.2 --suppress=misra-c2012-20.9
+
+      - name: Execute CppCheck on structs files
+        run: cppcheck --std=c99 --force --error-exitcode=-1 --inline-suppr --addon=misra.py -Ifirmware -Ifirmware/app -Ifirmware/app -Ifirmware/app/libs -Ifirmware/freertos/include -Ifirmware/config -Ifirmware/freertos/portable/CCS/MSP430X -Ifirmware/app/libs/libpredict/include firmware/app/structs/ --suppress=misra-c2012-20.7 --suppress=misra-c2012-21.1 --suppress=misra-c2012-20.2 --suppress=misra-c2012-20.9
 
       - name: Execute CppCheck on devices files
-        run: cppcheck --std=c99 --error-exitcode=-1 --addon=misra.py firmware/devices/
+        run: cppcheck --std=c99 --force --error-exitcode=-1 --inline-suppr --addon=misra.py -Ifirmware -Ifirmware/app -Ifirmware/app -Ifirmware/app/libs -Ifirmware/freertos/include -Ifirmware/config -Ifirmware/freertos/portable/CCS/MSP430X -Ifirmware/app/libs/libpredict/include firmware/devices/ --suppress=misra-c2012-20.7 --suppress=misra-c2012-21.1 --suppress=misra-c2012-20.2 --suppress=misra-c2012-20.9
 
       - name: Execute CppCheck on drivers files
-        run: cppcheck --std=c99 --error-exitcode=-1 --inline-suppr --addon=misra.py firmware/drivers/
+        run: cppcheck --std=c99 --force --error-exitcode=-1 --inline-suppr --addon=misra.py -Ifirmware -Ifirmware/app -Ifirmware/app -Ifirmware/app/libs -Ifirmware/freertos/include -Ifirmware/config -Ifirmware/freertos/portable/CCS/MSP430X -Ifirmware/app/libs/libpredict/include firmware/drivers/ --suppress=misra-c2012-20.7 --suppress=misra-c2012-21.1 --suppress=misra-c2012-20.2 --suppress=misra-c2012-20.9
 
       - name: Execute CppCheck on system files
-        run: cppcheck --std=c99 --error-exitcode=-1 --inline-suppr --addon=misra.py firmware/system/
+        run: cppcheck --std=c99 --force --error-exitcode=-1 --inline-suppr --addon=misra.py -Ifirmware -Ifirmware/app -Ifirmware/app -Ifirmware/app/libs -Ifirmware/freertos/include -Ifirmware/config -Ifirmware/freertos/portable/CCS/MSP430X -Ifirmware/app/libs/libpredict/include firmware/system/ --suppress=misra-c2012-20.7 --suppress=misra-c2012-21.1 --suppress=misra-c2012-20.2 --suppress=misra-c2012-20.9
 
       - name: Execute CppCheck on main files
-        run: cppcheck --std=c99 --error-exitcode=-1 --addon=misra.py firmware/main.c firmware/version.h
+        run: cppcheck --std=c99 --force --error-exitcode=-1 --inline-suppr --addon=misra.py -Ifirmware -Ifirmware/app -Ifirmware/app -Ifirmware/app/libs -Ifirmware/freertos/include -Ifirmware/config -Ifirmware/freertos/portable/CCS/MSP430X -Ifirmware/app/libs/libpredict/include firmware/main.c firmware/version.h --suppress=misra-c2012-20.7 --suppress=misra-c2012-21.1 --suppress=misra-c2012-20.2 --suppress=misra-c2012-20.9

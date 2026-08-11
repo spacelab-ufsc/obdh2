@@ -1,7 +1,7 @@
 /*
  * antenna.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -24,8 +24,9 @@
  * \brief Antenna device implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.8.10
+ * \version 1.0.0
  * 
  * \date 2019/11/01
  * 
@@ -39,6 +40,7 @@
 #include <system/sys_log/sys_log.h>
 
 #include <drivers/isis_antenna/isis_antenna.h>
+#include <drivers/sl_antenna/sl_antenna.h>
 
 #include "antenna.h"
 
@@ -67,7 +69,7 @@ int antenna_init(void)
     else
     {
     #if defined(CONFIG_DRV_ISIS_ANTENNA_ENABLED) && (CONFIG_DRV_ISIS_ANTENNA_ENABLED == 1)
-        sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Initializing...");
+        sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Initializing the antenna...");
         sys_log_new_line();
 
         if (isis_antenna_init() == 0)
@@ -102,6 +104,19 @@ int antenna_init(void)
                 sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "Error reading the antenna temperature!");
                 sys_log_new_line();
             }
+        }
+        else
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "Error during the initialization!");
+            sys_log_new_line();
+        }
+    #elif defined(CONFIG_DRV_SL_ANTENNA_ENABLED) && (CONFIG_DRV_SL_ANTENNA_ENABLED == 1)
+        sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Initializing the antenna...");
+        sys_log_new_line();
+
+        if (sl_antenna_init() == 0)
+        {
+            err = 0;
         }
         else
         {
@@ -201,7 +216,7 @@ int antenna_deploy(uint32_t timeout_ms)
     }
 
     /* Sequential deployment */
-    sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Trying an sequential deploy...");
+    sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Trying a sequential deploy...");
     sys_log_new_line();
 
     if (isis_antenna_start_sequential_deploy(ANTENNA_SEQUENTIAL_DEPLOY_BURN_TIME_SEC) != 0)
@@ -239,8 +254,17 @@ int antenna_deploy(uint32_t timeout_ms)
 
         err++;
     }
+#elif defined(CONFIG_DRV_SL_ANTENNA_ENABLED) && (CONFIG_DRV_SL_ANTENNA_ENABLED == 1)
+    sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Trying a sequential deploy...");
+    sys_log_new_line();
 
-    return err;
+    if (sl_antenna_start_sequential_deploy() != 0)
+    {
+        sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "Error during the sequential deployment!");
+        sys_log_new_line();
+
+        err = -1;
+    }
 #else
     sys_log_print_event_from_module(SYS_LOG_ERROR, ANTENNA_MODULE_NAME, "No driver to read the status!");
     sys_log_new_line();
@@ -254,19 +278,19 @@ int antenna_deploy(uint32_t timeout_ms)
 static void antenna_print_status(isis_antenna_status_t status)
 {
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 1 status=");
-    sys_log_print_msg((status.antenna_1.status == ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
+    sys_log_print_msg((status.antenna_1.status == (uint8_t)ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
     sys_log_new_line();
 
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 2 status=");
-    sys_log_print_msg((status.antenna_2.status == ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
+    sys_log_print_msg((status.antenna_2.status == (uint8_t)ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
     sys_log_new_line();
 
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 3 status=");
-    sys_log_print_msg((status.antenna_3.status == ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
+    sys_log_print_msg((status.antenna_3.status == (uint8_t)ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
     sys_log_new_line();
 
     sys_log_print_event_from_module(SYS_LOG_INFO, ANTENNA_MODULE_NAME, "Antenna 4 status=");
-    sys_log_print_msg((status.antenna_4.status == ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
+    sys_log_print_msg((status.antenna_4.status == (uint8_t)ISIS_ANTENNA_STATUS_DEPLOYED) ? "DEPLOYED" : "NOT DEPLOYED");
     sys_log_new_line();
 }
 

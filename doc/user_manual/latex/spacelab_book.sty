@@ -1,0 +1,107 @@
+%
+% spacelab_book.sty
+%
+% Copyright The OBDH 2.0 Contributors.
+%
+% OBDH 2.0 Documentation
+%
+% This work is licensed under the Creative Commons Attribution-ShareAlike 4.0
+% International License. To view a copy of this license,
+% visit http://creativecommons.org/licenses/by-sa/4.0/.
+%
+
+%
+% \brief Document style customization and packages.
+%
+% \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+%
+% \version 0.10.0
+%
+% \date 2026/08/07
+%
+
+\ProvidesPackage{spacelab_book}
+
+% Match the paragraph layout of the original LaTeX manual.
+\usepackage{indentfirst}
+\setlength{\parindent}{15pt}
+\setlength{\parskip}{0pt plus 1pt}
+
+% Preserve the original appendix grouping and the landscape packet table.
+\usepackage[toc,page]{appendix}
+\appendixpageoff
+\usepackage{pdflscape}
+\usepackage{multirow}
+\newenvironment{sphinxclasslandscape}{\begin{landscape}}{\end{landscape}}
+
+% Sphinx normally expands every table to the full line width. These wrappers
+% restore the compact widths used by the original manual where appropriate.
+\newenvironment{sphinxclasscompacttable50}{%
+    \begin{center}\begin{minipage}{0.50\linewidth}%
+}{%
+    \end{minipage}\end{center}%
+}
+\newenvironment{sphinxclasscompacttable55}{%
+    \begin{center}\begin{minipage}{0.55\linewidth}%
+}{%
+    \end{minipage}\end{center}%
+}
+\newenvironment{sphinxclasscompacttable60}{%
+    \begin{center}\begin{minipage}{0.60\linewidth}%
+}{%
+    \end{minipage}\end{center}%
+}
+\newenvironment{sphinxclasscompacttable65}{%
+    \begin{center}\begin{minipage}{0.65\linewidth}%
+}{%
+    \end{minipage}\end{center}%
+}
+\newenvironment{sphinxclasscompacttable70}{%
+    \begin{center}\begin{minipage}{0.70\linewidth}%
+}{%
+    \end{minipage}\end{center}%
+}
+
+% Sphinx's default numfig implementation always uses an Arabic chapter
+% number. Use the actual chapter representation so appendix figures and
+% tables are numbered A.1, B.1, and so on.
+\AtBeginDocument{%
+    \renewcommand{\thefigure}{\thechapter.\arabic{figure}}%
+    \renewcommand{\thetable}{\thechapter.\arabic{table}}%
+}
+
+% Bibliography style (order of appearance)
+\bibliographystyle{unsrt}
+\addto\captionsenglish{\renewcommand{\bibname}{References}}
+
+% First chapter page style
+\titleformat{\chapter}[display]
+    {\bfseries\Large}
+    {\filright\MakeUppercase{\chaptertitlename} \Large\thechapter}
+    {1ex}
+    {\titlerule\vspace{1ex}\filleft}
+    [\vspace{1ex}\titlerule]
+
+% Header style
+\pagestyle{fancy}
+\setlength{\headheight}{15pt}
+\fancypagestyle{normal}{
+    \fancyhf{}
+    \fancyhead[RO]{\nouppercase{\rightmark}}
+    \fancyhead[LE]{\nouppercase{\leftmark}}
+    \fancyfoot[RO]{\thepage}
+    \fancyfoot[LE]{\thepage}
+    \renewcommand{\headrulewidth}{0.5pt}
+    \renewcommand{\footrulewidth}{0.5pt}
+}
+
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyfoot[R]{\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+}
+
+% Table cell size limit and alignment
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}

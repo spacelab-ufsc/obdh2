@@ -14,10 +14,9 @@ endif
 CC=gcc
 INC=../../
 FLAGS=-fpic -std=c99 -Wall -pedantic -Wshadow -Wpointer-arith -Wcast-qual -Wstrict-prototypes -Wmissing-prototypes -I$(INC) -I../../tests/freertos_sim/ -Wl,--wrap=sys_log_init,--wrap=sys_log_print_event,--wrap=sys_log_print_event_from_module,--wrap=sys_log_print_msg,--wrap=sys_log_print_str,--wrap=sys_log_new_line,--wrap=sys_log_print_uint,--wrap=sys_log_print_int,--wrap=sys_log_print_hex,--wrap=sys_log_dump_hex,--wrap=sys_log_print_float,--wrap=sys_log_print_byte,--wrap=sys_log_print_system_time,--wrap=sys_log_print_license_msg,--wrap=sys_log_print_splash_screen,--wrap=sys_log_print_firmware_version
+CY15X102QN_TEST_FLAGS=$(FLAGS),--wrap=spi_init,--wrap=spi_select_slave,--wrap=spi_write,--wrap=spi_read,--wrap=spi_transfer,--wrap=gpio_init,--wrap=gpio_set_state,--wrap=gpio_get_state,--wrap=gpio_toggle,--wrap=spi_mutex_take,--wrap=spi_mutex_give
 
-CY15X102QN_TEST_FLAGS=$(FLAGS),--wrap=spi_init,--wrap=spi_select_slave,--wrap=spi_write,--wrap=spi_read,--wrap=spi_transfer,--wrap=gpio_init,--wrap=gpio_set_state,--wrap=gpio_get_state,--wrap=gpio_toggle
-
-TPS382X_TEST_FLAGS=$(FLAGS),--wrap=gpio_init,--wrap=gpio_set_state,--wrap=gpio_get_state,--wrap=gpio_toggle
+TPS382X_TEST_FLAGS=$(FLAGS),--wrap=gpio_init,--wrap=gpio_set_state,--wrap=gpio_get_state,--wrap=gpio_toggle,--wrap=gpio_init_mr_pin
 
 TCA4311A_TEST_FLAGS=$(FLAGS),--wrap=i2c_init,--wrap=i2c_write,--wrap=i2c_read,--wrap=gpio_init,--wrap=gpio_set_state,--wrap=gpio_get_state,--wrap=gpio_toggle
 
@@ -27,17 +26,17 @@ ISIS_ANTENNA_TEST_FLAGS=$(FLAGS),--wrap=tca4311a_init,--wrap=tca4311a_enable,--w
 
 SL_EPS2_TEST_FLAGS=$(FLAGS),--wrap=tca4311a_init,--wrap=tca4311a_enable,--wrap=tca4311a_disable,--wrap=tca4311a_is_ready,--wrap=tca4311a_write,--wrap=tca4311a_read,--wrap=tca4311a_write_byte,--wrap=tca4311a_read_byte
 
-MT25Q_TEST_FLAGS=$(FLAGS),--wrap=spi_init,--wrap=spi_select_slave,--wrap=spi_write,--wrap=spi_read,--wrap=spi_transfer,--wrap=gpio_init,--wrap=gpio_set_state,--wrap=gpio_get_state,--wrap=gpio_toggle
+MT25Q_TEST_FLAGS=$(FLAGS),--wrap=spi_init,--wrap=spi_select_slave,--wrap=spi_write,--wrap=spi_read,--wrap=spi_transfer,--wrap=gpio_init,--wrap=gpio_set_state,--wrap=gpio_get_state,--wrap=gpio_toggle,--wrap=spi_mutex_take,--wrap=spi_mutex_give
 
-SL_TTC2_TEST_FLAGS=$(FLAGS),--wrap=spi_init,--wrap=spi_select_slave,--wrap=spi_write,--wrap=spi_read,--wrap=spi_transfer,--wrap=gpio_init,--wrap=gpio_set_state,--wrap=gpio_get_state,--wrap=gpio_toggle
+SL_TTC2_TEST_FLAGS=$(FLAGS),--wrap=spi_init,--wrap=spi_select_slave,--wrap=spi_write,--wrap=spi_read,--wrap=spi_transfer,--wrap=gpio_init,--wrap=gpio_set_state,--wrap=gpio_get_state,--wrap=gpio_toggle,--wrap=spi_mutex_take,--wrap=spi_mutex_give,--wrap=sl_ttc2_spi_read,--wrap=crc8_get_val
 
 .PHONY: all
 .PHONY: all
 all: cy15x102qn_test tps382x_test tca4311a_test edc_test isis_antenna_test sl_eps2_test mt25q_test sl_ttc2_test
 
 .PHONY: cy15x102qn_test
-cy15x102qn_test: $(BUILD_DIR)/cy15x102qn.o $(BUILD_DIR)/cy15x102qn_gpio.o $(BUILD_DIR)/cy15x102qn_spi.o $(BUILD_DIR)/cy15x102qn_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o
-	$(CC) $(CY15X102QN_TEST_FLAGS) $(BUILD_DIR)/cy15x102qn.o $(BUILD_DIR)/cy15x102qn_gpio.o $(BUILD_DIR)/cy15x102qn_spi.o $(BUILD_DIR)/cy15x102qn_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o -o $(BUILD_DIR)/$(TARGET_CY15X102QN) -lcmocka
+cy15x102qn_test: $(BUILD_DIR)/cy15x102qn.o $(BUILD_DIR)/cy15x102qn_mutex.o $(BUILD_DIR)/cy15x102qn_gpio.o $(BUILD_DIR)/cy15x102qn_spi.o $(BUILD_DIR)/cy15x102qn_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/semphr.o
+	$(CC) $(CY15X102QN_TEST_FLAGS) $(BUILD_DIR)/cy15x102qn.o $(BUILD_DIR)/cy15x102qn_mutex.o $(BUILD_DIR)/cy15x102qn_gpio.o $(BUILD_DIR)/cy15x102qn_spi.o $(BUILD_DIR)/cy15x102qn_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/semphr.o -o $(BUILD_DIR)/$(TARGET_CY15X102QN) -lcmocka
 
 .PHONY: tps382x_test
 tps382x_test: $(BUILD_DIR)/tps382x.o $(BUILD_DIR)/tps382x_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/gpio_wrap.o
@@ -60,12 +59,12 @@ sl_eps2_test: $(BUILD_DIR)/sl_eps2.o $(BUILD_DIR)/sl_eps2_i2c.o $(BUILD_DIR)/sl_
 	$(CC) $(SL_EPS2_TEST_FLAGS) $(BUILD_DIR)/sl_eps2.o $(BUILD_DIR)/sl_eps2_i2c.o $(BUILD_DIR)/sl_eps2_delay.o $(BUILD_DIR)/sl_eps2_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/tca4311a_wrap.o $(BUILD_DIR)/task.o -o $(BUILD_DIR)/$(TARGET_SL_EPS2) -lm -lcmocka
 
 .PHONY: mt25q_test
-mt25q_test: $(BUILD_DIR)/mt25q.o $(BUILD_DIR)/mt25q_delay.o $(BUILD_DIR)/mt25q_gpio.o $(BUILD_DIR)/mt25q_spi.o $(BUILD_DIR)/mt25q_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/task.o
-	$(CC) $(MT25Q_TEST_FLAGS) $(BUILD_DIR)/mt25q.o $(BUILD_DIR)/mt25q_delay.o $(BUILD_DIR)/mt25q_gpio.o $(BUILD_DIR)/mt25q_spi.o $(BUILD_DIR)/mt25q_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/task.o -o $(BUILD_DIR)/$(TARGET_MT25Q) -lm -lcmocka
+mt25q_test: $(BUILD_DIR)/mt25q.o $(BUILD_DIR)/mt25q_mutex.o $(BUILD_DIR)/mt25q_delay.o $(BUILD_DIR)/mt25q_gpio.o $(BUILD_DIR)/mt25q_spi.o $(BUILD_DIR)/mt25q_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/task.o $(BUILD_DIR)/semphr.o
+	$(CC) $(MT25Q_TEST_FLAGS) $(BUILD_DIR)/mt25q.o $(BUILD_DIR)/mt25q_mutex.o $(BUILD_DIR)/mt25q_delay.o $(BUILD_DIR)/mt25q_gpio.o $(BUILD_DIR)/mt25q_spi.o $(BUILD_DIR)/mt25q_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/task.o $(BUILD_DIR)/semphr.o -o $(BUILD_DIR)/$(TARGET_MT25Q) -lm -lcmocka
 
 .PHONY: sl_ttc2_test
-sl_ttc2_test: $(BUILD_DIR)/sl_ttc2.o $(BUILD_DIR)/sl_ttc2_spi.o $(BUILD_DIR)/sl_ttc2_delay.o $(BUILD_DIR)/sl_ttc2_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/task.o
-	$(CC) $(SL_TTC2_TEST_FLAGS) $(BUILD_DIR)/sl_ttc2.o $(BUILD_DIR)/sl_ttc2_spi.o $(BUILD_DIR)/sl_ttc2_delay.o $(BUILD_DIR)/sl_ttc2_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/task.o -o $(BUILD_DIR)/$(TARGET_SL_TTC2) -lm -lcmocka
+sl_ttc2_test: $(BUILD_DIR)/sl_ttc2.o $(BUILD_DIR)/sl_ttc2_spi.o $(BUILD_DIR)/sl_ttc2_delay.o $(BUILD_DIR)/sl_ttc2_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/task.o $(BUILD_DIR)/sl_ttc2_mutex.o $(BUILD_DIR)/sl_ttc2_wrap.o $(BUILD_DIR)/semphr.o
+	$(CC) $(SL_TTC2_TEST_FLAGS) $(BUILD_DIR)/sl_ttc2.o $(BUILD_DIR)/sl_ttc2_spi.o $(BUILD_DIR)/sl_ttc2_delay.o $(BUILD_DIR)/sl_ttc2_test.o $(BUILD_DIR)/sys_log_wrap.o $(BUILD_DIR)/spi_wrap.o $(BUILD_DIR)/gpio_wrap.o $(BUILD_DIR)/task.o $(BUILD_DIR)/sl_ttc2_mutex.o $(BUILD_DIR)/sl_ttc2_wrap.o $(BUILD_DIR)/semphr.o -o $(BUILD_DIR)/$(TARGET_SL_TTC2) -lm -lcmocka
 
 # Drivers
 $(BUILD_DIR)/cy15x102qn.o: ../../drivers/cy15x102qn/cy15x102qn.c
@@ -75,6 +74,9 @@ $(BUILD_DIR)/cy15x102qn_gpio.o: ../../drivers/cy15x102qn/cy15x102qn_gpio.c
 	$(CC) $(CY15X102QN_TEST_FLAGS) -c $< -o $@
 
 $(BUILD_DIR)/cy15x102qn_spi.o: ../../drivers/cy15x102qn/cy15x102qn_spi.c
+	$(CC) $(CY15X102QN_TEST_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/cy15x102qn_mutex.o: ../../drivers/cy15x102qn/cy15x102qn_mutex.c
 	$(CC) $(CY15X102QN_TEST_FLAGS) -c $< -o $@
 
 $(BUILD_DIR)/tps382x.o: ../../drivers/tps382x/tps382x.c
@@ -128,10 +130,16 @@ $(BUILD_DIR)/mt25q_gpio.o: ../../drivers/mt25q/mt25q_gpio.c
 $(BUILD_DIR)/mt25q_spi.o: ../../drivers/mt25q/mt25q_spi.c
 	$(CC) $(MT25Q_TEST_FLAGS) -c $< -o $@
 
+$(BUILD_DIR)/mt25q_mutex.o: ../../drivers/mt25q/mt25q_mutex.c
+	$(CC) $(MT25Q_TEST_FLAGS) -c $< -o $@
+
 $(BUILD_DIR)/sl_ttc2.o: ../../drivers/sl_ttc2/sl_ttc2.c
 	$(CC) $(SL_TTC2_TEST_FLAGS) -c $< -o $@
 
 $(BUILD_DIR)/sl_ttc2_spi.o: ../../drivers/sl_ttc2/sl_ttc2_spi.c
+	$(CC) $(SL_TTC2_TEST_FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/sl_ttc2_mutex.o: ../../drivers/sl_ttc2/sl_ttc2_mutex.c
 	$(CC) $(SL_TTC2_TEST_FLAGS) -c $< -o $@
 
 $(BUILD_DIR)/sl_ttc2_delay.o: ../../drivers/sl_ttc2/sl_ttc2_delay.c
@@ -181,6 +189,9 @@ $(BUILD_DIR)/flash_wrap.o: ../mockups/drivers/flash_wrap.c
 $(BUILD_DIR)/spi_wrap.o: ../mockups/drivers/spi_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
+$(BUILD_DIR)/sl_ttc2_wrap.o: ../mockups/drivers/sl_ttc2_wrap.c
+	$(CC) $(FLAGS) -c $< -o $@
+
 $(BUILD_DIR)/i2c_wrap.o: ../mockups/drivers/i2c_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
@@ -191,6 +202,9 @@ $(BUILD_DIR)/tca4311a_wrap.o: ../mockups/drivers/tca4311a_wrap.c
 	$(CC) $(FLAGS) -c $< -o $@
 
 $(BUILD_DIR)/task.o: ../freertos_sim/task.c
+	$(CC) $(FLAGS) -c $< -o $@
+
+$(BUILD_DIR)/semphr.o: ../freertos_sim/semphr.c
 	$(CC) $(FLAGS) -c $< -o $@
 
 .PHONY: clean

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.35
+ * \version 1.0.0
  * 
  * \date 2020/02/01
  * 
@@ -43,7 +43,9 @@
 
 #include "ttc_data.h"
 
-#define TTC_MODULE_NAME         "TTC"
+#define TTC_MODULE_NAME            "TTC"
+
+#define TTC_MAX_FAILED_PACKETS     2U
 
 /**
  * \brief TTC configuration parameters.
@@ -207,6 +209,21 @@ int ttc_enter_hibernation(ttc_e dev);
  * \return The status/error code.
  */
 int ttc_leave_hibernation(ttc_e dev);
+
+/**
+ * \brief Check number of consecutive failed packets, if greater than 
+ * max allowed, resets TTC device.
+ *
+ * \param[in] dev is the TTC device to be checked. It can be:
+ * \parblock
+ *      -\b TTC_0
+ *      -\b TTC_1
+ *      .
+ * \endparblock
+ *
+ * \return The status/error code.
+ */
+int ttc_check_failed_pkts(ttc_e dev);
 
 #endif /* TTC_H_ */
 

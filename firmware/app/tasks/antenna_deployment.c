@@ -24,8 +24,9 @@
  * \brief Antenna deployment task implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.8.39
+ * \version 1.0.0
  * 
  * \date 2021/11/17
  * 
@@ -33,7 +34,9 @@
  * \{
  */
 
+#include "tasks/mission_manager.h"
 #include <config/config.h>
+#include <conops/conops.h>
 #include <system/sys_log/sys_log.h>
 
 #include <devices/antenna/antenna.h>
@@ -44,18 +47,30 @@
 
 xTaskHandle xTaskAntennaDeploymentHandle;
 
-void vTaskAntennaDeployment(void)
+void vTaskAntennaDeployment(void *p)
 {
+    (void)p;
+
     /* Initial hibernation */
     if (!sat_data_buf.obdh.data.initial_hib_executed)
     {
         uint8_t initial_hib_time_counter = sat_data_buf.obdh.data.initial_hib_time_count;
 
-        uint8_t i = 0;
+        taskENTER_CRITICAL();
+        sat_data_buf.obdh.data.hib_duration = (uint32_t)CONFIG_ANTENNA_DEPLOYMENT_HIBERNATION_MIN * 60UL;
+        sat_data_buf.obdh.data.hibernation_on = true;
+        taskEXIT_CRITICAL();
 
-        for(i = initial_hib_time_counter; i < CONFIG_ANTENNA_DEPLOYMENT_HIBERNATION_MIN; i++)
+        uint8_t i = 0;
+        for(i = initial_hib_time_counter; (i < CONFIG_ANTENNA_DEPLOYMENT_HIBERNATION_MIN) && (!sat_data_buf.obdh.data.initial_hib_executed); i++)
         {
-            vTaskDelay(pdMS_TO_TICKS(60*1000));
+            uint32_t hib_dur = CONFIG_ANTENNA_DEPLOYMENT_HIBERNATION_MIN - (uint32_t)i;
+            sys_log_print_event_from_module(SYS_LOG_WARNING, TASK_ANTENNA_DEPLOYMENT_NAME, "Antenna deployment will happen in ");
+            sys_log_print_uint(hib_dur);
+            sys_log_print_msg(" minutes!");
+            sys_log_new_line();
+
+            vTaskDelay(pdMS_TO_TICKS(60000U));
 
             sat_data_buf.obdh.data.initial_hib_time_count++;
         }
@@ -72,7 +87,7 @@ void vTaskAntennaDeployment(void)
     if (sat_data_buf.obdh.data.ant_deployment_counter < CONFIG_ANTENNA_DEPLOYMENT_ATTEMPTS)
     {
         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_ANTENNA_DEPLOYMENT_NAME, "Antenna deployment attempt number ");
-        sys_log_print_uint(sat_data_buf.obdh.data.ant_deployment_counter + 1);
+        sys_log_print_uint(sat_data_buf.obdh.data.ant_deployment_counter + 1U);
         sys_log_print_msg(" of ");
         sys_log_print_uint(CONFIG_ANTENNA_DEPLOYMENT_ATTEMPTS);
         sys_log_print_msg("...");
@@ -84,17 +99,33 @@ void vTaskAntennaDeployment(void)
             sys_log_new_line();
         }
 
-        sat_data_buf.obdh.data.ant_deployment_counter = true;
+        sat_data_buf.obdh.data.ant_deployment_executed = true;
 
         sat_data_buf.obdh.data.ant_deployment_counter++;
+
+        const struct conops_event ant_deploy = {
+            .ev_id = EV_DEPLOYMENT_COMPLETE,
+            .ev_name = "DEPLOY_END",
+            .src = 0U,
+            .callback = NULL,
+        };
+
+        if (notify_event_to_mission_manager(&ant_deploy) != 0)
+        {
+            sys_log_print_event_from_module(SYS_LOG_ERROR, TASK_ANTENNA_DEPLOYMENT_NAME, "Failed to notify Mission Manager of Antenna Deploy!");
+            sys_log_new_line();
+        }
     }
     else
     {
         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_ANTENNA_DEPLOYMENT_NAME, "All antenna deployments attempts executed! (");
-        sys_log_print_uint(sat_data_buf.obdh.data.ant_deployment_counter + 1);
+        sys_log_print_uint(sat_data_buf.obdh.data.ant_deployment_counter + 1U);
         sys_log_print_msg(")");
         sys_log_new_line();
     }
+
+    /* Startup task status = Done */
+    vTaskSuspend(xTaskAntennaDeploymentHandle);
 }
 
 /** \} End of antenna_deployment group */

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.6.2
+ * \version 1.0.0
  * 
  * \date 2020/07/11
  * 
@@ -47,15 +47,15 @@
 
 /* Rsense value */
 #define CURRENT_SENSOR_RSENSE_VALUE_OHM     0.05            /**< Rsense resistor value in Ohm. */
-#define CURRENT_SENSOR_RSENSE_VALUE_MOHM    50              /**< Rsense resistor value in mOhm. */
+#define CURRENT_SENSOR_RSENSE_VALUE_MOHM    50UL            /**< Rsense resistor value in mOhm. */
 
 /* Rload value */
-#define CURRENT_SENSOR_RL_VALUE_OHM         1650            /**< RL resistor value in Ohms. */
-#define CURRENT_SENSOR_RL_VALUE_KOHM        1.65            /**< RL resistor value in kOhms. */
+#define CURRENT_SENSOR_RL_VALUE_OHM         12000           /**< RL resistor value in Ohms. */
+#define CURRENT_SENSOR_RL_VALUE_KOHM        12UL            /**< RL resistor value in kOhms. */
 
 /* Gain value */
 #define CURRENT_SENSOR_GAIN_A_V             0.025           /**< Current gain of max9934 in A/V. */
-#define CURRENT_SENSOR_GAIN_MA_MV           25              /**< Current gain of max9934 in mA/mV. */
+#define CURRENT_SENSOR_GAIN_MA_MV           25UL            /**< Current gain of max9934 in mA/mV. */
 
 /**
  * \brief Current sensor device initialization routine.

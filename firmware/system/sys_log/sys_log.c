@@ -1,7 +1,7 @@
 /*
  * sys_log.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -24,8 +24,9 @@
  * \brief System log implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.7.25
+ * \version 1.0.0
  * 
  * \date 2019/11/03
  * 
@@ -34,11 +35,13 @@
  */
 
 #include <math.h>
+#include <stdbool.h>
 
 #include <FreeRTOS.h>
 #include <task.h>
 
 #include <version.h>
+#include <system/system.h>
 
 #include "sys_log.h"
 #include "sys_log_config.h"
@@ -117,7 +120,7 @@ void sys_log_print_event(uint8_t type, const char *event)
 
     switch(type)
     {
-        case SYS_LOG_INFO:                                                  break;
+        case SYS_LOG_INFO:      sys_log_set_color(SYS_LOG_INFO_COLOR);      break;
         case SYS_LOG_WARNING:   sys_log_set_color(SYS_LOG_WARNING_COLOR);   break;
         case SYS_LOG_ERROR:     sys_log_set_color(SYS_LOG_ERROR_COLOR);     break;
         default:                                                            break;
@@ -140,7 +143,7 @@ void sys_log_print_event_from_module(uint8_t type, const char *module, const cha
 
     switch(type)
     {
-        case SYS_LOG_INFO:                                                  break;
+        case SYS_LOG_INFO:      sys_log_set_color(SYS_LOG_INFO_COLOR);      break;
         case SYS_LOG_WARNING:   sys_log_set_color(SYS_LOG_WARNING_COLOR);   break;
         case SYS_LOG_ERROR:     sys_log_set_color(SYS_LOG_ERROR_COLOR);     break;
         default:                                                            break;
@@ -277,13 +280,13 @@ void sys_log_dump_hex(uint8_t *data, uint16_t len)
 
 void sys_log_print_float(float flt, uint8_t digits)
 {
-    float flt_pos = 0.0;
+    float flt_pos = flt;
 
     if (flt < 0.0)
     {
         sys_log_print_msg("-");
 
-        flt_pos = abs(flt);
+        flt_pos = fabs(flt);
     }
 
     /* Extract integer part */
@@ -312,7 +315,7 @@ void sys_log_print_system_time(void)
     sys_log_set_color(SYS_LOG_SYSTEM_TIME_COLOR);
 
     sys_log_print_msg("[ ");
-    sys_log_print_uint(xTaskGetTickCount());    /* System time in milliseconds */
+    sys_log_print_uint(system_get_time());    /* System time in seconds */
     sys_log_print_msg(" ]");
 
     sys_log_reset_color();
@@ -389,6 +392,29 @@ void sys_log_print_firmware_version(void)
 {
     sys_log_print_msg("v");
     sys_log_print_msg(FIRMWARE_VERSION);
+}
+
+void sys_log_print_test_result(bool result, const char *check_msg)
+{
+    (void)sys_log_mutex_take();
+
+    sys_log_print_msg("[");
+
+    if (result)
+    {
+        sys_log_set_color(SYS_LOG_COLOR_GREEN);
+        sys_log_print_msg("  OK  ");
+        sys_log_reset_color();
+    }
+    else
+    {
+        sys_log_set_color(SYS_LOG_COLOR_RED);
+        sys_log_print_msg("FAILED");
+        sys_log_reset_color();
+    }
+
+    sys_log_print_msg("] ");
+    sys_log_print_msg(check_msg);
 }
 
 /** \} End of sys_log group */

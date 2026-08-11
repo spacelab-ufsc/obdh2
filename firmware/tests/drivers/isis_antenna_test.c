@@ -1,7 +1,7 @@
 /*
  * isis_antenna_test.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.2
+ * \version 0.10.9
  * 
  * \date 2021/09/01
  * 
@@ -68,7 +68,7 @@ static void isis_antenna_init_test(void **state)
 
     expect_value(__wrap_tca4311a_init, en, false);
 
-    will_return(__wrap_tca4311a_init, 1);
+    will_return(__wrap_tca4311a_init, 0);
 
     assert_return_code(isis_antenna_init(), 0);
 }
@@ -83,7 +83,7 @@ static void isis_antenna_arm_test(void **state)
 
     write_test(&cmd, 1);
 
-    uint8_t ans[2] = {0x00, 0x01};
+    uint8_t ans[2] = {0x01, 0x00};
 
     read_test(ans, 2);
 
@@ -161,8 +161,8 @@ static void isis_antenna_read_deployment_status_code_test(void **state)
 
     uint8_t ans[2] = {0};
 
-    ans[0] = raw_status >> 8;
-    ans[1] = raw_status & 0xFF;
+    ans[0] = raw_status & 0xFF;
+    ans[1] = raw_status >> 8;
 
     read_test(ans, 2);
 
@@ -183,8 +183,8 @@ static void isis_antenna_read_deployment_status_test(void **state)
 
     uint16_t raw_status = generate_random(0, UINT16_MAX);
 
-    ans[0] = raw_status >> 8;
-    ans[1] = raw_status & 0xFF;
+    ans[0] = raw_status & 0xFF;
+    ans[1] = raw_status >> 8;
 
     read_test(ans, 2);
 
@@ -221,8 +221,8 @@ static void isis_antenna_get_data_test(void **state)
 
     uint16_t raw_status = generate_random(0, UINT16_MAX);
 
-    ans[0] = raw_status >> 8;
-    ans[1] = raw_status & 0xFF;
+    ans[0] = raw_status & 0xFF;
+    ans[1] = raw_status >> 8;
 
     read_test(ans, 2);
 
@@ -233,8 +233,8 @@ static void isis_antenna_get_data_test(void **state)
 
     write_test(&cmd, 1);
 
-    ans[0] = raw_temp >> 8;
-    ans[1] = raw_temp & 0xFF;
+    ans[0] = raw_temp & 0xFF;
+    ans[1] = raw_temp >> 8;
 
     read_test(ans, 2);
 
@@ -296,8 +296,8 @@ static void isis_antenna_get_antenna_status_test(void **state)
 
         uint16_t raw_status = generate_random(0, UINT16_MAX);
 
-        ans[0] = raw_status >> 8;
-        ans[1] = raw_status & 0xFF;
+        ans[0] = raw_status & 0xFF;
+        ans[1] = raw_status >> 8;
 
         read_test(ans, 2);
 
@@ -349,8 +349,8 @@ static void isis_antenna_get_antenna_timeout_test(void **state)
 
         uint16_t raw_status = generate_random(0, UINT16_MAX);
 
-        ans[0] = raw_status >> 8;
-        ans[1] = raw_status & 0xFF;
+        ans[0] = raw_status & 0xFF;
+        ans[1] = raw_status >> 8;
 
         read_test(ans, 2);
 
@@ -402,8 +402,8 @@ static void isis_antenna_get_burning_test(void **state)
 
         uint16_t raw_status = generate_random(0, UINT16_MAX);
 
-        ans[0] = raw_status >> 8;
-        ans[1] = raw_status & 0xFF;
+        ans[0] = raw_status & 0xFF;
+        ans[1] = raw_status >> 8;
 
         read_test(ans, 2);
 
@@ -439,8 +439,8 @@ static void isis_antenna_get_arming_status_test(void **state)
 
     uint16_t raw_status = generate_random(0, UINT16_MAX);
 
-    ans[0] = raw_status >> 8;
-    ans[1] = raw_status & 0xFF;
+    ans[0] = raw_status & 0xFF;
+    ans[1] = raw_status >> 8;
 
     read_test(ans, 2);
 
@@ -455,14 +455,14 @@ static void isis_antenna_get_raw_temperature_test(void **state)
     uint8_t cmd = 0xC0;
 
     uint16_t raw = 0;
-    for(raw=0; raw<1023; raw+=50)
+    for(raw = 0; raw < 1023; raw += 50)
     {
         write_test(&cmd, 1);
 
         uint8_t ans[2] = {0};
 
-        ans[0] = raw >> 8;
-        ans[1] = raw & 0xFF;
+        ans[0] = raw & 0xFF;
+        ans[1] = raw >> 8;
 
         read_test(ans, 2);
 
@@ -504,8 +504,8 @@ static void isis_antenna_get_temperature_c_test(void **state)
 
         uint8_t ans[2] = {0};
 
-        ans[0] = raw >> 8;
-        ans[1] = raw & 0xFF;
+        ans[0] = raw & 0xFF;
+        ans[1] = raw >> 8;
 
         read_test(ans, 2);
 
@@ -530,14 +530,14 @@ static void isis_antenna_get_temperature_k_test(void **state)
     uint8_t cmd = 0xC0;
 
     uint16_t raw = 0;
-    for(raw=0; raw<1023; raw+=50)
+    for(raw = 0; raw < 1023; raw += 50)
     {
         write_test(&cmd, 1);
 
         uint8_t ans[2] = {0};
 
-        ans[0] = raw >> 8;
-        ans[1] = raw & 0xFF;
+        ans[0] = raw & 0xFF;
+        ans[1] = raw >> 8;
 
         read_test(ans, 2);
 
@@ -611,7 +611,7 @@ void write_test(uint8_t *wd, uint16_t wd_len)
     expect_value(__wrap_tca4311a_disable, config.en_pin,                ISIS_ANTENNA_IIC_EN_PIN);
     expect_value(__wrap_tca4311a_disable, config.ready_pin,             ISIS_ANTENNA_IIC_RDY_PIN);
 
-    will_return(__wrap_tca4311a_disable, 1);
+    will_return(__wrap_tca4311a_disable, 0);
 }
 
 void read_test(uint8_t *rd, uint16_t rd_len)
@@ -644,7 +644,7 @@ void read_test(uint8_t *rd, uint16_t rd_len)
     expect_value(__wrap_tca4311a_disable, config.en_pin,                ISIS_ANTENNA_IIC_EN_PIN);
     expect_value(__wrap_tca4311a_disable, config.ready_pin,             ISIS_ANTENNA_IIC_RDY_PIN);
 
-    will_return(__wrap_tca4311a_disable, 1);
+    will_return(__wrap_tca4311a_disable, 0);
 }
 
 /** \} End of isis_antenna_test group */

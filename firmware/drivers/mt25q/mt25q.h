@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.42
+ * \version 0.10.17
  * 
  * \date 2019/11/15
  * 
@@ -472,6 +472,20 @@ int mt25q_gpio_set_reset(bool state);
  * \return None.
  */
 void mt25q_delay_ms(uint32_t ms);
+
+/**
+ * \brief Takes the mt25q mutex.
+ *
+ * \return The status/error code.
+ */
+int mt25q_mutex_take(void);
+
+/**
+ * \brief Gives the mt25q mutex.
+ *
+ * \return The status/error code.
+ */
+int mt25q_mutex_give(void);
 
 #endif /* MT25Q_H_ */
 

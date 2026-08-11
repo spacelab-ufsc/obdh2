@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.35
+ * \version 0.10.14
  * 
  * \date 2021/08/06
  * 
@@ -67,29 +67,29 @@ static void ttc_init_test(void **state)
     {
         if (ttc_dev == TTC_0)
         {
-            expect_value(__wrap_sl_ttc2_init, config.port, TTC_0_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_init, config.cs_pin, TTC_0_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_init, config.port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_init, config.port_config.mode, TTC_0_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_init, config.id, TTC_0_ID);
+            expect_value(__wrap_sl_ttc2_init, config->port, TTC_0_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_init, config->cs_pin, TTC_0_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_init, config->port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_init, config->port_config.mode, TTC_0_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_init, config->id, TTC_0_ID);
 
             will_return(__wrap_sl_ttc2_init, 0);
 
-            expect_value(__wrap_sl_ttc2_read_hardware_version, config.port, TTC_0_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_read_hardware_version, config.cs_pin, TTC_0_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_read_hardware_version, config.port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_read_hardware_version, config.port_config.mode, TTC_0_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_read_hardware_version, config.id, TTC_0_ID);
+            expect_value(__wrap_sl_ttc2_read_hardware_version, config->port, TTC_0_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_read_hardware_version, config->cs_pin, TTC_0_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_read_hardware_version, config->port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_read_hardware_version, config->port_config.mode, TTC_0_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_read_hardware_version, config->id, TTC_0_ID);
 
             will_return(__wrap_sl_ttc2_read_hardware_version, generate_random(0, UINT8_MAX));
 
             will_return(__wrap_sl_ttc2_read_hardware_version, 0);
 
-            expect_value(__wrap_sl_ttc2_read_firmware_version, config.port, TTC_0_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_read_firmware_version, config.cs_pin, TTC_0_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_read_firmware_version, config.port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_read_firmware_version, config.port_config.mode, TTC_0_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_read_firmware_version, config.id, TTC_0_ID);
+            expect_value(__wrap_sl_ttc2_read_firmware_version, config->port, TTC_0_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_read_firmware_version, config->cs_pin, TTC_0_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_read_firmware_version, config->port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_read_firmware_version, config->port_config.mode, TTC_0_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_read_firmware_version, config->id, TTC_0_ID);
 
             will_return(__wrap_sl_ttc2_read_firmware_version, generate_random(0, UINT32_MAX-1));
 
@@ -97,29 +97,29 @@ static void ttc_init_test(void **state)
         }
         else if (ttc_dev == TTC_1)
         {
-            expect_value(__wrap_sl_ttc2_init, config.port, TTC_1_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_init, config.cs_pin, TTC_1_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_init, config.port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_init, config.port_config.mode, TTC_1_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_init, config.id, TTC_1_ID);
+            expect_value(__wrap_sl_ttc2_init, config->port, TTC_1_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_init, config->cs_pin, TTC_1_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_init, config->port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_init, config->port_config.mode, TTC_1_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_init, config->id, TTC_1_ID);
 
             will_return(__wrap_sl_ttc2_init, 0);
 
-            expect_value(__wrap_sl_ttc2_read_hardware_version, config.port, TTC_1_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_read_hardware_version, config.cs_pin, TTC_1_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_read_hardware_version, config.port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_read_hardware_version, config.port_config.mode, TTC_1_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_read_hardware_version, config.id, TTC_1_ID);
+            expect_value(__wrap_sl_ttc2_read_hardware_version, config->port, TTC_1_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_read_hardware_version, config->cs_pin, TTC_1_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_read_hardware_version, config->port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_read_hardware_version, config->port_config.mode, TTC_1_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_read_hardware_version, config->id, TTC_1_ID);
 
             will_return(__wrap_sl_ttc2_read_hardware_version, generate_random(0, UINT8_MAX));
 
             will_return(__wrap_sl_ttc2_read_hardware_version, 0);
 
-            expect_value(__wrap_sl_ttc2_read_firmware_version, config.port, TTC_1_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_read_firmware_version, config.cs_pin, TTC_1_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_read_firmware_version, config.port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_read_firmware_version, config.port_config.mode, TTC_1_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_read_firmware_version, config.id, TTC_1_ID);
+            expect_value(__wrap_sl_ttc2_read_firmware_version, config->port, TTC_1_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_read_firmware_version, config->cs_pin, TTC_1_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_read_firmware_version, config->port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_read_firmware_version, config->port_config.mode, TTC_1_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_read_firmware_version, config->id, TTC_1_ID);
 
             will_return(__wrap_sl_ttc2_read_firmware_version, generate_random(0, UINT32_MAX-1));
 
@@ -150,11 +150,11 @@ static void ttc_set_param_test(void **state)
         {
             for(i = 0; i < UINT8_MAX; i++)
             {
-                expect_value(__wrap_sl_ttc2_write_reg, config.port, TTC_0_SPI_PORT);
-                expect_value(__wrap_sl_ttc2_write_reg, config.cs_pin, TTC_0_SPI_CS_PIN);
-                expect_value(__wrap_sl_ttc2_write_reg, config.port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
-                expect_value(__wrap_sl_ttc2_write_reg, config.port_config.mode, TTC_0_SPI_MODE);
-                expect_value(__wrap_sl_ttc2_write_reg, config.id, TTC_0_ID);
+                expect_value(__wrap_sl_ttc2_write_reg, config->port, TTC_0_SPI_PORT);
+                expect_value(__wrap_sl_ttc2_write_reg, config->cs_pin, TTC_0_SPI_CS_PIN);
+                expect_value(__wrap_sl_ttc2_write_reg, config->port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
+                expect_value(__wrap_sl_ttc2_write_reg, config->port_config.mode, TTC_0_SPI_MODE);
+                expect_value(__wrap_sl_ttc2_write_reg, config->id, TTC_0_ID);
 
                 expect_value(__wrap_sl_ttc2_write_reg, adr, i);
 
@@ -169,11 +169,11 @@ static void ttc_set_param_test(void **state)
         {
             for(i = 0; i < UINT8_MAX; i++)
             {
-                expect_value(__wrap_sl_ttc2_write_reg, config.port, TTC_1_SPI_PORT);
-                expect_value(__wrap_sl_ttc2_write_reg, config.cs_pin, TTC_1_SPI_CS_PIN);
-                expect_value(__wrap_sl_ttc2_write_reg, config.port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
-                expect_value(__wrap_sl_ttc2_write_reg, config.port_config.mode, TTC_1_SPI_MODE);
-                expect_value(__wrap_sl_ttc2_write_reg, config.id, TTC_1_ID);
+                expect_value(__wrap_sl_ttc2_write_reg, config->port, TTC_1_SPI_PORT);
+                expect_value(__wrap_sl_ttc2_write_reg, config->cs_pin, TTC_1_SPI_CS_PIN);
+                expect_value(__wrap_sl_ttc2_write_reg, config->port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
+                expect_value(__wrap_sl_ttc2_write_reg, config->port_config.mode, TTC_1_SPI_MODE);
+                expect_value(__wrap_sl_ttc2_write_reg, config->id, TTC_1_ID);
 
                 expect_value(__wrap_sl_ttc2_write_reg, adr, i);
 
@@ -209,11 +209,11 @@ static void ttc_get_param_test(void **state)
         {
             for(i = 0; i < UINT8_MAX; i++)
             {
-                expect_value(__wrap_sl_ttc2_read_reg, config.port, TTC_0_SPI_PORT);
-                expect_value(__wrap_sl_ttc2_read_reg, config.cs_pin, TTC_0_SPI_CS_PIN);
-                expect_value(__wrap_sl_ttc2_read_reg, config.port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
-                expect_value(__wrap_sl_ttc2_read_reg, config.port_config.mode, TTC_0_SPI_MODE);
-                expect_value(__wrap_sl_ttc2_read_reg, config.id, TTC_0_ID);
+                expect_value(__wrap_sl_ttc2_read_reg, config->port, TTC_0_SPI_PORT);
+                expect_value(__wrap_sl_ttc2_read_reg, config->cs_pin, TTC_0_SPI_CS_PIN);
+                expect_value(__wrap_sl_ttc2_read_reg, config->port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
+                expect_value(__wrap_sl_ttc2_read_reg, config->port_config.mode, TTC_0_SPI_MODE);
+                expect_value(__wrap_sl_ttc2_read_reg, config->id, TTC_0_ID);
 
                 expect_value(__wrap_sl_ttc2_read_reg, adr, i);
 
@@ -230,11 +230,11 @@ static void ttc_get_param_test(void **state)
         {
             for(i = 0; i < UINT8_MAX; i++)
             {
-                expect_value(__wrap_sl_ttc2_read_reg, config.port, TTC_1_SPI_PORT);
-                expect_value(__wrap_sl_ttc2_read_reg, config.cs_pin, TTC_1_SPI_CS_PIN);
-                expect_value(__wrap_sl_ttc2_read_reg, config.port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
-                expect_value(__wrap_sl_ttc2_read_reg, config.port_config.mode, TTC_1_SPI_MODE);
-                expect_value(__wrap_sl_ttc2_read_reg, config.id, TTC_1_ID);
+                expect_value(__wrap_sl_ttc2_read_reg, config->port, TTC_1_SPI_PORT);
+                expect_value(__wrap_sl_ttc2_read_reg, config->cs_pin, TTC_1_SPI_CS_PIN);
+                expect_value(__wrap_sl_ttc2_read_reg, config->port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
+                expect_value(__wrap_sl_ttc2_read_reg, config->port_config.mode, TTC_1_SPI_MODE);
+                expect_value(__wrap_sl_ttc2_read_reg, config->id, TTC_1_ID);
 
                 expect_value(__wrap_sl_ttc2_read_reg, adr, i);
 
@@ -285,35 +285,35 @@ static void ttc_get_data_test(void **state)
 
         if (ttc_dev == TTC_0)
         {
-            expect_value(__wrap_sl_ttc2_check_device, config.port, TTC_0_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_check_device, config.cs_pin, TTC_0_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_check_device, config.port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_check_device, config.port_config.mode, TTC_0_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_check_device, config.id, TTC_0_ID);
+            expect_value(__wrap_sl_ttc2_check_device, config->port, TTC_0_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_check_device, config->cs_pin, TTC_0_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_check_device, config->port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_check_device, config->port_config.mode, TTC_0_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_check_device, config->id, TTC_0_ID);
 
             will_return(__wrap_sl_ttc2_check_device, 0);
 
-            expect_value(__wrap_sl_ttc2_read_hk_data, config.port, TTC_0_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_read_hk_data, config.cs_pin, TTC_0_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_read_hk_data, config.port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_read_hk_data, config.port_config.mode, TTC_0_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_read_hk_data, config.id, TTC_0_ID);
+            expect_value(__wrap_sl_ttc2_read_hk_data, config->port, TTC_0_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_read_hk_data, config->cs_pin, TTC_0_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_read_hk_data, config->port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_read_hk_data, config->port_config.mode, TTC_0_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_read_hk_data, config->id, TTC_0_ID);
         }
         else if (ttc_dev == TTC_1)
         {
-            expect_value(__wrap_sl_ttc2_check_device, config.port, TTC_1_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_check_device, config.cs_pin, TTC_1_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_check_device, config.port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_check_device, config.port_config.mode, TTC_1_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_check_device, config.id, TTC_1_ID);
+            expect_value(__wrap_sl_ttc2_check_device, config->port, TTC_1_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_check_device, config->cs_pin, TTC_1_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_check_device, config->port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_check_device, config->port_config.mode, TTC_1_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_check_device, config->id, TTC_1_ID);
 
             will_return(__wrap_sl_ttc2_check_device, 0);
 
-            expect_value(__wrap_sl_ttc2_read_hk_data, config.port, TTC_1_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_read_hk_data, config.cs_pin, TTC_1_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_read_hk_data, config.port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_read_hk_data, config.port_config.mode, TTC_1_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_read_hk_data, config.id, TTC_1_ID);
+            expect_value(__wrap_sl_ttc2_read_hk_data, config->port, TTC_1_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_read_hk_data, config->cs_pin, TTC_1_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_read_hk_data, config->port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_read_hk_data, config->port_config.mode, TTC_1_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_read_hk_data, config->id, TTC_1_ID);
         }
         else
         {
@@ -358,36 +358,36 @@ static void ttc_send_test(void **state)
 
         if (ttc_dev == TTC_0)
         {
-            expect_value(__wrap_sl_ttc2_check_device, config.port, TTC_0_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_check_device, config.cs_pin, TTC_0_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_check_device, config.port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_check_device, config.port_config.mode, TTC_0_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_check_device, config.id, TTC_0_ID);
+            expect_value(__wrap_sl_ttc2_check_device, config->port, TTC_0_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_check_device, config->cs_pin, TTC_0_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_check_device, config->port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_check_device, config->port_config.mode, TTC_0_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_check_device, config->id, TTC_0_ID);
 
             will_return(__wrap_sl_ttc2_check_device, 0);
 
-            expect_value(__wrap_sl_ttc2_transmit_packet, config.port, TTC_0_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_transmit_packet, config.cs_pin, TTC_0_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_transmit_packet, config.port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_transmit_packet, config.port_config.mode, TTC_0_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_transmit_packet, config.id, TTC_0_ID);
+            expect_value(__wrap_sl_ttc2_transmit_packet, config->port, TTC_0_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_transmit_packet, config->cs_pin, TTC_0_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_transmit_packet, config->port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_transmit_packet, config->port_config.mode, TTC_0_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_transmit_packet, config->id, TTC_0_ID);
 
         }
         else if (ttc_dev == TTC_1)
         {
-            expect_value(__wrap_sl_ttc2_check_device, config.port, TTC_1_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_check_device, config.cs_pin, TTC_1_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_check_device, config.port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_check_device, config.port_config.mode, TTC_1_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_check_device, config.id, TTC_1_ID);
+            expect_value(__wrap_sl_ttc2_check_device, config->port, TTC_1_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_check_device, config->cs_pin, TTC_1_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_check_device, config->port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_check_device, config->port_config.mode, TTC_1_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_check_device, config->id, TTC_1_ID);
 
             will_return(__wrap_sl_ttc2_check_device, 0);
 
-            expect_value(__wrap_sl_ttc2_transmit_packet, config.port, TTC_1_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_transmit_packet, config.cs_pin, TTC_1_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_transmit_packet, config.port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_transmit_packet, config.port_config.mode, TTC_1_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_transmit_packet, config.id, TTC_1_ID);
+            expect_value(__wrap_sl_ttc2_transmit_packet, config->port, TTC_1_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_transmit_packet, config->cs_pin, TTC_1_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_transmit_packet, config->port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_transmit_packet, config->port_config.mode, TTC_1_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_transmit_packet, config->id, TTC_1_ID);
 
         }
         else
@@ -422,35 +422,35 @@ static void ttc_recv_test(void **state)
 
         if (ttc_dev == TTC_0)
         {
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.port, TTC_0_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.cs_pin, TTC_0_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.port_config.mode, TTC_0_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.id, TTC_0_ID);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->port, TTC_0_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->cs_pin, TTC_0_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->port_config.mode, TTC_0_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->id, TTC_0_ID);
 
             will_return(__wrap_sl_ttc2_check_pkt_avail, test_len);
 
-            expect_value(__wrap_sl_ttc2_read_packet, config.port, TTC_0_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_read_packet, config.cs_pin, TTC_0_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_read_packet, config.port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_read_packet, config.port_config.mode, TTC_0_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_read_packet, config.id, TTC_0_ID);
+            expect_value(__wrap_sl_ttc2_read_packet, config->port, TTC_0_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_read_packet, config->cs_pin, TTC_0_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_read_packet, config->port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_read_packet, config->port_config.mode, TTC_0_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_read_packet, config->id, TTC_0_ID);
         }
         else if (ttc_dev == TTC_1)
         {
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.port, TTC_1_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.cs_pin, TTC_1_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.port_config.mode, TTC_1_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.id, TTC_1_ID);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->port, TTC_1_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->cs_pin, TTC_1_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->port_config.mode, TTC_1_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->id, TTC_1_ID);
 
             will_return(__wrap_sl_ttc2_check_pkt_avail, test_len);
 
-            expect_value(__wrap_sl_ttc2_read_packet, config.port, TTC_1_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_read_packet, config.cs_pin, TTC_1_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_read_packet, config.port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_read_packet, config.port_config.mode, TTC_1_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_read_packet, config.id, TTC_1_ID);
+            expect_value(__wrap_sl_ttc2_read_packet, config->port, TTC_1_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_read_packet, config->cs_pin, TTC_1_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_read_packet, config->port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_read_packet, config->port_config.mode, TTC_1_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_read_packet, config->id, TTC_1_ID);
         }
         else
         {
@@ -484,19 +484,19 @@ static void ttc_avail_test(void **state)
     {
         if (ttc_dev == TTC_0)
         {
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.port, TTC_0_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.cs_pin, TTC_0_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.port_config.mode, TTC_0_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.id, TTC_0_ID);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->port, TTC_0_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->cs_pin, TTC_0_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->port_config.mode, TTC_0_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->id, TTC_0_ID);
         }
         else if (ttc_dev == TTC_1)
         {
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.port, TTC_1_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.cs_pin, TTC_1_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.port_config.mode, TTC_1_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_check_pkt_avail, config.id, TTC_1_ID);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->port, TTC_1_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->cs_pin, TTC_1_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->port_config.mode, TTC_1_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_check_pkt_avail, config->id, TTC_1_ID);
         }
         else
         {
@@ -520,19 +520,19 @@ static void ttc_enter_hibernation_test(void **state)
     {
         if (ttc_dev == TTC_0)
         {
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.port, TTC_0_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.cs_pin, TTC_0_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.port_config.mode, TTC_0_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.id, TTC_0_ID);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->port, TTC_0_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->cs_pin, TTC_0_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->port_config.mode, TTC_0_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->id, TTC_0_ID);
         }
         else if (ttc_dev == TTC_1)
         {
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.port, TTC_1_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.cs_pin, TTC_1_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.port_config.mode, TTC_1_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.id, TTC_1_ID);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->port, TTC_1_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->cs_pin, TTC_1_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->port_config.mode, TTC_1_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->id, TTC_1_ID);
         }
         else
         {
@@ -556,19 +556,19 @@ static void ttc_leave_hibernation_test(void **state)
     {
         if (ttc_dev == TTC_0)
         {
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.port, TTC_0_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.cs_pin, TTC_0_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.port_config.mode, TTC_0_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.id, TTC_0_ID);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->port, TTC_0_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->cs_pin, TTC_0_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->port_config.speed_hz, TTC_0_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->port_config.mode, TTC_0_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->id, TTC_0_ID);
         }
         else if (ttc_dev == TTC_1)
         {
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.port, TTC_1_SPI_PORT);
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.cs_pin, TTC_1_SPI_CS_PIN);
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.port_config.mode, TTC_1_SPI_MODE);
-            expect_value(__wrap_sl_ttc2_set_tx_enable, config.id, TTC_1_ID);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->port, TTC_1_SPI_PORT);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->cs_pin, TTC_1_SPI_CS_PIN);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->port_config.speed_hz, TTC_1_SPI_CLOCK_HZ);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->port_config.mode, TTC_1_SPI_MODE);
+            expect_value(__wrap_sl_ttc2_set_tx_enable, config->id, TTC_1_ID);
         }
         else
         {

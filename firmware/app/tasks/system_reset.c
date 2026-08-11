@@ -1,7 +1,7 @@
 /*
  * system_reset.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.47
+ * \version 1.0.0
  * 
  * \date 2020/01/12
  * 
@@ -35,16 +35,25 @@
 
 #include <system/system.h>
 #include <system/sys_log/sys_log.h>
+#include <structs/satellite.h>
 
+#include "time_control.h"
 #include "system_reset.h"
 
 xTaskHandle xTaskSystemResetHandle;
 
-void vTaskSystemReset(void)
+void vTaskSystemReset(void *p)
 {
+    (void)p;
+
+    const TickType_t reset_period_ticks = pdMS_TO_TICKS_64((TickType_t) TASK_SYSTEM_RESET_PERIOD_MS);
+
     while(1)
     {
-        vTaskDelay(pdMS_TO_TICKS(TASK_SYSTEM_RESET_PERIOD_MS));
+        vTaskDelay(reset_period_ticks); 
+
+        /* Saving system time to FRAM before reset */
+        (void)time_control_save_sys_time(system_get_time());
 
         sys_log_print_event_from_module(SYS_LOG_INFO, TASK_SYSTEM_RESET_NAME, "Restarting the system...");
         sys_log_new_line();

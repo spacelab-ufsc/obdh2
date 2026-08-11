@@ -1,7 +1,7 @@
 /*
  * sl_ttc2_test.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -24,8 +24,9 @@
  * \brief Unit test of the SpaceLab TTC 2.0 driver.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.7.19
+ * \version 0.10.17
  * 
  * \date 2021/09/08
  * 
@@ -34,6 +35,7 @@
  * \{
  */
 
+#include "tests/mockups/drivers/sl_ttc2_wrap.h"
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -55,9 +57,32 @@ sl_ttc2_config_t conf = {0};
 
 unsigned int generate_random(unsigned int l, unsigned int r);
 
-uint16_t crc16_ccitt(uint8_t *data, uint16_t len);
+static inline void read_adr(uint8_t adr, uint32_t val);
 
-void read_adr(uint8_t adr, uint32_t val);
+#define CRC8_INITIAL_VAL            0x00U       /* CRC8-CCITT initial value. */
+#define CRC8_POLYNOMIAL             0x07U       /* CRC8-CCITT polynomial. */
+
+static uint8_t crc8(uint8_t *data, uint8_t len)
+{
+    uint8_t crc = CRC8_INITIAL_VAL;
+    uint8_t i = 0U;
+    uint8_t j = 0U;
+
+    for(i = 0U; i < len; i++)
+    {
+        crc ^= data[i];
+
+        j = 0U;
+        for (j = 0U; j < 8U; j++)
+        {
+            crc = (crc << 1) ^ ((crc & 0x80U) ? CRC8_POLYNOMIAL : 0U);
+        }
+
+        crc &= 0xFFU;
+    }
+
+    return crc;
+}
 
 static void sl_ttc2_init_test(void **state)
 {
@@ -72,65 +97,70 @@ static void sl_ttc2_init_test(void **state)
     uint8_t cmd[8] = {0};
     uint8_t ans[8] = {0};
 
-    cmd[0] = 1;     /* Read reg. command */
-    cmd[1] = 0;     /* Read device ID */
+    cmd[0] = SL_TTC2_PKT_PREAMBLE;     /* Packet Preamble */
+    cmd[1] = SL_TTC2_CMD_READ_REG;     /* Read device ID */
+    cmd[2] = SL_TTC2_REG_DEVICE_ID;     /* Read device ID */
 
-    ans[0] = 1;     /* Command */
-    ans[1] = 0;     /* Address */
-    ans[2] = 0;     /* Dummy byte */
-    ans[3] = 0;     /* Dummy byte */
-    ans[4] = 0xCC;  /* Radio 0 ID */
-    ans[5] = 0x2A;  /* Radio 0 ID */
-    ans[6] = 0x93;  /* CRC16 */
-    ans[7] = 0xB1;  /* CRC16 */
+    ans[0] = SL_TTC2_PKT_PREAMBLE;     /* Packet Preamble */
+    ans[1] = SL_TTC2_CMD_READ_REG;     /* Command */
+    ans[2] = 0;     /* Address */
+    ans[3] = 0xCC;  /* Radio 0 ID */
+    ans[4] = 0x2A;  /* Radio 0 ID */
 
-    expect_value(__wrap_spi_transfer, port, SL_TTC2_SPI_PORT);
-    expect_value(__wrap_spi_transfer, cs, SL_TTC2_SPI_CS);
-    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 8);
-    expect_value(__wrap_spi_transfer, len, 8);
+    ans[7] = crc8(ans, 7U);
+    cmd[7] = crc8(cmd, 7U);
+
+    expect_memory(__wrap_crc8_get_val, data, (void*)cmd, 7U);
+    expect_value(__wrap_crc8_get_val, len, 7U);
+
+    will_return(__wrap_crc8_get_val, crc8(cmd, 7U));
+
+    will_return(__wrap_spi_mutex_take, 0);
+
+    expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)cmd, 8U);
+    expect_value(__wrap_spi_write, len, 8U);
+
+    will_return(__wrap_spi_write, 0);
+
+    expect_value(__wrap_sl_ttc2_spi_read, config->port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_sl_ttc2_spi_read, config->cs_pin, SL_TTC2_SPI_CS);
+    expect_value(__wrap_sl_ttc2_spi_read, config->port_config.speed_hz, SL_TTC2_SPI_CLOCK_HZ);
+    expect_value(__wrap_sl_ttc2_spi_read, config->port_config.mode, SL_TTC2_SPI_MODE);
+    expect_value(__wrap_sl_ttc2_spi_read, len, 8U);
 
     uint16_t i = 0;
-    for(i=0; i<8; i++)
+    for(i = 0; i < 8U; i++)
     {
-        will_return(__wrap_spi_transfer, ans[i]);
+        will_return(__wrap_sl_ttc2_spi_read, ans[i]);
     }
 
-    will_return(__wrap_spi_transfer, 0);
+    will_return(__wrap_sl_ttc2_spi_read, 0);
 
-    assert_return_code(sl_ttc2_init(conf), 0);
+    expect_memory(__wrap_crc8_get_val, data, (void*)ans, 7U);
+    expect_value(__wrap_crc8_get_val, len, 7U);
+
+    will_return(__wrap_crc8_get_val, crc8(ans, 7U));
+
+    will_return(__wrap_spi_mutex_give, 0);
+
+    assert_return_code(sl_ttc2_init(&conf), 0);
 }
 
 static void sl_ttc2_check_device_test(void **state)
 {
-    uint8_t cmd[8] = {0};
-    uint8_t ans[8] = {0};
+    uint32_t adr = 0U;
+    uint16_t val1 = 0xCC2AU;
+    uint16_t val2 = 0xCC2AU;
 
-    cmd[0] = 1;     /* Read reg. command */
-    cmd[1] = 0;     /* Read device ID */
+    read_adr(adr, (uint32_t)val1);
 
-    ans[0] = 1;     /* Command */
-    ans[1] = 0;     /* Address */
-    ans[2] = 0;     /* Dummy byte */
-    ans[3] = 0;     /* Dummy byte */
-    ans[4] = 0xCC;  /* Radio 0 ID */
-    ans[5] = 0x2A;  /* Radio 0 ID */
-    ans[6] = 0x93;  /* CRC16 */
-    ans[7] = 0xB1;  /* CRC16 */
+    assert_return_code(sl_ttc2_check_device(&conf), 0);
 
-    expect_value(__wrap_spi_transfer, port, SL_TTC2_SPI_PORT);
-    expect_value(__wrap_spi_transfer, cs, SL_TTC2_SPI_CS);
-    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 8);
-    expect_value(__wrap_spi_transfer, len, 8);
+    read_adr(adr, (uint32_t)val2);
 
-    uint16_t i = 0;
-    for(i=0; i<8; i++)
-    {
-        will_return(__wrap_spi_transfer, ans[i]);
-    }
-
-    will_return(__wrap_spi_transfer, 0);
-
-    assert_return_code(sl_ttc2_check_device(conf), 0);
+    assert_return_code(sl_ttc2_check_device(&conf), 0);
 }
 
 static void sl_ttc2_write_reg_test(void **state)
@@ -139,68 +169,294 @@ static void sl_ttc2_write_reg_test(void **state)
     uint32_t val = generate_random(0, UINT32_MAX-1);
 
     uint8_t cmd[8] = {0};
+    uint8_t cmd_len = 8;
 
-    cmd[0] = 2;     /* Write reg. command */
-    cmd[1] = adr;   /* Address */
-    cmd[2] = (val >> 24) & 0xFF;
-    cmd[3] = (val >> 16) & 0xFF;
-    cmd[4] = (val >> 8) & 0xFF;
-    cmd[5] = val & 0xFF;
+    cmd[0] = SL_TTC2_PKT_PREAMBLE;      /* Write reg. command */
+    cmd[1] = SL_TTC2_CMD_WRITE_REG;     /* Address */
+    cmd[2] = adr;                       /* Address */
 
-    uint16_t checksum = crc16_ccitt(cmd, 6);
+    switch(adr)
+    {
+        case SL_TTC2_REG_DEVICE_ID:
+            cmd[3] = (val >> 8) & 0xFFU;
+            cmd[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_HARDWARE_VERSION:
+            cmd[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_RESET_COUNTER:
+            cmd[3] = (val >> 8) & 0xFFU;
+            cmd[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_LAST_RESET_CAUSE:
+            cmd[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_INPUT_VOLTAGE_MCU:
+            cmd[3] = (val >> 8) & 0xFFU;
+            cmd[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_INPUT_CURRENT_MCU:
+            cmd[3] = (val >> 8) & 0xFFU;
+            cmd[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_TEMPERATURE_MCU:
+            cmd[3] = (val >> 8) & 0xFFU;
+            cmd[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_INPUT_VOLTAGE_RADIO:
+            cmd[3] = (val >> 8) & 0xFFU;
+            cmd[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_INPUT_CURRENT_RADIO:
+            cmd[3] = (val >> 8) & 0xFFU;
+            cmd[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_TEMPERATURE_RADIO:
+            cmd[3] = (val >> 8) & 0xFFU;
+            cmd[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_LAST_VALID_TC:
+            cmd[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_RSSI_LAST_VALID_TC:
+            cmd[3] = (val >> 8) & 0xFFU;
+            cmd[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_TEMPERATURE_ANTENNA:
+            cmd[3] = (val >> 8) & 0xFFU;
+            cmd[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_ANTENNA_STATUS:
+            cmd[3] = (val >> 8) & 0xFFU;
+            cmd[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_ANTENNA_DEPLOYMENT_STATUS:
+            cmd[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_ANTENNA_DEP_HIB_STATUS:
+            cmd[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_TX_ENABLE:
+            cmd[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_FIFO_TX_PACKET:
+            cmd[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_FIFO_RX_PACKET:
+            cmd[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO:
+            cmd[3] = (val >> 8) & 0xFFU;
+            cmd[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        default:
+            cmd[3] = (val >> 24) & 0xFFU;
+            cmd[4] = (val >> 16) & 0xFFU;
+            cmd[5] = (val >> 8)  & 0xFFU;
+            cmd[6] = (val >> 0)  & 0xFFU;
+            break;
+    }
 
-    cmd[6] = (checksum >> 8) & 0xFF;
-    cmd[7] = checksum & 0xFF;
+    cmd[7] = crc8(cmd, 7U);
+
+    expect_memory(__wrap_crc8_get_val, data, (void*)cmd, 7U);
+    expect_value(__wrap_crc8_get_val, len, 7U);
+
+    will_return(__wrap_crc8_get_val, crc8(cmd, 7U));
+
+    will_return(__wrap_spi_mutex_take, 0);
 
     expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
     expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
-    expect_memory(__wrap_spi_write, data, (void*)cmd, 8);
-    expect_value(__wrap_spi_write, len, 8);
+    expect_memory(__wrap_spi_write, data, (void*)cmd, cmd_len);
+    expect_value(__wrap_spi_write, len, cmd_len);
 
     will_return(__wrap_spi_write, 0);
 
-    assert_return_code(sl_ttc2_write_reg(conf, adr, val), 0);
+    will_return(__wrap_spi_mutex_give, 0);
+
+    assert_return_code(sl_ttc2_write_reg(&conf, adr, val), 0);
 }
 
 static void sl_ttc2_read_reg_test(void **state)
 {
-    uint8_t adr = generate_random(0, 255);
+    uint8_t adr = generate_random(0, 255) % 23U;
     uint32_t val = generate_random(0, UINT32_MAX-1);
+
+    uint32_t res = UINT32_MAX;
 
     uint8_t cmd[8] = {0};
     uint8_t ans[8] = {0};
 
-    cmd[0] = 1;     /* Write reg. command */
-    cmd[1] = adr;   /* Address */
+    cmd[0] = SL_TTC2_PKT_PREAMBLE;     
+    cmd[1] = SL_TTC2_CMD_READ_REG;     /* Read reg. command */
+    cmd[2] = adr;                       /* Address */
 
-    ans[0] = 1;
-    ans[1] = adr;
-    ans[2] = (val >> 24) & 0xFF;
-    ans[3] = (val >> 16) & 0xFF;
-    ans[4] = (val >> 8) & 0xFF;
-    ans[5] = val & 0xFF;
+    ans[0] = SL_TTC2_PKT_PREAMBLE;
+    ans[1] = SL_TTC2_CMD_READ_REG;
+    ans[2] = adr;
 
-    uint16_t checksum = crc16_ccitt(ans, 6);
-
-    ans[6] = (checksum >> 8) & 0xFF;
-    ans[7] = checksum & 0xFF;
-
-    expect_value(__wrap_spi_transfer, port, SL_TTC2_SPI_PORT);
-    expect_value(__wrap_spi_transfer, cs, SL_TTC2_SPI_CS);
-    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 8);
-    expect_value(__wrap_spi_transfer, len, 8);
-
-    uint16_t i = 0;
-    for(i=0; i<8; i++)
+    switch(adr)
     {
-        will_return(__wrap_spi_transfer, ans[i]);
+        case SL_TTC2_REG_DEVICE_ID:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_HARDWARE_VERSION:
+            ans[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_RESET_COUNTER:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_LAST_RESET_CAUSE:
+            ans[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_INPUT_VOLTAGE_MCU:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_INPUT_CURRENT_MCU:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_TEMPERATURE_MCU:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_INPUT_VOLTAGE_RADIO:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_INPUT_CURRENT_RADIO:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_TEMPERATURE_RADIO:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_LAST_VALID_TC:
+            ans[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_RSSI_LAST_VALID_TC:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_TEMPERATURE_ANTENNA:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_ANTENNA_STATUS:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_ANTENNA_DEPLOYMENT_STATUS:
+            ans[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_ANTENNA_DEP_HIB_STATUS:
+            ans[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_TX_ENABLE:
+            ans[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_FIFO_TX_PACKET:
+            ans[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_FIFO_RX_PACKET:
+            ans[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        default:
+            ans[3] = (val >> 24) & 0xFFU;
+            ans[4] = (val >> 16) & 0xFFU;
+            ans[5] = (val >> 8)  & 0xFFU;
+            ans[6] = (val >> 0)  & 0xFFU;
+            break;
     }
 
-    will_return(__wrap_spi_transfer, 0);
+    cmd[7] = crc8(cmd, 7U);
+    ans[7] = crc8(ans, 7U);
 
-    uint32_t res = UINT32_MAX;
+    expect_memory(__wrap_crc8_get_val, data, (void*)cmd, 7U);
+    expect_value(__wrap_crc8_get_val, len, 7U);
 
-    assert_return_code(sl_ttc2_read_reg(conf, adr, &res), 0);
+    will_return(__wrap_crc8_get_val, crc8(cmd, 7U));
+
+    will_return(__wrap_spi_mutex_take, 0);
+
+    expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)cmd, 8U);
+    expect_value(__wrap_spi_write, len, 8U);
+
+    will_return(__wrap_spi_write, 0);
+
+    expect_value(__wrap_sl_ttc2_spi_read, config->port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_sl_ttc2_spi_read, config->cs_pin, SL_TTC2_SPI_CS);
+    expect_value(__wrap_sl_ttc2_spi_read, config->port_config.speed_hz, SL_TTC2_SPI_CLOCK_HZ);
+    expect_value(__wrap_sl_ttc2_spi_read, config->port_config.mode, SL_TTC2_SPI_MODE);
+    expect_value(__wrap_sl_ttc2_spi_read, len, 8U);
+
+    uint16_t i = 0;
+    for(i = 0; i < 8U; i++)
+    {
+        will_return(__wrap_sl_ttc2_spi_read, ans[i]);
+    }
+
+    will_return(__wrap_sl_ttc2_spi_read, 0);
+
+    expect_memory(__wrap_crc8_get_val, data, (void*)ans, 7U);
+    expect_value(__wrap_crc8_get_val, len, 7U);
+
+    will_return(__wrap_crc8_get_val, crc8(ans, 7U));
+
+    will_return(__wrap_spi_mutex_give, 0);
+
+    assert_return_code(sl_ttc2_read_reg(&conf, adr, &res), 0);
 
     assert_int_equal(res, val);
 }
@@ -262,7 +518,7 @@ static void sl_ttc2_read_hk_data_test(void **state)
 
     sl_ttc2_hk_data_t hk_res = {0};
 
-    assert_return_code(sl_ttc2_read_hk_data(conf, &hk_res), 0);
+    assert_return_code(sl_ttc2_read_hk_data(&conf, &hk_res), 0);
 
     assert_int_equal(hk_val.time_counter,           hk_res.time_counter);
     assert_int_equal(hk_val.reset_counter,          hk_res.reset_counter);
@@ -292,7 +548,7 @@ static void sl_ttc2_read_device_id_test(void **state)
 
     uint16_t res = UINT16_MAX;
 
-    assert_return_code(sl_ttc2_read_device_id(conf, &res), 0);
+    assert_return_code(sl_ttc2_read_device_id(&conf, &res), 0);
 
     assert_int_equal(res, val);
 }
@@ -306,7 +562,7 @@ static void sl_ttc2_read_hardware_version_test(void **state)
 
     uint8_t res = UINT8_MAX;
 
-    assert_return_code(sl_ttc2_read_hardware_version(conf, &res), 0);
+    assert_return_code(sl_ttc2_read_hardware_version(&conf, &res), 0);
 
     assert_int_equal(res, val);
 }
@@ -320,7 +576,7 @@ static void sl_ttc2_read_firmware_version_test(void **state)
 
     uint32_t res = UINT32_MAX;
 
-    assert_return_code(sl_ttc2_read_firmware_version(conf, &res), 0);
+    assert_return_code(sl_ttc2_read_firmware_version(&conf, &res), 0);
 
     assert_int_equal(res, val);
 }
@@ -334,7 +590,7 @@ static void sl_ttc2_read_time_counter_test(void **state)
 
     uint32_t res = UINT32_MAX;
 
-    assert_return_code(sl_ttc2_read_time_counter(conf, &res), 0);
+    assert_return_code(sl_ttc2_read_time_counter(&conf, &res), 0);
 
     assert_int_equal(res, val);
 }
@@ -348,7 +604,7 @@ static void sl_ttc2_read_reset_counter_test(void **state)
 
     uint16_t res = UINT16_MAX;
 
-    assert_return_code(sl_ttc2_read_reset_counter(conf, &res), 0);
+    assert_return_code(sl_ttc2_read_reset_counter(&conf, &res), 0);
 
     assert_int_equal(res, val);
 }
@@ -362,7 +618,7 @@ static void sl_ttc2_read_reset_cause_test(void **state)
 
     uint8_t res = UINT8_MAX;
 
-    assert_return_code(sl_ttc2_read_reset_cause(conf, &res), 0);
+    assert_return_code(sl_ttc2_read_reset_cause(&conf, &res), 0);
 
     assert_int_equal(res, val);
 }
@@ -384,7 +640,7 @@ static void sl_ttc2_read_voltage_test(void **state)
                 adr = 9;    /* Radio voltage register */
                 break;
             default:
-                assert_int_equal(sl_ttc2_read_voltage(conf, i, &res), -1);
+                assert_int_equal(sl_ttc2_read_voltage(&conf, i, &res), -1);
 
                 continue;
         }
@@ -393,7 +649,7 @@ static void sl_ttc2_read_voltage_test(void **state)
 
         read_adr(adr, (uint32_t)val);
 
-        assert_return_code(sl_ttc2_read_voltage(conf, i, &res), 0);
+        assert_return_code(sl_ttc2_read_voltage(&conf, i, &res), 0);
 
         assert_int_equal(res, val);
     }
@@ -416,7 +672,7 @@ static void sl_ttc2_read_current_test(void **state)
                 adr = 10;   /* Radio current register */
                 break;
             default:
-                assert_int_equal(sl_ttc2_read_current(conf, i, &res), -1);
+                assert_int_equal(sl_ttc2_read_current(&conf, i, &res), -1);
 
                 continue;
         }
@@ -425,7 +681,7 @@ static void sl_ttc2_read_current_test(void **state)
 
         read_adr(adr, (uint32_t)val);
 
-        assert_return_code(sl_ttc2_read_current(conf, i, &res), 0);
+        assert_return_code(sl_ttc2_read_current(&conf, i, &res), 0);
 
         assert_int_equal(res, val);
     }
@@ -451,7 +707,7 @@ static void sl_ttc2_read_temp_test(void **state)
                 adr = 14;   /* Antenna temperature register */
                 break;
             default:
-                assert_int_equal(sl_ttc2_read_temp(conf, i, &res), -1);
+                assert_int_equal(sl_ttc2_read_temp(&conf, i, &res), -1);
 
                 continue;
         }
@@ -460,7 +716,7 @@ static void sl_ttc2_read_temp_test(void **state)
 
         read_adr(adr, (uint32_t)val);
 
-        assert_return_code(sl_ttc2_read_temp(conf, i, &res), 0);
+        assert_return_code(sl_ttc2_read_temp(&conf, i, &res), 0);
 
         assert_int_equal(res, val);
     }
@@ -475,7 +731,7 @@ static void sl_ttc2_read_last_valid_tc_test(void **state)
 
     uint8_t res = UINT8_MAX;
 
-    assert_return_code(sl_ttc2_read_last_valid_tc(conf, &res), 0);
+    assert_return_code(sl_ttc2_read_last_valid_tc(&conf, &res), 0);
 
     assert_int_equal(res, val);
 }
@@ -489,7 +745,7 @@ static void sl_ttc2_read_rssi_test(void **state)
 
     sl_ttc2_rssi_t res = UINT16_MAX;
 
-    assert_return_code(sl_ttc2_read_rssi(conf, &res), 0);
+    assert_return_code(sl_ttc2_read_rssi(&conf, &res), 0);
 
     assert_int_equal(res, val);
 }
@@ -503,7 +759,7 @@ static void sl_ttc2_read_antenna_status_test(void **state)
 
     uint16_t res = UINT16_MAX;
 
-    assert_return_code(sl_ttc2_read_antenna_status(conf, &res), 0);
+    assert_return_code(sl_ttc2_read_antenna_status(&conf, &res), 0);
 
     assert_int_equal(res, val);
 }
@@ -517,7 +773,7 @@ static void sl_ttc2_read_antenna_deployment_status_test(void **state)
 
     uint8_t res = UINT8_MAX;
 
-    assert_return_code(sl_ttc2_read_antenna_deployment_status(conf, &res), 0);
+    assert_return_code(sl_ttc2_read_antenna_deployment_status(&conf, &res), 0);
 
     assert_int_equal(res, val);
 }
@@ -531,7 +787,7 @@ static void sl_ttc2_read_antenna_deployment_hibernation_status_test(void **state
 
     uint8_t res = UINT8_MAX;
 
-    assert_return_code(sl_ttc2_read_antenna_deployment_hibernation_status(conf, &res), 0);
+    assert_return_code(sl_ttc2_read_antenna_deployment_hibernation_status(&conf, &res), 0);
 
     assert_int_equal(res, val);
 }
@@ -545,38 +801,42 @@ static void sl_ttc2_read_tx_enable_test(void **state)
 
     uint8_t res = UINT8_MAX;
 
-    assert_return_code(sl_ttc2_read_tx_enable(conf, &res), 0);
+    assert_return_code(sl_ttc2_read_tx_enable(&conf, &res), 0);
 
     assert_int_equal(res, val);
 }
 
 static void sl_ttc2_set_tx_enable_test(void **state)
 {
-    uint8_t adr = 18;   /* TX enable register */
-    uint32_t val = generate_random(0, 1);
+    uint8_t adr = SL_TTC2_REG_TX_ENABLE;   /* TX enable register */
+    uint8_t val = generate_random(0, 1);
 
     uint8_t cmd[8] = {0};
 
-    cmd[0] = 2;     /* Write reg. command */
-    cmd[1] = adr;   /* Address */
-    cmd[2] = (val >> 24) & 0xFF;
-    cmd[3] = (val >> 16) & 0xFF;
-    cmd[4] = (val >> 8) & 0xFF;
-    cmd[5] = val & 0xFF;
+    cmd[0] = SL_TTC2_PKT_PREAMBLE;     /* Write reg. command */
+    cmd[1] = SL_TTC2_CMD_WRITE_REG;   /* Address */
+    cmd[2] = adr;   /* Address */
+    cmd[3] = val;
 
-    uint16_t checksum = crc16_ccitt(cmd, 6);
+    cmd[7] = crc8(cmd, 7U);
 
-    cmd[6] = (checksum >> 8) & 0xFF;
-    cmd[7] = checksum & 0xFF;
+    expect_memory(__wrap_crc8_get_val, data, (void*)cmd, 7U);
+    expect_value(__wrap_crc8_get_val, len, 7U);
+
+    will_return(__wrap_crc8_get_val, crc8(cmd, 7U));
+
+    will_return(__wrap_spi_mutex_take, 0);
 
     expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
     expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
-    expect_memory(__wrap_spi_write, data, (void*)cmd, 8);
-    expect_value(__wrap_spi_write, len, 8);
+    expect_memory(__wrap_spi_write, data, (void*)cmd, 8U);
+    expect_value(__wrap_spi_write, len, 8U);
 
     will_return(__wrap_spi_write, 0);
 
-    assert_return_code(sl_ttc2_set_tx_enable(conf, (bool)val), 0);
+    will_return(__wrap_spi_mutex_give, 0);
+
+    assert_return_code(sl_ttc2_set_tx_enable(&conf, (bool)val), 0);
 }
 
 static void sl_ttc2_read_pkt_counter_test(void **state)
@@ -596,7 +856,7 @@ static void sl_ttc2_read_pkt_counter_test(void **state)
                 adr = 20;   /* RX packet counter register */
                 break;
             default:
-                assert_int_equal(sl_ttc2_read_pkt_counter(conf, i, &res), -1);
+                assert_int_equal(sl_ttc2_read_pkt_counter(&conf, i, &res), -1);
 
                 continue;
         }
@@ -605,7 +865,7 @@ static void sl_ttc2_read_pkt_counter_test(void **state)
 
         read_adr(adr, (uint32_t)val);
 
-        assert_return_code(sl_ttc2_read_pkt_counter(conf, i, &res), 0);
+        assert_return_code(sl_ttc2_read_pkt_counter(&conf, i, &res), 0);
 
         assert_int_equal(res, val);
     }
@@ -628,7 +888,7 @@ static void sl_ttc2_read_fifo_pkts_test(void **state)
                 adr = 22;   /* FIFO RX packet register */
                 break;
             default:
-                assert_int_equal(sl_ttc2_read_fifo_pkts(conf, i, &res), -1);
+                assert_int_equal(sl_ttc2_read_fifo_pkts(&conf, i, &res), -1);
 
                 continue;
         }
@@ -637,7 +897,7 @@ static void sl_ttc2_read_fifo_pkts_test(void **state)
 
         read_adr(adr, (uint32_t)val);
 
-        assert_return_code(sl_ttc2_read_fifo_pkts(conf, i, &res), 0);
+        assert_return_code(sl_ttc2_read_fifo_pkts(&conf, i, &res), 0);
 
         assert_int_equal(res, val);
     }
@@ -645,14 +905,14 @@ static void sl_ttc2_read_fifo_pkts_test(void **state)
 
 static void sl_ttc2_read_len_rx_pkt_in_fifo_test(void **state)
 {
-    uint8_t adr = 23;   /* Length of the first available RX packet register */
+    uint8_t adr = SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO;   /* Length of the first available RX packet register */
     uint16_t val = generate_random(0, UINT16_MAX);
-
-    read_adr(adr, (uint32_t)val);
 
     uint16_t res = UINT16_MAX;
 
-    assert_return_code(sl_ttc2_read_len_rx_pkt_in_fifo(conf, &res), 0);
+    read_adr(adr, (uint32_t)val);
+
+    assert_return_code(sl_ttc2_read_len_rx_pkt_in_fifo(&conf, &res), 0);
 
     assert_int_equal(res, val);
 }
@@ -664,74 +924,133 @@ static void sl_ttc2_check_pkt_avail_test(void **state)
 
     read_adr(adr, (uint32_t)val);
 
-    assert_int_equal((uint8_t)(sl_ttc2_check_pkt_avail(conf)), val);
+    assert_int_equal((uint8_t)(sl_ttc2_check_pkt_avail(&conf)), val);
 }
 
 static void sl_ttc2_transmit_packet_test(void **state)
 {
-    uint8_t cmd[256] = {UINT8_MAX};
+    uint8_t cmd[223] = {0U};
     uint16_t data_len = generate_random(1, 220);
 
-    cmd[0] = 3;     /* Transmit packet command */
+    cmd[0] = SL_TTC2_PKT_PREAMBLE;     /* Packet Preamble */
+    cmd[1] = SL_TTC2_CMD_TRANSMIT_PKT;     /* Transmit packet command */
+    cmd[2] = data_len;     /* Data lenght */
 
-    uint16_t i = 0;
-    for(i=0; i<data_len; i++)
-    {
-        cmd[i+1] = generate_random(0, UINT8_MAX);
-    }
+    cmd[7] = crc8(cmd, 7U);
 
-    uint16_t checksum = crc16_ccitt(cmd, 1+data_len);
+    expect_memory(__wrap_crc8_get_val, data, (void*)cmd, 7U);
+    expect_value(__wrap_crc8_get_val, len, 7U);
 
-    cmd[1+data_len] = (checksum >> 8) & 0xFF;
-    cmd[1+data_len+1] = checksum & 0xFF;
+    will_return(__wrap_crc8_get_val, crc8(cmd, 7U));
+
+    will_return(__wrap_spi_mutex_take, 0);
 
     expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
     expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
-    expect_memory(__wrap_spi_write, data, (void*)cmd, 1+data_len+2);
-    expect_value(__wrap_spi_write, len, 1+data_len+2);
+    expect_memory(__wrap_spi_write, data, (void*)cmd, 8U);
+    expect_value(__wrap_spi_write, len, 8U);
 
     will_return(__wrap_spi_write, 0);
 
-    assert_return_code(sl_ttc2_transmit_packet(conf, cmd+1, data_len), 0);
+    uint16_t i = 0;
+    for(i = 0; i < data_len; i++)
+    {
+        cmd[i+3] = generate_random(0, UINT8_MAX);
+    }
+
+    cmd[data_len + 3] = crc8(cmd, data_len + 3U);
+
+    expect_memory(__wrap_crc8_get_val, data, (void*)cmd, data_len + 3U);
+    expect_value(__wrap_crc8_get_val, len, data_len + 3U);
+
+    will_return(__wrap_crc8_get_val, crc8(cmd, data_len + 3U));
+
+    expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)cmd, 3U + data_len + 1U);
+    expect_value(__wrap_spi_write, len, 3U + data_len + 1U);
+
+    will_return(__wrap_spi_write, 0);
+
+    will_return(__wrap_spi_mutex_give, 0);
+
+    assert_return_code(sl_ttc2_transmit_packet(&conf, &cmd[3], data_len), 0);
 }
 
 static void sl_ttc2_read_packet_test(void **state)
 {
-    uint8_t adr = 23;   /* Length of the first available RX packet register */
-    uint8_t pkt[1+220+2] = {UINT8_MAX};
-    uint16_t pkt_len = generate_random(1, 220);
-
-    read_adr(adr, (uint32_t)pkt_len);
-
-    pkt[0] = 4;
-
-    expect_value(__wrap_spi_transfer, port, SL_TTC2_SPI_PORT);
-    expect_value(__wrap_spi_transfer, cs, SL_TTC2_SPI_CS);
-    expect_memory(__wrap_spi_transfer, wd, (void*)pkt, 1);
-    expect_value(__wrap_spi_transfer, len, 1+pkt_len+2);
-
-    uint16_t i = 0;
-    for(i=0; i<pkt_len+1; i++)
-    {
-        will_return(__wrap_spi_transfer, pkt[i]);
-    }
-
-    uint16_t checksum = crc16_ccitt(pkt, 1+pkt_len);
-
-    pkt[1+pkt_len] = (checksum >> 8) & 0xFF;
-    pkt[1+pkt_len+1] = checksum & 0xFF;
-
-    will_return(__wrap_spi_transfer, pkt[1+pkt_len]);
-    will_return(__wrap_spi_transfer, pkt[1+pkt_len+1]);
-
-    will_return(__wrap_spi_transfer, 0);
-
-    uint8_t res_pkt[256] = {UINT8_MAX};
+    uint8_t adr = SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO;   /* Length of the first available RX packet register */
+    uint8_t wr_cmd[8U] = {0};
+    uint8_t pkt[UINT16_MAX] = {UINT8_MAX};
+    uint8_t cpkt[UINT16_MAX] = {UINT8_MAX};
+    uint16_t pkt_len = generate_random(1, 299U);
+    uint8_t res_pkt[220] = {UINT8_MAX};
     uint16_t res_pkt_len = UINT16_MAX;
 
-    assert_return_code(sl_ttc2_read_packet(conf, res_pkt, &res_pkt_len), 0);
+    wr_cmd[0] = SL_TTC2_PKT_PREAMBLE;     /* Packet Preamble */
+    wr_cmd[1] = SL_TTC2_CMD_RECEIVE_PKT;     /* Read packet command */
 
-    assert_memory_equal((void*)res_pkt, (void*)(pkt+1), pkt_len);
+    wr_cmd[7] = crc8(wr_cmd, 7U);
+
+    expect_memory(__wrap_crc8_get_val, data, (void*)wr_cmd, 7U);
+    expect_value(__wrap_crc8_get_val, len, 7U);
+
+    will_return(__wrap_crc8_get_val, crc8(wr_cmd, 7U));
+
+    uint8_t i = 0U;
+    for (i = 0U; i < pkt_len; ++i) 
+    {
+        pkt[i] = generate_random(1, UINT8_MAX);
+    }
+
+    cpkt[0] = SL_TTC2_PKT_PREAMBLE;
+    cpkt[1] = SL_TTC2_CMD_RECEIVE_PKT;
+
+    for (i = 0U; i < pkt_len; ++i)
+    {
+        cpkt[i + 2] = pkt[i];
+    }
+
+    read_adr(adr, (uint32_t)pkt_len); 
+
+    will_return(__wrap_spi_mutex_take, 0);
+
+    expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)wr_cmd, 8U);
+    expect_value(__wrap_spi_write, len, 8U);
+
+    will_return(__wrap_spi_write, 0);
+
+    expect_value(__wrap_sl_ttc2_spi_read, config->port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_sl_ttc2_spi_read, config->cs_pin, SL_TTC2_SPI_CS);
+    expect_value(__wrap_sl_ttc2_spi_read, config->port_config.speed_hz, SL_TTC2_SPI_CLOCK_HZ);
+    expect_value(__wrap_sl_ttc2_spi_read, config->port_config.mode, SL_TTC2_SPI_MODE);
+    expect_value(__wrap_sl_ttc2_spi_read, len, 2U + pkt_len + 1U);
+
+
+    will_return(__wrap_sl_ttc2_spi_read, SL_TTC2_PKT_PREAMBLE);
+    will_return(__wrap_sl_ttc2_spi_read, SL_TTC2_CMD_RECEIVE_PKT);
+
+    for(i = 0; i < pkt_len; i++)
+    {
+        will_return(__wrap_sl_ttc2_spi_read, pkt[i]);
+    }
+
+    will_return(__wrap_sl_ttc2_spi_read, crc8(cpkt, 2U + pkt_len));
+
+    will_return(__wrap_sl_ttc2_spi_read, 0);
+
+    expect_memory(__wrap_crc8_get_val, data, (void*)cpkt, 2U + pkt_len);
+    expect_value(__wrap_crc8_get_val, len, 2U + pkt_len);
+
+    will_return(__wrap_crc8_get_val, crc8(cpkt, 2U + pkt_len));
+
+    will_return(__wrap_spi_mutex_give, 0);
+
+    assert_return_code(sl_ttc2_read_packet(&conf, res_pkt, &res_pkt_len), 0);
+
+    assert_memory_equal((void*)res_pkt, (void*)pkt, pkt_len);
     assert_int_equal(res_pkt_len, pkt_len);
 }
 
@@ -781,53 +1100,158 @@ unsigned int generate_random(unsigned int l, unsigned int r)
     return (rand() % (r - l + 1)) + l;
 }
 
-uint16_t crc16_ccitt(uint8_t *data, uint16_t len)
-{
-    uint8_t x;
-    uint16_t crc = 0;   /* Initial value */
-
-    while(len--)
-    {
-        x = crc >> 8 ^ *data++;
-        x ^= x >> 4;
-        crc = (crc << 8) ^ ((uint16_t)(x << 12)) ^ ((uint16_t)(x << 5)) ^ ((uint16_t)x);
-    }
-
-    return crc;
-}
-
-void read_adr(uint8_t adr, uint32_t val)
+static inline void read_adr(uint8_t adr, uint32_t val)
 {
     uint8_t cmd[8] = {0};
     uint8_t ans[8] = {0};
 
-    cmd[0] = 1;     /* Read reg. command */
-    cmd[1] = adr;   /* Address */
+    cmd[0] = SL_TTC2_PKT_PREAMBLE;     
+    cmd[1] = SL_TTC2_CMD_READ_REG;     /* Read reg. command */
+    cmd[2] = adr;                       /* Address */
 
-    ans[0] = 1;
-    ans[1] = adr;
-    ans[2] = (val >> 24) & 0xFF;
-    ans[3] = (val >> 16) & 0xFF;
-    ans[4] = (val >> 8) & 0xFF;
-    ans[5] = val & 0xFF;
+    ans[0] = SL_TTC2_PKT_PREAMBLE;
+    ans[1] = SL_TTC2_CMD_READ_REG;
+    ans[2] = adr;
 
-    uint16_t checksum = crc16_ccitt(ans, 6);
-
-    ans[6] = (checksum >> 8) & 0xFF;
-    ans[7] = checksum & 0xFF;
-
-    expect_value(__wrap_spi_transfer, port, SL_TTC2_SPI_PORT);
-    expect_value(__wrap_spi_transfer, cs, SL_TTC2_SPI_CS);
-    expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 8);
-    expect_value(__wrap_spi_transfer, len, 8);
-
-    uint16_t i = 0;
-    for(i=0; i<8; i++)
+    switch(adr)
     {
-        will_return(__wrap_spi_transfer, ans[i]);
+        case SL_TTC2_REG_DEVICE_ID:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_HARDWARE_VERSION:
+            ans[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_RESET_COUNTER:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_LAST_RESET_CAUSE:
+            ans[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_INPUT_VOLTAGE_MCU:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_INPUT_CURRENT_MCU:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_TEMPERATURE_MCU:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_INPUT_VOLTAGE_RADIO:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_INPUT_CURRENT_RADIO:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_TEMPERATURE_RADIO:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_LAST_VALID_TC:
+            ans[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_RSSI_LAST_VALID_TC:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_TEMPERATURE_ANTENNA:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_ANTENNA_STATUS:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        case SL_TTC2_REG_ANTENNA_DEPLOYMENT_STATUS:
+            ans[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_ANTENNA_DEP_HIB_STATUS:
+            ans[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_TX_ENABLE:
+            ans[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_FIFO_TX_PACKET:
+            ans[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_FIFO_RX_PACKET:
+            ans[3] = val & 0xFFU;
+            val &= 0xFFU;
+            break;
+        case SL_TTC2_REG_LEN_FIRST_RX_PACKET_IN_FIFO:
+            ans[3] = (val >> 8) & 0xFFU;
+            ans[4] = (val >> 0) & 0xFFU;
+            val &= 0xFFFFU;
+            break;
+        default:
+            ans[3] = (val >> 24) & 0xFFU;
+            ans[4] = (val >> 16) & 0xFFU;
+            ans[5] = (val >> 8)  & 0xFFU;
+            ans[6] = (val >> 0)  & 0xFFU;
+            break;
     }
 
-    will_return(__wrap_spi_transfer, 0);
+    ans[7] = crc8(ans, 7U);
+    cmd[7] = crc8(cmd, 7U);
+
+    expect_memory(__wrap_crc8_get_val, data, (void*)cmd, 7U);
+    expect_value(__wrap_crc8_get_val, len, 7U);
+
+    will_return(__wrap_crc8_get_val, crc8(cmd, 7U));
+
+    will_return(__wrap_spi_mutex_take, 0);
+
+    expect_value(__wrap_spi_write, port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_spi_write, cs, SL_TTC2_SPI_CS);
+    expect_memory(__wrap_spi_write, data, (void*)cmd, 8U);
+    expect_value(__wrap_spi_write, len, 8U);
+
+    will_return(__wrap_spi_write, 0);
+
+    expect_value(__wrap_sl_ttc2_spi_read, config->port, SL_TTC2_SPI_PORT);
+    expect_value(__wrap_sl_ttc2_spi_read, config->cs_pin, SL_TTC2_SPI_CS);
+    expect_value(__wrap_sl_ttc2_spi_read, config->port_config.speed_hz, SL_TTC2_SPI_CLOCK_HZ);
+    expect_value(__wrap_sl_ttc2_spi_read, config->port_config.mode, SL_TTC2_SPI_MODE);
+    expect_value(__wrap_sl_ttc2_spi_read, len, 8U);
+
+    uint16_t i = 0;
+    for(i = 0; i < 8U; i++)
+    {
+        will_return(__wrap_sl_ttc2_spi_read, ans[i]);
+    }
+
+    will_return(__wrap_sl_ttc2_spi_read, 0);
+
+    expect_memory(__wrap_crc8_get_val, data, (void*)ans, 7U);
+    expect_value(__wrap_crc8_get_val, len, 7U);
+
+    will_return(__wrap_crc8_get_val, crc8(ans, 7U));
+
+    will_return(__wrap_spi_mutex_give, 0);
 }
 
 /** \} End of sl_ttc2_test group */

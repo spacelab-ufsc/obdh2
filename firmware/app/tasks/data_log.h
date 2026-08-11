@@ -24,8 +24,9 @@
  * \brief Data log task definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.7.47
+ * \version 1.0.0
  * 
  * \date 2021/05/24
  * 
@@ -44,14 +45,15 @@
 #define TASK_DATA_LOG_STACK_SIZE                225                 /**< Stack size in bytes. */
 #define TASK_DATA_LOG_PRIORITY                  3                   /**< Task priority. */
 #define TASK_DATA_LOG_PERIOD_MS                 (600000UL)          /**< Task period in milliseconds. */
-#define TASK_DATA_LOG_INIT_TIMEOUT_MS           2000                /**< Wait time to initialize the task in milliseconds. */
+#define TASK_DATA_LOG_INITIAL_DELAY_MS          (300000UL)          /**< Delay, in milliseconds, before the first execution. */
+#define TASK_DATA_LOG_INIT_TIMEOUT_MS           5000                /**< Wait time to initialize the task in milliseconds. */
 
 /**
  * \brief Data IDs.
  */
 typedef enum
 {
-    DATA_LOG_HK_DATA_ID=1,
+    DATA_LOG_HK_DATA_ID = 1,
 } data_log_id_t;
 
 /**
@@ -64,7 +66,7 @@ extern xTaskHandle xTaskDataLogHandle;
  *
  * \return None.
  */
-void vTaskDataLog(void);
+void vTaskDataLog(void* p);
 
 #endif /* DATA_LOG_H_ */
 

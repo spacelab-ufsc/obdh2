@@ -1,7 +1,7 @@
 /*
  * sl_ttc2_wrap.c
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -24,8 +24,9 @@
  * \brief SpaceLab TTC 2.0 wrap implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.7.22
+ * \version 0.10.14
  * 
  * \date 2021/08/06
  * 
@@ -43,35 +44,35 @@
 
 #include "sl_ttc2_wrap.h"
 
-int __wrap_sl_ttc2_init(sl_ttc2_config_t config)
+int __wrap_sl_ttc2_init(sl_ttc2_config_t *config)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_check_device(sl_ttc2_config_t config)
+int __wrap_sl_ttc2_check_device(sl_ttc2_config_t *config)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_write_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t val)
+int __wrap_sl_ttc2_write_reg(sl_ttc2_config_t *config, uint8_t adr, uint32_t val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     check_expected(adr);
     check_expected(val);
@@ -79,13 +80,13 @@ int __wrap_sl_ttc2_write_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t val)
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
+int __wrap_sl_ttc2_read_reg(sl_ttc2_config_t *config, uint8_t adr, uint32_t *val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     check_expected(adr);
 
@@ -97,13 +98,13 @@ int __wrap_sl_ttc2_read_reg(sl_ttc2_config_t config, uint8_t adr, uint32_t *val)
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_hk_data(sl_ttc2_config_t config, sl_ttc2_hk_data_t *data)
+int __wrap_sl_ttc2_read_hk_data(sl_ttc2_config_t *config, sl_ttc2_hk_data_t *data)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     if (data != NULL)
     {
@@ -129,13 +130,13 @@ int __wrap_sl_ttc2_read_hk_data(sl_ttc2_config_t config, sl_ttc2_hk_data_t *data
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_device_id(sl_ttc2_config_t config, uint16_t *val)
+int __wrap_sl_ttc2_read_device_id(sl_ttc2_config_t *config, uint16_t *val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     if (val != NULL)
     {
@@ -145,13 +146,13 @@ int __wrap_sl_ttc2_read_device_id(sl_ttc2_config_t config, uint16_t *val)
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_hardware_version(sl_ttc2_config_t config, uint8_t *val)
+int __wrap_sl_ttc2_read_hardware_version(sl_ttc2_config_t *config, uint8_t *val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     if (val != NULL)
     {
@@ -161,13 +162,13 @@ int __wrap_sl_ttc2_read_hardware_version(sl_ttc2_config_t config, uint8_t *val)
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_firmware_version(sl_ttc2_config_t config, uint32_t *val)
+int __wrap_sl_ttc2_read_firmware_version(sl_ttc2_config_t *config, uint32_t *val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     if (val != NULL)
     {
@@ -177,13 +178,13 @@ int __wrap_sl_ttc2_read_firmware_version(sl_ttc2_config_t config, uint32_t *val)
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_time_counter(sl_ttc2_config_t config, uint32_t *val)
+int __wrap_sl_ttc2_read_time_counter(sl_ttc2_config_t *config, uint32_t *val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     if (val != NULL)
     {
@@ -193,13 +194,13 @@ int __wrap_sl_ttc2_read_time_counter(sl_ttc2_config_t config, uint32_t *val)
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_reset_counter(sl_ttc2_config_t config, uint16_t *val)
+int __wrap_sl_ttc2_read_reset_counter(sl_ttc2_config_t *config, uint16_t *val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     if (val != NULL)
     {
@@ -209,13 +210,13 @@ int __wrap_sl_ttc2_read_reset_counter(sl_ttc2_config_t config, uint16_t *val)
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_reset_cause(sl_ttc2_config_t config, uint8_t *val)
+int __wrap_sl_ttc2_read_reset_cause(sl_ttc2_config_t *config, uint8_t *val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     if (val != NULL)
     {
@@ -225,13 +226,13 @@ int __wrap_sl_ttc2_read_reset_cause(sl_ttc2_config_t config, uint8_t *val)
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_voltage(sl_ttc2_config_t config, uint8_t volt, sl_ttc2_voltage_t *val)
+int __wrap_sl_ttc2_read_voltage(sl_ttc2_config_t *config, uint8_t volt, sl_ttc2_voltage_t *val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     check_expected(volt);
 
@@ -243,13 +244,13 @@ int __wrap_sl_ttc2_read_voltage(sl_ttc2_config_t config, uint8_t volt, sl_ttc2_v
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_current(sl_ttc2_config_t config, uint8_t cur, sl_ttc2_current_t *val)
+int __wrap_sl_ttc2_read_current(sl_ttc2_config_t *config, uint8_t cur, sl_ttc2_current_t *val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     check_expected(cur);
 
@@ -261,13 +262,13 @@ int __wrap_sl_ttc2_read_current(sl_ttc2_config_t config, uint8_t cur, sl_ttc2_cu
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_temp(sl_ttc2_config_t config, uint8_t temp, sl_ttc2_temp_t *val)
+int __wrap_sl_ttc2_read_temp(sl_ttc2_config_t *config, uint8_t temp, sl_ttc2_temp_t *val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     check_expected(temp);
 
@@ -279,13 +280,13 @@ int __wrap_sl_ttc2_read_temp(sl_ttc2_config_t config, uint8_t temp, sl_ttc2_temp
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_last_valid_tc(sl_ttc2_config_t config, uint8_t *val)
+int __wrap_sl_ttc2_read_last_valid_tc(sl_ttc2_config_t *config, uint8_t *val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     if (val != NULL)
     {
@@ -295,13 +296,13 @@ int __wrap_sl_ttc2_read_last_valid_tc(sl_ttc2_config_t config, uint8_t *val)
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_rssi(sl_ttc2_config_t config, sl_ttc2_rssi_t *val)
+int __wrap_sl_ttc2_read_rssi(sl_ttc2_config_t *config, sl_ttc2_rssi_t *val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     if (val != NULL)
     {
@@ -311,13 +312,13 @@ int __wrap_sl_ttc2_read_rssi(sl_ttc2_config_t config, sl_ttc2_rssi_t *val)
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_antenna_status(sl_ttc2_config_t config, uint16_t *val)
+int __wrap_sl_ttc2_read_antenna_status(sl_ttc2_config_t *config, uint16_t *val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     if (val != NULL)
     {
@@ -327,13 +328,13 @@ int __wrap_sl_ttc2_read_antenna_status(sl_ttc2_config_t config, uint16_t *val)
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_antenna_deployment_status(sl_ttc2_config_t config, uint8_t *val)
+int __wrap_sl_ttc2_read_antenna_deployment_status(sl_ttc2_config_t *config, uint8_t *val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     if (val != NULL)
     {
@@ -343,13 +344,13 @@ int __wrap_sl_ttc2_read_antenna_deployment_status(sl_ttc2_config_t config, uint8
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_antenna_deployment_hibernation_status(sl_ttc2_config_t config, uint8_t *val)
+int __wrap_sl_ttc2_read_antenna_deployment_hibernation_status(sl_ttc2_config_t *config, uint8_t *val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     if (val != NULL)
     {
@@ -359,13 +360,13 @@ int __wrap_sl_ttc2_read_antenna_deployment_hibernation_status(sl_ttc2_config_t c
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_tx_enable(sl_ttc2_config_t config, uint8_t *val)
+int __wrap_sl_ttc2_read_tx_enable(sl_ttc2_config_t *config, uint8_t *val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     if (val != NULL)
     {
@@ -375,26 +376,26 @@ int __wrap_sl_ttc2_read_tx_enable(sl_ttc2_config_t config, uint8_t *val)
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_set_tx_enable(sl_ttc2_config_t config, bool en)
+int __wrap_sl_ttc2_set_tx_enable(sl_ttc2_config_t *config, bool en)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     check_expected(en);
 
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_pkt_counter(sl_ttc2_config_t config, uint8_t pkt, uint32_t *val)
+int __wrap_sl_ttc2_read_pkt_counter(sl_ttc2_config_t *config, uint8_t pkt, uint32_t *val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     check_expected(pkt);
 
@@ -406,13 +407,13 @@ int __wrap_sl_ttc2_read_pkt_counter(sl_ttc2_config_t config, uint8_t pkt, uint32
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_fifo_pkts(sl_ttc2_config_t config, uint8_t pkt, uint8_t *val)
+int __wrap_sl_ttc2_read_fifo_pkts(sl_ttc2_config_t *config, uint8_t pkt, uint8_t *val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     check_expected(pkt);
 
@@ -424,13 +425,13 @@ int __wrap_sl_ttc2_read_fifo_pkts(sl_ttc2_config_t config, uint8_t pkt, uint8_t 
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_len_rx_pkt_in_fifo(sl_ttc2_config_t config, uint16_t *val)
+int __wrap_sl_ttc2_read_len_rx_pkt_in_fifo(sl_ttc2_config_t *config, uint16_t *val)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     if (val != NULL)
     {
@@ -440,24 +441,24 @@ int __wrap_sl_ttc2_read_len_rx_pkt_in_fifo(sl_ttc2_config_t config, uint16_t *va
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_check_pkt_avail(sl_ttc2_config_t config)
+int __wrap_sl_ttc2_check_pkt_avail(sl_ttc2_config_t *config)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_transmit_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t len)
+int __wrap_sl_ttc2_transmit_packet(sl_ttc2_config_t *config, uint8_t *data, uint16_t len)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     check_expected_ptr(data);
     check_expected(len);
@@ -465,13 +466,13 @@ int __wrap_sl_ttc2_transmit_packet(sl_ttc2_config_t config, uint8_t *data, uint1
     return mock_type(int);
 }
 
-int __wrap_sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t *len)
+int __wrap_sl_ttc2_read_packet(sl_ttc2_config_t *config, uint8_t *data, uint16_t *len)
 {
-    check_expected(config.port);
-    check_expected(config.cs_pin);
-    check_expected(config.port_config.speed_hz);
-    check_expected(config.port_config.mode);
-    check_expected(config.id);
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(config->id);
 
     if (len != NULL)
     {
@@ -490,11 +491,49 @@ int __wrap_sl_ttc2_read_packet(sl_ttc2_config_t config, uint8_t *data, uint16_t 
     return mock_type(int);
 }
 
+int __wrap_sl_ttc2_mutex_take(void)
+{
+    return mock_type(int);
+}
+
+int __wrap_sl_ttc2_mutex_give(void)
+{
+    return mock_type(int);
+}
+
 void __wrap_sl_ttc2_delay_ms(uint32_t ms)
 {
     function_called();
 
     return;
+}
+
+int __wrap_sl_ttc2_spi_read(sl_ttc2_config_t *config, uint8_t *data, uint16_t len)
+{
+    check_expected(config->port);
+    check_expected(config->cs_pin);
+    check_expected(config->port_config.speed_hz);
+    check_expected(config->port_config.mode);
+    check_expected(len);
+
+    if (data != NULL)
+    {
+        uint16_t i = 0;
+        for(i=0; i<len; i++)
+        {
+            data[i] = mock_type(uint8_t);
+        }
+    }
+
+    return mock_type(int);
+}
+
+uint8_t __wrap_crc8_get_val(uint8_t *data, uint8_t len)
+{
+    check_expected_ptr(data);
+    check_expected(len);
+
+    return mock_type(uint8_t);
 }
 
 /** \} End of sl_ttc2_wrap group */

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.25
+ * \version 1.0.0
  * 
  * \date 2020/01/25
  * 
@@ -140,6 +140,14 @@ sys_time_t system_get_time(void);
  * \endparblock
  */
 sys_hw_version_t system_get_hw_version(void);
+
+
+/**
+ * \brief System reset count. Update the reset count at the FRAM memory.
+ *
+ * \return The status/error code.
+ */
+int8_t system_reset_count(void);
 
 #endif /* SYSTEM_H_ */
 

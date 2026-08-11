@@ -24,8 +24,9 @@
  * \brief System management routines implementation.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.8.7
+ * \version 1.0.0
  * 
  * \date 2020/01/29
  * 
@@ -35,6 +36,9 @@
 
 #include <msp430.h>
 #include <drivers/gpio/gpio.h>
+#include <utils/mem_mng.h>
+#include <structs/satellite.h>
+#include <portmacro.h>
 
 #include "system.h"
 
@@ -54,12 +58,17 @@ uint8_t system_get_reset_cause(void)
 
 void system_set_time(sys_time_t tm)
 {
+    portENTER_CRITICAL();
     sys_time = tm;
+    portEXIT_CRITICAL();
 }
 
 void system_increment_time(void)
 {
+    /* This ensures the sys_time increment is done atomically */
+    portENTER_CRITICAL();
     sys_time++;
+    portEXIT_CRITICAL();
 }
 
 sys_time_t system_get_time(void)
@@ -95,6 +104,20 @@ sys_hw_version_t system_get_hw_version(void)
     }
 
     return res;
+}
+
+int8_t system_reset_count(void)
+{
+    int8_t err = -1;
+
+    ++sat_data_buf.obdh.data.reset_counter;
+
+    if (mem_mng_save_obdh_data_to_fram(&sat_data_buf.obdh) == 0)
+    {
+        err = 0;
+    }
+
+    return err;
 }
 
 /** \} End of system group */

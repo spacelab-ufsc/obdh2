@@ -26,7 +26,7 @@
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author Bruno Benedetti <brunobenedetti45@gmail.com>
  * 
- * \version 0.9.13
+ * \version 1.0.0
  * 
  * \date 2019/10/27
  * 
@@ -50,6 +50,9 @@ int edc_init(edc_config_t config)
     {
         if (edc_enable(config) == 0)
         {
+            /* Used to make sure it can reply to requests after enabling */
+            edc_delay_ms(650U);
+
             switch(config.interface)
             {
                 case EDC_IF_UART:

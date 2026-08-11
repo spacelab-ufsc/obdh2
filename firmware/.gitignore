@@ -1,5 +1,6 @@
 # Source files
 !lnk_msp430f6659.cmd
+!lnk_msp430f5659.cmd
 
 # Code Composer Studio output
 .launches

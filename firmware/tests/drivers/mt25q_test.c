@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.20
+ * \version 0.10.17
  * 
  * \date 2021/09/05
  * 
@@ -144,6 +144,8 @@ static void mt25q_read_device_id_test(void **state)
     expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 4);
     expect_value(__wrap_spi_transfer, len, 4);
 
+    will_return(__wrap_spi_mutex_take, 0);
+
     uint16_t i = 0;
     for(i=0; i<4; i++)
     {
@@ -151,6 +153,8 @@ static void mt25q_read_device_id_test(void **state)
     }
 
     will_return(__wrap_spi_transfer, 0);
+
+    will_return(__wrap_spi_mutex_give, 0);
 
     mt25q_dev_id_t dev_id = {0};
 
@@ -267,6 +271,8 @@ static void mt25q_read_flag_status_register_test(void **state)
 
     ans[1] = generate_random(0, UINT8_MAX);
 
+    will_return(__wrap_spi_mutex_take, 0);
+
     expect_value(__wrap_spi_transfer, port, MT25Q_SPI_PORT);
     expect_value(__wrap_spi_transfer, cs, MT25Q_SPI_CS_PIN);
     expect_memory(__wrap_spi_transfer, wd, (void*)cmd, 2);
@@ -276,6 +282,8 @@ static void mt25q_read_flag_status_register_test(void **state)
     will_return(__wrap_spi_transfer, ans[1]);
 
     will_return(__wrap_spi_transfer, 0);
+
+    will_return(__wrap_spi_mutex_give, 0);
 
     uint8_t flag = UINT8_MAX;
 

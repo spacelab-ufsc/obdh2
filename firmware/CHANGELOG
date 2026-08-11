@@ -1,5 +1,20 @@
 ===========================================
 
+v1.0 - 2026/05/21
+
+- First stable release (ready for GOLDS-UFSC mission)
+- Operation modes implementation
+- Mission manager
+- Non-volatile memory management
+- Payloads management
+- Embedded orbit propagation
+- All telecommands implemented
+- Code cleanup
+- Documentation updates and improvements
+- General fixes and updates
+
+===========================================
+
 v0.10 - 2022/11/03
 
 - edc driver fully tested and working

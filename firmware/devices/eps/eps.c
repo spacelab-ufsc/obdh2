@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.35
+ * \version 1.0.0
  * 
  * \date 2020/02/01
  * 
@@ -211,6 +211,147 @@ int eps_get_data(eps_data_t *data)
     }
 
     return err;
+}
+
+void eps_print_data(const eps_data_t *data)
+{
+    int16_t tmp = 0;
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "uC Temperature: ");
+    sys_log_print_uint((uint32_t)data->temperature_uc);
+    sys_log_print_msg(" oC");
+    sys_log_new_line();
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "SP -Y|+X voltage: ");
+    sys_log_print_uint((uint32_t)data->solar_panel_voltage_my_px);
+    sys_log_print_msg(" mV");
+    sys_log_new_line();
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "SP -Y|+X voltage: ");
+    sys_log_print_uint((uint32_t)data->solar_panel_voltage_my_px);
+    sys_log_print_msg(" mV");
+    sys_log_new_line();
+
+    sl_eps2_delay_ms(10U);
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "SP -X|+Z voltage: ");
+    sys_log_print_uint((uint32_t)data->solar_panel_voltage_mx_pz);
+    sys_log_print_msg(" mV");
+    sys_log_new_line();
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "SP -Z|+Y voltage: ");
+    sys_log_print_uint((uint32_t)data->solar_panel_voltage_mz_py);
+    sys_log_print_msg(" mV");
+    sys_log_new_line();
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "SP +X current: ");
+    sys_log_print_uint((uint32_t)data->solar_panel_current_px);
+    sys_log_print_msg(" mA");
+    sys_log_new_line();
+
+    sl_eps2_delay_ms(10U);
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "SP -X current: ");
+    sys_log_print_uint((uint32_t)data->solar_panel_current_mx);
+    sys_log_print_msg(" mA");
+    sys_log_new_line();
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "SP -Z current: ");
+    sys_log_print_uint((uint32_t)data->solar_panel_current_mz);
+    sys_log_print_msg(" mA");
+    sys_log_new_line();
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "SP +Z current: ");
+    sys_log_print_uint((uint32_t)data->solar_panel_current_pz);
+    sys_log_print_msg(" mA");
+    sys_log_new_line();
+
+    sl_eps2_delay_ms(10U);
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "SP +Y current: ");
+    sys_log_print_uint((uint32_t)data->solar_panel_current_py);
+    sys_log_print_msg(" mA");
+    sys_log_new_line();
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "SP -Y current: ");
+    sys_log_print_uint((uint32_t)data->solar_panel_current_my);
+    sys_log_print_msg(" mA");
+    sys_log_new_line();
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "SP total voltage: ");
+    sys_log_print_uint((uint32_t)data->solar_panel_output_voltage);
+    sys_log_print_msg(" mV");
+    sys_log_new_line();
+
+    sl_eps2_delay_ms(10U);
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "Main bus voltage: ");
+    sys_log_print_uint((uint32_t)data->main_power_bus_voltage);
+    sys_log_print_msg(" mV");
+    sys_log_new_line();
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "RTD 0 temperature: ");
+    sys_log_print_uint((uint32_t)data->rtd_0_temperature);
+    sys_log_print_msg(" oC");
+    sys_log_new_line();
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "RTD 1 temperature: ");
+    sys_log_print_uint((uint32_t)data->rtd_1_temperature);
+    sys_log_print_msg(" oC");
+    sys_log_new_line();
+
+    sl_eps2_delay_ms(10U);
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "RTD 2 temperature: ");
+    sys_log_print_uint((uint32_t)data->rtd_2_temperature);
+    sys_log_print_msg(" oC");
+    sys_log_new_line();
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "RTD 3 temperature: ");
+    sys_log_print_uint((uint32_t)data->rtd_3_temperature);
+    sys_log_print_msg(" oC");
+    sys_log_new_line();
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "RTD 4 temperature: ");
+    sys_log_print_uint((uint32_t)data->rtd_4_temperature);
+    sys_log_print_msg(" oC");
+    sys_log_new_line();
+
+    sl_eps2_delay_ms(10U);
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "RTD 5 temperature: ");
+    sys_log_print_uint((uint32_t)data->rtd_5_temperature);
+    sys_log_print_msg(" oC");
+    sys_log_new_line();
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "RTD 6 temperature: ");
+    sys_log_print_uint((uint32_t)data->rtd_6_temperature);
+    sys_log_print_msg(" oC");
+    sys_log_new_line();
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "Battery voltage: ");
+    sys_log_print_uint((uint32_t)data->battery_voltage);
+    sys_log_print_msg(" mV");
+    sys_log_new_line();
+
+    sl_eps2_delay_ms(10U);
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "Battery current: ");
+    tmp = (int16_t)data->battery_current;
+    sys_log_print_int((int32_t)tmp);
+    sys_log_print_msg(" mA");
+    sys_log_new_line();
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "Battery average current: ");
+    tmp = (int16_t)data->battery_average_current;
+    sys_log_print_int((int32_t)tmp);
+    sys_log_print_msg(" mA");
+    sys_log_new_line();
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, EPS_MODULE_NAME, "Battery accumalated current: ");
+    sys_log_print_uint((uint32_t)data->battery_acc_current);
+    sys_log_print_msg(" mAh");
+    sys_log_new_line();
 }
 
 /** \} End of eps group */

@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.47
+ * \version 1.0.0
  * 
  * \date 2020/01/11
  * 
@@ -39,16 +39,18 @@
 
 xTaskHandle xTaskWatchdogResetHandle;
 
-void vTaskWatchdogReset(void)
+void vTaskWatchdogReset(void *p)
 {
+    (void)p;
+
     /* Delay before the first cycle */
     vTaskDelay(pdMS_TO_TICKS(TASK_WATCHDOG_RESET_INITIAL_DELAY_MS));
 
+    TickType_t last_cycle = xTaskGetTickCount();
+
     while(1)
     {
-        TickType_t last_cycle = xTaskGetTickCount();
-
-        watchdog_reset();
+        (void)watchdog_reset();
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_WATCHDOG_RESET_PERIOD_MS));
     }

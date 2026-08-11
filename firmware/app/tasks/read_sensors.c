@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.5
+ * \version 1.0.0
  * 
  * \date 2020/07/12
  * 
@@ -38,43 +38,61 @@
 #include <devices/temp_sensor/temp_sensor.h>
 
 #include <structs/satellite.h>
+#include <system/sys_log/sys_log.h>
 
 #include "read_sensors.h"
 #include "startup.h"
 
 xTaskHandle xTaskReadSensorsHandle;
 
-void vTaskReadSensors(void)
+void vTaskReadSensors(void *p)
 {
+    (void)p;
+
     /* Wait startup task to finish */
-    xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_SENSORS_INIT_TIMEOUT_MS));
+    (void)xEventGroupWaitBits(task_startup_status, TASK_STARTUP_DONE, pdFALSE, pdTRUE, pdMS_TO_TICKS(TASK_READ_SENSORS_INIT_TIMEOUT_MS));
+
+    TickType_t last_cycle = xTaskGetTickCount();
 
     while(1)
     {
-        TickType_t last_cycle = xTaskGetTickCount();
-
         uint16_t buf = 0;
 
         /* OBDH current */
         if (current_sensor_read_ma(&buf) == 0)
         {
             sat_data_buf.obdh.data.current = buf;
+
+            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_SENSORS_NAME, "Current uC current: ");
+            sys_log_print_uint((uint32_t)buf);
+            sys_log_print_msg(" mA");
+            sys_log_new_line();
         }
 
         /* OBDH voltage */
         if (voltage_sensor_read_mv(&buf) == 0)
         {
             sat_data_buf.obdh.data.voltage = buf;
+
+            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_SENSORS_NAME, "Current uC voltage: ");
+            sys_log_print_uint((uint32_t)buf);
+            sys_log_print_msg(" mV");
+            sys_log_new_line();
         }
 
         /* OBDH temperature */
-        if (temp_sensor_read_raw(&buf) == 0)
+        if (temp_sensor_read_k(&buf) == 0)
         {
             sat_data_buf.obdh.data.temperature = buf;
+
+            sys_log_print_event_from_module(SYS_LOG_INFO, TASK_READ_SENSORS_NAME, "Current uC temperature: ");
+            sys_log_print_uint((uint32_t)buf);
+            sys_log_print_msg(" K");
+            sys_log_new_line();
         }
 
-        /* Data timestamp */
-        sat_data_buf.obdh.timestamp = system_get_time();
+        /* Saving readings timestamp */
+        sat_data_buf.obdh.data.ts_read_sensors = system_get_time();
 
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_SENSORS_PERIOD_MS));
     }

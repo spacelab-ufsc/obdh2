@@ -25,8 +25,9 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * \author João Cláudio Elsen Barcellos <joaoclaudiobarcellos@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.9.9
+ * \version 1.0.0
  * 
  * \date 2021/08/15
  * 
@@ -34,19 +35,23 @@
  * \{
  */
 
+#include <config/config.h>
 #include <system/system.h>
 #include <system/sys_log/sys_log.h>
 
 #include <drivers/gpio/gpio.h>
 #include <drivers/edc/edc.h>
 #include <drivers/phj/phj.h>
+#include <drivers/px/px.h>
 
 #include "payload.h"
 
-#define PAYLOAD_UNIX_TO_J2000_EPOCH(x)      ((x) - 946684800)   /* Unix to J2000 epoch conversion */
+#define PAYLOAD_UNIX_TO_J2000_EPOCH(x)      ((x) - 946684800UL)   /* Unix to J2000 epoch conversion */
 
-static edc_config_t edc_0_conf = {0};
-static edc_config_t edc_1_conf = {0};
+static edc_config_t edc_0_conf;
+static edc_config_t edc_1_conf;
+
+static px_config_t px_conf;
 
 int payload_init(payload_t pl)
 {
@@ -153,46 +158,26 @@ int payload_init(payload_t pl)
             break;
         }
         case PAYLOAD_X:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: init() not implemented yet");
-            sys_log_new_line();
-
-            break;
-        case PAYLOAD_PHJ:
         {
-            phj_config_i2c_t config_i2c;
-            phj_config_gpio_t config_gpio;
+            px_conf.port = I2C_PORT_0;
+            px_conf.bitrate = 400000UL;
+            px_conf.en_pin = GPIO_PIN_37;
 
-            config_i2c.port = I2C_PORT_0;
-            config_i2c.bitrate = 400000UL;
-
-            if (phj_init_i2c(config_i2c) == 0)
+            if (px_init(&px_conf) == 0)
             {
-                config_gpio.pin = GPIO_PIN_0;
-                config_gpio.mode = GPIO_MODE_INPUT;
+                err = 0;
 
-                if (phj_init_gpio(config_gpio) == 0)
-                {
-                    err = 0;
-                }
-                else
-                {
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "PHJ: Error initializing the GPIO configuration!");
-                    sys_log_new_line();
-                }
+                sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "Payload-X: Initialization done!");
+                sys_log_new_line();
             }
             else
             {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "PHJ: Error initializing the I2C configuration!");
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: Error initializing the I2C configuration!");
                 sys_log_new_line();
             }
 
             break;
         }
-        case PAYLOAD_HARSH:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Harsh: init() not implemented yet!");
-            sys_log_new_line();
-
-            break;
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Invalid payload to initialize!");
             sys_log_new_line();
@@ -234,18 +219,15 @@ int payload_enable(payload_t pl)
 
             break;
         case PAYLOAD_X:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: enable() routine not implemented yet!");
-            sys_log_new_line();
-
-            break;
-        case PAYLOAD_PHJ:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "PHJ: enable() routine not implemented yet!");
-            sys_log_new_line();
-
-            break;
-        case PAYLOAD_HARSH:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Harsh: enable() routine not implemented yet!");
-            sys_log_new_line();
+            if (px_enable(&px_conf) == 0)
+            {
+                err = 0;
+            }
+            else
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload X: Error enabling!");
+                sys_log_new_line();
+            }
 
             break;
         default:
@@ -289,18 +271,15 @@ int payload_disable(payload_t pl)
 
             break;
         case PAYLOAD_X:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: disable() routine not implemented yet!");
-            sys_log_new_line();
-
-            break;
-        case PAYLOAD_PHJ:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "PHJ: disable() routine not implemented yet!");
-            sys_log_new_line();
-
-            break;
-        case PAYLOAD_HARSH:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Harsh: disable() routine not implemented yet!");
-            sys_log_new_line();
+            if (px_disable(&px_conf) == 0)
+            {
+                err = 0;
+            }
+            else
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload X: Error enabling!");
+                sys_log_new_line();
+            }
 
             break;
         default:
@@ -320,40 +299,102 @@ int payload_write_cmd(payload_t pl, payload_cmd_t cmd)
     switch(pl)
     {
         case PAYLOAD_EDC_0:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: ");
+        {
+            sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "EDC 0: ");
             sys_log_print_hex(cmd);
             sys_log_print_msg(" command received!");
             sys_log_new_line();
 
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC: write_cmd() routine not implemented yet!");
-            sys_log_new_line();
+            const edc_cmd_t edc_cmd = {
+                .id = cmd,
+                .param = 0U,
+            };
+
+            switch (cmd) 
+            {
+                case EDC_CMD_PTT_RESUME:
+                    if (edc_write_cmd(edc_0_conf, edc_cmd) == 0)
+                    {
+                        err = 0;
+                    }
+                    break;
+                case EDC_CMD_PTT_PAUSE:
+                    if (edc_write_cmd(edc_0_conf, edc_cmd) == 0)
+                    {
+                        err = 0;
+                    }
+                    break;
+                case EDC_CMD_PTT_POP:
+                    if (edc_write_cmd(edc_0_conf, edc_cmd) == 0)
+                    {
+                        err = 0;
+                    }
+                    break;
+                default: 
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC: Received command is not implemented yet!");
+                    sys_log_new_line();
+                    break;
+            }
 
             break;
+        }
         case PAYLOAD_EDC_1:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 1: ");
+        {
+            sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "EDC 1: ");
             sys_log_print_hex(cmd);
             sys_log_print_msg(" command received!");
             sys_log_new_line();
 
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC: write_cmd() routine not implemented yet!");
-            sys_log_new_line();
+            const edc_cmd_t edc_cmd = {
+                .id = cmd,
+                .param = 0U,
+            };
+
+            switch (cmd) 
+            {
+                case EDC_CMD_PTT_RESUME:
+                    if (edc_write_cmd(edc_1_conf, edc_cmd) == 0)
+                    {
+                        err = 0;
+                    }
+                    break;
+                case EDC_CMD_PTT_PAUSE:
+                    if (edc_write_cmd(edc_1_conf, edc_cmd) == 0)
+                    {
+                        err = 0;
+                    }
+                    break;
+                case EDC_CMD_PTT_POP:
+                    if (edc_write_cmd(edc_1_conf, edc_cmd) == 0)
+                    {
+                        err = 0;
+                    }
+                    break;
+                default: 
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC: Received command is not implemented yet!");
+                    sys_log_new_line();
+                    break;
+            }
 
             break;
+        }
         case PAYLOAD_X:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: write_cmd() routine not implemented yet!");
-            sys_log_new_line();
+        {
+            if (px_write(&px_conf, &cmd, 1U) == 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "Payload-X: ");
+                sys_log_print_hex(cmd);
+                sys_log_print_msg(" command send!");
+                sys_log_new_line();
+            }
+            else
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: Error in sending through I2C bus");
+                sys_log_new_line();
+            }
 
             break;
-        case PAYLOAD_PHJ:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "PHJ: write_cmd() routine not implemented yet!");
-            sys_log_new_line();
-
-            break;
-        case PAYLOAD_HARSH:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Harsh: write_cmd() routine not implemented yet!");
-            sys_log_new_line();
-
-            break;
+        }
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Invalid payload to write command!");
             sys_log_new_line();
@@ -364,7 +405,7 @@ int payload_write_cmd(payload_t pl, payload_cmd_t cmd)
     return err;
 }
 
-int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t *len)
+int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, int32_t *len)
 {
     int err = -1;
 
@@ -476,17 +517,17 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
                 }
                 case PAYLOAD_EDC_RAW_HK:
                 {
-                    int bytes = edc_get_hk_pkg(edc_0_conf, data);
+                    *len = edc_get_hk_pkg(edc_0_conf, data);
 
-                    if (bytes < 0)
+                    if (*len < 0)
                     {
                         sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Error reading housekeeping data!");
                         sys_log_new_line();
                     }
-
-                    *len = bytes;
-
-                    err = 0;
+                    else
+                    {
+                        err = 0;
+                    }
 
                     break;
                 }
@@ -681,24 +722,95 @@ int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, uint32_t
             break;
         }
         case PAYLOAD_X:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: get_data() routine not implemented yet!");
-            sys_log_new_line();
-
-            break;
-        case PAYLOAD_PHJ:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "PHJ: get_data() routine not implemented yet!");
-            sys_log_new_line();
-
-            break;
-        case PAYLOAD_HARSH:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Harsh: get_data() routine not implemented yet!");
-            sys_log_new_line();
+            if (px_read(&px_conf, data, *len) == 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "Payload-X: ");
+                /*
+                uint8_t i = 0;
+                for(i = 0; i < sizeof(data); i++)
+                {
+                    sys_log_print_msg(data[i]);
+                }
+                */
+                sys_log_print_msg(" data received!");
+                sys_log_new_line();
+             }
+             else
+             {
+                 sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Payload-X: Error in receiving data through I2C bus");
+                 sys_log_new_line();
+             }
 
             break;
         default:
             sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Invalid payload to get data!");
             sys_log_new_line();
 
+            break;
+    }
+
+    return err;
+}
+
+int payload_init_gpio_enables(void)
+{
+    int err = 0;
+
+    #if defined (CONFIG_MISSION_GOLDS_UFSC) && (CONFIG_MISSION_GOLDS_UFSC == 1)
+    const gpio_config_t conf = { .mode = GPIO_MODE_OUTPUT };
+
+    /* Initializes enable pins */
+    (void)gpio_init(GPIO_PIN_29, conf); /* EDC 0 */
+    (void)gpio_init(GPIO_PIN_30, conf); /* EDC 1 */
+    (void)gpio_init(GPIO_PIN_37, conf); /* Payload X */
+
+    /* Make sure payloads are disabled */
+    (void)gpio_set_state(GPIO_PIN_29, false); /* EDC 0 */
+    (void)gpio_set_state(GPIO_PIN_30, false); /* EDC 1 */
+    (void)gpio_set_state(GPIO_PIN_37, false); /* Payload X */
+
+    #endif
+
+    return err;
+}
+
+int payload_set_clock(const payload_t pl, const uint32_t time)
+{
+    int err = 0;
+
+    switch(pl)
+    {
+        case PAYLOAD_EDC_0:
+            sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "EDC 0: Setting Clock/RTC time...");
+            sys_log_new_line();
+
+            if (edc_set_rtc_time(edc_0_conf, PAYLOAD_UNIX_TO_J2000_EPOCH(time)) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Error setting the Clock/RTC time!");
+                sys_log_new_line();
+                err = -1;
+            }
+            break;
+        case PAYLOAD_EDC_1:
+            sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "EDC 1: Setting Clock/RTC time...");
+            sys_log_new_line();
+
+            if (edc_set_rtc_time(edc_1_conf, PAYLOAD_UNIX_TO_J2000_EPOCH(time)) != 0)
+            {
+                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 1: Error setting the Clock/RTC time!");
+                sys_log_new_line();
+                err = -1;
+            }
+            break;
+        case PAYLOAD_X:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "PX: set_clock() routine not implemented yet!");
+            sys_log_new_line();
+            err = -1;
+            break;
+        default:
+            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Invalid payload to set clock!");
+            sys_log_new_line();
+            err = -1;
             break;
     }
 

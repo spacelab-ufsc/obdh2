@@ -1,7 +1,7 @@
 /*
  * system_reset.h
  * 
- * Copyright (C) 2021, SpaceLab.
+ * Copyright The OBDH 2.0 Contributors.
  * 
  * This file is part of OBDH 2.0.
  * 
@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.7.48
+ * \version 1.0.0
  * 
  * \date 2020/01/12
  * 
@@ -45,6 +45,8 @@
 #define TASK_SYSTEM_RESET_PRIORITY                  2                       /**< Task priority. */
 #define TASK_SYSTEM_RESET_PERIOD_MS                 (1000UL*60U*60U*10U)    /**< Task period in milliseconds. */
 
+#define pdMS_TO_TICKS_64( xTimeInMs ) ( ( TickType_t ) ( ( ( uint64_t ) ( xTimeInMs ) * ( uint64_t ) configTICK_RATE_HZ ) / ( TickType_t ) 1000 ) )
+
 /**
  * \brief Periodic system reset handle.
  */
@@ -57,7 +59,7 @@ extern xTaskHandle xTaskSystemResetHandle;
  *
  * \return None.
  */
-void vTaskSystemReset(void);
+void vTaskSystemReset(void *p);
 
 #endif /* SYSTEM_RESET_H_ */
 

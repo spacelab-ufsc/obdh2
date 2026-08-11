@@ -24,8 +24,9 @@
  * \brief Housekeeping task definition.
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * 
- * \version 0.8.33
+ * \version 1.0.0
  * 
  * \date 2021/04/27
  * 
@@ -41,10 +42,10 @@
 #include <task.h>
 
 #define TASK_HOUSEKEEPING_NAME                  "Housekeeping"      /**< Task name. */
-#define TASK_HOUSEKEEPING_STACK_SIZE            160                 /**< Stack size in bytes. */
+#define TASK_HOUSEKEEPING_STACK_SIZE            512                 /**< Stack size in bytes. */
 #define TASK_HOUSEKEEPING_PRIORITY              3                   /**< Task priority. */
-#define TASK_HOUSEKEEPING_PERIOD_MS             (10000)             /**< Task period in milliseconds. */
-#define TASK_HOUSEKEEPING_INIT_TIMEOUT_MS       2000                /**< Wait time to initialize the task in milliseconds. */
+#define TASK_HOUSEKEEPING_PERIOD_MS             (60000)             /**< Task period in milliseconds. */
+#define TASK_HOUSEKEEPING_INIT_TIMEOUT_MS       5000                /**< Wait time to initialize the task in milliseconds. */
 
 /**
  * \brief Housekeeping handle.
@@ -56,7 +57,7 @@ extern xTaskHandle xTaskHousekeepingHandle;
  *
  * \return None.
  */
-void vTaskHousekeeping(void);
+void vTaskHousekeeping(void* p);
 
 #endif /* HOUSEKEEPING_H_ */
 

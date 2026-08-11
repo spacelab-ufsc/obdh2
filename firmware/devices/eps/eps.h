@@ -25,7 +25,7 @@
  * 
  * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
  * 
- * \version 0.8.35
+ * \version 1.0.0
  * 
  * \date 2020/02/01
  * 
@@ -112,6 +112,15 @@ int eps_get_bat_charge(eps_charge_t *charge);
  * \return The status/error code.
  */
 int eps_get_data(eps_data_t *data);
+
+/**
+ * \brief Prints EPS housekeeping data. 
+ *
+ * \param[int] data is a pointer to the EPS data.
+ *
+ * \return The status/error code.
+ */
+void eps_print_data(const eps_data_t *data);
 
 #endif /* EPS_H_ */
 
