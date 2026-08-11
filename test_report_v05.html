@@ -1,0 +1,372 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test Report of v0.5 Version &mdash; OBDH 2.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=09c281a4" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=99a04888"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Test Report of v0.7 Version" href="test_report_v07.html" />
+    <link rel="prev" title="Telecommunication Description" href="packets.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system_overview.html">System Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html">Hardware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">Firmware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assembly.html">Board Assembly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instructions.html">Usage Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="telemetry.html">Telemetry Packets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packets.html">Telecommunication Description</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Test Report of v0.5 Version</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#visual-inspection">Visual Inspection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#firmware-programming">Firmware Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#communication-busses">Communication Busses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sensors">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#input-voltage">Input Voltage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#input-current">Input Current</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#peripherals">Peripherals</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#nor-flash-memory">NOR Flash Memory</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="test_report_v07.html">Test Report of v0.7 Version</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">obdh2</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Test Report of v0.5 Version</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/test_report_v05.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+  .ss-layout-default-AB { grid-template-areas: 'A B'; }
+  .ss-layout-default-ABC { grid-template-areas: 'A B C'; }
+@media (max-width: 576px) {
+  .ss-layout-sm-A_B { grid-template-areas: 'A' 'B'; }
+  .ss-layout-sm-A_B_C { grid-template-areas: 'A' 'B' 'C'; }
+}
+</style>
+<section id="test-report-of-v0-5-version">
+<span id="anx-test-report-v05"></span><h1>Test Report of v0.5 Version<a class="headerlink" href="#test-report-of-v0-5-version" title="Permalink to this heading"></a></h1>
+<p>This appendix is a test report of the first manufactured and assembled PCB (version v0.5).</p>
+<ul class="simple">
+<li><p><strong>PCB manufacturer</strong>: PCBWay (China)</p></li>
+<li><p><strong>PCB assembly</strong>: PCBWay (China)</p></li>
+<li><p><strong>PCB arrival date</strong>: 2021/04/14</p></li>
+<li><p><strong>Execution date</strong>: 2021/04/16 to TBC</p></li>
+<li><p><strong>Tester</strong>: G. M. Marcelino</p></li>
+</ul>
+<section id="visual-inspection">
+<h2>Visual Inspection<a class="headerlink" href="#visual-inspection" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Test description/Objective</strong>: Inspection of the board, visually and with a multimeter, searching for fabrication and assembly failures.</p></li>
+<li><p><strong>Material</strong>:</p>
+<ul>
+<li><p>Multimeter UNI-T DT830B</p></li>
+</ul>
+</li>
+<li><p><strong>Results</strong>: The results of this test can be seen in Figures <a class="reference internal" href="#fig-obdh2-v05-top"><span class="std std-numref">Fig. 35</span></a> (top view of the board) and <a class="reference internal" href="#fig-obdh2-v05-bottom"><span class="std std-numref">Fig. 36</span></a> (bottom view of the board).</p></li>
+<li><p><strong>Conclusion</strong>: No problems were identified on this test.</p></li>
+</ul>
+<figure class="align-center" id="fig-obdh2-v05-top">
+<img alt="_images/obdh2-v05-top.jpg" src="_images/obdh2-v05-top.jpg" />
+<figcaption>
+<p><span class="caption-number">Fig. 35 </span><span class="caption-text">Top view of the OBDH 2.0 v0.5 board.</span><a class="headerlink" href="#fig-obdh2-v05-top" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="fig-obdh2-v05-bottom">
+<img alt="_images/obdh2-v05-bottom.jpg" src="_images/obdh2-v05-bottom.jpg" />
+<figcaption>
+<p><span class="caption-number">Fig. 36 </span><span class="caption-text">Bottom view of the OBDH 2.0 v0.5 board.</span><a class="headerlink" href="#fig-obdh2-v05-bottom" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="firmware-programming">
+<h2>Firmware Programming<a class="headerlink" href="#firmware-programming" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Test description/Objective</strong>: Inspection of the board, visually and with a multimeter, searching for fabrication and assembly mistakes.</p></li>
+<li><p><strong>Material</strong>:</p>
+<ul>
+<li><p>Code Composer Studio v9.3.0</p></li>
+<li><p>MSP-FET Flash Emulation Tool</p></li>
+<li><p>USB-UART converter</p></li>
+<li><p>Screen (Linux software)</p></li>
+</ul>
+</li>
+<li><p><strong>Results</strong>: The results of this are available in <a class="reference internal" href="#fig-log-first-boot"><span class="std std-numref">Fig. 37</span></a>, where the log messages of the first boot of the board can be seen.</p></li>
+<li><p><strong>Conclusion</strong>: No problems were identified on this test.</p></li>
+</ul>
+<figure class="align-center" id="fig-log-first-boot">
+<img alt="_images/log-first-boot.png" src="_images/log-first-boot.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 37 </span><span class="caption-text">Log messages during the first boot.</span><a class="headerlink" href="#fig-log-first-boot" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="communication-busses">
+<h2>Communication Busses<a class="headerlink" href="#communication-busses" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Test description/Objective</strong>: Test the communication busses of the board, as listed below:</p>
+<ul>
+<li><p>I<span class="math notranslate nohighlight">\(^{2}\)</span>C Port 0</p></li>
+<li><p>I<span class="math notranslate nohighlight">\(^{2}\)</span>C Port 1</p></li>
+<li><p>I<span class="math notranslate nohighlight">\(^{2}\)</span>C Port 2</p></li>
+</ul>
+</li>
+<li><p><strong>Material</strong>:</p>
+<ul>
+<li><p>Saleae Logic Analyzer (24 MHz, 8 channels)</p></li>
+<li><p>Saleae Logic software (v1.2.18)</p></li>
+<li><p>MSP-FET Flash Emulation Tool</p></li>
+</ul>
+</li>
+<li><p><strong>Results</strong>: The results of this test can be seen in Figures <a class="reference internal" href="#fig-test-i2c-0"><span class="std std-numref">Fig. 38</span></a>, <a class="reference internal" href="#fig-test-i2c-1"><span class="std std-numref">Fig. 39</span></a> and <a class="reference internal" href="#fig-test-i2c-2"><span class="std std-numref">Fig. 40</span></a>.</p></li>
+<li><p><strong>Conclusion:</strong> No problems were identified on this test, all buses are working as expected.</p></li>
+</ul>
+<figure class="sphinx-subfigure align-center" id="fig-test-i2c-0">
+<div class="sphinx-subfigure-grid ss-layout-default-AB ss-layout-sm-A_B outline" style="display: grid; gap: 8px; grid-gap: 8px;">
+<div class="sphinx-subfigure-area" style="display: flex; flex-direction: column; justify-content: center; align-items: center; grid-area: A;">
+<a class="reference internal image-reference" href="_images/test-i2c-0.jpg"><img alt="Connections of the I2C port 0 test." class="align-center" src="_images/test-i2c-0.jpg" style="width: 100%;" /></a>
+<span class="caption">Connections of the I2C port 0 test.</span>
+</div>
+<div class="sphinx-subfigure-area" style="display: flex; flex-direction: column; justify-content: center; align-items: center; grid-area: B;">
+<a class="reference internal image-reference" href="_images/waveform-i2c-0.png"><img alt="Waveforms of the I2C port 0 test." class="align-center" src="_images/waveform-i2c-0.png" style="width: 100%;" /></a>
+<span class="caption">Waveforms of the I2C port 0 test.</span>
+</div>
+</div>
+<figcaption>
+<p><span class="caption-number">Fig. 38 </span><span class="caption-text">I2C port 0 test.</span><a class="headerlink" href="#fig-test-i2c-0" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="sphinx-subfigure align-center" id="fig-test-i2c-1">
+<div class="sphinx-subfigure-grid ss-layout-default-AB ss-layout-sm-A_B outline" style="display: grid; gap: 8px; grid-gap: 8px;">
+<div class="sphinx-subfigure-area" style="display: flex; flex-direction: column; justify-content: center; align-items: center; grid-area: A;">
+<a class="reference internal image-reference" href="_images/test-i2c-1.jpg"><img alt="Connections of the I2C port 1 test." class="align-center" src="_images/test-i2c-1.jpg" style="width: 100%;" /></a>
+<span class="caption">Connections of the I2C port 1 test.</span>
+</div>
+<div class="sphinx-subfigure-area" style="display: flex; flex-direction: column; justify-content: center; align-items: center; grid-area: B;">
+<a class="reference internal image-reference" href="_images/waveform-i2c-1.png"><img alt="Waveforms of the I2C port 1 test." class="align-center" src="_images/waveform-i2c-1.png" style="width: 100%;" /></a>
+<span class="caption">Waveforms of the I2C port 1 test.</span>
+</div>
+</div>
+<figcaption>
+<p><span class="caption-number">Fig. 39 </span><span class="caption-text">I2C port 1 test.</span><a class="headerlink" href="#fig-test-i2c-1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="sphinx-subfigure align-center" id="fig-test-i2c-2">
+<div class="sphinx-subfigure-grid ss-layout-default-AB ss-layout-sm-A_B outline" style="display: grid; gap: 8px; grid-gap: 8px;">
+<div class="sphinx-subfigure-area" style="display: flex; flex-direction: column; justify-content: center; align-items: center; grid-area: A;">
+<a class="reference internal image-reference" href="_images/test-i2c-2.jpg"><img alt="Connections of the I2C port 2 test." class="align-center" src="_images/test-i2c-2.jpg" style="width: 100%;" /></a>
+<span class="caption">Connections of the I2C port 2 test.</span>
+</div>
+<div class="sphinx-subfigure-area" style="display: flex; flex-direction: column; justify-content: center; align-items: center; grid-area: B;">
+<a class="reference internal image-reference" href="_images/waveform-i2c-2.png"><img alt="Waveforms of the I2C port 2 test." class="align-center" src="_images/waveform-i2c-2.png" style="width: 100%;" /></a>
+<span class="caption">Waveforms of the I2C port 2 test.</span>
+</div>
+</div>
+<figcaption>
+<p><span class="caption-number">Fig. 40 </span><span class="caption-text">I2C port 2 test.</span><a class="headerlink" href="#fig-test-i2c-2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="sensors">
+<h2>Sensors<a class="headerlink" href="#sensors" title="Permalink to this heading"></a></h2>
+<section id="input-voltage">
+<h3>Input Voltage<a class="headerlink" href="#input-voltage" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Test description/Objective</strong>: .</p></li>
+<li><p><strong>Material</strong>:</p>
+<ul>
+<li><p>Code Composer Studio v9.3.0</p></li>
+<li><p>MSP-FET Flash Emulation Tool</p></li>
+<li><p>USB-UART converter</p></li>
+<li><p>Screen (Linux software)</p></li>
+</ul>
+</li>
+<li><p><strong>Results</strong>: .</p></li>
+<li><p><strong>Conclusion:</strong> .</p></li>
+</ul>
+</section>
+<section id="input-current">
+<h3>Input Current<a class="headerlink" href="#input-current" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Test description/Objective</strong>: .</p></li>
+<li><p><strong>Material</strong>:</p>
+<ul>
+<li><p>Code Composer Studio v9.3.0</p></li>
+<li><p>MSP-FET Flash Emulation Tool</p></li>
+<li><p>USB-UART converter</p></li>
+<li><p>Screen (Linux software)</p></li>
+</ul>
+</li>
+<li><p><strong>Results</strong>: .</p></li>
+<li><p><strong>Conclusion:</strong> .</p></li>
+</ul>
+<figure class="sphinx-subfigure align-center" id="fig-current-sensing-error-v05">
+<div class="sphinx-subfigure-grid ss-layout-default-ABC ss-layout-sm-A_B_C outline" style="display: grid; gap: 8px; grid-gap: 8px;">
+<div class="sphinx-subfigure-area" style="display: flex; flex-direction: column; justify-content: center; align-items: center; grid-area: A;">
+<a class="reference internal image-reference" href="_images/current-sensor-circuit.png"><img alt="Current sensing circuit." class="align-center" src="_images/current-sensor-circuit.png" style="width: 100%;" /></a>
+<span class="caption">Current sensing circuit.</span>
+</div>
+<div class="sphinx-subfigure-area" style="display: flex; flex-direction: column; justify-content: center; align-items: center; grid-area: B;">
+<a class="reference internal image-reference" href="_images/max9934-top-view.png"><img alt="MAX9934 pinout." class="align-center" src="_images/max9934-top-view.png" style="width: 100%;" /></a>
+<span class="caption">MAX9934 pinout.</span>
+</div>
+<div class="sphinx-subfigure-area" style="display: flex; flex-direction: column; justify-content: center; align-items: center; grid-area: C;">
+<a class="reference internal image-reference" href="_images/current-sensor-layout.png"><img alt="Current sensing layout on the bottom layer." class="align-center" src="_images/current-sensor-layout.png" style="width: 100%;" /></a>
+<span class="caption">Current sensing layout on the bottom layer.</span>
+</div>
+</div>
+<figcaption>
+<p><span class="caption-number">Fig. 41 </span><span class="caption-text">Current sensing circuit, pinout, and PCB layout.</span><a class="headerlink" href="#fig-current-sensing-error-v05" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="fig-current-sensor-fix">
+<img alt="_images/max9934-fix.jpg" src="_images/max9934-fix.jpg" />
+<figcaption>
+<p><span class="caption-number">Fig. 42 </span><span class="caption-text">Current sensor fix.</span><a class="headerlink" href="#fig-current-sensor-fix" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="fig-log-current-sensor">
+<img alt="_images/log-current-sensor.png" src="_images/log-current-sensor.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 43 </span><span class="caption-text">Log messages with the read values from the current sensor.</span><a class="headerlink" href="#fig-log-current-sensor" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="peripherals">
+<h2>Peripherals<a class="headerlink" href="#peripherals" title="Permalink to this heading"></a></h2>
+<section id="nor-flash-memory">
+<h3>NOR Flash Memory<a class="headerlink" href="#nor-flash-memory" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Test description/Objective</strong>: Test the functionality of the NOR flash memory by verifying the device ID register of the IC.</p></li>
+<li><p><strong>Material</strong>:</p>
+<ul>
+<li><p>Saleae Logic Analyzer (24 MHz, 8 channels)</p></li>
+<li><p>Saleae Logic software (v1.2.18)</p></li>
+<li><p>MSP-FET Flash Emulation Tool</p></li>
+</ul>
+</li>
+<li><p><strong>Results</strong>: The results of this test can be seen in <a class="reference internal" href="#fig-test-nor-memory"><span class="std std-numref">Fig. 44</span></a>.</p></li>
+<li><p><strong>Conclusion:</strong> No problems were identified on this test. As shown in <a class="reference internal" href="#fig-test-nor-memory"><span class="std std-numref">Fig. 44</span></a>, the device ID register was read as expected.</p></li>
+</ul>
+<figure class="sphinx-subfigure align-center" id="fig-test-nor-memory">
+<div class="sphinx-subfigure-grid ss-layout-default-AB ss-layout-sm-A_B outline" style="display: grid; gap: 8px; grid-gap: 8px;">
+<div class="sphinx-subfigure-area" style="display: flex; flex-direction: column; justify-content: center; align-items: center; grid-area: A;">
+<a class="reference internal image-reference" href="_images/test-nor-memory.jpg"><img alt="Connections of the NOR flash memory test." class="align-center" src="_images/test-nor-memory.jpg" style="width: 100%;" /></a>
+<span class="caption">Connections of the NOR flash memory test.</span>
+</div>
+<div class="sphinx-subfigure-area" style="display: flex; flex-direction: column; justify-content: center; align-items: center; grid-area: B;">
+<a class="reference internal image-reference" href="_images/waveform-spi-mem.png"><img alt="Waveforms of the NOR memory SPI." class="align-center" src="_images/waveform-spi-mem.png" style="width: 100%;" /></a>
+<span class="caption">Waveforms of the NOR memory SPI.</span>
+</div>
+</div>
+<figcaption>
+<p><span class="caption-number">Fig. 44 </span><span class="caption-text">NOR memory SPI test.</span><a class="headerlink" href="#fig-test-nor-memory" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this heading"></a></h2>
+<p>Excluding the current sensor issue, no major problems were identified during the executed tests. For the next fabrication round, the identified mistakes will be corrected.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="packets.html" class="btn btn-neutral float-left" title="Telecommunication Description" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="test_report_v07.html" class="btn btn-neutral float-right" title="Test Report of v0.7 Version" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright The OBDH 2.0 Contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

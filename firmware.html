@@ -1,0 +1,1339 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Firmware &mdash; OBDH 2.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=09c281a4" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=99a04888"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Board Assembly" href="assembly.html" />
+    <link rel="prev" title="Hardware" href="hardware.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system_overview.html">System Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html">Hardware</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Firmware</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#product-tree">Product tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tasks">Tasks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#antenna-deployment">Antenna deployment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#antenna-reading">Antenna reading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-log">Data log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#general-telemetry">General Telemetry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#edc-reading">EDC reading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eps-reading">EPS reading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#heartbeat">Heartbeat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#housekeeping">Housekeeping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mission-manager">Mission Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#payload-x-reading">Payload X reading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#position-determination">Position Determination</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#read-sensors">Read sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#startup-boot">Startup (boot)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#schedule-tc">Schedule TC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#system-reset">System reset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#telecommand-processing">Telecommand processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#time-control">Time control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ttc-reading">TTC reading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#watchdog-reset">Watchdog reset</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#variables-and-parameters">Variables and Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#telemetry">Telemetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#telecommands">Telecommands</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#authentication">Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#telecommand-descriptions">Telecommand Descriptions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#operating-system">Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hardware-abstraction-layer-hal">Hardware Abstraction Layer (HAL)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="assembly.html">Board Assembly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instructions.html">Usage Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="telemetry.html">Telemetry Packets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packets.html">Telecommunication Description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_report_v05.html">Test Report of v0.5 Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_report_v07.html">Test Report of v0.7 Version</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">obdh2</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Firmware</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/firmware.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="firmware">
+<span id="ch-firmware"></span><h1>Firmware<a class="headerlink" href="#firmware" title="Permalink to this heading"></a></h1>
+<section id="product-tree">
+<h2>Product tree<a class="headerlink" href="#product-tree" title="Permalink to this heading"></a></h2>
+<p>The product tree of the firmware part of the OBDH 2.0 module is available in <a class="reference internal" href="#fig-product-tree-fw"><span class="std std-numref">Fig. 28</span></a>.</p>
+<figure class="align-center" id="fig-product-tree-fw">
+<img alt="_images/product-tree-fw.png" src="_images/product-tree-fw.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 28 </span><span class="caption-text">Product tree of the firmware of the OBDH 2.0 module.</span><a class="headerlink" href="#fig-product-tree-fw" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading"></a></h2>
+<p>The firmware depends on external libraries to access the embedded hardware or to communicate with other modules. A list of these libraries and the used version is available in <a class="reference internal" href="#tab-fw-dependencies"><span class="std std-numref">Table 10</span></a>.</p>
+<div class="compacttable60 docutils container">
+<table class="docutils align-center" id="tab-fw-dependencies">
+<caption><span class="caption-number">Table 10 </span><span class="caption-text">External libraries and dependencies of the firmware.</span><a class="headerlink" href="#tab-fw-dependencies" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 70.0%" />
+<col style="width: 30.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Library</strong></p></th>
+<th class="head"><p><strong>Version</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>MSP430 DriverLib</p></td>
+<td><p>v2.91.11.01</p></td>
+</tr>
+<tr class="row-odd"><td><p>FreeRTOS</p></td>
+<td><p>v10.2.1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="tasks">
+<h2>Tasks<a class="headerlink" href="#tasks" title="Permalink to this heading"></a></h2>
+<p>A list of the firmware tasks can be seen in the <a class="reference internal" href="#tab-firmware-tasks"><span class="std std-numref">Table 11</span></a>. A complete description of them is provided below.</p>
+<div class="docutils container">
+<table class="docutils align-center" id="tab-firmware-tasks">
+<caption><span class="caption-number">Table 11 </span><span class="caption-text">Firmware tasks.</span><a class="headerlink" href="#tab-firmware-tasks" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 14.0%" />
+<col style="width: 18.0%" />
+<col style="width: 18.0%" />
+<col style="width: 20.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Name</strong></p></th>
+<th class="head"><p><strong>Priority</strong></p></th>
+<th class="head"><p><strong>Initial delay [ms]</strong></p></th>
+<th class="head"><p><strong>Period [ms]</strong></p></th>
+<th class="head"><p><strong>Stack [bytes]</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Antenna deployment</p></td>
+<td><p>Highest</p></td>
+<td><p>0</p></td>
+<td><p>Aperiodic</p></td>
+<td><p>150</p></td>
+</tr>
+<tr class="row-odd"><td><p>Antenna reading</p></td>
+<td><p>Medium</p></td>
+<td><p>5000</p></td>
+<td><p>60000</p></td>
+<td><p>150</p></td>
+</tr>
+<tr class="row-even"><td><p>Data log</p></td>
+<td><p>Medium</p></td>
+<td><p>3005000</p></td>
+<td><p>600000</p></td>
+<td><p>225</p></td>
+</tr>
+<tr class="row-odd"><td><p>General Telemetry</p></td>
+<td><p>High</p></td>
+<td><p>15000</p></td>
+<td><p>60000</p></td>
+<td><p>225</p></td>
+</tr>
+<tr class="row-even"><td><p>EDC reading</p></td>
+<td><p>Medium</p></td>
+<td><p>5000</p></td>
+<td><p>60000</p></td>
+<td><p>300</p></td>
+</tr>
+<tr class="row-odd"><td><p>EPS reading</p></td>
+<td><p>Medium</p></td>
+<td><p>5000</p></td>
+<td><p>60000</p></td>
+<td><p>384</p></td>
+</tr>
+<tr class="row-even"><td><p>Heartbeat</p></td>
+<td><p>Lowest</p></td>
+<td><p>2000</p></td>
+<td><p>500</p></td>
+<td><p>160</p></td>
+</tr>
+<tr class="row-odd"><td><p>Housekeeping</p></td>
+<td><p>Medium</p></td>
+<td><p>5000</p></td>
+<td><p>60000</p></td>
+<td><p>225</p></td>
+</tr>
+<tr class="row-even"><td><p>Mission Manager</p></td>
+<td><p>High</p></td>
+<td><p>5000</p></td>
+<td><p>Aperiodic</p></td>
+<td><p>512</p></td>
+</tr>
+<tr class="row-odd"><td><p>Payload X reading</p></td>
+<td><p>Medium</p></td>
+<td><p>5000</p></td>
+<td><p>60000</p></td>
+<td><p>300</p></td>
+</tr>
+<tr class="row-even"><td><p>Position Determination</p></td>
+<td><p>Low</p></td>
+<td><p>3000</p></td>
+<td><p>60000</p></td>
+<td><p>1024</p></td>
+</tr>
+<tr class="row-odd"><td><p>Read sensors</p></td>
+<td><p>Medium</p></td>
+<td><p>5000</p></td>
+<td><p>60000</p></td>
+<td><p>140</p></td>
+</tr>
+<tr class="row-even"><td><p>Startup (boot)</p></td>
+<td><p>Highest</p></td>
+<td><p>0</p></td>
+<td><p>Aperiodic</p></td>
+<td><p>350</p></td>
+</tr>
+<tr class="row-odd"><td><p>Schedule TC</p></td>
+<td><p>Low</p></td>
+<td><p>0</p></td>
+<td><p>1000</p></td>
+<td><p>1024</p></td>
+</tr>
+<tr class="row-even"><td><p>System reset</p></td>
+<td><p>Medium</p></td>
+<td><p>0</p></td>
+<td><p>36000000</p></td>
+<td><p>128</p></td>
+</tr>
+<tr class="row-odd"><td><p>Telecommand processing</p></td>
+<td><p>High</p></td>
+<td><p>16500</p></td>
+<td><p>1000</p></td>
+<td><p>1024</p></td>
+</tr>
+<tr class="row-even"><td><p>Time control</p></td>
+<td><p>High</p></td>
+<td><p>1000</p></td>
+<td><p>1000</p></td>
+<td><p>128</p></td>
+</tr>
+<tr class="row-odd"><td><p>TTC reading</p></td>
+<td><p>Medium</p></td>
+<td><p>15500</p></td>
+<td><p>60000</p></td>
+<td><p>384</p></td>
+</tr>
+<tr class="row-even"><td><p>Watchdog reset</p></td>
+<td><p>Lowest</p></td>
+<td><p>0</p></td>
+<td><p>100</p></td>
+<td><p>150</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="antenna-deployment">
+<h3>Antenna deployment<a class="headerlink" href="#antenna-deployment" title="Permalink to this heading"></a></h3>
+<p>This task deploys the Antenna module at the start of the mission. It basically implements the previously shown antenna deploy routine flowchart in <a class="reference internal" href="system_overview.html#fig-flowchart-antenna-deploy-routine"><span class="std std-numref">Fig. 7</span></a>.</p>
+</section>
+<section id="antenna-reading">
+<h3>Antenna reading<a class="headerlink" href="#antenna-reading" title="Permalink to this heading"></a></h3>
+<p>This task initializes the antenna device and reads the antenna housekeeping data, which includes deployment status. It also stores the reading timestamp together with housekeeping data.</p>
+</section>
+<section id="data-log">
+<span id="sec-data-log-task"></span><h3>Data log<a class="headerlink" href="#data-log" title="Permalink to this heading"></a></h3>
+<p>This task saves the all subsystems last read housekeeping data to flash memory. Since there is no proper file system to manage the memories each subsystem got a predetermined number of flash pages to write in a ring buffer fashion. The address and page numbers for each subsystem can be seen in <a class="reference external" href="https://github.com/spacelab-ufsc/obdh2/blob/master/firmware/config/config.h">firmware/config/config.h</a> from <span id="id1">[<a class="reference internal" href="references.html#id9" title="SpaceLab. On-Board Data Handling 2.0. 2020. Available at &lt;https://github.com/spacelab-ufsc/obdh2&gt;.">3</a>]</span>.</p>
+</section>
+<section id="general-telemetry">
+<h3>General Telemetry<a class="headerlink" href="#general-telemetry" title="Permalink to this heading"></a></h3>
+<p>The General Telemetry task transmits a data package containing the satellite’s basic telemetry data every 60 seconds. The complete content of the packet can be seen at <a class="reference internal" href="packets.html#tab-downlink-packets"><span class="std std-numref">Table 24</span></a>. The transmission is controlled through a flag on the OBDH parameters (see <a class="reference internal" href="#tab-vars-and-pars"><span class="std std-numref">Table 13</span></a>), accessible through telecommands.</p>
+</section>
+<section id="edc-reading">
+<h3>EDC reading<a class="headerlink" href="#edc-reading" title="Permalink to this heading"></a></h3>
+<p>This task reads the state and housekeeping EDC frames, if there are available PTT packets on EDC’s FIFO, it also attempts to read them. After every sucessfull PTT packet read the data is stored in flash memory, following the same scheme described in <a class="reference internal" href="#sec-data-log-task"><span class="std std-ref">Data log</span></a>. A flowchart of how the data collection procedure works can be seen in <a class="reference internal" href="#fig-edc-reading-flowchart"><span class="std std-numref">Fig. 29</span></a>.</p>
+<figure class="align-center" id="fig-edc-reading-flowchart">
+<a class="reference internal image-reference" href="_images/edc_reading_flowchart.png"><img alt="_images/edc_reading_flowchart.png" src="_images/edc_reading_flowchart.png" style="width: 70%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 29 </span><span class="caption-text">EDC reading procedure flowchart.</span><a class="headerlink" href="#fig-edc-reading-flowchart" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="eps-reading">
+<h3>EPS reading<a class="headerlink" href="#eps-reading" title="Permalink to this heading"></a></h3>
+<p>This task initializes the EPS device and reads the EPS housekeeping data. The communication with EPS has a simple retry scheme, basically the task will attempt to resend the command five times, after five consecutive errors it goes to the next operation.</p>
+</section>
+<section id="heartbeat">
+<h3>Heartbeat<a class="headerlink" href="#heartbeat" title="Permalink to this heading"></a></h3>
+<p>The heartbeat task keeps blinking a LED (“<em>System LED</em>” in <a class="reference internal" href="system_overview.html#fig-status-leds"><span class="std std-numref">Fig. 10</span></a>) at a rate of 1 Hz during the execution of the system. Its purpose is to give visual feedback on the execution of the scheduler. This task does not have a specific purpose on the flight version of the module (the flight version of the PCB does not have LEDs).</p>
+</section>
+<section id="housekeeping">
+<h3>Housekeeping<a class="headerlink" href="#housekeeping" title="Permalink to this heading"></a></h3>
+<p>This task saves the OBDH data parameters to FRAM every 60 seconds. It also keep track of hibernation duration and timeouts, notifying the Mission Manager task in case of a timeout.</p>
+</section>
+<section id="mission-manager">
+<h3>Mission Manager<a class="headerlink" href="#mission-manager" title="Permalink to this heading"></a></h3>
+<p>This task controls all mission specific behavior, specially payload control. After task creation Mission Manager will attempt to restore the satellite state from the previous boot through the OBDH parameters, making sure the operation is consistent through boots. The task has an Event Queue implemented using the FreeRTOS Queue, in which the task blocks waiting for event notifications, this way the task does not waste any compute time while idle. The implemented events can be seen in <a class="reference internal" href="#tab-mission-man-events"><span class="std std-numref">Table 12</span></a>.</p>
+<div class="docutils container">
+<table class="docutils align-center" id="tab-mission-man-events">
+<caption><span class="caption-number">Table 12 </span><span class="caption-text">Mission Manager events.</span><a class="headerlink" href="#tab-mission-man-events" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 28.0%" />
+<col style="width: 62.0%" />
+<col style="width: 10.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Name</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+<th class="head"><p><strong>ID</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Persist State On Init</p></td>
+<td><p>Used for the state machine initialization</p></td>
+<td><p>0x0000</p></td>
+</tr>
+<tr class="row-odd"><td><p>In Brazil</p></td>
+<td><p>Satellite’s position is inside brazilian territory</p></td>
+<td><p>0x0001</p></td>
+</tr>
+<tr class="row-even"><td><p>Out of Brazil</p></td>
+<td><p>Satellite got out of brazilian territory</p></td>
+<td><p>0x0002</p></td>
+</tr>
+<tr class="row-odd"><td><p>PX Finished</p></td>
+<td><p>Payload X finished its experiment</p></td>
+<td><p>0x0003</p></td>
+</tr>
+<tr class="row-even"><td><p>Hibernation Timeout</p></td>
+<td><p>Notifies that hibernation time has ended</p></td>
+<td><p>0x0004</p></td>
+</tr>
+<tr class="row-odd"><td><p>Battery Level Critical</p></td>
+<td><p>Satellite battery is on critical levels</p></td>
+<td><p>0x0005</p></td>
+</tr>
+<tr class="row-even"><td><p>FDIR Resolved</p></td>
+<td><p>FDIR condition was resolved</p></td>
+<td><p>0x0006</p></td>
+</tr>
+<tr class="row-odd"><td><p>Commission Timeout</p></td>
+<td><p>Commission Mode timedout</p></td>
+<td><p>0x0007</p></td>
+</tr>
+<tr class="row-even"><td><p>Deployment Complete</p></td>
+<td><p>Antenna Deployment complete</p></td>
+<td><p>0x0008</p></td>
+</tr>
+<tr class="row-odd"><td><p>TC Goto Deployment Mode</p></td>
+<td><p>Mode change to Deployment mode was requested by TC</p></td>
+<td><p>0x8000</p></td>
+</tr>
+<tr class="row-even"><td><p>TC Goto Commission Mode</p></td>
+<td><p>Mode change to Commission mode was requested by TC</p></td>
+<td><p>0x8001</p></td>
+</tr>
+<tr class="row-odd"><td><p>TC Goto Nominal Mode</p></td>
+<td><p>Mode change to Nominal mode was requested by TC</p></td>
+<td><p>0x8002</p></td>
+</tr>
+<tr class="row-even"><td><p>TC Goto Stand-by Mode</p></td>
+<td><p>Mode change to Stand-by mode was requested by TC</p></td>
+<td><p>0x8003</p></td>
+</tr>
+<tr class="row-odd"><td><p>TC Goto Experiment Mode</p></td>
+<td><p>Mode change to Experiment mode was requested by TC</p></td>
+<td><p>0x8004</p></td>
+</tr>
+<tr class="row-even"><td><p>TC Goto FDIR</p></td>
+<td><p>Mode change to FDIR was requested by TC</p></td>
+<td><p>0x8005</p></td>
+</tr>
+<tr class="row-odd"><td><p>TC Goto Manual Mode</p></td>
+<td><p>Mode change to Manual mode was requested by TC</p></td>
+<td><p>0x8006</p></td>
+</tr>
+<tr class="row-even"><td><p>TC Enable Payload</p></td>
+<td><p>A request to enable a payload was made by TC</p></td>
+<td><p>0x8010</p></td>
+</tr>
+<tr class="row-odd"><td><p>TC Disable Payload</p></td>
+<td><p>A request to disable a payload was made by TC</p></td>
+<td><p>0x8020</p></td>
+</tr>
+<tr class="row-even"><td><p>TC Enter hibernation</p></td>
+<td><p>A request to enter hibernation was made by TC</p></td>
+<td><p>0x8030</p></td>
+</tr>
+<tr class="row-odd"><td><p>TC Leave hibernation</p></td>
+<td><p>A request to leave hibernation was made by TC</p></td>
+<td><p>0x8040</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="payload-x-reading">
+<h3>Payload X reading<a class="headerlink" href="#payload-x-reading" title="Permalink to this heading"></a></h3>
+<p>This task reads Payload X experiment data and status. It only attempts to read data from Payload X if it is active and set as the secondary payload (see <a class="reference internal" href="#tab-vars-and-pars"><span class="std std-numref">Table 13</span></a>).</p>
+</section>
+<section id="position-determination">
+<h3>Position Determination<a class="headerlink" href="#position-determination" title="Permalink to this heading"></a></h3>
+<p>This task determines the satellite position based on the satellite’s TLE lines using a library that implements a SGP4 propagator. The TLE lines are provided through telecommands and are expected to by update quite regularly. The task also deals with TLE updates, repopulating the orbital elements and SGP4 variables whenever there is an update.</p>
+</section>
+<section id="read-sensors">
+<h3>Read sensors<a class="headerlink" href="#read-sensors" title="Permalink to this heading"></a></h3>
+<p>This task reads the internal sensors of the OBDH. The available readings are: <span class="math notranslate nohighlight">\(\mu\)</span>C temperature, <span class="math notranslate nohighlight">\(\mu\)</span>C current supply and <span class="math notranslate nohighlight">\(\mu\)</span>C voltage supply. The task also updates the sensor reading timestamp parameter.</p>
+</section>
+<section id="startup-boot">
+<h3>Startup (boot)<a class="headerlink" href="#startup-boot" title="Permalink to this heading"></a></h3>
+<p>This task is the first executed task when the system starts. All devices, libraries, and data structures are initialized in this task. When the execution is done, the remaining tasks of the system are allowed to execute.</p>
+</section>
+<section id="schedule-tc">
+<h3>Schedule TC<a class="headerlink" href="#schedule-tc" title="Permalink to this heading"></a></h3>
+<p>This task implements the necessary functionality to allow for scheduled execution of telecommands. It manages a telecommand queue, implemented as a min-heap and persisted in the FRAM, that forces the command with the closest execution time (referenced by OBDH’s clock) to be the first item of the queue, allowing the task to dequeue scheduled TCs in order of execution. The task run every second and starts by comparing the next command execution time with the current satellite time, running the telecommand whenever the execution time is reached or otherwise going back to sleep.</p>
+<p>Telecommands are enqueued for execution through a dedicated telecommand, see <a class="reference internal" href="packets.html#anx-packets"><span class="std std-ref">Telecommunication Description</span></a> for details on this procedure.</p>
+</section>
+<section id="system-reset">
+<h3>System reset<a class="headerlink" href="#system-reset" title="Permalink to this heading"></a></h3>
+<p>This task resets the microcontroller by software every 10 hours. This can be useful to clean up possible wrong values in variables, repeat the antenna deployment routine (limited to <span class="math notranslate nohighlight">\(n\)</span> times), clean up the RAM, etc.</p>
+</section>
+<section id="telecommand-processing">
+<h3>Telecommand processing<a class="headerlink" href="#telecommand-processing" title="Permalink to this heading"></a></h3>
+<p>This task processes all the telecommand packets received by the TTC device. The supported telemetry and telecommand packets, for both uplink and downlink, can be seen in <a class="reference internal" href="#tab-packets-struct"><span class="std std-numref">Table 14</span></a>. Also, a description of each telecommand is provided in <a class="reference internal" href="packets.html#anx-packets"><span class="std std-ref">Telecommunication Description</span></a>.</p>
+</section>
+<section id="time-control">
+<h3>Time control<a class="headerlink" href="#time-control" title="Permalink to this heading"></a></h3>
+<p>This task is responsible for the time management of the system. At every second, it increments the system time (epoch). Also, it saves the current system time in the non-volatile memory every minute.</p>
+</section>
+<section id="ttc-reading">
+<h3>TTC reading<a class="headerlink" href="#ttc-reading" title="Permalink to this heading"></a></h3>
+<p>This task initializes the TTC device and reads the TTC housekeeping data. Also, it checks for the number of consecutive decoding errors on TTC, if there are more than 5 consecutive errors the task tries to reset the TTC device. This is done to avoid potential issues, such as the radio being stuck in TX mode or memory corruption.</p>
+</section>
+<section id="watchdog-reset">
+<h3>Watchdog reset<a class="headerlink" href="#watchdog-reset" title="Permalink to this heading"></a></h3>
+<p>This task resets the internal and external watchdog timer every 100 ms. The internal watchdog has a maximum count time of 500 ms, and the external watchdog has a maximum of 1600 ms (see <a class="reference internal" href="hardware.html#ch-hardware"><span class="std std-ref">Hardware</span></a> for more information about the watchdog timers).</p>
+<p>To prevent the system to not reset during an anomaly on some task (like an execution time longer than planned), this task has the lowest possible priority: 0.</p>
+</section>
+</section>
+<section id="variables-and-parameters">
+<h2>Variables and Parameters<a class="headerlink" href="#variables-and-parameters" title="Permalink to this heading"></a></h2>
+<p>The internal variables and parameters of the OBDH firmware can be seen in <a class="reference internal" href="#tab-vars-and-pars"><span class="std std-numref">Table 13</span></a>.</p>
+<div class="docutils container">
+<table class="docutils align-center" id="tab-vars-and-pars">
+<caption><span class="caption-number">Table 13 </span><span class="caption-text">Variables and parameters of the OBDH 2.0.</span><a class="headerlink" href="#tab-vars-and-pars" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 8.0%" />
+<col style="width: 70.0%" />
+<col style="width: 12.0%" />
+<col style="width: 10.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>ID</strong></p></th>
+<th class="head"><p><strong>Name/Description</strong></p></th>
+<th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>Access</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>System time in sec. (Unix epoch)</p></td>
+<td><p>uint32</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>Temperature of the <span class="math notranslate nohighlight">\(\mu\)</span>C in Kelvin</p></td>
+<td><p>uint16</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>Input current in mA</p></td>
+<td><p>uint16</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>Input voltage in mV</p></td>
+<td><p>uint16</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>Last reset cause:</p></td>
+<td><p>uint8</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>- 0x00 = No interrupt pending</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>- 0x02 = Brownout (BOR)</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>- 0x04 = RST/NMI (BOR)</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>- 0x06 = PMMSWBOR (BOR)</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>- 0x08 = Wakeup from LPMx.5 (BOR)</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>- 0x0A = Security violation (BOR)</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>- 0x0C = SVSL (POR)</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>- 0x0E = SVSH (POR)</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>- 0x10 = SVML_OVP (POR)</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>- 0x12 = SVMH_OVP (POR)</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>- 0x14 = PMMSWPOR (POR)</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>- 0x16 = WDT time out (PUC)</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>- 0x18 = WDT password violation (PUC)</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>- 0x1A = Flash password violation (PUC)</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>- 0x1C = Reserved</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>- 0x1E = PERF peripheral/configuration area fetch (PUC)</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>- 0x20 = PMM password violation (PUC)</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>- 0x22 to 0x3E = Reserved</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>5</p></td>
+<td><p>Reset counter</p></td>
+<td><p>uint16</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-even"><td><p>6</p></td>
+<td><p>Last valid telecommand (uplink packet ID)</p></td>
+<td><p>uint8</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-odd"><td><p>7</p></td>
+<td><p>Hardware version</p></td>
+<td><p>uint8</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-even"><td><p>8</p></td>
+<td><p>Firmware version (ex.: “v1.2.3” = 0x00010203)</p></td>
+<td><p>uint32</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-odd"><td><p>9</p></td>
+<td><p>Operation Mode:</p></td>
+<td><p>uint8</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>- 0x00 = Deployment</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>- 0x01 = Commission</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>- 0x02 = Nominal/Normal</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>- 0x03 = Stand-by</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>- 0x04 = Experiment</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>- 0x05 = FDIR</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>- 0x06 = Manual</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>Timestamp of the last mode change</p></td>
+<td><p>uint32</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-even"><td><p>11</p></td>
+<td><p>Mode duration in sec.</p></td>
+<td><p>uint32</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-odd"><td><p>12</p></td>
+<td><p>Initial hibernation executed</p></td>
+<td><p>boolean</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-even"><td><p>13</p></td>
+<td><p>Initial hibernation time counter (minutes)</p></td>
+<td><p>uint8</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-odd"><td><p>14</p></td>
+<td><p>Antenna deployment executed</p></td>
+<td><p>boolean</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-even"><td><p>15</p></td>
+<td><p>Antenna deployment counter</p></td>
+<td><p>uint8</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-odd"><td><p>16</p></td>
+<td><p>Satellite’s latitude in degress</p></td>
+<td><p>int16</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-even"><td><p>17</p></td>
+<td><p>Satellite’s longitude in degress</p></td>
+<td><p>int16</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-odd"><td><p>18</p></td>
+<td><p>Satellite’s altitude in kilometers</p></td>
+<td><p>int16</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-even"><td><p>19</p></td>
+<td><p>Last written flash page in OBDH sector</p></td>
+<td><p>uint32</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-odd"><td><p>20</p></td>
+<td><p>Last written flash page in EPS sector</p></td>
+<td><p>uint32</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-even"><td><p>21</p></td>
+<td><p>Last written flash page in TTC 0 sector</p></td>
+<td><p>uint32</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-odd"><td><p>22</p></td>
+<td><p>Last written flash page in TTC 1 sector</p></td>
+<td><p>uint32</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-even"><td><p>23</p></td>
+<td><p>Last written flash page in Antenna sector</p></td>
+<td><p>uint32</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-odd"><td><p>24</p></td>
+<td><p>Last written flash page in EDC sector</p></td>
+<td><p>uint32</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-even"><td><p>25</p></td>
+<td><p>Last written flash page in Payload X sector</p></td>
+<td><p>uint32</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-odd"><td><p>26</p></td>
+<td><p>Last written flash page in SBCD packets sector</p></td>
+<td><p>uint32</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-even"><td><p>27</p></td>
+<td><p>Hibernation enabled</p></td>
+<td><p>boolean</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-odd"><td><p>28</p></td>
+<td><p>Main EDC ID (see the system IDs table)</p></td>
+<td><p>uint8</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-even"><td><p>29</p></td>
+<td><p>General telemetry enabled</p></td>
+<td><p>boolean</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-odd"><td><p>30</p></td>
+<td><p>Reset device (Resets OBDH when “01h” is written into it)</p></td>
+<td><p>boolean</p></td>
+<td><p>W</p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>Timestamp of the last TLE line set update in sec.</p></td>
+<td><p>uint32</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-odd"><td><p>32</p></td>
+<td><p>Timestamp of the last OBDH sensor’s reading in sec.</p></td>
+<td><p>uint32</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-even"><td><p>33</p></td>
+<td><p>Main payload state (Active payload ID or 0 if disabled)</p></td>
+<td><p>uint32</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-odd"><td><p>34</p></td>
+<td><p>Secondary payload state (Active payload ID or 0 if disabled)</p></td>
+<td><p>uint32</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-even"><td><p>35</p></td>
+<td><p>Remaining hibernation time in sec.</p></td>
+<td><p>uint32</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-odd"><td><p>36</p></td>
+<td><p>Binary format TLE line</p></td>
+<td><p>uint8[50]</p></td>
+<td><p>W</p></td>
+</tr>
+<tr class="row-even"><td><p>37</p></td>
+<td><p>Timestamp used in the last position determination in sec.</p></td>
+<td><p>uint32</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-odd"><td><p>38</p></td>
+<td><p>Timestamp from the last telecommand reception in sec.</p></td>
+<td><p>uint32</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-even"><td><p>39</p></td>
+<td><p>Timestamp when commission mode will timeout.</p></td>
+<td><p>uint32</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-odd"><td><p>40</p></td>
+<td><p>Last valid event id that caused an mode transition</p></td>
+<td><p>uint16</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-even"><td><p>41</p></td>
+<td><p>EPS beacon enabled</p></td>
+<td><p>boolean</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-odd"><td><p>42</p></td>
+<td><p>Battery critical level threshold in millivolts.</p></td>
+<td><p>uint16</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-even"><td><p>43</p></td>
+<td><p>Experiment enable mode (Automatic = 0 or Manual = 1)</p></td>
+<td><p>uint8</p></td>
+<td><p>R/W</p></td>
+</tr>
+<tr class="row-odd"><td><p>44</p></td>
+<td><p>Reset TC Queue (Resets queue when “01h” is written into it)</p></td>
+<td><p>uint8</p></td>
+<td><p>W</p></td>
+</tr>
+<tr class="row-even"><td><p>44</p></td>
+<td><p>TC Queue size</p></td>
+<td><p>uint8</p></td>
+<td><p>R</p></td>
+</tr>
+<tr class="row-odd"><td><p>44</p></td>
+<td><p>Next scheduled telecommand execution timestamp</p></td>
+<td><p>uint32</p></td>
+<td><p>R</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="telemetry">
+<h2>Telemetry<a class="headerlink" href="#telemetry" title="Permalink to this heading"></a></h2>
+<p>All telemetry data available to downloaded from OBDH is expected to be serialized in big endian ordering, meaning that a data field named “param” with type <em>uint16</em>, is serialized as the first byte being the 8 most significant bits of “param” and the second byte is the 8 least significant bits of it. This behavior happens to all data types with length bigger than 1 byte.</p>
+<p>The <a class="reference internal" href="telemetry.html#anx-telemetry-apx"><span class="std std-ref">Telemetry Packets</span></a> presents the available telemetry information for each subsystem, keep in mind that this only illustrates the timestamp and data fields of the complete downlink packet, there are still IDs, callsigns, etc. To see a complete representation of the packets look at the <a class="reference internal" href="packets.html#tab-downlink-packets"><span class="std std-numref">Table 24</span></a>.</p>
+</section>
+<section id="telecommands">
+<span id="sec-telecommands"></span><h2>Telecommands<a class="headerlink" href="#telecommands" title="Permalink to this heading"></a></h2>
+<p>The <a class="reference internal" href="#tab-packets-struct"><span class="std std-numref">Table 14</span></a> summarizes all types of telemetry and telecommand packets received by TTC device that OBDH can handle, with the ID number, structure, length, and access type of each packet.</p>
+<div class="landscape docutils container">
+<div class="docutils container">
+<table class="packet-summary docutils align-center" id="tab-packets-struct">
+<caption><span class="caption-number">Table 14 </span><span class="caption-text">Telecommunication packets and their content.</span><a class="headerlink" href="#tab-packets-struct" title="Permalink to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Link</strong></p></th>
+<th class="head"><p><strong>Packet Name</strong></p></th>
+<th class="head"><p><strong>ID</strong></p></th>
+<th class="head"><p><strong>Source Callsign</strong></p></th>
+<th class="head"><p><strong>Data (up to 212 bytes)</strong></p></th>
+<th class="head"><p><strong>Size (bytes)</strong></p></th>
+<th class="head"><p><strong>Access</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Downlink</p></td>
+<td><p>EPS data</p></td>
+<td><p>00h</p></td>
+<td><p>“ ” + “PY0EFS”</p></td>
+<td><p>EPS data</p></td>
+<td><p>46</p></td>
+<td><p>Public</p></td>
+</tr>
+<tr class="row-odd"><td><p>(VHF)</p></td>
+<td><p>Message broadcast</p></td>
+<td><p>01h</p></td>
+<td></td>
+<td><p>Requester + dst. callsign + message</p></td>
+<td><p>22 to 60</p></td>
+<td><p>Public</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>Ping answer</p></td>
+<td><p>02h</p></td>
+<td></td>
+<td><p>Requester callsign</p></td>
+<td><p>15</p></td>
+<td><p>Public</p></td>
+</tr>
+<tr class="row-odd"><td><p>Downlink</p></td>
+<td><p>General telemetry</p></td>
+<td><p>10h</p></td>
+<td><p>“ ” + “PY0EFS”</p></td>
+<td><p>OBDH/EPS data</p></td>
+<td><p>78</p></td>
+<td><p>Public</p></td>
+</tr>
+<tr class="row-even"><td><p>(UHF)</p></td>
+<td><p>Data request answer</p></td>
+<td><p>11h</p></td>
+<td></td>
+<td><p>Requester callsign + data ID + ts. + data</p></td>
+<td><p>20 to 220</p></td>
+<td><p>Public</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>Subsystem table</p></td>
+<td><p>12h</p></td>
+<td></td>
+<td><p>Table ID + table data</p></td>
+<td><p>9 to 220</p></td>
+<td><p>Public</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>TC feedback</p></td>
+<td><p>13h</p></td>
+<td></td>
+<td><p>Req. callsign + TC ID + timestamp + error code</p></td>
+<td><p>22</p></td>
+<td><p>Public</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>Parameter value</p></td>
+<td><p>14h</p></td>
+<td></td>
+<td><p>Req. callsign + Sub. ID + Param. ID + Param. Val.</p></td>
+<td><p>21</p></td>
+<td><p>Public</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>Packet broadcast</p></td>
+<td><p>15h</p></td>
+<td></td>
+<td><p>Data of “Transmit packet” TC</p></td>
+<td><p>8 to 60</p></td>
+<td><p>Public</p></td>
+</tr>
+<tr class="row-odd"><td><p>Uplink</p></td>
+<td><p>Ping request</p></td>
+<td><p>40h</p></td>
+<td><p>Any Callsign</p></td>
+<td><p>None</p></td>
+<td><p>8</p></td>
+<td><p>Public</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>Data request</p></td>
+<td><p>41h</p></td>
+<td></td>
+<td><p>Data ID + Start ts. + End ts. + Hash</p></td>
+<td><p>37</p></td>
+<td><p>Private</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>Broadcast Message</p></td>
+<td><p>42h</p></td>
+<td></td>
+<td><p>Dst. callsign + message</p></td>
+<td><p>15 to 53</p></td>
+<td><p>Public</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>Enter hibernation</p></td>
+<td><p>43h</p></td>
+<td></td>
+<td><p>Hibernation in hours + Hash</p></td>
+<td><p>30</p></td>
+<td><p>Private</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>Leave hibernation</p></td>
+<td><p>44h</p></td>
+<td></td>
+<td><p>Hash</p></td>
+<td><p>28</p></td>
+<td><p>Private</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>Activate module</p></td>
+<td><p>45h</p></td>
+<td></td>
+<td><p>Module ID + Hash</p></td>
+<td><p>29</p></td>
+<td><p>Private</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>Deactivate module</p></td>
+<td><p>46h</p></td>
+<td></td>
+<td><p>Module ID + Hash</p></td>
+<td><p>29</p></td>
+<td><p>Private</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>Activate payload</p></td>
+<td><p>47h</p></td>
+<td></td>
+<td><p>Payload ID + Hash</p></td>
+<td><p>29</p></td>
+<td><p>Private</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>Deactivate payload</p></td>
+<td><p>48h</p></td>
+<td></td>
+<td><p>Payload ID + Hash</p></td>
+<td><p>29</p></td>
+<td><p>Private</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>Erase memory</p></td>
+<td><p>49h</p></td>
+<td></td>
+<td><p>Memory ID + Hash</p></td>
+<td><p>29</p></td>
+<td><p>Private</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>Force reset</p></td>
+<td><p>4Ah</p></td>
+<td></td>
+<td><p>Hash</p></td>
+<td><p>28</p></td>
+<td><p>Private</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>Get subsystem table</p></td>
+<td><p>4Bh</p></td>
+<td></td>
+<td><p>Table ID + Hash</p></td>
+<td><p>29</p></td>
+<td><p>Private</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>Set parameter</p></td>
+<td><p>4Ch</p></td>
+<td></td>
+<td><p>Subsystem ID + Param. ID + Param. value + Hash</p></td>
+<td><p>34</p></td>
+<td><p>Private</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>Get parameter</p></td>
+<td><p>4Dh</p></td>
+<td></td>
+<td><p>Subsystem ID + Parameter ID + Hash</p></td>
+<td><p>30</p></td>
+<td><p>Private</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>Transmit packet</p></td>
+<td><p>4Eh</p></td>
+<td></td>
+<td><p>Req. callsign + Any sequence of bytes + Hash</p></td>
+<td><p>29 to 73</p></td>
+<td><p>Private</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>Update TLE</p></td>
+<td><p>4Fh</p></td>
+<td></td>
+<td><p>Binary TLE line + Hash</p></td>
+<td><p>78</p></td>
+<td><p>Private</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>Schedule TC</p></td>
+<td><p>50h</p></td>
+<td></td>
+<td><p>Exec. TS + TC ID + Callsign + TC Args + Hash</p></td>
+<td><p>40 to 52</p></td>
+<td><p>Private</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The ID of the subsystems, modules, memories and payloads used in the packets are highlighted in <a class="reference internal" href="#tab-system-ids"><span class="std std-numref">Table 15</span></a>.</p>
+<div class="compacttable70 docutils container">
+<table class="docutils align-center" id="tab-system-ids">
+<caption><span class="caption-number">Table 15 </span><span class="caption-text">IDs of the satellite.</span><a class="headerlink" href="#tab-system-ids" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 22.0%" />
+<col style="width: 25.0%" />
+<col style="width: 53.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Type</strong></p></th>
+<th class="head"><p><strong>ID Number</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Subsystem</p></td>
+<td><p>0</p></td>
+<td><p>OBDH</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>1</p></td>
+<td><p>TTC 1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>2</p></td>
+<td><p>TTC 2</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>3</p></td>
+<td><p>EPS</p></td>
+</tr>
+<tr class="row-even"><td><p>Module</p></td>
+<td><p>1</p></td>
+<td><p>Battery heater</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>2</p></td>
+<td><p>Beacon</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>3</p></td>
+<td><p>Periodic telemetry</p></td>
+</tr>
+<tr class="row-odd"><td><p>Payload</p></td>
+<td><p>1</p></td>
+<td><p>EDC 1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>2</p></td>
+<td><p>EDC 2</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>3</p></td>
+<td><p>Payload X</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>4</p></td>
+<td><p>Radiation instrument</p></td>
+</tr>
+<tr class="row-odd"><td><p>Data</p></td>
+<td><p>0</p></td>
+<td><p>OBDH data</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>1</p></td>
+<td><p>EPS data</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>2</p></td>
+<td><p>TTC 0 data</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>3</p></td>
+<td><p>TTC 1 data</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>4</p></td>
+<td><p>Antenna data</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>5</p></td>
+<td><p>SBCD packets</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>6</p></td>
+<td><p>Payload Info</p></td>
+</tr>
+<tr class="row-even"><td><p>Table</p></td>
+<td><p>0</p></td>
+<td><p>OBDH table</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>1</p></td>
+<td><p>EPS table</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>2</p></td>
+<td><p>TTC 0 table</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>3</p></td>
+<td><p>TTC 1 table</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>4</p></td>
+<td><p>Antenna tabl</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>5</p></td>
+<td><p>SBCD packets</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>6</p></td>
+<td><p>EDC 0 table</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>7</p></td>
+<td><p>EDC 1 table</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>8</p></td>
+<td><p>Payload X table</p></td>
+</tr>
+<tr class="row-odd"><td><p>Memory</p></td>
+<td><p>0</p></td>
+<td><p>NOR memory</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>1</p></td>
+<td><p>FRAM memory</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="authentication">
+<span id="sec-hmac"></span><h3>Authentication<a class="headerlink" href="#authentication" title="Permalink to this heading"></a></h3>
+<p>All the telecommands classified as private use an HMAC authentication scheme. Every type of private telecommand has a unique 16-digit ASCII character key that with the telecommand sequence (or message) generates an 160-bits (20-bytes) hash sequence to be transmitted together with the packet payload. The used hash algorithm is the SHA-1. The <a class="reference internal" href="#fig-hmac-diagram"><span class="std std-numref">Fig. 30</span></a> illustrates this authentication method.</p>
+<figure class="align-center" id="fig-hmac-diagram">
+<img alt="_images/hmac-diagram.png" src="_images/hmac-diagram.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 30 </span><span class="caption-text">Diagram of the used HMAC scheme.</span><a class="headerlink" href="#fig-hmac-diagram" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="telecommand-descriptions">
+<h3>Telecommand Descriptions<a class="headerlink" href="#telecommand-descriptions" title="Permalink to this heading"></a></h3>
+<p>A detailed description of each telecommand, including packet structure, execution and feedback is highlighted on <a class="reference internal" href="packets.html#anx-packets"><span class="std std-ref">Telecommunication Description</span></a>.</p>
+</section>
+</section>
+<section id="operating-system">
+<h2>Operating System<a class="headerlink" href="#operating-system" title="Permalink to this heading"></a></h2>
+<p>The FreeRTOS 10 <span id="id2">[<a class="reference internal" href="references.html#id4" title="Amazon Web Services, Inc. FreeRTOS - Real-time operating system for microcontrollers. 2020. Available at &lt;https://www.freertos.org/&gt;.">7</a>]</span> is being used as an operating system. FreeRTOS is a market-leading real-time operating system (RTOS) for microcontrollers and small microprocessors. Distributed freely under the MIT open-source license, FreeRTOS includes a kernel and a growing set of IoT libraries suitable for use across all industry sectors. FreeRTOS is built with an emphasis on reliability and ease of use.</p>
+<p>The main configuration parameters of the operating system in this project are available in <a class="reference internal" href="#tab-freertos-config"><span class="std std-numref">Table 16</span></a>.</p>
+<div class="docutils container">
+<table class="docutils align-center" id="tab-freertos-config">
+<caption><span class="caption-number">Table 16 </span><span class="caption-text">FreeRTOS main configuration parameters.</span><a class="headerlink" href="#tab-freertos-config" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 55.0%" />
+<col style="width: 25.0%" />
+<col style="width: 20.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Parameter</strong></p></th>
+<th class="head"><p><strong>Value</strong></p></th>
+<th class="head"><p><strong>Unit</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Version</p></td>
+<td><p>v10.2.0</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>Tick rate (Hz)</p></td>
+<td><p>1000</p></td>
+<td><p>Hz</p></td>
+</tr>
+<tr class="row-even"><td><p>CPU clock (HZ)</p></td>
+<td><p>32</p></td>
+<td><p>MHz</p></td>
+</tr>
+<tr class="row-odd"><td><p>Max. priorities</p></td>
+<td><p>5</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>Heap size</p></td>
+<td><p>40960</p></td>
+<td><p>bytes</p></td>
+</tr>
+<tr class="row-odd"><td><p>Max. length of task name</p></td>
+<td><p>20</p></td>
+<td><p>-</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>More details of the used configuration parameters can be seen in the file <a class="reference external" href="https://github.com/spacelab-ufsc/obdh2/blob/master/firmware/config/FreeRTOSConfig.h">firmware/config/FreeRTOSConfig.h</a> from <span id="id3">[<a class="reference internal" href="references.html#id9" title="SpaceLab. On-Board Data Handling 2.0. 2020. Available at &lt;https://github.com/spacelab-ufsc/obdh2&gt;.">3</a>]</span>.</p>
+</section>
+<section id="hardware-abstraction-layer-hal">
+<h2>Hardware Abstraction Layer (HAL)<a class="headerlink" href="#hardware-abstraction-layer-hal" title="Permalink to this heading"></a></h2>
+<p>As the Hardware Abstraction Layer (HAL), the DriverLib <span id="id4">[<a class="reference internal" href="references.html#id2" title="Texas Instruments. MSP Driver Library. 2020. Available at &lt;https://www.ti.com/tool/MSPDRIVERLIB&gt;.">8</a>]</span> from Texas Instruments is begin used. It is the official API to access the registers of the MSP430 microcontrollers.</p>
+<p>The DriverLib is meant to provide a “software” layer to the programmer to facilitate a higher programming level than direct register accesses. By using the high-level software APIs provided by DriverLib, users can create powerful and intuitive code that is highly portable between devices within the MSP430 platform and different families in the MSP430/MSP432 platforms.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="hardware.html" class="btn btn-neutral float-left" title="Hardware" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="assembly.html" class="btn btn-neutral float-right" title="Board Assembly" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright The OBDH 2.0 Contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

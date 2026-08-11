@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OBDH 2.0 &mdash; OBDH 2.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=09c281a4" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=99a04888"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#">
+            
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system_overview.html">System Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html">Hardware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">Firmware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assembly.html">Board Assembly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instructions.html">Usage Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="telemetry.html">Telemetry Packets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packets.html">Telecommunication Description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_report_v05.html">Test Report of v0.5 Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_report_v07.html">Test Report of v0.7 Version</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">obdh2</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OBDH 2.0</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="obdh-2-0">
+<h1>OBDH 2.0<a class="headerlink" href="#obdh-2-0" title="Permalink to this heading"></a></h1>
+<p>The OBDH 2.0 is an on-board computer module designed by SpaceLab for nanosatellite missions. This manual describes its architecture, hardware, firmware, assembly, operation, telemetry, communication packets, and hardware test results.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system_overview.html">System Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="system_overview.html#product-tree">Product tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system_overview.html#block-diagram">Block Diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system_overview.html#system-layers">System Layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system_overview.html#operation">Operation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="system_overview.html#execution-flow">Execution Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system_overview.html#data-flow">Data Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system_overview.html#status-leds">Status LEDs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html">Hardware</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hardware.html#interfaces">Interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.html#external-connectors">External Connectors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hardware.html#pc-104">PC-104</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hardware.html#antenna-module">Antenna Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hardware.html#programmer-and-debug">Programmer and Debug</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hardware.html#daughterboard">Daughterboard</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.html#microcontroller">Microcontroller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hardware.html#interfaces-configuration">Interfaces Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hardware.html#clocks-configuration">Clocks Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hardware.html#pinout">Pinout</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.html#external-watchdog">External Watchdog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.html#non-volatile-memories">Non-Volatile Memories</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="hardware.html#flash-nor">Flash NOR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hardware.html#fram">FRAM</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.html#i2c-buffers">I2C Buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.html#rs-485-transceiver">RS-485 Transceiver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardware.html#voltage-and-current-sensors">Voltage and Current Sensors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">Firmware</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="firmware.html#product-tree">Product tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="firmware.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="firmware.html#tasks">Tasks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#antenna-deployment">Antenna deployment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#antenna-reading">Antenna reading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#data-log">Data log</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#general-telemetry">General Telemetry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#edc-reading">EDC reading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#eps-reading">EPS reading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#heartbeat">Heartbeat</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#housekeeping">Housekeeping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#mission-manager">Mission Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#payload-x-reading">Payload X reading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#position-determination">Position Determination</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#read-sensors">Read sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#startup-boot">Startup (boot)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#schedule-tc">Schedule TC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#system-reset">System reset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#telecommand-processing">Telecommand processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#time-control">Time control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#ttc-reading">TTC reading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#watchdog-reset">Watchdog reset</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="firmware.html#variables-and-parameters">Variables and Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="firmware.html#telemetry">Telemetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="firmware.html#telecommands">Telecommands</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#authentication">Authentication</a></li>
+<li class="toctree-l3"><a class="reference internal" href="firmware.html#telecommand-descriptions">Telecommand Descriptions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="firmware.html#operating-system">Operating System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="firmware.html#hardware-abstraction-layer-hal">Hardware Abstraction Layer (HAL)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="assembly.html">Board Assembly</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="assembly.html#development-model">Development Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="assembly.html#debug-and-programming-connectors">Debug and programming connectors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="assembly.html#status-leds">Status leds</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="assembly.html#flight-model">Flight Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="assembly.html#custom-configuration">Custom Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="instructions.html">Usage Instructions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="instructions.html#powering-the-board">Powering the Board</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions.html#log-messages">Log Messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions.html#daughterboards-installation">Daughterboards Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="instructions.html#flight-preparation">Flight Preparation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="telemetry.html">Telemetry Packets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="telemetry.html#edc-information">EDC Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telemetry.html#obdh-information">OBDH Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telemetry.html#eps-information">EPS Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telemetry.html#ttc-information">TTC Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telemetry.html#antenna-information">Antenna Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="telemetry.html#sbcd-packets">SBCD Packets</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="packets.html">Telecommunication Description</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="packets.html#downlink">Downlink</a></li>
+<li class="toctree-l2"><a class="reference internal" href="packets.html#uplink">Uplink</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="test_report_v05.html">Test Report of v0.5 Version</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="test_report_v05.html#visual-inspection">Visual Inspection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_report_v05.html#firmware-programming">Firmware Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_report_v05.html#communication-busses">Communication Busses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_report_v05.html#sensors">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="test_report_v05.html#input-voltage">Input Voltage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test_report_v05.html#input-current">Input Current</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="test_report_v05.html#peripherals">Peripherals</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="test_report_v05.html#nor-flash-memory">NOR Flash Memory</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="test_report_v05.html#conclusion">Conclusion</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="test_report_v07.html">Test Report of v0.7 Version</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="test_report_v07.html#visual-inspection">Visual Inspection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_report_v07.html#firmware-programming">Firmware Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_report_v07.html#communication-busses">Communication Busses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="test_report_v07.html#sensors">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="test_report_v07.html#input-voltage">Input Voltage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test_report_v07.html#input-current">Input Current</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="test_report_v07.html#peripherals">Peripherals</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="test_report_v07.html#nor-flash-memory">NOR Flash Memory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="test_report_v07.html#fram-memory">FRAM Memory</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="test_report_v07.html#conclusion">Conclusion</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="introduction.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright The OBDH 2.0 Contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

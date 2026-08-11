@@ -1,0 +1,1112 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Telecommunication Description &mdash; OBDH 2.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=09c281a4" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=99a04888"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Test Report of v0.5 Version" href="test_report_v05.html" />
+    <link rel="prev" title="Telemetry Packets" href="telemetry.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system_overview.html">System Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html">Hardware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">Firmware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assembly.html">Board Assembly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instructions.html">Usage Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="telemetry.html">Telemetry Packets</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Telecommunication Description</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#downlink">Downlink</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#uplink">Uplink</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="test_report_v05.html">Test Report of v0.5 Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_report_v07.html">Test Report of v0.7 Version</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">obdh2</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Telecommunication Description</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/packets.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="telecommunication-description">
+<span id="anx-packets"></span><h1>Telecommunication Description<a class="headerlink" href="#telecommunication-description" title="Permalink to this heading"></a></h1>
+<p>This appendix describes the telecommands supported by OBDH, including the packet format, responses, etc.</p>
+<section id="downlink">
+<h2>Downlink<a class="headerlink" href="#downlink" title="Permalink to this heading"></a></h2>
+<p>In <a class="reference internal" href="#tab-downlink-packets"><span class="std std-numref">Table 24</span></a> the content of the downlink packets are available. These can be downloaded through telecommands, see <a class="reference internal" href="#sec-uplink-descr"><span class="std std-ref">Uplink</span></a> for more information on how to do so. The format for the “data” field of <em>Get Payload Data</em> and <em>Data Request</em> are shown in <a class="reference internal" href="telemetry.html#anx-telemetry-apx"><span class="std std-ref">Telemetry Packets</span></a>.</p>
+<div class="docutils container">
+<table class="docutils align-default" id="tab-downlink-packets">
+<caption><span class="caption-number">Table 24 </span><span class="caption-text">Downlink packets.</span><a class="headerlink" href="#tab-downlink-packets" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 12.0%" />
+<col style="width: 53.0%" />
+<col style="width: 15.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Packet</strong></p></th>
+<th class="head"><p><strong>Position</strong></p></th>
+<th class="head"><p><strong>Content</strong></p></th>
+<th class="head"><p><strong>Length [bytes]</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Message broadcast</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (01h)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>1</p></td>
+<td><p>Source callsign (“ PY0EFS”)</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>8</p></td>
+<td><p>Requester callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>15</p></td>
+<td><p>Destination callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>22</p></td>
+<td><p>Message</p></td>
+<td><p>up to 38</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td><p>up to 60</p></td>
+</tr>
+<tr class="row-even"><td><p>Ping answer</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (02h)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>1</p></td>
+<td><p>Source callsign (“ PY0EFS”)</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>8</p></td>
+<td><p>Requester callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td><p>15</p></td>
+</tr>
+<tr class="row-even"><td><p>Data request answer</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (11h)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>1</p></td>
+<td><p>Source callsign (“ PY0EFS”)</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>8</p></td>
+<td><p>Requester callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>15</p></td>
+<td><p>Data type ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>16</p></td>
+<td><p>Timestamp</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>20</p></td>
+<td><p>Data</p></td>
+<td><p>Var.</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td><p>20 (min.)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Subsystem Table</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (12h)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>1</p></td>
+<td><p>Source callsign (“ PY0EFS”)</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>8</p></td>
+<td><p>Table ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>9</p></td>
+<td><p>Data</p></td>
+<td><p>Var.</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td><p>9 (min.)</p></td>
+</tr>
+<tr class="row-even"><td><p>TC feedback</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (13h)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>1</p></td>
+<td><p>Source callsign (“ PY0EFS”)</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>8</p></td>
+<td><p>Requester callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>15</p></td>
+<td><p>TC packet ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>16</p></td>
+<td><p>Timestamp</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>20</p></td>
+<td><p>Error code</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td><p>22</p></td>
+</tr>
+<tr class="row-odd"><td><p>Parameter value</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (14h)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>1</p></td>
+<td><p>Source callsign (“ PY0EFS”)</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>8</p></td>
+<td><p>Requester callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>15</p></td>
+<td><p>Subsystem ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>16</p></td>
+<td><p>Parameter ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>17</p></td>
+<td><p>Parameter value</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td><p>21</p></td>
+</tr>
+<tr class="row-even"><td><p>Packet Broadcast</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (15h)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>1</p></td>
+<td><p>Source callsign (“ PY0EFS”)</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>8</p></td>
+<td><p>Requester callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>15</p></td>
+<td><p>Message</p></td>
+<td><p>up to 45</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td><p>up to 60</p></td>
+</tr>
+<tr class="row-odd"><td><p>General Telemetry</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (10h)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>1</p></td>
+<td><p>Source callsign (“ PY0EFS”)</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>8</p></td>
+<td><p>System time in seconds (Unix epoch)</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>12</p></td>
+<td><p>Temperature of the OBDH <span class="math notranslate nohighlight">\(\mu\)</span>C in Kelvin</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>14</p></td>
+<td><p>Input current of the OBDH in mA</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>16</p></td>
+<td><p>Input voltage of the OBDH in mV</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>18</p></td>
+<td><p>Last reset cause of the OBDH</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>19</p></td>
+<td><p>Reset counter of the OBDH</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>21</p></td>
+<td><p>Last valid telecommand (uplink packet ID)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>22</p></td>
+<td><p>Temperature of the radio 1 in Kelvin</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>24</p></td>
+<td><p>RSSI of the last valid TC from radio 1</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>26</p></td>
+<td><p>Temperature of the antenna in Kelvin</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>28</p></td>
+<td><p>Antenna status</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>30</p></td>
+<td><p>Temperature of the EPS <span class="math notranslate nohighlight">\(\mu\)</span>C in K</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>32</p></td>
+<td><p>EPS circuitry and Beacon MCU current in mA</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>34</p></td>
+<td><p>Last reset cause of the EPS</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>35</p></td>
+<td><p>Reset counter (EPS)</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>37</p></td>
+<td><p>-Y and +X sides solar panel voltage in mV</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>39</p></td>
+<td><p>-X and +Z sides solar panel voltage in mV</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>41</p></td>
+<td><p>-Z and +Y sides solar panel voltage in mV</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>43</p></td>
+<td><p>-Y side solar panel current in mA</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>45</p></td>
+<td><p>+Y side solar panel current in mA</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>47</p></td>
+<td><p>-X side solar panel current in mA</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>49</p></td>
+<td><p>+X side solar panel current in mA</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>51</p></td>
+<td><p>-Z side solar panel current in mA</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>53</p></td>
+<td><p>+Z side solar panel current in mA</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>55</p></td>
+<td><p>MPPT 1 duty cycle in %</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>56</p></td>
+<td><p>MPPT 2 duty cycle in %</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>57</p></td>
+<td><p>MPPT 3 duty cycle in %</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>58</p></td>
+<td><p>Main power bus voltage in mV</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>60</p></td>
+<td><p>Batteries voltage in mV</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>62</p></td>
+<td><p>Batteries current in mA</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>64</p></td>
+<td><p>Batteries average current in mA</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>66</p></td>
+<td><p>Batteries accumulated current in mA</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>68</p></td>
+<td><p>Battery monitor IC temperature in K</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>70</p></td>
+<td><p>Battery heater 1 duty cycle in %</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>71</p></td>
+<td><p>Battery heater 2 duty cycle in %</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>72</p></td>
+<td><p>Main EDC (01h = EDC_1, 02h = EDC_2)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>73</p></td>
+<td><p>Main payload state (Payload ID or 0)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>74</p></td>
+<td><p>Secondary payload state (Payload ID or 0)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>75</p></td>
+<td><p>Number of used Data Log flash pages</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>79</p></td>
+<td><p>Number of used flash pages in SBCD packets sector</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>83</p></td>
+<td><p>Timestamp of the last OBDH sensor’s reading in sec.</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>87</p></td>
+<td><p>Timestamp of the last position determination in sec.</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>91</p></td>
+<td><p>Satellite’s latitude in degrees</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>93</p></td>
+<td><p>Satellite’s longitude in degrees</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>95</p></td>
+<td><p>Satellite’s altitude in km</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>97</p></td>
+<td><p>Timestamp of the last TLE line update in sec.</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>101</p></td>
+<td><p>Timestamp of the last TC reception in sec.</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>105</p></td>
+<td><p>Timestamp of next scheduled telecommand.</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>109</p></td>
+<td><p>TC queue size</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>110</p></td>
+<td><p>Operation mode</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td><p>111</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="uplink">
+<span id="sec-uplink-descr"></span><h2>Uplink<a class="headerlink" href="#uplink" title="Permalink to this heading"></a></h2>
+<p>As shown in <a class="reference internal" href="firmware.html#tab-packets-struct"><span class="std std-numref">Table 14</span></a>, there are 15 supported telecommands. Below there is a description of each one.</p>
+<ul class="simple">
+<li><p><strong>Ping Request:</strong> It is a simple command to test the communication with the satellite. When the satellite receives a ping packet, it will respond with another ping packet (with another packet ID, as defined in the downlink packets list). There are no additional parameters in the ping packet, just the packet ID and the source callsign (or address). It is also a public telecommand, anyone can send a ping request telecommand to a satellite.</p></li>
+<li><p><strong>Data Request:</strong> It is a command to download data from the satellite. This command allows a ground station to get specific parameters from a given period (stored in the non-volatile memory of the onboard computer of the satellite). The list of possible data packets varies according to the satellite, see <a class="reference internal" href="firmware.html#tab-system-ids"><span class="std std-numref">Table 15</span></a> for already implemented data IDs. The required fields of this telecommand are the data ID (1 byte), the start memory page and the end memory page. The memory pages are relative to the first page of module’s sector, meaning that if there is 15 pages of data from EPS and the operator wants to download all available pages, the start page should be 0 and end page should be 14. This is a private telecommand and requires a key for authentication, see <a class="reference internal" href="firmware.html#sec-hmac"><span class="std std-ref">Authentication</span></a> for more information about authentication.</p></li>
+<li><p><strong>Broadcast Message:</strong> The “broadcast message” is another public telecommand, no authentication or key is required to send this telecommand to a satellite. This command has the purpose of making a satellite transmit a custom message back to Earth. This can be useful for communication tasks, like a station sending data to another. There are two parameters in this telecommand: the destination callsign (or address), and the content of the message, which can be any sequence of ASCII characters or any byte value. There is a limit of 38 characters in the message field.</p></li>
+<li><p><strong>Enter Hibernation:</strong> This telecommand activates the hibernation mode in a satellite. During the hibernation mode, no transmissions are made by the satellite; it keeps just listening for new incoming packets (reception). The satellite will stay in hibernation mode for a custom period (1 to 65536 hours), or until a “Leave Hibernation” mode is received. Beyond the packet ID and the source callsign (or address), the number of hours (2 bytes long) is also transmitted. This is a private telecommand and requires a key for authentication, see <a class="reference internal" href="firmware.html#sec-hmac"><span class="std std-ref">Authentication</span></a> for more information about authentication.</p></li>
+<li><p><strong>Leave Hibernation:</strong> This telecommand complements the “enter hibernation” telecommand by deactivating the hibernation mode in the satellite. When a satellite receives this telecommand, it enables the transmission again immediately. This is also a private telecommand; a specific key is required to send it. There is no additional content to this telecommand packet, just the packet ID and the source callsign (or address). This is a private telecommand and requires a key for authentication, see <a class="reference internal" href="firmware.html#sec-hmac"><span class="std std-ref">Authentication</span></a> for more information about authentication.</p></li>
+<li><p><strong>Activate Module:</strong> It activates an internal module of the satellite. Each module has a unique ID that is passed as an argument of this telecommand’s packet, see <a class="reference internal" href="firmware.html#tab-system-ids"><span class="std std-numref">Table 15</span></a>. This is a private telecommand and requires a key for authentication, see <a class="reference internal" href="firmware.html#sec-hmac"><span class="std std-ref">Authentication</span></a> for more information about authentication.</p></li>
+<li><p><strong>Deactivate Module:</strong> It disables an internal module of the satellite. Each module has a unique ID that is passed as an argument of this telecommand’s packet, see <a class="reference internal" href="firmware.html#tab-system-ids"><span class="std std-numref">Table 15</span></a>. This is a private telecommand and requires a key for authentication, see <a class="reference internal" href="firmware.html#sec-hmac"><span class="std std-ref">Authentication</span></a> for more information about authentication.</p></li>
+<li><p><strong>Activate Payload:</strong> This one is similar to the telecommand “Activate Module”, but in this case is used for activating payloads of the satellite, see <a class="reference internal" href="firmware.html#tab-system-ids"><span class="std std-numref">Table 15</span></a> for already implemented payloads. Each satellite should have a list of IDs of the set of payloads. This is a private telecommand and requires a key for authentication, see <a class="reference internal" href="firmware.html#sec-hmac"><span class="std std-ref">Authentication</span></a> for more information about authentication.</p></li>
+<li><p><strong>Deactivate Payload:</strong> It is the same as the “Deactivate Module” telecommand, but for payloads. This is a private telecommand and requires a key for authentication, see <a class="reference internal" href="firmware.html#sec-hmac"><span class="std std-ref">Authentication</span></a> for more information about authentication.</p></li>
+<li><p><strong>Erase Memory:</strong> It erases all the content presented in the specified non-volatile memory of the onboard computer of a satellite. No additional content is required in a erase memory telecommand packet, just the packet ID, the source callsign (or address) and the memory ID, see <a class="reference internal" href="firmware.html#tab-system-ids"><span class="std std-numref">Table 15</span></a>. This is a private telecommand and requires a key for authentication, see <a class="reference internal" href="firmware.html#sec-hmac"><span class="std std-ref">Authentication</span></a> for more information about authentication.</p></li>
+<li><p><strong>Force Reset:</strong> It performs a general reset of the satellite modules. When received, the OBDH resets other subsystem, then reset itself. There is no additional content in this packet, just the packet ID and the source callsign (or address). This is a private telecommand and requires a key for authentication, see <a class="reference internal" href="firmware.html#sec-hmac"><span class="std std-ref">Authentication</span></a> for more information about authentication.</p></li>
+<li><p><strong>Get Subsystem Table:</strong> It allows a ground station to download data from a specific subsystem of the satellite. The only required field is the table ID. The IDs can be seen at <a class="reference internal" href="firmware.html#tab-system-ids"><span class="std std-numref">Table 15</span></a>. This is a private telecommand and requires a key for authentication, see <a class="reference internal" href="firmware.html#sec-hmac"><span class="std std-ref">Authentication</span></a> for more information about authentication.</p></li>
+<li><p><strong>Set Parameter:</strong> It allows the configuration of specific parameters of a given subsystem of the satellite. The required fields are the ID of the subsystem to set (1 byte), the ID of the parameter to set (1 byte), and the new value of the parameter (4 bytes long). The possible IDs (subsystem and parameter) vary according to the satellite. This is a private telecommand and requires a key for authentication, see <a class="reference internal" href="firmware.html#sec-hmac"><span class="std std-ref">Authentication</span></a> for more information about authentication.</p></li>
+<li><p><strong>Get Parameter:</strong> This telecommand complements the “Set Parameter” telecommand. It has the purpose of reading specific parameters of a given subsystem. The required fields are the subsystem’s ID (1 byte) and the parameter ID (1 byte). The possible IDs (subsystem and parameter) vary according to the satellite. This is a private telecommand and requires a key for authentication, see <a class="reference internal" href="firmware.html#sec-hmac"><span class="std std-ref">Authentication</span></a> for more information about authentication.</p></li>
+<li><p><strong>Transmit Packet:</strong> This command has the purpose of making a satellite transmit a custom message back to Earth. This can be useful for communication tasks, like a station sending data to another. It differs from “Broadcast Message” in frequency band and the removal of destination callsign. This is a private telecommand and requires a key for authentication, see <a class="reference internal" href="firmware.html#sec-hmac"><span class="std std-ref">Authentication</span></a> for more information about authentication.</p></li>
+<li><p><strong>Update TLE:</strong> This telecommand provides a way to update the satellite TLE lines, which are used for position determination, more about the format on the <a class="reference external" href="https://github.com/c-porto/libpredict/blob/master/include/predict/predict.h">libpredict implementation</a> used for position determination. This is a private telecommand and requires a key for authentication, see <a class="reference internal" href="firmware.html#sec-hmac"><span class="std std-ref">Authentication</span></a> for more information about authentication.</p></li>
+<li><p><strong>Schedule TC:</strong> This telecommand provides a way to schedule telecommands, which enable telecommand execution without ground station contact. This is a private telecommand and requires a key for authentication, see <a class="reference internal" href="firmware.html#sec-hmac"><span class="std std-ref">Authentication</span></a> for more information about authentication.</p></li>
+</ul>
+<p>The <a class="reference internal" href="#tab-uplink-packets"><span class="std std-numref">Table 25</span></a> presents the content of the uplink packets.</p>
+<div class="docutils container">
+<table class="docutils align-default" id="tab-uplink-packets">
+<caption><span class="caption-number">Table 25 </span><span class="caption-text">Uplink packets.</span><a class="headerlink" href="#tab-uplink-packets" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 12.0%" />
+<col style="width: 53.0%" />
+<col style="width: 15.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Packet</strong></p></th>
+<th class="head"><p><strong>Position</strong></p></th>
+<th class="head"><p><strong>Content</strong></p></th>
+<th class="head"><p><strong>Length [bytes]</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Ping request</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (40h)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>1</p></td>
+<td><p>Ground station callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td><p>8</p></td>
+</tr>
+<tr class="row-odd"><td><p>Data request</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (41h)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>1</p></td>
+<td><p>Ground station callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>8</p></td>
+<td><p>Data type ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>9</p></td>
+<td><p>Start memory page</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>13</p></td>
+<td><p>End memory page</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>17</p></td>
+<td><p>HMAC hash</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td><p>37</p></td>
+</tr>
+<tr class="row-even"><td><p>Broadcast message</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (42h)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>1</p></td>
+<td><p>Ground station callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>8</p></td>
+<td><p>Destination callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>15</p></td>
+<td><p>Message</p></td>
+<td><p>up to 38</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td><p>up to 53</p></td>
+</tr>
+<tr class="row-odd"><td><p>Enter hibernation</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (43h)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>1</p></td>
+<td><p>Ground station callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>8</p></td>
+<td><p>Hibernation in hours</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>10</p></td>
+<td><p>HMAC hash</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td><p>30</p></td>
+</tr>
+<tr class="row-even"><td><p>Leave hibernation</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (44h)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>1</p></td>
+<td><p>Ground station callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>8</p></td>
+<td><p>HMAC hash</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td><p>28</p></td>
+</tr>
+<tr class="row-even"><td><p>Activate module</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (45h)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>1</p></td>
+<td><p>Ground station callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>8</p></td>
+<td><p>Module ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>9</p></td>
+<td><p>HMAC hash</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td><p>29</p></td>
+</tr>
+<tr class="row-odd"><td><p>Deactivate module</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (46h)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>1</p></td>
+<td><p>Ground station callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>8</p></td>
+<td><p>Module ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>9</p></td>
+<td><p>HMAC hash</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td><p>29</p></td>
+</tr>
+<tr class="row-even"><td><p>Activate payload</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (47h)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>1</p></td>
+<td><p>Ground station callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>8</p></td>
+<td><p>Payload ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>9</p></td>
+<td><p>HMAC hash</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td><p>29</p></td>
+</tr>
+<tr class="row-odd"><td><p>Deactivate payload</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (48h)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>1</p></td>
+<td><p>Ground station callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>8</p></td>
+<td><p>Payload ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>9</p></td>
+<td><p>HMAC hash</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td><p>29</p></td>
+</tr>
+<tr class="row-even"><td><p>Erase memory</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (49h)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>1</p></td>
+<td><p>Ground station callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>8</p></td>
+<td><p>Memory ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>9</p></td>
+<td><p>HMAC hash</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td><p>29</p></td>
+</tr>
+<tr class="row-odd"><td><p>Force reset</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (4Ah)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>1</p></td>
+<td><p>Ground station callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>8</p></td>
+<td><p>HMAC hash</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td><p>28</p></td>
+</tr>
+<tr class="row-odd"><td><p>Get subsystem table</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (4Bh)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>1</p></td>
+<td><p>Ground station callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>8</p></td>
+<td><p>Table ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>9</p></td>
+<td><p>HMAC hash</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td><p>29</p></td>
+</tr>
+<tr class="row-even"><td><p>Set parameter</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (4Ch)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>1</p></td>
+<td><p>Ground station callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>8</p></td>
+<td><p>Subsystem ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>9</p></td>
+<td><p>Parameter ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>10</p></td>
+<td><p>Parameter value</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>14</p></td>
+<td><p>HMAC hash</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td><p>34</p></td>
+</tr>
+<tr class="row-odd"><td><p>Get parameter</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (4Dh)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>1</p></td>
+<td><p>Ground station callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>8</p></td>
+<td><p>Subsystem ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>9</p></td>
+<td><p>Parameter ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>10</p></td>
+<td><p>HMAC hash</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td><p>30</p></td>
+</tr>
+<tr class="row-odd"><td><p>Transmit Packet</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (4Eh)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>1</p></td>
+<td><p>Ground station callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>9</p></td>
+<td><p>Message</p></td>
+<td><p>up to 45</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>Var.</p></td>
+<td><p>HMAC hash</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td><p>up to 73</p></td>
+</tr>
+<tr class="row-even"><td><p>Update TLE</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (4Fh)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>1</p></td>
+<td><p>Ground station callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>8</p></td>
+<td><p>Binary TLE line</p></td>
+<td><p>50</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>58</p></td>
+<td><p>HMAC hash</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td><p>78</p></td>
+</tr>
+<tr class="row-odd"><td><p>Schedule TC</p></td>
+<td><p>0</p></td>
+<td><p>Packet ID (50h)</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>1</p></td>
+<td><p>Ground station callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>8</p></td>
+<td><p>Execution timestamp</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>12</p></td>
+<td><p>TC ID</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>13</p></td>
+<td><p>TC execution callsign</p></td>
+<td><p>7</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>20</p></td>
+<td><p>TC arguments</p></td>
+<td><p>up to 12</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>Var.</p></td>
+<td><p>HMAC hash</p></td>
+<td><p>20</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td><p>up to 52</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="telemetry.html" class="btn btn-neutral float-left" title="Telemetry Packets" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="test_report_v05.html" class="btn btn-neutral float-right" title="Test Report of v0.5 Version" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright The OBDH 2.0 Contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

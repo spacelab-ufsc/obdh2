@@ -1,0 +1,1042 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Telemetry Packets &mdash; OBDH 2.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=09c281a4" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=99a04888"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Telecommunication Description" href="packets.html" />
+    <link rel="prev" title="References" href="references.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system_overview.html">System Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html">Hardware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">Firmware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assembly.html">Board Assembly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instructions.html">Usage Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Telemetry Packets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#edc-information">EDC Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#obdh-information">OBDH Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#eps-information">EPS Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ttc-information">TTC Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#antenna-information">Antenna Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sbcd-packets">SBCD Packets</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="packets.html">Telecommunication Description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_report_v05.html">Test Report of v0.5 Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_report_v07.html">Test Report of v0.7 Version</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">obdh2</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Telemetry Packets</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/telemetry.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="telemetry-packets">
+<span id="anx-telemetry-apx"></span><h1>Telemetry Packets<a class="headerlink" href="#telemetry-packets" title="Permalink to this heading"></a></h1>
+<p>This appendix lists all the telemetry packets that OBDH can transmit upon telecommand request by the RF links. The fields and length of each type of packet is also presented.</p>
+<section id="edc-information">
+<h2>EDC Information<a class="headerlink" href="#edc-information" title="Permalink to this heading"></a></h2>
+<p>Telemetry packages from EDC can be seen in <a class="reference internal" href="#tab-telemetry-edc"><span class="std std-numref">Table 18</span></a>. This data can be requested through the “Get Payload Data” and “Data Request” telecommands, for more information about them see <a class="reference internal" href="firmware.html#sec-telecommands"><span class="std std-ref">Telecommands</span></a>. PTT packets from the Sistema Brasileiro de Coleta de Dados (SBCD) are seen in <a class="reference internal" href="#tab-telemetry-sbcd"><span class="std std-numref">Table 23</span></a>.</p>
+<div class="docutils container">
+<table class="docutils align-default" id="tab-telemetry-edc">
+<caption><span class="caption-number">Table 18 </span><span class="caption-text">EDC information packet.</span><a class="headerlink" href="#tab-telemetry-edc" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 55.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Position</strong></p></th>
+<th class="head"><p><strong>Content</strong></p></th>
+<th class="head"><p><strong>Data type</strong></p></th>
+<th class="head"><p><strong>Len. [bytes]</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>System time on which EDC data was last read</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>HK Info</strong></p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>Time of EDC housekeeping reading since J2000 epoch</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p>Elapsed time since last reset</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>12</p></td>
+<td><p>Digital circuitry current supply in mA</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>12</p></td>
+<td><p>Analog circuitry supply in mA</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>16</p></td>
+<td><p>System voltage supply in mV</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>18</p></td>
+<td><p>EDC board temperature + <span class="math notranslate nohighlight">\(40\)</span> in Celsius</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>19</p></td>
+<td><p>RF front end LO…</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>20</p></td>
+<td><p>RMS level at front-end output</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>22</p></td>
+<td><p>Generated PTT packages since</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>26</p></td>
+<td><p>Maximum number of active PTT decoder channels</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>27</p></td>
+<td><p>Number of double bit errors detected</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>System State</strong></p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>28</p></td>
+<td><p>Time of EDC state reading since J2000 epoch</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>32</p></td>
+<td><p>Number of PTT Package available for reading</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>33</p></td>
+<td><p>PTT decoder task status</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>34</p></td>
+<td><p>ADC sampler state</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>35</p></td>
+<td><p>Payload ID (EDC_1 or EDC_2)</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>Total</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>36</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="obdh-information">
+<h2>OBDH Information<a class="headerlink" href="#obdh-information" title="Permalink to this heading"></a></h2>
+<p>Telemetry packages from OBDH can be seen in <a class="reference internal" href="#tab-telemetry-obdh"><span class="std std-numref">Table 19</span></a>. This data can be requested through the “Data Request” telecommands, for more information about it, see <a class="reference internal" href="firmware.html#sec-telecommands"><span class="std std-ref">Telecommands</span></a>.</p>
+<div class="docutils container">
+<table class="docutils align-default" id="tab-telemetry-obdh">
+<caption><span class="caption-number">Table 19 </span><span class="caption-text">OBDH data packet.</span><a class="headerlink" href="#tab-telemetry-obdh" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 55.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Position</strong></p></th>
+<th class="head"><p><strong>Content</strong></p></th>
+<th class="head"><p><strong>Data type</strong></p></th>
+<th class="head"><p><strong>Len. [bytes]</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>System time</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mu\)</span>C temperature in Kelvin</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>6</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mu\)</span>C current supply in mA</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>8</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mu\)</span>C voltage supply in mV</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>10</p></td>
+<td><p>Reset counter</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>12</p></td>
+<td><p>Last reset cause ID</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>13</p></td>
+<td><p>Last valid TC ID</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>14</p></td>
+<td><p>Antenna deployment attempts counter</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>15</p></td>
+<td><p>Initial hibernation time count (minutes)</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>16</p></td>
+<td><p>Hardware version</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>17</p></td>
+<td><p>Firmware version</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>21</p></td>
+<td><p>Operation mode</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>22</p></td>
+<td><p>System time of last mode change</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>26</p></td>
+<td><p>Current operation mode duration</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>30</p></td>
+<td><p>Initial hibernation executed</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>31</p></td>
+<td><p>Antenna deployment executed</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>32</p></td>
+<td><p>Hibernation enabled</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>33</p></td>
+<td><p>Current main EDC</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>34</p></td>
+<td><p>General telemetry state</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>35</p></td>
+<td><p>Data log last written flash page</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>39</p></td>
+<td><p>SBCD packets last written flash page</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>43</p></td>
+<td><p>Last position determination timestamp</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>47</p></td>
+<td><p>Satellite’s latitude</p></td>
+<td><p>int16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>49</p></td>
+<td><p>Satellite’s longitude</p></td>
+<td><p>int16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>51</p></td>
+<td><p>Satellite’s altitude</p></td>
+<td><p>int16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>53</p></td>
+<td><p>Last TLE update timestamp</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>57</p></td>
+<td><p>Last sensor readings timestamp</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>61</p></td>
+<td><p>Main payload state</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>62</p></td>
+<td><p>Secondary payload state</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>63</p></td>
+<td><p>Remaining hibernation time in sec.</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>67</p></td>
+<td><p>Timestamp of the last TC reception in sec.</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>71</p></td>
+<td><p>Battery critical level threshold in mV</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>73</p></td>
+<td><p>Last valid mode transition event ID</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>75</p></td>
+<td><p>Experiment enable mode</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>76</p></td>
+<td><p>EPS beacon enabled</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>77</p></td>
+<td><p>Timestamp when commission mode will timeout</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>81</p></td>
+<td><p>Next scheduled TC execution timestamp</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>85</p></td>
+<td><p>TC queue size</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>86</p></td>
+<td><p>Binary TLE</p></td>
+<td><p>uint8[]</p></td>
+<td><p>50</p></td>
+</tr>
+<tr class="row-odd"><td><p>Total</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>136</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="eps-information">
+<h2>EPS Information<a class="headerlink" href="#eps-information" title="Permalink to this heading"></a></h2>
+<p>Telemetry packages from EPS can be seen in <a class="reference internal" href="#tab-telemetry-eps"><span class="std std-numref">Table 20</span></a>. This data can be requested through the “Data Request” telecommands, for more information about it, see <a class="reference internal" href="firmware.html#sec-telecommands"><span class="std std-ref">Telecommands</span></a>.</p>
+<div class="docutils container">
+<table class="docutils align-default" id="tab-telemetry-eps">
+<caption><span class="caption-number">Table 20 </span><span class="caption-text">EPS data packet.</span><a class="headerlink" href="#tab-telemetry-eps" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 55.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Position</strong></p></th>
+<th class="head"><p><strong>Content</strong></p></th>
+<th class="head"><p><strong>Data type</strong></p></th>
+<th class="head"><p><strong>Len. [bytes]</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>System time on which EPS was last read</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>EPS system time</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>8</p></td>
+<td><p>EPS <span class="math notranslate nohighlight">\(\mu\)</span>C temperature in Kelvin</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>EPS Circ. and Beacon <span class="math notranslate nohighlight">\(\mu\)</span> current in mA</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>12</p></td>
+<td><p>Last reset cause ID</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>13</p></td>
+<td><p>Reset counter</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>15</p></td>
+<td><p>Solar panel -Y +X voltage in mV</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>17</p></td>
+<td><p>Solar panel -X +Z voltage in mV</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>19</p></td>
+<td><p>Solar panel -Z +Y voltage in mV</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>21</p></td>
+<td><p>Solar panel +X current in mA</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>23</p></td>
+<td><p>Solar panel -X current in mA</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>25</p></td>
+<td><p>Solar panel +Y current in mA</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>27</p></td>
+<td><p>Solar panel -Y current in mA</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>29</p></td>
+<td><p>Solar panel +Z current in mA</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>31</p></td>
+<td><p>Solar panel -Z current in mA</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>33</p></td>
+<td><p>MPPT 1 duty cycle in %</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>34</p></td>
+<td><p>MPPT 2 duty cycle in %</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>35</p></td>
+<td><p>MPPT 3 duty cycle in %</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>36</p></td>
+<td><p>Total solar panels output voltage after MPPT in mV</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>38</p></td>
+<td><p>Main power bus voltage in mV</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>40</p></td>
+<td><p>RTD0 temperature in K</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>42</p></td>
+<td><p>RTD1 temperature in K</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>44</p></td>
+<td><p>RTD2 temperature in K</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>46</p></td>
+<td><p>RTD3 temperature in K</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>48</p></td>
+<td><p>RTD4 temperature in K</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>50</p></td>
+<td><p>RTD5 temperature in K</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>52</p></td>
+<td><p>RTD6 temperature in K</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>54</p></td>
+<td><p>Battery voltage in mV</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>56</p></td>
+<td><p>Battery current in mA</p></td>
+<td><p>int16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>58</p></td>
+<td><p>Battery average current in mA</p></td>
+<td><p>int16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>60</p></td>
+<td><p>Battery accumulated current in mA</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>62</p></td>
+<td><p>Battery charge in mAh</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>64</p></td>
+<td><p>Battery monitor temperatura in Ke</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>66</p></td>
+<td><p>Battery monitor status register</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>67</p></td>
+<td><p>Battery monitor protection register</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>68</p></td>
+<td><p>Battery monitor cycle counter</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>69</p></td>
+<td><p>Battery monitor RAAC in mAh</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>71</p></td>
+<td><p>Battery monitor RSAC in mAh</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>73</p></td>
+<td><p>Battery monitor RARC in %</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>74</p></td>
+<td><p>Battery monitor RSRC in %</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>75</p></td>
+<td><p>Battery heater 1 duty cycle in %</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>77</p></td>
+<td><p>Battery heater 2 duty cycle in %</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>79</p></td>
+<td><p>MPPT 1 mode</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>80</p></td>
+<td><p>MPPT 2 mode</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>81</p></td>
+<td><p>MPPT 3 mode</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>82</p></td>
+<td><p>Battery heater 1 mode</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>83</p></td>
+<td><p>Battery heater 2 mode</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>Total</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>84</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="ttc-information">
+<h2>TTC Information<a class="headerlink" href="#ttc-information" title="Permalink to this heading"></a></h2>
+<p>Telemetry packages from TTC can be seen in <a class="reference internal" href="#tab-telemetry-ttc"><span class="std std-numref">Table 21</span></a>. This data can be requested through the “Data Request” telecommands, for more information about it, see <a class="reference internal" href="firmware.html#sec-telecommands"><span class="std std-ref">Telecommands</span></a>.</p>
+<div class="docutils container">
+<table class="docutils align-default" id="tab-telemetry-ttc">
+<caption><span class="caption-number">Table 21 </span><span class="caption-text">TTC data packet.</span><a class="headerlink" href="#tab-telemetry-ttc" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 55.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Position</strong></p></th>
+<th class="head"><p><strong>Content</strong></p></th>
+<th class="head"><p><strong>Data type</strong></p></th>
+<th class="head"><p><strong>Len. [bytes]</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>System time on which TTC was last read</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>TTC system time</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>8</p></td>
+<td><p>Reset counter</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>10</p></td>
+<td><p>Last reset cause ID</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>11</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mu\)</span>C voltage supply in mV</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>13</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mu\)</span>C current supply in mA</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>15</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mu\)</span>C temperature in Kelvin</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>17</p></td>
+<td><p>Input voltage of the radio in mV</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>19</p></td>
+<td><p>Input current of the radio in mA</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>21</p></td>
+<td><p>Temperature of the radio in K</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>23</p></td>
+<td><p>Last valid telecommand (uplink packet ID)</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>24</p></td>
+<td><p>RSSI of the last valid telecommand.</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>26</p></td>
+<td><p>Temperature of the antenna module in K</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-odd"><td><p>28</p></td>
+<td><p>Antenna status</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>30</p></td>
+<td><p>Antenna deployment status</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>31</p></td>
+<td><p>Antenna deploymaent hibernation status</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>32</p></td>
+<td><p>TX packet counter</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>36</p></td>
+<td><p>RX packet counter</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-even"><td><p>Total</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>40</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="antenna-information">
+<h2>Antenna Information<a class="headerlink" href="#antenna-information" title="Permalink to this heading"></a></h2>
+<p>Telemetry packages from Antenna can be seen in <a class="reference internal" href="#tab-telemetry-antenna"><span class="std std-numref">Table 22</span></a>. This data can be requested through the “Data Request” telecommands, for more information about it, see <a class="reference internal" href="firmware.html#sec-telecommands"><span class="std std-ref">Telecommands</span></a>.</p>
+<div class="docutils container">
+<table class="docutils align-default" id="tab-telemetry-antenna">
+<caption><span class="caption-number">Table 22 </span><span class="caption-text">Antenna data packet.</span><a class="headerlink" href="#tab-telemetry-antenna" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 55.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Position</strong></p></th>
+<th class="head"><p><strong>Content</strong></p></th>
+<th class="head"><p><strong>Data type</strong></p></th>
+<th class="head"><p><strong>Len. [bytes]</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>System time on which TTC was last read</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>Antenna status code</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>6</p></td>
+<td><p>Antenna 1 status</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>7</p></td>
+<td><p>Antenna 1 timeout</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>8</p></td>
+<td><p>Antenna 1 burning</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>9</p></td>
+<td><p>Antenna 2 status</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>10</p></td>
+<td><p>Antenna 2 timeout</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>11</p></td>
+<td><p>Antenna 2 burning</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>12</p></td>
+<td><p>Antenna 3 status</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>13</p></td>
+<td><p>Antenna 3 timeout</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>14</p></td>
+<td><p>Antenna 3 burning</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>15</p></td>
+<td><p>Antenna 4 status</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>16</p></td>
+<td><p>Antenna 4 timeout</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>17</p></td>
+<td><p>Antenna 4 burning</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>18</p></td>
+<td><p>Antenna ignoring switches</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>19</p></td>
+<td><p>Antenna independent burn</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>20</p></td>
+<td><p>Antenna armed</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>21</p></td>
+<td><p>Antenna temperature</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>Total</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>23</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="sbcd-packets">
+<h2>SBCD Packets<a class="headerlink" href="#sbcd-packets" title="Permalink to this heading"></a></h2>
+<p>Telemetry packages from the SBCD can be seen in <a class="reference internal" href="#tab-telemetry-sbcd"><span class="std std-numref">Table 23</span></a>. This data can be requested through the “Data Request” telecommands, for more information about it, see <a class="reference internal" href="firmware.html#sec-telecommands"><span class="std std-ref">Telecommands</span></a>.</p>
+<div class="docutils container">
+<table class="docutils align-default" id="tab-telemetry-sbcd">
+<caption><span class="caption-number">Table 23 </span><span class="caption-text">SBCD PTT data packet.</span><a class="headerlink" href="#tab-telemetry-sbcd" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 15.0%" />
+<col style="width: 55.0%" />
+<col style="width: 15.0%" />
+<col style="width: 15.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Position</strong></p></th>
+<th class="head"><p><strong>Content</strong></p></th>
+<th class="head"><p><strong>Data type</strong></p></th>
+<th class="head"><p><strong>Len. [bytes]</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>PTT signal receiving time (J2000 epoch)</p></td>
+<td><p>uint32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>PTT Error code</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>Carrier frequency</p></td>
+<td><p>int32</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p>9</p></td>
+<td><p>Carrier amplitude at ADC interface output</p></td>
+<td><p>uint16</p></td>
+<td><p>2</p></td>
+</tr>
+<tr class="row-even"><td><p>11</p></td>
+<td><p>User messsage length in bytes</p></td>
+<td><p>uint8</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>12</p></td>
+<td><p>User message</p></td>
+<td><p>uint8[ ]</p></td>
+<td><p>1 to 36</p></td>
+</tr>
+<tr class="row-even"><td><p>Total</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>12 to 48</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="references.html" class="btn btn-neutral float-left" title="References" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="packets.html" class="btn btn-neutral float-right" title="Telecommunication Description" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright The OBDH 2.0 Contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

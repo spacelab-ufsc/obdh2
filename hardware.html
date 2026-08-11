@@ -1,0 +1,1242 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hardware &mdash; OBDH 2.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=09c281a4" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=99a04888"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Firmware" href="firmware.html" />
+    <link rel="prev" title="System Overview" href="system_overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system_overview.html">System Overview</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Hardware</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#interfaces">Interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#external-connectors">External Connectors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pc-104">PC-104</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#antenna-module">Antenna Module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#programmer-and-debug">Programmer and Debug</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#daughterboard">Daughterboard</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#guidelines">Guidelines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#microcontroller">Microcontroller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#interfaces-configuration">Interfaces Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clocks-configuration">Clocks Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pinout">Pinout</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#external-watchdog">External Watchdog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#non-volatile-memories">Non-Volatile Memories</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#flash-nor">Flash NOR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fram">FRAM</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#i2c-buffers">I2C Buffers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rs-485-transceiver">RS-485 Transceiver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#voltage-and-current-sensors">Voltage and Current Sensors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">Firmware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assembly.html">Board Assembly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instructions.html">Usage Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="telemetry.html">Telemetry Packets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packets.html">Telecommunication Description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_report_v05.html">Test Report of v0.5 Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_report_v07.html">Test Report of v0.7 Version</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">obdh2</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Hardware</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/hardware.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+  .ss-layout-default-AB_CC { grid-template-areas: 'A B' 'C C'; }
+  .ss-layout-default-AB { grid-template-areas: 'A B'; }
+@media (max-width: 576px) {
+  .ss-layout-sm-A_B { grid-template-areas: 'A' 'B'; }
+}
+</style>
+<section id="hardware">
+<span id="ch-hardware"></span><h1>Hardware<a class="headerlink" href="#hardware" title="Permalink to this heading"></a></h1>
+<p>The OBDH 2.0 architecture focuses on the low-power operation and low-cost production, maintaining performance and proposing different approaches to increase overall reliability. Therefore, the board was developed using these criteria, and the changes from the original design were necessary to improve bottlenecks and achieve the requirements of the further space mission. The <a class="reference internal" href="system_overview.html#fig-block-diagram"><span class="std std-numref">Fig. 3</span></a> presents the module architecture from the hardware perspective, including the main PCB components and interfaces: microcontroller, buffers, transceivers, memory, watchdog and voltage monitor, and connectors. The following sections describe the hardware design, interfaces, and standards in detail. The <a class="reference internal" href="#fig-pcb-views"><span class="std std-numref">Fig. 11</span></a> present 3D-rendered images of the top, bottom, and side views of the board, respectively.</p>
+<figure class="sphinx-subfigure align-center" id="fig-pcb-views">
+<div class="sphinx-subfigure-grid ss-layout-default-AB_CC outline" style="display: grid; gap: 8px; grid-gap: 8px;">
+<div class="sphinx-subfigure-area" style="display: flex; flex-direction: column; justify-content: center; align-items: center; grid-area: A;">
+<a class="reference internal image-reference" href="_images/obdh2-pcb-top.png"><img alt="Top view." class="align-center" src="_images/obdh2-pcb-top.png" style="width: 98%;" /></a>
+<span class="caption">Top view.</span>
+</div>
+<div class="sphinx-subfigure-area" style="display: flex; flex-direction: column; justify-content: center; align-items: center; grid-area: B;">
+<a class="reference internal image-reference" href="_images/obdh2-pcb-bottom.png"><img alt="Bottom view." class="align-center" src="_images/obdh2-pcb-bottom.png" style="width: 98%;" /></a>
+<span class="caption">Bottom view.</span>
+</div>
+<div class="sphinx-subfigure-area" style="display: flex; flex-direction: column; justify-content: center; align-items: center; grid-area: C;">
+<a class="reference internal image-reference" href="_images/obdh2-pcb-side.png"><img alt="Side view." class="align-center" src="_images/obdh2-pcb-side.png" style="width: 50%;" /></a>
+<span class="caption">Side view.</span>
+</div>
+</div>
+<figcaption>
+<p><span class="caption-number">Fig. 11 </span><span class="caption-text">Views of the PCB.</span><a class="headerlink" href="#fig-pcb-views" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<section id="interfaces">
+<h2>Interfaces<a class="headerlink" href="#interfaces" title="Permalink to this heading"></a></h2>
+<p>The <a class="reference internal" href="#fig-diagram-interfaces"><span class="std std-numref">Fig. 12</span></a> presents the board interfaces, which consist of communication with other modules, debug access points, and internal peripherals. From the perspective of the microcontroller, there are 6 individual and shared communication buses and the JTAG interface in the following scheme: A0-SPI (shared with Radio, TTC, and external memory chip); A1-UART (shared with redundant payloads); A2-UART (dedicated for debugging); B0-I2C (dedicated for the payload); B1-I2C (dedicated for the EPS); B2-I2C (dedicated for the Antenna module). Currently, “<em>Payload 1</em>” and “<em>Payload 2</em>” are “<em>Radiation instrument</em>” and “<em>Payload EDC</em>” respectively.</p>
+<figure class="align-center" id="fig-diagram-interfaces">
+<a class="reference internal image-reference" href="_images/diagram_interfaces.png"><img alt="_images/diagram_interfaces.png" src="_images/diagram_interfaces.png" style="width: 80%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 12 </span><span class="caption-text">Interfaces diagram.</span><a class="headerlink" href="#fig-diagram-interfaces" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="docutils container">
+<table class="docutils align-center" id="tab-interfaces">
+<caption><span class="caption-number">Table 1 </span><span class="caption-text">Boards interfaces.</span><a class="headerlink" href="#tab-interfaces" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 28.0%" />
+<col style="width: 12.0%" />
+<col style="width: 22.0%" />
+<col style="width: 38.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Peripheral</strong></p></th>
+<th class="head"><p><strong>USCI</strong></p></th>
+<th class="head"><p><strong>Protocol</strong></p></th>
+<th class="head"><p><strong>Comm. Protocol</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>TTC</p></td>
+<td><p>A0</p></td>
+<td><p>SPI</p></td>
+<td><p>Register read/write</p></td>
+</tr>
+<tr class="row-odd"><td><p>Radio (downlink/link)</p></td>
+<td><p>A0</p></td>
+<td><p>SPI</p></td>
+<td><p>Radio config./NGHam</p></td>
+</tr>
+<tr class="row-even"><td><p>NOR Memory</p></td>
+<td><p>A0</p></td>
+<td><p>SPI</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>FRAM Memory</p></td>
+<td><p>A0</p></td>
+<td><p>SPI</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>Payload port</p></td>
+<td><p>A1</p></td>
+<td><p>UART</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>PC (log messages)</p></td>
+<td><p>A2</p></td>
+<td><p>UART</p></td>
+<td><p>ANSI messages</p></td>
+</tr>
+<tr class="row-even"><td><p>Payload port</p></td>
+<td><p>B0</p></td>
+<td><p>I<span class="math notranslate nohighlight">\(^{2}\)</span>C</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>EPS</p></td>
+<td><p>B1</p></td>
+<td><p>I<span class="math notranslate nohighlight">\(^{2}\)</span>C</p></td>
+<td><p>Register read/write</p></td>
+</tr>
+<tr class="row-even"><td><p>Antenna Module</p></td>
+<td><p>B2</p></td>
+<td><p>I<span class="math notranslate nohighlight">\(^{2}\)</span>C</p></td>
+<td><p>-</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="external-connectors">
+<h2>External Connectors<a class="headerlink" href="#external-connectors" title="Permalink to this heading"></a></h2>
+<p>The external interfaces are connected to the microcontroller using different connector types: EPS, TTC, Radio, and Payloads through PC-104; Antenna module with 6H header and 6P picoblade connectors; JTAG through 14H header and 6P picoblade connectors; and debug access using a dedicated 2H header and shared with the JTAG connectors. The following topics describe these interfaces and present the pinout of the connectors.</p>
+<section id="pc-104">
+<span id="sec-pc104"></span><h3>PC-104<a class="headerlink" href="#pc-104" title="Permalink to this heading"></a></h3>
+<p>The connector PC-104 is a junction of two double-row 28H headers (<em>SSW-126-04-G-D</em>). These connectors create a solid 104-pin interconnection across the different satellite modules. The <a class="reference internal" href="#fig-pc-104-scheme"><span class="std std-numref">Fig. 13</span></a> shows the PC-104 interface from the bottom side of the PCB, which allows visualizing the simplified label scheme in the board. Also, the <a class="reference internal" href="#tab-pc104-pins"><span class="std std-numref">Table 2</span></a> provides the connector pinout <a class="footnote-reference brackets" href="#id6" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> for the pins that are connected to the module.</p>
+<figure class="align-center" id="fig-pc-104-scheme">
+<a class="reference internal image-reference" href="_images/pc-104-scheme.png"><img alt="_images/pc-104-scheme.png" src="_images/pc-104-scheme.png" style="width: 75.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 13 </span><span class="caption-text">Bottom view of PC-104 and simplified labels</span><a class="headerlink" href="#fig-pc-104-scheme" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="docutils container">
+<table class="docutils align-default" id="tab-pc104-pins">
+<caption><span class="caption-number">Table 2 </span><span class="caption-text">PC-104 connector pinout.</span><a class="headerlink" href="#tab-pc104-pins" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 12.0%" />
+<col style="width: 22.0%" />
+<col style="width: 22.0%" />
+<col style="width: 22.0%" />
+<col style="width: 22.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Pin [A-B]</strong></p></th>
+<th class="head"><p><strong>H1A</strong></p></th>
+<th class="head"><p><strong>H1B</strong></p></th>
+<th class="head"><p><strong>H2A</strong></p></th>
+<th class="head"><p><strong>H2B</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1-2</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>3-4</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>GPIO_4</p></td>
+<td><p>GPIO_5</p></td>
+</tr>
+<tr class="row-even"><td><p>5-6</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>7-8</p></td>
+<td><p>GPIO_0</p></td>
+<td><p>GPIO_1</p></td>
+<td><p>-</p></td>
+<td><p>GPIO_6</p></td>
+</tr>
+<tr class="row-even"><td><p>9-10</p></td>
+<td><p>GPIO_2</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>11-12</p></td>
+<td><p>GPIO_3</p></td>
+<td><p>GPIO_7</p></td>
+<td><p>SPI_0_MOSI</p></td>
+<td><p>SPI_0_CLK</p></td>
+</tr>
+<tr class="row-even"><td><p>13-14</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>SPI_0_CS_1</p></td>
+<td><p>SPI_0_MISO</p></td>
+</tr>
+<tr class="row-odd"><td><p>15-16</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>17-18</p></td>
+<td><p>UART_1_RX</p></td>
+<td><p>GPIO_8</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>19-20</p></td>
+<td><p>UART_1_TX</p></td>
+<td><p>GPIO_9</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>21-22</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>23-24</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>25-26</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>27-28</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>29-30</p></td>
+<td><p>GND</p></td>
+<td><p>GND</p></td>
+<td><p>GND</p></td>
+<td><p>GND</p></td>
+</tr>
+<tr class="row-odd"><td><p>31-32</p></td>
+<td><p>GND</p></td>
+<td><p>GND</p></td>
+<td><p>GND</p></td>
+<td><p>GND</p></td>
+</tr>
+<tr class="row-even"><td><p>33-34</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>35-36</p></td>
+<td><p>SPI_0_CLK</p></td>
+<td><p>-</p></td>
+<td><p>VCC_3V3_ANT</p></td>
+<td><p>VCC_3V3_ANT</p></td>
+</tr>
+<tr class="row-even"><td><p>37-38</p></td>
+<td><p>SPI_0_MISO</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>39-40</p></td>
+<td><p>SPI_0_MOSI</p></td>
+<td><p>SPI_0_CS_0</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>41-42</p></td>
+<td><p>I2C_0_SDA</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>43-44</p></td>
+<td><p>I2C_0_SCL</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>45-46</p></td>
+<td><p>VCC_3V3</p></td>
+<td><p>VCC_3V3</p></td>
+<td><p>VCC_BAT</p></td>
+<td><p>VCC_BAT</p></td>
+</tr>
+<tr class="row-odd"><td><p>47-48</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>49-50</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>I2C_1_SDA</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>51-52</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+<td><p>I2C_1_SCL</p></td>
+<td><p>-</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="antenna-module">
+<h3>Antenna Module<a class="headerlink" href="#antenna-module" title="Permalink to this heading"></a></h3>
+<p>The communication with the Antenna module is performed through the external connectors presented in <a class="reference internal" href="#fig-ant-connectors"><span class="std std-numref">Fig. 14</span></a>. The P5 connector (6H header) is used for development, while P4 (6P PicoBlade) is used for the flight model. Both connectors provide the same dedicated I2C, power-supply, and GPIO interface described in <a class="reference internal" href="#tab-antenna-connector-pins"><span class="std std-numref">Table 3</span></a>.</p>
+<table class="docutils align-center" id="tab-antenna-connector-pins">
+<caption><span class="caption-number">Table 3 </span><span class="caption-text">Antenna module connectors pinout.</span><a class="headerlink" href="#tab-antenna-connector-pins" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 36.4%" />
+<col style="width: 63.6%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Pin</strong></p></th>
+<th class="head"><p><strong>Row</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>VCC_3V3_ANT</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>VCC_3V3_ANT</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>I2C_SDA</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>I2C_SCL</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>GPIO</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>GND</p></td>
+</tr>
+</tbody>
+</table>
+<figure class="sphinx-subfigure align-center" id="fig-ant-connectors">
+<div class="sphinx-subfigure-grid ss-layout-default-AB ss-layout-sm-A_B" style="display: grid; gap: 8px; grid-gap: 8px;">
+<div class="sphinx-subfigure-area" style="display: flex; flex-direction: column; justify-content: center; align-items: center; grid-area: A;">
+<a class="reference internal image-reference" href="_images/p5-connector.png"><img alt="Debug interface of the antenna module." class="align-center" src="_images/p5-connector.png" style="width: 50.0%;" /></a>
+<span class="caption">Debug interface of the antenna module.</span>
+</div>
+<div class="sphinx-subfigure-area" style="display: flex; flex-direction: column; justify-content: center; align-items: center; grid-area: B;">
+<a class="reference internal image-reference" href="_images/p4-connector.png"><img alt="Main interface of the antenna module." class="align-center" src="_images/p4-connector.png" style="width: 50.0%;" /></a>
+<span class="caption">Main interface of the antenna module.</span>
+</div>
+</div>
+<figcaption>
+<p><span class="caption-number">Fig. 14 </span><span class="caption-text">Antenna module connectors: development header (left) and flight-model PicoBlade (right).</span><a class="headerlink" href="#fig-ant-connectors" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="programmer-and-debug">
+<span id="sec-programer-and-debug"></span><h3>Programmer and Debug<a class="headerlink" href="#programmer-and-debug" title="Permalink to this heading"></a></h3>
+<p>The interface with the microcontroller programmer is performed through external connectors, which are presented in the <a class="reference internal" href="#fig-jtag-connectors"><span class="std std-numref">Fig. 15</span></a>. Both connectors have the same JTAG and UART interfaces. However, the 14H header is used during development, and the 6P picoblade (provides a more compact and reliable attachment) as the connector for the flight model, which is described in the <a class="reference internal" href="#tab-jtag-header-connector-pins"><span class="std std-numref">Table 4</span></a> and <a class="reference internal" href="#tab-jtag-picoblade-connector-pins"><span class="std std-numref">Table 5</span></a>, respectively. This interface consists of a dedicated debug UART, a JTAG, and an external power supply. The debug UART connection has another access point in a dedicated 2H header (P7), as shown in <a class="reference internal" href="#fig-uart-debug-connector"><span class="std std-numref">Fig. 16</span></a>. Also, to use this external supply, it is necessary to connect both pins of a 2H header jumper (P6).</p>
+<figure class="align-center" id="fig-jtag-connectors">
+<a class="reference internal image-reference" href="_images/jtag-connector.png"><img alt="_images/jtag-connector.png" src="_images/jtag-connector.png" style="width: 70.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 15 </span><span class="caption-text">Programmer (P1 and P2) and jumper (P6) connectors.</span><a class="headerlink" href="#fig-jtag-connectors" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="compacttable60 docutils container">
+<table class="docutils align-center" id="tab-jtag-header-connector-pins">
+<caption><span class="caption-number">Table 4 </span><span class="caption-text">Programmer header connector pinout.</span><a class="headerlink" href="#tab-jtag-header-connector-pins" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 35.0%" />
+<col style="width: 35.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Pin [A-B]</strong></p></th>
+<th class="head"><p><strong>Row A</strong></p></th>
+<th class="head"><p><strong>Row B</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1-2</p></td>
+<td><p>TDO_TDI</p></td>
+<td><p>VCC_3V3</p></td>
+</tr>
+<tr class="row-odd"><td><p>3-4</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>5-6</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>7-8</p></td>
+<td><p>TCK</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>9-10</p></td>
+<td><p>GND</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>11-12</p></td>
+<td><p>-</p></td>
+<td><p>UART_TX</p></td>
+</tr>
+<tr class="row-even"><td><p>13-14</p></td>
+<td><p>-</p></td>
+<td><p>UART_RX</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<table class="docutils align-center" id="tab-jtag-picoblade-connector-pins">
+<caption><span class="caption-number">Table 5 </span><span class="caption-text">Programmer picoblade connector pinout.</span><a class="headerlink" href="#tab-jtag-picoblade-connector-pins" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 33.3%" />
+<col style="width: 66.7%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Pin</strong></p></th>
+<th class="head"><p><strong>Row</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>VCC_3V3</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>TDO_TDI</p></td>
+</tr>
+<tr class="row-even"><td><p>3</p></td>
+<td><p>TCK</p></td>
+</tr>
+<tr class="row-odd"><td><p>4</p></td>
+<td><p>UART_TX</p></td>
+</tr>
+<tr class="row-even"><td><p>5</p></td>
+<td><p>UART_RX</p></td>
+</tr>
+<tr class="row-odd"><td><p>6</p></td>
+<td><p>GND</p></td>
+</tr>
+</tbody>
+</table>
+<figure class="align-center" id="fig-uart-debug-connector">
+<a class="reference internal image-reference" href="_images/p7-connector.png"><img alt="_images/p7-connector.png" src="_images/p7-connector.png" style="width: 15.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 16 </span><span class="caption-text">Dedicated UART debug connectors (P7).</span><a class="headerlink" href="#fig-uart-debug-connector" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="daughterboard">
+<span id="sec-daughterboard-interface"></span><h3>Daughterboard<a class="headerlink" href="#daughterboard" title="Permalink to this heading"></a></h3>
+<p>The daughterboard interface uses the Samtec FSI-110-D connector <span id="id2">[<a class="reference internal" href="references.html#id5" title="Samtec. FSI-110-03-G-D-AD. 2020. Available at &lt;https://www.samtec.com/products/fsi-110-03-g-d-ad&gt;.">4</a>]</span>, which can be seen in the <a class="reference internal" href="#fig-samtec-connector"><span class="std std-numref">Fig. 17</span></a>. This connector has metal contacts in the format of flexible arcs and four polymer guide pins (a pair for the top and bottom). When the daughterboard is attached, there is some pressure on the metal contacts that bend and create a meaningful pin connection to the daughterboard copper pads <a class="footnote-reference brackets" href="#id7" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. A picture of this connector on the PCB can be seen in <a class="reference internal" href="#fig-daughterboard-connector"><span class="std std-numref">Fig. 18</span></a>.</p>
+<figure class="align-center" id="fig-samtec-connector">
+<a class="reference internal image-reference" href="_images/samtec_fsi-110-03-g-d-ad.jpeg"><img alt="_images/samtec_fsi-110-03-g-d-ad.jpeg" src="_images/samtec_fsi-110-03-g-d-ad.jpeg" style="width: 40.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 17 </span><span class="caption-text">Samtec FSI-110-03-G-D-AD connector.</span><a class="headerlink" href="#fig-samtec-connector" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="fig-daughterboard-connector">
+<a class="reference internal image-reference" href="_images/p3-connector.png"><img alt="_images/p3-connector.png" src="_images/p3-connector.png" style="width: 30.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 18 </span><span class="caption-text">Daughterboard connector (P3).</span><a class="headerlink" href="#fig-daughterboard-connector" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>The pinout of the daughterboard interface is available in the <a class="reference internal" href="#tab-daugtherboard-connector-pins"><span class="std std-numref">Table 6</span></a>. There are different power supply lines (OBDH, Antenna, and battery), communication buses (I2C and SPI), GPIO, and ADC interfaces available. Besides the GPIO and ADC pins, the other interfaces are shared with other modules and peripherals.</p>
+<div class="compacttable65 docutils container">
+<table class="docutils align-center" id="tab-daugtherboard-connector-pins">
+<caption><span class="caption-number">Table 6 </span><span class="caption-text">Daughterboard connector pinout.</span><a class="headerlink" href="#tab-daugtherboard-connector-pins" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 35.0%" />
+<col style="width: 35.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Pin [A-B]</strong></p></th>
+<th class="head"><p><strong>Row A</strong></p></th>
+<th class="head"><p><strong>Row B</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1-2</p></td>
+<td><p>VCC_3V3</p></td>
+<td><p>GND</p></td>
+</tr>
+<tr class="row-odd"><td><p>3-4</p></td>
+<td><p>VCC_3V3_ANT</p></td>
+<td><p>GND</p></td>
+</tr>
+<tr class="row-even"><td><p>5-6</p></td>
+<td><p>VCC_BAT</p></td>
+<td><p>GND</p></td>
+</tr>
+<tr class="row-odd"><td><p>7-8</p></td>
+<td><p>GPIO_0</p></td>
+<td><p>GPIO_1</p></td>
+</tr>
+<tr class="row-even"><td><p>9-10</p></td>
+<td><p>GPIO_2</p></td>
+<td><p>GPIO_3</p></td>
+</tr>
+<tr class="row-odd"><td><p>11-12</p></td>
+<td><p>SPI_0_CLK</p></td>
+<td><p>ADC_0</p></td>
+</tr>
+<tr class="row-even"><td><p>13-14</p></td>
+<td><p>SPI_0_MISO</p></td>
+<td><p>ADC_1</p></td>
+</tr>
+<tr class="row-odd"><td><p>15-16</p></td>
+<td><p>SPI_0_MOSI</p></td>
+<td><p>ADC_2</p></td>
+</tr>
+<tr class="row-even"><td><p>17-18</p></td>
+<td><p>SPI_0_CS_0</p></td>
+<td><p>I2C_2_SDA</p></td>
+</tr>
+<tr class="row-odd"><td><p>19-20</p></td>
+<td><p>SPI_0_CS_1</p></td>
+<td><p>I2C_2_SCL</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="guidelines">
+<h4>Guidelines<a class="headerlink" href="#guidelines" title="Permalink to this heading"></a></h4>
+<p>The recommended shape and size of the daughterboard can be seen in the <a class="reference internal" href="#fig-daughterboard-size"><span class="std std-numref">Fig. 19</span></a>. Besides that, there are mandatory and suggested elements placement: four M3 holes for mechanical attachment, required; contact connector pads (in light gray on the bottom layer), required; two debug headers on the left and bottom sides, suggested; and a general purpose flight model picoblade suggested.</p>
+<figure class="align-center" id="fig-daughterboard-size">
+<a class="reference internal image-reference" href="_images/daughterboard-size.png"><img alt="_images/daughterboard-size.png" src="_images/daughterboard-size.png" style="width: 52.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 19 </span><span class="caption-text">Recommended shape and size of the daughterboard.</span><a class="headerlink" href="#fig-daughterboard-size" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="fig-daughterboard-integration">
+<a class="reference internal image-reference" href="_images/daughterboard-integration.png"><img alt="_images/daughterboard-integration.png" src="_images/daughterboard-integration.png" style="width: 60.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 20 </span><span class="caption-text">Illustrative daughterboard integration.</span><a class="headerlink" href="#fig-daughterboard-integration" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+</section>
+<section id="microcontroller">
+<h2>Microcontroller<a class="headerlink" href="#microcontroller" title="Permalink to this heading"></a></h2>
+<p>The OBDH 2.0 uses a low-power and low-cost microcontroller family from Texas Instruments; the MSP430F6659 <span id="id4">[<a class="reference internal" href="references.html#id6" title="MSP430x5xx and MSP430x6xx Family User Guide. Texas Instruments Inc., October 2016.">5</a>]</span>. This device provides sufficient performance for low and medium-complexity software and algorithms, allowing the module to execute the required tasks. The <a class="reference internal" href="#tab-msp430-summary"><span class="std std-numref">Table 7</span></a> presents a summary of the main available features and <a class="reference internal" href="#fig-msp430-diagram"><span class="std std-numref">Fig. 21</span></a> shows the internal subsystems, descriptions, and peripherals. The microcontroller interfaces, configurations, and auxiliary components are described in the following topics.</p>
+<div class="docutils container">
+<table class="docutils align-center" id="tab-msp430-summary">
+<caption><span class="caption-number">Table 7 </span><span class="caption-text">Microcontroller features summary.</span><a class="headerlink" href="#tab-msp430-summary" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 12.0%" />
+<col style="width: 12.0%" />
+<col style="width: 12.0%" />
+<col style="width: 28.0%" />
+<col style="width: 12.0%" />
+<col style="width: 12.0%" />
+<col style="width: 12.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Flash</strong></p></th>
+<th class="head"><p><strong>SRAM</strong></p></th>
+<th class="head"><p><strong>Timers</strong></p></th>
+<th class="head"><p><strong>USCI</strong></p></th>
+<th class="head"><p><strong>ADC</strong></p></th>
+<th class="head"><p><strong>DAC</strong></p></th>
+<th class="head"><p><strong>GPIO</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>512KB</p></td>
+<td><p>64KB</p></td>
+<td><p>2</p></td>
+<td><p>6 (SPI / I2C / UART)</p></td>
+<td><p>12</p></td>
+<td><p>2</p></td>
+<td><p>74</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<figure class="align-center" id="fig-msp430-diagram">
+<img alt="_images/msp430-diagram.png" src="_images/msp430-diagram.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 21 </span><span class="caption-text">Microcontroller internal diagram.</span><a class="headerlink" href="#fig-msp430-diagram" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<section id="interfaces-configuration">
+<h3>Interfaces Configuration<a class="headerlink" href="#interfaces-configuration" title="Permalink to this heading"></a></h3>
+<p>The microcontroller has 6 Universal Serial Communication Interfaces (USCI) that can be configured to operate with different protocols and parameters. These interfaces are connected to different modules and peripherals, as presented in the <a class="reference internal" href="#fig-diagram-interfaces"><span class="std std-numref">Fig. 12</span></a>. The <a class="reference internal" href="#tab-usci-config"><span class="std std-numref">Table 8</span></a> describes each interface configuration.</p>
+<div class="docutils container">
+<table class="docutils align-center" id="tab-usci-config">
+<caption><span class="caption-number">Table 8 </span><span class="caption-text">USCI configuration.</span><a class="headerlink" href="#tab-usci-config" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 14.0%" />
+<col style="width: 20.0%" />
+<col style="width: 12.0%" />
+<col style="width: 18.0%" />
+<col style="width: 16.0%" />
+<col style="width: 20.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Interface</strong></p></th>
+<th class="head"><p><strong>Protocol (Index)</strong></p></th>
+<th class="head"><p><strong>Mode</strong></p></th>
+<th class="head"><p><strong>Word Length</strong></p></th>
+<th class="head"><p><strong>Data Rate</strong></p></th>
+<th class="head"><p><strong>Configuration</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>USCI_A0</p></td>
+<td><p>SPI</p></td>
+<td><p>Master</p></td>
+<td><p>8 bits</p></td>
+<td><p>1 Mbps</p></td>
+<td><p>Phase: High</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>Polarity: Low</p></td>
+</tr>
+<tr class="row-even"><td><p>USCI_A1</p></td>
+<td><p>UART1</p></td>
+<td><p>-</p></td>
+<td><p>8 bits</p></td>
+<td><p>115200 bps</p></td>
+<td><p>Stop bits: 1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>Parity: None</p></td>
+</tr>
+<tr class="row-even"><td><p>USCI_A2</p></td>
+<td><p>UART0</p></td>
+<td><p>-</p></td>
+<td><p>8 bits</p></td>
+<td><p>115200 bps</p></td>
+<td><p>Stop bits: 1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>Parity: None</p></td>
+</tr>
+<tr class="row-even"><td><p>USCI_B0</p></td>
+<td><p>I2C0</p></td>
+<td><p>Master</p></td>
+<td><p>8 bits</p></td>
+<td><p>100 kbps</p></td>
+<td><p>Adr. len: 7 bits</p></td>
+</tr>
+<tr class="row-odd"><td><p>USCI_B1</p></td>
+<td><p>I2C1</p></td>
+<td><p>Master</p></td>
+<td><p>8 bits</p></td>
+<td><p>100 kbps</p></td>
+<td><p>Adr. len: 7 bits</p></td>
+</tr>
+<tr class="row-even"><td><p>USCI_B2</p></td>
+<td><p>I2C2</p></td>
+<td><p>Master</p></td>
+<td><p>8 bits</p></td>
+<td><p>100 kbps</p></td>
+<td><p>Adr. len: 7 bits</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="clocks-configuration">
+<h3>Clocks Configuration<a class="headerlink" href="#clocks-configuration" title="Permalink to this heading"></a></h3>
+<p>Besides the internal clock sources, the microcontroller has two dedicated clock inputs for external crystals: the main clock and the auxiliary. A <span class="math notranslate nohighlight">\(32\ MHz\)</span> crystal and a <span class="math notranslate nohighlight">\(32.769\ kHz\)</span> are connected to these inputs. The first source is used for generating the Master Clock (MCLK) and the Subsystem Master Clock (SMCLK), which are used by the CPU and the internal peripheral modules. The second source is used for generating the Auxiliary Clock (ACLK) that handles the low-power modes and might be used for peripherals.</p>
+</section>
+<section id="pinout">
+<h3>Pinout<a class="headerlink" href="#pinout" title="Permalink to this heading"></a></h3>
+<p>An illustration of the microcontroller pinout positions can be seen in the <a class="reference internal" href="#fig-msp430-pinout-positions"><span class="std std-numref">Fig. 22</span></a>. The <a class="reference internal" href="#tab-mcu-pinout"><span class="std std-numref">Table 9</span></a> presents the OBDH 2.0 microcontroller pins assignment.</p>
+<figure class="align-center" id="fig-msp430-pinout-positions">
+<a class="reference internal image-reference" href="_images/msp430-pinout.png"><img alt="_images/msp430-pinout.png" src="_images/msp430-pinout.png" style="width: 90.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 22 </span><span class="caption-text">Microcontroller pinout positions.</span><a class="headerlink" href="#fig-msp430-pinout-positions" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<div class="docutils container">
+<table class="docutils align-center" id="tab-mcu-pinout">
+<caption><span class="caption-number">Table 9 </span><span class="caption-text">Microcontroller pinout and assignments.</span><a class="headerlink" href="#tab-mcu-pinout" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 23.1%" />
+<col style="width: 23.1%" />
+<col style="width: 53.8%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Pin Code</strong></p></th>
+<th class="head"><p><strong>Pin Number</strong></p></th>
+<th class="head"><p><strong>Signal</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>P1.0</p></td>
+<td><p>34</p></td>
+<td><p>MAIN_RADIO_ENABLE</p></td>
+</tr>
+<tr class="row-odd"><td><p>P1.1</p></td>
+<td><p>35</p></td>
+<td><p>MAIN_RADIO_GPIO0</p></td>
+</tr>
+<tr class="row-even"><td><p>P1.2</p></td>
+<td><p>36</p></td>
+<td><p>MAIN_RADIO_GPIO1</p></td>
+</tr>
+<tr class="row-odd"><td><p>P1.3</p></td>
+<td><p>37</p></td>
+<td><p>MAIN_RADIO_GPIO2</p></td>
+</tr>
+<tr class="row-even"><td><p>P1.4</p></td>
+<td><p>38</p></td>
+<td><p>MAIN_RADIO_RESET</p></td>
+</tr>
+<tr class="row-odd"><td><p>P1.5</p></td>
+<td><p>39</p></td>
+<td><p>MAIN_RADIO_SPI_CS</p></td>
+</tr>
+<tr class="row-even"><td><p>P1.6</p></td>
+<td><p>40</p></td>
+<td><p>TTC_MCU_SPI_CS</p></td>
+</tr>
+<tr class="row-odd"><td><p>P1.7</p></td>
+<td><p>41</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>P2.0</p></td>
+<td><p>17</p></td>
+<td><p>SPI_CLK</p></td>
+</tr>
+<tr class="row-odd"><td><p>P2.1</p></td>
+<td><p>18</p></td>
+<td><p>I2C0_SDA</p></td>
+</tr>
+<tr class="row-even"><td><p>P2.2</p></td>
+<td><p>19</p></td>
+<td><p>I2C0_SCL</p></td>
+</tr>
+<tr class="row-odd"><td><p>P2.3</p></td>
+<td><p>20</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>P2.4</p></td>
+<td><p>21</p></td>
+<td><p>SPI_MOSI</p></td>
+</tr>
+<tr class="row-odd"><td><p>P2.5</p></td>
+<td><p>22</p></td>
+<td><p>SPI_MISO</p></td>
+</tr>
+<tr class="row-even"><td><p>P2.6</p></td>
+<td><p>23</p></td>
+<td><p>VERSION_BIT0</p></td>
+</tr>
+<tr class="row-odd"><td><p>P2.7</p></td>
+<td><p>24</p></td>
+<td><p>VERSION_BIT1</p></td>
+</tr>
+<tr class="row-even"><td><p>P3.0</p></td>
+<td><p>42</p></td>
+<td><p>I2C0_EN</p></td>
+</tr>
+<tr class="row-odd"><td><p>P3.1</p></td>
+<td><p>43</p></td>
+<td><p>I2C1_EN</p></td>
+</tr>
+<tr class="row-even"><td><p>P3.2</p></td>
+<td><p>44</p></td>
+<td><p>I2C2_EN</p></td>
+</tr>
+<tr class="row-odd"><td><p>P3.3</p></td>
+<td><p>45</p></td>
+<td><p>I2C0_READY</p></td>
+</tr>
+<tr class="row-even"><td><p>P3.4</p></td>
+<td><p>46</p></td>
+<td><p>I2C1_READY</p></td>
+</tr>
+<tr class="row-odd"><td><p>P3.5</p></td>
+<td><p>47</p></td>
+<td><p>I2C2_READY</p></td>
+</tr>
+<tr class="row-even"><td><p>P3.6</p></td>
+<td><p>48</p></td>
+<td><p>PC104_GPIO0</p></td>
+</tr>
+<tr class="row-odd"><td><p>P3.7</p></td>
+<td><p>49</p></td>
+<td><p>PC104_GPIO1</p></td>
+</tr>
+<tr class="row-even"><td><p>P4.0</p></td>
+<td><p>50</p></td>
+<td><p>PC104_GPIO2</p></td>
+</tr>
+<tr class="row-odd"><td><p>P4.1</p></td>
+<td><p>51</p></td>
+<td><p>PC104_GPIO3</p></td>
+</tr>
+<tr class="row-even"><td><p>P4.2</p></td>
+<td><p>52</p></td>
+<td><p>MEM_HOLD</p></td>
+</tr>
+<tr class="row-odd"><td><p>P4.3</p></td>
+<td><p>53</p></td>
+<td><p>MEM_RESET</p></td>
+</tr>
+<tr class="row-even"><td><p>P4.4</p></td>
+<td><p>54</p></td>
+<td><p>MEM_SPI_CS</p></td>
+</tr>
+<tr class="row-odd"><td><p>P4.5</p></td>
+<td><p>55</p></td>
+<td><p>PC104_GPIO4</p></td>
+</tr>
+<tr class="row-even"><td><p>P4.6</p></td>
+<td><p>56</p></td>
+<td><p>PC104_GPIO5</p></td>
+</tr>
+<tr class="row-odd"><td><p>P4.7</p></td>
+<td><p>57</p></td>
+<td><p>PC104_GPIO6</p></td>
+</tr>
+<tr class="row-even"><td><p>P5.0</p></td>
+<td><p>9</p></td>
+<td><p>VREF</p></td>
+</tr>
+<tr class="row-odd"><td><p>P5.1</p></td>
+<td><p>10</p></td>
+<td><p>AGND</p></td>
+</tr>
+<tr class="row-even"><td><p>P5.2</p></td>
+<td><p>28</p></td>
+<td><p>SYSTEM_FAULT_LED</p></td>
+</tr>
+<tr class="row-odd"><td><p>P5.3</p></td>
+<td><p>31</p></td>
+<td><p>SYSTEM_LED</p></td>
+</tr>
+<tr class="row-even"><td><p>P5.4</p></td>
+<td><p>32</p></td>
+<td><p>PAYLOAD_0_ENABLE</p></td>
+</tr>
+<tr class="row-odd"><td><p>P5.5</p></td>
+<td><p>33</p></td>
+<td><p>PAYLOAD_1_ENABLE</p></td>
+</tr>
+<tr class="row-even"><td><p>P5.6</p></td>
+<td><p>16</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>P5.7</p></td>
+<td><p>88</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>P6.0</p></td>
+<td><p>97</p></td>
+<td><p>D_BOARD_ADC0</p></td>
+</tr>
+<tr class="row-odd"><td><p>P6.1</p></td>
+<td><p>98</p></td>
+<td><p>D_BOARD_ADC1</p></td>
+</tr>
+<tr class="row-even"><td><p>P6.2</p></td>
+<td><p>99</p></td>
+<td><p>D_BOARD_ADC2</p></td>
+</tr>
+<tr class="row-odd"><td><p>P6.3</p></td>
+<td><p>100</p></td>
+<td><p>OBDH_CURRENT_ADC</p></td>
+</tr>
+<tr class="row-even"><td><p>P6.4</p></td>
+<td><p>1</p></td>
+<td><p>OBDH_VOLTAGE_ADC</p></td>
+</tr>
+<tr class="row-odd"><td><p>P6.5</p></td>
+<td><p>2</p></td>
+<td><p>D_BOARD_SPI_CS0</p></td>
+</tr>
+<tr class="row-even"><td><p>P6.6</p></td>
+<td><p>3</p></td>
+<td><p>D_BOARD_SPI_CS1</p></td>
+</tr>
+<tr class="row-odd"><td><p>P6.7</p></td>
+<td><p>4</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>P7.0</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>P7.1</p></td>
+<td><p>-</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>P7.2</p></td>
+<td><p>84</p></td>
+<td><p>XT2_N</p></td>
+</tr>
+<tr class="row-odd"><td><p>P7.3</p></td>
+<td><p>85</p></td>
+<td><p>XT2_P</p></td>
+</tr>
+<tr class="row-even"><td><p>P7.4</p></td>
+<td><p>5</p></td>
+<td><p>D_BOARD_GPIO0</p></td>
+</tr>
+<tr class="row-odd"><td><p>P7.5</p></td>
+<td><p>6</p></td>
+<td><p>D_BOARD_GPIO1</p></td>
+</tr>
+<tr class="row-even"><td><p>P7.6</p></td>
+<td><p>7</p></td>
+<td><p>D_BOARD_GPIO2</p></td>
+</tr>
+<tr class="row-odd"><td><p>P7.7</p></td>
+<td><p>8</p></td>
+<td><p>D_BOARD_GPIO3</p></td>
+</tr>
+<tr class="row-even"><td><p>P8.0</p></td>
+<td><p>58</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>P8.1</p></td>
+<td><p>59</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-even"><td><p>P8.2</p></td>
+<td><p>60</p></td>
+<td><p>UART1_TX</p></td>
+</tr>
+<tr class="row-odd"><td><p>P8.3</p></td>
+<td><p>61</p></td>
+<td><p>UART1_RX</p></td>
+</tr>
+<tr class="row-even"><td><p>P8.4</p></td>
+<td><p>62</p></td>
+<td><p>-</p></td>
+</tr>
+<tr class="row-odd"><td><p>P8.5</p></td>
+<td><p>65</p></td>
+<td><p>I2C1_SDA</p></td>
+</tr>
+<tr class="row-even"><td><p>P8.6</p></td>
+<td><p>66</p></td>
+<td><p>I2C1_SCL</p></td>
+</tr>
+<tr class="row-odd"><td><p>P8.7</p></td>
+<td><p>67</p></td>
+<td><p>ANTENNA_GPIO</p></td>
+</tr>
+<tr class="row-even"><td><p>P9.0</p></td>
+<td><p>68</p></td>
+<td><p>FRAM_WP</p></td>
+</tr>
+<tr class="row-odd"><td><p>P9.1</p></td>
+<td><p>69</p></td>
+<td><p>FRAM_SPI_CS</p></td>
+</tr>
+<tr class="row-even"><td><p>P9.2</p></td>
+<td><p>70</p></td>
+<td><p>UART0_TX</p></td>
+</tr>
+<tr class="row-odd"><td><p>P9.3</p></td>
+<td><p>71</p></td>
+<td><p>UART0_RX</p></td>
+</tr>
+<tr class="row-even"><td><p>P9.4</p></td>
+<td><p>72</p></td>
+<td><p>WDI_EXT</p></td>
+</tr>
+<tr class="row-odd"><td><p>P9.5</p></td>
+<td><p>73</p></td>
+<td><p>I2C2_SDA</p></td>
+</tr>
+<tr class="row-even"><td><p>P9.6</p></td>
+<td><p>74</p></td>
+<td><p>I2C2_SCL</p></td>
+</tr>
+<tr class="row-odd"><td><p>P9.7</p></td>
+<td><p>75</p></td>
+<td><p>MR_WDOG</p></td>
+</tr>
+<tr class="row-even"><td><p>PJ.0</p></td>
+<td><p>92</p></td>
+<td><p>TP21</p></td>
+</tr>
+<tr class="row-odd"><td><p>PJ.1</p></td>
+<td><p>93</p></td>
+<td><p>TP22</p></td>
+</tr>
+<tr class="row-even"><td><p>PJ.2</p></td>
+<td><p>94</p></td>
+<td><p>TP23</p></td>
+</tr>
+<tr class="row-odd"><td><p>PJ.3</p></td>
+<td><p>95</p></td>
+<td><p>TP24</p></td>
+</tr>
+<tr class="row-even"><td><p>-</p></td>
+<td><p>13</p></td>
+<td><p>XT1IN</p></td>
+</tr>
+<tr class="row-odd"><td><p>-</p></td>
+<td><p>14</p></td>
+<td><p>XT1OUT</p></td>
+</tr>
+<tr class="row-even"><td><p>-</p></td>
+<td><p>96</p></td>
+<td><p>JTAG_TDO_TDI</p></td>
+</tr>
+<tr class="row-odd"><td><p>-</p></td>
+<td><p>91</p></td>
+<td><p>JTAG_TCK</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="external-watchdog">
+<h2>External Watchdog<a class="headerlink" href="#external-watchdog" title="Permalink to this heading"></a></h2>
+<p>In addition to the internal watchdog timer of the microcontroller, to ensure a system reset in case of a software freeze, an external watchdog circuit is being used. For that, the TPS3823 IC from Texas Instruments <span id="id5">[<a class="reference internal" href="references.html#id10" title="TPS328x Voltage Monitor With Watchdog Timer. Texas Instruments Inc., July 2020.">6</a>]</span> was chosen. This IC is a voltage monitor with a watchdog timer feature. This circuit can be seen in the <a class="reference internal" href="#fig-ext-wdt-circuit"><span class="std std-numref">Fig. 23</span></a>.</p>
+<p>This circuit works this way: if the WDI pin remains high or low longer than the timeout period, then reset is triggered. The timer clears when reset is asserted or when WDI sees a rising or falling edge.</p>
+<p>The watchdog timer task clears the TPS3823 timer by toggling the WDI pin every <span class="math notranslate nohighlight">\(100\ ms\)</span>. If the WDI pin state stays unmodified for more than <span class="math notranslate nohighlight">\(1600\ ms\)</span>, the reset pin is cleared, and the microcontroller is reset.</p>
+<figure class="align-center" id="fig-ext-wdt-circuit">
+<a class="reference internal image-reference" href="_images/ext-watchdog-circuit.png"><img alt="_images/ext-watchdog-circuit.png" src="_images/ext-watchdog-circuit.png" style="width: 65.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 23 </span><span class="caption-text">External watchdog timer circuit.</span><a class="headerlink" href="#fig-ext-wdt-circuit" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="non-volatile-memories">
+<h2>Non-Volatile Memories<a class="headerlink" href="#non-volatile-memories" title="Permalink to this heading"></a></h2>
+<p>There are two non-volatile memories available on the module: one flash NOR memory and one FRAM memory.</p>
+<section id="flash-nor">
+<h3>Flash NOR<a class="headerlink" href="#flash-nor" title="Permalink to this heading"></a></h3>
+<p>The flash NOR non-volatile memory model is the Micron MT25QL01GBBB, which is composed of a NOR flash architecture with 1 Gb of capacity (or 128 MB) and features extended SPI configurations. As seen in <a class="reference internal" href="#fig-diagram-interfaces"><span class="std std-numref">Fig. 12</span></a>, an SPI bus is used to communicate with this peripheral, using the <a class="reference internal" href="#tab-usci-config"><span class="std std-numref">Table 8</span></a> configurations. Also, some control pins are connected to microcontroller GPIOs: HOLD#, RESET#, and W#.</p>
+<p>When RESET# is driven LOW, the device is reset, and the outputs are tri-stated. The HOLD# signal pauses serial communications without deselecting or resetting the device; outputs are tri-stated, and inputs are ignored. The W# signal handles as write protection, freezes the status register, turning its non-volatile bits read-only and preventing the write operation from being executed.</p>
+<figure class="align-center" id="fig-ext-mem-circuit">
+<a class="reference internal image-reference" href="_images/ext-memory-circuit.png"><img alt="_images/ext-memory-circuit.png" src="_images/ext-memory-circuit.png" style="width: 65.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 24 </span><span class="caption-text">External memory circuit.</span><a class="headerlink" href="#fig-ext-mem-circuit" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="fram">
+<h3>FRAM<a class="headerlink" href="#fram" title="Permalink to this heading"></a></h3>
+<p>The EXCELON™ Auto CY15X102QN is an automotive grade, 2Mb non-volatile memory employing an advanced ferroelectric process. A ferroelectric random access memory or F-RAM is non-volatile and performs reads and writes similar to RAM. It provides reliable data retention for 121 years. The schematics of the memory can be seen in <a class="reference internal" href="#fig-fram-mem-circuit"><span class="std std-numref">Fig. 25</span></a>, an SPI bus is used to communicate with this peripheral.</p>
+<figure class="align-center" id="fig-fram-mem-circuit">
+<a class="reference internal image-reference" href="_images/fram-memory-circuit.png"><img alt="_images/fram-memory-circuit.png" src="_images/fram-memory-circuit.png" style="width: 65.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 25 </span><span class="caption-text">FRAM memory circuit.</span><a class="headerlink" href="#fig-fram-mem-circuit" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="i2c-buffers">
+<h2>I2C Buffers<a class="headerlink" href="#i2c-buffers" title="Permalink to this heading"></a></h2>
+<p>The microcontroller I2C interfaces have dedicated IC buffers, which improve the signal quality throughout the various connectors and offer reliability enhancements since it protects the bus in case of failures. This measure was adopted in all the satellite modules due to previous failures in I2C buses. Using this scheme, the modules connected through this protocol might have shared connections without losing performance or reliability.</p>
+<p>The buffer selected for this function is the Texas Instruments TCA4311 device. Besides the I2C inputs and outputs, it features control and status signals that are connected to GPIOs in the microcontroller: an enable and an operation-ready status. Also, both inputs and outputs in these I2C lines have external pull-up resistors.</p>
+<figure class="align-center" id="fig-i2c-buffer-circuit">
+<a class="reference internal image-reference" href="_images/i2c-buffer-circuit.png"><img alt="_images/i2c-buffer-circuit.png" src="_images/i2c-buffer-circuit.png" style="width: 65.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 26 </span><span class="caption-text">I2C buffer circuit.</span><a class="headerlink" href="#fig-i2c-buffer-circuit" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="rs-485-transceiver">
+<h2>RS-485 Transceiver<a class="headerlink" href="#rs-485-transceiver" title="Permalink to this heading"></a></h2>
+<p>The module features an RS-485 interface connected to a 4H header (P8). This interface uses a transceiver (THVD1451) to convert the incoming RS-485 signals to UART and vice-versa. The outputs are <span class="math notranslate nohighlight">\(120\ \Omega\)</span> differential pairs that have termination resistors before connecting to the header pins.</p>
+<figure class="align-center" id="fig-rs485-transceiver-circuit">
+<a class="reference internal image-reference" href="_images/rs485-transceiver-circuit.png"><img alt="_images/rs485-transceiver-circuit.png" src="_images/rs485-transceiver-circuit.png" style="width: 65.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 27 </span><span class="caption-text">RS-485 transceiver circuit.</span><a class="headerlink" href="#fig-rs485-transceiver-circuit" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="voltage-and-current-sensors">
+<h2>Voltage and Current Sensors<a class="headerlink" href="#voltage-and-current-sensors" title="Permalink to this heading"></a></h2>
+<p>To monitor the board’s overall current and voltage, the module has a current sensor using a Maxim Integrated IC (MAX9934) and a buffered voltage divider circuit with a Texas Instruments IC (TLV341A). These circuits have direct analog outputs that are connected to ADC inputs. The microcontroller’s internal ADC peripheral has a dedicated input for a voltage reference, which is connected to the REF5030A IC. This device generates a precise <span class="math notranslate nohighlight">\(3\ V\)</span> output that enhances the measures and conversions performed by the microcontroller.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id6" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>This pinout is simplified since additional interfaces were omitted. Refer to <em>option sheet</em> in chapter <a class="reference internal" href="assembly.html#ch-assembly"><span class="std std-ref">Board Assembly</span></a>.</p>
+</aside>
+<aside class="footnote brackets" id="id7" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">2</a><span class="fn-bracket">]</span></span>
+<p>These daughterboard pads are similar to the ones used as a footprint in the OBDH, despite a slightly bigger size.</p>
+</aside>
+</aside>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="system_overview.html" class="btn btn-neutral float-left" title="System Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="firmware.html" class="btn btn-neutral float-right" title="Firmware" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright The OBDH 2.0 Contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

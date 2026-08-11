@@ -1,0 +1,217 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Board Assembly &mdash; OBDH 2.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=09c281a4" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=99a04888"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Usage Instructions" href="instructions.html" />
+    <link rel="prev" title="Firmware" href="firmware.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="system_overview.html">System Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html">Hardware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">Firmware</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Board Assembly</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#development-model">Development Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#debug-and-programming-connectors">Debug and programming connectors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#status-leds">Status leds</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#flight-model">Flight Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#custom-configuration">Custom Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="instructions.html">Usage Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="telemetry.html">Telemetry Packets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packets.html">Telecommunication Description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_report_v05.html">Test Report of v0.5 Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_report_v07.html">Test Report of v0.7 Version</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">obdh2</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Board Assembly</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/assembly.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="board-assembly">
+<span id="ch-assembly"></span><h1>Board Assembly<a class="headerlink" href="#board-assembly" title="Permalink to this heading"></a></h1>
+<p>The OBDH2 has some DNP components to provide flashing, debugging, testing, or extra interfaces if needed. These components may be optional for the flight model of the board. The draftsman document can be viewed for more detailed information regarding their location and board dimensions <span id="id1">[<a class="reference internal" href="references.html#id8" title="SpaceLab. On-board data handling 2.0 draftsman document. 2020. Available at &lt;https://github.com/spacelab-ufsc/obdh2/tree/master/hardware/outputs/board_draftsman&gt;.">9</a>]</span>.</p>
+<section id="development-model">
+<h2>Development Model<a class="headerlink" href="#development-model" title="Permalink to this heading"></a></h2>
+<section id="debug-and-programming-connectors">
+<h3>Debug and programming connectors<a class="headerlink" href="#debug-and-programming-connectors" title="Permalink to this heading"></a></h3>
+<p>The P2 and P6 connectors are used for flashing and debugging the OBDH2 board. See <a class="reference internal" href="hardware.html#sec-programer-and-debug"><span class="std std-ref">Programmer and Debug</span></a> for more information.</p>
+</section>
+<section id="status-leds">
+<h3>Status leds<a class="headerlink" href="#status-leds" title="Permalink to this heading"></a></h3>
+<p>As already exposed in the document OBDH2 has status LEDs to be used during the development and test phases. See <a class="reference internal" href="system_overview.html#sec-status-leds"><span class="std std-ref">Status LEDs</span></a> for more information.</p>
+</section>
+</section>
+<section id="flight-model">
+<h2>Flight Model<a class="headerlink" href="#flight-model" title="Permalink to this heading"></a></h2>
+<p>The flight model of the OBDH 2.0 boards follows a special assembly, some components are not soldered, like the LEDs and some connectors. The PCB is also fabricated with higher quality, using the Class 3 standard and a core material less sensitive to temperature changes. The silkscreen is also not printed on the board.</p>
+</section>
+<section id="custom-configuration">
+<h2>Custom Configuration<a class="headerlink" href="#custom-configuration" title="Permalink to this heading"></a></h2>
+<p>On the PC104 connector of OBDH2, there are some jumper resistors to enable extra I2C, SPI, and GPIO interfaces if desired. Note that the I2C0, I2C1, and SPI channels should not be used with shared devices. These components’ corresponding tables and locations on the PCB are shown on <a class="reference internal" href="#tab-additional-pc104-inferfaces"><span class="std std-numref">Table 17</span></a> and Figures <a class="reference internal" href="#fig-add-gpio-i2c1-jumpers"><span class="std std-numref">Fig. 31</span></a>, <a class="reference internal" href="#fig-add-i2c0-jumpers"><span class="std std-numref">Fig. 32</span></a> and <a class="reference internal" href="#fig-add-spi-1gpio-jumpers"><span class="std std-numref">Fig. 33</span></a>.</p>
+<table class="docutils align-center" id="tab-additional-pc104-inferfaces">
+<caption><span class="caption-number">Table 17 </span><span class="caption-text">Additional PC104 inferfaces.</span><a class="headerlink" href="#tab-additional-pc104-inferfaces" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 50.0%" />
+<col style="width: 50.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Label</strong></p></th>
+<th class="head"><p><strong>Interface</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>J_PC1</p></td>
+<td><p>I2C0_SDA</p></td>
+</tr>
+<tr class="row-odd"><td><p>J_PC2</p></td>
+<td><p>I2C0_SCL</p></td>
+</tr>
+<tr class="row-even"><td><p>J_PC3</p></td>
+<td><p>I2C1_SDA</p></td>
+</tr>
+<tr class="row-odd"><td><p>J_PC4</p></td>
+<td><p>I2C1_SCL</p></td>
+</tr>
+<tr class="row-even"><td><p>J_PC5</p></td>
+<td><p>SPI_MOSI</p></td>
+</tr>
+<tr class="row-odd"><td><p>J_PC6</p></td>
+<td><p>SPI_MISO</p></td>
+</tr>
+<tr class="row-even"><td><p>J_PC7</p></td>
+<td><p>SPI_CLK</p></td>
+</tr>
+<tr class="row-odd"><td><p>J_PC8</p></td>
+<td><p>GPI0</p></td>
+</tr>
+<tr class="row-even"><td><p>J_PC9</p></td>
+<td><p>GPIO1</p></td>
+</tr>
+<tr class="row-odd"><td><p>J_PC10</p></td>
+<td><p>GPIO2</p></td>
+</tr>
+<tr class="row-even"><td><p>J_PC11</p></td>
+<td><p>GPIO3</p></td>
+</tr>
+</tbody>
+</table>
+<figure class="align-center" id="fig-add-gpio-i2c1-jumpers">
+<a class="reference internal image-reference" href="_images/add_gpio_i2c1_jumpers.png"><img alt="_images/add_gpio_i2c1_jumpers.png" src="_images/add_gpio_i2c1_jumpers.png" style="width: 50mm;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 31 </span><span class="caption-text">Additional GPIOs and I2C channel 1.</span><a class="headerlink" href="#fig-add-gpio-i2c1-jumpers" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="fig-add-i2c0-jumpers">
+<a class="reference internal image-reference" href="_images/add_i2c0_jumpers.png"><img alt="_images/add_i2c0_jumpers.png" src="_images/add_i2c0_jumpers.png" style="width: 80mm;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 32 </span><span class="caption-text">Additional I2C channel 0.</span><a class="headerlink" href="#fig-add-i2c0-jumpers" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="fig-add-spi-1gpio-jumpers">
+<a class="reference internal image-reference" href="_images/add_spi_1gpio_jumpers.png"><img alt="_images/add_spi_1gpio_jumpers.png" src="_images/add_spi_1gpio_jumpers.png" style="width: 60mm;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 33 </span><span class="caption-text">Additional GPIO and SPI channel.</span><a class="headerlink" href="#fig-add-spi-1gpio-jumpers" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="firmware.html" class="btn btn-neutral float-left" title="Firmware" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="instructions.html" class="btn btn-neutral float-right" title="Usage Instructions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright The OBDH 2.0 Contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

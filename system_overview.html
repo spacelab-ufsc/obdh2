@@ -1,0 +1,232 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>System Overview &mdash; OBDH 2.0 Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=09c281a4" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=99a04888"></script>
+      <script src="_static/doctools.js?v=888ff710"></script>
+      <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Hardware" href="hardware.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">System Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#product-tree">Product tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#block-diagram">Block Diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#system-layers">System Layers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#operation">Operation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#execution-flow">Execution Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-flow">Data Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#status-leds">Status LEDs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hardware.html">Hardware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="firmware.html">Firmware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assembly.html">Board Assembly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instructions.html">Usage Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="telemetry.html">Telemetry Packets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="packets.html">Telecommunication Description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_report_v05.html">Test Report of v0.5 Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_report_v07.html">Test Report of v0.7 Version</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">obdh2</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">System Overview</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/system_overview.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="system-overview">
+<span id="ch-system-overview"></span><h1>System Overview<a class="headerlink" href="#system-overview" title="Permalink to this heading"></a></h1>
+<p>The board has an MSP430 low-power microcontroller that runs the firmware application and several other peripherals for extended operation and physical interfaces (i.e., non-volatile memory, watchdog timer, service modules, payloads interfaces, daughterboard interface, and current monitor). The microcontroller manages the other sub-modules within the board using serial communication buses, synchronizes actions, handles communication with the ground segment, and manages the data flow. The programming language used is C, and the firmware was developed using the Code Composer Studio IDE (a.k.a. CCS) for compiling, programming and testing. The module has many tasks over distinct protocols and time requirements, such as interfacing peripherals and other MCUs. To improve predictability, a Real-Time Operating System (RTOS) is used to ensure that the deadlines are observed, even under a faulty situation in a routine. The RTOS chosen is the FreeRTOS (v10.0.0), since it is designed for embedded systems applications and was already validated in space applications. The firmware architecture follows an abstraction layer scheme to facilitate higher-level implementations and allow more portability across different hardware platforms.</p>
+<section id="product-tree">
+<h2>Product tree<a class="headerlink" href="#product-tree" title="Permalink to this heading"></a></h2>
+<p>The product tree of the OBDH 2.0 module is available in <a class="reference internal" href="#fig-product-tree"><span class="std std-numref">Fig. 2</span></a>.</p>
+<figure class="align-center" id="fig-product-tree">
+<a class="reference internal image-reference" href="_images/product-tree.png"><img alt="_images/product-tree.png" src="_images/product-tree.png" style="width: 80.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 2 </span><span class="caption-text">Product tree of the OBDH 2.0 module.</span><a class="headerlink" href="#fig-product-tree" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="block-diagram">
+<h2>Block Diagram<a class="headerlink" href="#block-diagram" title="Permalink to this heading"></a></h2>
+<p><a class="reference internal" href="#fig-block-diagram"><span class="std std-numref">Fig. 3</span></a> presents a simplified view of the module subsystems and interfaces. The microcontroller has a programming JTAG and 6 communication buses, divided into 3 different protocols (I2C, SPI, and UART), that is shared between all the peripherals and external interfaces. Besides these channels, there are GPIO connections for various functions, from control ports to status pins. There is a non-volatile memory device to store the satellite data frames and critical status indicators. Some buffers and transceivers allow secure and proper communication with external modules. A watchdog timer with a voltage monitor and a current sensor is attached to the system to improve the overall reliability and generate essential housekeeping data. There is a generic daughterboard interface for extending the module capabilities with an auxiliary application board. Also, a UART debug interface is directly connected to the microcontroller. More details and descriptions about these components and interfaces are provided in <a class="reference internal" href="hardware.html#ch-hardware"><span class="std std-ref">Hardware</span></a>.</p>
+<figure class="align-center" id="fig-block-diagram">
+<img alt="_images/block_diagram.png" src="_images/block_diagram.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">OBDH 2.0 Block diagram.</span><a class="headerlink" href="#fig-block-diagram" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="system-layers">
+<h2>System Layers<a class="headerlink" href="#system-layers" title="Permalink to this heading"></a></h2>
+<p>As mentioned, the system is divided into abstraction layers to favor high-level firmware implementations. The <a class="reference internal" href="#fig-system-layers"><span class="std std-numref">Fig. 4</span></a> shows this scheme, composed of third-party drivers at the lowest layer above the hardware, the operating system as the base building block of the module, the devices handling implementation, and the application tasks in the highest layer. More details are provided in <a class="reference internal" href="firmware.html#ch-firmware"><span class="std std-ref">Firmware</span></a>.</p>
+<figure class="align-center" id="fig-system-layers">
+<a class="reference internal image-reference" href="_images/system_layers.png"><img alt="_images/system_layers.png" src="_images/system_layers.png" style="width: 40.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 4 </span><span class="caption-text">System layers.</span><a class="headerlink" href="#fig-system-layers" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="operation">
+<h2>Operation<a class="headerlink" href="#operation" title="Permalink to this heading"></a></h2>
+<p>The system operates through the sequential execution of routines (tasks in the context of the operating system) that are scheduled and multiplexed over time. Each routine has a priority and a periodicity, determining the subsequent execution, the set of functionalities currently running, and the memory usage management. Besides this deterministic scheduling system, the routines have communication channels with each other through the usage of queues and task notifications, which provides a robust synchronization scheme. In <a class="reference internal" href="firmware.html#ch-firmware"><span class="std std-ref">Firmware</span></a> the system operation and the internal nuances are described in detail. Then, this section uses a top-view user perspective to describe the module operation.</p>
+<section id="execution-flow">
+<h3>Execution Flow<a class="headerlink" href="#execution-flow" title="Permalink to this heading"></a></h3>
+<p>The OBDH 2.0 execution flowchart can be seen on <a class="reference internal" href="#fig-flowchart-obdh"><span class="std std-numref">Fig. 5</span></a>.</p>
+<figure class="align-center" id="fig-flowchart-obdh">
+<a class="reference internal image-reference" href="_images/flowchart_OBDH.png"><img alt="_images/flowchart_OBDH.png" src="_images/flowchart_OBDH.png" style="width: 60.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 5 </span><span class="caption-text">OBDH 2.0 operation flowchart</span><a class="headerlink" href="#fig-flowchart-obdh" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>The boot sequence can be seen better on <a class="reference internal" href="#fig-flowchart-obdh-boot-sequence"><span class="std std-numref">Fig. 6</span></a>.</p>
+<figure class="align-center" id="fig-flowchart-obdh-boot-sequence">
+<a class="reference internal image-reference" href="_images/flowchart_obdh_boot_sequence.png"><img alt="_images/flowchart_obdh_boot_sequence.png" src="_images/flowchart_obdh_boot_sequence.png" style="width: 20.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 6 </span><span class="caption-text">OBDH’s 2.0 boot sequence.</span><a class="headerlink" href="#fig-flowchart-obdh-boot-sequence" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>The antenna deploy routine is exemplified with the flowchart on <a class="reference internal" href="#fig-flowchart-antenna-deploy-routine"><span class="std std-numref">Fig. 7</span></a>.</p>
+<figure class="align-center" id="fig-flowchart-antenna-deploy-routine">
+<a class="reference internal image-reference" href="_images/flowchart_antenna_deploy_routine.png"><img alt="_images/flowchart_antenna_deploy_routine.png" src="_images/flowchart_antenna_deploy_routine.png" style="width: 45.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 7 </span><span class="caption-text">Antenna deploy routine</span><a class="headerlink" href="#fig-flowchart-antenna-deploy-routine" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>The Telecommand’s processing flowchart can be seen on <a class="reference internal" href="#fig-tc-flowchart"><span class="std std-numref">Fig. 8</span></a>.</p>
+<figure class="align-center" id="fig-tc-flowchart">
+<a class="reference internal image-reference" href="_images/tc_processing_flow.png"><img alt="_images/tc_processing_flow.png" src="_images/tc_processing_flow.png" style="width: 75.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 8 </span><span class="caption-text">Telecommand’s processing flowchart</span><a class="headerlink" href="#fig-tc-flowchart" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="data-flow">
+<h3>Data Flow<a class="headerlink" href="#data-flow" title="Permalink to this heading"></a></h3>
+<p>The OBDH 2.0 controls most of the CubeSat’s data flow, which can be seen on <a class="reference internal" href="#fig-data-path-diagram"><span class="std std-numref">Fig. 9</span></a>.</p>
+<figure class="align-center" id="fig-data-path-diagram">
+<img alt="_images/data_path_diagram.png" src="_images/data_path_diagram.png" />
+<figcaption>
+<p><span class="caption-number">Fig. 9 </span><span class="caption-text">Data path diagram.</span><a class="headerlink" href="#fig-data-path-diagram" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="status-leds">
+<span id="sec-status-leds"></span><h3>Status LEDs<a class="headerlink" href="#status-leds" title="Permalink to this heading"></a></h3>
+<p>On the development version of the board, eight LEDs indicate some behaviors of the systems. This set of LEDs can be seen on <a class="reference internal" href="#fig-status-leds"><span class="std std-numref">Fig. 10</span></a>.</p>
+<figure class="align-center" id="fig-status-leds">
+<a class="reference internal image-reference" href="_images/status_leds.png"><img alt="_images/status_leds.png" src="_images/status_leds.png" style="width: 30.0%;" /></a>
+<figcaption>
+<p><span class="caption-number">Fig. 10 </span><span class="caption-text">Available status LEDs.</span><a class="headerlink" href="#fig-status-leds" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>A description of each of these LEDs are available below:</p>
+<ul class="simple">
+<li><p><strong>D1 - System LED</strong>: Heartbeat of the system. Blinks at a frequency of 1 Hz when the system is running properly.</p></li>
+<li><p><strong>D2 - Fault LED</strong>: Indicates a critical fault in the system.</p></li>
+<li><p><strong>D3 - UART0 TX</strong>: Blinks when data is being transmitted over the UART0 port.</p></li>
+<li><p><strong>D4 - UART0 RX</strong>: Blinks when data is being received over the UART0 port.</p></li>
+<li><p><strong>D5 - UART1 TX</strong>: Blinks when data is being transmitted over that UART1 port.</p></li>
+<li><p><strong>D6 - UART1 RX</strong>: Blinks when data is being received over the UART1 port.</p></li>
+<li><p><strong>D7 - Antenna VCC</strong>: Indicates that the antenna module board is being power sourced.</p></li>
+<li><p><strong>D8 - OBDH VCC</strong>: Indicates that the OBDH board is being power sourced.</p></li>
+</ul>
+<p>These LEDs are not mounted in the flight version of the module.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hardware.html" class="btn btn-neutral float-right" title="Hardware" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright The OBDH 2.0 Contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
