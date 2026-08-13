@@ -51,6 +51,7 @@
 #define CONFIG_TASK_READ_EDC_ENABLED                    1
 #define CONFIG_TASK_READ_EPS_ENABLED                    1
 #define CONFIG_TASK_READ_TTC_ENABLED                    1
+#define CONFIG_TASK_READ_TTCSB_ENABLED                    1
 #define CONFIG_TASK_READ_ANTENNA_ENABLED                1
 #define CONFIG_TASK_DATA_LOG_ENABLED                    1
 #define CONFIG_TASK_PROCESS_TC_ENABLED                  1

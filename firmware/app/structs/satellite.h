@@ -46,6 +46,7 @@
 #include <devices/eps/eps_data.h>
 #include <drivers/edc/edc.h>
 #include <devices/ttc/ttc_data.h>
+#include <devices/ttcsb/ttcsb_data.h>
 #include <devices/antenna/antenna_data.h>
 
 #include "obdh_data.h"
@@ -183,6 +184,12 @@ typedef struct
     ttc_data_t data;                /**< TTC data. */
 } ttc_telemetry_t;
 
+typedef struct
+{
+    sys_time_t timestamp;           /**< Timestamp of the TTC data. */
+    ttcsb_data_t data;                /**< TTC data. */
+} ttcsb_telemetry_t;
+
 /**
  * \brief Antenna telemetry type.
  */
@@ -231,6 +238,8 @@ typedef struct
     eps_telemetry_t eps;            /**< EPS telemetry. */
     ttc_telemetry_t ttc_0;          /**< TTC 0 telemetry. */
     ttc_telemetry_t ttc_1;          /**< TTC 1 telemetry. */
+    ttcsb_telemetry_t ttcsb_0;          /**< TTC 0 telemetry. */
+    ttcsb_telemetry_t ttcsb_1;          /**< TTC 1 telemetry. */
     antenna_telemetry_t antenna;    /**< Antenna telemetry. */
     edc_telemetry_t edc_0;          /**< EDC 0 telemetry. */
     edc_telemetry_t edc_1;          /**< EDC 1 telemetry. */
