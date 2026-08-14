@@ -310,10 +310,6 @@ int16_t ro_get_navigation_pkg(ro_config_t config, uint8_t *navigation);
 
 int16_t ro_get_observation_pkg(ro_config_t config, uint8_t *observation);
 
-int16_t ro_get_iq_pkg(ro_config_t config, uint8_t *iq);
-
-
-
 /*============================================================================*/
 /* Data Parsing                                                               */
 /*============================================================================*/
@@ -332,7 +328,6 @@ int ro_get_navigation(ro_config_t config,
 
 int ro_get_observation(ro_config_t config,
                        ro_observation_t *observation);
-
 
 /*============================================================================*/
 /* I2C Driver                                                                 */
