@@ -52,6 +52,7 @@
 #include "read_edc.h"
 #include "read_eps.h"
 #include "read_ttc.h"
+#include "read_ttcsb.h"
 #include "read_antenna.h"
 #include "data_log.h"
 #include "process_tc.h"
@@ -154,6 +155,15 @@ void create_tasks(void)
 
 #if defined(CONFIG_TASK_READ_TTC_ENABLED) && (CONFIG_TASK_READ_TTC_ENABLED == 1)
     (void)xTaskCreate(vTaskReadTTC, TASK_READ_TTC_NAME, TASK_READ_TTC_STACK_SIZE, NULL, TASK_READ_TTC_PRIORITY, &xTaskReadTTCHandle);
+
+    if (xTaskReadTTCHandle == NULL)
+    {
+        /* Error creating the read TTC task */
+    }
+#endif /* CONFIG_TASK_READ_TTC_ENABLED */
+
+#if defined(CONFIG_TASK_READ_TTCSB_ENABLED) && (CONFIG_TASK_READ_TTCSB_ENABLED == 1)
+    xTaskCreate(vTaskReadTTCSB, TASK_READ_TTCSB_NAME, TASK_READ_TTCSB_STACK_SIZE, NULL, TASK_READ_TTCSB_PRIORITY, &xTaskReadTTCSBHandle);
 
     if (xTaskReadTTCHandle == NULL)
     {

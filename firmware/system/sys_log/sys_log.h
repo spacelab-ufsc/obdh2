@@ -245,7 +245,11 @@ void sys_log_print_byte(uint8_t byte);
 void sys_log_print_bit_array_as_hex(uint64_t bit_array, uint16_t bytes_to_read);
 
 /**
+<<<<<<< HEAD
+ * \brief Prints a uint64_t bit array as hex.
+=======
  * \brief Prints the hex representation of a uint64_t number representing a bit array.
+>>>>>>> 9d129a5439c3c4940e1613c2e3d33a24f21eaed6
  *
  * \return None.
  */

@@ -1,0 +1,473 @@
+/*
+ * sl_ttc2.h
+ * 
+ * Copyright (C) 2021, SpaceLab.
+ * 
+ * This file is part of OBDH 2.0.
+ * 
+ * OBDH 2.0 is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * OBDH 2.0 is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with OBDH 2.0. If not, see <http://www.gnu.org/licenses/>.
+ * 
+ */
+
+/**
+ * \brief SpaceLab TTC 2.0 driver definition.
+ * 
+ * \author Gabriel Mariano Marcelino <gabriel.mm8@gmail.com>
+ * 
+ * \version 0.8.13
+ * 
+ * \date 2021/05/12
+ * 
+ * \defgroup sl_ttc2 SpaceLab TTC 2.0
+ * \ingroup drivers
+ * \{
+ */
+
+#ifndef SL_TTCSB_H_
+#define SL_TTCSB_H_
+
+#include <stdbool.h>
+#include <stdint.h>
+
+#include <drivers/i2c/i2c.h>
+
+#define SL_TTC2_MODULE_NAME                     "SpaceLab TTCSB 2.0"
+
+/* TTCSB IDs */
+#define SL_TTCSB_SLAVE_ADDR               0xCC2AU /**< I2C slave address for TTC SBAND */
+
+#define SL_TTCSB_DEVICE_ID_RADIO_0               0xCC2AU /**< TTC 2.0 device ID (radio 1). */
+#define SL_TTCSB_DEVICE_ID_RADIO_1               0xCC2BU /**< TTC 2.0 device ID (radio 2). */
+
+/* TTC 2.0 Registers */
+#define SL_TTCSB_REG_DEVICE_ID                   0       /**< Device ID (0xCC2A or 0xCC2B). */
+#define SL_TTCSB_REG_HARDWARE_VERSION            1       /**< Hardware version. */
+#define SL_TTCSB_REG_FIRMWARE_VERSION            2       /**< Firmware version. */
+#define SL_TTCSB_REG_TIME_COUNTER                3       /**< Time counter in millseconds. */
+#define SL_TTCSB_REG_RESET_COUNTER               4       /**< Reset counter. */
+#define SL_TTCSB_REG_LAST_RESET_CAUSE            5       /**< Last reset cause. */
+#define SL_TTCSB_REG_INPUT_VOLTAGE_MCU           6       /**< Input voltage of the uC in mV. */
+#define SL_TTCSB_REG_INPUT_CURRENT_MCU           7       /**< Input current of the uC in mA. */
+#define SL_TTCSB_REG_TEMPERATURE_MCU             8       /**< Temperature of the uC in K. */
+#define SL_TTCSB_REG_INPUT_VOLTAGE_RADIO         9       /**< Input voltage of the radio in mV. */
+#define SL_TTCSB_REG_INPUT_CURRENT_RADIO         10      /**< Input current of the radio in mA. */
+#define SL_TTCSB_REG_TEMPERATURE_RADIO           11      /**< Temperature of the radio in K. */
+#define SL_TTCSB_REG_LAST_VALID_TC               12      /**< Last valid telecommand (uplink packet ID). */
+#define SL_TTCSB_REG_RSSI_LAST_VALID_TC          13      /**< RSSI of the last valid telecommand. */
+#define SL_TTCSB_REG_TEMPERATURE_ANTENNA         14      /**< Temperature of the antenna module in K. */
+#define SL_TTCSB_REG_ANTENNA_STATUS              15      /**< Antenna module status bits. */
+#define SL_TTCSB_REG_ANTENNA_DEPLOYMENT_STATUS   16      /**< Antenna deployment status (0=never executed, 1=executed). */
+#define SL_TTCSB_REG_ANTENNA_DEP_HIB_STATUS      17      /**< Antenna deployment hibernation status (0=never executed, 1=executed). */
+#define SL_TTCSB_REG_TX_ENABLE                   18      /**< TX enable (0=off, 1=on). */
+#define SL_TTCSB_REG_TX_PACKET_COUNTER           19      /**< TX packet counter. */
+#define SL_TTCSB_REG_RX_PACKET_COUNTER           20      /**< RX packet counter. */
+
+
+/**
+ * \brief Temperature type.
+ */
+typedef uint16_t sl_ttcsb_temp_t;
+
+/**
+ * \brief Voltage type.
+ */
+typedef uint16_t sl_ttcsb_voltage_t;
+
+/**
+ * \brief Current type.
+ */
+typedef uint16_t sl_ttcsb_current_t;
+
+/**
+ * \brief RSSI type.
+ */
+typedef uint16_t sl_ttcsb_rssi_t;
+
+/**
+ * \brief Radio ID.
+ */
+typedef enum
+{
+    SL_TTCSB_RADIO_0 = 0,                                  /**< TTC radio 0. */
+    SL_TTCSB_RADIO_1,                                      /**< TTC radio 0. */
+} sl_ttcsb_radio_t;
+
+/**
+ * \brief Voltage types.
+ */
+typedef enum
+{
+    SL_TTCSB_VOLTAGE_MCU=0,                              /**< MCU input voltage. */
+    SL_TTCSB_VOLTAGE_RADIO                               /**< Radio input voltage. */
+} sl_ttcsb_voltage_e;
+
+/**
+ * \brief Current types.
+ */
+typedef enum
+{
+    SL_TTCSB_CURRENT_MCU=0,                              /**< MCU input current. */
+    SL_TTCSB_CURRENT_RADIO                               /**< Radio input current. */
+} sl_ttcsb_current_e;
+
+/**
+ * \brief Temperature types.
+ */
+typedef enum
+{
+    SL_TTCSB_TEMP_MCU=0,                                 /**< MCU temperature. */
+    SL_TTCSB_TEMP_RADIO,                                 /**< Radio temperature. */
+    SL_TTCSB_TEMP_ANTENNA                                /**< Antenna temperature. */
+} sl_ttcsb_temp_e;
+
+typedef enum
+{
+    SL_TTCSB_TX_PKT=0,                                   /**< TX packet. */
+    SL_TTCSB_RX_PKT                                      /**< RX packet. */
+} sl_ttcsb_pkt_e;
+
+
+
+/**
+ * \brief Data structure.
+ */
+typedef struct
+{
+    uint32_t                time_counter;               /**< Time counter in milliseconds. */
+    uint16_t                reset_counter;              /**< Reset counter. */
+    uint8_t                 last_reset_cause;           /**< Last reset cause. */
+    sl_ttcsb_voltage_t       voltage_mcu;                /**< Input voltage of the uC in mV. */
+    sl_ttcsb_current_t       current_mcu;                /**< Input current of the uC in mA. */
+    sl_ttcsb_temp_t          temperature_mcu;            /**< Temperature of the uC in K. */
+    sl_ttcsb_voltage_t       voltage_radio;              /**< Input voltage of the radio in mV. */
+    sl_ttcsb_current_t       current_radio;              /**< Input current of the radio in mA. */
+    sl_ttcsb_temp_t          temperature_radio;          /**< Temperature of the radio in K. */
+    uint8_t                 last_valid_tc;              /**< Last valid telecommand (uplink packet ID). */
+    sl_ttcsb_rssi_t          rssi_last_valid_tc;         /**< RSSI of the last valid telecommand. */
+    sl_ttcsb_temp_t          temperature_antenna;        /**< Temperature of the antenna module in K. */
+    uint16_t                antenna_status;             /**< Antenna module status bits. */
+    uint8_t                 deployment_status;          /**< Antenna deployment status (0=never executed, 1=executed). */
+    uint8_t                 hibernation_status;         /**< Antenna deployment hibernation (0=never executed, 1=executed). */
+    uint32_t                tx_packet_counter;          /**< TX packet counter. */
+    uint32_t                rx_packet_counter;          /**< RX packet counter. */
+} sl_ttcsb_hk_data_t;
+
+/**
+ * \brief TTC 2.0 configuration type.
+ */
+typedef struct
+{
+    sl_ttcsb_radio_t id;
+    i2c_port_t port;                /**< I2C port. */
+    i2c_config_t port_config;       /**< I2C configuration. */
+} sl_ttcsb_config_t;
+
+typedef enum
+{
+    I2C_ERROR=-1,                  /**< Error during initialization. */
+    I2C_READY,                     /**< The chip is not ready. */
+    I2C_NOT_READY                  /**< The chip is ready. */
+} i2c_status_e;
+
+/**
+ * \brief Initialization of the TTC module driver.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_init(sl_ttcsb_config_t config);
+
+/**
+ * \brief Verifies the TTC ID code.
+ *
+ * This function is useful to test the connection with the TTC module.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_check_device(sl_ttcsb_config_t config);
+
+/**
+ * \brief Writes a value to a register of the TTC module.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] adr is the register address to write.
+ *
+ * \param[in,out] val is the value to write to the given register.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_write_reg(sl_ttcsb_config_t config, uint8_t adr, uint32_t val);
+
+/**
+ * \brief Reads a register from the TTC module.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] adr is the register address to read.
+ *
+ * \param[in,out] val is a pointer to store the read value from the given register.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_read_reg(sl_ttcsb_config_t config, uint8_t adr, uint32_t *val);
+
+/**
+ * \brief Reads all the TTC variables and parameters.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] data is a pointer to store the read TTC data.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_read_hk_data(sl_ttcsb_config_t config, sl_ttcsb_hk_data_t *data, uint64_t *err_id);
+
+/**
+ * \brief Reads the device ID of the TTC module.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read device ID value.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_read_device_id(sl_ttcsb_config_t config, uint16_t *val);
+
+/**
+ * \brief Reads the hardware version of the TTC 2.0 module.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read hardware version.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_read_hardware_version(sl_ttcsb_config_t config, uint8_t *val);
+
+/**
+ * \brief Reads the firmware version of the TTC 2.0 module.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read firmware version.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_read_firmware_version(sl_ttcsb_config_t config, uint32_t *val);
+
+/**
+ * \brief Reads the time counter value.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read time counter value.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_read_time_counter(sl_ttcsb_config_t config, uint32_t *val);
+
+/**
+ * \brief Reads the reset counter value of the TTC module.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read reset counter value.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_read_reset_counter(sl_ttcsb_config_t config, uint16_t *val);
+
+/**
+ * \brief Reads the last reset cause ID of the TTC.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read reset cause ID.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_read_reset_cause(sl_ttcsb_config_t config, uint8_t *val);
+
+/**
+ * \brief Reads the input voltage of the TTC module.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] volt is the voltage type to read. It can be:
+ * \parblock
+ *      -\b SL_TTC2_VOLTAGE_MCU
+ *      -\b SL_TTC2_VOLTAGE_RADIO
+ *      .
+ * \endparblock
+ *
+ * \param[in,out] val is a pointer to store the read voltage value.
+ *
+ * \note The unit of the read current is \b mV.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_read_voltage(sl_ttcsb_config_t config, uint8_t volt, sl_ttcsb_voltage_t *val);
+
+/**
+ * \brief Reads the input current of the TTC module.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] cur is current type to read. It can be:
+ * \parblock
+ *      -\b SL_TTC2_CURRENT_MCU
+ *      -\b SL_TTC2_CURRENT_RADIO
+ *      .
+ * \endparblock
+ *
+ * \param[in,out] val is a pointer to store the read current.
+ *
+ * \note The unit of the read current is \b mA.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_read_current(sl_ttcsb_config_t config, uint8_t cur, sl_ttcsb_current_t *val);
+
+/**
+ * \brief Reads the temperature of  the TTC microncontroller.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] temp is the temperature type to read. It can be:
+ * \parblock
+ *      -\b SL_TTC2_TEMP_MCU
+ *      -\b SL_TTC2_TEMP_RADIO
+ *      -\b SL_TTC2_TEMP_ANTENNA
+ *      .
+ * \endparblock
+ *
+ * \param[in,out] val is a pointer to store the read temperature.
+ *
+ * \note The unit ot the read temperature is Kelvin.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_read_temp(sl_ttcsb_config_t config, uint8_t temp, sl_ttcsb_temp_t *val);
+
+/**
+ * \brief Reads the ID of the last valid telecommand received by the TTC module
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read ID of the last valid telecommand.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_read_last_valid_tc(sl_ttcsb_config_t config, uint8_t *val);
+
+/**
+ * \brief Reads the RSSI valur of the last valid telecommand of the TTC module.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read RSSI value.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_read_rssi(sl_ttcsb_config_t config, sl_ttcsb_rssi_t *val);
+
+/**
+ * \brief Reads the antenna status of the TTC module.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read antenna status value.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_read_antenna_status(sl_ttcsb_config_t config, uint16_t *val);
+
+/**
+ * \brief Reads the antenna deployment status (executed or not executed).
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read status value.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_read_antenna_deployment_status(sl_ttcsb_config_t config, uint8_t *val);
+
+/**
+ * \brief Reads the antenna deployment hibernation status (executed or not executed).
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read status value.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_read_antenna_deployment_hibernation_status(sl_ttcsb_config_t config, uint8_t *val);
+
+/**
+ * \brief Reads the TX enable flag.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in,out] val is a pointer to store the read TX enable flag.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_read_tx_enable(sl_ttcsb_config_t config, uint8_t *val);
+
+/**
+ * \brief Sets the TX enable flag of the TTC.
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] en is TRUE/FALSE to enable/disable the transmitter.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_set_tx_enable(sl_ttcsb_config_t config, bool en);
+
+/**
+ * \brief Reads the packet counter value (transmitted or received).
+ *
+ * \param[in] config is a structure with the configuration parameters of the driver.
+ *
+ * \param[in] pkt is packet type counter to read. It can be:
+ * \parblock
+ *      -\b SL_TTC2_TX_PKT
+ *      -\b SL_TTC2_RX_PKT
+ *      .
+ * \endparblock
+ *
+ * \param[in,out] val is a pointer to store the read packet counter value.
+ *
+ * \return The status/error code.
+ */
+int sl_ttcsb_read_pkt_counter(sl_ttcsb_config_t config, uint8_t pkt, uint32_t *val);
+
+int sl_ttcsb_i2c_init(sl_ttcsb_config_t config);
+
+int sl_ttcsb_i2c_write(sl_ttcsb_config_t config, uint8_t *data, uint16_t len);
+
+int sl_ttcsb_i2c_read(sl_ttcsb_config_t config, uint8_t *data, uint16_t len);
+
+void sl_ttcsb_delay_ms(uint32_t ms);
+
+
+#endif /* SL_TTC2_H_ */
+
+/** \} End of sl_ttc2 group */
