@@ -49,7 +49,8 @@
  * \brief RO type.
  */
 typedef enum  
-{ RO_NONE = 0, /**< Means there's no RO active */
+{ 
+  RO_NONE = 0, /**< Means there's no RO active */
   RO_1 = PL_ID_RO_1, /**< RO 1. */
 } 
 ro_type_t;
@@ -81,56 +82,46 @@ typedef uint8_t payload_cmd_t;
 /**
  * \brief RO device initialization.
  *
- * \param[in] pl is the RO device to initialize. It can be:
+ * \param[in] ro is the RO device to initialize. It can be:
  * \parblock
- *      -\b PAYLOAD_EDC_0
- *      -\b PAYLOAD_EDC_1
- *      -\b PAYLOAD_X
- *      .
+ *      -\b PAYLOAD_RO_0
  * \endparblock
  *
  * \return The status/error code.
  */
-int payload_init(payload_t pl);
+int ro_payload_init(ro_type_t ro);
 
 /**
  * \brief Enables a given payload payload.
  *
- * \param[in] pl is the payload device to enable. It can be:
+ * \param[in] ro is the RO device to enable. It can be:
  * \parblock
- *      -\b PAYLOAD_EDC_0
- *      -\b PAYLOAD_EDC_1
- *      -\b PAYLOAD_X
+ *      -\b PAYLOAD_RO_0
  *      .
  * \endparblock
  *
  * \return The status/error code.
  */
-int payload_enable(payload_t pl);
+int ro_payload_enable(ro_type_t ro);
 
 /**
  * \brief Disables a given payload.
  *
- * \param[in] pl is the payload device to disable. It can be:
+ * \param[in] ro is the RO device to disable. It can be:
  * \parblock
- *      -\b PAYLOAD_EDC_0
- *      -\b PAYLOAD_EDC_1
- *      -\b PAYLOAD_X
- *      .
+ *      -\b PAYLOAD_RO_0
  * \endparblock
  *
  * \return Thet status/error code.
  */
-int payload_disable(payload_t pl);
+int ro_payload_disable(ro_type_t ro);
 
 /**
- * \brief Writes a command to a given payload.
+ * \brief Writes a command to a given RO payload.
  *
- * \param[in] pl is the payload device to disable. It can be:
+ * \param[in] ro is the RO device to write the command. It can be:
  * \parblock
- *      -\b PAYLOAD_EDC_0
- *      -\b PAYLOAD_EDC_1
- *      -\b PAYLOAD_X
+ *      -\b PAYLOAD_RO_0
  *      .
  * \endparblock
  *
@@ -138,27 +129,31 @@ int payload_disable(payload_t pl);
  *
  * \return Thet status/error code.
  */
-int payload_write_cmd(payload_t pl, payload_cmd_t cmd);
+int ro_payload_write_cmd(ro_type_t ro, ro_cmd_t cmd);
 
 /**
- * \brief Gets data from a given payload.
+ * \brief Gets data from a given RO payload.
  *
- * \param[in] pl is the payload device to initialize. It can be:
+ * \param[in] ro is the RO device to get data from. It can be:
  * \parblock
- *      -\b PAYLOAD_EDC_0
- *      -\b PAYLOAD_EDC_1
- *      -\b PAYLOAD_X
+ *      -\b PAYLOAD_RO_0
  *      .
  * \endparblock
  *
  * param[in] id is the data ID. It can be:
  * \parblock
- *      -\b PAYLOAD_EDC_RAW_STATE
- *      -\b PAYLOAD_EDC_STATE
- *      -\b PAYLOAD_EDC_RAW_PTT
- *      -\b PAYLOAD_EDC_PTT
- *      -\b PAYLOAD_EDC_RAW_HK
- *      -\b PAYLOAD_EDC_HK
+ *      -\b PAYLOAD_RO_RAW_STATE
+ *      -\b PAYLOAD_RO_STATE
+ *      -\b PAYLOAD_RO_RAW_EVENT
+ *      -\b PAYLOAD_RO_EVENT
+ *      -\b PAYLOAD_RO_RAW_NAVIGATION
+ *      -\b PAYLOAD_RO_NAVIGATION
+ *      -\b PAYLOAD_RO_RAW_OBSERVATION
+ *      -\b PAYLOAD_RO_OBSERVATION
+  *      -\b PAYLOAD_RO_RAW_IQ_HEADER
+  *      -\b PAYLOAD_RO_IQ_HEADER
+  *      -\b PAYLOAD_RO_RAW_HK
+  *      -\b PAYLOAD_RO_HK
  *      .
  * \endparblock
  *
@@ -168,15 +163,8 @@ int payload_write_cmd(payload_t pl, payload_cmd_t cmd);
  *
  * \return The status/error code.
  */
-int payload_get_data(payload_t pl, payload_data_id_t id, uint8_t *data, int32_t *len);
+int ro_get_data(ro_type_t ro, ro_data_id_t id, uint8_t *data, int32_t *len);
 
-/**
- * \brief Initialize mission specific payload gpio enable pins, making sure 
- * the payloads can be initialized from a disable state on startup.
- *
- * \return The status/error code.
- */
-int payload_init_gpio_enables(void);
 
 /**
  * \brief Sets the payload clock to a provided unix timestamp.
@@ -187,7 +175,7 @@ int payload_init_gpio_enables(void);
  *
  * \return The status/error code.
  */
-int payload_set_clock(const payload_t pl, const uint32_t time);
+int ro_set_clock(const ro_type_t ro, const uint32_t time);
 
 #endif /* PAYLOAD_H_ */
 

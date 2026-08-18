@@ -44,7 +44,7 @@
 
 #include "ro.h"
 
-//#define RO_UNIX_TO_J2000_EPOCH(x)      ((x) - 946684800UL)   /* Unix to J2000 epoch conversion */
+#define RO_UNIX_TO_J2000_EPOCH(x)      ((x) - 946684800UL)   /* Unix to J2000 epoch conversion */
 
 static ro_config_t ro_conf;
 
@@ -54,7 +54,7 @@ int ro_payload_init(ro_type_t ro)
 
     switch(ro)
     {
-        case RO_1:
+        case RO_0:
         {
             ro_conf.interface = RO_IF_I2C;
             ro_conf.uart_port = I2C_PORT_1;
@@ -119,7 +119,7 @@ int ro_payload_enable(ro_type_t ro)
 
     switch(ro)
     {
-        case RO_1:
+        case RO_0:
             if (ro_enable(ro_conf) == 0)
             {
                 err = 0;
@@ -147,7 +147,7 @@ int ro_payload_disable(ro_type_t ro)
 
     switch(ro)
     {
-        case RO_1:
+        case RO_0:
             if (ro_disable(ro_conf) == 0)
             {
                 err = 0;
@@ -175,7 +175,7 @@ int ro_payload_write_cmd(ro_type_t ro, ro_cmd_t cmd)
 
     switch(ro)
     {
-        case RO_1:
+        case RO_0:
             if (ro_write_cmd(ro_conf, cmd) == 0)
             {
                 err = 0;
@@ -201,7 +201,7 @@ int ro_get_data(ro_type_t ro, ro_data_id_t id, uint8_t *data, int32_t *len)
 
     switch(ro)
     {
-        case RO_1:
+        case RO_0:
         {
             switch(id)
             {
@@ -458,7 +458,7 @@ int ro_get_data(ro_type_t ro, ro_data_id_t id, uint8_t *data, int32_t *len)
                     break;
                 }
                 default:
-                    sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Invalid data ID!");
+                    sys_log_print_event_from_module(SYS_LOG_ERROR, RO_MODULE_NAME, "RO: Invalid data ID!");
                     sys_log_new_line();
 
                     break;
@@ -467,7 +467,7 @@ int ro_get_data(ro_type_t ro, ro_data_id_t id, uint8_t *data, int32_t *len)
             break;
         }
         default:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Invalid payload to get data!");
+            sys_log_print_event_from_module(SYS_LOG_ERROR, RO_MODULE_NAME, "RO: Invalid payload to get data!");
             sys_log_new_line();
 
             break;
@@ -476,63 +476,25 @@ int ro_get_data(ro_type_t ro, ro_data_id_t id, uint8_t *data, int32_t *len)
     return err;
 }
 
-int payload_init_gpio_enables(void)
+int ro_set_clock(const ro_type_t ro, const uint32_t time)
 {
     int err = 0;
 
-    #if defined (CONFIG_MISSION_GOLDS_UFSC) && (CONFIG_MISSION_GOLDS_UFSC == 1)
-    const gpio_config_t conf = { .mode = GPIO_MODE_OUTPUT };
-
-    /* Initializes enable pins */
-    (void)gpio_init(GPIO_PIN_29, conf); /* EDC 0 */
-    (void)gpio_init(GPIO_PIN_30, conf); /* EDC 1 */
-    (void)gpio_init(GPIO_PIN_37, conf); /* Payload X */
-
-    /* Make sure payloads are disabled */
-    (void)gpio_set_state(GPIO_PIN_29, false); /* EDC 0 */
-    (void)gpio_set_state(GPIO_PIN_30, false); /* EDC 1 */
-    (void)gpio_set_state(GPIO_PIN_37, false); /* Payload X */
-
-    #endif
-
-    return err;
-}
-
-int payload_set_clock(const payload_t pl, const uint32_t time)
-{
-    int err = 0;
-
-    switch(pl)
+    switch(ro)
     {
-        case PAYLOAD_EDC_0:
-            sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "EDC 0: Setting Clock/RTC time...");
+        case RO_0:
+            sys_log_print_event_from_module(SYS_LOG_INFO, RO_MODULE_NAME, "RO 0: Setting Clock/RTC time...");
             sys_log_new_line();
 
-            if (edc_set_rtc_time(edc_0_conf, PAYLOAD_UNIX_TO_J2000_EPOCH(time)) != 0)
+            if (ro_set_rtc_time(ro_conf, RO_UNIX_TO_J2000_EPOCH(time)) != 0)
             {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 0: Error setting the Clock/RTC time!");
+                sys_log_print_event_from_module(SYS_LOG_ERROR, RO_MODULE_NAME, "RO 0: Error setting the Clock/RTC time!");
                 sys_log_new_line();
                 err = -1;
             }
-            break;
-        case PAYLOAD_EDC_1:
-            sys_log_print_event_from_module(SYS_LOG_INFO, PAYLOAD_MODULE_NAME, "EDC 1: Setting Clock/RTC time...");
-            sys_log_new_line();
-
-            if (edc_set_rtc_time(edc_1_conf, PAYLOAD_UNIX_TO_J2000_EPOCH(time)) != 0)
-            {
-                sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "EDC 1: Error setting the Clock/RTC time!");
-                sys_log_new_line();
-                err = -1;
-            }
-            break;
-        case PAYLOAD_X:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "PX: set_clock() routine not implemented yet!");
-            sys_log_new_line();
-            err = -1;
             break;
         default:
-            sys_log_print_event_from_module(SYS_LOG_ERROR, PAYLOAD_MODULE_NAME, "Invalid payload to set clock!");
+            sys_log_print_event_from_module(SYS_LOG_ERROR, RO_MODULE_NAME, "RO: Invalid payload to set clock!");
             sys_log_new_line();
             err = -1;
             break;
