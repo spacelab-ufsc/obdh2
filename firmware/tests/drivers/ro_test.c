@@ -12,7 +12,15 @@
 #include <stdint.h>
 #include <setjmp.h>
 #include <cmocka.h>
+
+#include <stdlib.h>
+#include <math.h>
+
+#include <drivers/i2c/i2c.h>
+#include <drivers/gpio/gpio.h>
 #include <drivers/ro/ro.h>
+
+
 
 void ro_delay_ms(uint32_t ms) { (void)ms; }
 static void test_checksum_and_invalid_command(void **state)

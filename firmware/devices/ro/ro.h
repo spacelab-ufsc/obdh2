@@ -1,5 +1,5 @@
 /*
- * payload.h
+ * ro.h
  * 
  * Copyright The OBDH 2.0 Contributors.
  * 
@@ -27,7 +27,7 @@
  * \author Carlos Augusto Porto Freitas <carlos.portof@hotmail.com>
  * \author Renato Augusto Schenkel Meneghin Marchiori
  * 
- * \version 1.0.0
+ * \version 0.0.1
  * 
  * \date 2026/08/13
  * 
