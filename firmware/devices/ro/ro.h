@@ -150,10 +150,10 @@ int ro_payload_write_cmd(ro_type_t ro, ro_cmd_t cmd);
  *      -\b PAYLOAD_RO_NAVIGATION
  *      -\b PAYLOAD_RO_RAW_OBSERVATION
  *      -\b PAYLOAD_RO_OBSERVATION
-  *      -\b PAYLOAD_RO_RAW_IQ_HEADER
-  *      -\b PAYLOAD_RO_IQ_HEADER
-  *      -\b PAYLOAD_RO_RAW_HK
-  *      -\b PAYLOAD_RO_HK
+ *      -\b PAYLOAD_RO_RAW_IQ_HEADER
+ *      -\b PAYLOAD_RO_IQ_HEADER
+ *      -\b PAYLOAD_RO_RAW_HK
+ *      -\b PAYLOAD_RO_HK
  *      .
  * \endparblock
  *

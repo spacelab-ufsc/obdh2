@@ -65,8 +65,7 @@ typedef struct
     sys_time_t timestamp;           /**< Timestamp of the Payload data. */
     uint8_t id;                     /**< Payload id [Ex: CONFIG_PL_ID_EDC_1] */
     ro_hk_t hk;                    /**< RO Housekeeping */
-    ro_state_t state;              /**< RO State */
-    ro_ptt_t ptt;                  /**< RO PTT Packet */
+    //ro_state_t state;              /**< RO State */
 } ro_telemetry_t;
 
 /**
