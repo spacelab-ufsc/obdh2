@@ -77,7 +77,7 @@ typedef enum
 /**
  * \brief RO command.
  */
-typedef uint8_t payload_cmd_t;
+typedef uint8_t ro_cmd_t;
 
 /**
  * \brief RO device initialization.
