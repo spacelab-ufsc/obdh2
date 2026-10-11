@@ -142,3 +142,20 @@ void xTaskReadRO(void *p)
         vTaskDelayUntil(&last_cycle, pdMS_TO_TICKS(TASK_READ_EDC_PERIOD_MS));
     }
 }
+
+static void print_ro_hk(ro_hk_t *hk){
+    sys_log_print_event_from_module(SYS_LOG_INFO, "RO Status", "Current: ");
+    sys_log_print_uint((uint32_t) hk->current);
+    sys_log_print_msg(" mA");
+    sys_log_new_line();
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, "RO Status", "Sys Voltage: ");
+    sys_log_print_uint((uint32_t) hk->voltage);
+    sys_log_print_msg(" mV");
+    sys_log_new_line();
+
+    sys_log_print_event_from_module(SYS_LOG_INFO, "RO Status", "FPGA Temp: ");
+    sys_log_print_int((int32_t) hk->fpga_temperature);
+    sys_log_print_msg(" oC");
+    sys_log_new_line();  
+}
